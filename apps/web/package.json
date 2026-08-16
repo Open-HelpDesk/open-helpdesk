@@ -9,8 +9,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@openhelpdesk/auth": "workspace:*",
     "@openhelpdesk/config": "workspace:*",
+    "@openhelpdesk/db": "workspace:*",
     "@openhelpdesk/ui": "workspace:*",
+    "better-auth": "^1.3.0",
+    "drizzle-orm": "^0.44.0",
+    "lucide-react": "^0.475.0",
     "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

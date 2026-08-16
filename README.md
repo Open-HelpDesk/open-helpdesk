@@ -33,18 +33,20 @@ docker compose -f docker/docker-compose.yml up -d
 pnpm db:generate && pnpm db:migrate
 psql "$DATABASE_URL" -f packages/db/sql/rls.sql
 pnpm db:seed                    # workspace de démo « Acme Support »
+pnpm db:seed:auth               # comptes agents de démo
 pnpm dev                        # web :3000 · console :3001 · www :3002 · worker
 ```
 
 Puis ouvrir **http://acme.localhost:3000** — le middleware résout le tenant par
-sous-domaine ({slug}.BASE_DOMAIN, voir `.env.example`).
+sous-domaine ({slug}.BASE_DOMAIN, voir `.env.example`). Connexion de démo :
+`marie.dupont@acme.example` / `demo-openhelpdesk`.
 
 ## État d'avancement (roadmap specs/01 § 9)
 
 | Lot | Contenu | État |
 |---|---|---|
-| Lot 0 — Socle | Monorepo, schéma DB + RLS, multi-tenant par sous-domaine, tokens design, docker | **En cours** — reste : Better Auth, CI |
-| Lot 1 — Cœur ticketing | Tickets, conversations, email, contacts/orgs, vues, recherche | À venir |
+| Lot 0 — Socle | Monorepo, schéma DB + RLS, multi-tenant par sous-domaine, tokens design, docker, auth (Better Auth) | **Fait** — reste : 2FA, CI |
+| Lot 1 — Cœur ticketing | Tickets, conversations, email, contacts/orgs, vues, recherche | **En cours** — fait : AG-01 (connexion), AG-03 (inbox, vues par défaut), AG-04 (fil, notes internes, réponse & statut, propriétés), AG-05 (création + rattachement org par domaine). Reste : pipeline email, contacts/orgs, ⌘K, vues personnalisées, macros, actions groupées, temps réel |
 | Lot 2 — Productivité | Macros, automatisations, SLA, champs, CSAT, rapports | À venir |
 | Lot 3 — Portail & KB | KB, portail client, widget, déflexion | À venir |
 | Lot 4 — Cloud | Signup, provisioning, Stripe, console | À venir |

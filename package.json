@@ -12,7 +12,8 @@
     "lint": "turbo run lint",
     "db:generate": "pnpm --filter @openhelpdesk/db db:generate",
     "db:migrate": "pnpm --filter @openhelpdesk/db db:migrate",
-    "db:seed": "pnpm --filter @openhelpdesk/db db:seed"
+    "db:seed": "pnpm --filter @openhelpdesk/db db:seed",
+    "db:seed:auth": "pnpm --filter @openhelpdesk/auth seed"
   },
   "devDependencies": {
     "turbo": "^2.5.0",

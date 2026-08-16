@@ -9,5 +9,5 @@ export default defineConfig({
       process.env.DATABASE_URL ??
       "postgres://openhelpdesk:openhelpdesk@localhost:5439/openhelpdesk",
   },
-  schemaFilter: ["app", "cloud"],
+  schemaFilter: ["app", "auth", "cloud"],
 });

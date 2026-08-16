@@ -1,24 +1,30 @@
+import { LoginForm } from "./login-form";
+
 /**
- * AG-01 — Connexion. Squelette Lot 0 ; le branchement Better Auth
- * (email + mot de passe, Google/Microsoft, 2FA) arrive en fin de Lot 0.
+ * AG-01 — Connexion (specs/10). Branding du tenant, carte centrée 400 px,
+ * email + mot de passe, SSO Google/Microsoft, mention « propulsé par » en pied.
  */
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <div
-        className="w-full rounded-lg border p-8"
-        style={{ maxWidth: 400, background: "var(--panel)", borderColor: "var(--line)" }}
-      >
-        <p
-          className="mb-2 font-mono text-xs uppercase tracking-wider"
-          style={{ color: "var(--acc)" }}
+    <main className="flex min-h-screen items-center justify-center p-4">
+      <div className="w-full" style={{ maxWidth: 400 }}>
+        <div
+          className="rounded-xl border p-8 shadow-sm"
+          style={{ background: "var(--panel)", borderColor: "var(--line)" }}
         >
-          AG-01 · Connexion
-        </p>
-        <h1 className="text-lg font-semibold">Se connecter</h1>
-        <p className="mt-2 text-sm" style={{ color: "var(--mute)" }}>
-          Auth (Better Auth) branchée en fin de Lot 0 : email + mot de passe,
-          Google/Microsoft, 2FA.
+          <h1 className="mb-1 text-lg font-semibold">Se connecter</h1>
+          <p className="mb-5 text-sm" style={{ color: "var(--mute)" }}>
+            Accédez à votre espace de travail.
+          </p>
+          <LoginForm initialError={error} />
+        </div>
+        <p className="mt-4 text-center text-xs" style={{ color: "var(--mute)" }}>
+          Propulsé par Open HelpDesk
         </p>
       </div>
     </main>
