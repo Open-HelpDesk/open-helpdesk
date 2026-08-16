@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "@openhelpdesk/ui/tokens.css";
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  /* Densité app agent : 14 px (specs/02) */
+  font-size: 14px;
+}

@@ -1,0 +1,13 @@
+import { defineConfig } from "drizzle-kit";
+
+export default defineConfig({
+  schema: "./src/schema/index.ts",
+  out: "./drizzle",
+  dialect: "postgresql",
+  dbCredentials: {
+    url:
+      process.env.DATABASE_URL ??
+      "postgres://openhelpdesk:openhelpdesk@localhost:5439/openhelpdesk",
+  },
+  schemaFilter: ["app", "cloud"],
+});

@@ -1,0 +1,54 @@
+name: open-helpdesk
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: openhelpdesk
+      POSTGRES_PASSWORD: openhelpdesk
+      POSTGRES_DB: openhelpdesk
+    ports:
+      # Port hôte décalé pour cohabiter avec d'autres Postgres locaux ;
+      # surcharger via OHD_POSTGRES_PORT.
+      - "${OHD_POSTGRES_PORT:-5439}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openhelpdesk"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:8-alpine
+    ports:
+      - "${OHD_REDIS_PORT:-6380}:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: openhelpdesk
+      MINIO_ROOT_PASSWORD: openhelpdesk
+    ports:
+      - "${OHD_MINIO_PORT:-9010}:9000"
+      - "${OHD_MINIO_CONSOLE_PORT:-9011}:9001"
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:

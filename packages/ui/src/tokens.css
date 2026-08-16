@@ -1,0 +1,137 @@
+/*
+ * Tokens Open HelpDesk — extraits des maquettes validées (design/*.html).
+ * Trois jeux :
+ *  1. Produit (espace agent, administration, portail) — accent vert profond #0B5F46.
+ *     Le portail substitue l'accent du tenant à --acc au runtime.
+ *  2. Console cloud — accent cuivre, neutres chauds. Appliquer .surface-console.
+ *  3. Site public — fond sombre #08281E (voir specs/14 § direction artistique).
+ *
+ * Thème sombre : stamp [data-theme="dark"] sur <html>.
+ * Conventions statuts/priorités : specs/02-design-system.md.
+ */
+
+/* ---------- 1. Produit — clair ---------- */
+:root {
+  --acc: #0b5f46;
+  --acc-t: #e7f1ec;
+  --acc-b: #bfdbcf;
+  --canvas: #f6f8f7;
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --sunk: #f1f4f2;
+  --hi: #fff9db;
+  --ink: #11211c;
+  --mute: #5f6f68;
+  --line: #e2e7e4;
+  /* Notes internes — toujours jaune pâle + cadenas (jamais ambigu) */
+  --note: #fffbeb;
+  --note-line: #f5dfa0;
+  /* Statuts ticket : nouveau / ouvert / en attente / en pause / résolu / clos */
+  --new: #6d28d9;
+  --new-t: #f1eafd;
+  --open: #1d4ed8;
+  --open-t: #e8eefc;
+  --wait: #b45309;
+  --wait-t: #fdf1e1;
+  --pause: #546a7b;
+  --pause-t: #edf1f4;
+  --ok: #0e7a58;
+  --ok-t: #e4f1ea;
+  --closed: #6b7280;
+  --closed-t: #f0f1f3;
+  --dang: #c0342b;
+  --dang-t: #fdecea;
+  /* Site public */
+  --site-dark: #08281e;
+  /* Typographie */
+  --font-ui: "Inter", Inter, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* ---------- 1bis. Produit — sombre ---------- */
+[data-theme="dark"] {
+  --acc: #34c08d;
+  --acc-t: #12291f;
+  --acc-b: #1e4536;
+  --canvas: #080c0b;
+  --bg: #0e1413;
+  --panel: #131b18;
+  --sunk: #0a100e;
+  --hi: #2a2510;
+  --ink: #e8efeb;
+  --mute: #96a59e;
+  --line: #232e2a;
+  --note: #251e0c;
+  --note-line: #5c4a16;
+  --new: #a98bf5;
+  --new-t: #241a3b;
+  --open: #7ba1f5;
+  --open-t: #141f38;
+  --wait: #e0a85c;
+  --wait-t: #2e2113;
+  --pause: #9fb2bf;
+  --pause-t: #1a2228;
+  --ok: #48d0a0;
+  --ok-t: #122a20;
+  --closed: #9ca3af;
+  --closed-t: #1b1f1e;
+  --dang: #f0736a;
+  --dang-t: #2e1614;
+}
+
+/* ---------- 2. Console cloud — clair ----------
+ * Esthétique volontairement distincte du produit (accent cuivre, bandeau CONSOLE) :
+ * aucune capture ne doit être confondue avec l'app client. */
+.surface-console {
+  --cu: #a2521c;
+  --cu-t: #faefe6;
+  --cu-b: #e7c9ac;
+  --cu-deep: #3b2413;
+  --canvas: #f8f6f4;
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --sunk: #f3f0ed;
+  --ink: #1f1813;
+  --mute: #79706a;
+  --mute-t: #f1eeeb;
+  --line: #e6e1dc;
+  --ok: #137a54;
+  --ok-t: #e3f1eb;
+  --dang: #be3a2e;
+  --dang-t: #fcebe9;
+  --info: #1d4ed8;
+  --info-t: #e8eefc;
+  --vio: #6d28d9;
+  --vio-t: #f1eafd;
+  --scrim: rgba(31, 24, 19, 0.42);
+  /* La console n'utilise jamais l'accent produit */
+  --acc: var(--cu);
+  --acc-t: var(--cu-t);
+  --acc-b: var(--cu-b);
+}
+
+/* ---------- 2bis. Console cloud — sombre ---------- */
+[data-theme="dark"] .surface-console,
+.surface-console[data-theme="dark"] {
+  --cu: #e09a5e;
+  --cu-t: #2a1c10;
+  --cu-b: #4a3220;
+  --cu-deep: #231710;
+  --canvas: #0c0908;
+  --bg: #14100d;
+  --panel: #1a1512;
+  --sunk: #110d0b;
+  --ink: #f0eae4;
+  --mute: #9c918a;
+  --mute-t: #1d1815;
+  --line: #2c2521;
+  --ok: #3fbe8c;
+  --ok-t: #0f2a20;
+  --dang: #f0736a;
+  --dang-t: #2e1614;
+  --info: #7ba1f5;
+  --info-t: #141f38;
+  --vio: #a98bf5;
+  --vio-t: #241a3b;
+  --scrim: rgba(4, 3, 2, 0.6);
+}

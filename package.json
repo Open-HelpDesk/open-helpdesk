@@ -1,0 +1,21 @@
+{
+  "name": "open-helpdesk",
+  "private": true,
+  "packageManager": "pnpm@10.15.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "db:generate": "pnpm --filter @openhelpdesk/db db:generate",
+    "db:migrate": "pnpm --filter @openhelpdesk/db db:migrate",
+    "db:seed": "pnpm --filter @openhelpdesk/db db:seed"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0",
+    "typescript": "^5.8.0"
+  }
+}
