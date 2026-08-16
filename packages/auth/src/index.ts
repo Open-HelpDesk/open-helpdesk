@@ -30,16 +30,17 @@ if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
   };
 }
 
+const baseDomain = process.env.BASE_DOMAIN ?? "localhost:3000";
+
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET ?? "dev-secret-change-me",
-  baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
+  baseURL: process.env.BETTER_AUTH_URL ?? `http://${baseDomain}`,
   // Chaque tenant vit sur son sous-domaine : {slug}.BASE_DOMAIN.
   trustedOrigins: [
-    "http://localhost:3000",
-    "http://*.localhost:3000",
-    ...(process.env.BASE_DOMAIN && process.env.BASE_DOMAIN !== "localhost:3000"
-      ? [`https://${process.env.BASE_DOMAIN}`, `https://*.${process.env.BASE_DOMAIN}`]
-      : []),
+    `http://${baseDomain}`,
+    `http://*.${baseDomain}`,
+    `https://${baseDomain}`,
+    `https://*.${baseDomain}`,
   ],
   database: drizzleAdapter(db, {
     provider: "pg",
