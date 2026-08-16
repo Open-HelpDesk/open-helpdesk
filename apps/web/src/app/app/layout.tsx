@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { requireAgent } from "@/lib/session";
 import { Avatar } from "@/components/ticket-bits";
+import { CommandPalette, SearchButton } from "@/components/command-palette";
 import { SignOutButton } from "./sign-out-button";
 
 /**
@@ -24,12 +25,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const navItems = [
     { href: "/app/tickets", icon: Inbox, label: "Inbox" },
-    { href: "#", icon: Search, label: "Recherche (⌘K — Lot 1)" },
-    { href: "#", icon: Users, label: "Contacts (Lot 1)" },
-    { href: "#", icon: Building2, label: "Organisations (Lot 1)" },
+    { href: "/app/contacts", icon: Users, label: "Contacts" },
+    { href: "/app/organizations", icon: Building2, label: "Organisations" },
     { href: "#", icon: BarChart3, label: "Rapports (Lot 2)" },
     { href: "#", icon: BookOpen, label: "Base de connaissances (Lot 3)" },
-    { href: "#", icon: Settings, label: "Paramètres (Lot 1)" },
+    { href: "#", icon: Settings, label: "Paramètres (Lot 1, suite)" },
   ];
 
   return (
@@ -46,12 +46,23 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         >
           {tenant.name[0]?.toUpperCase()}
         </div>
-        {navItems.map(({ href, icon: Icon, label }) => (
+        <Link
+          href="/app/tickets"
+          title="Inbox"
+          className="rounded-lg p-2.5"
+          style={{ color: "var(--ink)" }}
+        >
+          <Inbox size={18} strokeWidth={1.8} />
+        </Link>
+        <SearchButton>
+          <Search size={18} strokeWidth={1.8} />
+        </SearchButton>
+        {navItems.slice(1).map(({ href, icon: Icon, label }) => (
           <Link
             key={label}
             href={href}
             title={label}
-            className="rounded-lg p-2.5 hover:opacity-100"
+            className="rounded-lg p-2.5"
             style={{ color: href === "#" ? "var(--mute)" : "var(--ink)" }}
           >
             <Icon size={18} strokeWidth={1.8} />
@@ -85,6 +96,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
         <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
       </div>
+
+      <CommandPalette />
     </div>
   );
 }

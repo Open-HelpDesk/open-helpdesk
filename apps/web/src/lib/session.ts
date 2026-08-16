@@ -10,30 +10,42 @@ export type CurrentAgent = {
   sessionEmail: string;
 };
 
-/**
- * Session Better Auth + appartenance au workspace courant (app.users, par email).
- * Redirige vers /login sans session ; jette si l'identité n'est pas membre du tenant.
- */
-export async function requireAgent(): Promise<CurrentAgent> {
+type Resolution =
+  | { status: "ok"; value: CurrentAgent }
+  | { status: "anonymous" }
+  | { status: "not-member" };
+
+async function resolveAgent(): Promise<Resolution> {
   const h = await headers();
   const session = await auth.api.getSession({ headers: h });
-  if (!session) redirect("/login");
+  if (!session) return { status: "anonymous" };
 
   const slug = h.get("x-tenant-slug");
   if (!slug) throw new Error("Tenant non résolu par le middleware.");
 
   const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug));
-  if (!tenant) redirect("/login");
+  if (!tenant) return { status: "anonymous" };
 
   const [agent] = await db
     .select()
     .from(users)
     .where(and(eq(users.tenantId, tenant.id), eq(users.email, session.user.email)));
 
-  if (!agent || agent.status === "disabled") {
-    // Identité valide mais pas membre de CE workspace.
-    redirect("/login?error=not-a-member");
-  }
+  if (!agent || agent.status === "disabled") return { status: "not-member" };
 
-  return { tenant, agent, sessionEmail: session.user.email };
+  return { status: "ok", value: { tenant, agent, sessionEmail: session.user.email } };
+}
+
+/** Pages : session + appartenance au workspace, sinon redirection vers /login. */
+export async function requireAgent(): Promise<CurrentAgent> {
+  const res = await resolveAgent();
+  if (res.status === "anonymous") redirect("/login");
+  if (res.status === "not-member") redirect("/login?error=not-a-member");
+  return res.value;
+}
+
+/** Routes API : même résolution, mais null (→ 401) au lieu d'une redirection. */
+export async function apiAgent(): Promise<CurrentAgent | null> {
+  const res = await resolveAgent();
+  return res.status === "ok" ? res.value : null;
 }
