@@ -122,6 +122,26 @@ export async function listTickets(tenantId: string, view: ViewKey, agentId: stri
 
 export { nextTicketNumber } from "@openhelpdesk/db";
 
+/** Macros disponibles dans l'éditeur de AG-04 (format aplati pour le client). */
+export async function listMacrosForEditor(tenantId: string) {
+  const { macros } = await import("@openhelpdesk/db");
+  const rows = await db
+    .select()
+    .from(macros)
+    .where(eq(macros.tenantId, tenantId))
+    .orderBy(asc(macros.category), asc(macros.name));
+  return rows.map((m) => {
+    const actions = (m.actions as { type: string; value?: unknown }[]) ?? [];
+    return {
+      id: m.id,
+      name: m.name,
+      category: m.category,
+      insertText: String(actions.find((a) => a.type === "insert_text")?.value ?? ""),
+      setStatus: String(actions.find((a) => a.type === "set_status")?.value ?? ""),
+    };
+  });
+}
+
 export async function getTicketByNumber(tenantId: string, number: number) {
   const [ticket] = await db
     .select()

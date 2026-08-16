@@ -2,10 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Lock } from "lucide-react";
 import { requireAgent } from "@/lib/session";
-import { getTicketByNumber } from "@/lib/data";
+import { getTicketByNumber, listMacrosForEditor } from "@/lib/data";
 import { relativeFr, PRIORITY_LABELS_FR, STATUS_LABELS_FR } from "@/lib/format";
 import { Avatar, PriorityDot, SlaBadge, StatusChip } from "@/components/ticket-bits";
-import { sendReply, updateTicketProps } from "../actions";
+import { updateTicketProps } from "../actions";
+import { ReplyEditor } from "./reply-editor";
 
 /**
  * AG-04 — Détail ticket (specs/10) : en-tête, fil de conversation (réponses publiques /
@@ -23,7 +24,10 @@ export default async function TicketPage({
   const number = Number(numberParam);
   if (!Number.isInteger(number)) notFound();
 
-  const data = await getTicketByNumber(tenant.id, number);
+  const [data, editorMacros] = await Promise.all([
+    getTicketByNumber(tenant.id, number),
+    listMacrosForEditor(tenant.id),
+  ]);
   if (!data) notFound();
   const { ticket, requester, organization, messages, agents, requesterTicketCount } = data;
 
@@ -88,53 +92,13 @@ export default async function TicketPage({
           )}
         </div>
 
-        {/* Éditeur */}
-        <form
-          action={sendReply}
-          className="shrink-0 border-t p-4"
-          style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-        >
-          <input type="hidden" name="ticketId" value={ticket.id} />
-          <div className="mb-2 flex gap-4 text-sm">
-            <label className="inline-flex items-center gap-1.5 font-medium">
-              <input type="radio" name="kind" value="public_reply" defaultChecked /> Réponse
-            </label>
-            <label className="inline-flex items-center gap-1.5 font-medium" style={{ color: "var(--wait)" }}>
-              <input type="radio" name="kind" value="internal_note" /> Note interne
-            </label>
-          </div>
-          <textarea
-            name="body"
-            required
-            rows={3}
-            placeholder={`Répondre à ${requester.name ?? requester.email}…`}
-            className="w-full resize-y rounded-md border p-3 text-sm outline-none"
-            style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-          />
-          <div className="mt-2 flex items-center justify-end gap-2">
-            <label className="text-xs" style={{ color: "var(--mute)" }}>
-              Envoyer &amp; passer à
-            </label>
-            <select
-              name="nextStatus"
-              defaultValue="waiting"
-              className="rounded-md border px-2 py-1.5 text-sm"
-              style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-            >
-              <option value="">— sans changement —</option>
-              <option value="open">Ouvert</option>
-              <option value="waiting">En attente</option>
-              <option value="resolved">Résolu</option>
-            </select>
-            <button
-              type="submit"
-              className="rounded-md px-4 py-1.5 text-sm font-semibold text-white"
-              style={{ background: "var(--acc)" }}
-            >
-              Envoyer
-            </button>
-          </div>
-        </form>
+        {/* Éditeur — onglets Réponse / Note interne, macros, bouton scindé */}
+        <ReplyEditor
+          ticketId={ticket.id}
+          ticketNumber={ticket.number}
+          contactName={requester.name ?? requester.email}
+          macros={editorMacros}
+        />
       </div>
 
       {/* Panneau propriétés — 320 px */}

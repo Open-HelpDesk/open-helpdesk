@@ -13,6 +13,7 @@ import {
   automationRules,
   contactOrganizations,
   contacts,
+  macros,
   mailboxes,
   organizations,
   slaPolicies,
@@ -110,6 +111,29 @@ async function ensureProductivity(tenantId: string) {
     if (!existing) {
       await db.insert(automationRules).values({ tenantId, active: true, ...rule });
     }
+  }
+
+  const [existingMacro] = await db
+    .select({ id: macros.id })
+    .from(macros)
+    .where(and(eq(macros.tenantId, tenantId), eq(macros.name, "Demande de précisions")));
+  if (!existingMacro) {
+    await db.insert(macros).values({
+      tenantId,
+      name: "Demande de précisions",
+      category: "Général",
+      availability: "everyone",
+      actions: [
+        {
+          type: "insert_text",
+          value:
+            "Bonjour {{contact.name}},\n\nPour avancer sur votre demande (ticket " +
+            "#{{ticket.number}}), pourriez-vous préciser les étapes exactes qui mènent " +
+            "au problème, et joindre une capture d'écran si possible ?\n\nMerci !",
+        },
+        { type: "set_status", value: "waiting" },
+      ],
+    });
   }
 }
 
