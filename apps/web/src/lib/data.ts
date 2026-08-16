@@ -120,6 +120,8 @@ export async function listTickets(tenantId: string, view: ViewKey, agentId: stri
   return rows.map((r) => ({ ...r, excerpt: excerptByTicket.get(r.id) ?? null }));
 }
 
+export { nextTicketNumber } from "@openhelpdesk/db";
+
 export async function getTicketByNumber(tenantId: string, number: number) {
   const [ticket] = await db
     .select()
@@ -168,11 +170,3 @@ export async function getTicketByNumber(tenantId: string, number: number) {
   };
 }
 
-/** Numéro séquentiel par tenant — l'index unique (tenant, number) protège les courses. */
-export async function nextTicketNumber(tenantId: string): Promise<number> {
-  const [row] = await db
-    .select({ max: sql<number>`coalesce(max(${tickets.number}), 0)` })
-    .from(tickets)
-    .where(eq(tickets.tenantId, tenantId));
-  return (row?.max ?? 0) + 1;
-}

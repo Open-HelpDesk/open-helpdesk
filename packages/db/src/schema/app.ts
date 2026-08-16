@@ -202,6 +202,29 @@ export const contactOrganizations = app.table(
   (t) => [primaryKey({ columns: [t.contactId, t.organizationId] })],
 );
 
+/* ---------- Canal email (ST-03) ---------- */
+
+export const mailboxKind = app.enum("mailbox_kind", ["provided", "forwarding", "imap"]);
+
+export const mailboxes = app.table(
+  "mailboxes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    /** Une adresse appartient à exactement un tenant — clé de résolution à l'ingestion. */
+    address: text("address").notNull(),
+    kind: mailboxKind("kind").notNull().default("provided"),
+    verified: boolean("verified").notNull().default(false),
+    senderName: text("sender_name"),
+    signatureHtml: text("signature_html"),
+    defaultTeamId: uuid("default_team_id").references(() => teams.id),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("mailboxes_address").on(t.address)],
+);
+
 /* ---------- SLA & horaires ---------- */
 
 export const businessHours = app.table("business_hours", {

@@ -46,7 +46,7 @@ sous-domaine ({slug}.BASE_DOMAIN, voir `.env.example`). Connexion de démo :
 | Lot | Contenu | État |
 |---|---|---|
 | Lot 0 — Socle | Monorepo, schéma DB + RLS, multi-tenant par sous-domaine, tokens design, docker, auth (Better Auth) | **Fait** — reste : 2FA, CI |
-| Lot 1 — Cœur ticketing | Tickets, conversations, email, contacts/orgs, vues, recherche | **En cours** — fait : AG-01 (connexion), AG-03 (inbox, vues par défaut), AG-04 (fil, notes internes, réponse & statut, propriétés), AG-05 (création + rattachement org par domaine). Reste : pipeline email, contacts/orgs, ⌘K, vues personnalisées, macros, actions groupées, temps réel |
+| Lot 1 — Cœur ticketing | Tickets, conversations, email, contacts/orgs, vues, recherche | **En cours** — fait : AG-01 (connexion), AG-03 (inbox, vues par défaut), AG-04 (fil, notes internes, réponse & statut, propriétés), AG-05 (création + rattachement org par domaine), pipeline email entrant (webhook + threading + réouverture) et sortant (réponse agent → email). Reste : écrans contacts/orgs (AG-07/08), ⌘K (AG-06), vues personnalisées, actions groupées, temps réel, poller IMAP |
 | Lot 2 — Productivité | Macros, automatisations, SLA, champs, CSAT, rapports | À venir |
 | Lot 3 — Portail & KB | KB, portail client, widget, déflexion | À venir |
 | Lot 4 — Cloud | Signup, provisioning, Stripe, console | À venir |

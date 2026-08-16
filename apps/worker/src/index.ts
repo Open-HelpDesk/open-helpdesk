@@ -1,5 +1,6 @@
 import { Worker, type Processor } from "bullmq";
 import IORedis from "ioredis";
+import { ingestEmail, type InboundEmail } from "@openhelpdesk/mail";
 import { QUEUE_NAMES, type QueueName } from "./queues";
 
 const connection = new IORedis(process.env.REDIS_URL ?? "redis://localhost:6380", {
@@ -13,7 +14,11 @@ const processors: Record<QueueName, Processor> = {
     console.log(`[sla-timers] job ${job.id} — à implémenter (Lot 2)`);
   },
   "mail-ingest": async (job) => {
-    console.log(`[mail-ingest] job ${job.id} — à implémenter (Lot 1)`);
+    // Le poller IMAP (auto-hébergé) publie des InboundEmail normalisés dans cette file ;
+    // en cloud, le webhook /api/ingress/email appelle ingestEmail directement.
+    const result = await ingestEmail(job.data as InboundEmail);
+    console.log(`[mail-ingest] job ${job.id} → ${result.outcome}`);
+    return result;
   },
   automations: async (job) => {
     console.log(`[automations] job ${job.id} — à implémenter (Lot 2)`);

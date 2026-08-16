@@ -11,6 +11,7 @@ import {
   ticketMessages,
 } from "@openhelpdesk/db";
 import { and, arrayContains, eq } from "drizzle-orm";
+import { sendTicketReplyEmail } from "@openhelpdesk/mail";
 import { requireAgent } from "@/lib/session";
 import { nextTicketNumber } from "@/lib/data";
 
@@ -31,14 +32,45 @@ export async function sendReply(formData: FormData) {
     .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.id, ticketId)));
   if (!ticket || ticket.mergedIntoId) return;
 
-  await db.insert(ticketMessages).values({
-    tenantId: tenant.id,
-    ticketId,
-    kind,
-    authorType: "agent",
-    authorId: agent.id,
-    bodyText: body,
-  });
+  const [message] = await db
+    .insert(ticketMessages)
+    .values({
+      tenantId: tenant.id,
+      ticketId,
+      kind,
+      authorType: "agent",
+      authorId: agent.id,
+      bodyText: body,
+    })
+    .returning();
+
+  // Réponse publique → email au demandeur (transport console en dev, Resend en cloud).
+  if (kind === "public_reply" && message) {
+    try {
+      const [requester] = await db
+        .select({ email: contacts.email })
+        .from(contacts)
+        .where(eq(contacts.id, ticket.requesterId));
+      if (requester) {
+        const sent = await sendTicketReplyEmail({
+          tenantId: tenant.id,
+          ticketNumber: ticket.number,
+          subject: ticket.subject,
+          to: requester.email,
+          bodyText: body,
+        });
+        if (sent?.messageId) {
+          await db
+            .update(ticketMessages)
+            .set({ emailMeta: { messageId: sent.messageId } })
+            .where(eq(ticketMessages.id, message.id));
+        }
+      }
+    } catch (err) {
+      // L'échec d'envoi ne bloque pas la réponse — il sera visible dans le journal (ST-03).
+      console.error("[mail] échec d'envoi de la réponse :", err);
+    }
+  }
 
   const patch: Partial<typeof tickets.$inferInsert> = { updatedAt: new Date() };
   if (kind === "public_reply" && !ticket.firstRepliedAt) {

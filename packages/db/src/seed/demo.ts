@@ -7,16 +7,32 @@
  *
  * Usage : pnpm db:seed (DATABASE_URL doit pointer sur une base migrée).
  */
+import { eq } from "drizzle-orm";
 import { db } from "../client";
 import {
   contactOrganizations,
   contacts,
+  mailboxes,
   organizations,
   tenants,
   ticketMessages,
   tickets,
   users,
 } from "../schema";
+
+/** Boîte de réception démo — idempotent, rejouable sur une base déjà seedée. */
+async function ensureMailbox(tenantId: string) {
+  await db
+    .insert(mailboxes)
+    .values({
+      tenantId,
+      address: "support@acme.example",
+      kind: "provided",
+      verified: true,
+      senderName: "Acme Support",
+    })
+    .onConflictDoNothing();
+}
 
 const HOUR = 3600 * 1000;
 
@@ -35,9 +51,13 @@ async function seed() {
     .returning();
 
   if (!tenant) {
-    console.log("Le tenant acme existe déjà — seed ignoré (jeu figé, pas de mise à jour).");
+    const [existing] = await db.select().from(tenants).where(eq(tenants.slug, "acme"));
+    if (existing) await ensureMailbox(existing.id);
+    console.log("Le tenant acme existe déjà — seed ignoré (jeu figé), boîte email vérifiée.");
     return;
   }
+
+  await ensureMailbox(tenant.id);
 
   const agents = await db
     .insert(users)
