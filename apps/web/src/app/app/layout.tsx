@@ -28,7 +28,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     { href: "/app/contacts", icon: Users, label: "Contacts" },
     { href: "/app/organizations", icon: Building2, label: "Organisations" },
     { href: "/app/reports", icon: BarChart3, label: "Rapports" },
-    { href: "#", icon: BookOpen, label: "Base de connaissances (Lot 3)" },
+    { href: "/app/kb", icon: BookOpen, label: "Base de connaissances" },
     { href: "/app/settings/team", icon: Settings, label: "Paramètres" },
   ];
 

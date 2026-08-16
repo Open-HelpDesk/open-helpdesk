@@ -13,6 +13,8 @@ import {
   automationRules,
   contactOrganizations,
   contacts,
+  kbArticles,
+  kbCategories,
   macros,
   mailboxes,
   organizations,
@@ -22,6 +24,68 @@ import {
   tickets,
   users,
 } from "../schema";
+
+/** Contenu de la base de connaissances de démo (AG-10 / PT-01) — idempotent par slug. */
+async function ensureKb(tenantId: string) {
+  const categoriesSeed = [
+    ["Prise en main", "prise-en-main", "🚀", "Premiers pas avec votre espace client"],
+    ["Facturation", "facturation", "💳", "Factures, exports et moyens de paiement"],
+  ] as const;
+  const categoryIds = new Map<string, string>();
+  for (const [name, slug, icon, description] of categoriesSeed) {
+    const [existing] = await db
+      .select({ id: kbCategories.id })
+      .from(kbCategories)
+      .where(and(eq(kbCategories.tenantId, tenantId), eq(kbCategories.slug, slug)));
+    if (existing) {
+      categoryIds.set(slug, existing.id);
+    } else {
+      const [created] = await db
+        .insert(kbCategories)
+        .values({ tenantId, name, slug, icon, description })
+        .returning({ id: kbCategories.id });
+      categoryIds.set(slug, created!.id);
+    }
+  }
+
+  const articlesSeed = [
+    [
+      "prise-en-main",
+      "Créer votre premier ticket",
+      "creer-votre-premier-ticket",
+      "Pour créer une demande, cliquez sur « Soumettre une demande » en haut du centre d'aide, décrivez votre besoin, et validez.\n\nVous recevrez un email de confirmation avec un lien de suivi. Vous pouvez répondre directement à cet email : votre réponse sera ajoutée au fil de la demande.",
+    ],
+    [
+      "prise-en-main",
+      "Suivre l'avancement de vos demandes",
+      "suivre-vos-demandes",
+      "L'onglet « Mes demandes » liste toutes vos demandes avec leur statut :\n\n- En cours : notre équipe travaille dessus.\n- En attente de votre réponse : nous avons besoin d'une précision de votre part.\n- Résolue : la demande est traitée — vous pouvez la rouvrir si besoin.",
+    ],
+    [
+      "facturation",
+      "Exporter vos factures en PDF",
+      "exporter-vos-factures-en-pdf",
+      "Depuis l'écran Factures, sélectionnez la période souhaitée puis cliquez sur « Exporter en PDF ».\n\nSi le bouton ne répond pas, videz le cache de votre navigateur et réessayez. Si le problème persiste, soumettez une demande en précisant l'heure de votre essai.",
+    ],
+  ] as const;
+  for (const [catSlug, title, slug, body] of articlesSeed) {
+    const [existing] = await db
+      .select({ id: kbArticles.id })
+      .from(kbArticles)
+      .where(and(eq(kbArticles.tenantId, tenantId), eq(kbArticles.slug, slug)));
+    if (!existing) {
+      await db.insert(kbArticles).values({
+        tenantId,
+        categoryId: categoryIds.get(catSlug)!,
+        title,
+        slug,
+        bodyHtml: body,
+        status: "published",
+        publishedAt: new Date(),
+      });
+    }
+  }
+}
 
 /** Boîte de réception démo — idempotent, rejouable sur une base déjà seedée. */
 async function ensureMailbox(tenantId: string) {
@@ -169,15 +233,17 @@ async function seed() {
     if (existing) {
       await ensureMailbox(existing.id);
       await ensureProductivity(existing.id);
+      await ensureKb(existing.id);
     }
     console.log(
-      "Le tenant acme existe déjà — seed ignoré (jeu figé), boîte email + SLA + règles vérifiés.",
+      "Le tenant acme existe déjà — seed ignoré (jeu figé), boîte email + SLA + règles + KB vérifiés.",
     );
     return;
   }
 
   await ensureMailbox(tenant.id);
   await ensureProductivity(tenant.id);
+  await ensureKb(tenant.id);
 
   const agents = await db
     .insert(users)
