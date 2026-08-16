@@ -19,7 +19,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
 
   const data = await getContactRequest(session.tenant.id, session.contact.id, number);
   if (!data) notFound();
-  const { ticket, messages } = data;
+  const { ticket, messages, attachmentsByMessage } = data;
   const isMine = ticket.requesterId === session.contact.id;
   const csatEnabled = (session.tenant.csatConfig as { enabled?: boolean }).enabled === true;
 
@@ -64,6 +64,20 @@ export default async function RequestPage({ params }: { params: Promise<{ number
               {relativeFr(m.createdAt)}
             </p>
             <p className="whitespace-pre-wrap text-[15px] leading-relaxed">{m.bodyText}</p>
+            {(attachmentsByMessage.get(m.id) ?? []).length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {attachmentsByMessage.get(m.id)!.map((a) => (
+                  <a
+                    key={a.id}
+                    href={`/api/attachments/${a.id}`}
+                    className="rounded border px-2 py-0.5 font-mono text-xs"
+                    style={{ borderColor: "var(--line)", background: "var(--sunk)" }}
+                  >
+                    📎 {a.filename}
+                  </a>
+                ))}
+              </div>
+            )}
           </article>
         ))}
       </div>
@@ -108,6 +122,8 @@ export default async function RequestPage({ params }: { params: Promise<{ number
               style={{ borderColor: "var(--line)", background: "var(--panel)" }}
             />
             <div className="flex items-center gap-2">
+              <input name="files" type="file" multiple className="text-xs" title="10 Mo max par fichier" />
+              <span className="flex-1" />
               <button
                 type="submit"
                 className="rounded-md px-4 py-2 text-sm font-semibold text-white"

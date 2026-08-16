@@ -36,6 +36,13 @@
       "when": 1786920670653,
       "tag": "0004_vengeful_devos",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786921661546,
+      "tag": "0005_furry_electro",
+      "breakpoints": true
     }
   ]
 }

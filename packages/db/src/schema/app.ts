@@ -98,6 +98,8 @@ export const tenants = app.table("tenants", {
   ticketNumberFormat: text("ticket_number_format").notNull().default("#{number}"),
   /** { enabled: boolean, question: string } — ST-08. */
   csatConfig: jsonb("csat_config").notNull().default({}),
+  /** { welcomeText, kbPublic, widget: { enabled, color, position, title } } — ST-09. */
+  portalConfig: jsonb("portal_config").notNull().default({}),
   // v1.1 — SSO
   ssoDelegationEnabled: boolean("sso_delegation_enabled").notNull().default(false),
   agentSsoConfig: jsonb("agent_sso_config"),

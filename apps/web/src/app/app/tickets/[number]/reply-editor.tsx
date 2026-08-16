@@ -109,7 +109,11 @@ export function ReplyEditor({
             : inputStyle
         }
       />
-      <div className="mt-2 flex items-center justify-end gap-2">
+      <div className="mt-2 flex items-center gap-2">
+        <label className="text-xs" style={{ color: "var(--mute)" }} title="10 Mo max par fichier">
+          <input name="files" type="file" multiple className="text-xs" />
+        </label>
+        <span className="flex-1" />
         <label className="text-xs" style={{ color: "var(--mute)" }}>
           Envoyer &amp; passer à
         </label>

@@ -169,6 +169,30 @@ export async function getTicketByNumber(tenantId: string, number: number) {
     .where(and(eq(ticketMessages.tenantId, tenantId), eq(ticketMessages.ticketId, ticket.id)))
     .orderBy(asc(ticketMessages.createdAt));
 
+  const { attachments } = await import("@openhelpdesk/db");
+  const attachmentRows =
+    messages.length > 0
+      ? await db
+          .select({
+            id: attachments.id,
+            messageId: attachments.messageId,
+            filename: attachments.filename,
+            sizeBytes: attachments.sizeBytes,
+          })
+          .from(attachments)
+          .where(
+            and(
+              eq(attachments.tenantId, tenantId),
+              inArray(attachments.messageId, messages.map((m) => m.id)),
+            ),
+          )
+      : [];
+  const attachmentsByMessage = new Map<string, typeof attachmentRows>();
+  for (const a of attachmentRows) {
+    if (!a.messageId) continue;
+    attachmentsByMessage.set(a.messageId, [...(attachmentsByMessage.get(a.messageId) ?? []), a]);
+  }
+
   const agents = await db
     .select({ id: users.id, name: users.name })
     .from(users)
@@ -185,6 +209,7 @@ export async function getTicketByNumber(tenantId: string, number: number) {
     requester: requester!,
     organization,
     messages,
+    attachmentsByMessage,
     agents,
     requesterTicketCount: requesterTickets?.n ?? 0,
   };

@@ -15,6 +15,7 @@ import { sendTicketReplyEmail } from "@openhelpdesk/mail";
 import { maybeSendCsat, onAgentReplySla, onTicketCreated, runTriggers } from "@openhelpdesk/rules";
 import { requireAgent } from "@/lib/session";
 import { nextTicketNumber } from "@/lib/data";
+import { saveUploadedFiles } from "@/lib/storage";
 
 const OPENING_STATUS = new Set(["new", "open", "waiting", "on_hold"]);
 
@@ -44,6 +45,11 @@ export async function sendReply(formData: FormData) {
       bodyText: body,
     })
     .returning();
+
+  const files = formData.getAll("files").filter((f): f is File => f instanceof File);
+  if (files.length > 0 && message) {
+    await saveUploadedFiles(tenant.id, message.id, files);
+  }
 
   // Réponse publique → email au demandeur (transport console en dev, Resend en cloud).
   if (kind === "public_reply" && message) {

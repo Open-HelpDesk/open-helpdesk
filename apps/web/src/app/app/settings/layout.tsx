@@ -18,8 +18,7 @@ const NAV_GROUPS: { title: string; items: { label: string; href: string | null }
     title: "Canaux",
     items: [
       { label: "Email", href: null },
-      { label: "Portail", href: null },
-      { label: "Widget", href: null },
+      { label: "Portail & widget", href: "/app/settings/portal" },
     ],
   },
   {

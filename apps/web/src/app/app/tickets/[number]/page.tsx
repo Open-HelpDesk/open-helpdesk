@@ -29,7 +29,15 @@ export default async function TicketPage({
     listMacrosForEditor(tenant.id),
   ]);
   if (!data) notFound();
-  const { ticket, requester, organization, messages, agents, requesterTicketCount } = data;
+  const {
+    ticket,
+    requester,
+    organization,
+    messages,
+    attachmentsByMessage,
+    agents,
+    requesterTicketCount,
+  } = data;
 
   const authorName = (authorId: string | null, authorType: string) => {
     if (authorType === "contact") return requester.name ?? requester.email;
@@ -87,6 +95,20 @@ export default async function TicketPage({
                   <span style={{ color: "var(--mute)" }}>{relativeFr(m.createdAt)}</span>
                 </div>
                 <p className="whitespace-pre-wrap text-sm leading-relaxed">{m.bodyText}</p>
+                {(attachmentsByMessage.get(m.id) ?? []).length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {attachmentsByMessage.get(m.id)!.map((a) => (
+                      <a
+                        key={a.id}
+                        href={`/api/attachments/${a.id}`}
+                        className="rounded border px-2 py-0.5 font-mono text-[11px]"
+                        style={{ borderColor: "var(--line)", background: "var(--sunk)" }}
+                      >
+                        📎 {a.filename} ({Math.max(1, Math.round(a.sizeBytes / 1024))} Ko)
+                      </a>
+                    ))}
+                  </div>
+                )}
               </article>
             ),
           )}

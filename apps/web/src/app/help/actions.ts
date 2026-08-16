@@ -22,6 +22,7 @@ import {
   getPortalTenant,
   magicLinkToken,
 } from "@/lib/portal-auth";
+import { saveUploadedFiles } from "@/lib/storage";
 
 const BASE_DOMAIN = process.env.BASE_DOMAIN ?? "localhost:3000";
 const PROTOCOL = BASE_DOMAIN.includes("localhost") ? "http" : "https";
@@ -127,15 +128,22 @@ export async function submitRequest(formData: FormData) {
       organizationId: orgLink?.organizationId ?? null,
     })
     .returning();
-  await db.insert(ticketMessages).values({
-    tenantId: tenant.id,
-    ticketId: ticket!.id,
-    kind: "public_reply",
-    authorType: "contact",
-    authorId: contact.id,
-    bodyText: body,
-    source: "portal",
-  });
+  const [message] = await db
+    .insert(ticketMessages)
+    .values({
+      tenantId: tenant.id,
+      ticketId: ticket!.id,
+      kind: "public_reply",
+      authorType: "contact",
+      authorId: contact.id,
+      bodyText: body,
+      source: "portal",
+    })
+    .returning();
+  const files = formData.getAll("files").filter((f): f is File => f instanceof File);
+  if (files.length > 0 && message) {
+    await saveUploadedFiles(tenant.id, message.id, files);
+  }
   await onTicketCreated(tenant.id, ticket!.id);
 
   if (!session) {
@@ -159,15 +167,22 @@ export async function replyToRequest(formData: FormData) {
     .where(and(eq(tickets.tenantId, session.tenant.id), eq(tickets.number, number)));
   if (!ticket || ticket.requesterId !== session.contact.id) return;
 
-  await db.insert(ticketMessages).values({
-    tenantId: session.tenant.id,
-    ticketId: ticket.id,
-    kind: "public_reply",
-    authorType: "contact",
-    authorId: session.contact.id,
-    bodyText: body,
-    source: "portal",
-  });
+  const [message] = await db
+    .insert(ticketMessages)
+    .values({
+      tenantId: session.tenant.id,
+      ticketId: ticket.id,
+      kind: "public_reply",
+      authorType: "contact",
+      authorId: session.contact.id,
+      bodyText: body,
+      source: "portal",
+    })
+    .returning();
+  const files = formData.getAll("files").filter((f): f is File => f instanceof File);
+  if (files.length > 0 && message) {
+    await saveUploadedFiles(session.tenant.id, message.id, files);
+  }
   const reopen = ["waiting", "on_hold", "resolved"].includes(ticket.status);
   await db
     .update(tickets)

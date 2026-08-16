@@ -45,6 +45,11 @@ export default async function NewRequestPage() {
           />
         </label>
 
+        <label className="flex flex-col gap-1 text-sm font-medium">
+          Pièces jointes <span className="font-normal text-xs" style={{ color: "var(--mute)" }}>(10 Mo max par fichier)</span>
+          <input name="files" type="file" multiple className="text-sm" />
+        </label>
+
         <button
           type="submit"
           className="self-start rounded-md px-5 py-2.5 font-semibold text-white"

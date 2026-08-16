@@ -1,5 +1,6 @@
 /** Requêtes du portail client (PT) et de la KB publique. */
 import {
+  attachments,
   contactOrganizations,
   db,
   kbArticles,
@@ -208,5 +209,28 @@ export async function getContactRequest(tenantId: string, contactId: string, num
     )
     .orderBy(asc(ticketMessages.createdAt));
 
-  return { ticket, messages };
+  const attachmentRows =
+    messages.length > 0
+      ? await db
+          .select({
+            id: attachments.id,
+            messageId: attachments.messageId,
+            filename: attachments.filename,
+            sizeBytes: attachments.sizeBytes,
+          })
+          .from(attachments)
+          .where(
+            and(
+              eq(attachments.tenantId, tenantId),
+              inArray(attachments.messageId, messages.map((m) => m.id)),
+            ),
+          )
+      : [];
+  const attachmentsByMessage = new Map<string, typeof attachmentRows>();
+  for (const a of attachmentRows) {
+    if (!a.messageId) continue;
+    attachmentsByMessage.set(a.messageId, [...(attachmentsByMessage.get(a.messageId) ?? []), a]);
+  }
+
+  return { ticket, messages, attachmentsByMessage };
 }
