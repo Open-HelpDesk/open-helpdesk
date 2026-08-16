@@ -47,7 +47,7 @@ sous-domaine ({slug}.BASE_DOMAIN, voir `.env.example`). Connexion de démo :
 |---|---|---|
 | Lot 0 — Socle | Monorepo, schéma DB + RLS, multi-tenant par sous-domaine, tokens design, docker, auth (Better Auth) | **Fait** — reste : 2FA, CI |
 | Lot 1 — Cœur ticketing | Tickets, conversations, email, contacts/orgs, vues, recherche | **En cours** — fait : AG-01, AG-03, AG-04, AG-05, AG-06 (⌘K), AG-07 (contacts + blocage spam), AG-08 (organisations + domaines éditables + partage), pipeline email entrant/sortant. Reste : vues personnalisées, actions groupées, temps réel, poller IMAP, import CSV, fusion |
-| Lot 2 — Productivité | Macros, automatisations, SLA, champs, CSAT, rapports | **En cours** — fait : moteur de règles + worker, administration (shell ST + ST-02 agents, ST-05 automatisations avec builder conditions/actions, ST-06 macros + menu dans AG-04, ST-07 politiques SLA). Reste : équipes, champs custom (ST-04), CSAT (ST-08), rapports AG-09, heures ouvrées, drag & drop, « Tester sur un ticket » |
+| Lot 2 — Productivité | Macros, automatisations, SLA, champs, CSAT, rapports | **Quasi fait** — moteur de règles + worker, administration (ST-02, ST-05, ST-06, ST-07, ST-08 CSAT), rapports AG-09. Reste : équipes, champs custom (ST-04), heures ouvrées, drag & drop, « Tester sur un ticket », export CSV |
 | Lot 3 — Portail & KB | KB, portail client, widget, déflexion | À venir |
 | Lot 4 — Cloud | Signup, provisioning, Stripe, console | À venir |
 | Lot 5a/5b/5c — Identité & IA | SSO agents, SSO clients délégué, IA | À venir |
