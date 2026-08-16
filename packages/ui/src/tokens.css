@@ -41,6 +41,9 @@
   --closed-t: #f0f1f3;
   --dang: #c0342b;
   --dang-t: #fdecea;
+  /* Séries graphiques (AG-09) — validées CVD sur surface claire (dataviz) */
+  --chart-1: #0e8a5f;
+  --chart-2: #2563eb;
   /* Site public */
   --site-dark: #08281e;
   /* Typographie */
@@ -77,6 +80,9 @@
   --closed-t: #1b1f1e;
   --dang: #f0736a;
   --dang-t: #2e1614;
+  /* Séries graphiques — validées CVD sur surface sombre (dataviz) */
+  --chart-1: #2ea47c;
+  --chart-2: #5a87e8;
 }
 
 /* ---------- 2. Console cloud — clair ----------

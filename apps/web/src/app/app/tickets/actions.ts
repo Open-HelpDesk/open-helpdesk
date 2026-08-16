@@ -12,7 +12,7 @@ import {
 } from "@openhelpdesk/db";
 import { and, arrayContains, eq } from "drizzle-orm";
 import { sendTicketReplyEmail } from "@openhelpdesk/mail";
-import { onAgentReplySla, onTicketCreated, runTriggers } from "@openhelpdesk/rules";
+import { maybeSendCsat, onAgentReplySla, onTicketCreated, runTriggers } from "@openhelpdesk/rules";
 import { requireAgent } from "@/lib/session";
 import { nextTicketNumber } from "@/lib/data";
 
@@ -89,6 +89,10 @@ export async function sendReply(formData: FormData) {
     .set(patch)
     .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.id, ticketId)));
 
+  if (patch.status === "resolved") {
+    await maybeSendCsat(tenant.id, ticketId);
+  }
+
   revalidatePath(`/app/tickets/${ticket.number}`);
   revalidatePath("/app/tickets");
 }
@@ -118,6 +122,10 @@ export async function updateTicketProps(formData: FormData) {
     .update(tickets)
     .set(patch)
     .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.id, ticketId)));
+
+  if (patch.status === "resolved") {
+    await maybeSendCsat(tenant.id, ticketId);
+  }
 
   await runTriggers("ticket.updated", tenant.id, ticketId);
 

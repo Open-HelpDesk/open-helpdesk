@@ -29,7 +29,7 @@ const NAV_GROUPS: { title: string; items: { label: string; href: string | null }
       { label: "Automatisations", href: "/app/settings/automations" },
       { label: "Macros", href: "/app/settings/macros" },
       { label: "SLA", href: "/app/settings/sla" },
-      { label: "Satisfaction", href: null },
+      { label: "Satisfaction", href: "/app/settings/csat" },
     ],
   },
   {

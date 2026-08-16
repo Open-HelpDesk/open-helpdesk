@@ -10,7 +10,7 @@ export const consoleTransport: MailTransport = {
   async send(mail) {
     const messageId = `<dev-${Date.now()}-${Math.random().toString(36).slice(2)}@open-helpdesk.local>`;
     console.log(
-      `[mail:console] à: ${mail.to} | de: ${mail.from} | sujet: ${mail.subject} | id: ${messageId}\n${mail.text.slice(0, 200)}`,
+      `[mail:console] à: ${mail.to} | de: ${mail.from} | sujet: ${mail.subject} | id: ${messageId}\n${mail.text.slice(0, 800)}`,
     );
     return { messageId };
   },

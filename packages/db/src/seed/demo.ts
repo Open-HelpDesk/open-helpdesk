@@ -7,7 +7,7 @@
  *
  * Usage : pnpm db:seed (DATABASE_URL doit pointer sur une base migrée).
  */
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "../client";
 import {
   automationRules,
@@ -112,6 +112,17 @@ async function ensureProductivity(tenantId: string) {
       await db.insert(automationRules).values({ tenantId, active: true, ...rule });
     }
   }
+
+  // CSAT activé par défaut sur le workspace de démo (ST-08).
+  await db
+    .update(tenants)
+    .set({
+      csatConfig: {
+        enabled: true,
+        question: "Comment évaluez-vous la réponse apportée à votre demande ?",
+      },
+    })
+    .where(and(eq(tenants.id, tenantId), sql`${tenants.csatConfig} = '{}'::jsonb`));
 
   const [existingMacro] = await db
     .select({ id: macros.id })

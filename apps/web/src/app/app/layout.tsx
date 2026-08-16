@@ -27,7 +27,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     { href: "/app/tickets", icon: Inbox, label: "Inbox" },
     { href: "/app/contacts", icon: Users, label: "Contacts" },
     { href: "/app/organizations", icon: Building2, label: "Organisations" },
-    { href: "#", icon: BarChart3, label: "Rapports (Lot 2)" },
+    { href: "/app/reports", icon: BarChart3, label: "Rapports" },
     { href: "#", icon: BookOpen, label: "Base de connaissances (Lot 3)" },
     { href: "/app/settings/team", icon: Settings, label: "Paramètres" },
   ];

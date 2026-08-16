@@ -96,6 +96,8 @@ export const tenants = app.table("tenants", {
   featureFlags: jsonb("feature_flags").notNull().default({}),
   branding: jsonb("branding").notNull().default({}),
   ticketNumberFormat: text("ticket_number_format").notNull().default("#{number}"),
+  /** { enabled: boolean, question: string } — ST-08. */
+  csatConfig: jsonb("csat_config").notNull().default({}),
   // v1.1 — SSO
   ssoDelegationEnabled: boolean("sso_delegation_enabled").notNull().default(false),
   agentSsoConfig: jsonb("agent_sso_config"),
@@ -333,6 +335,8 @@ export const tickets = app.table(
     /** Avertissement T-30 min et dépassement SLA — posés une seule fois par le worker. */
     slaWarnedAt: timestamp("sla_warned_at", { withTimezone: true }),
     slaBreachedAt: timestamp("sla_breached_at", { withTimezone: true }),
+    /** Enquête CSAT envoyée une seule fois par ticket (ST-08). */
+    csatSentAt: timestamp("csat_sent_at", { withTimezone: true }),
     resolvedAt: timestamp("resolved_at", { withTimezone: true }),
     closedAt: timestamp("closed_at", { withTimezone: true }),
     /** Ticket fusionné : lecture seule, bandeau vers la cible (AG-04). */

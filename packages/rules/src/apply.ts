@@ -7,6 +7,7 @@ import {
 } from "@openhelpdesk/db";
 import { and, eq } from "drizzle-orm";
 import { sendTicketReplyEmail } from "@openhelpdesk/mail";
+import { maybeSendCsat } from "./csat";
 import type { RuleAction } from "./types";
 
 type TicketRow = typeof tickets.$inferSelect;
@@ -100,6 +101,10 @@ export async function applyActions(
     authorType: "system",
     bodyText: `Règle « ${rule.name} » : ${applied.join(" · ") || "aucune action"}`,
   });
+
+  if (patch.status === "resolved") {
+    await maybeSendCsat(ticket.tenantId, ticket.id);
+  }
 
   return { ...ticket, ...patch } as TicketRow;
 }
