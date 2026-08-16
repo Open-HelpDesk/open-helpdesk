@@ -12,7 +12,9 @@
     "@openhelpdesk/config": "workspace:*",
     "@openhelpdesk/db": "workspace:*",
     "@openhelpdesk/mail": "workspace:*",
+    "@openhelpdesk/rules": "workspace:*",
     "bullmq": "^5.44.0",
+    "drizzle-orm": "^0.44.0",
     "ioredis": "^5.6.0"
   },
   "devDependencies": {

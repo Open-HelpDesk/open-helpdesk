@@ -7,13 +7,15 @@
  *
  * Usage : pnpm db:seed (DATABASE_URL doit pointer sur une base migrée).
  */
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../client";
 import {
+  automationRules,
   contactOrganizations,
   contacts,
   mailboxes,
   organizations,
+  slaPolicies,
   tenants,
   ticketMessages,
   tickets,
@@ -34,6 +36,83 @@ async function ensureMailbox(tenantId: string) {
     .onConflictDoNothing();
 }
 
+/** Politique SLA par défaut + règles de démo (ST-05/ST-07) — idempotent par nom. */
+async function ensureProductivity(tenantId: string) {
+  const [existingPolicy] = await db
+    .select({ id: slaPolicies.id })
+    .from(slaPolicies)
+    .where(and(eq(slaPolicies.tenantId, tenantId), eq(slaPolicies.name, "Standard")));
+  if (!existingPolicy) {
+    await db.insert(slaPolicies).values({
+      tenantId,
+      name: "Standard",
+      position: 0,
+      isDefault: true,
+      conditions: [],
+      targets: {
+        urgent: { firstReplyMin: 60, nextReplyMin: 120, resolveMin: 480 },
+        high: { firstReplyMin: 240, nextReplyMin: 480, resolveMin: 1440 },
+        normal: { firstReplyMin: 480, nextReplyMin: 960, resolveMin: 4320 },
+        low: { firstReplyMin: 1440, nextReplyMin: 2880, resolveMin: 7200 },
+      },
+    });
+  }
+
+  const demoRules = [
+    {
+      kind: "trigger" as const,
+      name: "Urgence détectée dans le sujet",
+      position: 0,
+      conditionsAll: [
+        { field: "event", operator: "is", value: "ticket.created" },
+        { field: "subject", operator: "contains", value: "urgent" },
+      ],
+      actions: [
+        { type: "set_priority", value: "urgent" },
+        { type: "add_tags", value: ["urgence"] },
+      ],
+    },
+    {
+      kind: "trigger" as const,
+      name: "Accusé de réception",
+      position: 1,
+      conditionsAll: [
+        { field: "event", operator: "is", value: "ticket.created" },
+        { field: "channel", operator: "is", value: "email" },
+      ],
+      actions: [
+        {
+          type: "email_contact",
+          value:
+            "Bonjour {{contact.name}},\n\nNous avons bien reçu votre demande " +
+            "« {{ticket.subject}} » (ticket #{{ticket.number}}). Un agent vous répondra " +
+            "rapidement.\n\nAcme Support",
+        },
+      ],
+    },
+    {
+      kind: "scheduled" as const,
+      name: "Clôture automatique à 4 jours",
+      position: 0,
+      conditionsAll: [
+        { field: "status", operator: "is", value: "resolved" },
+        { field: "hours_since_updated", operator: "gte", value: 96 },
+      ],
+      actions: [{ type: "set_status", value: "closed" }],
+    },
+  ];
+
+  for (const rule of demoRules) {
+    const [existing] = await db
+      .select({ id: automationRules.id })
+      .from(automationRules)
+      .where(and(eq(automationRules.tenantId, tenantId), eq(automationRules.name, rule.name)));
+    if (!existing) {
+      await db.insert(automationRules).values({ tenantId, active: true, ...rule });
+    }
+  }
+}
+
 const HOUR = 3600 * 1000;
 
 async function seed() {
@@ -52,12 +131,18 @@ async function seed() {
 
   if (!tenant) {
     const [existing] = await db.select().from(tenants).where(eq(tenants.slug, "acme"));
-    if (existing) await ensureMailbox(existing.id);
-    console.log("Le tenant acme existe déjà — seed ignoré (jeu figé), boîte email vérifiée.");
+    if (existing) {
+      await ensureMailbox(existing.id);
+      await ensureProductivity(existing.id);
+    }
+    console.log(
+      "Le tenant acme existe déjà — seed ignoré (jeu figé), boîte email + SLA + règles vérifiés.",
+    );
     return;
   }
 
   await ensureMailbox(tenant.id);
+  await ensureProductivity(tenant.id);
 
   const agents = await db
     .insert(users)

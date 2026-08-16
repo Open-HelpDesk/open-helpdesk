@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     "@openhelpdesk/db",
     "@openhelpdesk/auth",
     "@openhelpdesk/mail",
+    "@openhelpdesk/rules",
   ],
   // postgres.js et better-auth restent côté Node.
   serverExternalPackages: ["postgres"],

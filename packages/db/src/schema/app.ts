@@ -330,6 +330,9 @@ export const tickets = app.table(
     nextReplyDueAt: timestamp("next_reply_due_at", { withTimezone: true }),
     resolveDueAt: timestamp("resolve_due_at", { withTimezone: true }),
     firstRepliedAt: timestamp("first_replied_at", { withTimezone: true }),
+    /** Avertissement T-30 min et dépassement SLA — posés une seule fois par le worker. */
+    slaWarnedAt: timestamp("sla_warned_at", { withTimezone: true }),
+    slaBreachedAt: timestamp("sla_breached_at", { withTimezone: true }),
     resolvedAt: timestamp("resolved_at", { withTimezone: true }),
     closedAt: timestamp("closed_at", { withTimezone: true }),
     /** Ticket fusionné : lecture seule, bandeau vers la cible (AG-04). */

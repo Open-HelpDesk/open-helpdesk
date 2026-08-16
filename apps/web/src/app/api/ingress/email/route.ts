@@ -5,6 +5,7 @@
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { ingestEmail, type InboundEmail } from "@openhelpdesk/mail";
+import { onContactMessage, onTicketCreated } from "@openhelpdesk/rules";
 
 export async function POST(request: NextRequest) {
   const secret = process.env.MAIL_INGRESS_SECRET ?? "dev-ingress-secret";
@@ -23,6 +24,14 @@ export async function POST(request: NextRequest) {
   }
 
   const result = await ingestEmail(payload);
+
+  // L'ingestion reste pure ; l'orchestration (triggers puis SLA) se fait ici.
+  if (result.outcome === "created") {
+    await onTicketCreated(result.tenantId, result.ticketId);
+  } else if (result.outcome === "appended") {
+    await onContactMessage(result.tenantId, result.ticketId);
+  }
+
   const status = result.outcome === "rejected" ? 202 : 201;
   return NextResponse.json(result, { status });
 }
