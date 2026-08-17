@@ -75,7 +75,6 @@ export default async function FieldsSettingsPage({
   return (
     <PageShell maxWidth={1100}>
       <PageHeader
-        code="ST-04"
         title="Champs & formulaires"
         subtitle="Champs personnalisés et composition des formulaires de ticket."
         tabs={tabs}

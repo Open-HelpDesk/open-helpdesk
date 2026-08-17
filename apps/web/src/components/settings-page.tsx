@@ -35,13 +35,11 @@ export function PageShell({
 }
 
 export function PageHeader({
-  code,
   title,
   subtitle,
   tabs,
   actions,
 }: {
-  code: string;
   title: string;
   subtitle: string;
   tabs?: PageTab[];
@@ -50,27 +48,12 @@ export function PageHeader({
   return (
     <header className="flex flex-wrap items-start gap-3">
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <span
-            className="rounded border font-mono"
-            style={{
-              fontSize: 11,
-              padding: "2px 7px",
-              borderRadius: 5,
-              borderColor: "var(--line)",
-              color: "var(--ink-3)",
-              background: "var(--panel)",
-            }}
-          >
-            {code}
-          </span>
-          <h1
-            className="font-semibold"
-            style={{ fontSize: 20, letterSpacing: "-0.02em", color: "var(--ink)" }}
-          >
-            {title}
-          </h1>
-        </div>
+        <h1
+          className="font-semibold"
+          style={{ fontSize: 20, letterSpacing: "-0.02em", color: "var(--ink)" }}
+        >
+          {title}
+        </h1>
         <p className="mt-1" style={{ fontSize: 13.5, color: "var(--ink-2)", maxWidth: "70ch" }}>
           {subtitle}
         </p>

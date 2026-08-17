@@ -189,7 +189,6 @@ export default async function SlaPage({
   return (
     <PageShell maxWidth={1000}>
       <PageHeader
-        code="ST-07"
         title="SLA & horaires ouvrés"
         subtitle="Cibles de réponse et de résolution, calendriers de travail et escalades."
         tabs={tabs}

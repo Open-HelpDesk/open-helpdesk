@@ -224,7 +224,6 @@ export default async function EmailSettingsPage({
   return (
     <PageShell maxWidth={1040}>
       <PageHeader
-        code="ST-03"
         title="Canal email"
         subtitle="Fournisseur d'envoi, adresses de réception, délivrabilité et journaux."
         tabs={tabs}

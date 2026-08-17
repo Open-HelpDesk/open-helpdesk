@@ -46,7 +46,6 @@ export default async function CsatPage({
   return (
     <PageShell maxWidth={900}>
       <PageHeader
-        code="ST-08"
         title="Satisfaction (CSAT)"
         subtitle="Enquête envoyée après résolution, et son rendu côté client."
       />

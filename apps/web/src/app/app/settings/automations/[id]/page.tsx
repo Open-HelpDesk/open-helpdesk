@@ -111,7 +111,6 @@ export default async function RuleEditorPage({
   return (
     <PageShell maxWidth={1000}>
       <PageHeader
-        code="ST-05"
         title="Automatisations"
         subtitle="Règles « quand X alors Y ». L'ordre d'exécution compte."
         tabs={tabs}

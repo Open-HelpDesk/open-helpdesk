@@ -103,7 +103,6 @@ export default async function PortalSettingsPage({
   return (
     <PageShell maxWidth={1100}>
       <PageHeader
-        code="ST-09"
         title="Portail client & widget"
         subtitle="Visibilité de la base de connaissances, authentification des contacts et widget embarquable."
         tabs={tabs}

@@ -102,7 +102,6 @@ export default async function ApiSettingsPage({
   return (
     <PageShell maxWidth={1040}>
       <PageHeader
-        code="ST-10"
         title="API & webhooks"
         subtitle="Clés d'API scopées et endpoints webhook signés HMAC."
         tabs={tabs}

@@ -58,7 +58,6 @@ export default async function GeneralSettingsPage({
   return (
     <PageShell maxWidth={860}>
       <PageHeader
-        code="ST-01"
         title="Général & branding"
         subtitle="Identité du workspace, langue, fuseau et numérotation des tickets."
       />

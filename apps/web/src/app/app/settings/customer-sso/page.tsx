@@ -92,7 +92,6 @@ export default async function CustomerSsoPage({
 
   const header = (
     <PageHeader
-      code="ST-14"
       title="SSO des organisations clientes"
       subtitle="Chaque organisation cliente connecte son propre fournisseur d'identité depuis le portail. Vous supervisez ici l'ensemble du parc."
     />

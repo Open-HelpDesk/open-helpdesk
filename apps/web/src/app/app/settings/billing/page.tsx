@@ -108,7 +108,6 @@ export default async function BillingPage() {
   return (
     <PageShell maxWidth={1040}>
       <PageHeader
-        code="ST-11"
         title="Abonnement & facturation"
         subtitle="Plan, sièges, quotas, moyen de paiement et historique des factures."
       />

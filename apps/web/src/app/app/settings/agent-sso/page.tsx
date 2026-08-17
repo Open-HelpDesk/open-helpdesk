@@ -143,7 +143,6 @@ export default async function AgentSsoPage({
 
   const header = (tabs?: { label: string; href: string; active: boolean }[]) => (
     <PageHeader
-      code="ST-13"
       title="SSO des agents"
       subtitle="Authentification unique SAML 2.0 et provisionnement SCIM pour votre équipe support."
       tabs={tabs}

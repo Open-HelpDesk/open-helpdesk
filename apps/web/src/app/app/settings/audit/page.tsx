@@ -78,7 +78,6 @@ export default async function AuditPage({
 
   const header = (
     <PageHeader
-      code="ST-12"
       title="Audit log"
       subtitle="Journal complet des actions d'administration. Rétention 2 ans."
     />

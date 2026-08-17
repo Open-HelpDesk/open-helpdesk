@@ -99,7 +99,6 @@ export default async function TeamPage({
   return (
     <PageShell maxWidth={1100}>
       <PageHeader
-        code="ST-02"
         title="Agents, équipes & rôles"
         subtitle="Gérez les accès, les rôles et la répartition des agents en équipes."
         tabs={tabs}

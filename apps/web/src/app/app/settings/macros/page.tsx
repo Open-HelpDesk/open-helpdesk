@@ -68,7 +68,6 @@ export default async function MacrosPage({
   return (
     <PageShell maxWidth={1000}>
       <PageHeader
-        code="ST-06"
         title="Macros"
         subtitle="Réponses types et actions groupées, disponibles depuis le détail d'un ticket."
       />
