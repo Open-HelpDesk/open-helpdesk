@@ -80,12 +80,13 @@ export async function requestMagicLink(formData: FormData) {
   if (!tenant) return;
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   if (!email || !email.includes("@")) return;
+  const sentUrl = `/help/login?sent=1&e=${encodeURIComponent(email)}`;
   const contact = await findOrCreateContact(tenant.id, email);
   if (contact.blocked) {
-    redirect("/help/login?sent=1"); // même réponse — pas d'oracle sur les comptes bloqués
+    redirect(sentUrl); // même réponse — pas d'oracle sur les comptes bloqués
   }
   await sendMagicLinkEmail(tenant, contact, "/help/requests");
-  redirect("/help/login?sent=1");
+  redirect(sentUrl);
 }
 
 export async function portalSignOut() {
@@ -93,6 +94,15 @@ export async function portalSignOut() {
   jar.delete(PORTAL_COOKIE);
   redirect("/help");
 }
+
+/** Types de demande de la maquette PT-04 — stockés dans tickets.type. */
+const REQUEST_TYPES = ["Support technique", "Question facturation", "Demande d'évolution"];
+/** « Urgence » client → priorité interne. */
+const URGENCY_TO_PRIORITY: Record<string, "low" | "normal" | "high"> = {
+  Basse: "low",
+  Normale: "normal",
+  Haute: "high",
+};
 
 /** PT-04 — soumission d'une demande. */
 export async function submitRequest(formData: FormData) {
@@ -105,6 +115,10 @@ export async function submitRequest(formData: FormData) {
   const subject = String(formData.get("subject") ?? "").trim();
   const body = String(formData.get("body") ?? "").trim();
   if (!email || !subject || !body) return;
+  const typeRaw = String(formData.get("type") ?? "").trim();
+  const type = REQUEST_TYPES.includes(typeRaw) ? typeRaw : null;
+  const moduleValue = String(formData.get("module") ?? "").trim();
+  const priority = URGENCY_TO_PRIORITY[String(formData.get("urgency") ?? "")] ?? "normal";
 
   const contact = session?.contact ?? (await findOrCreateContact(tenant.id, email));
   if (contact.blocked) redirect("/help/requests/submitted");
@@ -123,9 +137,12 @@ export async function submitRequest(formData: FormData) {
       number,
       subject,
       status: "new",
+      priority,
       channel: "portal",
+      type,
       requesterId: contact.id,
       organizationId: orgLink?.organizationId ?? null,
+      customFields: moduleValue ? { module: moduleValue } : {},
     })
     .returning();
   const [message] = await db
@@ -150,7 +167,11 @@ export async function submitRequest(formData: FormData) {
     // Non connecté : lien magique de suivi vers la demande (specs PT-04).
     await sendMagicLinkEmail(tenant, contact, `/help/requests/${number}`);
   }
-  redirect(session ? `/help/requests/${number}` : `/help/requests/submitted?n=${number}`);
+  redirect(
+    session
+      ? `/help/requests/${number}`
+      : `/help/requests/submitted?n=${number}&e=${encodeURIComponent(email)}`,
+  );
 }
 
 /** PT-06 — répondre sur sa demande (rouvre si résolue, côté moteur). */
@@ -217,7 +238,10 @@ export async function toggleRequestResolved(formData: FormData) {
   revalidatePath(`/help/requests/${number}`);
 }
 
-/** PT-03 — « Cet article vous a aidé ? ». */
+/**
+ * PT-03 — « Cet article vous a-t-il aidé ? ». Le 👎 n'entraîne plus de redirection :
+ * le bloc de vote client affiche le panneau « Créer une demande pré-remplie ».
+ */
 export async function voteArticle(formData: FormData) {
   const tenant = await getPortalTenant();
   if (!tenant) return;
@@ -231,8 +255,5 @@ export async function voteArticle(formData: FormData) {
         : { votesDown: sql`${kbArticles.votesDown} + 1` },
     )
     .where(and(eq(kbArticles.tenantId, tenant.id), eq(kbArticles.slug, slug)));
-  if (vote === "down") {
-    redirect(`/help/requests/new?from=${encodeURIComponent(slug)}`);
-  }
   revalidatePath(`/help/articles/${slug}`);
 }

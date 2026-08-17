@@ -4,74 +4,114 @@ import { db, kbArticles } from "@openhelpdesk/db";
 import { and, eq, sql } from "drizzle-orm";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { getPublishedArticle } from "@/lib/portal-data";
-import { voteArticle } from "../../../actions";
+import { dateLongFr, readingMinutesFr } from "../../../portal-format";
+import { ArticleBody, parseArticle } from "./article-body";
+import { VoteBlock } from "./vote-block";
 
-/** PT-03 — Article (specs/12) : corps 68ch, vote utile, articles liés. */
+/** PT-03 — Article : rendu riche 68ch, méta, vote, articles liés, TOC « Sur cette page ». */
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const tenant = await getPortalTenant();
   const { slug } = await params;
   if (!tenant) notFound();
   const data = await getPublishedArticle(tenant.id, slug);
   if (!data) notFound();
-  const { article, related } = data;
+  const { article, related, root } = data;
 
-  // Compteur de vues (alimente « les plus consultés » de PT-01).
+  // Compteur de vues (alimente « Les plus consultés » de PT-01).
   await db
     .update(kbArticles)
     .set({ viewCount: sql`${kbArticles.viewCount} + 1` })
     .where(and(eq(kbArticles.tenantId, tenant.id), eq(kbArticles.id, article.id)));
 
+  const body = article.bodyHtml ?? "";
+  const blocks = parseArticle(body);
+  const toc = blocks.filter((b) => b.type === "h2");
+
   return (
-    <article style={{ maxWidth: "68ch" }}>
-      <nav className="text-sm" style={{ color: "var(--mute)" }}>
-        <Link href="/help">Centre d'aide</Link> › {article.title}
-      </nav>
-      <h1 className="mt-2 text-2xl font-semibold" style={{ textWrap: "balance" }}>
-        {article.title}
-      </h1>
-      <p className="mt-1 text-xs" style={{ color: "var(--mute)" }}>
-        Mis à jour le {article.updatedAt.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
-      </p>
-      <div className="mt-5 whitespace-pre-wrap leading-relaxed">{article.bodyHtml}</div>
+    <div className="pt-rise px-8 py-11 max-sm:px-[18px] max-sm:py-7">
+      <div className="mx-auto grid max-w-[1040px] grid-cols-[1fr_200px] gap-11 max-md:grid-cols-1">
+        <div className="flex min-w-0 flex-col gap-[22px]">
+          <nav
+            className="flex flex-wrap items-center gap-2 text-[13.5px]"
+            style={{ color: "var(--ink-3)" }}
+          >
+            <Link href="/help" style={{ color: "inherit" }}>
+              Aide
+            </Link>
+            {root && (
+              <>
+                <span>/</span>
+                <Link href={`/help/categories/${root.slug}`} style={{ color: "inherit" }}>
+                  {root.name}
+                </Link>
+              </>
+            )}
+            <span>/</span>
+            <span style={{ color: "var(--ink-2)" }}>{article.title}</span>
+          </nav>
 
-      {/* Vote — le 👎 propose de créer une demande pré-remplie */}
-      <div
-        className="mt-8 flex items-center gap-3 rounded-lg border p-4"
-        style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-      >
-        <p className="flex-1 text-sm font-medium">Cet article vous a aidé ?</p>
-        <form action={voteArticle}>
-          <input type="hidden" name="slug" value={article.slug} />
-          <input type="hidden" name="vote" value="up" />
-          <button className="rounded-md border px-3 py-1.5 text-sm" style={{ borderColor: "var(--line)" }}>
-            👍 Oui
-          </button>
-        </form>
-        <form action={voteArticle}>
-          <input type="hidden" name="slug" value={article.slug} />
-          <input type="hidden" name="vote" value="down" />
-          <button className="rounded-md border px-3 py-1.5 text-sm" style={{ borderColor: "var(--line)" }}>
-            👎 Non
-          </button>
-        </form>
-      </div>
+          <header className="flex flex-col gap-[9px]">
+            <h1
+              className="text-[34px] font-semibold leading-[1.15] tracking-[-0.03em]"
+              style={{ textWrap: "balance" }}
+            >
+              {article.title}
+            </h1>
+            <p className="text-[13.5px]" style={{ color: "var(--ink-3)" }}>
+              Mis à jour le {dateLongFr(article.updatedAt)} · {readingMinutesFr(body)} min de
+              lecture
+            </p>
+          </header>
 
-      {related.length > 0 && (
-        <section className="mt-8">
-          <h2 className="mb-2 text-sm font-semibold" style={{ color: "var(--mute)" }}>
-            Articles liés
-          </h2>
-          <ul className="flex flex-col gap-1 text-[15px]">
-            {related.map((r) => (
-              <li key={r.slug}>
-                <Link href={`/help/articles/${r.slug}`} className="underline-offset-2 hover:underline">
+          <ArticleBody blocks={blocks} />
+
+          <VoteBlock slug={article.slug} title={article.title} />
+
+          {related.length > 0 && (
+            <section className="flex flex-col gap-2.5">
+              <h2
+                className="text-[12.5px] font-semibold uppercase tracking-[0.06em]"
+                style={{ color: "var(--ink-3)" }}
+              >
+                Articles liés
+              </h2>
+              {related.map((r) => (
+                <Link
+                  key={r.slug}
+                  href={`/help/articles/${r.slug}`}
+                  className="pt-related rounded-[10px] px-4 py-[13px] text-[15px]"
+                >
                   {r.title}
                 </Link>
-              </li>
+              ))}
+            </section>
+          )}
+        </div>
+
+        {toc.length > 0 && (
+          <aside className="flex flex-col gap-[7px] self-start max-md:hidden">
+            <p
+              className="pb-1 text-[12.5px] font-semibold uppercase tracking-[0.06em]"
+              style={{ color: "var(--ink-3)" }}
+            >
+              Sur cette page
+            </p>
+            {toc.map((h, i) => (
+              <a
+                key={h.id}
+                href={`#${h.id}`}
+                className="py-1.5 pl-3 text-[14.5px] hover:no-underline"
+                style={{
+                  borderLeft: `2px solid ${i === 0 ? "var(--acc)" : "var(--line)"}`,
+                  color: i === 0 ? "var(--acc-2)" : "var(--ink-2)",
+                }}
+              >
+                {h.text}
+              </a>
             ))}
-          </ul>
-        </section>
-      )}
-    </article>
+          </aside>
+        )}
+      </div>
+    </div>
   );
 }

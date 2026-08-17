@@ -1,45 +1,153 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPortalTenant } from "@/lib/portal-auth";
-import { getCategoryWithArticles } from "@/lib/portal-data";
+import { getCategoryWithSections } from "@/lib/portal-data";
+import { excerptFr, pluralFr } from "../../../portal-format";
 
-/** PT-02 — Catégorie (specs/12). */
+type ArticleItem = { title: string; slug: string; bodyHtml: string | null };
+
+/** Item d'accordéon : titre 15/500 acc-2 + extrait 14 ink-2 (maquette PT-02). */
+function ArticleRow({ article }: { article: ArticleItem }) {
+  const excerpt = excerptFr(article.bodyHtml);
+  return (
+    <Link
+      href={`/help/articles/${article.slug}`}
+      className="pt-row flex flex-col gap-[3px] border-b px-[18px] py-3.5 hover:no-underline"
+      style={{ borderColor: "var(--line-2)" }}
+    >
+      <span className="text-[15px] font-medium" style={{ color: "var(--acc-2)" }}>
+        {article.title}
+      </span>
+      {excerpt && (
+        <span className="text-sm" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+          {excerpt}
+        </span>
+      )}
+    </Link>
+  );
+}
+
+/** Accordéon de section : en-tête sunk quand ouvert, caret ▼/▶, compteur. */
+function SectionAccordion({
+  name,
+  articles,
+  defaultOpen,
+}: {
+  name: string;
+  articles: ArticleItem[];
+  defaultOpen: boolean;
+}) {
+  return (
+    <details
+      className="pt-acc overflow-hidden rounded-xl border"
+      style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+      open={defaultOpen}
+    >
+      <summary className="flex items-center gap-[11px] px-[18px] py-[15px]">
+        <span className="text-[10px]" style={{ color: "var(--ink-3)" }}>
+          <span className="pt-caret-o">▼</span>
+          <span className="pt-caret-c">▶</span>
+        </span>
+        <span className="flex-1 text-base font-semibold">{name}</span>
+        <span className="text-[13px]" style={{ color: "var(--ink-3)" }}>
+          {pluralFr(articles.length, "article")}
+        </span>
+      </summary>
+      <div className="border-t" style={{ borderColor: "var(--line)" }}>
+        {articles.map((a) => (
+          <ArticleRow key={a.slug} article={a} />
+        ))}
+      </div>
+    </details>
+  );
+}
+
+/** PT-02 — Catégorie : fil d'Ariane, accordéons par section, sidebar « Autres catégories ». */
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const tenant = await getPortalTenant();
   const { slug } = await params;
   if (!tenant) notFound();
-  const data = await getCategoryWithArticles(tenant.id, slug);
+  const data = await getCategoryWithSections(tenant.id, slug);
   if (!data) notFound();
+  const { category, sections, directArticles, allCategories } = data;
+  const withArticles = sections.filter((s) => s.articles.length > 0);
 
   return (
-    <div>
-      <nav className="text-sm" style={{ color: "var(--mute)" }}>
-        <Link href="/help">Centre d'aide</Link> › {data.category.name}
-      </nav>
-      <h1 className="mt-2 text-xl font-semibold">{data.category.name}</h1>
-      {data.category.description && (
-        <p className="mt-1" style={{ color: "var(--mute)" }}>
-          {data.category.description}
-        </p>
-      )}
-      <ul className="mt-5 flex flex-col gap-3">
-        {data.articles.map((a) => (
-          <li
-            key={a.slug}
-            className="rounded-lg border p-4"
-            style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-          >
-            <Link href={`/help/articles/${a.slug}`} className="font-medium underline-offset-2 hover:underline">
-              {a.title}
+    <div className="pt-rise px-8 py-11 max-sm:px-[18px] max-sm:py-7">
+      <div className="mx-auto grid max-w-[1040px] grid-cols-[1fr_200px] gap-11 max-md:grid-cols-1">
+        <div className="flex min-w-0 flex-col gap-6">
+          <nav className="flex items-center gap-2 text-[13.5px]" style={{ color: "var(--ink-3)" }}>
+            <Link href="/help" style={{ color: "inherit" }}>
+              Aide
             </Link>
-            {a.bodyHtml && (
-              <p className="mt-1 text-sm" style={{ color: "var(--mute)" }}>
-                {a.bodyHtml.replace(/<[^>]+>/g, "").slice(0, 140)}…
+            <span>/</span>
+            <span style={{ color: "var(--ink-2)" }}>{category.name}</span>
+          </nav>
+
+          <header className="flex flex-col gap-2">
+            <h1 className="text-[32px] font-semibold tracking-[-0.025em]">{category.name}</h1>
+            {category.description && (
+              <p
+                className="max-w-[60ch] text-[16.5px]"
+                style={{ color: "var(--ink-2)", textWrap: "pretty" }}
+              >
+                {category.description}
               </p>
             )}
-          </li>
-        ))}
-      </ul>
+          </header>
+
+          {withArticles.length === 0 && directArticles.length > 0 ? (
+            /* Pas de sections : liste simple dans une carte (accordéon implicite ouvert). */
+            <div
+              className="overflow-hidden rounded-xl border"
+              style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+            >
+              {directArticles.map((a) => (
+                <ArticleRow key={a.slug} article={a} />
+              ))}
+            </div>
+          ) : (
+            <>
+              {withArticles.map((s, i) => (
+                <SectionAccordion key={s.id} name={s.name} articles={s.articles} defaultOpen={i === 0} />
+              ))}
+              {directArticles.length > 0 && (
+                <SectionAccordion
+                  name="Autres articles"
+                  articles={directArticles}
+                  defaultOpen={withArticles.length === 0}
+                />
+              )}
+            </>
+          )}
+        </div>
+
+        <aside className="flex flex-col gap-1.5 self-start max-md:hidden">
+          <p
+            className="pb-[5px] text-[12.5px] font-semibold uppercase tracking-[0.06em]"
+            style={{ color: "var(--ink-3)" }}
+          >
+            Autres catégories
+          </p>
+          {allCategories.map((c) => {
+            const active = c.id === category.id;
+            return (
+              <Link
+                key={c.id}
+                href={`/help/categories/${c.slug}`}
+                className={`pt-row rounded-lg px-[11px] py-2 text-[14.5px] hover:no-underline ${active ? "font-semibold" : "font-[450]"}`}
+                style={
+                  active
+                    ? { background: "var(--acc-t)", color: "var(--acc)" }
+                    : { color: "var(--ink-2)" }
+                }
+              >
+                {c.name}
+              </Link>
+            );
+          })}
+        </aside>
+      </div>
     </div>
   );
 }
