@@ -42,6 +42,24 @@ body {
   animation: ohd-rise 0.2s ease both;
 }
 
+/*
+ * Transition d'écran commune à tout le produit — mêmes valeurs que l'administration
+ * (opacité 0 + 6 px de montée, .18s). Appliquée par les template.tsx de chaque
+ * section : seule la zone de contenu bouge, jamais la navigation qui l'entoure.
+ */
+.screen-rise {
+  animation: ohd-rise 0.18s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-rise,
+  .ohd-rise,
+  .ohd-rise-fast,
+  .ohd-rise-slow {
+    animation: none;
+  }
+}
+
 .ohd-rise-fast {
   animation: ohd-rise 0.16s ease both;
 }
