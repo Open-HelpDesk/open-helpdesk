@@ -83,21 +83,40 @@ export async function getReportData(tenantId: string, days: number, teamId?: str
     group by channel order by count desc
   `)) as unknown as Row[];
 
+  // Les deux agrégats sont calculés SÉPARÉMENT : joindre tickets et réponses CSAT
+  // dans la même requête multiplie les lignes (N tickets × M réponses) et gonfle
+  // le nombre de tickets résolus par agent.
   const agents = (await db.execute(sql`
+    with par_ticket as (
+      select t.assignee_id as agent_id,
+        count(*) filter (where t.resolved_at >= now() - make_interval(days => ${days})) as resolved,
+        percentile_cont(0.5) within group (order by extract(epoch from (t.first_replied_at - t.created_at)))
+          filter (where t.first_replied_at >= now() - make_interval(days => ${days})) as median_first_reply_sec
+      from app.tickets t
+      where t.tenant_id = ${tenantId} and t.assignee_id is not null
+        and t.deleted_at is null and t.merged_into_id is null${teamFilterT}
+      group by t.assignee_id
+    ),
+    par_csat as (
+      select c.agent_id,
+        count(*) filter (where c.score = 'good') as csat_good,
+        count(*) as csat_total
+      from app.csat_responses c
+      where c.tenant_id = ${tenantId} and c.agent_id is not null
+        and c.created_at >= now() - make_interval(days => ${days})
+      group by c.agent_id
+    )
     select u.name,
-      count(t.id) filter (where t.resolved_at >= now() - make_interval(days => ${days})) as resolved,
-      percentile_cont(0.5) within group (order by extract(epoch from (t.first_replied_at - t.created_at)))
-        filter (where t.first_replied_at >= now() - make_interval(days => ${days})) as median_first_reply_sec,
-      count(c.id) filter (where c.score = 'good') as csat_good,
-      count(c.id) as csat_total
+      coalesce(pt.resolved, 0) as resolved,
+      pt.median_first_reply_sec,
+      coalesce(pc.csat_good, 0) as csat_good,
+      coalesce(pc.csat_total, 0) as csat_total
     from app.users u
-    left join app.tickets t on t.assignee_id = u.id and t.tenant_id = ${tenantId}${teamFilterT}
-    left join app.csat_responses c on c.agent_id = u.id and c.tenant_id = ${tenantId}
-      and c.created_at >= now() - make_interval(days => ${days})
+    left join par_ticket pt on pt.agent_id = u.id
+    left join par_csat pc on pc.agent_id = u.id
     where u.tenant_id = ${tenantId} and u.status != 'disabled'
-    group by u.id, u.name
-    having count(t.id) > 0 or count(c.id) > 0
-    order by resolved desc
+      and (pt.agent_id is not null or pc.agent_id is not null)
+    order by resolved desc, u.name
   `)) as unknown as Row[];
 
   // Heatmap « Volume par heure et jour » — dow Postgres (0 = dimanche) × heures 7–18.

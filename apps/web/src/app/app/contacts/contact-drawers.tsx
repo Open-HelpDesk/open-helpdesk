@@ -53,8 +53,14 @@ export function NewContactButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center rounded-md px-3 font-semibold text-white"
-        style={{ height: 30, background: "var(--acc)", fontSize: 13 }}
+        className="inline-flex items-center font-semibold text-white"
+        style={{
+          height: 30,
+          padding: "0 12px",
+          borderRadius: 6,
+          background: "var(--acc)",
+          fontSize: 12.5,
+        }}
       >
         + Contact
       </button>
@@ -83,15 +89,13 @@ export function NewContactButton() {
   );
 }
 
+/** Chip du panneau détail (design) : padding 4px 9px, radius 5, 12px ink-2, sans fond. */
 const chipStyle = {
-  height: 28,
-  borderRadius: 6,
+  padding: "4px 9px",
+  borderRadius: 5,
   border: "1px solid var(--line)",
-  background: "var(--bg)",
   color: "var(--ink-2)",
   fontSize: 12,
-  fontWeight: 500,
-  padding: "0 10px",
 } as const;
 
 export function MergeContactButton({

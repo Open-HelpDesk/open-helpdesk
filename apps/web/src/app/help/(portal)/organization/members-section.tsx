@@ -75,8 +75,8 @@ export function MembersSection({
             : inOrgDomain(m.email)
               ? "Collaborateur"
               : "Invité";
-          const connection =
-            ssoActive && ssoProviderLabel && inOrgDomain(m.email) ? ssoProviderLabel : "Lien email";
+          const viaSso = Boolean(ssoActive && ssoProviderLabel && inOrgDomain(m.email));
+          const connection = viaSso ? ssoProviderLabel! : "Lien email";
           return (
             <div
               key={m.id}
@@ -109,7 +109,8 @@ export function MembersSection({
                   {role}
                 </span>
               </div>
-              <div className="text-[13px]" style={{ color: "var(--ink-3)" }}>
+              {/* Maquette : ink-2 quand la connexion passe par le SSO, ink-3 sinon. */}
+              <div className="text-[13px]" style={{ color: viaSso ? "var(--ink-2)" : "var(--ink-3)" }}>
                 {connection}
               </div>
               <div className="text-right tabular-nums" style={{ color: "var(--ink-2)" }}>

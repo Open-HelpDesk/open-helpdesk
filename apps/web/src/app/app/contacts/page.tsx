@@ -16,6 +16,25 @@ import { DeleteRgpdButton, MergeContactButton, NewContactButton } from "./contac
 const GRID = "minmax(200px,1fr) 240px 200px 90px 120px";
 type Tab = "tickets" | "infos" | "activite";
 
+/** Bouton de toolbar bordé — h30, padding 0 11px, 12.5px ink-2. */
+const TOOL_BTN: React.CSSProperties = {
+  height: 30,
+  padding: "0 11px",
+  border: "1px solid var(--line)",
+  borderRadius: 6,
+  fontSize: 12.5,
+  color: "var(--ink-2)",
+};
+
+/** Chip du panneau détail — padding 4px 9px, radius 5, 12px ink-2. */
+const PANEL_CHIP: React.CSSProperties = {
+  padding: "4px 9px",
+  border: "1px solid var(--line)",
+  borderRadius: 5,
+  fontSize: 12,
+  color: "var(--ink-2)",
+};
+
 function buildUrl(q: string | undefined, selected: string, tab?: Tab) {
   const parts = [
     q ? `q=${encodeURIComponent(q)}` : "",
@@ -40,73 +59,67 @@ export default async function ContactsPage({
   const tab: Tab = tabParam === "infos" ? "infos" : tabParam === "activite" ? "activite" : "tickets";
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full" style={{ background: "var(--bg)" }}>
       {/* Colonne table */}
       <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
         {/* Toolbar */}
         <div
-          className="flex shrink-0 items-center gap-2 border-b px-4"
-          style={{ height: 48, background: "var(--panel)", borderColor: "var(--line)" }}
+          className="flex shrink-0 items-center border-b"
+          style={{ gap: 8, padding: "10px 16px", borderColor: "var(--line)" }}
         >
-          <form className="min-w-0">
+          <form className="min-w-0 flex-1" style={{ maxWidth: 280 }}>
             <input
               name="q"
               defaultValue={q ?? ""}
               placeholder="Rechercher un contact…"
-              className="border px-3 text-[13px] outline-none"
+              className="w-full outline-none"
               style={{
                 height: 30,
-                maxWidth: 280,
-                width: "100%",
+                padding: "0 10px",
                 borderRadius: 6,
-                borderColor: "var(--line)",
+                border: "1px solid var(--line)",
                 background: "var(--bg)",
+                fontSize: 12.5,
               }}
             />
           </form>
           <span className="flex-1" />
-          <button
-            type="button"
-            className="rounded-md border px-3 font-medium"
-            style={{
-              height: 30,
-              borderColor: "var(--line)",
-              background: "var(--bg)",
-              color: "var(--ink-2)",
-              fontSize: 13,
-            }}
-          >
+          <button type="button" className="grid place-items-center" style={TOOL_BTN}>
             Importer CSV
           </button>
           <NewContactButton />
         </div>
 
         {/* Table */}
-        <div className="min-h-0 flex-1 overflow-auto" style={{ background: "var(--bg)" }}>
+        <div className="min-h-0 flex-1 overflow-auto">
           {rows.length === 0 ? (
-            <p className="py-24 text-center text-sm" style={{ color: "var(--ink-3)" }}>
+            <p
+              className="text-center"
+              style={{ padding: "96px 0", fontSize: 13, color: "var(--ink-3)" }}
+            >
               Aucun contact{query ? ` pour « ${query} »` : ""}.
             </p>
           ) : (
-            <div style={{ minWidth: 860 }}>
+            <div style={{ minWidth: 880 }}>
               <div
-                className="sticky top-0 z-10 grid items-center border-b font-semibold uppercase tracking-wide"
+                className="sticky top-0 z-10 grid items-center border-b font-semibold"
                 style={{
                   gridTemplateColumns: GRID,
                   height: 32,
+                  padding: "0 16px",
                   fontSize: 11,
                   background: "var(--sunk)",
                   borderColor: "var(--line)",
                   color: "var(--ink-3)",
                 }}
               >
-                <span className="pl-4">Nom</span>
+                <span>Nom</span>
                 <span>Email</span>
                 <span>Organisation</span>
                 <span className="text-right">Tickets</span>
-                <span className="pr-4 text-right">Dernier</span>
+                <span className="text-right">Dernier</span>
               </div>
-              {rows.map((c) => {
+              {rows.map((c, i) => {
                 const active = c.id === selectedId;
                 return (
                   <Link
@@ -116,23 +129,26 @@ export default async function ContactsPage({
                     style={{
                       gridTemplateColumns: GRID,
                       height: 42,
+                      padding: "0 16px",
                       borderColor: "var(--line-2)",
-                      background: active ? "var(--acc-t)" : "var(--bg)",
+                      background: active ? "var(--acc-t)" : "transparent",
                     }}
                   >
-                    <span className="flex min-w-0 items-center gap-2 pl-4">
-                      <Avatar name={c.name ?? c.email} size={22} />
-                      <span className="truncate text-[13px] font-medium">
+                    <span className="flex min-w-0 items-center" style={{ gap: 9 }}>
+                      <Avatar name={c.name ?? c.email} size={24} fontSize={9.5} tone={i} />
+                      <span className="truncate" style={{ fontSize: 13, fontWeight: 500 }}>
                         {c.name ?? "—"}
                       </span>
                       {c.blocked && (
                         <span
-                          className="shrink-0 rounded-full px-1.5 py-0.5 font-bold"
+                          className="shrink-0"
                           style={{
-                            fontSize: 9.5,
+                            padding: "1px 6px",
+                            borderRadius: 4,
+                            fontSize: 10,
+                            fontWeight: 700,
                             background: "var(--dang-t)",
                             color: "var(--dang)",
-                            letterSpacing: "0.04em",
                           }}
                         >
                           BLOQUÉ
@@ -140,20 +156,23 @@ export default async function ContactsPage({
                       )}
                     </span>
                     <span
-                      className="truncate pr-3"
-                      style={{ fontSize: 12.5, color: "var(--ink-2)" }}
+                      className="truncate"
+                      style={{ fontSize: 12.5, color: "var(--ink-2)", paddingRight: 12 }}
                     >
                       {c.email}
                     </span>
-                    <span className="truncate pr-3" style={{ fontSize: 12.5 }}>
+                    <span
+                      className="truncate"
+                      style={{ fontSize: 12.5, color: "var(--ink-2)", paddingRight: 12 }}
+                    >
                       {c.organizationName ?? "—"}
                     </span>
                     <span className="text-right tabular-nums" style={{ fontSize: 12.5 }}>
                       {c.ticketCount}
                     </span>
                     <span
-                      className="pr-4 text-right tabular-nums"
-                      style={{ fontSize: 11.5, color: "var(--ink-3)" }}
+                      className="text-right tabular-nums"
+                      style={{ fontSize: 12.5, color: "var(--ink-3)" }}
                     >
                       {c.lastTicketAt ? relativeFr(new Date(c.lastTicketAt)) : "—"}
                     </span>
@@ -168,20 +187,34 @@ export default async function ContactsPage({
       {/* Panneau détail — 340 px */}
       {detail && (
         <aside
-          className="hidden w-[340px] shrink-0 flex-col overflow-y-auto border-l lg:flex"
-          style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+          className="hidden shrink-0 flex-col overflow-y-auto border-l lg:flex"
+          style={{ width: 340, background: "var(--panel)", borderColor: "var(--line)" }}
         >
-          <div className="border-b p-4" style={{ borderColor: "var(--line)" }}>
-            <div className="flex items-center gap-3">
-              <Avatar name={detail.contact.name ?? detail.contact.email} size={44} />
+          <div
+            className="flex flex-col border-b"
+            style={{ padding: "18px 16px", gap: 11, borderColor: "var(--line)" }}
+          >
+            <div className="flex items-center" style={{ gap: 11 }}>
+              <Avatar
+                name={detail.contact.name ?? detail.contact.email}
+                size={44}
+                fontSize={15}
+                tone={0}
+              />
               <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-2 truncate text-[14px] font-semibold">
+                <p
+                  className="flex items-center gap-2 truncate"
+                  style={{ fontSize: 15, fontWeight: 600 }}
+                >
                   {detail.contact.name ?? detail.contact.email}
                   {detail.contact.blocked && (
                     <span
-                      className="shrink-0 rounded-full px-1.5 py-0.5 font-bold"
+                      className="shrink-0"
                       style={{
-                        fontSize: 9.5,
+                        padding: "1px 6px",
+                        borderRadius: 4,
+                        fontSize: 10,
+                        fontWeight: 700,
                         background: "var(--dang-t)",
                         color: "var(--dang)",
                       }}
@@ -190,14 +223,13 @@ export default async function ContactsPage({
                     </span>
                   )}
                 </p>
-                <p className="truncate" style={{ fontSize: 12, color: "var(--ink-3)" }}>
+                <p className="truncate" style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
                   {detail.contact.email}
-                  {detail.orgs[0] ? ` · ${detail.orgs[0].name}` : ""}
                 </p>
               </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            <div className="flex flex-wrap items-center" style={{ gap: 6 }}>
               <MergeContactButton
                 keepId={detail.contact.id}
                 keepLabel={detail.contact.name ?? detail.contact.email}
@@ -207,17 +239,7 @@ export default async function ContactsPage({
               />
               <form action={toggleContactBlocked}>
                 <input type="hidden" name="contactId" value={detail.contact.id} />
-                <button
-                  type="submit"
-                  className="rounded-md border px-2.5 font-medium"
-                  style={{
-                    height: 28,
-                    fontSize: 12,
-                    borderColor: "var(--line)",
-                    background: "var(--bg)",
-                    color: "var(--ink-2)",
-                  }}
-                >
+                <button type="submit" style={PANEL_CHIP}>
                   {detail.contact.blocked ? "Débloquer" : "Bloquer"}
                 </button>
               </form>
@@ -227,8 +249,8 @@ export default async function ContactsPage({
 
           {/* Onglets */}
           <div
-            className="flex gap-1 border-b px-3 pt-2"
-            style={{ borderColor: "var(--line)" }}
+            className="flex border-b"
+            style={{ gap: 2, padding: "0 16px", borderColor: "var(--line)" }}
           >
             {(
               [
@@ -240,22 +262,21 @@ export default async function ContactsPage({
               <Link
                 key={key}
                 href={buildUrl(query, detail.contact.id, key)}
-                className="rounded-t-md px-3 pb-2 pt-1 text-[13px] font-medium"
-                style={
-                  tab === key
-                    ? {
-                        color: "var(--acc)",
-                        boxShadow: "inset 0 -2px 0 var(--acc)",
-                      }
-                    : { color: "var(--ink-3)" }
-                }
+                style={{
+                  padding: "9px 10px",
+                  marginBottom: -1,
+                  fontSize: 13,
+                  fontWeight: tab === key ? 600 : 450,
+                  color: tab === key ? "var(--ink)" : "var(--ink-3)",
+                  borderBottom: `2px solid ${tab === key ? "var(--acc)" : "transparent"}`,
+                }}
               >
                 {label}
               </Link>
             ))}
           </div>
 
-          <div className="flex-1 p-4">
+          <div className="flex-1" style={{ padding: "14px 16px" }}>
             {tab === "tickets" &&
               (detail.tickets.length === 0 ? (
                 <p style={{ fontSize: 13, color: "var(--ink-3)" }}>Aucun ticket.</p>
@@ -287,7 +308,7 @@ export default async function ContactsPage({
               ))}
 
             {tab === "infos" && (
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col" style={{ gap: 10 }}>
                 {[
                   [
                     "Langue",
@@ -316,11 +337,14 @@ export default async function ContactsPage({
                       display: "grid",
                       gridTemplateColumns: "110px 1fr",
                       gap: 8,
+                      alignItems: "baseline",
                       fontSize: 12.5,
                     }}
                   >
-                    <span style={{ color: "var(--ink-3)", fontSize: 12 }}>{label}</span>
-                    <span className="min-w-0 break-words">{value}</span>
+                    <span style={{ color: "var(--ink-3)" }}>{label}</span>
+                    <span className="min-w-0 break-words" style={{ fontWeight: 500 }}>
+                      {value}
+                    </span>
                   </div>
                 ))}
               </div>

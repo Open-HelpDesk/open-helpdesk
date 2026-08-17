@@ -22,6 +22,7 @@ export type AgentSsoConfig = {
     backupEmail?: string;
   };
   scim?: {
+    enabled?: boolean;
     tokenHash?: string;
     tokenHint?: string;
     groups?: { group: string; team: string; role: string }[];
@@ -102,7 +103,7 @@ export async function regenerateScimToken(
   return { token };
 }
 
-/** ST-13 — Correspondance des groupes SCIM (éditable, jsonb). */
+/** ST-13 — Activation SCIM + correspondance des groupes (éditable, jsonb). */
 export async function saveScimGroups(formData: FormData) {
   const { tenant } = await requirePro();
   const config = ((tenant.agentSsoConfig as AgentSsoConfig) ?? {}) as AgentSsoConfig;
@@ -124,7 +125,11 @@ export async function saveScimGroups(formData: FormData) {
 
   const next: AgentSsoConfig = {
     ...config,
-    scim: { ...(config.scim ?? {}), groups: rows.slice(0, 50) },
+    scim: {
+      ...(config.scim ?? {}),
+      enabled: formData.get("scimEnabled") === "on",
+      groups: rows.slice(0, 50),
+    },
   };
 
   await db.update(tenants).set({ agentSsoConfig: next }).where(eq(tenants.id, tenant.id));

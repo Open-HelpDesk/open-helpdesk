@@ -14,7 +14,6 @@ import {
   BookOpen,
   Building2,
   Inbox,
-  Plus,
   Search,
   Settings,
   Users,
@@ -62,21 +61,22 @@ export function RailNav({ inboxBadge }: { inboxBadge: number }) {
           height: 40,
           borderRadius: 8,
           background: active ? "var(--acc-t)" : "transparent",
-          color: active ? "var(--acc)" : "var(--ink-2)",
+          color: active ? "var(--acc)" : "var(--ink-3)",
         } as const;
         const inner = (
           <>
-            <Icon size={18} strokeWidth={1.7} />
+            <Icon size={19} strokeWidth={1.7} />
             {label === "Inbox" && inboxBadge > 0 && (
               <span
-                className="absolute flex items-center justify-center rounded-full font-semibold text-white"
+                className="absolute flex items-center justify-center font-bold text-white"
                 style={{
                   top: 4,
                   right: 4,
                   height: 15,
                   minWidth: 15,
                   padding: "0 3px",
-                  fontSize: 9.5,
+                  borderRadius: 8,
+                  fontSize: 9,
                   background: "var(--dang)",
                   border: "2px solid var(--panel)",
                   lineHeight: 1,
@@ -206,19 +206,17 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
         borderColor: "var(--line)",
       }}
     >
-      <div className="flex min-w-0 items-baseline gap-2">
-        <h1 className="truncate" style={{ fontSize: 14, fontWeight: 600 }}>
-          {info.title}
-        </h1>
-        {info.subtitle && (
-          <span
-            className="hidden truncate sm:inline"
-            style={{ fontSize: 12, color: "var(--ink-3)" }}
-          >
-            {info.subtitle}
-          </span>
-        )}
-      </div>
+      <h1 className="truncate" style={{ fontSize: 14, fontWeight: 600 }}>
+        {info.title}
+      </h1>
+      {info.subtitle && (
+        <span
+          className="hidden truncate sm:inline"
+          style={{ fontSize: 12, color: "var(--ink-3)" }}
+        >
+          {info.subtitle}
+        </span>
+      )}
 
       <span className="flex-1" />
 
@@ -226,20 +224,30 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
       <button
         type="button"
         onClick={() => window.dispatchEvent(new Event("ohd:open-search"))}
-        className="hidden items-center gap-2 border px-2.5 md:flex"
+        className="hidden items-center gap-2 border md:flex"
         style={{
           height: 30,
           minWidth: 200,
+          padding: "0 10px",
           borderRadius: 6,
           borderColor: "var(--line)",
-          background: "var(--sunk)",
           color: "var(--ink-3)",
-          fontSize: 12.5,
+          fontSize: 12,
         }}
       >
-        <Search size={13} strokeWidth={1.7} />
         <span className="flex-1 text-left">Rechercher…</span>
-        <kbd className="ohd-kbd">⌘K</kbd>
+        <kbd
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 10,
+            padding: "1px 5px",
+            border: "1px solid var(--line)",
+            borderRadius: 4,
+            background: "var(--sunk)",
+          }}
+        >
+          ⌘K
+        </kbd>
       </button>
 
       {/* Cloche */}
@@ -249,12 +257,12 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
         className="relative flex items-center justify-center rounded-md"
         style={{ width: 30, height: 30, color: "var(--ink-2)" }}
       >
-        <Bell size={16} strokeWidth={1.7} />
+        <Bell size={17} strokeWidth={1.7} />
         <span
           className="absolute rounded-full"
           style={{
-            top: 4,
-            right: 5,
+            top: 3,
+            right: 3,
             width: 7,
             height: 7,
             background: "var(--dang)",
@@ -265,10 +273,10 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
 
       <Link
         href="/app/tickets/new"
-        className="inline-flex items-center gap-1.5 rounded-md px-3 font-semibold text-white"
-        style={{ height: 30, background: "var(--acc)", fontSize: 13 }}
+        className="inline-flex items-center rounded-md font-semibold text-white"
+        style={{ height: 30, padding: "0 12px", gap: 6, background: "var(--acc)", fontSize: 13 }}
       >
-        <Plus size={14} strokeWidth={2.2} /> Nouveau ticket
+        <span style={{ fontSize: 15, lineHeight: 1 }}>+</span> Nouveau ticket
       </Link>
     </header>
   );

@@ -103,16 +103,20 @@ export function PortalSearchBar() {
               </Link>
             ))
           ) : (
-            <div className="flex flex-col items-center gap-2.5 px-6 py-6 text-center">
-              <p className="text-base font-semibold" style={{ color: "var(--ink)" }}>
+            /* Même bloc que /help/search (maquette « sans résultat ») : 20/600, 15.5, bouton h46. */
+            <div className="flex flex-col items-center gap-3.5 px-6 py-8 text-center">
+              <p className="text-xl font-semibold" style={{ color: "var(--ink)" }}>
                 Aucun résultat pour «&nbsp;{q.trim()}&nbsp;»
               </p>
-              <p className="text-[13.5px]" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+              <p
+                className="max-w-[440px] text-[15.5px]"
+                style={{ color: "var(--ink-2)", textWrap: "pretty" }}
+              >
                 Essayez des termes plus généraux, ou décrivez votre situation à notre équipe.
               </p>
               <Link
                 href="/help/requests/new"
-                className="mt-0.5 grid h-10 place-items-center rounded-[9px] px-4 text-sm font-semibold text-white hover:no-underline"
+                className="grid h-[46px] place-items-center rounded-[9px] px-[22px] text-[15px] font-semibold text-white hover:no-underline"
                 style={{ background: "var(--acc)" }}
               >
                 Soumettre une demande

@@ -144,7 +144,18 @@ export function CommandPalette() {
       tagBg: "var(--sunk)",
       tagColor: "var(--ink-2)",
     },
+    {
+      key: "action-billing",
+      href: "/app/settings/billing",
+      group: "Actions",
+      label: "Aller aux paramètres de facturation",
+      meta: "G puis B",
+      tag: "⌘",
+      tagBg: "var(--sunk)",
+      tagColor: "var(--ink-2)",
+    },
   ];
+  const ACTION_COUNT = 2;
 
   function onInputKey(e: React.KeyboardEvent) {
     if (e.key === "ArrowDown") {
@@ -173,43 +184,68 @@ export function CommandPalette() {
       onClick={close}
     >
       <div
-        className="ohd-rise-fast flex w-full flex-col overflow-hidden border shadow-xl"
+        className="ohd-rise-fast flex w-full flex-col overflow-hidden"
         style={{
           maxWidth: 620,
           borderRadius: 12,
           background: "var(--panel)",
-          borderColor: "var(--line)",
+          border: "1px solid var(--line)",
+          boxShadow: "0 24px 64px rgba(0,0,0,.3)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="flex items-center gap-3 border-b px-4"
-          style={{ borderColor: "var(--line)" }}
+          className="flex items-center"
+          style={{ gap: 10, padding: "13px 15px", borderBottom: "1px solid var(--line)" }}
         >
+          <svg
+            viewBox="0 0 24 24"
+            width="17"
+            height="17"
+            fill="none"
+            stroke="var(--ink-3)"
+            strokeWidth="1.9"
+            className="shrink-0"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-3.5-3.5" />
+          </svg>
           <input
             ref={inputRef}
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={onInputKey}
             placeholder="Rechercher tickets, contacts, articles…"
-            className="min-w-0 flex-1 py-3.5 outline-none"
+            className="min-w-0 flex-1 outline-none"
             style={{ fontSize: 15, background: "transparent", color: "var(--ink)" }}
           />
-          <kbd className="ohd-kbd shrink-0">ESC</kbd>
+          <kbd
+            className="shrink-0"
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              padding: "2px 6px",
+              border: "1px solid var(--line)",
+              borderRadius: 4,
+              color: "var(--ink-3)",
+            }}
+          >
+            ESC
+          </kbd>
         </div>
 
-        <div className="max-h-96 overflow-y-auto p-2">
+        <div className="overflow-y-auto" style={{ maxHeight: 400, padding: 6 }}>
           {q.trim().length < 2 && (
             <p className="px-3 py-4 text-center text-[13px]" style={{ color: "var(--ink-3)" }}>
               Tapez au moins deux caractères…
             </p>
           )}
-          {q.trim().length >= 2 &&
-            items.length === 1 /* seule l'action reste */ && (
-              <p className="px-3 py-4 text-center text-[13px]" style={{ color: "var(--ink-3)" }}>
-                Aucun résultat pour « {q} »
-              </p>
-            )}
+          {q.trim().length >= 2 && items.length === ACTION_COUNT && (
+            <p className="px-3 py-4 text-center text-[13px]" style={{ color: "var(--ink-3)" }}>
+              Aucun résultat pour « {q} »
+            </p>
+          )}
           {items.map((item, i) => {
             const showGroup = item.group !== lastGroup;
             lastGroup = item.group;
@@ -217,8 +253,14 @@ export function CommandPalette() {
               <div key={item.key}>
                 {showGroup && (
                   <p
-                    className="px-3 pb-1 pt-2.5 uppercase tracking-wider"
-                    style={{ fontSize: 10.5, fontWeight: 700, color: "var(--ink-3)" }}
+                    className="uppercase"
+                    style={{
+                      padding: "8px 9px 3px",
+                      fontSize: 10.5,
+                      fontWeight: 700,
+                      letterSpacing: ".07em",
+                      color: "var(--ink-3)",
+                    }}
                   >
                     {item.group}
                   </p>
@@ -230,35 +272,36 @@ export function CommandPalette() {
                     router.push(item.href);
                     close();
                   }}
-                  className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left"
-                  style={
-                    i === active
-                      ? { background: "var(--acc-t)", color: "var(--ink)" }
-                      : { color: "var(--ink)" }
-                  }
+                  className="flex w-full items-center text-left"
+                  style={{
+                    gap: 10,
+                    padding: "8px 9px",
+                    borderRadius: 7,
+                    color: "var(--ink)",
+                    background: i === active ? "var(--sunk)" : "transparent",
+                  }}
                 >
                   <span
-                    className="flex shrink-0 items-center justify-center font-bold"
+                    className="grid shrink-0 place-items-center font-bold"
                     style={{
                       width: 22,
                       height: 22,
                       borderRadius: 5,
-                      fontSize: 9,
+                      fontSize: 10,
+                      fontFamily: "var(--font-mono)",
                       background: item.tagBg,
                       color: item.tagColor,
                     }}
                   >
                     {item.tag}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-[13.5px]">{item.label}</span>
+                  <span className="min-w-0 flex-1 truncate" style={{ fontSize: 13.5 }}>
+                    {item.label}
+                  </span>
                   {item.meta && (
                     <span
-                      className="shrink-0 whitespace-nowrap tabular-nums"
-                      style={{
-                        fontSize: 11.5,
-                        fontFamily: "var(--font-mono)",
-                        color: "var(--ink-3)",
-                      }}
+                      className="shrink-0 whitespace-nowrap"
+                      style={{ fontSize: 11.5, color: "var(--ink-3)" }}
                     >
                       {item.meta}
                     </span>
@@ -270,17 +313,20 @@ export function CommandPalette() {
         </div>
 
         <div
-          className="flex items-center gap-3 border-t px-4 py-2"
+          className="flex items-center"
           style={{
+            gap: 14,
+            padding: "8px 14px",
+            borderTop: "1px solid var(--line)",
             background: "var(--sunk)",
-            borderColor: "var(--line)",
             color: "var(--ink-3)",
             fontSize: 11,
           }}
         >
           <span>
-            Filtres :{" "}
-            <span style={{ fontFamily: "var(--font-mono)" }}>from: status: #tag</span>
+            Filtres : <span style={{ fontFamily: "var(--font-mono)" }}>from:</span>{" "}
+            <span style={{ fontFamily: "var(--font-mono)" }}>status:</span>{" "}
+            <span style={{ fontFamily: "var(--font-mono)" }}>#tag</span>
           </span>
           <span className="flex-1" />
           <span>↑↓ naviguer · ↵ ouvrir</span>

@@ -141,11 +141,13 @@ export async function moveRule(formData: FormData) {
   const ruleId = String(formData.get("ruleId"));
   const direction = formData.get("direction") === "up" ? "up" : "down";
 
+  // Même tri que la liste ST-05 : position, puis kind et nom (createdAt ne
+  // discrimine pas les lignes insérées dans une même transaction de seed).
   const siblings = await db
     .select()
     .from(automationRules)
     .where(eq(automationRules.tenantId, tenant.id))
-    .orderBy(asc(automationRules.position), asc(automationRules.createdAt));
+    .orderBy(asc(automationRules.position), asc(automationRules.kind), asc(automationRules.name));
 
   const index = siblings.findIndex((r) => r.id === ruleId);
   if (index < 0) return;

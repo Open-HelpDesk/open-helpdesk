@@ -15,12 +15,19 @@ export type AttachmentData = {
   sizeBytes: number;
 };
 
+/** Bordures de la visionneuse — même palette claire que le design (overlay sombre). */
+const VIEWER_INK = "#F2FBF7";
+const VIEWER_LINE = "1px solid rgba(242,251,247,.24)";
+
 export function MessageAttachments({
   attachments,
   senderName,
+  borderColor = "var(--line)",
 }: {
   attachments: AttachmentData[];
   senderName: string;
+  /** Bordure de la carte porteuse — le design reprend la couleur du message. */
+  borderColor?: string;
 }) {
   const images = attachments.filter((a) => a.contentType.startsWith("image/"));
   const files = attachments.filter((a) => !a.contentType.startsWith("image/"));
@@ -44,21 +51,25 @@ export function MessageAttachments({
   return (
     <>
       {(images.length > 0 || files.length > 0) && (
-        <div className="mt-2.5 flex flex-wrap gap-2">
+        <div
+          className="flex flex-wrap"
+          style={{ padding: "0 12px 11px", gap: 9 }}
+        >
           {images.map((a, i) => (
             <button
               key={a.id}
               type="button"
+              title={a.filename}
               onClick={() => {
                 setViewerIndex(i);
                 setZoom(100);
               }}
-              className="overflow-hidden border text-left"
+              className="overflow-hidden text-left"
               style={{
                 width: 138,
                 borderRadius: 8,
-                borderColor: "var(--line)",
-                background: "var(--bg)",
+                border: `1px solid ${borderColor}`,
+                background: "var(--panel)",
                 cursor: "zoom-in",
               }}
             >
@@ -66,13 +77,30 @@ export function MessageAttachments({
               <img
                 src={`/api/attachments/${a.id}`}
                 alt={a.filename}
-                style={{ width: "100%", height: 84, objectFit: "cover", display: "block" }}
+                style={{
+                  width: "100%",
+                  height: 84,
+                  objectFit: "cover",
+                  objectPosition: "top center",
+                  display: "block",
+                  background: "var(--sunk)",
+                }}
               />
-              <span className="block px-2 py-1">
-                <span className="block truncate" style={{ fontSize: 11, fontWeight: 500 }}>
+              <span
+                className="flex items-center"
+                style={{
+                  gap: 6,
+                  padding: "6px 8px",
+                  borderTop: `1px solid ${borderColor}`,
+                }}
+              >
+                <span className="min-w-0 flex-1 truncate" style={{ fontSize: 11.5 }}>
                   {a.filename}
                 </span>
-                <span style={{ fontSize: 10.5, color: "var(--ink-3)" }}>
+                <span
+                  className="whitespace-nowrap"
+                  style={{ fontSize: 10.5, color: "var(--ink-3)" }}
+                >
                   {sizeFr(a.sizeBytes)}
                 </span>
               </span>
@@ -82,18 +110,32 @@ export function MessageAttachments({
             <a
               key={a.id}
               href={`/api/attachments/${a.id}`}
-              className="inline-flex items-center gap-1.5 border px-2 py-1"
+              className="inline-flex items-center self-start"
               style={{
-                borderRadius: 6,
-                borderColor: "var(--line)",
-                background: "var(--sunk)",
-                fontSize: 11.5,
-                fontFamily: "var(--font-mono)",
-                color: "var(--ink-2)",
+                gap: 7,
+                padding: "7px 10px",
+                borderRadius: 8,
+                border: `1px solid ${borderColor}`,
+                background: "var(--panel)",
+                fontSize: 12,
               }}
             >
-              📎 {a.filename}
-              <span style={{ color: "var(--ink-3)" }}>{sizeFr(a.sizeBytes)}</span>
+              <svg
+                viewBox="0 0 24 24"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="var(--ink-3)"
+                strokeWidth="1.8"
+                aria-hidden="true"
+              >
+                <path d="M14 3v5h5" />
+                <path d="M19 8v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7z" />
+              </svg>
+              <span>{a.filename}</span>
+              <span style={{ color: "var(--ink-3)", fontSize: 10.5 }}>
+                {sizeFr(a.sizeBytes)}
+              </span>
             </a>
           ))}
         </div>
@@ -102,39 +144,72 @@ export function MessageAttachments({
       {/* Visionneuse */}
       {current && viewerIndex !== null && (
         <div
-          className="fixed inset-0 z-50 flex flex-col"
-          style={{ background: "rgba(6,12,10,.86)" }}
+          className="ohd-rise-fast fixed inset-0 z-50 flex flex-col"
+          style={{ background: "rgba(6,12,10,.86)", color: VIEWER_INK }}
           onClick={() => setViewerIndex(null)}
         >
-          {/* En-tête */}
+          {/* En-tête : nom + méta, zoom, Télécharger, ✕ */}
           <div
-            className="flex items-center gap-3 px-4"
-            style={{ height: 52, color: "#fff" }}
+            className="flex shrink-0 items-center"
+            style={{
+              gap: 12,
+              padding: "12px 18px",
+              borderBottom: "1px solid rgba(242,251,247,.14)",
+            }}
             onClick={(e) => e.stopPropagation()}
           >
-            <span className="min-w-0 truncate text-[13px] font-semibold">
-              {current.filename}
-            </span>
-            <span className="hidden text-[11.5px] sm:inline" style={{ color: "rgba(255,255,255,.65)" }}>
-              {sizeFr(current.sizeBytes)} · reçue de {senderName}
-            </span>
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              className="shrink-0"
+              aria-hidden="true"
+            >
+              <rect x="3" y="4" width="18" height="16" rx="2" />
+              <path d="M3 16l5-5 4 4 3-3 6 6" />
+              <circle cx="9" cy="9" r="1.6" />
+            </svg>
+            <div className="flex min-w-0 flex-col">
+              <span className="truncate" style={{ fontSize: 13.5, fontWeight: 600 }}>
+                {current.filename}
+              </span>
+              <span style={{ fontSize: 11.5, opacity: 0.6 }}>
+                {sizeFr(current.sizeBytes)} · reçue de {senderName}
+              </span>
+            </div>
             <span className="flex-1" />
-            <div className="flex items-center gap-1">
+            <div
+              className="flex items-center"
+              style={{
+                gap: 2,
+                padding: 2,
+                background: "rgba(242,251,247,.1)",
+                borderRadius: 7,
+              }}
+            >
               <button
                 type="button"
                 onClick={() => setZoom((z) => Math.max(60, z - 20))}
-                className="rounded px-2 py-1 text-[14px]"
-                style={{ background: "rgba(255,255,255,.12)" }}
+                className="grid place-items-center"
+                style={{ width: 30, height: 26, borderRadius: 5, fontSize: 15 }}
                 title="Réduire"
               >
                 −
               </button>
-              <span className="w-12 text-center text-[12px] tabular-nums">{zoom} %</span>
+              <span
+                className="text-center tabular-nums"
+                style={{ minWidth: 52, fontSize: 12 }}
+              >
+                {zoom} %
+              </span>
               <button
                 type="button"
                 onClick={() => setZoom((z) => Math.min(160, z + 20))}
-                className="rounded px-2 py-1 text-[14px]"
-                style={{ background: "rgba(255,255,255,.12)" }}
+                className="grid place-items-center"
+                style={{ width: 30, height: 26, borderRadius: 5, fontSize: 15 }}
                 title="Agrandir"
               >
                 +
@@ -142,16 +217,16 @@ export function MessageAttachments({
             </div>
             <a
               href={`/api/attachments/${current.id}`}
-              className="rounded px-3 py-1.5 text-[12.5px] font-medium"
-              style={{ background: "rgba(255,255,255,.12)" }}
+              className="grid place-items-center whitespace-nowrap"
+              style={{ height: 28, padding: "0 11px", border: VIEWER_LINE, borderRadius: 6, fontSize: 12.5 }}
             >
               Télécharger
             </a>
             <button
               type="button"
               onClick={() => setViewerIndex(null)}
-              className="rounded px-2 py-1.5 text-[14px]"
-              style={{ background: "rgba(255,255,255,.12)" }}
+              className="grid place-items-center"
+              style={{ width: 28, height: 28, borderRadius: 6, fontSize: 14, opacity: 0.7 }}
               title="Fermer"
             >
               ✕
@@ -159,7 +234,10 @@ export function MessageAttachments({
           </div>
 
           {/* Image */}
-          <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto p-6">
+          <div
+            className="grid min-h-0 flex-1 place-items-center overflow-auto"
+            style={{ padding: 24, cursor: "zoom-out" }}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`/api/attachments/${current.id}`}
@@ -170,49 +248,55 @@ export function MessageAttachments({
                 maxHeight: "100%",
                 transform: `scale(${zoom / 100})`,
                 transition: "transform .12s ease",
-                borderRadius: 6,
+                borderRadius: 8,
+                boxShadow: "0 24px 70px rgba(0,0,0,.6)",
               }}
             />
           </div>
 
-          {/* Pied */}
-          {images.length > 1 && (
-            <div
-              className="flex items-center justify-center gap-4 pb-4"
-              style={{ color: "rgba(255,255,255,.8)" }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                type="button"
-                disabled={viewerIndex === 0}
-                onClick={() => {
-                  setViewerIndex((i) => Math.max(0, (i ?? 0) - 1));
-                  setZoom(100);
-                }}
-                className="rounded px-2 py-1 disabled:opacity-40"
-                style={{ background: "rgba(255,255,255,.12)" }}
-                title="Précédente"
-              >
-                ←
-              </button>
-              <span className="text-[12px]">
-                Pièce jointe {viewerIndex + 1} sur {images.length}
-              </span>
-              <button
-                type="button"
-                disabled={viewerIndex === images.length - 1}
-                onClick={() => {
-                  setViewerIndex((i) => Math.min(images.length - 1, (i ?? 0) + 1));
-                  setZoom(100);
-                }}
-                className="rounded px-2 py-1 disabled:opacity-40"
-                style={{ background: "rgba(255,255,255,.12)" }}
-                title="Suivante"
-              >
-                →
-              </button>
-            </div>
-          )}
+          {/* Pied : « Pièce jointe 1 sur 2 » + ← / → */}
+          <div
+            className="flex shrink-0 items-center"
+            style={{
+              gap: 10,
+              padding: "10px 18px",
+              borderTop: "1px solid rgba(242,251,247,.14)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span style={{ fontSize: 11.5, opacity: 0.55 }}>
+              Pièce jointe {viewerIndex + 1} sur {images.length}
+            </span>
+            <span className="flex-1" />
+            {images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  disabled={viewerIndex === 0}
+                  onClick={() => {
+                    setViewerIndex((i) => Math.max(0, (i ?? 0) - 1));
+                    setZoom(100);
+                  }}
+                  className="grid place-items-center whitespace-nowrap disabled:opacity-40"
+                  style={{ height: 28, padding: "0 12px", border: VIEWER_LINE, borderRadius: 6, fontSize: 12.5 }}
+                >
+                  ← Précédente
+                </button>
+                <button
+                  type="button"
+                  disabled={viewerIndex === images.length - 1}
+                  onClick={() => {
+                    setViewerIndex((i) => Math.min(images.length - 1, (i ?? 0) + 1));
+                    setZoom(100);
+                  }}
+                  className="grid place-items-center whitespace-nowrap disabled:opacity-40"
+                  style={{ height: 28, padding: "0 12px", border: VIEWER_LINE, borderRadius: 6, fontSize: 12.5 }}
+                >
+                  Suivante →
+                </button>
+              </>
+            )}
+          </div>
         </div>
       )}
     </>

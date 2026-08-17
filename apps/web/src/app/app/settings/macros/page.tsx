@@ -17,18 +17,22 @@ import { deleteMacro, saveMacro } from "./actions";
 
 type MacroRow = typeof macros.$inferSelect;
 
+/** Ordre des catégories du design ; les autres suivent, alphabétiquement. */
+const CATEGORY_ORDER = ["Réponses courantes", "Escalade", "Facturation"];
+
 /**
- * ST-06 — Macros (1000 px) : liste par catégories avec résumé d'actions généré,
- * badge de périmètre (Tous les agents / équipe), usage 30 j (« — » tant que non
- * mesuré), éditeur en drawer (texte / note interne, statut appliqué, disponibilité).
+ * ST-06 — Macros (1000 px) : barre de recherche + « + Nouvelle macro », groupes par
+ * catégorie (titre 11px/700 uppercase) dans une carte par groupe, résumé d'actions
+ * généré, pastille de périmètre, usage 30 j, éditeur en drawer 420 px.
  */
 export default async function MacrosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ saved?: string; q?: string }>;
 }) {
   const { tenant } = await requireAgent();
-  const { saved } = await searchParams;
+  const { saved, q } = await searchParams;
+  const query = (q ?? "").trim();
 
   const [rows, teamRows] = await Promise.all([
     db
@@ -44,11 +48,22 @@ export default async function MacrosPage({
   ]);
 
   const teamNameById = new Map(teamRows.map((t) => [t.id, t.name]));
+  const needle = query.toLocaleLowerCase("fr-FR");
+  const visible = needle
+    ? rows.filter((m) => m.name.toLocaleLowerCase("fr-FR").includes(needle))
+    : rows;
+
   const byCategory = new Map<string, MacroRow[]>();
-  for (const m of rows) {
+  for (const m of visible) {
     const key = m.category ?? "Sans catégorie";
     byCategory.set(key, [...(byCategory.get(key) ?? []), m]);
   }
+  const groups = [...byCategory.entries()].sort(([a], [b]) => {
+    const ia = CATEGORY_ORDER.indexOf(a);
+    const ib = CATEGORY_ORDER.indexOf(b);
+    if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    return a.localeCompare(b, "fr-FR");
+  });
 
   return (
     <PageShell maxWidth={1000}>
@@ -56,88 +71,106 @@ export default async function MacrosPage({
         code="ST-06"
         title="Macros"
         subtitle="Réponses types et actions groupées, disponibles depuis le détail d'un ticket."
-        actions={
-          <Drawer
-            title="Nouvelle macro"
-            trigger={<>Nouvelle macro</>}
-            triggerClassName="rounded-md px-3.5 font-semibold text-white"
-            triggerStyle={{ height: 32, fontSize: 13, background: "var(--acc)" }}
-          >
-            <MacroForm teams={teamRows} />
-          </Drawer>
-        }
       />
 
       {saved === "1" && <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>}
 
-      {rows.length === 0 ? (
-        <EmptyState
-          title="Aucune macro"
-          text="Créez des réponses types pour vos demandes récurrentes — accusé de réception, demande de précisions, résolution confirmée…"
-        />
-      ) : (
-        [...byCategory.entries()].map(([category, list]) => (
-          <div key={category}>
-            <p
-              className="mb-2 font-mono font-bold uppercase"
-              style={{ fontSize: 10.5, letterSpacing: "0.07em", color: "var(--ink-3)" }}
-            >
-              {category}
-            </p>
-            <ul className="flex flex-col gap-2">
-              {list.map((m) => {
-                const actions = (m.actions as { type: string; value?: unknown }[]) ?? [];
-                const scope =
-                  m.availability === "team" && m.teamId
-                    ? (teamNameById.get(m.teamId) ?? "Équipe")
-                    : m.availability === "personal"
-                      ? "Personnel"
-                      : "Tous les agents";
-                return (
-                  <li
-                    key={m.id}
-                    className="flex items-center gap-3 rounded-[10px] border"
-                    style={{
-                      background: "var(--panel)",
-                      borderColor: "var(--line)",
-                      padding: "10px 14px",
-                    }}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <Drawer
-                        title={`Modifier « ${m.name} »`}
-                        trigger={<>{m.name}</>}
-                        triggerClassName="block truncate text-left font-semibold"
-                        triggerStyle={{ fontSize: 13.5, color: "var(--ink)" }}
-                      >
-                        <MacroForm macro={m} teams={teamRows} />
-                      </Drawer>
-                      <p className="truncate" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                        {macroActionsSummary(actions, teamNameById)}
-                      </p>
-                    </div>
-                    <StatusPill tone={m.availability === "team" ? "open" : "acc"}>
-                      {scope}
-                    </StatusPill>
-                    <span
-                      className="whitespace-nowrap font-mono tabular-nums"
-                      style={{ fontSize: 11.5, color: "var(--ink-3)" }}
-                      title="Utilisations sur 30 jours"
+      <div className="st-rise flex flex-col" style={{ gap: 20 }}>
+        {/* Recherche + création */}
+        <div className="flex flex-wrap items-center" style={{ gap: 9 }}>
+          <form action="/app/settings/macros" className="min-w-0 flex-1" style={{ maxWidth: 300 }}>
+            <TextInput
+              name="q"
+              defaultValue={query}
+              placeholder="Rechercher une macro…"
+              aria-label="Rechercher une macro"
+              className="w-full"
+              style={{ height: 34, padding: "0 11px", fontSize: 13 }}
+            />
+          </form>
+          <span className="flex-1" />
+          <Drawer
+            title="Créer une macro"
+            trigger={<>+ Nouvelle macro</>}
+            triggerClassName="inline-flex items-center justify-center rounded-md font-semibold text-white"
+            triggerStyle={{ height: 34, padding: "0 14px", fontSize: 13, background: "var(--acc)" }}
+          >
+            <MacroForm teams={teamRows} />
+          </Drawer>
+        </div>
+
+        {rows.length === 0 ? (
+          <EmptyState
+            title="Aucune macro"
+            text="Créez des réponses types pour vos demandes récurrentes — accusé de réception, demande de précisions, résolution confirmée…"
+          />
+        ) : groups.length === 0 ? (
+          <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
+            Aucune macro ne correspond à « {query} ».
+          </p>
+        ) : (
+          groups.map(([category, list]) => (
+            <div key={category} className="flex flex-col" style={{ gap: 9 }}>
+              <p
+                className="font-bold uppercase"
+                style={{ fontSize: 11, letterSpacing: "0.06em", color: "var(--ink-3)" }}
+              >
+                {category}
+              </p>
+              <div
+                className="overflow-hidden rounded-[10px] border"
+                style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+              >
+                {list.map((m) => {
+                  const actions = (m.actions as { type: string; value?: unknown }[]) ?? [];
+                  const scope =
+                    m.availability === "team" && m.teamId
+                      ? (teamNameById.get(m.teamId) ?? "Équipe")
+                      : m.availability === "personal"
+                        ? "Personnel"
+                        : "Tous les agents";
+                  return (
+                    <div
+                      key={m.id}
+                      className="st-row flex items-center border-b"
+                      style={{ padding: "12px 15px", gap: 13, borderColor: "var(--line-2)" }}
                     >
-                      — / 30 j
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))
-      )}
+                      <div className="min-w-0 flex-1">
+                        <Drawer
+                          title="Modifier une macro"
+                          trigger={<>{m.name}</>}
+                          triggerClassName="block truncate text-left font-semibold"
+                          triggerStyle={{ fontSize: 13.5, color: "var(--ink)" }}
+                        >
+                          <MacroForm macro={m} teams={teamRows} />
+                        </Drawer>
+                        <p className="truncate" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                          {macroActionsSummary(actions, teamNameById)}
+                        </p>
+                      </div>
+                      <StatusPill tone={m.availability === "team" ? "open" : "closed"}>
+                        {scope}
+                      </StatusPill>
+                      <span
+                        className="whitespace-nowrap text-right tabular-nums"
+                        style={{ fontSize: 12, color: "var(--ink-3)", width: 110 }}
+                        title="Utilisations sur 30 jours"
+                      >
+                        — / 30 j
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </PageShell>
   );
 }
 
-/** Drawer d'édition : texte / note interne, statut appliqué, disponibilité. */
+/** Drawer d'édition 420 px : nom, catégorie, texte inséré, statut appliqué, disponibilité. */
 function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; name: string }[] }) {
   const actions = (macro?.actions as { type: string; value?: unknown }[]) ?? [];
   const insert = actions.find((a) => a.type === "insert_text" || a.type === "insert_note");
@@ -146,28 +179,36 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
   const setStatus = String(actions.find((a) => a.type === "set_status")?.value ?? "");
   const availability =
     macro?.availability === "team" && macro.teamId ? `team:${macro.teamId}` : "everyone";
+  const control = { minHeight: 36, padding: "7px 11px", fontSize: 13.5 } as const;
 
   return (
-    <form action={saveMacro} className="flex h-full flex-col gap-4">
+    <form action={saveMacro} className="flex h-full flex-col" style={{ gap: 14 }}>
       {macro && <input type="hidden" name="macroId" value={macro.id} />}
-      <div className="grid gap-3" style={{ gridTemplateColumns: "1fr 1fr" }}>
-        <Field label="Nom">
-          <TextInput name="name" required defaultValue={macro?.name ?? ""} />
-        </Field>
-        <Field label="Catégorie">
-          <TextInput
-            name="category"
-            defaultValue={macro?.category ?? ""}
-            placeholder="Réponses courantes"
-          />
-        </Field>
-      </div>
+
+      <Field label="Nom">
+        <TextInput
+          name="name"
+          required
+          defaultValue={macro?.name ?? ""}
+          placeholder="Accusé de réception"
+          style={control}
+        />
+      </Field>
+
+      <Field label="Catégorie">
+        <TextInput
+          name="category"
+          defaultValue={macro?.category ?? ""}
+          placeholder="Réponses courantes"
+          style={control}
+        />
+      </Field>
 
       <div className="flex flex-col gap-1.5">
-        <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-          Type d'insertion
+        <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+          Type d&apos;insertion
         </span>
-        <div className="flex gap-4" style={{ fontSize: 13 }}>
+        <div className="flex gap-4" style={{ fontSize: 13.5 }}>
           <label className="flex items-center gap-1.5">
             <input
               type="radio"
@@ -190,21 +231,29 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
       </div>
 
       <Field
-        label="Texte"
+        label="Texte inséré"
         hint="Variables : {{contact.name}}, {{ticket.number}}, {{ticket.subject}}."
       >
         <textarea
           name="insertText"
           required
-          rows={6}
+          rows={4}
           defaultValue={insertText}
-          className="rounded-md border px-2.5 py-1.5 text-sm"
-          style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
+          className="rounded-md border"
+          style={{
+            minHeight: 96,
+            padding: "10px 11px",
+            fontSize: 13.5,
+            lineHeight: 1.55,
+            borderColor: "var(--line)",
+            background: "var(--bg)",
+            color: "var(--ink)",
+          }}
         />
       </Field>
 
       <Field label="Statut appliqué">
-        <Select name="setStatus" defaultValue={setStatus}>
+        <Select name="setStatus" defaultValue={setStatus} style={control}>
           <option value="">— sans changement —</option>
           {Object.entries(STATUS_LABELS_FR).map(([k, v]) => (
             <option key={k} value={k}>
@@ -214,8 +263,11 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
         </Select>
       </Field>
 
-      <Field label="Disponibilité">
-        <Select name="availability" defaultValue={availability}>
+      <Field
+        label="Disponibilité"
+        hint="Restreignez à une équipe pour éviter de surcharger la liste des macros."
+      >
+        <Select name="availability" defaultValue={availability} style={control}>
           <option value="everyone">Tous les agents</option>
           {teams.map((t) => (
             <option key={t.id} value={`team:${t.id}`}>
@@ -233,9 +285,10 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
           <button
             type="submit"
             formAction={deleteMacro}
-            className="rounded-md border px-3 font-medium"
+            className="rounded-md border font-medium"
             style={{
-              height: 32,
+              height: 34,
+              padding: "0 14px",
               fontSize: 13,
               borderColor: "var(--dang)",
               color: "var(--dang)",
@@ -248,8 +301,8 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
         <span className="flex-1" />
         <button
           type="submit"
-          className="rounded-md px-3.5 font-semibold text-white"
-          style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+          className="rounded-md font-semibold text-white"
+          style={{ height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
         >
           Enregistrer
         </button>

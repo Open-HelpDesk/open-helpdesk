@@ -1,9 +1,19 @@
 import { getPortalTenant } from "@/lib/portal-auth";
+// Le widget vit hors du groupe /help : il charge lui-même les styles .pt-* du portail.
+import "../help/portal.css";
 
 /**
- * Formulaire compact du widget (ST-09) — rendu dans l'iframe, hors shell du portail.
- * POST multipart vers /api/portal/widget-submit (pièce jointe acceptée, 10 Mo max).
+ * Widget embarquable (aperçu ST-09 « Portail & widget ») — rendu dans l'iframe,
+ * hors chrome du portail : bandeau d'accent portant le titre du widget, formulaire
+ * compact (email / sujet / message / pièce jointe), bouton d'accent pleine largeur.
+ * Palette du portail (.surface-portal), accent = couleur du widget puis du tenant.
+ * POST multipart vers /api/portal/widget-submit (noms de champs inchangés).
  */
+
+const HEX = /^#[0-9a-fA-F]{6}$/;
+/** Accent du design system : on laisse alors les tokens de .surface-portal faire foi. */
+const DEFAULT_ACCENT = "#0b5f46";
+
 export default async function WidgetPage({
   searchParams,
 }: {
@@ -13,68 +23,109 @@ export default async function WidgetPage({
   const { sent } = await searchParams;
   if (!tenant) return null;
 
-  if (sent) {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-        <p className="text-3xl">✅</p>
-        <h1 className="mt-2 text-base font-semibold">Demande envoyée</h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--mute)" }}>
-          Vous recevrez la réponse par email.
-        </p>
-        <a href="/widget" className="mt-4 text-sm underline" style={{ color: "var(--acc)" }}>
-          Envoyer une autre demande
-        </a>
-      </main>
-    );
-  }
+  const config = (tenant.portalConfig ?? {}) as {
+    welcomeText?: string;
+    widget?: { color?: string; title?: string };
+  };
+  const widget = config.widget ?? {};
+  const candidate = HEX.test(widget.color ?? "")
+    ? widget.color!
+    : ((tenant.branding as { accentColor?: string } | null)?.accentColor ?? "");
+  const accent =
+    HEX.test(candidate) && candidate.toLowerCase() !== DEFAULT_ACCENT ? candidate : null;
+  const title = widget.title?.trim() || "Besoin d'aide ?";
+  const intro = config.welcomeText?.trim() || "Comment pouvons-nous vous aider ?";
 
   return (
-    <main className="p-4" style={{ fontSize: 14 }}>
-      <h1 className="text-base font-semibold">{tenant.name}</h1>
-      <p className="mb-3 text-xs" style={{ color: "var(--mute)" }}>
-        Décrivez votre demande, nous répondons par email.
-      </p>
-      <form
-        action="/api/portal/widget-submit"
-        method="post"
-        encType="multipart/form-data"
-        className="flex flex-col gap-2.5"
+    <div
+      className="surface-portal flex min-h-screen flex-col"
+      style={{
+        fontSize: 15,
+        lineHeight: 1.55,
+        background: "var(--panel)",
+        color: "var(--ink)",
+        ...(accent ? ({ "--acc": accent, "--acc-2": accent } as React.CSSProperties) : {}),
+      }}
+    >
+      <header
+        className="flex-none px-4 py-3.5 text-[15px] font-semibold text-white"
+        style={{ background: "var(--acc)" }}
       >
-        <input
-          name="email"
-          type="email"
-          required
-          placeholder="Votre email"
-          className="rounded-md border px-3 py-2"
-          style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-        />
-        <input
-          name="subject"
-          required
-          placeholder="Sujet"
-          className="rounded-md border px-3 py-2"
-          style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-        />
-        <textarea
-          name="body"
-          required
-          rows={6}
-          placeholder="Votre message…"
-          className="resize-y rounded-md border px-3 py-2"
-          style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-        />
-        <label className="text-xs" style={{ color: "var(--mute)" }}>
-          Pièce jointe (10 Mo max)
-          <input name="files" type="file" className="mt-1 block w-full text-xs" />
-        </label>
-        <button
-          type="submit"
-          className="rounded-md px-4 py-2 text-sm font-semibold text-white"
-          style={{ background: "var(--acc)" }}
-        >
-          Envoyer
-        </button>
-      </form>
-    </main>
+        {title}
+      </header>
+
+      {sent ? (
+        <main className="flex flex-1 flex-col items-center justify-center gap-[11px] p-6 text-center">
+          <span
+            className="grid h-11 w-11 place-items-center rounded-full text-[22px]"
+            style={{ background: "var(--ok-t)", color: "var(--ok)" }}
+          >
+            ✓
+          </span>
+          <p className="text-[19px] font-semibold tracking-[-0.02em]">Demande enregistrée</p>
+          <p className="text-[14.5px]" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+            Vous recevrez chaque réponse par email.
+          </p>
+          <a href="/widget" className="pt-link text-sm">
+            Envoyer une autre demande
+          </a>
+        </main>
+      ) : (
+        <main className="flex flex-1 flex-col gap-[13px] p-4">
+          <p className="text-[13.5px]" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+            {intro}
+          </p>
+          <form
+            action="/api/portal/widget-submit"
+            method="post"
+            encType="multipart/form-data"
+            className="flex flex-1 flex-col gap-[9px]"
+          >
+            <label className="sr-only" htmlFor="ohd-w-email">
+              Votre email
+            </label>
+            <input
+              id="ohd-w-email"
+              name="email"
+              type="email"
+              required
+              placeholder="Votre email"
+              className="pt-input h-[42px] px-[13px] text-[14.5px]"
+            />
+            <label className="sr-only" htmlFor="ohd-w-subject">
+              Sujet
+            </label>
+            <input
+              id="ohd-w-subject"
+              name="subject"
+              required
+              placeholder="Sujet"
+              className="pt-input h-[42px] px-[13px] text-[14.5px]"
+            />
+            <label className="sr-only" htmlFor="ohd-w-body">
+              Votre message
+            </label>
+            <textarea
+              id="ohd-w-body"
+              name="body"
+              required
+              placeholder="Écrivez votre message…"
+              className="pt-input min-h-[104px] flex-1 resize-y p-[13px] text-[14.5px] leading-[1.6]"
+            />
+            <label className="flex cursor-pointer flex-col gap-1 text-[13px]" style={{ color: "var(--ink-2)" }}>
+              📎 Joindre un fichier — 10 Mo maximum
+              <input name="files" type="file" className="block w-full text-[12.5px]" />
+            </label>
+            <button
+              type="submit"
+              className="mt-1 grid h-[46px] w-full flex-none place-items-center rounded-[9px] text-[15px] font-semibold text-white"
+              style={{ background: "var(--acc)" }}
+            >
+              Envoyer la demande
+            </button>
+          </form>
+        </main>
+      )}
+    </div>
   );
 }

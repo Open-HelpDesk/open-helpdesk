@@ -1,9 +1,11 @@
 "use client";
 
 /**
- * ST-08 — Exclusions en chips (« tag : spam », « formulaire : Commercial ») :
- * ajout/retrait côté client, valeurs portées par des inputs cachés répétés
- * lus par la server action à l'enregistrement.
+ * ST-08 — Exclusions en chips (« tag : spam », « tag : interne »,
+ * « formulaire : Commercial ») dans un cadre unique min-height 44 : la saisie se
+ * fait en ligne (placeholder « Ajouter un tag ou un formulaire… », validation
+ * Entrée ou perte de focus). Les valeurs sont portées par des inputs cachés
+ * répétés, lus par la server action à l'enregistrement.
  */
 import { useState } from "react";
 
@@ -13,75 +15,64 @@ export function ExclusionsField({ initial }: { initial: string[] }) {
 
   function add() {
     const v = draft.trim();
+    setDraft("");
     if (!v || chips.includes(v)) return;
     setChips([...chips, v]);
-    setDraft("");
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex flex-wrap gap-1.5">
-        {chips.map((c) => (
-          <span
-            key={c}
-            className="inline-flex items-center gap-1.5 rounded-full border font-mono"
-            style={{
-              fontSize: 11.5,
-              padding: "3px 10px",
-              borderColor: "var(--line)",
-              background: "var(--sunk)",
-              color: "var(--ink)",
-            }}
-          >
-            <input type="hidden" name="exclusions" value={c} />
-            {c}
-            <button
-              type="button"
-              onClick={() => setChips(chips.filter((x) => x !== c))}
-              title="Retirer"
-              style={{ color: "var(--ink-3)" }}
-            >
-              ✕
-            </button>
-          </span>
-        ))}
-        {chips.length === 0 && (
-          <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>Aucune exclusion.</span>
-        )}
-      </div>
-      <div className="flex items-center gap-2">
-        <input
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              add();
-            }
-          }}
-          placeholder="tag : spam"
-          className="rounded-md border px-2.5 py-1.5 font-mono text-sm"
+    <div
+      className="flex flex-wrap items-center border"
+      style={{
+        minHeight: 44,
+        padding: "8px 10px",
+        gap: 6,
+        borderRadius: 6,
+        borderColor: "var(--line)",
+        background: "var(--bg)",
+      }}
+    >
+      {chips.map((c) => (
+        <span
+          key={c}
+          className="inline-flex items-center border"
           style={{
+            padding: "3px 9px",
+            gap: 7,
+            borderRadius: 5,
+            fontSize: 12,
             borderColor: "var(--line)",
-            background: "var(--bg)",
-            color: "var(--ink)",
-            width: 200,
-          }}
-        />
-        <button
-          type="button"
-          onClick={add}
-          className="rounded-md border px-2.5 py-1 font-medium"
-          style={{
-            fontSize: 12.5,
-            borderColor: "var(--line)",
-            background: "var(--panel)",
+            background: "var(--sunk)",
             color: "var(--ink)",
           }}
         >
-          Ajouter
-        </button>
-      </div>
+          <input type="hidden" name="exclusions" value={c} />
+          {c}
+          <button
+            type="button"
+            onClick={() => setChips(chips.filter((x) => x !== c))}
+            aria-label={`Retirer ${c}`}
+            style={{ opacity: 0.45 }}
+          >
+            ✕
+          </button>
+        </span>
+      ))}
+      <input
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={add}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            add();
+          }
+        }}
+        placeholder="Ajouter un tag ou un formulaire…"
+        aria-label="Ajouter une exclusion"
+        className="min-w-0 flex-1 bg-transparent"
+        style={{ fontSize: 12.5, color: "var(--ink)", minWidth: 190 }}
+      />
     </div>
   );
 }

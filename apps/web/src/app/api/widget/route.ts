@@ -27,26 +27,35 @@ export async function GET(request: NextRequest) {
   const title = (widget.title ?? "Besoin d'aide ?").replace(/[<>]/g, "");
   const origin = `${request.nextUrl.protocol}//${request.headers.get("host")}`;
 
+  // Pastille flottante + panneau 12 px d'angle, ombre 0 8px 24px — aperçu ST-09.
   const js = `(function(){
   if (window.__ohdWidget) return; window.__ohdWidget = true;
+  var label = ${JSON.stringify(`💬 ${title}`)};
   var btn = document.createElement("button");
-  btn.textContent = ${JSON.stringify(title)};
+  btn.type = "button";
+  btn.textContent = label;
   btn.setAttribute("aria-haspopup", "dialog");
+  btn.setAttribute("aria-expanded", "false");
   btn.style.cssText = "position:fixed;bottom:20px;${position}:20px;z-index:2147483000;" +
-    "background:${accent};color:#fff;border:0;border-radius:24px;padding:12px 18px;" +
-    "font:600 14px/1 Inter,system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2)";
+    "background:${accent};color:#fff;border:0;border-radius:999px;padding:0 18px;height:44px;" +
+    "font:600 14.5px/1 Inter,system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2)";
   var frame = null;
   btn.addEventListener("click", function(){
-    if (frame) { frame.remove(); frame = null; btn.textContent = ${JSON.stringify(title)}; return; }
+    if (frame) {
+      frame.remove(); frame = null;
+      btn.textContent = label; btn.setAttribute("aria-expanded", "false");
+      return;
+    }
     frame = document.createElement("iframe");
     frame.src = "${origin}/widget";
     frame.title = ${JSON.stringify(title)};
     frame.style.cssText = "position:fixed;bottom:76px;${position}:20px;z-index:2147483000;" +
       "width:min(380px,calc(100vw - 40px));height:min(560px,calc(100vh - 110px));" +
-      "border:1px solid rgba(0,0,0,.12);border-radius:14px;background:#fff;" +
-      "box-shadow:0 12px 40px rgba(0,0,0,.22)";
+      "border:1px solid rgba(0,0,0,.10);border-radius:12px;background:#fff;" +
+      "box-shadow:0 8px 24px rgba(0,0,0,.14)";
     document.body.appendChild(frame);
     btn.textContent = "✕ Fermer";
+    btn.setAttribute("aria-expanded", "true");
   });
   document.body.appendChild(btn);
 })();`;

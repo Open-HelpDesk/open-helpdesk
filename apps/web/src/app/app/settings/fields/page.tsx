@@ -4,9 +4,7 @@ import { db, formFields, ticketFields, ticketForms } from "@openhelpdesk/db";
 import { asc, eq } from "drizzle-orm";
 import { FIELD_TYPE_LABELS } from "@/lib/rule-labels";
 import {
-  Card,
   Field,
-  GridHead,
   PageHeader,
   PageShell,
   Select,
@@ -18,13 +16,18 @@ import { Drawer } from "@/components/settings-overlays";
 import { addFieldToForm, createForm, deleteField, removeFieldFromForm, saveField } from "./actions";
 
 const FIELDS_GRID = "minmax(200px,1.4fr) 170px 110px 110px 120px";
+/** Libellés longs de la table ST-04 (« Liste déroulante ») — la composition utilise « Liste ». */
+const TYPE_LABELS_LONG: Record<string, string> = {
+  ...FIELD_TYPE_LABELS,
+  select: "Liste déroulante",
+};
 
 type FieldRow = typeof ticketFields.$inferSelect;
 
 /**
- * ST-04 — Champs & formulaires (1100 px). Onglet Champs : table réelle + drawer de
- * création/édition. Onglet Formulaires : 3 colonnes (champs disponibles /
- * composition avec intrinsèques Sujet, Description, Pièces jointes / aperçu portail).
+ * ST-04 — Champs & formulaires (1100 px). Onglet Champs : table
+ * `minmax(200px,1.4fr) 170px 110px 110px 120px` + drawer 420 px. Onglet Formulaires :
+ * 3 colonnes auto-fit minmax(260px,1fr) — champs disponibles / composition / aperçu portail.
  */
 export default async function FieldsSettingsPage({
   searchParams,
@@ -62,9 +65,7 @@ export default async function FieldsSettingsPage({
   const composedFields = selectedLinks
     .map((l) => fieldById.get(l.fieldId))
     .filter((f): f is FieldRow => Boolean(f));
-  const availableFields = fields.filter(
-    (f) => !selectedLinks.some((l) => l.fieldId === f.id),
-  );
+  const availableFields = fields.filter((f) => !selectedLinks.some((l) => l.fieldId === f.id));
 
   const tabs = [
     { label: "Champs", href: "/app/settings/fields", active: activeTab === "fields" },
@@ -78,32 +79,36 @@ export default async function FieldsSettingsPage({
         title="Champs & formulaires"
         subtitle="Champs personnalisés et composition des formulaires de ticket."
         tabs={tabs}
-        actions={
-          activeTab === "fields" ? (
-            <Drawer
-              title="Nouveau champ"
-              trigger={<>Nouveau champ</>}
-              triggerClassName="rounded-md px-3.5 font-semibold text-white"
-              triggerStyle={{ height: 32, fontSize: 13, background: "var(--acc)" }}
-            >
-              <FieldForm />
-            </Drawer>
-          ) : undefined
-        }
       />
 
       {saved === "1" && <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>}
 
       {activeTab === "fields" ? (
-        <div
-          className="overflow-x-auto rounded-[10px] border"
-          style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-        >
-          <div style={{ minWidth: 760 }}>
-            <GridHead
-              template={FIELDS_GRID}
-              columns={["Champ", "Type", "Portail", "Requis", "Formulaires"]}
-            />
+        <div className="st-rise flex flex-col" style={{ gap: 14 }}>
+          <div
+            className="overflow-x-auto rounded-[10px] border"
+            style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+          >
+            <div
+              className="grid items-center border-b"
+              style={{
+                gridTemplateColumns: FIELDS_GRID,
+                minWidth: 760,
+                padding: "0 14px",
+                height: 34,
+                background: "var(--sunk)",
+                borderColor: "var(--line)",
+                fontSize: 11,
+                fontWeight: 700,
+                color: "var(--ink-3)",
+              }}
+            >
+              <span>Champ</span>
+              <span>Type</span>
+              <span>Portail</span>
+              <span>Requis</span>
+              <span className="text-right">Formulaires</span>
+            </div>
             {fields.length === 0 && (
               <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
                 Aucun champ personnalisé. Créez le premier — liste, texte, date…
@@ -112,25 +117,28 @@ export default async function FieldsSettingsPage({
             {fields.map((f) => (
               <div
                 key={f.id}
-                className="grid items-center gap-3 border-t"
+                className="st-row grid items-center border-b"
                 style={{
                   gridTemplateColumns: FIELDS_GRID,
-                  padding: "10px 14px",
+                  minWidth: 760,
+                  padding: "0 14px",
+                  minHeight: 44,
                   borderColor: "var(--line-2)",
+                  fontSize: 13,
                 }}
               >
-                <span className="flex min-w-0 items-center gap-2">
+                <span className="flex min-w-0 items-center" style={{ paddingRight: 10 }}>
                   <Drawer
-                    title={`Modifier « ${f.label} »`}
+                    title="Modifier un champ"
                     trigger={<>{f.label}</>}
-                    triggerClassName="truncate text-left font-medium"
-                    triggerStyle={{ fontSize: 13, color: "var(--ink)" }}
+                    triggerClassName="min-w-0 truncate text-left"
+                    triggerStyle={{ fontSize: 13, fontWeight: 500, color: "var(--ink)" }}
                   >
                     <FieldForm field={f} />
                   </Drawer>
                 </span>
                 <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                  {FIELD_TYPE_LABELS[f.type] ?? f.type}
+                  {TYPE_LABELS_LONG[f.type] ?? f.type}
                 </span>
                 <span>
                   {f.portalVisible ? (
@@ -139,18 +147,31 @@ export default async function FieldsSettingsPage({
                     <StatusPill tone="closed">Masqué</StatusPill>
                   )}
                 </span>
-                <span style={{ fontSize: 12.5, color: f.required ? "var(--ink)" : "var(--ink-3)" }}>
+                <span style={{ fontSize: 12.5, color: f.required ? "var(--dang)" : "var(--ink-3)" }}>
                   {f.required ? "Requis" : "—"}
                 </span>
-                <span
-                  className="text-right font-mono tabular-nums"
-                  style={{ fontSize: 12.5, color: "var(--ink-2)" }}
-                >
+                <span className="text-right tabular-nums" style={{ color: "var(--ink-2)" }}>
                   {formCountByField.get(f.id) ?? 0}
                 </span>
               </div>
             ))}
           </div>
+
+          <Drawer
+            title="Créer un champ"
+            trigger={<>+ Créer un champ</>}
+            triggerClassName="inline-flex items-center justify-center self-start rounded-md border font-semibold"
+            triggerStyle={{
+              height: 32,
+              padding: "0 13px",
+              fontSize: 13,
+              borderColor: "var(--line)",
+              background: "var(--panel)",
+              color: "var(--ink-2)",
+            }}
+          >
+            <FieldForm />
+          </Drawer>
         </div>
       ) : (
         <>
@@ -168,7 +189,7 @@ export default async function FieldsSettingsPage({
                     padding: "4px 12px",
                     borderColor: active ? "var(--acc)" : "var(--line)",
                     background: active ? "var(--acc-t)" : "var(--panel)",
-                    color: active ? "var(--acc)" : "var(--ink)",
+                    color: active ? "var(--acc)" : "var(--ink-2)",
                   }}
                 >
                   {f.name}
@@ -177,34 +198,60 @@ export default async function FieldsSettingsPage({
             })}
             <span className="flex-1" />
             <form action={createForm} className="flex items-center gap-2">
-              <TextInput name="name" required placeholder="Nom du formulaire" style={{ width: 180 }} />
+              <TextInput
+                name="name"
+                required
+                placeholder="Nom du formulaire"
+                style={{ width: 180, height: 32, padding: "0 11px", fontSize: 12.5 }}
+              />
               <button
                 type="submit"
-                className="rounded-md border px-3 font-medium"
+                className="rounded-md border font-semibold"
                 style={{
-                  height: 30,
+                  height: 32,
+                  padding: "0 13px",
                   fontSize: 12.5,
                   borderColor: "var(--line)",
                   background: "var(--panel)",
-                  color: "var(--ink)",
+                  color: "var(--ink-2)",
                 }}
               >
-                Nouveau formulaire
+                + Créer un formulaire
               </button>
             </form>
           </div>
 
           {!selectedForm ? (
-            <Card>
+            <div
+              className="rounded-[10px] border"
+              style={{ background: "var(--panel)", borderColor: "var(--line)", padding: 15 }}
+            >
               <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
                 Aucun formulaire. Créez le premier pour composer votre portail.
               </p>
-            </Card>
+            </div>
           ) : (
-            <div className="grid items-start gap-4" style={{ gridTemplateColumns: "1fr 1.2fr 1.1fr" }}>
+            <div
+              className="st-rise grid items-start"
+              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}
+            >
               {/* Colonne 1 — champs disponibles */}
-              <Card title="Champs disponibles">
-                <div className="flex flex-col gap-1.5">
+              <div
+                className="overflow-hidden rounded-[10px] border"
+                style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+              >
+                <div
+                  className="border-b font-semibold"
+                  style={{
+                    padding: "11px 14px",
+                    borderColor: "var(--line)",
+                    fontSize: 12.5,
+                    color: "var(--ink-2)",
+                  }}
+                >
+                  Champs disponibles
+                </div>
+                <div className="flex flex-col" style={{ padding: 9, gap: 5 }}>
                   {availableFields.length === 0 && (
                     <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
                       Tous les champs sont déjà dans ce formulaire.
@@ -217,120 +264,102 @@ export default async function FieldsSettingsPage({
                       <button
                         type="submit"
                         title="Ajouter au formulaire"
-                        className="flex w-full items-center gap-2 rounded-md border border-dashed px-2.5 py-1.5 text-left"
-                        style={{ borderColor: "var(--line)", background: "var(--bg)" }}
+                        className="flex w-full items-center rounded-[7px] border text-left"
+                        style={{
+                          padding: "9px 11px",
+                          gap: 9,
+                          borderColor: "var(--line)",
+                          background: "var(--bg)",
+                          fontSize: 13,
+                          color: "var(--ink)",
+                          cursor: "grab",
+                        }}
                       >
-                        <span className="min-w-0 flex-1 truncate" style={{ fontSize: 13, color: "var(--ink)" }}>
-                          {f.label}
+                        <span aria-hidden style={{ fontSize: 11, color: "var(--ink-3)" }}>
+                          ⠿
                         </span>
+                        <span className="min-w-0 flex-1 truncate">{f.label}</span>
                         <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
                           {FIELD_TYPE_LABELS[f.type] ?? f.type}
                         </span>
-                        <span style={{ color: "var(--acc)", fontWeight: 600 }}>+</span>
                       </button>
                     </form>
                   ))}
                 </div>
-              </Card>
+              </div>
 
               {/* Colonne 2 — composition */}
-              <Card title={`Composition — ${selectedForm.name}`}>
-                <div className="flex flex-col gap-1.5">
-                  <IntrinsicRow label="Sujet" type="Texte" />
-                  <IntrinsicRow label="Description" type="Texte long" />
-                  {composedFields.map((f) => (
-                    <div
-                      key={f.id}
-                      className="flex items-center gap-2 rounded-md border px-2.5 py-1.5"
-                      style={{ borderColor: "var(--line)", background: "var(--panel)" }}
-                    >
-                      <span className="min-w-0 flex-1 truncate" style={{ fontSize: 13, color: "var(--ink)" }}>
-                        {f.label}
-                      </span>
-                      <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-                        {FIELD_TYPE_LABELS[f.type] ?? f.type}
-                        {f.required ? " · Requis" : ""}
-                      </span>
-                      <form action={removeFieldFromForm}>
-                        <input type="hidden" name="formId" value={selectedForm.id} />
-                        <input type="hidden" name="fieldId" value={f.id} />
-                        <button title="Retirer" style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                          ✕
-                        </button>
-                      </form>
-                    </div>
-                  ))}
-                  <IntrinsicRow label="Pièces jointes" type="Fichier" optional />
+              <div
+                className="overflow-hidden rounded-[10px] border"
+                style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+              >
+                <div
+                  className="border-b font-semibold"
+                  style={{
+                    padding: "11px 14px",
+                    borderColor: "var(--acc-b)",
+                    background: "var(--acc-t)",
+                    fontSize: 12.5,
+                    color: "var(--acc)",
+                  }}
+                >
+                  Formulaire « {selectedForm.name} »
                 </div>
-              </Card>
+                <div className="flex flex-col" style={{ padding: 9, gap: 5 }}>
+                  <ComposedRow label="Sujet" type="Texte" required />
+                  <ComposedRow label="Description" type="Texte long" required />
+                  {composedFields.map((f) => (
+                    <ComposedRow
+                      key={f.id}
+                      label={f.label}
+                      type={FIELD_TYPE_LABELS[f.type] ?? f.type}
+                      required={f.required}
+                      remove={
+                        <form action={removeFieldFromForm}>
+                          <input type="hidden" name="formId" value={selectedForm.id} />
+                          <input type="hidden" name="fieldId" value={f.id} />
+                          <button title="Retirer du formulaire" style={{ fontSize: 11, color: "var(--ink-3)" }}>
+                            ✕
+                          </button>
+                        </form>
+                      }
+                    />
+                  ))}
+                  <ComposedRow label="Pièces jointes" type="Fichier" />
+                </div>
+              </div>
 
               {/* Colonne 3 — aperçu portail */}
-              <Card title="Aperçu portail">
+              <div
+                className="overflow-hidden rounded-[10px] border"
+                style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+              >
                 <div
-                  className="flex flex-col gap-3 rounded-lg border p-3"
-                  style={{ borderColor: "var(--line-2)", background: "var(--canvas)" }}
+                  className="border-b"
+                  style={{
+                    padding: "9px 13px",
+                    background: "var(--sunk)",
+                    borderColor: "var(--line)",
+                    fontSize: 11.5,
+                    color: "var(--ink-3)",
+                  }}
                 >
-                  <PreviewField label="Sujet" required>
-                    <span className="block rounded-md border px-2 py-1.5" style={{ borderColor: "var(--line)", background: "var(--bg)", height: 30 }} />
-                  </PreviewField>
-                  <PreviewField label="Description" required>
-                    <span className="block rounded-md border px-2 py-1.5" style={{ borderColor: "var(--line)", background: "var(--bg)", height: 56 }} />
-                  </PreviewField>
+                  Aperçu portail
+                </div>
+                <div className="flex flex-col" style={{ padding: 16, gap: 11 }}>
+                  <PreviewField label="Sujet" height={36} />
+                  <PreviewField label="Description" height={72} />
                   {composedFields.map((f) => (
-                    <PreviewField key={f.id} label={f.label} required={f.required}>
-                      {f.type === "checkbox" ? (
-                        <span className="flex items-center gap-2" style={{ fontSize: 12 }}>
-                          <span
-                            className="inline-block rounded border"
-                            style={{ width: 14, height: 14, borderColor: "var(--line)", background: "var(--bg)" }}
-                          />
-                          <span style={{ color: "var(--ink-3)" }}>Oui</span>
-                        </span>
-                      ) : (
-                        <span
-                          className="flex items-center justify-between rounded-md border px-2"
-                          style={{
-                            borderColor: "var(--line)",
-                            background: "var(--bg)",
-                            height: 30,
-                            fontSize: 11.5,
-                            color: "var(--ink-3)",
-                          }}
-                        >
-                          <span>
-                            {f.type === "select" || f.type === "multi_select"
-                              ? (f.options as string[])[0] ?? "Choisir…"
-                              : f.type === "date"
-                                ? "jj/mm/aaaa"
-                                : ""}
-                          </span>
-                          {(f.type === "select" || f.type === "multi_select") && <span>▾</span>}
-                        </span>
-                      )}
-                    </PreviewField>
+                    <PreviewField key={f.id} label={f.label} height={36} />
                   ))}
-                  <PreviewField label="Pièces jointes">
-                    <span
-                      className="flex items-center justify-center rounded-md border border-dashed"
-                      style={{
-                        borderColor: "var(--line)",
-                        height: 38,
-                        fontSize: 11.5,
-                        color: "var(--ink-3)",
-                        background: "var(--bg)",
-                      }}
-                    >
-                      Glissez vos fichiers ici
-                    </span>
-                  </PreviewField>
                   <span
-                    className="inline-flex items-center justify-center self-start rounded-md px-3 font-semibold text-white"
-                    style={{ height: 30, fontSize: 12.5, background: "var(--acc)" }}
+                    className="flex items-center justify-center font-semibold text-white"
+                    style={{ height: 40, borderRadius: 8, fontSize: 13.5, background: "var(--acc)" }}
                   >
-                    Envoyer la demande
+                    Envoyer
                   </span>
                 </div>
-              </Card>
+              </div>
             </div>
           )}
         </>
@@ -339,65 +368,85 @@ export default async function FieldsSettingsPage({
   );
 }
 
-/** Ligne intrinsèque de la composition (Sujet / Description / Pièces jointes). */
-function IntrinsicRow({
+/** Ligne de la composition — pastille « Requis » 10.5/700 sur --dang-t. */
+function ComposedRow({
   label,
   type,
-  optional,
+  required,
+  remove,
 }: {
   label: string;
   type: string;
-  optional?: boolean;
+  required?: boolean;
+  remove?: React.ReactNode;
 }) {
   return (
     <div
-      className="flex items-center gap-2 rounded-md border px-2.5 py-1.5"
-      style={{ borderColor: "var(--line-2)", background: "var(--sunk)" }}
+      className="flex items-center rounded-[7px] border"
+      style={{
+        padding: "9px 11px",
+        gap: 9,
+        borderColor: "var(--acc-b)",
+        background: "var(--acc-t)",
+        fontSize: 13,
+        color: "var(--ink)",
+        cursor: "grab",
+      }}
     >
-      <span className="min-w-0 flex-1 truncate font-medium" style={{ fontSize: 13, color: "var(--ink-2)" }}>
-        {label}
+      <span aria-hidden style={{ fontSize: 11, color: "var(--ink-3)" }}>
+        ⠿
       </span>
-      <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-        {type}
-        {optional ? "" : " · Requis"}
-      </span>
-      <span title="Champ intrinsèque du formulaire" style={{ fontSize: 11, color: "var(--ink-3)" }}>
-        intrinsèque
-      </span>
+      <span className="min-w-0 flex-1 truncate">{label}</span>
+      <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>{type}</span>
+      {required && (
+        <span
+          className="rounded-full font-bold"
+          style={{
+            padding: "1px 7px",
+            fontSize: 10.5,
+            background: "var(--dang-t)",
+            color: "var(--dang)",
+          }}
+        >
+          Requis
+        </span>
+      )}
+      {remove}
     </div>
   );
 }
 
-function PreviewField({
-  label,
-  required,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  children: React.ReactNode;
-}) {
+function PreviewField({ label, height }: { label: string; height: number }) {
   return (
-    <span className="flex flex-col gap-1">
-      <span className="font-medium" style={{ fontSize: 11.5, color: "var(--ink-2)" }}>
+    <span className="flex flex-col" style={{ gap: 5 }}>
+      <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
         {label}
-        {required && <span style={{ color: "var(--dang)" }}> *</span>}
       </span>
-      {children}
+      <span
+        className="block border"
+        style={{ height, borderRadius: 7, borderColor: "var(--line)", background: "var(--bg)" }}
+      />
     </span>
   );
 }
 
-/** Drawer création/édition d'un champ (types FR, options une par ligne, portail). */
+/** Drawer création/édition d'un champ (420 px) — types FR, options une par ligne, portail. */
 function FieldForm({ field }: { field?: FieldRow }) {
+  const control = { minHeight: 36, padding: "7px 11px", fontSize: 13.5 } as const;
   return (
-    <form action={saveField} className="flex h-full flex-col gap-4">
+    <form action={saveField} className="flex h-full flex-col" style={{ gap: 14 }}>
       {field && <input type="hidden" name="fieldId" value={field.id} />}
-      <Field label="Libellé">
-        <TextInput name="label" required defaultValue={field?.label ?? ""} placeholder="Module concerné" />
+      <Field label="Nom du champ">
+        <TextInput
+          name="label"
+          required
+          defaultValue={field?.label ?? ""}
+          placeholder="Numéro de commande"
+          style={control}
+        />
       </Field>
       <Field label="Type">
-        <Select name="type" defaultValue={field?.type ?? "text"}>
+        <Select name="type" defaultValue={field?.type ?? "text"} style={control}>
           {Object.entries(FIELD_TYPE_LABELS).map(([v, l]) => (
             <option key={v} value={v}>
               {l}
@@ -405,21 +454,37 @@ function FieldForm({ field }: { field?: FieldRow }) {
           ))}
         </Select>
       </Field>
-      <Field label="Options" hint="Une option par ligne — pour les types Liste et Multi-sélection.">
+      <Field label="Options">
         <textarea
           name="options"
-          rows={4}
+          rows={3}
+          placeholder="Une option par ligne"
           defaultValue={((field?.options as string[]) ?? []).join("\n")}
-          className="rounded-md border px-2.5 py-1.5 text-sm"
-          style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
+          className="rounded-md border"
+          style={{
+            minHeight: 76,
+            padding: "10px 11px",
+            fontSize: 13.5,
+            lineHeight: 1.55,
+            borderColor: "var(--line)",
+            background: "var(--bg)",
+            color: "var(--ink)",
+          }}
         />
       </Field>
-      <Toggle
-        name="portalVisible"
-        defaultChecked={field?.portalVisible ?? false}
-        label="Visible sur le portail"
-        hint="Masqué, le champ reste disponible pour les agents et les automatisations."
-      />
+      <Field
+        label="Visibilité portail"
+        hint="Les champs masqués restent visibles des agents uniquement."
+      >
+        <Select
+          name="portalVisible"
+          defaultValue={field?.portalVisible ? "on" : ""}
+          style={control}
+        >
+          <option value="on">Visible et modifiable</option>
+          <option value="">Masqué</option>
+        </Select>
+      </Field>
       <Toggle name="required" defaultChecked={field?.required ?? false} label="Requis" />
       <div
         className="mt-auto flex items-center gap-2 border-t pt-3"
@@ -429,9 +494,10 @@ function FieldForm({ field }: { field?: FieldRow }) {
           <button
             type="submit"
             formAction={deleteField}
-            className="rounded-md border px-3 font-medium"
+            className="rounded-md border font-medium"
             style={{
-              height: 32,
+              height: 34,
+              padding: "0 14px",
               fontSize: 13,
               borderColor: "var(--dang)",
               color: "var(--dang)",
@@ -444,8 +510,8 @@ function FieldForm({ field }: { field?: FieldRow }) {
         <span className="flex-1" />
         <button
           type="submit"
-          className="rounded-md px-3.5 font-semibold text-white"
-          style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+          className="rounded-md font-semibold text-white"
+          style={{ height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
         >
           Enregistrer
         </button>

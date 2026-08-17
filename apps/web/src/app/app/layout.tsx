@@ -62,15 +62,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="flex h-screen overflow-hidden">
       {/* Rail 64 px */}
       <aside
-        className="flex w-16 shrink-0 flex-col items-center border-r py-3"
-        style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+        className="flex w-16 shrink-0 flex-col items-center border-r"
+        style={{ padding: "10px 0", background: "var(--panel)", borderColor: "var(--line)" }}
       >
         <div
-          className="mb-3 flex items-center justify-center font-bold text-white"
+          className="mb-2 flex items-center justify-center font-bold text-white"
           style={{
             width: 32,
             height: 32,
             borderRadius: 8,
+            fontSize: 14,
             background: branding.accentColor || "var(--acc)",
           }}
           title={tenant.name}
@@ -82,7 +83,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
         <div className="mt-auto flex flex-col items-center gap-1.5">
           <SignOutButton />
-          <Avatar name={agent.name} size={30} />
+          <Avatar name={agent.name} size={30} bordered />
         </div>
       </aside>
 

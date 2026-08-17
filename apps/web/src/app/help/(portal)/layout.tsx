@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { entitlementsFor } from "@/lib/entitlements";
 import { getPortalContact, getPortalTenant } from "@/lib/portal-auth";
 import { getOrgAdminOrg } from "@/lib/portal-data";
 import { portalSignOut } from "../actions";
@@ -6,7 +7,8 @@ import { initialsFr, shortNameFr } from "../portal-format";
 
 /**
  * Chrome du portail client (maquette PT) : header 62 px (logo 30, liens 14.5,
- * pilule utilisateur) + footer « © {année} {tenant} / Propulsé par Open HelpDesk ».
+ * pilule utilisateur) + rangée de navigation mobile (deux boutons h44, maquette
+ * « narrow ») + footer « © {année} {tenant} / Propulsé par Open HelpDesk ».
  * /help/login et /help/auth vivent hors de ce groupe — sans chrome (PT-07).
  */
 export default async function PortalChromeLayout({ children }: { children: React.ReactNode }) {
@@ -14,6 +16,10 @@ export default async function PortalChromeLayout({ children }: { children: React
   const session = await getPortalContact();
   const adminOrg = session ? await getOrgAdminOrg(session.tenant.id, session.contact.id) : null;
   const name = tenant?.name ?? "Centre d'aide";
+  // « Masquer Propulsé par Open HelpDesk » : réglage ST-09, réservé au plan Pro.
+  const hidePoweredBy =
+    (tenant?.portalConfig as { hidePoweredBy?: boolean } | null)?.hidePoweredBy === true &&
+    entitlementsFor(tenant?.plan ?? "").multiBrand;
 
   return (
     <div className="flex min-h-screen flex-col" style={{ background: "var(--bg)" }}>
@@ -110,6 +116,24 @@ export default async function PortalChromeLayout({ children }: { children: React
             </Link>
           )}
         </div>
+
+        {/* Rangée mobile de la maquette : les deux liens du header en boutons h44. */}
+        <div className="hidden gap-1.5 px-[18px] pb-2.5 max-sm:flex">
+          <Link
+            href="/help/requests/new"
+            className="grid h-11 flex-1 place-items-center rounded-lg border text-sm font-medium hover:no-underline"
+            style={{ borderColor: "var(--line)", color: "var(--ink)" }}
+          >
+            Soumettre
+          </Link>
+          <Link
+            href="/help/requests"
+            className="grid h-11 flex-1 place-items-center rounded-lg border text-sm font-medium hover:no-underline"
+            style={{ borderColor: "var(--line)", color: "var(--ink)" }}
+          >
+            Mes demandes
+          </Link>
+        </div>
       </header>
 
       <main className="flex-1">{children}</main>
@@ -126,12 +150,14 @@ export default async function PortalChromeLayout({ children }: { children: React
             © {new Date().getFullYear()} {name}
           </span>
           <span className="flex-1" />
-          <span>
-            Propulsé par{" "}
-            <a href="https://open-helpdesk.com" className="pt-link">
-              Open HelpDesk
-            </a>
-          </span>
+          {!hidePoweredBy && (
+            <span>
+              Propulsé par{" "}
+              <a href="https://open-helpdesk.com" className="pt-link">
+                Open HelpDesk
+              </a>
+            </span>
+          )}
         </div>
       </footer>
     </div>

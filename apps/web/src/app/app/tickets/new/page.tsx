@@ -29,28 +29,27 @@ export default async function NewTicketPage() {
   ]);
 
   return (
-    <div className="h-full overflow-y-auto py-8">
+    <div
+      className="grid h-full overflow-auto"
+      style={{ padding: 26, placeItems: "start center", background: "var(--canvas)" }}
+    >
       <div
-        className="ohd-rise mx-auto w-full border shadow-sm"
+        className="ohd-rise w-full overflow-hidden"
         style={{
           maxWidth: 720,
           borderRadius: 12,
           background: "var(--panel)",
-          borderColor: "var(--line)",
+          border: "1px solid var(--line)",
         }}
       >
         {/* En-tête de la carte */}
         <div
-          className="flex items-center justify-between border-b px-6 py-4"
-          style={{ borderColor: "var(--line)" }}
+          className="flex items-center border-b"
+          style={{ padding: "14px 18px", borderColor: "var(--line)" }}
         >
-          <h1 className="text-[15px] font-semibold">Nouveau ticket</h1>
-          <Link
-            href="/app/tickets"
-            title="Fermer"
-            className="flex items-center justify-center rounded-md"
-            style={{ width: 26, height: 26, color: "var(--ink-3)" }}
-          >
+          <h1 style={{ fontSize: 15, fontWeight: 600 }}>Nouveau ticket</h1>
+          <span className="flex-1" />
+          <Link href="/app/tickets" title="Fermer" style={{ color: "var(--ink-3)" }}>
             ✕
           </Link>
         </div>

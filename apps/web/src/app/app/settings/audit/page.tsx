@@ -2,17 +2,65 @@ import { requireAgent } from "@/lib/session";
 import { auditEvents, db, users } from "@openhelpdesk/db";
 import { and, asc, desc, eq, gte } from "drizzle-orm";
 import { entitlementsFor } from "@/lib/entitlements";
-import {
-  GridHead,
-  LockedScreen,
-  PageHeader,
-  PageShell,
-  Select,
-} from "@/components/settings-page";
+import { LockedScreen, PageHeader, PageShell } from "@/components/settings-page";
 import { AutoSubmitSelect } from "@/components/settings-overlays";
 
 const AUDIT_GRID = "160px 170px minmax(220px,1fr) 200px 120px";
-const DESTRUCTIVE = /delete|remove|revoke|disable|purge/i;
+const COLUMNS = ["Date", "Acteur", "Action", "Cible", "IP"];
+
+/** Actions destructives — affichées en --dang (l'action est stockée en français). */
+const DESTRUCTIVE =
+  /supprim|révoqu|revoqu|désactiv|desactiv|purg|delete|remove|revoke|disable/i;
+
+const ACTOR_TYPES: Record<string, string> = {
+  system: "Système",
+  api: "API",
+  user: "Utilisateur",
+  contact: "Contact",
+};
+
+/** Chip de filtre / bouton du bandeau : h30, bordure --line, radius 6, 12.5 px. */
+const CHIP: React.CSSProperties = {
+  height: 30,
+  padding: "0 11px",
+  borderRadius: 6,
+  fontSize: 12.5,
+  borderColor: "var(--line)",
+  background: "var(--panel)",
+  color: "var(--ink-2)",
+};
+
+/** « Aujourd'hui 14:02 », « Hier 17:48 », « 14 août 10:24 ». */
+function dayTimeFr(date: Date, now: Date = new Date()): string {
+  const time = date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  if (day === today) return `Aujourd'hui ${time}`;
+  if (day === today - 24 * 3600 * 1000) return `Hier ${time}`;
+  return `${date.toLocaleDateString("fr-FR", { day: "numeric", month: "long" })} ${time}`;
+}
+
+/** En-tête de table 11 px/700 sur fond --sunk, hauteur 34. */
+function TableHead() {
+  return (
+    <div
+      className="grid items-center border-b font-bold"
+      style={{
+        gridTemplateColumns: AUDIT_GRID,
+        height: 34,
+        padding: "0 14px",
+        background: "var(--sunk)",
+        borderColor: "var(--line)",
+        fontSize: 11,
+        color: "var(--ink-3)",
+      }}
+    >
+      {COLUMNS.map((c) => (
+        <span key={c}>{c}</span>
+      ))}
+    </div>
+  );
+}
 
 /**
  * ST-12 — Audit log (1040 px). Verrouillé hors plan Pro (voile blur + carte PLAN
@@ -80,131 +128,149 @@ export default async function AuditPage({
     <PageShell maxWidth={1040}>
       {header}
 
-      {/* Filtres */}
-      <form className="flex flex-wrap items-center gap-2">
-        <AutoSubmitSelect
-          name="actor"
-          defaultValue={actor ?? ""}
-          options={[
-            { value: "", label: "Tous les acteurs" },
-            ...agents.map((a) => ({ value: a.id, label: a.name })),
-          ]}
-          style={{ minWidth: 160, padding: "6px 8px" }}
-        />
-        <AutoSubmitSelect
-          name="action"
-          defaultValue={action ?? ""}
-          options={[
-            { value: "", label: "Toutes les actions" },
-            ...actionRows.map((a) => ({ value: a.action, label: a.action })),
-          ]}
-          style={{ minWidth: 160, padding: "6px 8px" }}
-        />
-        <AutoSubmitSelect
-          name="days"
-          defaultValue={String(daysN)}
-          options={[
-            { value: "7", label: "7 derniers jours" },
-            { value: "30", label: "30 derniers jours" },
-            { value: "90", label: "90 derniers jours" },
-          ]}
-          style={{ padding: "6px 8px" }}
-        />
-        <span className="flex-1" />
-        <a
-          href={`/app/settings/audit/export?days=${daysN}${actor ? `&actor=${actor}` : ""}${action ? `&action=${encodeURIComponent(action)}` : ""}`}
-          className="rounded-md border px-3 font-medium"
-          style={{
-            height: 30,
-            lineHeight: "28px",
-            fontSize: 12.5,
-            borderColor: "var(--line)",
-            background: "var(--panel)",
-            color: "var(--ink)",
-          }}
-        >
-          Export CSV
-        </a>
-      </form>
+      <div className="st-rise flex flex-col" style={{ gap: 14 }}>
+        {/* Filtres */}
+        <form className="flex flex-wrap items-center" style={{ gap: 7 }}>
+          <AutoSubmitSelect
+            name="actor"
+            defaultValue={actor ?? ""}
+            options={[
+              { value: "", label: "Acteur : tous" },
+              ...agents.map((a) => ({ value: a.id, label: a.name })),
+            ]}
+            style={CHIP}
+          />
+          <AutoSubmitSelect
+            name="action"
+            defaultValue={action ?? ""}
+            options={[
+              { value: "", label: "Action : toutes" },
+              ...actionRows.map((a) => ({ value: a.action, label: a.action })),
+            ]}
+            style={{ ...CHIP, maxWidth: 260 }}
+          />
+          <AutoSubmitSelect
+            name="days"
+            defaultValue={String(daysN)}
+            options={[
+              { value: "7", label: "7 derniers jours" },
+              { value: "30", label: "30 derniers jours" },
+              { value: "90", label: "90 derniers jours" },
+            ]}
+            style={CHIP}
+          />
+          <span className="flex-1" />
+          <a
+            href={`/app/settings/audit/export?days=${daysN}${actor ? `&actor=${actor}` : ""}${action ? `&action=${encodeURIComponent(action)}` : ""}`}
+            className="grid place-items-center border"
+            style={CHIP}
+          >
+            Export CSV
+          </a>
+        </form>
 
-      <div
-        className="overflow-x-auto rounded-[10px] border"
-        style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-      >
-        <div style={{ minWidth: 880 }}>
-          <GridHead template={AUDIT_GRID} columns={["Date", "Acteur", "Action", "Cible", "IP"]} />
-          {rows.length === 0 && (
-            <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-              Aucun événement sur la période — les actions d'administration apparaîtront ici.
-            </p>
-          )}
-          {rows.map((e) => {
-            const destructive = DESTRUCTIVE.test(e.action);
-            return (
-              <div
-                key={e.id}
-                className="grid items-center gap-3 border-t"
-                style={{
-                  gridTemplateColumns: AUDIT_GRID,
-                  padding: "9px 14px",
-                  borderColor: "var(--line-2)",
-                }}
-              >
-                <span className="font-mono" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                  {e.createdAt.toLocaleDateString("fr-FR", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })}{" "}
-                  {e.createdAt.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
-                </span>
-                <span className="truncate" style={{ fontSize: 12.5, color: "var(--ink)" }}>
-                  {e.actorId ? (agentNameById.get(e.actorId) ?? e.actorType) : e.actorType}
-                </span>
-                <span
-                  className="truncate font-mono font-medium"
-                  style={{ fontSize: 12, color: destructive ? "var(--dang)" : "var(--ink)" }}
+        <div
+          className="overflow-x-auto border"
+          style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
+        >
+          <div style={{ minWidth: 880 }}>
+            <TableHead />
+            {rows.length === 0 && (
+              <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
+                Aucun événement sur la période — les actions d'administration apparaîtront ici.
+              </p>
+            )}
+            {rows.map((e) => {
+              const destructive = DESTRUCTIVE.test(e.action);
+              return (
+                <div
+                  key={e.id}
+                  className="st-row grid items-center border-b"
+                  style={{
+                    gridTemplateColumns: AUDIT_GRID,
+                    height: 42,
+                    padding: "0 14px",
+                    borderColor: "var(--line-2)",
+                    fontSize: 12.5,
+                  }}
                 >
-                  {e.action}
-                </span>
-                <span className="truncate" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                  {e.targetType ? `${e.targetType}${e.targetId ? ` · ${e.targetId.slice(0, 8)}` : ""}` : "—"}
-                </span>
-                <span className="font-mono" style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                  {e.ip ?? "—"}
-                </span>
-              </div>
-            );
-          })}
+                  <span className="tabular-nums" style={{ color: "var(--ink-3)" }}>
+                    {dayTimeFr(e.createdAt)}
+                  </span>
+                  <span className="truncate" style={{ paddingRight: 10, color: "var(--ink)" }}>
+                    {(e.actorId ? agentNameById.get(e.actorId) : undefined) ??
+                      ACTOR_TYPES[e.actorType] ??
+                      e.actorType}
+                  </span>
+                  <span
+                    className="truncate font-medium"
+                    style={{
+                      paddingRight: 10,
+                      color: destructive ? "var(--dang)" : "var(--ink)",
+                    }}
+                  >
+                    {e.action}
+                  </span>
+                  <span className="truncate" style={{ paddingRight: 10, color: "var(--ink-2)" }}>
+                    {e.targetType
+                      ? `${e.targetType}${e.targetId ? ` · ${e.targetId.slice(0, 8)}` : ""}`
+                      : "—"}
+                  </span>
+                  <span className="font-mono" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
+                    {e.ip ?? "—"}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </PageShell>
   );
 }
 
-/** Table factice floutée derrière le voile de l'état verrouillé. */
+/** Filtres + table factices floutés derrière le voile de l'état verrouillé. */
 function GhostTable() {
   return (
-    <div
-      className="rounded-[10px] border"
-      style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-    >
-      <GridHead template={AUDIT_GRID} columns={["Date", "Acteur", "Action", "Cible", "IP"]} />
-      {Array.from({ length: 8 }).map((_, i) => (
-        <div
-          key={i}
-          className="grid items-center gap-3 border-t"
-          style={{ gridTemplateColumns: AUDIT_GRID, padding: "11px 14px", borderColor: "var(--line-2)" }}
-        >
-          {[110, 90, 180, 130, 80].map((w, j) => (
-            <span
-              key={j}
-              className="inline-block rounded"
-              style={{ width: w, height: 10, background: "var(--sunk)" }}
-            />
-          ))}
-        </div>
-      ))}
+    <div className="flex flex-col" style={{ gap: 14 }}>
+      <div className="flex items-center" style={{ gap: 7 }}>
+        {["Acteur : tous", "Action : toutes", "30 derniers jours"].map((f) => (
+          <span key={f} className="flex items-center border" style={{ ...CHIP, gap: 6 }}>
+            {f}
+            <span style={{ opacity: 0.45, fontSize: 9 }}>▾</span>
+          </span>
+        ))}
+        <span className="flex-1" />
+        <span className="grid place-items-center border" style={CHIP}>
+          Export CSV
+        </span>
+      </div>
+      <div
+        className="border"
+        style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
+      >
+        <TableHead />
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div
+            key={i}
+            className="grid items-center border-b"
+            style={{
+              gridTemplateColumns: AUDIT_GRID,
+              height: 42,
+              padding: "0 14px",
+              borderColor: "var(--line-2)",
+            }}
+          >
+            {[110, 90, 180, 130, 80].map((w, j) => (
+              <span
+                key={j}
+                className="inline-block rounded"
+                style={{ width: w, height: 10, background: "var(--sunk)" }}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

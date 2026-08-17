@@ -18,16 +18,27 @@ type ContactHit = {
   organizationName?: string | null;
 };
 
+/** Champ pleine largeur du design : h36, padding 0 10px, 13.5px. */
 const inputStyle = {
-  height: 34,
+  height: 36,
   borderRadius: 6,
   border: "1px solid var(--line)",
   background: "var(--bg)",
   color: "var(--ink)",
-  fontSize: 13,
+  fontSize: 13.5,
   padding: "0 10px",
   width: "100%",
 } as const;
+
+/** Selects de la grille 4 colonnes : h34, padding 0 9px, 13px. */
+const selectStyle = { ...inputStyle, height: 34, fontSize: 13, padding: "0 9px" } as const;
+
+/** Libellé de champ : 12px/600 ink-2. */
+const labelStyle = { fontSize: 12, fontWeight: 600, color: "var(--ink-2)" } as const;
+
+function Req() {
+  return <span style={{ color: "var(--dang)" }}>*</span>;
+}
 
 export function NewTicketForm({
   forms,
@@ -108,17 +119,19 @@ export function NewTicketForm({
 
   return (
     <form action={createTicket} className="flex flex-col">
-      <div className="flex flex-col gap-4 px-6 py-5">
+      <div className="flex flex-col" style={{ padding: 18, gap: 15 }}>
         {/* Contact — combobox */}
-        <div ref={boxRef} className="relative flex flex-col gap-1">
-          <label className="text-[12.5px] font-medium">Contact *</label>
+        <div ref={boxRef} className="relative flex flex-col" style={{ gap: 6 }}>
+          <label style={labelStyle}>
+            Contact <Req />
+          </label>
           {chosen ? (
             <div
-              className="flex items-center gap-2 border px-2.5"
+              className="flex items-center gap-2"
               style={{ ...inputStyle, display: "flex", padding: "0 10px" }}
             >
-              <Avatar name={chosen.name ?? chosen.email} size={20} />
-              <span className="min-w-0 flex-1 truncate text-[13px]">
+              <Avatar name={chosen.name ?? chosen.email} size={20} tone={1} />
+              <span className="min-w-0 flex-1 truncate" style={{ fontSize: 13.5 }}>
                 {chosen.name ?? chosen.email}
                 <span style={{ color: "var(--ink-3)" }}> · {chosen.email}</span>
               </span>
@@ -149,8 +162,13 @@ export function NewTicketForm({
           )}
           {open && !chosen && query.trim().length >= 2 && (
             <div
-              className="absolute left-0 right-0 top-full z-30 mt-1 flex flex-col overflow-hidden rounded-md border py-1 shadow-lg"
-              style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+              className="absolute left-0 right-0 top-full z-30 mt-1 flex flex-col overflow-hidden shadow-lg"
+              style={{
+                padding: 4,
+                borderRadius: 6,
+                background: "var(--panel)",
+                border: "1px solid var(--line)",
+              }}
             >
               {hits.map((c) => (
                 <button
@@ -160,11 +178,12 @@ export function NewTicketForm({
                     setChosen(c);
                     setOpen(false);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-left hover:opacity-70"
+                  className="flex items-center text-left"
+                  style={{ gap: 8, padding: "7px 9px", borderRadius: 5 }}
                 >
-                  <Avatar name={c.name ?? c.email} size={22} />
+                  <Avatar name={c.name ?? c.email} size={22} tone={1} />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[13px] font-medium">
+                    <span className="block truncate" style={{ fontSize: 13 }}>
                       {c.name ?? c.email}
                     </span>
                     <span
@@ -183,17 +202,25 @@ export function NewTicketForm({
                   setCreateMode(true);
                   setOpen(false);
                 }}
-                className="px-3 py-2 text-left text-[13px] font-medium"
-                style={{ color: "var(--acc)" }}
+                className="text-left"
+                style={{
+                  padding: "7px 9px",
+                  borderRadius: 5,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: "var(--acc-2)",
+                }}
               >
                 + Créer le contact « {query.trim()} »
               </button>
             </div>
           )}
           {createMode && !chosen && (
-            <div className="mt-1 grid grid-cols-2 gap-3">
-              <label className="flex flex-col gap-1 text-[12px]" style={{ color: "var(--ink-2)" }}>
-                Email du nouveau contact *
+            <div className="mt-1 grid grid-cols-2" style={{ gap: 12 }}>
+              <label className="flex flex-col" style={{ gap: 6 }}>
+                <span style={labelStyle}>
+                  Email du nouveau contact <Req />
+                </span>
                 <input
                   name="email"
                   type="email"
@@ -202,8 +229,8 @@ export function NewTicketForm({
                   style={inputStyle}
                 />
               </label>
-              <label className="flex flex-col gap-1 text-[12px]" style={{ color: "var(--ink-2)" }}>
-                Nom
+              <label className="flex flex-col" style={{ gap: 6 }}>
+                <span style={labelStyle}>Nom</span>
                 <input
                   name="name"
                   defaultValue={query.includes("@") ? "" : query.trim()}
@@ -216,13 +243,15 @@ export function NewTicketForm({
         </div>
 
         {/* Sujet / Formulaire — grille 1fr 220px */}
-        <div className="grid gap-3" style={{ gridTemplateColumns: "1fr 220px" }}>
-          <label className="flex flex-col gap-1 text-[12.5px] font-medium">
-            Sujet *
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 220px", gap: 12 }}>
+          <label className="flex flex-col" style={{ gap: 6 }}>
+            <span style={labelStyle}>
+              Sujet <Req />
+            </span>
             <input name="subject" required style={inputStyle} />
           </label>
-          <label className="flex flex-col gap-1 text-[12.5px] font-medium">
-            Formulaire
+          <label className="flex flex-col" style={{ gap: 6 }}>
+            <span style={labelStyle}>Formulaire</span>
             <select name="formId" defaultValue={forms[0]?.id ?? ""} style={inputStyle}>
               {forms.length === 0 && <option value="">—</option>}
               {forms.map((f) => (
@@ -234,61 +263,76 @@ export function NewTicketForm({
           </label>
         </div>
 
-        {/* Description + toolbar */}
-        <div className="flex flex-col gap-1">
-          <label className="text-[12.5px] font-medium">Description</label>
+        {/* Description : toolbar + corps dans une seule boîte bordée */}
+        <div className="flex flex-col" style={{ gap: 6 }}>
+          <label style={labelStyle}>Description</label>
           <div
-            className="flex items-center gap-0.5 rounded-t-md border border-b-0 px-1.5 py-1"
-            style={{ borderColor: "var(--line)", background: "var(--sunk)" }}
+            style={{
+              border: "1px solid var(--line)",
+              borderRadius: 6,
+              background: "var(--bg)",
+            }}
           >
-            {TOOLBAR.map((b) => (
-              <button
-                key={b.title}
-                type="button"
-                title={b.title}
-                onClick={b.run}
-                className="flex items-center justify-center hover:opacity-70"
-                style={{
-                  width: 26,
-                  height: 24,
-                  borderRadius: 5,
-                  color: "var(--ink-2)",
-                  fontSize: 12.5,
-                  fontWeight: b.label === "B" ? 700 : 500,
-                  fontStyle: b.label === "I" ? "italic" : undefined,
-                  textDecoration:
-                    b.label === "U" ? "underline" : b.label === "S" ? "line-through" : undefined,
-                }}
-              >
-                {b.label}
-              </button>
-            ))}
+            <div
+              className="flex"
+              style={{ gap: 1, padding: "5px 6px", borderBottom: "1px solid var(--line)" }}
+            >
+              {TOOLBAR.map((b) => (
+                <button
+                  key={b.title}
+                  type="button"
+                  title={b.title}
+                  onClick={b.run}
+                  className="grid place-items-center hover:opacity-70"
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 4,
+                    color: "var(--ink-2)",
+                    fontSize: 11.5,
+                    fontWeight: b.label === "B" ? 700 : 400,
+                    fontStyle: b.label === "I" ? "italic" : undefined,
+                    textDecoration:
+                      b.label === "U" ? "underline" : b.label === "S" ? "line-through" : undefined,
+                  }}
+                >
+                  {b.label}
+                </button>
+              ))}
+            </div>
+            <textarea
+              ref={bodyRef}
+              name="body"
+              rows={4}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              className="w-full resize-y border-0 outline-none"
+              style={{
+                padding: 11,
+                minHeight: 100,
+                fontSize: 13.5,
+                lineHeight: 1.55,
+                background: "transparent",
+                color: "var(--ink)",
+              }}
+            />
           </div>
-          <textarea
-            ref={bodyRef}
-            name="body"
-            rows={5}
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            className="w-full resize-y rounded-b-md border p-3 text-sm outline-none"
-            style={{ borderColor: "var(--line)", background: "var(--bg)", marginTop: -4 }}
-          />
         </div>
 
-        {/* 4 selects */}
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <label className="flex flex-col gap-1 text-[12.5px] font-medium">
-            Statut
-            <select name="status" defaultValue="new" style={inputStyle}>
+        {/* 4 selects — repeat(4,1fr) gap 10 */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }}>
+          <label className="flex flex-col" style={{ gap: 6 }}>
+            <span style={labelStyle}>Statut</span>
+            <select name="status" defaultValue="new" style={selectStyle}>
               <option value="new">Nouveau</option>
               <option value="open">Ouvert</option>
               <option value="waiting">En attente</option>
               <option value="on_hold">En pause</option>
             </select>
           </label>
-          <label className="flex flex-col gap-1 text-[12.5px] font-medium">
-            Priorité
-            <select name="priority" defaultValue="normal" style={inputStyle}>
+          <label className="flex flex-col" style={{ gap: 6 }}>
+            <span style={labelStyle}>Priorité</span>
+            <select name="priority" defaultValue="normal" style={selectStyle}>
               {Object.entries(PRIORITY_LABELS_FR).map(([k, v]) => (
                 <option key={k} value={k}>
                   {v}
@@ -296,9 +340,9 @@ export function NewTicketForm({
               ))}
             </select>
           </label>
-          <label className="flex flex-col gap-1 text-[12.5px] font-medium">
-            Assigné
-            <select name="assigneeId" defaultValue="me" style={inputStyle}>
+          <label className="flex flex-col" style={{ gap: 6 }}>
+            <span style={labelStyle}>Assigné</span>
+            <select name="assigneeId" defaultValue="me" style={selectStyle}>
               <option value="me">Moi</option>
               <option value="">Non assigné</option>
               {agents
@@ -310,9 +354,9 @@ export function NewTicketForm({
                 ))}
             </select>
           </label>
-          <label className="flex flex-col gap-1 text-[12.5px] font-medium">
-            Tags
-            <select name="tag" defaultValue="" style={inputStyle}>
+          <label className="flex flex-col" style={{ gap: 6 }}>
+            <span style={labelStyle}>Tags</span>
+            <select name="tag" defaultValue="" style={selectStyle}>
               <option value="">Aucun</option>
               {tags.map((t) => (
                 <option key={t} value={t}>
@@ -325,39 +369,54 @@ export function NewTicketForm({
 
         {/* Encart email */}
         <label
-          className="flex items-center gap-2.5 border px-3 py-2.5 text-[13px]"
+          className="flex cursor-pointer items-center"
           style={{
-            borderRadius: 8,
+            gap: 8,
+            padding: "9px 11px",
+            borderRadius: 7,
+            fontSize: 13,
             background: "var(--acc-t)",
-            borderColor: "var(--acc-b)",
+            border: "1px solid var(--acc-b)",
           }}
         >
-          <input type="checkbox" name="sendEmail" defaultChecked style={{ width: 14, height: 14 }} />
+          <input
+            type="checkbox"
+            name="sendEmail"
+            defaultChecked
+            style={{ width: 15, height: 15, borderRadius: 4, accentColor: "var(--acc)" }}
+          />
           Envoyer la réponse par email au contact
         </label>
       </div>
 
       {/* Pied sunk */}
       <div
-        className="flex items-center justify-end gap-2 border-t px-6 py-3"
+        className="flex justify-end border-t"
         style={{
+          gap: 8,
+          padding: "12px 18px",
           background: "var(--sunk)",
           borderColor: "var(--line)",
-          borderBottomLeftRadius: 12,
-          borderBottomRightRadius: 12,
         }}
       >
         <Link
           href="/app/tickets"
-          className="rounded-md border px-3 py-1.5 text-[13px] font-medium"
-          style={{ borderColor: "var(--line)", background: "var(--bg)" }}
+          className="grid place-items-center"
+          style={{
+            height: 34,
+            padding: "0 14px",
+            border: "1px solid var(--line)",
+            borderRadius: 6,
+            fontSize: 13,
+            background: "var(--panel)",
+          }}
         >
           Annuler
         </Link>
         <button
           type="submit"
-          className="rounded-md px-4 py-1.5 text-[13px] font-semibold text-white"
-          style={{ background: "var(--acc)" }}
+          className="grid place-items-center font-semibold text-white"
+          style={{ height: 34, padding: "0 16px", borderRadius: 6, background: "var(--acc)", fontSize: 13 }}
         >
           Créer le ticket
         </button>

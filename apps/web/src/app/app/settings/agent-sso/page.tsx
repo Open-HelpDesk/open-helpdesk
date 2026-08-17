@@ -1,9 +1,8 @@
 import { requireAgent } from "@/lib/session";
-import { db, teams } from "@openhelpdesk/db";
-import { asc, eq } from "drizzle-orm";
+import { db, teams, users } from "@openhelpdesk/db";
+import { and, asc, eq, ne } from "drizzle-orm";
 import { entitlementsFor } from "@/lib/entitlements";
 import {
-  Card,
   Field,
   LockedScreen,
   PageHeader,
@@ -12,34 +11,125 @@ import {
   SaveBar,
   Select,
   StatusPill,
-  TextInput,
-  Toggle,
 } from "@/components/settings-page";
-import { CopyButton } from "@/components/settings-overlays";
-import { EnforcementRadios, ScimGroupsField, ScimTokenForm } from "./client";
+import {
+  CopyLink,
+  EnforcementRadios,
+  ScimEndpoint,
+  ScimGroupsField,
+} from "./client";
 import { regenerateScimToken, saveSamlConfig, saveScimGroups, type AgentSsoConfig } from "./actions";
 
+/** Libellés verbatim du design (les valeurs persistées restent inchangées). */
 const IDPS: { value: string; label: string }[] = [
   { value: "okta", label: "Okta" },
-  { value: "entra", label: "Microsoft Entra" },
-  { value: "google", label: "Google" },
+  { value: "entra", label: "Microsoft Entra ID" },
+  { value: "google", label: "Google Workspace" },
   { value: "onelogin", label: "OneLogin" },
-  { value: "other", label: "Autre" },
+  { value: "other", label: "Autre (SAML générique)" },
 ];
 
-const TEST_STEPS = [
-  "Redirection HTTP 302",
-  "Signature RSA-SHA256",
-  "Audience",
-  "Attributs requis",
-  "Résolution du compte",
-];
+const ATTR_GRID = "minmax(150px,1fr) 34px minmax(180px,1.2fr) 110px";
+const SP_GRID = "170px 1fr 80px";
+
+/** Contrôle de formulaire — hauteur 36, padding 7/11, radius 6, 13,5 px. */
+const CONTROL: React.CSSProperties = {
+  minHeight: 36,
+  padding: "7px 11px",
+  borderRadius: 6,
+  fontSize: 13.5,
+};
+
+/** Cadre encadrant un toggle (padding 13/14, radius 9). */
+function Panel({
+  children,
+  accent,
+  style,
+}: {
+  children: React.ReactNode;
+  accent?: boolean;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <div
+      className="flex items-start border"
+      style={{
+        gap: 12,
+        padding: accent ? "14px 15px" : "13px 14px",
+        borderRadius: accent ? 10 : 9,
+        borderColor: accent ? "var(--acc-b)" : "var(--line)",
+        background: accent ? "var(--acc-t)" : "var(--panel)",
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** Titre de section — 14,5 px/600, avec complément optionnel aligné sur la ligne de base. */
+function Section({
+  title,
+  aside,
+  gap = 12,
+  children,
+}: {
+  title: string;
+  aside?: React.ReactNode;
+  gap?: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="flex flex-col" style={{ gap }}>
+      <div className="flex flex-wrap items-baseline" style={{ gap: 10 }}>
+        <h2 className="font-semibold" style={{ fontSize: 14.5, color: "var(--ink)" }}>
+          {title}
+        </h2>
+        {aside}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+/** En-tête de table 11 px/700 sur fond --sunk, hauteur 34. */
+function TableHead({
+  template,
+  columns,
+  minWidth,
+}: {
+  template: string;
+  columns: (string | null)[];
+  minWidth: number;
+}) {
+  return (
+    <div
+      className="grid items-center border-b font-bold"
+      style={{
+        gridTemplateColumns: template,
+        minWidth,
+        height: 34,
+        padding: "0 15px",
+        background: "var(--sunk)",
+        borderColor: "var(--line)",
+        fontSize: 11,
+        color: "var(--ink-3)",
+      }}
+    >
+      {columns.map((c, i) => (
+        <span key={i} className={i === columns.length - 1 ? "text-right" : ""}>
+          {c}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 /**
  * ST-13 — SSO des agents (1000 px, EE). Verrouillé hors plan Pro. Onglet SAML 2.0 :
- * configuration persistée dans tenants.agentSsoConfig, valeurs SP réelles (slug),
- * application 3 radios, test à l'état idle. Onglet SCIM : URL réelle, jeton haché
- * régénérable, correspondance des groupes, journal vide honnête.
+ * activation, fournisseur d'identité, valeurs SP réelles (slug), correspondance des
+ * attributs, application & sessions, test de connexion. Onglet SCIM : point de
+ * terminaison, correspondance des groupes, journal de synchronisation.
  */
 export default async function AgentSsoPage({
   searchParams,
@@ -76,20 +166,43 @@ export default async function AgentSsoPage({
   const config = ((tenant.agentSsoConfig as AgentSsoConfig) ?? {}) as AgentSsoConfig;
   const saml = config.saml ?? {};
   const scim = config.scim ?? {};
-  const teamRows = await db
-    .select({ id: teams.id, name: teams.name })
-    .from(teams)
-    .where(eq(teams.tenantId, tenant.id))
-    .orderBy(asc(teams.name));
+  const [teamRows, agentRows] = await Promise.all([
+    db
+      .select({ id: teams.id, name: teams.name })
+      .from(teams)
+      .where(eq(teams.tenantId, tenant.id))
+      .orderBy(asc(teams.name)),
+    db
+      .select({ email: users.email })
+      .from(users)
+      .where(and(eq(users.tenantId, tenant.id), ne(users.status, "disabled"))),
+  ]);
+
+  // Domaines des comptes agents — aucune table de domaines vérifiés au niveau workspace.
+  const agentDomains = [
+    ...new Set(
+      agentRows
+        .map((a) => a.email.split("@")[1])
+        .filter((d): d is string => Boolean(d)),
+    ),
+  ].sort();
 
   const host = `https://${tenant.slug}.open-helpdesk.com`;
   const spValues: [string, string][] = [
-    ["URL ACS", `${host}/api/auth/saml/callback`],
-    ["Entity ID", host],
-    ["Métadonnées", `${host}/api/auth/saml/metadata`],
-    ["NameID", "emailAddress"],
+    ["URL de réponse (ACS)", `${host}/api/auth/saml/callback`],
+    ["Entity ID / Audience", host],
+    ["URL de métadonnées SP", `${host}/api/auth/saml/metadata`],
+    ["Format de NameID", "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"],
+  ];
+  const attrMap: [string, string, string, boolean][] = [
+    ["m_email", "Email", saml.mapping?.email ?? "user.email", true],
+    ["m_firstName", "Prénom", saml.mapping?.firstName ?? "user.firstName", true],
+    ["m_lastName", "Nom", saml.mapping?.lastName ?? "user.lastName", true],
+    ["m_role", "Rôle", saml.mapping?.role ?? "user.groups", false],
+    ["m_team", "Équipe", saml.mapping?.team ?? "user.department", false],
   ];
   const connected = Boolean(saml.enabled && saml.ssoUrl);
+  const scimEnabled = scim.enabled === true;
 
   const tabs = [
     { label: "SAML 2.0", href: "/app/settings/agent-sso", active: activeTab === "saml" },
@@ -98,222 +211,442 @@ export default async function AgentSsoPage({
 
   return (
     <PageShell maxWidth={1000}>
+      {/* Chips de fournisseur d'identité : état sélectionné en CSS (radio caché). */}
+      <style>{`
+        .sso-chip { position: relative; min-height: 38px; padding: 8px 14px; display: flex;
+          align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 8px;
+          background: var(--panel); color: var(--ink-2); font-size: 13px; font-weight: 450;
+          white-space: nowrap; cursor: pointer; }
+        .sso-chip input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .sso-chip:has(input:checked) { border-color: var(--acc); background: var(--acc-t);
+          color: var(--acc); font-weight: 600; }
+        .sso-chip:has(input:focus-visible) { outline: 2px solid var(--acc); outline-offset: 2px; }
+      `}</style>
+
       {header(tabs)}
 
       {activeTab === "saml" ? (
-        <form action={saveSamlConfig} className="flex flex-col" style={{ gap: 22 }}>
-          <Card>
-            <div className="flex items-center gap-2">
-              <div className="min-w-0 flex-1">
-                <Toggle
-                  name="enabled"
-                  defaultChecked={saml.enabled === true}
-                  label="Activer le SSO SAML 2.0"
-                  hint="Les agents se connectent via votre fournisseur d'identité."
-                />
+        <form action={saveSamlConfig} className="st-rise flex flex-col" style={{ gap: 24 }}>
+          {/* Activation */}
+          <Panel accent={saml.enabled === true}>
+            <label className="st-toggle flex items-start" style={{ gap: 12 }}>
+              <input type="checkbox" name="enabled" defaultChecked={saml.enabled === true} />
+              <span className="st-knob" aria-hidden />
+              <span className="sr-only">Activer l'authentification unique SAML 2.0</span>
+            </label>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center" style={{ gap: 9 }}>
+                <span className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
+                  Authentification unique SAML 2.0
+                </span>
+                <PlanProBadge />
+                {connected ? (
+                  <StatusPill tone="ok">Connecté</StatusPill>
+                ) : (
+                  <StatusPill tone="closed">Inactif</StatusPill>
+                )}
               </div>
-              <PlanProBadge />
-              {connected && <StatusPill tone="ok">Connecté</StatusPill>}
+              <p style={{ fontSize: 12.5, color: "var(--ink-2)", textWrap: "pretty" }}>
+                Vos agents se connectent via votre fournisseur d'identité. Les rôles restent
+                gérés dans Open HelpDesk sauf si le mapping d'attributs est actif.
+              </p>
             </div>
-          </Card>
+          </Panel>
 
-          <Card title="Fournisseur d'identité">
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-wrap gap-2">
-                {IDPS.map((idp) => (
-                  <label
-                    key={idp.value}
-                    className="cursor-pointer rounded-full border font-medium"
-                    style={{ fontSize: 12.5, padding: "4px 12px", borderColor: "var(--line)", color: "var(--ink)" }}
-                  >
-                    <input
-                      type="radio"
-                      name="idp"
-                      value={idp.value}
-                      defaultChecked={(saml.idp ?? "other") === idp.value}
-                      className="mr-1.5 align-middle"
-                    />
-                    {idp.label}
-                  </label>
-                ))}
-              </div>
-              <div className="grid gap-3" style={{ gridTemplateColumns: "1fr 1fr" }}>
-                <Field label="Entity ID de l'IdP">
-                  <TextInput
-                    name="entityId"
-                    defaultValue={saml.entityId ?? ""}
-                    placeholder="https://idp.entreprise.fr/saml"
-                    className="font-mono"
+          {/* Fournisseur d'identité */}
+          <Section title="Fournisseur d'identité">
+            <div className="flex flex-wrap" style={{ gap: 8 }}>
+              {IDPS.map((idp) => (
+                <label key={idp.value} className="sso-chip">
+                  <input
+                    type="radio"
+                    name="idp"
+                    value={idp.value}
+                    defaultChecked={(saml.idp ?? "other") === idp.value}
                   />
-                </Field>
-                <Field label="URL SSO">
-                  <TextInput
-                    name="ssoUrl"
-                    defaultValue={saml.ssoUrl ?? ""}
-                    placeholder="https://idp.entreprise.fr/sso/saml"
-                    className="font-mono"
-                  />
-                </Field>
-              </div>
-              <Field label="Certificat X.509" hint="Alerte automatique 30 jours avant expiration.">
+                  {idp.label}
+                </label>
+              ))}
+            </div>
+
+            <div
+              className="grid"
+              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
+            >
+              <Field label="Identifiant de l'émetteur (Entity ID)">
+                <input
+                  name="entityId"
+                  defaultValue={saml.entityId ?? ""}
+                  placeholder="http://www.idp.com/exk4f2c91ab44de7013"
+                  className="border font-mono"
+                  style={{
+                    ...CONTROL,
+                    fontSize: 13,
+                    borderColor: "var(--line)",
+                    background: "var(--bg)",
+                    color: "var(--ink)",
+                  }}
+                />
+              </Field>
+              <Field label="URL de connexion SSO">
+                <input
+                  name="ssoUrl"
+                  defaultValue={saml.ssoUrl ?? ""}
+                  placeholder="https://idp.entreprise.fr/app/ohd/sso/saml"
+                  className="border font-mono"
+                  style={{
+                    ...CONTROL,
+                    fontSize: 13,
+                    borderColor: "var(--line)",
+                    background: "var(--bg)",
+                    color: "var(--ink)",
+                  }}
+                />
+              </Field>
+              <Field
+                label="Certificat de signature X.509"
+                hint="Une alerte sera envoyée 30 jours avant l'expiration du certificat."
+                style={{ gridColumn: "1 / -1" }}
+              >
                 <textarea
                   name="certificate"
-                  rows={4}
                   defaultValue={saml.certificate ?? ""}
                   placeholder="-----BEGIN CERTIFICATE-----"
-                  className="rounded-md border px-2.5 py-1.5 font-mono text-xs"
-                  style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
+                  className="border font-mono"
+                  style={{
+                    minHeight: 96,
+                    padding: "10px 11px",
+                    borderRadius: 6,
+                    fontSize: 13,
+                    lineHeight: 1.55,
+                    borderColor: "var(--line)",
+                    background: "var(--bg)",
+                    color: "var(--ink-2)",
+                    wordBreak: "break-all",
+                  }}
                 />
               </Field>
             </div>
-          </Card>
 
-          <Card title="Valeurs côté Open HelpDesk (SP)">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap items-center" style={{ gap: 9 }}>
+              <button
+                type="button"
+                disabled
+                title="Disponible prochainement"
+                className="grid place-items-center border font-semibold disabled:opacity-50"
+                style={{
+                  minHeight: 32,
+                  padding: "6px 13px",
+                  borderRadius: 6,
+                  fontSize: 13,
+                  borderColor: "var(--line)",
+                  background: "var(--panel)",
+                  color: "var(--ink-2)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Importer les métadonnées XML
+              </button>
+              <span style={{ fontSize: 12.5, color: "var(--ink-3)", textWrap: "pretty" }}>
+                Ou collez l'URL de métadonnées de votre IdP pour remplir les trois champs
+                automatiquement.
+              </span>
+            </div>
+          </Section>
+
+          {/* Valeurs à renseigner côté IdP */}
+          <Section title="À renseigner chez votre fournisseur">
+            <div
+              className="overflow-hidden border"
+              style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
+            >
               {spValues.map(([label, value]) => (
                 <div
                   key={label}
-                  className="flex items-center gap-2 rounded-md border px-3 py-2"
-                  style={{ borderColor: "var(--line-2)", background: "var(--sunk)" }}
+                  className="grid items-center border-b"
+                  style={{
+                    gridTemplateColumns: SP_GRID,
+                    gap: 12,
+                    padding: "12px 15px",
+                    borderColor: "var(--line-2)",
+                  }}
                 >
-                  <span className="w-28 font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
+                  <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
                     {label}
                   </span>
-                  <code className="min-w-0 flex-1 truncate font-mono" style={{ fontSize: 12, color: "var(--ink)" }}>
+                  <span
+                    className="min-w-0 truncate font-mono"
+                    style={{ fontSize: 12.5, color: "var(--ink)" }}
+                  >
                     {value}
-                  </code>
-                  <CopyButton text={value} />
+                  </span>
+                  <span className="text-right">
+                    <CopyLink text={value} />
+                  </span>
                 </div>
               ))}
             </div>
-          </Card>
+          </Section>
 
-          <Card title="Correspondance des attributs">
-            <div className="flex flex-col gap-2">
-              {(
-                [
-                  ["m_email", "Email", saml.mapping?.email ?? "user.email", "requis"],
-                  ["m_firstName", "Prénom", saml.mapping?.firstName ?? "user.firstName", "optionnel"],
-                  ["m_lastName", "Nom", saml.mapping?.lastName ?? "user.lastName", "optionnel"],
-                  ["m_role", "Rôle", saml.mapping?.role ?? "user.groups", "optionnel"],
-                  ["m_team", "Équipe", saml.mapping?.team ?? "user.department", "optionnel"],
-                ] as const
-              ).map(([name, label, value, req]) => (
-                <div key={name} className="grid items-center gap-2" style={{ gridTemplateColumns: "110px 1fr 80px" }}>
-                  <span className="font-medium" style={{ fontSize: 13, color: "var(--ink)" }}>
+          {/* Correspondance des attributs */}
+          <Section title="Correspondance des attributs">
+            <div
+              className="overflow-x-auto border"
+              style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
+            >
+              <TableHead
+                template={ATTR_GRID}
+                columns={["Champ Open HelpDesk", null, "Attribut SAML", "Requis"]}
+                minWidth={620}
+              />
+              {attrMap.map(([name, label, value, required]) => (
+                <div
+                  key={name}
+                  className="grid items-center border-b"
+                  style={{
+                    gridTemplateColumns: ATTR_GRID,
+                    minWidth: 620,
+                    padding: "11px 15px",
+                    gap: 9,
+                    borderColor: "var(--line-2)",
+                    fontSize: 12.5,
+                  }}
+                >
+                  <span className="font-medium" style={{ color: "var(--ink)" }}>
                     {label}
                   </span>
-                  <TextInput name={name} defaultValue={value} className="font-mono" />
-                  <span style={{ fontSize: 11.5, color: req === "requis" ? "var(--dang)" : "var(--ink-3)" }}>
-                    {req}
+                  <span className="text-center" style={{ color: "var(--ink-3)" }}>
+                    ←
+                  </span>
+                  <input
+                    name={name}
+                    defaultValue={value}
+                    className="min-w-0 border font-mono"
+                    style={{
+                      minHeight: 32,
+                      padding: "6px 10px",
+                      borderRadius: 6,
+                      fontSize: 12,
+                      borderColor: "var(--line)",
+                      background: "var(--bg)",
+                      color: "var(--ink)",
+                    }}
+                  />
+                  <span
+                    className="text-right font-semibold"
+                    style={{ fontSize: 12, color: required ? "var(--dang)" : "var(--ink-3)" }}
+                  >
+                    {required ? "Requis" : "Optionnel"}
                   </span>
                 </div>
               ))}
-              <Toggle
-                name="rolesFromIdp"
-                defaultChecked={saml.rolesFromIdp === true}
-                label="Piloter les rôles depuis l'IdP"
-                hint="Groupes ohd-admins et ohd-agents synchronisés à chaque connexion."
-              />
             </div>
-          </Card>
 
-          <Card title="Application">
+            <Panel>
+              <label className="st-toggle flex items-start" style={{ gap: 12 }}>
+                <input
+                  type="checkbox"
+                  name="rolesFromIdp"
+                  defaultChecked={saml.rolesFromIdp === true}
+                />
+                <span className="st-knob" aria-hidden />
+                <span className="sr-only">Piloter les rôles depuis l'IdP</span>
+              </label>
+              <div className="min-w-0 flex-1">
+                <div className="font-medium" style={{ fontSize: 13.5, color: "var(--ink)" }}>
+                  Piloter les rôles depuis l'IdP
+                </div>
+                <p style={{ fontSize: 12.5, color: "var(--ink-3)", textWrap: "pretty" }}>
+                  Les rôles deviennent en lecture seule dans Agents &amp; équipes. Le groupe{" "}
+                  <span className="font-mono">ohd-admins</span> reçoit le rôle Admin,{" "}
+                  <span className="font-mono">ohd-agents</span> le rôle Agent.
+                </p>
+              </div>
+            </Panel>
+          </Section>
+
+          {/* Application et sessions */}
+          <Section title="Application et sessions">
             <EnforcementRadios initial={saml.enforcement ?? "verified_domains"} />
-            <div className="mt-4 grid gap-3" style={{ gridTemplateColumns: "1fr 1fr" }}>
+            <div
+              className="grid"
+              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
+            >
               <Field label="Durée de session">
-                <Select name="sessionHours" defaultValue={String(saml.sessionHours ?? 8)}>
+                <Select
+                  name="sessionHours"
+                  defaultValue={String(saml.sessionHours ?? 8)}
+                  style={CONTROL}
+                >
                   <option value="4">4 heures</option>
                   <option value="8">8 heures</option>
                   <option value="12">12 heures</option>
                   <option value="24">24 heures</option>
                 </Select>
               </Field>
-              <Field
-                label="Compte de secours"
-                hint="Toujours autorisé à se connecter par mot de passe."
-              >
-                <TextInput
+              <Field label="Compte de secours">
+                <input
                   name="backupEmail"
                   type="email"
                   defaultValue={saml.backupEmail ?? ""}
                   placeholder="admin@entreprise.fr"
+                  className="border font-mono"
+                  style={{
+                    ...CONTROL,
+                    borderColor: "var(--line)",
+                    background: "var(--bg)",
+                    color: "var(--ink)",
+                  }}
                 />
               </Field>
-            </div>
-          </Card>
-
-          <Card title="Test de connexion">
-            <div className="flex flex-col gap-1.5">
-              {TEST_STEPS.map((s) => (
-                <div key={s} className="flex items-center gap-2" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                  <span
-                    className="inline-block rounded-full"
-                    style={{ width: 8, height: 8, background: "var(--line)" }}
-                  />
-                  {s}
+              <Field label="Domaines des comptes agents">
+                <div
+                  className="flex flex-wrap items-center border"
+                  style={{
+                    minHeight: 36,
+                    padding: "7px 10px",
+                    gap: 6,
+                    borderRadius: 6,
+                    borderColor: "var(--line)",
+                    background: "var(--bg)",
+                  }}
+                >
+                  {agentDomains.length === 0 && (
+                    <span style={{ fontSize: 12, color: "var(--ink-3)" }}>—</span>
+                  )}
+                  {agentDomains.map((d) => (
+                    <span
+                      key={d}
+                      className="inline-flex items-center border font-mono"
+                      style={{
+                        padding: "2px 8px",
+                        gap: 6,
+                        borderRadius: 5,
+                        fontSize: 11.5,
+                        borderColor: "var(--line)",
+                        background: "var(--sunk)",
+                        color: "var(--ink)",
+                      }}
+                    >
+                      {d}
+                    </span>
+                  ))}
                 </div>
-              ))}
+              </Field>
             </div>
-            <button
-              type="button"
-              disabled
-              title="Disponible après enregistrement d'une configuration valide."
-              className="mt-3 rounded-md border px-3 font-medium disabled:opacity-50"
-              style={{
-                height: 30,
-                fontSize: 12.5,
-                borderColor: "var(--line)",
-                background: "var(--panel)",
-                color: "var(--ink)",
-              }}
+          </Section>
+
+          {/* Test de connexion */}
+          <Section title="Test de connexion" gap={11}>
+            <div
+              className="overflow-hidden border"
+              style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
             >
-              Lancer le test
-            </button>
-          </Card>
+              <div
+                className="flex flex-wrap items-center"
+                style={{ padding: "13px 15px", gap: 12 }}
+              >
+                <button
+                  type="button"
+                  disabled
+                  title="Disponible prochainement"
+                  className="grid place-items-center font-semibold text-white disabled:opacity-50"
+                  style={{
+                    minHeight: 34,
+                    padding: "7px 15px",
+                    borderRadius: 7,
+                    fontSize: 13,
+                    background: "var(--acc)",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Lancer un test
+                </button>
+                <span
+                  className="min-w-0 flex-1"
+                  style={{ fontSize: 13, color: "var(--ink-2)", textWrap: "pretty" }}
+                >
+                  Une fenêtre s'ouvrira vers votre IdP. Aucun réglage n'est appliqué tant que le
+                  test n'a pas réussi.
+                </span>
+              </div>
+            </div>
+          </Section>
 
           <SaveBar saved={saved === "1"} cancelHref="/app/settings/agent-sso" />
         </form>
       ) : (
-        <>
-          <Card title="Provisionnement SCIM">
-            <div className="flex flex-col gap-3">
-              <div
-                className="flex items-center gap-2 rounded-md border px-3 py-2"
-                style={{ borderColor: "var(--line-2)", background: "var(--sunk)" }}
-              >
-                <span className="w-24 font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                  URL SCIM
-                </span>
-                <code className="min-w-0 flex-1 truncate font-mono" style={{ fontSize: 12, color: "var(--ink)" }}>
-                  {host}/api/scim/v2
-                </code>
-                <CopyButton text={`${host}/api/scim/v2`} />
-              </div>
-              <ScimTokenForm action={regenerateScimToken} hint={scim.tokenHint ?? null} />
-            </div>
-          </Card>
-
-          <form action={saveScimGroups} className="flex flex-col" style={{ gap: 22 }}>
-            <Card title="Correspondance des groupes">
-              <ScimGroupsField
-                initial={(scim.groups ?? []).map((g) => ({
-                  group: g.group,
-                  team: g.team ?? "",
-                  role: g.role ?? "agent",
-                }))}
-                teams={teamRows}
+        <div className="st-rise flex flex-col" style={{ gap: 24 }}>
+          {/* Activation SCIM — associée au formulaire « scim-config » ci-dessous */}
+          <Panel accent={scimEnabled}>
+            <label className="st-toggle flex items-start" style={{ gap: 12 }}>
+              <input
+                type="checkbox"
+                name="scimEnabled"
+                form="scim-config"
+                defaultChecked={scimEnabled}
               />
-            </Card>
+              <span className="st-knob" aria-hidden />
+              <span className="sr-only">Activer le provisionnement automatique SCIM 2.0</span>
+            </label>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center" style={{ gap: 9 }}>
+                <span className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
+                  Provisionnement automatique SCIM 2.0
+                </span>
+                <PlanProBadge />
+              </div>
+              <p style={{ fontSize: 12.5, color: "var(--ink-2)", textWrap: "pretty" }}>
+                Les arrivées, départs et changements d'équipe sont répercutés depuis votre
+                annuaire. Un agent désactivé dans l'IdP libère son siège automatiquement.
+              </p>
+            </div>
+          </Panel>
+
+          {/* Point de terminaison */}
+          <Section title="Point de terminaison">
+            <ScimEndpoint
+              url={`${host}/api/scim/v2`}
+              hint={scim.tokenHint ?? null}
+              action={regenerateScimToken}
+            />
+          </Section>
+
+          {/* Correspondance des groupes */}
+          <Section title="Correspondance des groupes">
+            <ScimGroupsField
+              formId="scim-config"
+              initial={(scim.groups ?? []).map((g) => ({
+                group: g.group,
+                team: g.team ?? "",
+                role: g.role ?? "agent",
+              }))}
+              teams={teamRows}
+            />
+          </Section>
+
+          {/* Journal de synchronisation */}
+          <Section title="Journal de synchronisation">
+            <div
+              className="overflow-x-auto border"
+              style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
+            >
+              <TableHead
+                template="150px 120px minmax(200px,1fr) 130px"
+                columns={["Date", "Opération", "Utilisateur", "Résultat"]}
+                minWidth={640}
+              />
+              <p style={{ padding: "18px 15px", fontSize: 12.5, color: "var(--ink-2)" }}>
+                Aucune synchronisation pour le moment — les créations, mises à jour et
+                désactivations apparaîtront ici.
+              </p>
+            </div>
+          </Section>
+
+          <form id="scim-config" action={saveScimGroups}>
             <SaveBar saved={saved === "1"} cancelHref="/app/settings/agent-sso?tab=scim" />
           </form>
-
-          <Card title="Journal de synchronisation">
-            <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-              Aucun événement de synchronisation.
-            </p>
-          </Card>
-        </>
+        </div>
       )}
     </PageShell>
   );

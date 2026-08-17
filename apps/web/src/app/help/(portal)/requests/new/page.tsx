@@ -87,29 +87,33 @@ export default async function NewRequestPage({
           {/* Sujet + déflexion */}
           <SubjectWithDeflection defaultSubject={subject ?? ""} />
 
-          {/* Module concerné / Urgence */}
-          <div className="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
-            <div className="flex flex-col gap-[7px]">
-              <label htmlFor="pt-module" className="text-sm font-semibold">
-                Module concerné
-              </label>
-              <div className="relative">
-                <select
-                  id="pt-module"
-                  name="module"
-                  className="pt-input h-[46px] w-full appearance-none px-[13px] text-[15.5px]"
-                >
-                  {modules.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </select>
-                <span className="pointer-events-none absolute right-[13px] top-1/2 -translate-y-1/2 text-[10px] opacity-45">
-                  ▾
-                </span>
+          {/* Module concerné / Urgence — une seule colonne si le tenant n'a pas de modules. */}
+          <div
+            className={`grid gap-3 max-sm:grid-cols-1 ${modules.length > 0 ? "grid-cols-2" : "grid-cols-1"}`}
+          >
+            {modules.length > 0 && (
+              <div className="flex flex-col gap-[7px]">
+                <label htmlFor="pt-module" className="text-sm font-semibold">
+                  Module concerné
+                </label>
+                <div className="relative">
+                  <select
+                    id="pt-module"
+                    name="module"
+                    className="pt-input h-[46px] w-full appearance-none px-[13px] text-[15.5px]"
+                  >
+                    {modules.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="pointer-events-none absolute right-[13px] top-1/2 -translate-y-1/2 text-[10px] opacity-45">
+                    ▾
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
             <div className="flex flex-col gap-[7px]">
               <label htmlFor="pt-urgency" className="text-sm font-semibold">
                 Urgence

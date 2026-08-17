@@ -15,7 +15,7 @@ import {
   durationFr,
   relativeFr,
 } from "@/lib/format";
-import { Avatar, StatusChip } from "@/components/ticket-bits";
+import { Avatar, SlaClock, StatusChip } from "@/components/ticket-bits";
 import { TopbarOverride } from "@/components/app-shell";
 import { ChipVisual, CopyLinkChip, MergeChip } from "./header-tools";
 import { MessageAttachments, type AttachmentData } from "./attachments";
@@ -27,6 +27,15 @@ import { ReplyEditor } from "./reply-editor";
  * navigation ←/→, fil client/agent/note/événements, pièces jointes avec visionneuse,
  * composeur à onglets et split button, panneau propriétés 320 px.
  */
+
+/** Titre de groupe du panneau propriétés — 11px/600 uppercase, letter-spacing .06em. */
+const PANEL_GROUP: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 600,
+  letterSpacing: ".06em",
+  textTransform: "uppercase",
+  color: "var(--ink-3)",
+};
 
 function SlaRow({
   label,
@@ -64,9 +73,16 @@ function SlaRow({
     }
   }
   return (
-    <div className="flex items-baseline justify-between gap-2">
-      <span style={{ fontSize: 12, color: "var(--ink-2)" }}>{label}</span>
-      <span className="whitespace-nowrap font-semibold tabular-nums" style={{ fontSize: 12, color }}>
+    <div
+      className="flex items-center justify-between"
+      style={{
+        padding: "8px 10px",
+        borderBottom: "1px solid var(--line-2)",
+        fontSize: 12.5,
+      }}
+    >
+      <span style={{ color: "var(--ink-2)" }}>{label}</span>
+      <span className="whitespace-nowrap tabular-nums" style={{ fontWeight: 600, color }}>
         {text}
       </span>
     </div>
@@ -136,7 +152,6 @@ export default async function TicketPage({
     height: 26,
     borderRadius: 6,
     border: "1px solid var(--line)",
-    background: "var(--bg)",
     color: "var(--ink-2)",
     fontSize: 13,
   } as const;
@@ -156,25 +171,26 @@ export default async function TicketPage({
       <TopbarOverride title="Mes tickets" subtitle={positionLabel} />
 
       {/* Colonne conversation */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        {/* En-tête — rangée 1 */}
+      <div className="flex min-w-0 flex-1 flex-col" style={{ background: "var(--bg)" }}>
+        {/* En-tête — 2 rangées, padding 12/18, gap 9 */}
         <header
-          className="shrink-0 border-b px-4 pb-2.5 pt-3"
-          style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+          className="flex shrink-0 flex-col border-b"
+          style={{ padding: "12px 18px", gap: 9, borderColor: "var(--line)" }}
         >
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center" style={{ gap: 10 }}>
             <Link
               href={`/app/tickets?view=${view}`}
               title="Retour à l'inbox"
-              className="flex shrink-0 items-center justify-center"
+              className="grid shrink-0 place-items-center"
               style={navBtnStyle}
             >
               ←
             </Link>
             <span
+              className="shrink-0"
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: 12.5,
+                fontSize: 12,
                 color: "var(--ink-3)",
               }}
             >
@@ -182,11 +198,11 @@ export default async function TicketPage({
             </span>
             <h1
               className="min-w-0 flex-1 truncate"
-              style={{ fontSize: 16, fontWeight: 600 }}
+              style={{ fontSize: 16, fontWeight: 600, letterSpacing: "-.01em" }}
             >
               {ticket.subject}
             </h1>
-            <div className="hidden items-center gap-1.5 lg:flex">
+            <div className="hidden items-center lg:flex" style={{ gap: 4 }}>
               {!ticket.mergedIntoId && (
                 <MergeChip ticketId={ticket.id} ticketNumber={ticket.number} />
               )}
@@ -195,7 +211,7 @@ export default async function TicketPage({
               <CopyLinkChip />
               <ChipVisual label="Historique" />
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center" style={{ gap: 2, marginLeft: 4 }}>
               {prevNumber ? (
                 <Link
                   href={`/app/tickets/${prevNumber}?view=${view}`}
@@ -234,9 +250,12 @@ export default async function TicketPage({
           </div>
 
           {/* En-tête — rangée 2 */}
-          <div className="mt-2 flex flex-wrap items-center gap-2.5 pl-9">
+          <div className="flex flex-wrap items-center" style={{ gap: 7 }}>
             <StatusChip status={ticket.status} />
-            <span className="inline-flex items-center gap-1.5" style={{ fontSize: 12.5 }}>
+            <span
+              className="inline-flex items-center"
+              style={{ gap: 5, fontSize: 12.5, color: "var(--ink-2)" }}
+            >
               <span
                 className="rounded-full"
                 style={{
@@ -249,19 +268,32 @@ export default async function TicketPage({
             </span>
             {isOpen && remaining !== null && (
               <span
-                className="rounded px-1.5 py-0.5 font-semibold tabular-nums"
-                style={
-                  remaining < 0
-                    ? { fontSize: 11.5, background: "var(--dang-t)", color: "var(--dang)" }
+                className="inline-flex items-center tabular-nums"
+                style={{
+                  gap: 4,
+                  padding: "2px 8px",
+                  borderRadius: 5,
+                  fontSize: 11.5,
+                  fontWeight: 600,
+                  ...(remaining < 0
+                    ? {
+                        background: "var(--dang-t)",
+                        color: "var(--dang)",
+                        border: "1px solid var(--dang)",
+                      }
                     : remaining < 30 * 60_000
-                      ? { fontSize: 11.5, background: "var(--wait-t)", color: "var(--wait)" }
-                      : {
-                          fontSize: 11.5,
-                          border: "1px solid var(--line)",
-                          color: "var(--ink-2)",
+                      ? {
+                          background: "var(--wait-t)",
+                          color: "var(--wait)",
+                          border: "1px solid var(--wait)",
                         }
-                }
+                      : {
+                          color: "var(--ink-3)",
+                          border: "1px solid var(--line)",
+                        }),
+                }}
               >
+                <SlaClock />
                 {remaining < 0
                   ? `SLA dépassé de ${durationFr(-remaining)}`
                   : `SLA : ${durationFr(remaining)} restantes`}
@@ -277,11 +309,14 @@ export default async function TicketPage({
         {/* Bannière fusion */}
         {ticket.mergedIntoId && (
           <div
-            className="flex shrink-0 items-center gap-2 border-b px-4 py-2 text-[13px]"
+            className="flex shrink-0 items-center border-b"
             style={{
-              background: "var(--wait-t)",
+              gap: 8,
+              padding: "9px 18px",
+              fontSize: 13,
+              background: "var(--pause-t)",
               borderColor: "var(--line)",
-              color: "var(--wait)",
+              color: "var(--ink-2)",
             }}
           >
             Ce ticket a été fusionné dans{" "}
@@ -298,21 +333,22 @@ export default async function TicketPage({
 
         {/* Fil */}
         <div
-          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto"
-          style={{ padding: "18px 22px", background: "var(--canvas)" }}
+          className="flex min-h-0 flex-1 flex-col overflow-y-auto"
+          style={{ padding: "18px 22px", gap: 14 }}
         >
           {messages.map((m) => {
             if (m.kind === "system_event") {
               return (
-                <div key={m.id} className="flex items-center gap-3">
-                  <span className="h-px flex-1" style={{ background: "var(--line)" }} />
-                  <p
-                    className="text-center"
-                    style={{ fontSize: 12, color: "var(--ink-3)" }}
-                  >
+                <div
+                  key={m.id}
+                  className="flex items-center"
+                  style={{ gap: 9, padding: "2px 0", fontSize: 12, color: "var(--ink-3)" }}
+                >
+                  <span className="h-px flex-1" style={{ background: "var(--line-2)" }} />
+                  <span className="text-center">
                     {m.bodyText} · {relativeFr(m.createdAt)}
-                  </p>
-                  <span className="h-px flex-1" style={{ background: "var(--line)" }} />
+                  </span>
+                  <span className="h-px flex-1" style={{ background: "var(--line-2)" }} />
                 </div>
               );
             }
@@ -320,53 +356,78 @@ export default async function TicketPage({
             const isAgent = m.authorType === "agent";
             const name = authorName(m.authorId, m.authorType);
             const atts = (attachmentsByMessage.get(m.id) ?? []) as AttachmentData[];
+            const line = isNote
+              ? "var(--note-line)"
+              : isAgent
+                ? "var(--acc-b)"
+                : "var(--line)";
             return (
               <article
                 key={m.id}
-                className="border"
+                className="overflow-hidden"
                 style={{
                   borderRadius: 10,
-                  padding: "12px 14px",
+                  border: `1px solid ${line}`,
                   maxWidth: isNote ? "70%" : "82%",
-                  alignSelf: isAgent || isNote ? "flex-end" : "flex-start",
+                  alignSelf: isAgent && !isNote ? "flex-end" : "flex-start",
                   background: isNote
                     ? "var(--note)"
                     : isAgent
                       ? "var(--acc-t)"
                       : "var(--panel)",
-                  borderColor: isNote
-                    ? "var(--note-line)"
-                    : isAgent
-                      ? "var(--acc-b)"
-                      : "var(--line)",
                 }}
               >
-                <div className="mb-1.5 flex items-center gap-2">
-                  <Avatar name={name} size={22} />
+                <div
+                  className="flex items-center"
+                  style={{
+                    gap: 8,
+                    padding: "8px 12px",
+                    borderBottom: `1px solid ${line}`,
+                  }}
+                >
+                  <Avatar name={name} size={22} fontSize={9.5} tone={isNote ? 3 : isAgent ? 2 : 0} />
                   <span style={{ fontSize: 12.5, fontWeight: 600 }}>{name}</span>
                   {isNote && (
                     <span
-                      className="rounded px-1.5 py-0.5"
+                      className="inline-flex items-center uppercase"
                       style={{
+                        gap: 4,
+                        padding: "1px 7px",
+                        borderRadius: 4,
                         fontSize: 10.5,
                         fontWeight: 700,
+                        letterSpacing: ".03em",
                         background: "var(--wait-t)",
                         color: "var(--wait)",
-                        letterSpacing: "0.03em",
                       }}
                     >
-                      🔒 NOTE INTERNE
+                      🔒 Note interne
                     </span>
                   )}
+                  <span className="flex-1" />
                   <span
-                    className="ml-auto whitespace-nowrap pl-3"
+                    className="whitespace-nowrap"
                     style={{ fontSize: 11.5, color: "var(--ink-3)" }}
                   >
                     {relativeFr(m.createdAt)}
                   </span>
                 </div>
-                <p className="whitespace-pre-wrap text-sm leading-relaxed">{m.bodyText}</p>
-                <MessageAttachments attachments={atts} senderName={name} />
+                <p
+                  className="whitespace-pre-wrap"
+                  style={{
+                    padding: "11px 12px",
+                    fontSize: 13.5,
+                    lineHeight: 1.55,
+                    textWrap: "pretty",
+                  }}
+                >
+                  {m.bodyText}
+                </p>
+                <MessageAttachments
+                  attachments={atts}
+                  senderName={name}
+                  borderColor={line}
+                />
               </article>
             );
           })}
@@ -385,8 +446,14 @@ export default async function TicketPage({
 
       {/* Panneau propriétés — 320 px */}
       <aside
-        className="hidden w-80 shrink-0 flex-col gap-5 overflow-y-auto border-l p-4 xl:flex"
-        style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+        className="hidden shrink-0 flex-col overflow-y-auto border-l xl:flex"
+        style={{
+          width: 320,
+          padding: "14px 16px",
+          gap: 16,
+          background: "var(--panel)",
+          borderColor: "var(--line)",
+        }}
       >
         <PropsForm
           ticketId={ticket.id}
@@ -402,46 +469,38 @@ export default async function TicketPage({
         />
 
         {/* Champs du formulaire */}
-        <section>
-          <p
-            className="mb-2 font-semibold uppercase tracking-wider"
-            style={{ fontSize: 11, color: "var(--ink-3)" }}
-          >
-            Champs du formulaire
-          </p>
+        <section className="flex flex-col" style={{ gap: 8 }}>
+          <p style={PANEL_GROUP}>Champs du formulaire</p>
           {fieldEntries.length === 0 ? (
             <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>Aucun champ renseigné.</p>
           ) : (
-            <div className="flex flex-col gap-1.5">
-              {fieldEntries.map((f) => (
-                <div
-                  key={f.label}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "96px 1fr",
-                    gap: 8,
-                    fontSize: 12.5,
-                  }}
-                >
-                  <span style={{ color: "var(--ink-3)", fontSize: 12 }}>{f.label}</span>
-                  <span className="min-w-0 truncate">{f.value}</span>
-                </div>
-              ))}
-            </div>
+            fieldEntries.map((f) => (
+              <div
+                key={f.label}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "96px 1fr",
+                  alignItems: "center",
+                  gap: 8,
+                  minHeight: 26,
+                  fontSize: 12.5,
+                }}
+              >
+                <span style={{ color: "var(--ink-3)" }}>{f.label}</span>
+                <span className="min-w-0 truncate" style={{ fontWeight: 500 }}>
+                  {f.value}
+                </span>
+              </div>
+            ))
           )}
         </section>
 
-        {/* SLA */}
-        <section>
-          <p
-            className="mb-2 font-semibold uppercase tracking-wider"
-            style={{ fontSize: 11, color: "var(--ink-3)" }}
-          >
-            SLA
-          </p>
+        {/* SLA — encadré, rangées séparées par --line-2 */}
+        <section className="flex flex-col" style={{ gap: 8 }}>
+          <p style={PANEL_GROUP}>SLA</p>
           <div
-            className="flex flex-col gap-1.5 border p-2.5"
-            style={{ borderRadius: 8, borderColor: "var(--line)", background: "var(--sunk)" }}
+            className="overflow-hidden"
+            style={{ border: "1px solid var(--line)", borderRadius: 8 }}
           >
             <SlaRow
               label="1ʳᵉ réponse"
@@ -461,19 +520,14 @@ export default async function TicketPage({
         </section>
 
         {/* Contact */}
-        <section>
-          <p
-            className="mb-2 font-semibold uppercase tracking-wider"
-            style={{ fontSize: 11, color: "var(--ink-3)" }}
-          >
-            Contact
-          </p>
+        <section className="flex flex-col" style={{ gap: 8 }}>
+          <p style={PANEL_GROUP}>Contact</p>
           <div
-            className="border p-3"
-            style={{ borderRadius: 8, borderColor: "var(--line)", background: "var(--bg)" }}
+            className="flex flex-col"
+            style={{ border: "1px solid var(--line)", borderRadius: 8, padding: 11, gap: 9 }}
           >
-            <div className="flex items-center gap-2.5">
-              <Avatar name={requesterName} size={32} />
+            <div className="flex items-center" style={{ gap: 9 }}>
+              <Avatar name={requesterName} size={32} fontSize={11} tone={0} />
               <div className="min-w-0">
                 <p className="truncate" style={{ fontSize: 13, fontWeight: 600 }}>
                   {requesterName}
@@ -483,38 +537,33 @@ export default async function TicketPage({
                 </p>
               </div>
             </div>
-            <p className="mt-2" style={{ fontSize: 12, color: "var(--ink-2)" }}>
+            <div style={{ height: 1, background: "var(--line-2)" }} />
+            <p style={{ fontSize: 12, color: "var(--ink-2)" }}>
               {requesterTicketCount} ticket{requesterTicketCount > 1 ? "s" : ""} récent
               {requesterTicketCount > 1 ? "s" : ""}
               {organization ? ` · ${organization.name}` : ""}
             </p>
-            {recentRequesterTickets.length > 0 && (
-              <ul
-                className="mt-2 flex flex-col gap-1 border-t pt-2"
-                style={{ borderColor: "var(--line-2)" }}
+            {recentRequesterTickets.map((t) => (
+              <Link
+                key={t.number}
+                href={`/app/tickets/${t.number}`}
+                className="flex items-center"
+                style={{ gap: 7, fontSize: 12 }}
               >
-                {recentRequesterTickets.map((t) => (
-                  <li key={t.number}>
-                    <Link
-                      href={`/app/tickets/${t.number}`}
-                      className="flex items-baseline gap-1.5"
-                      style={{ fontSize: 12 }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: 10.5,
-                          color: "var(--ink-3)",
-                        }}
-                      >
-                        #{t.number}
-                      </span>
-                      <span className="min-w-0 flex-1 truncate">{t.subject}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 10.5,
+                    color: "var(--ink-3)",
+                  }}
+                >
+                  #{t.number}
+                </span>
+                <span className="min-w-0 flex-1 truncate" style={{ color: "var(--ink-2)" }}>
+                  {t.subject}
+                </span>
+              </Link>
+            ))}
           </div>
         </section>
       </aside>

@@ -221,7 +221,7 @@ export function Field({
 }) {
   return (
     <label className="flex flex-col gap-1.5" style={style}>
-      <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
+      <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
         {label}
       </span>
       {children}
@@ -314,13 +314,14 @@ export function Gauge({
   const pct = max > 0 ? Math.min(100, Math.round((value / max) * 100)) : 0;
   return (
     <span
-      className="inline-block overflow-hidden rounded-full align-middle"
-      style={{ width, height: 7, background: "var(--sunk)", border: "1px solid var(--line-2)" }}
+      className="inline-block overflow-hidden align-middle"
+      style={{ width, height: 7, borderRadius: 4, background: "var(--sunk)" }}
     >
       <span
-        className="block h-full rounded-full"
+        className="block h-full"
         style={{
           width: `${pct}%`,
+          borderRadius: 4,
           background: pct > 85 ? "var(--wait)" : "var(--acc)",
         }}
       />
@@ -403,23 +404,30 @@ export function EmptyState({
 }) {
   return (
     <div
-      className="rounded-[10px] border border-dashed text-center"
-      style={{ borderColor: "var(--line)", padding: "42px 24px", background: "var(--panel)" }}
+      className="flex flex-col items-center rounded-[12px] border border-dashed text-center"
+      style={{
+        borderColor: "var(--line)",
+        padding: "40px 24px",
+        gap: 15,
+        background: "var(--panel)",
+      }}
     >
-      <p className="font-semibold" style={{ fontSize: 14, color: "var(--ink)" }}>
+      <p className="font-semibold" style={{ fontSize: 16, color: "var(--ink)" }}>
         {title}
       </p>
       {text && (
-        <p className="mt-1" style={{ fontSize: 13, color: "var(--ink-2)" }}>
-          {text}
-        </p>
+        <p style={{ fontSize: 13.5, color: "var(--ink-2)", maxWidth: 420 }}>{text}</p>
       )}
       {children}
     </div>
   );
 }
 
-/** En-tête de table en grid — cellules mono 10.5px uppercase ink-3. */
+/**
+ * En-tête de table en grid — design : h34, fond --sunk, 11px/700 ink-3.
+ * Le `gap-3` est conservé : les lignes de corps l'utilisent aussi, et c'est lui qui
+ * garantit que les colonnes tombent au même endroit qu'en-tête.
+ */
 export function GridHead({
   columns,
   template,
@@ -429,14 +437,16 @@ export function GridHead({
 }) {
   return (
     <div
-      className="grid items-center gap-3 border-b font-mono font-semibold uppercase"
+      className="grid items-center gap-3 border-b font-bold"
       style={{
         gridTemplateColumns: template,
-        fontSize: 10.5,
-        letterSpacing: "0.06em",
+        minHeight: 34,
+        fontSize: 11,
+        letterSpacing: "0.03em",
         color: "var(--ink-3)",
+        background: "var(--sunk)",
         borderColor: "var(--line)",
-        padding: "8px 14px",
+        padding: "0 14px",
       }}
     >
       {columns.map((c, i) => (
@@ -460,7 +470,7 @@ export function StatusPill({
   const fg = tone === "acc" ? "var(--acc)" : `var(--${tone})`;
   return (
     <span
-      className="inline-flex items-center whitespace-nowrap rounded-full font-medium"
+      className="inline-flex items-center whitespace-nowrap rounded-full font-semibold"
       style={{ fontSize: 11.5, padding: "2px 8px", background: bg, color: fg }}
     >
       {children}

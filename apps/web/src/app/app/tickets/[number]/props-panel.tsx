@@ -49,34 +49,38 @@ export function PropsForm({
   }
 
   const selectStyle = {
-    height: 28,
+    height: 26,
     width: "100%",
     borderRadius: 6,
     border: "1px solid var(--line)",
     background: "var(--bg)",
     color: "var(--ink)",
     fontSize: 12.5,
+    fontWeight: 500,
     padding: "0 6px",
   } as const;
 
-  const labelStyle = { fontSize: 12, color: "var(--ink-3)" } as const;
+  const labelStyle = { fontSize: 12.5, color: "var(--ink-3)" } as const;
   const rowStyle = {
     display: "grid",
     gridTemplateColumns: "96px 1fr",
     alignItems: "center",
     gap: 8,
+    minHeight: 26,
+  } as const;
+  const groupStyle = {
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: ".06em",
+    textTransform: "uppercase",
+    color: "var(--ink-3)",
   } as const;
 
   return (
-    <div className="flex flex-col gap-5" style={{ opacity: pending ? 0.6 : 1 }}>
-      <section>
-        <p
-          className="mb-2 font-semibold uppercase tracking-wider"
-          style={{ fontSize: 11, color: "var(--ink-3)" }}
-        >
-          Affectation
-        </p>
-        <div className="flex flex-col gap-2">
+    <div className="flex flex-col" style={{ gap: 16, opacity: pending ? 0.6 : 1 }}>
+      <section className="flex flex-col" style={{ gap: 8 }}>
+        <p style={groupStyle}>Affectation</p>
+        <div className="flex flex-col" style={{ gap: 8 }}>
           <div style={rowStyle}>
             <span style={labelStyle}>Assigné</span>
             <select
@@ -110,17 +114,12 @@ export function PropsForm({
         </div>
       </section>
 
-      <section>
-        <p
-          className="mb-2 font-semibold uppercase tracking-wider"
-          style={{ fontSize: 11, color: "var(--ink-3)" }}
-        >
-          Classification
-        </p>
-        <div className="flex flex-col gap-2">
+      <section className="flex flex-col" style={{ gap: 8 }}>
+        <p style={groupStyle}>Classification</p>
+        <div className="flex flex-col" style={{ gap: 8 }}>
           <div style={rowStyle}>
             <span style={labelStyle}>Priorité</span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center" style={{ gap: 6 }}>
               <span
                 className="shrink-0 rounded-full"
                 style={{
@@ -159,11 +158,13 @@ export function PropsForm({
           </div>
           <div style={rowStyle}>
             <span style={labelStyle}>Canal</span>
-            <span style={{ fontSize: 12.5 }}>{CHANNEL_LABELS_FR[channel] ?? channel}</span>
+            <span style={{ fontSize: 12.5, fontWeight: 500 }}>
+              {CHANNEL_LABELS_FR[channel] ?? channel}
+            </span>
           </div>
           <div style={{ ...rowStyle, alignItems: "start" }}>
             <span style={{ ...labelStyle, paddingTop: 3 }}>Tags</span>
-            <span className="flex flex-wrap gap-1">
+            <span className="flex flex-wrap items-center" style={{ gap: 6, paddingTop: 3 }}>
               {tags.length === 0 && (
                 <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>—</span>
               )}

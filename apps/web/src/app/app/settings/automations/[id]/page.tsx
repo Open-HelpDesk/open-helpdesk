@@ -117,20 +117,26 @@ export default async function RuleEditorPage({
         tabs={tabs}
       />
 
-      <form action={saveRule} className="flex flex-col gap-4">
+      <form action={saveRule} className="st-rise flex flex-col" style={{ gap: 15 }}>
         <input type="hidden" name="ruleId" value={isNew ? "" : rule!.id} />
         <input type="hidden" name="kind" value={kind} />
 
-        <div className="flex flex-wrap items-end gap-4">
-          <Field label="Nom de la règle" style={{ minWidth: 320 }}>
-            <TextInput name="name" required defaultValue={rule?.name ?? template?.name ?? ""} />
-          </Field>
-          <span className="pb-1" style={{ fontSize: 12, color: "var(--ink-3)" }}>
-            {kind === "trigger"
+        <Field
+          label="Nom de la règle"
+          hint={
+            kind === "trigger"
               ? "Déclencheur : évalué à chaque événement (création, mise à jour, message reçu)."
-              : "Règle horaire : évaluée périodiquement par le worker (conditions temporelles)."}
-          </span>
-        </div>
+              : "Règle horaire : évaluée périodiquement par le worker (conditions temporelles)."
+          }
+        >
+          <TextInput
+            name="name"
+            required
+            defaultValue={rule?.name ?? template?.name ?? ""}
+            placeholder="Escalade des tickets urgents hors horaires"
+            style={{ minHeight: 36, padding: "7px 11px", fontSize: 13.5 }}
+          />
+        </Field>
 
         <RuleEditorBody
           initialAll={initialAll}

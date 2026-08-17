@@ -1,12 +1,11 @@
 "use client";
 
 /**
- * ST-13 — Composants client : radios d'application (avertissement rouge sur
- * « Imposé à tous »), régénération du jeton SCIM (affiché une seule fois),
- * correspondance des groupes éditable.
+ * ST-13 — Composants client : lien « Copier » en texte accent, radios d'application
+ * en cartes (avertissement rouge sur « Imposé à tous »), point de terminaison SCIM
+ * (jeton affiché une seule fois) et correspondance des groupes éditable.
  */
-import { useActionState, useState } from "react";
-import { CopyButton } from "@/components/settings-overlays";
+import { useActionState, useRef, useState } from "react";
 import type { ScimTokenState } from "./actions";
 
 const inputStyle = {
@@ -15,117 +14,244 @@ const inputStyle = {
   color: "var(--ink)",
 } as const;
 
+/** Contrôle de table — hauteur 32, padding 6/10, radius 6, 12,5 px. */
+const CELL: React.CSSProperties = {
+  minHeight: 32,
+  padding: "6px 10px",
+  borderRadius: 6,
+  fontSize: 12.5,
+  ...inputStyle,
+};
+
+/** « Copier » en texte accent (12,5 px/600) — pas de cadre, comme le design. */
+export function CopyLink({ text, label = "Copier" }: { text: string; label?: string }) {
+  const [copied, setCopied] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        void navigator.clipboard.writeText(text);
+        setCopied(true);
+        if (timer.current) clearTimeout(timer.current);
+        timer.current = setTimeout(() => setCopied(false), 1800);
+      }}
+      className="whitespace-nowrap font-semibold"
+      style={{ fontSize: 12.5, color: copied ? "var(--ok)" : "var(--acc-2)" }}
+    >
+      {copied ? "✓ Copié" : label}
+    </button>
+  );
+}
+
+const ENFORCEMENTS: {
+  value: "optional" | "verified_domains" | "all";
+  title: string;
+  desc: string;
+}[] = [
+  {
+    value: "optional",
+    title: "Optionnel",
+    desc: "Les agents choisissent entre SSO et mot de passe. Recommandé pendant le déploiement.",
+  },
+  {
+    value: "verified_domains",
+    title: "Imposé aux domaines vérifiés",
+    desc: "Tout agent d'un domaine vérifié doit passer par le SSO. Les invités externes gardent le mot de passe.",
+  },
+  {
+    value: "all",
+    title: "Imposé à tous",
+    desc: "Le formulaire email et mot de passe disparaît de l'écran de connexion, sauf pour le compte de secours.",
+  },
+];
+
 export function EnforcementRadios({
   initial,
 }: {
   initial: "optional" | "verified_domains" | "all";
 }) {
   const [value, setValue] = useState(initial);
-  const options: { value: typeof value; label: string; hint: string }[] = [
-    {
-      value: "optional",
-      label: "Optionnel",
-      hint: "Les agents choisissent entre SSO et mot de passe.",
-    },
-    {
-      value: "verified_domains",
-      label: "Imposé aux domaines vérifiés",
-      hint: "Recommandé — le SSO est obligatoire pour les emails de vos domaines vérifiés.",
-    },
-    {
-      value: "all",
-      label: "Imposé à tous",
-      hint: "Tous les agents doivent passer par le SSO, sans exception.",
-    },
-  ];
   return (
-    <div className="flex flex-col gap-2">
-      {options.map((o) => (
-        <label key={o.value} className="flex items-start gap-2.5">
-          <input
-            type="radio"
-            name="enforcement"
-            value={o.value}
-            checked={value === o.value}
-            onChange={() => setValue(o.value)}
-            className="mt-0.5"
-          />
-          <span className="flex flex-col">
-            <span className="font-medium" style={{ fontSize: 13, color: "var(--ink)" }}>
-              {o.label}
-            </span>
-            <span style={{ fontSize: 12, color: "var(--ink-3)" }}>{o.hint}</span>
-          </span>
-        </label>
-      ))}
+    <div className="flex flex-col" style={{ gap: 9 }}>
+      <div className="flex flex-col" style={{ gap: 9 }}>
+        {ENFORCEMENTS.map((o) => {
+          const on = value === o.value;
+          return (
+            <label
+              key={o.value}
+              className="flex cursor-pointer items-start border"
+              style={{
+                gap: 12,
+                padding: "13px 14px",
+                borderRadius: 9,
+                borderColor: on ? "var(--acc)" : "var(--line)",
+                background: on ? "var(--acc-t)" : "var(--panel)",
+              }}
+            >
+              <input
+                type="radio"
+                name="enforcement"
+                value={o.value}
+                checked={on}
+                onChange={() => setValue(o.value)}
+                className="sr-only"
+              />
+              <span
+                className="grid flex-none place-items-center rounded-full"
+                style={{
+                  width: 17,
+                  height: 17,
+                  marginTop: 1,
+                  border: `1.5px solid ${on ? "var(--acc)" : "var(--line)"}`,
+                }}
+              >
+                <span
+                  className="rounded-full"
+                  style={{ width: 9, height: 9, background: on ? "var(--acc)" : "transparent" }}
+                />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span
+                  className="block font-semibold"
+                  style={{ fontSize: 13.5, color: on ? "var(--acc)" : "var(--ink)" }}
+                >
+                  {o.title}
+                </span>
+                <span
+                  className="block"
+                  style={{ fontSize: 12.5, color: "var(--ink-2)", textWrap: "pretty" }}
+                >
+                  {o.desc}
+                </span>
+              </span>
+            </label>
+          );
+        })}
+      </div>
       {value === "all" && (
         <p
-          className="rounded-md border px-3 py-2"
+          className="border"
           style={{
+            padding: "12px 14px",
+            borderRadius: 9,
             fontSize: 12.5,
             borderColor: "var(--dang)",
             background: "var(--dang-t)",
             color: "var(--dang)",
+            textWrap: "pretty",
           }}
         >
-          Attention : si votre fournisseur d'identité tombe en panne, plus personne ne
-          pourra se connecter — conservez un compte de secours valide.
+          Avant d'imposer le SSO, vérifiez que votre propre compte s'y connecte : un mapping
+          incorrect vous exclurait du workspace. Un compte de secours reste toujours autorisé
+          par mot de passe.
         </p>
       )}
     </div>
   );
 }
 
-export function ScimTokenForm({
-  action,
+/**
+ * Point de terminaison SCIM : URL de base (copiable) + jeton porteur régénérable.
+ * Le jeton en clair n'est affiché qu'une seule fois, au retour de la server action.
+ */
+export function ScimEndpoint({
+  url,
   hint,
+  action,
 }: {
-  action: (prev: ScimTokenState, formData: FormData) => Promise<ScimTokenState>;
+  url: string;
   hint: string | null;
+  action: (prev: ScimTokenState, formData: FormData) => Promise<ScimTokenState>;
 }) {
   const [state, formAction, pending] = useActionState(action, null);
+  const token = state ? state.token : hint;
+
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex flex-wrap items-center gap-2">
-        <code
-          className="rounded-md border px-2.5 py-1.5 font-mono"
-          style={{ fontSize: 12.5, ...inputStyle }}
-        >
-          {state ? state.token : (hint ?? "Aucun jeton généré")}
-        </code>
-        {state && <CopyButton text={state.token} />}
-        <form action={formAction}>
-          <button
-            type="submit"
-            disabled={pending}
-            className="rounded-md border px-3 font-medium disabled:opacity-50"
-            style={{
-              height: 30,
-              fontSize: 12.5,
-              borderColor: "var(--line)",
-              background: "var(--panel)",
-              color: "var(--ink)",
-            }}
-          >
-            {pending ? "Génération…" : hint || state ? "Régénérer le jeton" : "Générer un jeton"}
-          </button>
-        </form>
+    <div
+      className="overflow-hidden border"
+      style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
+    >
+      <div
+        className="grid items-center border-b"
+        style={{
+          gridTemplateColumns: "170px 1fr 80px",
+          gap: 12,
+          padding: "12px 15px",
+          borderColor: "var(--line-2)",
+        }}
+      >
+        <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+          URL de base SCIM
+        </span>
+        <span className="min-w-0 truncate font-mono" style={{ fontSize: 12.5, color: "var(--ink)" }}>
+          {url}
+        </span>
+        <span className="text-right">
+          <CopyLink text={url} />
+        </span>
       </div>
-      <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
-        Affiché une seule fois — le régénérer interrompt la synchronisation en cours.
-      </p>
+      <div
+        className="grid items-center border-b"
+        style={{
+          gridTemplateColumns: "170px 1fr 80px",
+          gap: 12,
+          padding: "12px 15px",
+          borderColor: "var(--line-2)",
+        }}
+      >
+        <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+          Jeton porteur
+        </span>
+        <span
+          className="min-w-0 truncate font-mono"
+          style={{ fontSize: 12.5, color: state ? "var(--ink)" : "var(--ink-3)" }}
+        >
+          {token ?? "Aucun jeton généré"}
+        </span>
+        <span className="flex items-center justify-end" style={{ gap: 10 }}>
+          {state && <CopyLink text={state.token} />}
+          <form action={formAction}>
+            <button
+              type="submit"
+              disabled={pending}
+              className="whitespace-nowrap font-semibold disabled:opacity-50"
+              style={{ fontSize: 12.5, color: "var(--acc-2)" }}
+            >
+              {pending ? "…" : token ? "Régénérer" : "Générer"}
+            </button>
+          </form>
+        </span>
+      </div>
+      <div
+        style={{
+          padding: "11px 15px",
+          background: "var(--wait-t)",
+          fontSize: 12.5,
+          color: "var(--wait)",
+          textWrap: "pretty",
+        }}
+      >
+        Le jeton n'est affiché qu'une seule fois. Le régénérer interrompt la synchronisation
+        jusqu'à sa mise à jour chez l'IdP.
+      </div>
     </div>
   );
 }
 
 type GroupRow = { group: string; team: string; role: string };
 
+const GROUP_GRID = "minmax(180px,1.2fr) 34px minmax(150px,1fr) minmax(130px,1fr) 90px";
+
 export function ScimGroupsField({
   initial,
   teams,
+  formId,
 }: {
   initial: GroupRow[];
   teams: { id: string; name: string }[];
+  /** Formulaire d'accueil (attribut `form=`) — la barre de sauvegarde vit ailleurs. */
+  formId?: string;
 }) {
   const [rows, setRows] = useState<GroupRow[]>(
     initial.length > 0 ? initial : [{ group: "", team: "", role: "agent" }],
@@ -136,71 +262,100 @@ export function ScimGroupsField({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col" style={{ gap: 12 }}>
       <div
-        className="grid gap-2 font-mono font-semibold uppercase"
-        style={{
-          gridTemplateColumns: "1fr 160px 120px 30px",
-          fontSize: 10,
-          letterSpacing: "0.06em",
-          color: "var(--ink-3)",
-        }}
+        className="overflow-x-auto border"
+        style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
       >
-        <span>Groupe IdP</span>
-        <span>Équipe</span>
-        <span>Rôle</span>
-        <span />
-      </div>
-      {rows.map((r, i) => (
-        <div key={i} className="grid items-center gap-2" style={{ gridTemplateColumns: "1fr 160px 120px 30px" }}>
-          <input
-            name="g_group"
-            value={r.group}
-            onChange={(e) => update(i, { group: e.target.value })}
-            placeholder="ohd-agents-n1"
-            className="min-w-0 rounded-md border px-2 py-1.5 font-mono text-sm"
-            style={inputStyle}
-          />
-          <select
-            name="g_team"
-            value={r.team}
-            onChange={(e) => update(i, { team: e.target.value })}
-            className="min-w-0 rounded-md border px-2 py-1.5 text-sm"
-            style={inputStyle}
-          >
-            <option value="">—</option>
-            {teams.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-          <select
-            name="g_role"
-            value={r.role}
-            onChange={(e) => update(i, { role: e.target.value })}
-            className="min-w-0 rounded-md border px-2 py-1.5 text-sm"
-            style={inputStyle}
-          >
-            <option value="admin">Admin</option>
-            <option value="agent">Agent</option>
-            <option value="viewer">Viewer</option>
-          </select>
-          <button
-            type="button"
-            onClick={() => setRows(rows.filter((_, j) => j !== i))}
-            title="Retirer"
-            style={{ color: "var(--ink-3)" }}
-          >
-            ✕
-          </button>
+        <div
+          className="grid items-center border-b font-bold"
+          style={{
+            gridTemplateColumns: GROUP_GRID,
+            minWidth: 700,
+            height: 34,
+            padding: "0 15px",
+            background: "var(--sunk)",
+            borderColor: "var(--line)",
+            fontSize: 11,
+            color: "var(--ink-3)",
+          }}
+        >
+          <span>Groupe IdP</span>
+          <span />
+          <span>Équipe</span>
+          <span>Rôle attribué</span>
+          <span className="text-right">Membres</span>
         </div>
-      ))}
+        {rows.map((r, i) => (
+          <div
+            key={i}
+            className="grid items-center border-b"
+            style={{
+              gridTemplateColumns: GROUP_GRID,
+              minWidth: 700,
+              padding: "11px 15px",
+              gap: 9,
+              borderColor: "var(--line-2)",
+              fontSize: 12.5,
+            }}
+          >
+            <input
+              name="g_group"
+              form={formId}
+              value={r.group}
+              onChange={(e) => update(i, { group: e.target.value })}
+              placeholder="ohd-agents-n1"
+              className="min-w-0 border font-mono"
+              style={{ ...CELL, fontSize: 12 }}
+            />
+            <span className="text-center" style={{ color: "var(--ink-3)" }}>
+              →
+            </span>
+            <select
+              name="g_team"
+              form={formId}
+              value={r.team}
+              onChange={(e) => update(i, { team: e.target.value })}
+              className="min-w-0 border"
+              style={CELL}
+            >
+              <option value="">—</option>
+              {teams.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+            <select
+              name="g_role"
+              form={formId}
+              value={r.role}
+              onChange={(e) => update(i, { role: e.target.value })}
+              className="min-w-0 border"
+              style={CELL}
+            >
+              <option value="admin">Admin</option>
+              <option value="agent">Agent</option>
+              <option value="viewer">Viewer</option>
+            </select>
+            <span className="flex items-center justify-end" style={{ gap: 10 }}>
+              <button
+                type="button"
+                onClick={() => setRows(rows.filter((_, j) => j !== i))}
+                aria-label="Retirer la correspondance"
+                style={{ fontSize: 12, color: "var(--ink-3)" }}
+              >
+                ✕
+              </button>
+            </span>
+          </div>
+        ))}
+      </div>
       <button
         type="button"
         onClick={() => setRows([...rows, { group: "", team: "", role: "agent" }])}
-        className="self-start rounded-md border border-dashed px-2 py-1"
-        style={{ fontSize: 12, borderColor: "var(--line)", color: "var(--ink-2)" }}
+        className="self-start font-medium"
+        style={{ fontSize: 12.5, color: "var(--acc-2)" }}
       >
         + Ajouter une correspondance
       </button>

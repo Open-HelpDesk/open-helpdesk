@@ -7,7 +7,7 @@
  */
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Avatar, StatusChip } from "@/components/ticket-bits";
+import { Avatar, SlaClock, StatusChip } from "@/components/ticket-bits";
 import { PRIORITY_COLORS, PRIORITY_LABELS_FR, STATUS_LABELS_FR } from "@/lib/format";
 import { bulkUpdateTickets, type BulkOp } from "./actions";
 
@@ -107,36 +107,43 @@ export function InboxTable({
     });
   }
 
+  // Barre flottante du design : fond --ink, texte --bg, actions padding 5px 9px / 12.5px.
   const bulkSelectStyle = {
-    height: 26,
-    borderRadius: 5,
-    background: "rgba(255,255,255,.12)",
-    color: "#fff",
-    border: "1px solid rgba(255,255,255,.25)",
-    fontSize: 12,
+    padding: "5px 9px",
+    borderRadius: 6,
+    background: "rgba(127,127,127,.28)",
+    color: "var(--bg)",
+    border: "none",
+    fontSize: 12.5,
   } as const;
+  const bulkDivider = (
+    <span style={{ width: 1, height: 18, background: "currentColor", opacity: 0.25 }} />
+  );
 
   return (
     <div>
       <div style={{ minWidth: 940 }}>
         {/* En-tête sticky h32 fond sunk */}
         <div
-          className="sticky top-0 z-10 grid items-center border-b font-semibold uppercase tracking-wide"
+          className="sticky top-0 z-10 grid items-center border-b font-semibold"
           style={{
             gridTemplateColumns: GRID,
             height: 32,
+            padding: "0 14px",
             fontSize: 11,
+            letterSpacing: ".03em",
             background: "var(--sunk)",
             borderColor: "var(--line)",
             color: "var(--ink-3)",
           }}
         >
-          <span className="flex justify-center">
+          <span>
             <input
               type="checkbox"
               checked={rows.length > 0 && selected.size === rows.length}
               onChange={toggleAll}
-              style={{ width: 14, height: 14 }}
+              className="block"
+              style={{ width: 14, height: 14, accentColor: "var(--acc)" }}
               aria-label="Tout sélectionner"
             />
           </span>
@@ -146,7 +153,7 @@ export function InboxTable({
           <span>Statut</span>
           <span>SLA</span>
           <span>Assigné</span>
-          <span className="pr-3 text-right">Activité</span>
+          <span className="text-right">Activité</span>
         </div>
 
         {rows.map((t, i) => {
@@ -162,6 +169,7 @@ export function InboxTable({
               style={{
                 gridTemplateColumns: GRID,
                 minHeight: 44,
+                padding: "0 14px",
                 borderColor: "var(--line-2)",
                 background: isSelected
                   ? "var(--acc-t)"
@@ -171,18 +179,19 @@ export function InboxTable({
                 boxShadow: i === cursor ? "inset 2px 0 0 var(--acc)" : undefined,
               }}
             >
-              <span className="flex justify-center" onClick={(e) => e.stopPropagation()}>
+              <span onClick={(e) => e.stopPropagation()}>
                 <input
                   type="checkbox"
                   checked={isSelected}
                   onChange={() => toggle(t.id)}
-                  style={{ width: 14, height: 14 }}
+                  className="block"
+                  style={{ width: 14, height: 14, accentColor: "var(--acc)" }}
                   aria-label={`Sélectionner #${t.number}`}
                 />
               </span>
-              <span className="flex justify-center">
+              <span>
                 <span
-                  className="rounded-full"
+                  className="block rounded-full"
                   style={{
                     width: 7,
                     height: 7,
@@ -191,9 +200,13 @@ export function InboxTable({
                   title={PRIORITY_LABELS_FR[t.priority]}
                 />
               </span>
-              <span className="min-w-0 py-1.5 pr-3">
-                <span className="block truncate">
+              <span
+                className="flex min-w-0 flex-col"
+                style={{ gap: 1, paddingRight: 16 }}
+              >
+                <span className="flex min-w-0 items-center" style={{ gap: 7 }}>
                   <span
+                    className="shrink-0"
                     style={{
                       fontFamily: "var(--font-mono)",
                       fontSize: 11,
@@ -201,80 +214,89 @@ export function InboxTable({
                     }}
                   >
                     #{t.number}
-                  </span>{" "}
-                  <span style={{ fontSize: 13, fontWeight: t.isNew ? 600 : 450 }}>
+                  </span>
+                  <span
+                    className="truncate"
+                    style={{ fontSize: 13, fontWeight: t.isNew ? 600 : 500 }}
+                  >
                     {t.subject}
                   </span>
                 </span>
                 {t.excerpt && (
-                  <span
-                    className="block truncate"
-                    style={{ fontSize: 12, color: "var(--ink-3)" }}
-                  >
+                  <span className="truncate" style={{ fontSize: 12, color: "var(--ink-3)" }}>
                     {t.excerpt}
                   </span>
                 )}
               </span>
-              <span className="min-w-0 pr-3">
-                <span className="block truncate" style={{ fontSize: 12.5 }}>
+              <span
+                className="flex min-w-0 flex-col"
+                style={{ gap: 1, paddingRight: 12 }}
+              >
+                <span className="truncate" style={{ fontSize: 12.5 }}>
                   {t.contactName}
                 </span>
                 {t.orgName && (
-                  <span
-                    className="block truncate"
-                    style={{ fontSize: 11.5, color: "var(--ink-3)" }}
-                  >
+                  <span className="truncate" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
                     {t.orgName}
                   </span>
                 )}
               </span>
-              <span className="pr-2">
+              <span>
                 <StatusChip status={t.status} />
               </span>
-              <span className="pr-2">
-                {t.sla &&
-                  (t.sla.tone === "neutral" ? (
-                    <span
-                      className="inline-block whitespace-nowrap rounded border px-1.5 py-0.5 tabular-nums"
-                      style={{
-                        fontSize: 11,
-                        fontFamily: "var(--font-mono)",
-                        borderColor: "var(--line)",
-                        color: "var(--ink-2)",
-                        background: "var(--bg)",
-                      }}
-                    >
-                      {t.sla.text}
-                    </span>
-                  ) : (
-                    <span
-                      className="inline-block whitespace-nowrap rounded px-1.5 py-0.5 font-semibold tabular-nums"
-                      style={{
-                        fontSize: 11,
-                        fontFamily: "var(--font-mono)",
-                        background: `var(--${t.sla.tone}-t)`,
-                        color: `var(--${t.sla.tone})`,
-                      }}
-                    >
-                      {t.sla.text}
-                    </span>
-                  ))}
+              <span>
+                {t.sla && (
+                  <span
+                    className="inline-flex items-center whitespace-nowrap tabular-nums"
+                    style={{
+                      gap: 4,
+                      padding: "2px 7px",
+                      borderRadius: 5,
+                      fontSize: 11.5,
+                      fontWeight: 600,
+                      background:
+                        t.sla.tone === "neutral" ? "transparent" : `var(--${t.sla.tone}-t)`,
+                      color:
+                        t.sla.tone === "neutral" ? "var(--ink-3)" : `var(--${t.sla.tone})`,
+                      border: `1px solid ${
+                        t.sla.tone === "neutral" ? "var(--line)" : `var(--${t.sla.tone})`
+                      }`,
+                    }}
+                  >
+                    <SlaClock />
+                    {t.sla.text}
+                  </span>
+                )}
               </span>
-              <span className="flex min-w-0 items-center gap-1.5 pr-2">
+              <span className="flex min-w-0 items-center" style={{ gap: 6 }}>
                 {t.assigneeName ? (
                   <>
-                    <Avatar name={t.assigneeName} size={20} />
-                    <span className="truncate" style={{ fontSize: 12 }}>
+                    <Avatar name={t.assigneeName} size={20} tone={i} />
+                    <span className="truncate" style={{ fontSize: 12, color: "var(--ink-2)" }}>
                       {t.assigneeName}
                     </span>
                   </>
                 ) : (
-                  <span style={{ fontSize: 12, color: "var(--ink-3)" }}>—</span>
+                  <>
+                    <span
+                      className="grid shrink-0 place-items-center rounded-full font-bold"
+                      style={{
+                        width: 20,
+                        height: 20,
+                        fontSize: 9,
+                        background: "var(--sunk)",
+                        color: "var(--ink-3)",
+                      }}
+                    >
+                      ?
+                    </span>
+                    <span style={{ fontSize: 12, color: "var(--ink-3)" }}>—</span>
+                  </>
                 )}
               </span>
               <span
-                className="whitespace-nowrap pr-3 text-right tabular-nums"
-                style={{ fontSize: 11.5, color: "var(--ink-3)" }}
+                className="whitespace-nowrap text-right tabular-nums"
+                style={{ fontSize: 12, color: "var(--ink-3)" }}
               >
                 {t.activity}
               </span>
@@ -286,13 +308,25 @@ export function InboxTable({
       {/* Barre flottante de sélection multiple */}
       {selected.size > 0 && (
         <div
-          className="ohd-rise-fast fixed bottom-10 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-lg px-3 py-2 shadow-lg"
-          style={{ background: "var(--ink)", color: "#fff", opacity: pending ? 0.7 : 1 }}
+          className="ohd-rise-fast fixed left-1/2 z-40 flex -translate-x-1/2 items-center"
+          style={{
+            bottom: 22,
+            gap: 6,
+            padding: "7px 9px",
+            borderRadius: 9,
+            background: "var(--ink)",
+            color: "var(--bg)",
+            boxShadow: "0 8px 28px rgba(0,0,0,.24)",
+            opacity: pending ? 0.7 : 1,
+          }}
         >
-          <span className="whitespace-nowrap text-[12.5px] font-semibold">
+          <span
+            className="whitespace-nowrap"
+            style={{ fontSize: 12.5, fontWeight: 600, padding: "0 6px" }}
+          >
             {selected.size} sélectionné{selected.size > 1 ? "s" : ""}
           </span>
-          <span className="mx-1 h-5 w-px" style={{ background: "rgba(255,255,255,.25)" }} />
+          {bulkDivider}
           <select
             defaultValue=""
             onChange={(e) => e.target.value && runBulk("assign", e.target.value)}
@@ -350,25 +384,29 @@ export function InboxTable({
               value={tagValue}
               onChange={(e) => setTagValue(e.target.value)}
               placeholder="Taguer…"
-              className="px-2 outline-none placeholder:text-white/60"
-              style={{ ...bulkSelectStyle, width: 90 }}
+              className="outline-none placeholder:opacity-60"
+              style={{ ...bulkSelectStyle, width: 92 }}
             />
           </form>
           <button
             type="button"
             onClick={() => runBulk("delete")}
-            className="rounded px-2 text-[12px] font-medium"
-            style={{ height: 26, background: "var(--dang)", color: "#fff" }}
+            style={{
+              padding: "5px 9px",
+              borderRadius: 6,
+              fontSize: 12.5,
+              background: "var(--dang)",
+              color: "#fff",
+            }}
           >
             Supprimer
           </button>
-          <span className="mx-1 h-5 w-px" style={{ background: "rgba(255,255,255,.25)" }} />
+          {bulkDivider}
           <button
             type="button"
             onClick={() => setSelected(new Set())}
             title="Annuler la sélection"
-            className="px-1 text-[14px]"
-            style={{ color: "rgba(255,255,255,.8)" }}
+            style={{ padding: "5px 8px", borderRadius: 6, fontSize: 12.5, opacity: 0.65 }}
           >
             ✕
           </button>

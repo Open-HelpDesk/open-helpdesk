@@ -301,7 +301,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
       tenantId,
       kind: "scheduled",
       name: "Relance client à 48 h",
-      position: 0,
+      position: 3,
       active: true,
       conditionsAll: [
         { field: "status", operator: "is", value: "waiting" },
@@ -321,7 +321,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
       tenantId,
       kind: "scheduled",
       name: "Clôture automatique J+4",
-      position: 1,
+      position: 4,
       active: true,
       conditionsAll: [
         { field: "status", operator: "is", value: "resolved" },

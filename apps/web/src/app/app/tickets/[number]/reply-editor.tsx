@@ -141,13 +141,35 @@ export function ReplyEditor({
 
   const isNote = kind === "internal_note";
 
+  // Design : boutons 26×26 radius 5, chips h26 padding 0 8px, tout en 12px ink-2.
   const toolBtn = {
     width: 26,
-    height: 24,
+    height: 26,
     borderRadius: 5,
     color: "var(--ink-2)",
-    fontSize: 12.5,
+    fontSize: 12,
   } as const;
+  const toolChip = {
+    height: 26,
+    padding: "0 8px",
+    borderRadius: 5,
+    color: "var(--ink-2)",
+    fontSize: 12,
+  } as const;
+  const editorLine = isNote ? "var(--note-line)" : "var(--line)";
+  const editorBg = isNote ? "var(--note)" : "var(--bg)";
+  const sendBg = isNote ? "var(--wait)" : "var(--acc)";
+  const tabStyle = (active: boolean, note: boolean) =>
+    ({
+      padding: "6px 12px",
+      borderRadius: "6px 6px 0 0",
+      fontSize: 13,
+      fontWeight: 600,
+      color: active ? (note ? "var(--wait)" : "var(--ink)") : "var(--ink-3)",
+      background: active ? (note ? "var(--note)" : "var(--bg)") : "transparent",
+      border: `1px solid ${active ? (note ? "var(--note-line)" : "var(--line)") : "transparent"}`,
+      borderBottom: "none",
+    }) as const;
 
   const TOOLBAR: { label: string; title: string; run: () => void }[] = [
     { label: "B", title: "Gras", run: () => insertMd("**", "**", "texte") },
@@ -170,7 +192,7 @@ export function ReplyEditor({
           /* ignoré */
         }
       }}
-      className="shrink-0 border-t px-4 pb-3 pt-2"
+      className="shrink-0 border-t"
       style={{ background: "var(--panel)", borderColor: "var(--line)" }}
     >
       <input type="hidden" name="ticketId" value={ticketId} />
@@ -179,44 +201,50 @@ export function ReplyEditor({
       <input type="hidden" name="nextStatus" value={isNote ? "" : nextStatus} />
 
       {/* Onglets + brouillon */}
-      <div className="mb-2 flex items-center gap-1 text-[13px]">
-        <button
-          type="button"
-          onClick={() => setKind("public_reply")}
-          className="rounded-md px-2.5 py-1 font-medium"
-          style={
-            !isNote
-              ? { background: "var(--acc-t)", color: "var(--acc)" }
-              : { color: "var(--ink-3)" }
-          }
-        >
+      <div className="flex" style={{ gap: 2, padding: "8px 18px 0" }}>
+        <button type="button" onClick={() => setKind("public_reply")} style={tabStyle(!isNote, false)}>
           Réponse
         </button>
         <button
           type="button"
           onClick={() => setKind("internal_note")}
-          className="rounded-md px-2.5 py-1 font-medium"
-          style={
-            isNote
-              ? { background: "var(--note)", color: "var(--wait)" }
-              : { color: "var(--ink-3)" }
-          }
+          className="flex items-center"
+          style={{ ...tabStyle(isNote, true), gap: 5 }}
         >
+          <svg
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden="true"
+          >
+            <rect x="4" y="10" width="16" height="10" rx="2" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+          </svg>
           Note interne
         </button>
         <span className="flex-1" />
         {draftLabel() && (
-          <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>{draftLabel()}</span>
+          <span className="self-center" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
+            {draftLabel()}
+          </span>
         )}
       </div>
 
+      <div
+        style={{
+          margin: "0 18px 12px",
+          border: `1px solid ${editorLine}`,
+          borderRadius: "0 8px 8px 8px",
+          background: editorBg,
+        }}
+      >
       {/* Toolbar */}
       <div
-        className="flex items-center gap-0.5 rounded-t-md border border-b-0 px-1.5 py-1"
-        style={{
-          borderColor: isNote ? "var(--note-line)" : "var(--line)",
-          background: isNote ? "var(--note)" : "var(--sunk)",
-        }}
+        className="flex items-center"
+        style={{ gap: 1, padding: "6px 8px", borderBottom: `1px solid ${editorLine}` }}
       >
         {TOOLBAR.map((b) => (
           <button
@@ -224,10 +252,10 @@ export function ReplyEditor({
             type="button"
             title={b.title}
             onClick={b.run}
-            className="flex items-center justify-center hover:opacity-70"
+            className="grid place-items-center hover:opacity-70"
             style={{
               ...toolBtn,
-              fontWeight: b.label === "B" ? 700 : 500,
+              fontWeight: b.label === "B" ? 700 : 400,
               fontStyle: b.label === "I" ? "italic" : undefined,
               textDecoration:
                 b.label === "U" ? "underline" : b.label === "S" ? "line-through" : undefined,
@@ -236,7 +264,7 @@ export function ReplyEditor({
             {b.label}
           </button>
         ))}
-        <span className="mx-1 h-4 w-px" style={{ background: "var(--line)" }} />
+        <span style={{ width: 1, height: 16, margin: "0 5px", background: "var(--line)" }} />
 
         {/* / Macros */}
         <div className="relative">
@@ -247,8 +275,8 @@ export function ReplyEditor({
               setVarMenu(false);
               setStatusMenu(false);
             }}
-            className="rounded px-2 py-0.5 text-[12px] font-medium"
-            style={{ color: "var(--ink-2)" }}
+            className="flex items-center"
+            style={toolChip}
           >
             / Macros
           </button>
@@ -279,6 +307,18 @@ export function ReplyEditor({
           )}
         </div>
 
+        {/* Article KB */}
+        <a
+          href="/app/kb"
+          target="_blank"
+          rel="noreferrer"
+          title="Ouvrir la base de connaissances pour copier un lien d'article"
+          className="flex items-center"
+          style={toolChip}
+        >
+          Article KB
+        </a>
+
         {/* Variables */}
         <div className="relative">
           <button
@@ -288,8 +328,8 @@ export function ReplyEditor({
               setMacroMenu(false);
               setStatusMenu(false);
             }}
-            className="rounded px-2 py-0.5 text-[12px]"
-            style={{ color: "var(--ink-2)", fontFamily: "var(--font-mono)" }}
+            className="flex items-center"
+            style={{ ...toolChip, fontFamily: "var(--font-mono)" }}
           >
             {"{{var}}"}
           </button>
@@ -329,21 +369,27 @@ export function ReplyEditor({
         placeholder={
           isNote ? "Note visible uniquement par les agents…" : `Répondre à ${contactName}…`
         }
-        className="w-full resize-y rounded-b-md border p-3 text-sm outline-none"
-        style={
-          isNote
-            ? { borderColor: "var(--note-line)", background: "var(--note)" }
-            : { borderColor: "var(--line)", background: "var(--bg)" }
-        }
+        className="w-full resize-y border-0 outline-none"
+        style={{
+          padding: 12,
+          minHeight: 86,
+          fontSize: 13.5,
+          lineHeight: 1.55,
+          background: "transparent",
+          color: "var(--ink)",
+        }}
       />
 
-      <div className="mt-2 flex items-center gap-2">
+      <div
+        className="flex items-center"
+        style={{ gap: 8, padding: "8px 10px", borderTop: `1px solid ${editorLine}` }}
+      >
         <label
-          className="inline-flex cursor-pointer items-center gap-1.5 text-[12px]"
-          style={{ color: "var(--ink-3)" }}
+          className="inline-flex cursor-pointer items-center gap-1.5"
+          style={{ fontSize: 12, color: "var(--ink-2)" }}
           title="Joindre des fichiers (10 Mo max par fichier)"
         >
-          <Paperclip size={14} />
+          <Paperclip size={15} strokeWidth={1.8} />
           <input name="files" type="file" multiple className="max-w-44 text-[11px]" />
         </label>
         <span className="flex-1" />
@@ -351,37 +397,36 @@ export function ReplyEditor({
         {isNote ? (
           <button
             type="submit"
-            className="rounded-md px-4 text-[13px] font-semibold text-white"
-            style={{ height: 32, background: "var(--wait)" }}
+            className="grid place-items-center font-semibold text-white"
+            style={{ height: 32, padding: "0 14px", borderRadius: 6, background: sendBg, fontSize: 13 }}
           >
             Ajouter la note
           </button>
         ) : (
-          <div className="relative flex">
-            <button
-              type="submit"
-              className="rounded-l-md px-4 text-[13px] font-semibold text-white"
-              style={{ height: 32, background: "var(--acc)" }}
-            >
-              {sendLabel(nextStatus)}
-            </button>
-            <button
-              type="button"
-              aria-label="Choisir le statut après envoi"
-              onClick={() => {
-                setStatusMenu((v) => !v);
-                setMacroMenu(false);
-                setVarMenu(false);
-              }}
-              className="rounded-r-md px-2 text-[11px] text-white"
-              style={{
-                height: 32,
-                background: "var(--acc)",
-                borderLeft: "1px solid rgba(255,255,255,.3)",
-              }}
-            >
-              ▾
-            </button>
+          <div className="relative">
+            <div className="flex overflow-hidden" style={{ borderRadius: 6 }}>
+              <button
+                type="submit"
+                className="grid place-items-center whitespace-nowrap font-semibold text-white"
+                style={{ height: 32, padding: "0 14px", background: sendBg, fontSize: 13 }}
+              >
+                {sendLabel(nextStatus)}
+              </button>
+              <span style={{ width: 1, background: "rgba(255,255,255,.28)" }} />
+              <button
+                type="button"
+                aria-label="Choisir le statut après envoi"
+                onClick={() => {
+                  setStatusMenu((v) => !v);
+                  setMacroMenu(false);
+                  setVarMenu(false);
+                }}
+                className="grid place-items-center text-white"
+                style={{ height: 32, padding: "0 9px", background: sendBg, fontSize: 10 }}
+              >
+                ▾
+              </button>
+            </div>
             {statusMenu && (
               <div
                 className="absolute bottom-full right-0 z-30 mb-1 flex min-w-48 flex-col rounded-md border py-1 shadow-lg"
@@ -408,6 +453,7 @@ export function ReplyEditor({
             )}
           </div>
         )}
+      </div>
       </div>
     </form>
   );

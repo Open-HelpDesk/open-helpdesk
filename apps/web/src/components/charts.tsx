@@ -1,40 +1,62 @@
 /**
  * Composants graphiques de AG-09 — rendus serveur, tokens du design system.
- * Fidèles à la maquette espace-agent : tuiles KPI (valeur 24px/600, sparkline 56×20),
- * « Créés vs résolus » en aires + lignes 640×190, barres par canal h7, heatmap 7×12.
+ * Fidèles à la maquette « Espace agent » : tuiles KPI (label 11.5 min-h 30, valeur 24px/600,
+ * ligne delta + sparkline 56×20), « Créés vs résolus » en aires + lignes 640×190 (pad 22),
+ * barres par canal h7, heatmap 7 × 12 en grille `16px repeat(12,1fr)` gap 3.
  */
 
+/** Sparkline 56×20 du design : normalisée min→max, polyline 1.6, sans point terminal. */
 export function Sparkline({
   values,
+  color = "var(--acc-2)",
   width = 56,
   height = 20,
 }: {
   values: number[];
+  color?: string;
   width?: number;
   height?: number;
 }) {
   if (values.length < 2) return null;
-  const max = Math.max(...values, 1);
-  const step = width / (values.length - 1);
-  const y = (v: number) => height - 2 - (v / max) * (height - 4);
-  const points = values.map((v, i) => `${(i * step).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
-  const last = values[values.length - 1]!;
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  const span = max - min || 1;
+  const points = values
+    .map((p, i) => {
+      const x = (i / (values.length - 1)) * width;
+      const y = height - ((p - min) / span) * (height - 3) - 1.5;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(" ");
   return (
-    <svg width={width} height={height} aria-hidden="true">
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      width="100%"
+      height="100%"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      style={{ display: "block" }}
+    >
       <polyline
         points={points}
         fill="none"
-        stroke="var(--acc-2)"
-        strokeWidth={1.5}
+        stroke={color}
+        strokeWidth={1.6}
         strokeLinejoin="round"
       />
-      <circle cx={(values.length - 1) * step} cy={y(last)} r={2} fill="var(--acc-2)" />
     </svg>
   );
 }
 
 export type KpiDelta = { text: string; tone: "good" | "bad" | "neutral" };
 
+const DELTA_INK: Record<KpiDelta["tone"], string> = {
+  good: "var(--ok)",
+  bad: "var(--dang)",
+  neutral: "var(--ink-2)",
+};
+
+/** Tuile KPI : label (min-h 30) · valeur 24px/600 · ligne « delta ↔ sparkline ». */
 export function KpiTile({
   label,
   value,
@@ -46,45 +68,73 @@ export function KpiTile({
   delta: KpiDelta | null;
   spark?: number[];
 }) {
+  const sparkColor = delta?.tone === "bad" ? "var(--dang)" : "var(--acc-2)";
   return (
     <div
-      className="border"
+      className="flex flex-col"
       style={{
+        gap: 7,
         borderRadius: 10,
         padding: 13,
         background: "var(--panel)",
-        borderColor: "var(--line)",
+        border: "1px solid var(--line)",
       }}
     >
-      <p style={{ fontSize: 11.5, color: "var(--ink-3)", minHeight: 30 }}>{label}</p>
-      <div className="flex items-end justify-between gap-2">
-        <span className="tabular-nums" style={{ fontSize: 24, fontWeight: 600, lineHeight: 1.1 }}>
-          {value}
-        </span>
-        {spark && spark.some((v) => v > 0) && <Sparkline values={spark} />}
+      <div style={{ fontSize: 11.5, color: "var(--ink-3)", fontWeight: 500, minHeight: 30 }}>
+        {label}
       </div>
-      {delta && (
-        <p
-          className="mt-1 tabular-nums"
+      <div
+        style={{
+          fontSize: 24,
+          fontWeight: 600,
+          letterSpacing: "-.02em",
+          fontVariantNumeric: "tabular-nums",
+          lineHeight: 1.15,
+        }}
+      >
+        {value}
+      </div>
+      <div className="flex items-center justify-between" style={{ gap: 6 }}>
+        <span
           style={{
             fontSize: 11.5,
             fontWeight: 600,
-            color:
-              delta.tone === "good"
-                ? "var(--ok)"
-                : delta.tone === "bad"
-                  ? "var(--dang)"
-                  : "var(--ink-3)",
+            color: delta ? DELTA_INK[delta.tone] : "var(--ink-3)",
+            fontVariantNumeric: "tabular-nums",
           }}
         >
-          {delta.text}
-        </p>
-      )}
+          {delta?.text ?? ""}
+        </span>
+        <div style={{ width: 56, height: 20 }}>
+          {spark && spark.some((v) => v !== spark[0]) ? (
+            <Sparkline values={spark} color={sparkColor} />
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 }
 
-/** « Créés vs résolus » — aires + lignes, viewBox 640×190, légende carrés 8×8. */
+/** Légende « ■ Créés ■ Résolus » — carrés 8×8, 11.5px ink-3, en ligne avec le titre. */
+export function ChartLegend({ items }: { items: { label: string; color: string }[] }) {
+  return (
+    <div className="flex" style={{ gap: 11, fontSize: 11.5, color: "var(--ink-3)" }}>
+      {items.map((i) => (
+        <span key={i.label} className="flex items-center" style={{ gap: 5 }}>
+          <span
+            style={{ width: 8, height: 8, borderRadius: 2, background: i.color, flex: "none" }}
+          />
+          {i.label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * « Créés vs résolus » — aires + lignes, viewBox 640×190, pad 22, 5 lignes de grille.
+ * Le conteneur parent impose la hauteur (190px dans le design).
+ */
 export function AreaLines({
   data,
   labelA,
@@ -96,143 +146,106 @@ export function AreaLines({
 }) {
   const W = 640;
   const H = 190;
-  const PAD_TOP = 10;
-  const PAD_BOTTOM = 22;
-  const plotH = H - PAD_TOP - PAD_BOTTOM;
-  const max = Math.max(...data.map((d) => Math.max(d.created, d.resolved)), 1);
-  const step = data.length > 1 ? W / (data.length - 1) : W;
-  const x = (i: number) => i * step;
-  const y = (v: number) => PAD_TOP + plotH - (v / max) * plotH;
+  const PAD = 22;
+  const peak = Math.max(...data.map((d) => Math.max(d.created, d.resolved)), 1);
+  // Plafond « rond » pour que les 4 quarts de grille tombent sur des valeurs lisibles.
+  const step = Math.max(1, Math.pow(10, Math.floor(Math.log10(peak))) / 2);
+  const max = Math.ceil(peak / (step * 4)) * step * 4;
+  const x = (i: number) => PAD + (data.length > 1 ? (i / (data.length - 1)) * (W - PAD - 8) : 0);
+  const y = (v: number) => H - PAD - (v / max) * (H - PAD - 12);
 
-  const line = (get: (d: (typeof data)[number]) => number) =>
-    data.map((d, i) => `${x(i).toFixed(1)},${y(get(d)).toFixed(1)}`).join(" ");
-  const area = (get: (d: (typeof data)[number]) => number) =>
-    `${line(get)} ${x(data.length - 1).toFixed(1)},${(PAD_TOP + plotH).toFixed(1)} 0,${(
-      PAD_TOP + plotH
-    ).toFixed(1)}`;
+  const path = (get: (d: (typeof data)[number]) => number) =>
+    data.map((d, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(get(d)).toFixed(1)}`).join(" ");
+  const fill = (get: (d: (typeof data)[number]) => number) =>
+    `${path(get)} L${x(data.length - 1).toFixed(1)},${H - PAD} L${x(0).toFixed(1)},${H - PAD} Z`;
 
-  const labelEvery = Math.max(1, Math.ceil(data.length / 8));
   const fmtDay = (iso: string) =>
     new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  const slot = data.length > 1 ? (W - PAD - 8) / (data.length - 1) : W;
 
   return (
-    <div>
-      <div className="mb-2 flex gap-4" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-        <span className="inline-flex items-center gap-1.5">
-          <span style={{ width: 8, height: 8, background: "var(--open)", borderRadius: 2 }} />
-          {labelA}
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span style={{ width: 8, height: 8, background: "var(--acc-2)", borderRadius: 2 }} />
-          {labelB}
-        </span>
-      </div>
-      <svg
-        width="100%"
-        viewBox={`0 0 ${W} ${H}`}
-        role="img"
-        aria-label={`${labelA} et ${labelB} par jour`}
-        style={{ display: "block" }}
-      >
-        {/* Grille horizontale discrète */}
-        {[0, 0.25, 0.5, 0.75, 1].map((f) => (
-          <line
-            key={f}
-            x1={0}
-            x2={W}
-            y1={PAD_TOP + plotH - f * plotH}
-            y2={PAD_TOP + plotH - f * plotH}
-            stroke="var(--line-2)"
-            strokeWidth={1}
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width="100%"
+      height="100%"
+      preserveAspectRatio="none"
+      role="img"
+      aria-label={`${labelA} et ${labelB} par jour`}
+      style={{ display: "block" }}
+    >
+      {[0, 0.25, 0.5, 0.75, 1].map((f) => (
+        <line
+          key={f}
+          x1={PAD}
+          x2={W - 8}
+          y1={y(max * f)}
+          y2={y(max * f)}
+          stroke="var(--line-2)"
+          strokeWidth={1}
+        />
+      ))}
+      {data.length > 1 && (
+        <>
+          <path d={fill((d) => d.created)} fill="var(--open)" opacity={0.12} />
+          <path d={fill((d) => d.resolved)} fill="var(--acc-2)" opacity={0.14} />
+          <path
+            d={path((d) => d.created)}
+            fill="none"
+            stroke="var(--open)"
+            strokeWidth={2}
+            strokeLinejoin="round"
           />
-        ))}
-        {data.length > 1 && (
-          <>
-            <polygon points={area((d) => d.created)} fill="var(--open)" opacity={0.12} />
-            <polygon points={area((d) => d.resolved)} fill="var(--acc-2)" opacity={0.12} />
-            <polyline
-              points={line((d) => d.created)}
-              fill="none"
-              stroke="var(--open)"
-              strokeWidth={2}
-              strokeLinejoin="round"
-            />
-            <polyline
-              points={line((d) => d.resolved)}
-              fill="none"
-              stroke="var(--acc-2)"
-              strokeWidth={2}
-              strokeLinejoin="round"
-            />
-          </>
-        )}
-        {data.map(
-          (d, i) =>
-            i % labelEvery === 0 && (
-              <text
-                key={d.day}
-                x={Math.min(Math.max(x(i), 14), W - 20)}
-                y={H - 6}
-                textAnchor="middle"
-                fontSize={9.5}
-                fill="var(--ink-3)"
-                fontFamily="var(--font-mono)"
-              >
-                {fmtDay(d.day)}
-              </text>
-            ),
-        )}
-        {/* Survol natif par jour */}
-        {data.map((d, i) => (
-          <rect
-            key={`h-${d.day}`}
-            x={x(i) - step / 2}
-            y={0}
-            width={step}
-            height={H}
-            fill="transparent"
-          >
-            <title>{`${fmtDay(d.day)} — ${labelA} : ${d.created} · ${labelB} : ${d.resolved}`}</title>
-          </rect>
-        ))}
-      </svg>
-    </div>
+          <path
+            d={path((d) => d.resolved)}
+            fill="none"
+            stroke="var(--acc-2)"
+            strokeWidth={2}
+            strokeLinejoin="round"
+          />
+        </>
+      )}
+      {data.map((d, i) => (
+        <rect key={d.day} x={x(i) - slot / 2} y={0} width={slot} height={H} fill="transparent">
+          <title>{`${fmtDay(d.day)} — ${labelA} : ${d.created} · ${labelB} : ${d.resolved}`}</title>
+        </rect>
+      ))}
+    </svg>
   );
 }
 
-/** « Répartition par canal » — barres h7 + pourcentage. */
+/** « Répartition par canal » — barres h7, largeur = part du total, valeur brute à droite. */
 export function ChannelBars({
   items,
 }: {
   items: { label: string; value: number; color: string }[];
 }) {
   const total = items.reduce((acc, i) => acc + i.value, 0);
-  const max = Math.max(...items.map((i) => i.value), 1);
   return (
-    <div className="flex flex-col gap-2.5">
+    <div className="flex flex-col" style={{ gap: 11, paddingTop: 4 }}>
       {items.map((item) => {
-        const pct = total > 0 ? Math.round((item.value / total) * 100) : 0;
+        const pct = total > 0 ? (item.value / total) * 100 : 0;
         return (
-          <div key={item.label} title={`${item.label} : ${item.value} (${pct} %)`}>
-            <div
-              className="mb-1 flex items-baseline justify-between"
-              style={{ fontSize: 12 }}
-            >
+          <div
+            key={item.label}
+            className="flex flex-col"
+            style={{ gap: 5 }}
+            title={`${item.label} : ${item.value.toLocaleString("fr-FR")} · ${Math.round(pct)} %`}
+          >
+            <div className="flex justify-between" style={{ fontSize: 12.5 }}>
               <span>{item.label}</span>
-              <span className="tabular-nums" style={{ color: "var(--ink-3)" }}>
-                {item.value.toLocaleString("fr-FR")} · {pct} %
+              <span style={{ color: "var(--ink-3)", fontVariantNumeric: "tabular-nums" }}>
+                {item.value.toLocaleString("fr-FR")}
               </span>
             </div>
             <div
-              className="w-full overflow-hidden"
-              style={{ height: 7, borderRadius: 4, background: "var(--sunk)" }}
+              style={{ height: 7, borderRadius: 4, background: "var(--sunk)", overflow: "hidden" }}
             >
               <div
                 style={{
                   height: "100%",
-                  width: `${Math.max((item.value / max) * 100, 2)}%`,
-                  borderRadius: 4,
+                  width: `${pct.toFixed(1)}%`,
                   background: item.color,
+                  borderRadius: 4,
                 }}
               />
             </div>
@@ -245,46 +258,41 @@ export function ChannelBars({
 
 const DAY_LABELS = ["L", "M", "M", "J", "V", "S", "D"];
 
-/** « Volume par heure et jour » — heatmap 7 jours × 12 heures, cases h15. */
+/** « Volume par heure et jour » — 7 lignes × 12 heures, grille `16px repeat(12,1fr)` gap 3. */
 export function Heatmap({ grid, hours }: { grid: number[][]; hours: number[] }) {
   const max = Math.max(...grid.flat(), 1);
-  const axisHours = hours.filter((_, i) => i % 2 === 0);
+  const cols = "16px repeat(12,1fr)";
   return (
-    <div>
-      <div className="flex flex-col gap-0.5">
-        {grid.map((row, r) => (
-          <div key={r} className="flex items-center gap-0.5">
-            <span
-              className="w-4 shrink-0 text-center"
-              style={{ fontSize: 10, color: "var(--ink-3)", fontFamily: "var(--font-mono)" }}
-            >
-              {DAY_LABELS[r]}
-            </span>
-            {row.map((v, c) => (
-              <span
-                key={c}
-                className="min-w-0 flex-1"
-                title={`${DAY_LABELS[r]} ${hours[c]} h : ${v} ticket${v > 1 ? "s" : ""}`}
-                style={{
-                  height: 15,
-                  borderRadius: 3,
-                  background: "var(--acc-2)",
-                  opacity: v === 0 ? 0.06 : 0.15 + (v / max) * 0.85,
-                }}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      <div className="mt-1 flex" style={{ paddingLeft: 18 }}>
-        {axisHours.map((h) => (
-          <span
+    <div className="flex flex-col" style={{ gap: 3 }}>
+      {grid.map((row, r) => (
+        <div
+          key={r}
+          style={{ display: "grid", gridTemplateColumns: cols, gap: 3, alignItems: "center" }}
+        >
+          <div style={{ fontSize: 10, color: "var(--ink-3)" }}>{DAY_LABELS[r]}</div>
+          {row.map((v, c) => (
+            <div
+              key={c}
+              title={`${DAY_LABELS[r]} ${hours[c]} h : ${v} ticket${v > 1 ? "s" : ""}`}
+              style={{
+                height: 15,
+                borderRadius: 3,
+                background: v === 0 ? "var(--sunk)" : "var(--acc-2)",
+                opacity: v === 0 ? 1 : 0.18 + (v / max) * 0.82,
+              }}
+            />
+          ))}
+        </div>
+      ))}
+      <div style={{ display: "grid", gridTemplateColumns: cols, gap: 3, marginTop: 3 }}>
+        <div />
+        {hours.map((h, i) => (
+          <div
             key={h}
-            className="flex-1 text-left"
-            style={{ fontSize: 10, color: "var(--ink-3)", fontFamily: "var(--font-mono)" }}
+            style={{ fontSize: 9.5, color: "var(--ink-3)", textAlign: "center" }}
           >
-            {h}
-          </span>
+            {i % 2 === 0 ? h : ""}
+          </div>
         ))}
       </div>
     </div>

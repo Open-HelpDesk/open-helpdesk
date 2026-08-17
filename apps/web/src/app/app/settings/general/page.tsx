@@ -14,6 +14,9 @@ import { Modal, SlugConfirmField } from "@/components/settings-overlays";
 import { AccentPicker } from "@/components/settings-accent";
 import { deleteWorkspace, saveGeneral, transferOwnership } from "./actions";
 
+/** Champ de saisie du design : min-height 36, padding 7/11, 13.5px. */
+const CONTROL = { minHeight: 36, padding: "7px 11px", fontSize: 13.5 } as const;
+
 /**
  * ST-01 — Général & branding (860 px) : identité du workspace, régionalisation,
  * zone de danger (transfert de propriété, suppression avec confirmation par slug).
@@ -50,6 +53,7 @@ export default async function GeneralSettingsPage({
   const nContacts = contactCount?.n ?? 0;
   const nArticles = articleCount?.n ?? 0;
   const fmtN = (n: number) => n.toLocaleString("fr-FR").replace(/ /g, " ");
+  const initial = tenant.name[0]?.toUpperCase() ?? "A";
 
   return (
     <PageShell maxWidth={860}>
@@ -75,58 +79,93 @@ export default async function GeneralSettingsPage({
 
       <form action={saveGeneral} className="flex flex-col" style={{ gap: 22 }}>
         <Card title="Identité">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col" style={{ gap: 13 }}>
             <Field label="Nom du workspace">
-              <TextInput name="name" required defaultValue={tenant.name} className="max-w-sm" />
+              <TextInput name="name" required defaultValue={tenant.name} style={CONTROL} />
             </Field>
 
-            <div className="flex items-center gap-3">
-              <span
-                className="flex items-center justify-center font-bold text-white"
-                style={{
-                  width: 46,
-                  height: 46,
-                  borderRadius: 10,
-                  fontSize: 20,
-                  background: branding.accentColor ?? "var(--acc)",
-                }}
-              >
-                {tenant.name[0]?.toUpperCase()}
-              </span>
-              <div className="flex flex-col gap-0.5">
-                <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
+            {/* Logo + favicon — grid auto-fit minmax(300px,1fr) gap 13 */}
+            <div
+              className="grid"
+              style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
+            >
+              <div className="flex flex-col gap-1.5">
+                <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
                   Logo
                 </span>
-                <span style={{ fontSize: 13, color: "var(--acc)" }}>Remplacer · recadrer</span>
+                <div className="flex items-center" style={{ gap: 11 }}>
+                  <span
+                    className="flex items-center justify-center font-bold text-white"
+                    style={{
+                      width: 46,
+                      height: 46,
+                      flex: "none",
+                      borderRadius: 10,
+                      fontSize: 19,
+                      background: branding.accentColor ?? "var(--acc)",
+                    }}
+                  >
+                    {initial}
+                  </span>
+                  <span
+                    className="flex flex-1 items-center justify-center rounded-lg border border-dashed"
+                    style={{
+                      height: 46,
+                      borderColor: "var(--line)",
+                      fontSize: 12.5,
+                      color: "var(--ink-3)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Remplacer · recadrer
+                  </span>
+                </div>
                 <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
                   PNG ou SVG, 512 px minimum.
                 </span>
               </div>
-            </div>
 
-            <div className="flex items-center gap-3">
-              <span
-                className="flex items-center justify-center rounded border font-bold"
-                style={{
-                  width: 32,
-                  height: 32,
-                  fontSize: 13,
-                  borderColor: "var(--line)",
-                  background: "var(--sunk)",
-                  color: "var(--ink-2)",
-                }}
-              >
-                {tenant.name[0]?.toUpperCase()}
-              </span>
-              <div className="flex flex-col gap-0.5">
-                <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
+              <div className="flex flex-col gap-1.5">
+                <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
                   Favicon
                 </span>
+                <div className="flex items-center" style={{ gap: 11 }}>
+                  <span
+                    className="flex items-center justify-center border"
+                    style={{
+                      width: 46,
+                      height: 46,
+                      flex: "none",
+                      borderRadius: 10,
+                      fontSize: 15,
+                      borderColor: "var(--line)",
+                      background: "var(--sunk)",
+                      color: "var(--ink)",
+                    }}
+                  >
+                    {initial}
+                  </span>
+                  <span
+                    className="flex flex-1 items-center justify-center rounded-lg border border-dashed"
+                    style={{
+                      height: 46,
+                      borderColor: "var(--line)",
+                      fontSize: 12.5,
+                      color: "var(--ink-3)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Remplacer
+                  </span>
+                </div>
                 <span style={{ fontSize: 12, color: "var(--ink-3)" }}>32 × 32 px, ICO ou PNG.</span>
               </div>
             </div>
 
-            <Field label="Couleur d'accent">
+            <Field
+              label="Couleur d'accent"
+              hint="Utilisée sur le portail client et dans les emails sortants."
+            >
               <AccentPicker name="accentColor" initial={branding.accentColor ?? "#0B5F46"} />
             </Field>
           </div>
@@ -134,17 +173,17 @@ export default async function GeneralSettingsPage({
 
         <Card title="Régionalisation">
           <div
-            className="grid gap-4"
-            style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}
+            className="grid"
+            style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
           >
-            <Field label="Langue">
-              <Select name="locale" defaultValue={tenant.locale}>
+            <Field label="Langue par défaut">
+              <Select name="locale" defaultValue={tenant.locale} style={CONTROL}>
                 <option value="fr">Français (fr-FR)</option>
                 <option value="en">English (en-US)</option>
               </Select>
             </Field>
             <Field label="Fuseau horaire">
-              <Select name="timezone" defaultValue={tenant.timezone}>
+              <Select name="timezone" defaultValue={tenant.timezone} style={CONTROL}>
                 <option value="Europe/Paris">Europe/Paris (UTC+2)</option>
                 <option value="Europe/Brussels">Europe/Brussels (UTC+2)</option>
                 <option value="Europe/London">Europe/London (UTC+1)</option>
@@ -152,24 +191,23 @@ export default async function GeneralSettingsPage({
                 <option value="UTC">UTC</option>
               </Select>
             </Field>
-            <Field
-              label="Format de numérotation"
-              hint="Le numéro est séquentiel et jamais réutilisé."
-            >
+            <Field label="Format de numérotation">
               <TextInput
                 name="ticketNumberFormat"
                 defaultValue={tenant.ticketNumberFormat}
                 className="font-mono"
                 spellCheck={false}
+                style={CONTROL}
               />
             </Field>
-            <Field label="Premier numéro" hint="Appliqué aux nouveaux workspaces uniquement.">
+            <Field label="Premier numéro">
               <TextInput
                 name="firstNumber"
                 type="number"
                 min={1}
                 defaultValue={branding.firstTicketNumber ?? 1000}
                 className="font-mono"
+                style={CONTROL}
               />
             </Field>
           </div>
@@ -178,87 +216,101 @@ export default async function GeneralSettingsPage({
         <SaveBar saved={saved === "1"} cancelHref="/app/settings/general" />
       </form>
 
-      <Card title="Zone de danger" danger>
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="min-w-0 flex-1">
-              <p className="font-medium" style={{ fontSize: 13.5, color: "var(--ink)" }}>
-                Transférer la propriété
-              </p>
-              <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                Le nouveau propriétaire doit être un administrateur actif. Vous deviendrez Admin.
-              </p>
-            </div>
-            {me.role === "owner" ? (
-              admins.length > 0 ? (
-                <form action={transferOwnership} className="flex items-center gap-2">
-                  <Select name="newOwnerId" defaultValue={admins[0]!.id} style={{ minWidth: 180 }}>
-                    {admins.map((a) => (
-                      <option key={a.id} value={a.id}>
-                        {a.name}
-                      </option>
-                    ))}
-                  </Select>
-                  <button
-                    type="submit"
-                    className="rounded-md border px-3 font-medium"
-                    style={{
-                      height: 32,
-                      fontSize: 13,
-                      borderColor: "var(--line)",
-                      background: "var(--panel)",
-                      color: "var(--ink)",
-                    }}
-                  >
-                    Transférer
-                  </button>
-                </form>
-              ) : (
-                <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-                  Aucun administrateur actif à promouvoir.
-                </span>
-              )
+      {/* Zone de danger — cadre --dang, 2 lignes (panel puis --dang-t) */}
+      <Card title="Zone de danger" danger style={{ padding: 0 }}>
+        <div
+          className="flex flex-wrap items-center"
+          style={{
+            padding: 14,
+            gap: 14,
+            borderTop: "1px solid var(--line)",
+            borderBottom: "1px solid var(--line)",
+            background: "var(--panel)",
+          }}
+        >
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
+              Transférer la propriété
+            </p>
+            <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+              Désigner un autre administrateur comme propriétaire.
+            </p>
+          </div>
+          {me.role === "owner" ? (
+            admins.length > 0 ? (
+              <form action={transferOwnership} className="flex items-center gap-2">
+                <Select
+                  name="newOwnerId"
+                  defaultValue={admins[0]!.id}
+                  style={{ minWidth: 180, height: 32, fontSize: 13 }}
+                >
+                  {admins.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.name}
+                    </option>
+                  ))}
+                </Select>
+                <button
+                  type="submit"
+                  className="rounded-md border font-semibold"
+                  style={{
+                    height: 32,
+                    padding: "0 13px",
+                    fontSize: 13,
+                    borderColor: "var(--line)",
+                    background: "var(--panel)",
+                    color: "var(--ink)",
+                  }}
+                >
+                  Transférer
+                </button>
+              </form>
             ) : (
               <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-                Réservé au propriétaire du workspace.
+                Aucun administrateur actif à promouvoir.
               </span>
-            )}
-          </div>
+            )
+          ) : (
+            <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+              Réservé au propriétaire du workspace.
+            </span>
+          )}
+        </div>
 
-          <div
-            className="flex flex-wrap items-center gap-3 border-t pt-4"
-            style={{ borderColor: "var(--line-2)" }}
-          >
-            <div className="min-w-0 flex-1">
-              <p className="font-medium" style={{ fontSize: 13.5, color: "var(--ink)" }}>
-                Supprimer le workspace
-              </p>
-              <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                Toutes les données seront supprimées après 30 jours de rétention.
-              </p>
-            </div>
-            <Modal
-              title="Supprimer le workspace"
-              trigger={<>Supprimer…</>}
-              triggerClassName="rounded-md border px-3 font-medium"
-              triggerStyle={{
-                height: 32,
-                fontSize: 13,
-                borderColor: "var(--dang)",
-                color: "var(--dang)",
-                background: "var(--panel)",
-              }}
-            >
-              <form action={deleteWorkspace} className="flex flex-col gap-3">
-                <p style={{ fontSize: 13, color: "var(--ink)" }}>
-                  Cette action est irréversible. Les {fmtN(nTickets)} tickets, {fmtN(nContacts)}{" "}
-                  contacts et {fmtN(nArticles)} articles seront définitivement supprimés après 30
-                  jours de rétention.
-                </p>
-                <SlugConfirmField slug={tenant.slug} buttonLabel="Supprimer définitivement" />
-              </form>
-            </Modal>
+        <div
+          className="flex flex-wrap items-center"
+          style={{ padding: 14, gap: 14, background: "var(--dang-t)" }}
+        >
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold" style={{ fontSize: 13.5, color: "var(--dang)" }}>
+              Supprimer le workspace
+            </p>
+            <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+              Suppression définitive après 30 jours de rétention.
+            </p>
           </div>
+          <Modal
+            title="Supprimer le workspace"
+            trigger={<>Supprimer</>}
+            triggerClassName="rounded-md border font-semibold"
+            triggerStyle={{
+              height: 32,
+              padding: "0 13px",
+              fontSize: 13,
+              borderColor: "var(--dang)",
+              color: "var(--dang)",
+              background: "var(--panel)",
+            }}
+          >
+            <form action={deleteWorkspace} className="flex flex-col gap-3">
+              <p style={{ fontSize: 13.5, color: "var(--ink-2)" }}>
+                Cette action est irréversible. Les {fmtN(nTickets)} tickets, {fmtN(nContacts)}{" "}
+                contacts et {fmtN(nArticles)} articles seront définitivement supprimés après 30
+                jours de rétention.
+              </p>
+              <SlugConfirmField slug={tenant.slug} buttonLabel="Supprimer définitivement" />
+            </form>
+          </Modal>
         </div>
       </Card>
     </PageShell>

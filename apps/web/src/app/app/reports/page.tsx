@@ -4,12 +4,21 @@ import { db, teams } from "@openhelpdesk/db";
 import { requireAgent } from "@/lib/session";
 import { getReportData } from "@/lib/reports";
 import { durationFr, nFr } from "@/lib/format";
-import { AreaLines, ChannelBars, Heatmap, KpiTile, type KpiDelta } from "@/components/charts";
+import { Avatar } from "@/components/ticket-bits";
+import {
+  AreaLines,
+  ChannelBars,
+  ChartLegend,
+  Heatmap,
+  KpiTile,
+  type KpiDelta,
+} from "@/components/charts";
 
 /**
- * AG-09 — Rapports (design espace-agent) : toolbar sticky (segmented périodes, équipe,
- * comparaison, export CSV), 6 tuiles KPI, « Créés vs résolus » en aires + lignes,
- * répartition par canal, heatmap heure × jour, performance par agent, tuile PLAN PRO.
+ * AG-09 — Rapports (design « Espace agent ») : toolbar sticky padding 14/18 (segmented
+ * 7 j / 30 j / 90 j / Personnalisé, équipe, comparaison, export CSV), 6 tuiles KPI
+ * `repeat(6,1fr)` gap 10, rangée `1.6fr 1fr` (« Créés vs résolus » 190px + canaux),
+ * rangée `1fr 1fr` (heatmap + performance agent), encart pointillé « PLAN PRO ».
  */
 
 const PERIODS = [
@@ -24,6 +33,14 @@ const CHANNELS: Record<string, { label: string; color: string }> = {
   widget: { label: "Widget", color: "var(--new)" },
   api: { label: "API", color: "var(--pause)" },
 };
+
+const CARD: React.CSSProperties = {
+  background: "var(--panel)",
+  border: "1px solid var(--line)",
+  borderRadius: 10,
+};
+const CARD_TITLE: React.CSSProperties = { fontSize: 13.5, fontWeight: 600 };
+const AGENT_COLS = "1fr 70px 90px 70px";
 
 const fmtFr = (x: number, digits = 1) =>
   x.toLocaleString("fr-FR", { maximumFractionDigits: digits });
@@ -97,7 +114,7 @@ export default async function ReportsPage({
       spark: data.daily.map((d) => d.created),
     },
     {
-      label: "Résolus",
+      label: "Tickets résolus",
       value: nFr(current.resolved),
       delta: pctDelta(current.resolved, previous.resolved, "up"),
       spark: data.daily.map((d) => d.resolved),
@@ -129,32 +146,47 @@ export default async function ReportsPage({
   ];
 
   return (
-    <div className="h-full overflow-y-auto">
+    <div className="h-full overflow-auto" style={{ background: "var(--canvas)" }}>
       {/* Toolbar sticky */}
       <div
-        className="sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b px-4"
-        style={{ minHeight: 48, background: "var(--panel)", borderColor: "var(--line)" }}
+        className="sticky top-0 z-20 flex items-center"
+        style={{
+          gap: 8,
+          padding: "14px 18px",
+          background: "var(--panel)",
+          borderBottom: "1px solid var(--line)",
+        }}
       >
         {/* Segmented périodes */}
         <div
-          className="flex items-center gap-0.5 rounded-md border p-0.5"
-          style={{ borderColor: "var(--line)", background: "var(--sunk)" }}
+          className="flex"
+          style={{ padding: 2, gap: 2, background: "var(--sunk)", borderRadius: 7 }}
         >
           {PERIODS.map(({ days: d, label }) => (
             <Link
               key={d}
               href={buildUrl({ p: String(d) })}
-              className="rounded px-2.5 py-1 text-[12.5px] font-medium"
-              style={
-                d === days
-                  ? { background: "var(--bg)", color: "var(--ink)", boxShadow: "0 0 0 1px var(--line)" }
-                  : { color: "var(--ink-3)" }
-              }
+              style={{
+                padding: "5px 11px",
+                borderRadius: 5,
+                fontSize: 12.5,
+                fontWeight: d === days ? 600 : 450,
+                background: d === days ? "var(--panel)" : "transparent",
+                color: d === days ? "var(--ink)" : "var(--ink-2)",
+              }}
             >
               {label}
             </Link>
           ))}
-          <span className="rounded px-2.5 py-1 text-[12.5px]" style={{ color: "var(--ink-3)" }}>
+          <span
+            style={{
+              padding: "5px 11px",
+              borderRadius: 5,
+              fontSize: 12.5,
+              fontWeight: 450,
+              color: "var(--ink-3)",
+            }}
+          >
             Personnalisé
           </span>
         </div>
@@ -162,15 +194,19 @@ export default async function ReportsPage({
         {/* Équipe */}
         <details className="relative">
           <summary
-            className="flex cursor-pointer list-none items-center gap-1 rounded-md border px-2.5 text-[12.5px] font-medium [&::-webkit-details-marker]:hidden"
+            className="flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden"
             style={{
-              height: 28,
-              borderColor: "var(--line)",
-              background: "var(--bg)",
+              height: 30,
+              padding: "0 10px",
+              gap: 6,
+              border: "1px solid var(--line)",
+              borderRadius: 6,
+              fontSize: 12.5,
               color: "var(--ink-2)",
             }}
           >
-            Équipe : {currentTeam?.name ?? "toutes"} <span style={{ fontSize: 9 }}>▾</span>
+            Équipe : {currentTeam?.name ?? "toutes"}
+            <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
           </summary>
           <div
             className="absolute left-0 top-full z-30 mt-1 flex min-w-44 flex-col rounded-md border py-1 shadow-md"
@@ -195,16 +231,17 @@ export default async function ReportsPage({
         {/* Comparaison */}
         <Link
           href={buildUrl({ compare: showCompare ? "0" : undefined })}
-          className="flex items-center gap-1.5 text-[12.5px]"
-          style={{ color: "var(--ink-2)" }}
+          className="flex items-center"
+          style={{ gap: 7, fontSize: 12.5, color: "var(--ink-2)", marginLeft: 4 }}
         >
           <span
-            className="flex items-center justify-center rounded"
+            className="grid place-items-center"
             style={{
-              width: 14,
-              height: 14,
-              border: showCompare ? "none" : "1.5px solid var(--line)",
-              background: showCompare ? "var(--acc)" : "var(--bg)",
+              width: 15,
+              height: 15,
+              borderRadius: 4,
+              background: showCompare ? "var(--acc)" : "transparent",
+              border: showCompare ? "none" : "1px solid var(--line)",
               color: "#fff",
               fontSize: 10,
             }}
@@ -217,11 +254,13 @@ export default async function ReportsPage({
         <span className="flex-1" />
         <a
           href={exportUrl}
-          className="rounded-md border px-3 text-[12.5px] font-medium leading-7"
+          className="grid place-items-center"
           style={{
-            height: 28,
-            borderColor: "var(--line)",
-            background: "var(--bg)",
+            height: 30,
+            padding: "0 11px",
+            border: "1px solid var(--line)",
+            borderRadius: 6,
+            fontSize: 12.5,
             color: "var(--ink-2)",
           }}
         >
@@ -229,55 +268,63 @@ export default async function ReportsPage({
         </a>
       </div>
 
-      <div className="mx-auto max-w-6xl p-4">
-        {data.dataSpanDays < 7 && (
-          <p
-            className="mb-4 rounded-md border px-3 py-2 text-[12.5px]"
-            style={{
-              borderColor: "var(--wait)",
-              background: "var(--wait-t)",
-              color: "var(--wait)",
-            }}
-          >
-            Moins de 7 jours de données — les tendances s'affineront avec l'usage.
-          </p>
-        )}
+      {data.dataSpanDays < 7 && (
+        <p
+          style={{
+            margin: "14px 18px 0",
+            padding: "10px 12px",
+            background: "var(--wait-t)",
+            border: "1px solid var(--wait)",
+            borderRadius: 8,
+            fontSize: 13,
+            color: "var(--wait)",
+          }}
+        >
+          Moins de 7 jours de données — les tendances s'affineront avec l'usage.
+        </p>
+      )}
 
+      <div className="flex flex-col" style={{ padding: "16px 18px", gap: 16 }}>
         {/* Tuiles KPI */}
-        <div className="overflow-x-auto">
-          <div
-            className="grid gap-3"
-            style={{ gridTemplateColumns: "repeat(6, 1fr)", minWidth: 880 }}
-          >
-            {kpis.map((k) => (
-              <KpiTile
-                key={k.label}
-                label={k.label}
-                value={k.value}
-                delta={showCompare ? k.delta : null}
-                spark={k.spark}
-              />
-            ))}
-          </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(6,1fr)",
+            gap: 10,
+          }}
+        >
+          {kpis.map((k) => (
+            <KpiTile
+              key={k.label}
+              label={k.label}
+              value={k.value}
+              delta={showCompare ? k.delta : null}
+              spark={k.spark}
+            />
+          ))}
         </div>
 
         {/* Rangée 2 : Créés vs résolus · Répartition par canal */}
-        <div className="mt-4 grid gap-4" style={{ gridTemplateColumns: "1.6fr 1fr" }}>
-          <section
-            className="border p-4"
-            style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
-          >
-            <p className="mb-3 text-[13px] font-semibold">Créés vs résolus</p>
-            <AreaLines data={data.daily} labelA="Créés" labelB="Résolus" />
+        <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 14 }}>
+          <section className="flex min-w-0 flex-col" style={{ ...CARD, padding: 15, gap: 12 }}>
+            <div className="flex items-baseline" style={{ gap: 10 }}>
+              <div style={CARD_TITLE}>Créés vs résolus</div>
+              <ChartLegend
+                items={[
+                  { label: "Créés", color: "var(--open)" },
+                  { label: "Résolus", color: "var(--acc-2)" },
+                ]}
+              />
+            </div>
+            <div style={{ height: 190 }}>
+              <AreaLines data={data.daily} labelA="Créés" labelB="Résolus" />
+            </div>
           </section>
 
-          <section
-            className="border p-4"
-            style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
-          >
-            <p className="mb-3 text-[13px] font-semibold">Répartition par canal</p>
+          <section className="flex min-w-0 flex-col" style={{ ...CARD, padding: 15, gap: 12 }}>
+            <div style={CARD_TITLE}>Répartition par canal</div>
             {data.channels.length === 0 ? (
-              <p style={{ fontSize: 12, color: "var(--ink-3)" }}>Aucun ticket sur la période.</p>
+              <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>Aucun ticket sur la période.</p>
             ) : (
               <ChannelBars
                 items={data.channels.map((c) => ({
@@ -291,60 +338,71 @@ export default async function ReportsPage({
         </div>
 
         {/* Rangée 3 : heatmap · performance par agent */}
-        <div className="mt-4 grid gap-4" style={{ gridTemplateColumns: "1fr 1fr" }}>
-          <section
-            className="border p-4"
-            style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
-          >
-            <p className="mb-3 text-[13px] font-semibold">Volume par heure et jour</p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <section className="flex min-w-0 flex-col" style={{ ...CARD, padding: 15, gap: 12 }}>
+            <div style={CARD_TITLE}>Volume par heure et jour</div>
             <Heatmap grid={data.heatmap} hours={data.heatmapHours} />
           </section>
 
           <section
-            className="border p-4"
-            style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
+            className="flex min-w-0 flex-col"
+            style={{ ...CARD, padding: "15px 0 5px", gap: 10 }}
           >
-            <p className="mb-3 text-[13px] font-semibold">Performance par agent</p>
+            <div style={{ ...CARD_TITLE, padding: "0 15px" }}>Performance par agent</div>
             {data.agents.length === 0 ? (
-              <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
+              <p style={{ padding: "0 15px", fontSize: 12.5, color: "var(--ink-3)" }}>
                 Aucune activité agent sur la période.
               </p>
             ) : (
               <div>
                 <div
-                  className="grid border-b pb-1.5 font-semibold uppercase tracking-wide"
                   style={{
-                    gridTemplateColumns: "1fr 70px 90px 70px",
-                    fontSize: 10.5,
+                    display: "grid",
+                    gridTemplateColumns: AGENT_COLS,
+                    padding: "0 15px",
+                    height: 26,
+                    alignItems: "center",
+                    fontSize: 11,
+                    fontWeight: 600,
                     color: "var(--ink-3)",
-                    borderColor: "var(--line)",
+                    borderBottom: "1px solid var(--line)",
                   }}
                 >
-                  <span>Agent</span>
-                  <span className="text-right">Résolus</span>
-                  <span className="text-right">1ʳᵉ rép.</span>
-                  <span className="text-right">CSAT</span>
+                  <div>Agent</div>
+                  <div style={{ textAlign: "right" }}>Résolus</div>
+                  <div style={{ textAlign: "right" }}>1ʳᵉ réponse</div>
+                  <div style={{ textAlign: "right" }}>CSAT</div>
                 </div>
-                {data.agents.map((a) => (
+                {data.agents.map((a, i) => (
                   <div
                     key={a.name}
-                    className="grid items-center border-b py-2 tabular-nums"
                     style={{
-                      gridTemplateColumns: "1fr 70px 90px 70px",
+                      display: "grid",
+                      gridTemplateColumns: AGENT_COLS,
+                      padding: "0 15px",
+                      height: 34,
+                      alignItems: "center",
                       fontSize: 12.5,
-                      borderColor: "var(--line-2)",
+                      borderBottom: "1px solid var(--line-2)",
                     }}
                   >
-                    <span className="truncate font-medium">{a.name}</span>
-                    <span className="text-right">{nFr(a.resolved)}</span>
-                    <span className="text-right">
+                    <div className="flex min-w-0 items-center" style={{ gap: 8 }}>
+                      <Avatar name={a.name} size={20} tone={i} />
+                      <span className="truncate">{a.name}</span>
+                    </div>
+                    <div style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+                      {nFr(a.resolved)}
+                    </div>
+                    <div style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
                       {a.medianFirstReplySec !== null
                         ? durationFr(a.medianFirstReplySec * 1000)
                         : "—"}
-                    </span>
-                    <span
-                      className="text-right font-semibold"
+                    </div>
+                    <div
                       style={{
+                        textAlign: "right",
+                        fontVariantNumeric: "tabular-nums",
+                        fontWeight: 600,
                         color:
                           a.csatPct === null
                             ? "var(--ink-3)"
@@ -356,7 +414,7 @@ export default async function ReportsPage({
                       }}
                     >
                       {a.csatPct !== null ? `${a.csatPct} %` : "—"}
-                    </span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -364,39 +422,49 @@ export default async function ReportsPage({
           </section>
         </div>
 
-        {/* Tuile verrouillée */}
-        <section
-          className="mt-4 flex items-center gap-3 border border-dashed p-4"
-          style={{ borderRadius: 10, borderColor: "var(--line)" }}
+        {/* Tuile verrouillée « PLAN PRO » */}
+        <div
+          className="flex items-center"
+          style={{
+            gap: 11,
+            padding: "13px 15px",
+            background: "var(--panel)",
+            border: "1px dashed var(--line)",
+            borderRadius: 10,
+            opacity: 0.75,
+          }}
         >
-          <span style={{ fontSize: 18 }}>🔒</span>
-          <div className="min-w-0 flex-1">
-            <p className="flex items-center gap-2 text-[13px] font-semibold">
-              Rapports personnalisés
-              <span
-                className="rounded-full px-2 py-0.5 font-bold"
-                style={{
-                  fontSize: 9.5,
-                  background: "var(--new-t)",
-                  color: "var(--new)",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                PLAN PRO
-              </span>
-            </p>
-            <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
-              Construisez vos propres tableaux : dimensions, filtres et exports planifiés.
-            </p>
-          </div>
-          <button
-            type="button"
-            className="shrink-0 rounded-md border px-3 py-1.5 text-[12.5px] font-medium"
-            style={{ borderColor: "var(--line)", color: "var(--ink-2)" }}
+          <svg
+            viewBox="0 0 24 24"
+            width="17"
+            height="17"
+            fill="none"
+            stroke="var(--ink-3)"
+            strokeWidth="1.8"
+            aria-hidden="true"
           >
+            <rect x="4" y="10" width="16" height="10" rx="2" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+          </svg>
+          <div style={{ fontSize: 13, color: "var(--ink-2)" }}>Rapports personnalisés</div>
+          <span
+            style={{
+              padding: "1px 8px",
+              borderRadius: 20,
+              background: "var(--new-t)",
+              color: "var(--new)",
+              fontSize: 10.5,
+              fontWeight: 700,
+              letterSpacing: ".04em",
+            }}
+          >
+            PLAN PRO
+          </span>
+          <span className="flex-1" />
+          <Link href="/app/settings/billing" style={{ fontSize: 12.5 }}>
             Découvrir
-          </button>
-        </section>
+          </Link>
+        </div>
       </div>
     </div>
   );

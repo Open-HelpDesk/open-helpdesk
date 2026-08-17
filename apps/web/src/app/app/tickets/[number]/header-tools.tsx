@@ -4,15 +4,16 @@
 import { useState } from "react";
 import { mergeTicket } from "../actions";
 
+/** Chip d'en-tête du design : h28, padding 0 9px, 12px, fond panel, bordure line. */
 const chipStyle = {
   height: 28,
   borderRadius: 6,
   border: "1px solid var(--line)",
-  background: "var(--bg)",
+  background: "var(--panel)",
   color: "var(--ink-2)",
-  fontSize: 12.5,
-  fontWeight: 500,
-  padding: "0 10px",
+  fontSize: 12,
+  padding: "0 9px",
+  whiteSpace: "nowrap",
 } as const;
 
 export function ChipVisual({ label }: { label: string }) {

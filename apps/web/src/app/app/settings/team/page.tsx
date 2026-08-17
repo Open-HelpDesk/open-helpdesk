@@ -1,14 +1,12 @@
+import Link from "next/link";
 import { requireAgent } from "@/lib/session";
 import { businessHours, db, teamMembers, teams, users } from "@openhelpdesk/db";
-import { asc, eq } from "drizzle-orm";
-import { relativeFr } from "@/lib/format";
+import { asc, eq, sql } from "drizzle-orm";
+import { initialsOf, relativeFr } from "@/lib/format";
 import { Avatar } from "@/components/ticket-bits";
 import { entitlementsFor, seatQuota } from "@/lib/entitlements";
 import {
-  Card,
   Field,
-  Gauge,
-  GridHead,
   PageHeader,
   PageShell,
   Select,
@@ -34,11 +32,19 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 const AGENT_GRID = "minmax(190px,1.4fr) 150px 180px 130px 110px 80px";
+/** Rotation de teintes des avatars (open, new, acc, wait, pause) — index de ligne. */
+const AV_TONES = [
+  ["var(--open-t)", "var(--open)"],
+  ["var(--new-t)", "var(--new)"],
+  ["var(--acc-t)", "var(--acc)"],
+  ["var(--wait-t)", "var(--wait)"],
+  ["var(--pause-t)", "var(--pause)"],
+] as const;
 
 /**
- * ST-02 — Agents, équipes & rôles (1100 px) : carte sièges avec jauge, invitation
- * multi-emails, table des agents (rôle inline), onglet Équipes fonctionnel
- * (cartes + drawer CRUD teams/teamMembers).
+ * ST-02 — Agents, équipes & rôles (1100 px) : carte sièges avec jauge 160×7 et
+ * bouton d'action, table des agents (rôle inline), barre d'invitation sous la table,
+ * onglet Équipes (cartes en-tête/corps + drawer CRUD teams/teamMembers).
  */
 export default async function TeamPage({
   searchParams,
@@ -50,7 +56,12 @@ export default async function TeamPage({
   const activeTab = tab === "teams" ? "teams" : "agents";
 
   const [agents, teamRows, memberRows, calendars] = await Promise.all([
-    db.select().from(users).where(eq(users.tenantId, tenant.id)).orderBy(asc(users.name)),
+    db
+      .select()
+      .from(users)
+      .where(eq(users.tenantId, tenant.id))
+      // Ordre du design : activité la plus récente d'abord, invités (sans accès) en fin.
+      .orderBy(sql`${users.lastSeenAt} desc nulls last`, asc(users.name)),
     db.select().from(teams).where(eq(teams.tenantId, tenant.id)).orderBy(asc(teams.name)),
     db.select().from(teamMembers).where(eq(teamMembers.tenantId, tenant.id)),
     db
@@ -60,8 +71,11 @@ export default async function TeamPage({
       .orderBy(asc(businessHours.name)),
   ]);
 
-  const seats = agents.filter((a) => a.status === "active" && a.role !== "viewer").length;
+  // Une invitation réserve son siège : sinon le quota serait dépassé dès l'acceptation.
+  const seats = agents.filter((a) => a.status !== "disabled" && a.role !== "viewer").length;
   const quota = seatQuota(entitlementsFor(tenant.plan));
+  const seatFull = quota > 0 && seats >= quota;
+  const seatPct = quota > 0 ? Math.min(100, Math.round((seats / quota) * 100)) : 0;
 
   const teamsByUser = new Map<string, string[]>();
   const usersByTeam = new Map<string, string[]>();
@@ -91,205 +105,238 @@ export default async function TeamPage({
         tabs={tabs}
       />
 
-      {saved === "1" && (
-        <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>
-      )}
+      {saved === "1" && <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>}
 
       {activeTab === "agents" ? (
-        <>
-          {/* Carte sièges */}
-          <Card>
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="min-w-0 flex-1">
-                <p className="font-semibold" style={{ fontSize: 14, color: "var(--ink)" }}>
-                  {seats} / {quota} sièges utilisés
-                </p>
-                <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                  Les rôles Viewer sont gratuits et illimités.
-                </p>
-              </div>
-              <Gauge value={seats} max={quota} width={160} />
-            </div>
-          </Card>
-
-          {/* Barre d'invitation */}
-          <form
-            action={inviteAgents}
-            className="flex flex-wrap items-center gap-2 rounded-[10px] border"
-            style={{ background: "var(--panel)", borderColor: "var(--line)", padding: 14 }}
+        <div className="st-rise flex flex-col" style={{ gap: 16 }}>
+          {/* Carte sièges — 160×7, bordure/fond --wait quand la limite est atteinte */}
+          <div
+            className="flex flex-wrap items-center rounded-[10px] border"
+            style={{
+              padding: "13px 15px",
+              gap: 14,
+              borderColor: seatFull ? "var(--wait)" : "var(--line)",
+              background: seatFull ? "var(--wait-t)" : "var(--panel)",
+            }}
           >
-            <TextInput
-              name="emails"
-              required
-              placeholder="email@entreprise.fr, autre@entreprise.fr"
-              className="min-w-0 flex-1"
-              style={{ minWidth: 240 }}
-            />
-            <Select name="role" defaultValue="agent" style={{ width: 140 }}>
-              <option value="admin">Admin</option>
-              <option value="agent">Agent</option>
-              <option value="viewer">Viewer</option>
-            </Select>
-            <button
-              type="submit"
-              className="rounded-md px-3.5 font-semibold text-white"
-              style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
+                {seatFull
+                  ? `${seats} / ${quota} sièges utilisés — limite atteinte`
+                  : `${seats} / ${quota} sièges utilisés`}
+              </p>
+              <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                {seatFull
+                  ? "Ajoutez des sièges pour inviter de nouveaux agents."
+                  : "Les rôles Viewer sont gratuits et illimités."}
+              </p>
+            </div>
+            <span
+              className="overflow-hidden"
+              style={{ width: 160, height: 7, borderRadius: 4, background: "var(--sunk)" }}
             >
-              Inviter
-            </button>
-          </form>
+              <span
+                className="block h-full"
+                style={{
+                  width: `${seatPct}%`,
+                  borderRadius: 4,
+                  background: seatFull ? "var(--wait)" : "var(--acc)",
+                }}
+              />
+            </span>
+            <Link
+              href="/app/settings/billing"
+              className="inline-flex items-center justify-center rounded-md border font-semibold"
+              style={{
+                height: 32,
+                padding: "0 13px",
+                fontSize: 13,
+                borderColor: seatFull ? "var(--acc)" : "var(--line)",
+                background: seatFull ? "var(--acc)" : "var(--panel)",
+                color: seatFull ? "#fff" : "var(--ink-2)",
+              }}
+            >
+              {seatFull ? "Ajouter des sièges" : "Gérer"}
+            </Link>
+          </div>
 
           {/* Table des agents */}
           <div
             className="overflow-x-auto rounded-[10px] border"
             style={{ background: "var(--panel)", borderColor: "var(--line)" }}
           >
-            <div style={{ minWidth: 880 }}>
-              <GridHead
-                template={AGENT_GRID}
-                columns={["Agent", "Rôle", "Équipes", "Dernier accès", "Statut", ""]}
-              />
-              {agents.map((a) => {
-                const isSelf = a.id === me.id;
-                const canManage = !isSelf && (me.role === "owner" || a.role !== "owner");
-                const teamNames = (teamsByUser.get(a.id) ?? []).filter(Boolean);
-                return (
-                  <div
-                    key={a.id}
-                    className="grid items-center gap-3 border-t"
-                    style={{
-                      gridTemplateColumns: AGENT_GRID,
-                      padding: "10px 14px",
-                      borderColor: "var(--line-2)",
-                    }}
+            <div
+              className="grid items-center border-b"
+              style={{
+                gridTemplateColumns: AGENT_GRID,
+                minWidth: 880,
+                padding: "0 14px",
+                height: 34,
+                background: "var(--sunk)",
+                borderColor: "var(--line)",
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.03em",
+                color: "var(--ink-3)",
+              }}
+            >
+              <span>Agent</span>
+              <span>Rôle</span>
+              <span>Équipes</span>
+              <span>Dernier accès</span>
+              <span>Statut</span>
+              <span className="text-right" />
+            </div>
+            {agents.map((a, i) => {
+              const isSelf = a.id === me.id;
+              const canManage = !isSelf && (me.role === "owner" || a.role !== "owner");
+              const teamNames = (teamsByUser.get(a.id) ?? []).filter(Boolean);
+              return (
+                <div
+                  key={a.id}
+                  className="grid items-center border-b"
+                  style={{
+                    gridTemplateColumns: AGENT_GRID,
+                    minWidth: 880,
+                    padding: "0 14px",
+                    minHeight: 46,
+                    borderColor: "var(--line-2)",
+                    fontSize: 13,
+                  }}
+                >
+                  <span
+                    className="flex min-w-0 items-center"
+                    style={{ gap: 9, paddingRight: 10 }}
                   >
-                    <span className="flex min-w-0 items-center gap-2.5">
-                      <Avatar name={a.name} size={26} />
-                      <span className="min-w-0">
-                        <span
-                          className="block truncate font-medium"
-                          style={{ fontSize: 13, color: "var(--ink)" }}
-                        >
-                          {a.name}
-                          {isSelf && (
-                            <span style={{ color: "var(--ink-3)", fontWeight: 400 }}> (vous)</span>
-                          )}
-                        </span>
-                        <span
-                          className="block truncate"
-                          style={{ fontSize: 11.5, color: "var(--ink-3)" }}
-                        >
-                          {a.email}
-                        </span>
+                    <Avatar name={a.name} size={24} tone={i} fontSize={9.5} />
+                    <span className="min-w-0">
+                      <span className="block truncate" style={{ color: "var(--ink)" }}>
+                        {a.name}
+                        {isSelf && (
+                          <span style={{ color: "var(--ink-3)" }}> (vous)</span>
+                        )}
+                      </span>
+                      <span
+                        className="block truncate"
+                        style={{ fontSize: 11.5, color: "var(--ink-3)" }}
+                      >
+                        {a.email}
                       </span>
                     </span>
-                    <span>
-                      {canManage ? (
-                        <form action={updateAgentRole}>
+                  </span>
+                  <span style={{ paddingRight: 10 }}>
+                    {canManage ? (
+                      <form action={updateAgentRole}>
+                        <input type="hidden" name="userId" value={a.id} />
+                        <AutoSubmitSelect
+                          name="role"
+                          defaultValue={a.role}
+                          options={[
+                            ...(me.role === "owner" ? [{ value: "owner", label: "Owner" }] : []),
+                            { value: "admin", label: "Admin" },
+                            { value: "agent", label: "Agent" },
+                            { value: "viewer", label: "Viewer" },
+                          ]}
+                          style={{ width: "100%", height: 28, padding: "0 9px", borderRadius: 6 }}
+                        />
+                      </form>
+                    ) : (
+                      <span style={{ fontSize: 12.5, color: "var(--ink)" }}>
+                        {ROLE_LABELS[a.role]}
+                      </span>
+                    )}
+                  </span>
+                  <span
+                    className="truncate"
+                    style={{ fontSize: 12.5, color: "var(--ink-2)", paddingRight: 10 }}
+                  >
+                    {teamNames.length > 0 ? teamNames.join(", ") : "—"}
+                  </span>
+                  <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+                    {a.lastSeenAt ? relativeFr(a.lastSeenAt) : "—"}
+                  </span>
+                  <span>
+                    {a.status === "active" ? (
+                      <StatusPill tone="ok">Actif</StatusPill>
+                    ) : a.status === "invited" ? (
+                      <StatusPill tone="wait">Invité</StatusPill>
+                    ) : (
+                      <StatusPill tone="closed">Désactivé</StatusPill>
+                    )}
+                  </span>
+                  <span className="text-right">
+                    {canManage &&
+                      (a.status === "invited" ? (
+                        <form action={resendInvite} className="inline">
                           <input type="hidden" name="userId" value={a.id} />
-                          <AutoSubmitSelect
-                            name="role"
-                            defaultValue={a.role}
-                            options={[
-                              ...(me.role === "owner" ? [{ value: "owner", label: "Owner" }] : []),
-                              { value: "admin", label: "Admin" },
-                              { value: "agent", label: "Agent" },
-                              { value: "viewer", label: "Viewer" },
-                            ]}
-                            style={{ width: 110 }}
-                          />
+                          <button style={{ fontSize: 12, color: "var(--acc-2)" }}>Renvoyer</button>
                         </form>
                       ) : (
-                        <span style={{ fontSize: 13, color: "var(--ink)" }}>
-                          {ROLE_LABELS[a.role]}
-                        </span>
-                      )}
-                    </span>
-                    <span
-                      className="truncate"
-                      style={{ fontSize: 12.5, color: teamNames.length ? "var(--ink)" : "var(--ink-3)" }}
-                    >
-                      {teamNames.length > 0 ? teamNames.join(", ") : "—"}
-                    </span>
-                    <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-                      {a.lastSeenAt ? relativeFr(a.lastSeenAt) : "—"}
-                    </span>
-                    <span>
-                      {a.status === "active" ? (
-                        <StatusPill tone="ok">Actif</StatusPill>
-                      ) : a.status === "invited" ? (
-                        <StatusPill tone="wait">Invité</StatusPill>
-                      ) : (
-                        <StatusPill tone="closed">Désactivé</StatusPill>
-                      )}
-                    </span>
-                    <span className="text-right">
-                      {canManage &&
-                        (a.status === "invited" ? (
-                          <form action={resendInvite} className="inline">
-                            <input type="hidden" name="userId" value={a.id} />
-                            <button
-                              className="rounded-md border px-2 py-1 font-medium"
-                              style={{
-                                fontSize: 12,
-                                borderColor: "var(--line)",
-                                color: "var(--ink)",
-                              }}
-                            >
-                              Renvoyer
-                            </button>
-                          </form>
-                        ) : (
-                          <form action={toggleAgentActive} className="inline">
-                            <input type="hidden" name="userId" value={a.id} />
-                            <button
-                              className="rounded-md border px-2 py-1 font-medium"
-                              style={
-                                a.status === "disabled"
-                                  ? { fontSize: 12, borderColor: "var(--line)", color: "var(--ink)" }
-                                  : { fontSize: 12, borderColor: "var(--dang)", color: "var(--dang)" }
-                              }
-                            >
-                              {a.status === "disabled" ? "Réactiver" : "Désactiver"}
-                            </button>
-                          </form>
-                        ))}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
+                        <form action={toggleAgentActive} className="inline">
+                          <input type="hidden" name="userId" value={a.id} />
+                          <button
+                            style={{
+                              fontSize: 12,
+                              color:
+                                a.status === "disabled" ? "var(--acc-2)" : "var(--ink-3)",
+                            }}
+                          >
+                            {a.status === "disabled" ? "Réactiver" : "Désactiver"}
+                          </button>
+                        </form>
+                      ))}
+                  </span>
+                </div>
+              );
+            })}
           </div>
+
+          {/* Barre d'invitation — sous la table (ordre du design) */}
+          <form action={inviteAgents} className="flex flex-wrap items-center" style={{ gap: 9 }}>
+            <TextInput
+              name="emails"
+              required
+              placeholder="email@entreprise.fr, autre@entreprise.fr"
+              className="min-w-0 flex-1"
+              style={{ minWidth: 240, minHeight: 36, padding: "7px 11px", fontSize: 13.5 }}
+            />
+            <Select
+              name="role"
+              defaultValue="agent"
+              style={{ width: 140, minHeight: 36, padding: "7px 11px", fontSize: 13.5 }}
+            >
+              <option value="admin">Admin</option>
+              <option value="agent">Agent</option>
+              <option value="viewer">Viewer</option>
+            </Select>
+            <button
+              type="submit"
+              className="rounded-md font-semibold text-white"
+              style={{ height: 36, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
+            >
+              Inviter
+            </button>
+          </form>
+
           <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
             Désactiver un agent repasse ses tickets ouverts en non-assignés.
           </p>
-        </>
+        </div>
       ) : (
-        <>
-          <div className="flex items-center">
-            <span className="flex-1" />
-            <Drawer
-              title="Nouvelle équipe"
-              trigger={<>Nouvelle équipe</>}
-              triggerClassName="rounded-md px-3.5 font-semibold text-white"
-              triggerStyle={{ height: 32, fontSize: 13, background: "var(--acc)" }}
-            >
-              <TeamForm
-                action={createTeam}
-                calendars={calendars}
-                agents={activeAgents}
-                memberIds={[]}
-              />
-            </Drawer>
-          </div>
-
-          <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))" }}>
+        <div className="st-rise flex flex-col" style={{ gap: 14 }}>
+          <div
+            className="grid"
+            style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
+          >
             {teamRows.length === 0 && (
-              <Card>
+              <div
+                className="rounded-[10px] border"
+                style={{ background: "var(--panel)", borderColor: "var(--line)", padding: 15 }}
+              >
                 <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
                   Aucune équipe. Créez la première pour répartir les tickets.
                 </p>
-              </Card>
+              </div>
             )}
             {teamRows.map((t) => {
               const memberIds = usersByTeam.get(t.id) ?? [];
@@ -300,24 +347,31 @@ export default async function TeamPage({
                 ? (calendarNameById.get(t.businessHoursId) ?? "—")
                 : "Astreinte 24/7";
               return (
-                <Card key={t.id}>
-                  <div className="flex items-start gap-2">
-                    <div className="min-w-0 flex-1">
-                      <p className="font-semibold" style={{ fontSize: 14, color: "var(--ink)" }}>
-                        {t.name}
-                      </p>
-                      <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                        {members.length} membre{members.length > 1 ? "s" : ""} · {calName}
-                      </p>
-                    </div>
+                <div
+                  key={t.id}
+                  className="overflow-hidden rounded-[10px] border"
+                  style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+                >
+                  <div
+                    className="flex items-center border-b"
+                    style={{ padding: "14px 15px", gap: 10, borderColor: "var(--line-2)" }}
+                  >
+                    <p
+                      className="min-w-0 flex-1 truncate font-semibold"
+                      style={{ fontSize: 14.5, color: "var(--ink)" }}
+                    >
+                      {t.name}
+                    </p>
                     <Drawer
-                      title={`Modifier « ${t.name} »`}
+                      title="Modifier une équipe"
                       trigger={<>Modifier</>}
-                      triggerClassName="rounded-md border px-2 py-1 font-medium"
+                      triggerClassName="inline-flex items-center justify-center rounded-md border font-semibold"
                       triggerStyle={{
-                        fontSize: 12,
+                        height: 28,
+                        padding: "0 11px",
+                        fontSize: 12.5,
                         borderColor: "var(--line)",
-                        color: "var(--ink)",
+                        color: "var(--ink-2)",
                         background: "var(--panel)",
                       }}
                     >
@@ -332,38 +386,73 @@ export default async function TeamPage({
                       />
                     </Drawer>
                   </div>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {members.length === 0 && (
-                      <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>Aucun membre.</span>
-                    )}
-                    {members.map((m) => (
-                      <span
-                        key={m.id}
-                        className="inline-flex items-center gap-1.5 rounded-full border"
-                        style={{
-                          fontSize: 12,
-                          padding: "2px 8px 2px 3px",
-                          borderColor: "var(--line)",
-                          background: "var(--sunk)",
-                          color: "var(--ink)",
-                        }}
-                      >
-                        <Avatar name={m.name} size={18} />
-                        {m.name}
-                      </span>
-                    ))}
+                  <div
+                    className="flex flex-col"
+                    style={{ padding: "13px 15px", gap: 9 }}
+                  >
+                    <div className="flex">
+                      {members.length === 0 && (
+                        <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>Aucun membre.</span>
+                      )}
+                      {members.map((m, j) => {
+                        const [bg, ink] = AV_TONES[j % AV_TONES.length]!;
+                        return (
+                          <span
+                            key={m.id}
+                            title={m.name}
+                            className="flex items-center justify-center rounded-full font-bold"
+                            style={{
+                              width: 26,
+                              height: 26,
+                              flex: "none",
+                              marginLeft: j ? -7 : 0,
+                              border: "2px solid var(--panel)",
+                              background: bg,
+                              color: ink,
+                              fontSize: 9,
+                            }}
+                          >
+                            {initialsOf(m.name)}
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+                      {members.length} membre{members.length > 1 ? "s" : ""} · {calName}
+                    </p>
                   </div>
-                </Card>
+                </div>
               );
             })}
           </div>
-        </>
+
+          <Drawer
+            title="Modifier une équipe"
+            trigger={<>+ Créer une équipe</>}
+            triggerClassName="inline-flex items-center justify-center self-start rounded-md border font-semibold"
+            triggerStyle={{
+              height: 32,
+              padding: "0 13px",
+              fontSize: 13,
+              borderColor: "var(--line)",
+              background: "var(--panel)",
+              color: "var(--ink-2)",
+            }}
+          >
+            <TeamForm
+              action={createTeam}
+              calendars={calendars}
+              agents={activeAgents}
+              memberIds={[]}
+            />
+          </Drawer>
+        </div>
       )}
     </PageShell>
   );
 }
 
-/** Formulaire d'équipe (drawer) — création et édition partagent le même corps. */
+/** Formulaire d'équipe (drawer 420 px) — création et édition partagent le même corps. */
 function TeamForm({
   action,
   teamId,
@@ -382,31 +471,27 @@ function TeamForm({
   memberIds: string[];
 }) {
   return (
-    <form action={action} className="flex h-full flex-col gap-4">
+    <form action={action} className="flex h-full flex-col" style={{ gap: 14 }}>
       {teamId && <input type="hidden" name="teamId" value={teamId} />}
       <Field label="Nom de l'équipe">
-        <TextInput name="name" required defaultValue={name ?? ""} placeholder="Support N1" />
-      </Field>
-      <Field label="Horaires ouvrés" hint="Les calendriers se gèrent dans SLA & horaires ouvrés.">
-        <Select name="businessHoursId" defaultValue={businessHoursId ?? ""}>
-          <option value="">Astreinte 24/7</option>
-          {calendars.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </Select>
+        <TextInput
+          name="name"
+          required
+          defaultValue={name ?? ""}
+          placeholder="Support N1"
+          style={{ minHeight: 36, padding: "7px 11px", fontSize: 13.5 }}
+        />
       </Field>
       <div className="flex flex-col gap-1.5">
-        <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
+        <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
           Membres
         </span>
         <div
-          className="flex max-h-64 flex-col gap-1 overflow-y-auto rounded-md border p-2"
-          style={{ borderColor: "var(--line)", background: "var(--bg)" }}
+          className="flex max-h-64 flex-col gap-1 overflow-y-auto rounded-md border"
+          style={{ borderColor: "var(--line)", background: "var(--bg)", padding: "10px 11px" }}
         >
           {agents.map((a) => (
-            <label key={a.id} className="flex items-center gap-2" style={{ fontSize: 13 }}>
+            <label key={a.id} className="flex items-center gap-2" style={{ fontSize: 13.5 }}>
               <input
                 type="checkbox"
                 name="memberIds"
@@ -419,14 +504,32 @@ function TeamForm({
           ))}
         </div>
       </div>
-      <div className="mt-auto flex items-center gap-2 border-t pt-3" style={{ borderColor: "var(--line)" }}>
+      <Field label="Horaires ouvrés" hint="Les calendriers se gèrent dans SLA & horaires ouvrés.">
+        <Select
+          name="businessHoursId"
+          defaultValue={businessHoursId ?? ""}
+          style={{ minHeight: 36, padding: "7px 11px", fontSize: 13.5 }}
+        >
+          <option value="">Astreinte 24/7</option>
+          {calendars.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </Select>
+      </Field>
+      <div
+        className="mt-auto flex items-center gap-2 border-t pt-3"
+        style={{ borderColor: "var(--line)" }}
+      >
         {teamId && (
           <button
             type="submit"
             formAction={deleteTeam}
-            className="rounded-md border px-3 font-medium"
+            className="rounded-md border font-medium"
             style={{
-              height: 32,
+              height: 34,
+              padding: "0 14px",
               fontSize: 13,
               borderColor: "var(--dang)",
               color: "var(--dang)",
@@ -439,8 +542,8 @@ function TeamForm({
         <span className="flex-1" />
         <button
           type="submit"
-          className="rounded-md px-3.5 font-semibold text-white"
-          style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+          className="rounded-md font-semibold text-white"
+          style={{ height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
         >
           Enregistrer
         </button>

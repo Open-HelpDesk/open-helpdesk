@@ -1,15 +1,12 @@
 import { requireAgent } from "@/lib/session";
 import { entitlementsFor } from "@/lib/entitlements";
 import {
-  Card,
   Field,
   PageHeader,
   PageShell,
   PlanProBadge,
   SaveBar,
   Select,
-  StatusPill,
-  TextInput,
   Toggle,
 } from "@/components/settings-page";
 import { savePortalConfig } from "./actions";
@@ -24,9 +21,58 @@ type PortalConfig = {
   widget?: { enabled?: boolean; color?: string; position?: "right" | "left"; title?: string };
 };
 
+const CONTROL: React.CSSProperties = {
+  minHeight: 36,
+  padding: "7px 11px",
+  borderRadius: 6,
+  fontSize: 13.5,
+};
+
+/** Panneau encadré autour d'un toggle (padding 13/14, radius 9). */
+function TogglePanel({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="border"
+      style={{
+        padding: "13px 14px",
+        borderRadius: 9,
+        borderColor: "var(--line)",
+        background: "var(--panel)",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** Cadre d'aperçu à droite (en-tête --sunk 11.5px + contenu). */
+function PreviewPanel({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div
+      className="overflow-hidden border"
+      style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
+    >
+      <div
+        className="border-b"
+        style={{
+          padding: "9px 13px",
+          background: "var(--sunk)",
+          borderColor: "var(--line)",
+          fontSize: 11.5,
+          color: "var(--ink-3)",
+        }}
+      >
+        {label}
+      </div>
+      {children}
+    </div>
+  );
+}
+
 /**
- * ST-09 — Portail client & widget (1100 px, onglets Portail / Widget) : toggles,
- * selects, domaine personnalisé [PLAN PRO] en lecture, aperçus à droite, snippet.
+ * ST-09 — Portail client & widget (1100 px, onglets Portail / Widget) : colonne de
+ * réglages (toggles encadrés, selects, texte d'accueil, domaine personnalisé
+ * [PLAN PRO]) + colonne d'aperçu (portail ou widget + snippet).
  */
 export default async function PortalSettingsPage({
   searchParams,
@@ -41,10 +87,13 @@ export default async function PortalSettingsPage({
   const widget = config.widget ?? {};
   const branding = (tenant.branding ?? {}) as { accentColor?: string };
   const accent = branding.accentColor ?? "#0B5F46";
+  const widgetColor = widget.color ?? accent;
+  const widgetTitle = widget.title ?? "Besoin d'aide ?";
   const ent = entitlementsFor(tenant.plan);
   const isPro = ent.multiBrand;
   const portalHost = `${tenant.slug}.open-helpdesk.com`;
   const snippet = `<script src="https://${portalHost}/widget.js" async></script>`;
+  const welcome = config.welcomeText || "Comment pouvons-nous vous aider ?";
 
   const tabs = [
     { label: "Portail", href: "/app/settings/portal", active: activeTab === "portal" },
@@ -64,131 +113,190 @@ export default async function PortalSettingsPage({
         <form action={savePortalConfig} className="flex flex-col" style={{ gap: 22 }}>
           <input type="hidden" name="section" value="portal" />
           <div
-            className="grid items-start gap-4"
-            style={{ gridTemplateColumns: "minmax(380px, 1.2fr) minmax(300px, 1fr)" }}
+            className="st-rise grid items-start"
+            style={{ gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: 20 }}
           >
-            <div className="flex flex-col gap-4">
-              <Card>
-                <div className="flex flex-col gap-4">
-                  <Toggle
-                    name="portalEnabled"
-                    defaultChecked={config.portalEnabled !== false}
-                    label="Portail client activé"
-                    hint={`Accessible sur ${portalHost}/help`}
-                  />
-                  <Toggle
-                    name="kbPublished"
-                    defaultChecked={config.kbPublished !== false}
-                    label="Base de connaissances publiée"
-                    hint="Les articles publiés sont visibles sans connexion."
-                  />
-                  <Toggle
-                    name="hidePoweredBy"
-                    defaultChecked={isPro && config.hidePoweredBy === true}
-                    disabled={!isPro}
-                    label="Masquer « Propulsé par Open HelpDesk »"
-                    hint="Disponible à partir du plan Pro."
-                  />
-                </div>
-              </Card>
+            <div className="flex flex-col" style={{ gap: 16 }}>
+              <TogglePanel>
+                <Toggle
+                  name="portalEnabled"
+                  defaultChecked={config.portalEnabled !== false}
+                  label="Portail client activé"
+                  hint={`Accessible sur ${portalHost}/help`}
+                />
+              </TogglePanel>
+              <TogglePanel>
+                <Toggle
+                  name="kbPublished"
+                  defaultChecked={config.kbPublished !== false}
+                  label="Base de connaissances publiée"
+                  hint="Les articles publiés sont visibles sans connexion."
+                />
+              </TogglePanel>
+              <TogglePanel>
+                <Toggle
+                  name="hidePoweredBy"
+                  defaultChecked={isPro && config.hidePoweredBy === true}
+                  disabled={!isPro}
+                  label="Masquer « Propulsé par Open HelpDesk »"
+                  hint="Disponible à partir du plan Pro."
+                />
+              </TogglePanel>
 
-              <Card>
-                <div className="flex flex-col gap-4">
-                  <Field label="Visibilité de la base de connaissances">
-                    <Select name="kbVisibility" defaultValue={config.kbVisibility ?? "public"}>
-                      <option value="public">Publique</option>
-                      <option value="authenticated">Sur connexion</option>
-                    </Select>
-                  </Field>
-                  <Field label="Authentification des contacts">
-                    <Select name="contactAuth" defaultValue={config.contactAuth ?? "magic_link"}>
-                      <option value="magic_link">Lien magique par email</option>
-                      <option value="sso">SSO d'organisation</option>
-                    </Select>
-                  </Field>
-                  <Field label="Texte d'accueil">
-                    <TextInput
-                      name="welcomeText"
-                      defaultValue={config.welcomeText ?? ""}
-                      placeholder="Comment pouvons-nous vous aider ?"
-                    />
-                  </Field>
-                </div>
-              </Card>
-
-              <Card>
-                <div className="mb-3 flex items-center gap-2">
-                  <h2
-                    className="font-mono font-bold uppercase"
-                    style={{ fontSize: 10.5, letterSpacing: "0.07em", color: "var(--ink-3)" }}
+              <div
+                className="grid"
+                style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
+              >
+                <Field label="Visibilité de la base de connaissances">
+                  <Select
+                    name="kbVisibility"
+                    defaultValue={config.kbVisibility ?? "public"}
+                    style={CONTROL}
                   >
+                    <option value="public">Publique</option>
+                    <option value="authenticated">Sur connexion</option>
+                  </Select>
+                </Field>
+                <Field label="Authentification des contacts">
+                  <Select
+                    name="contactAuth"
+                    defaultValue={config.contactAuth ?? "magic_link"}
+                    style={CONTROL}
+                  >
+                    <option value="magic_link">Lien magique par email</option>
+                    <option value="sso">SSO d'organisation</option>
+                  </Select>
+                </Field>
+              </div>
+
+              <Field label="Texte d'accueil">
+                <textarea
+                  name="welcomeText"
+                  rows={2}
+                  maxLength={200}
+                  defaultValue={config.welcomeText ?? ""}
+                  placeholder="Comment pouvons-nous vous aider ?"
+                  className="border"
+                  style={{
+                    minHeight: 60,
+                    padding: 11,
+                    borderRadius: 6,
+                    fontSize: 13.5,
+                    lineHeight: 1.55,
+                    borderColor: "var(--line)",
+                    background: "var(--bg)",
+                    color: "var(--ink)",
+                  }}
+                />
+              </Field>
+
+              <div className="flex flex-col" style={{ gap: 9 }}>
+                <div className="flex items-center" style={{ gap: 9 }}>
+                  <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
                     Domaine personnalisé
-                  </h2>
+                  </span>
                   <PlanProBadge />
                 </div>
                 <div
-                  className="flex flex-wrap items-center gap-3 rounded-md border px-3 py-2"
-                  style={{ borderColor: "var(--line-2)", background: "var(--sunk)" }}
+                  className="overflow-hidden border"
+                  style={{ borderRadius: 9, borderColor: "var(--line)", background: "var(--panel)" }}
                 >
-                  <span className="font-mono" style={{ fontSize: 13, color: "var(--ink)" }}>
-                    aide.acme.fr
-                  </span>
-                  <span className="font-mono" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-                    CNAME → portal.open-helpdesk.com
-                  </span>
-                  <span className="flex-1" />
-                  <StatusPill tone="ok">Vérifié</StatusPill>
-                </div>
-                <p className="mt-2" style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                  Certificat TLS émis · renouvellement automatique le 12 octobre 2026
-                </p>
-              </Card>
-            </div>
-
-            {/* Aperçu portail */}
-            <Card title="Aperçu du portail">
-              <div
-                className="overflow-hidden rounded-lg border"
-                style={{ borderColor: "var(--line-2)" }}
-              >
-                <div style={{ background: accent, padding: "18px 16px" }}>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="flex items-center justify-center rounded-md font-bold"
-                      style={{ width: 24, height: 24, fontSize: 12, background: "#fff", color: accent }}
-                    >
-                      {tenant.name[0]?.toUpperCase()}
+                  <div
+                    className="grid items-center border-b"
+                    style={{
+                      gridTemplateColumns: "120px 90px 1fr 110px",
+                      gap: 11,
+                      padding: "11px 14px",
+                      fontSize: 12.5,
+                      borderColor: "var(--line-2)",
+                    }}
+                  >
+                    <span className="font-mono" style={{ color: "var(--ink-2)" }}>
+                      aide.acme.fr
                     </span>
-                    <span className="font-semibold text-white" style={{ fontSize: 13 }}>
-                      {tenant.name} — Aide
+                    <span className="font-mono" style={{ color: "var(--ink-3)" }}>
+                      CNAME
+                    </span>
+                    <span className="truncate font-mono" style={{ color: "var(--ink-2)" }}>
+                      portal.open-helpdesk.com
+                    </span>
+                    <span
+                      className="flex items-center justify-end"
+                      style={{ gap: 7, color: "var(--ok)" }}
+                    >
+                      <span
+                        className="inline-block rounded-full"
+                        style={{ width: 7, height: 7, background: "var(--ok)" }}
+                      />
+                      Vérifié
                     </span>
                   </div>
-                  <p className="mt-3 font-semibold text-white" style={{ fontSize: 15 }}>
-                    {config.welcomeText || "Comment pouvons-nous vous aider ?"}
-                  </p>
-                  <span
-                    className="mt-2 flex items-center rounded-md px-2.5"
-                    style={{ height: 32, background: "#fff", fontSize: 12, color: "var(--ink-3)" }}
+                  <div
+                    className="flex items-center"
+                    style={{
+                      padding: "11px 14px",
+                      gap: 8,
+                      background: "var(--sunk)",
+                      fontSize: 12.5,
+                      color: "var(--ok)",
+                    }}
                   >
-                    Rechercher un article…
-                  </span>
-                </div>
-                <div className="flex flex-col gap-2" style={{ background: "var(--bg)", padding: 14 }}>
-                  {["Bien démarrer", "Facturation", "Intégrations"].map((c) => (
                     <span
-                      key={c}
-                      className="rounded-md border px-3 py-2 font-medium"
-                      style={{ fontSize: 12.5, borderColor: "var(--line)", color: "var(--ink)" }}
-                    >
-                      {c}
-                    </span>
-                  ))}
-                  <span className="text-center" style={{ fontSize: 10.5, color: "var(--ink-3)" }}>
-                    {config.hidePoweredBy && isPro ? " " : "Propulsé par Open HelpDesk"}
-                  </span>
+                      className="inline-block rounded-full"
+                      style={{ width: 7, height: 7, background: "var(--ok)" }}
+                    />
+                    Certificat TLS émis · renouvellement automatique le 12 octobre 2026
+                  </div>
                 </div>
               </div>
-            </Card>
+            </div>
+
+            {/* Aperçu du portail */}
+            <PreviewPanel label="Aperçu du portail">
+              <div
+                className="flex flex-col items-center"
+                style={{ padding: "22px 18px", gap: 13 }}
+              >
+                <span
+                  className="grid place-items-center font-bold text-white"
+                  style={{ width: 28, height: 28, borderRadius: 8, fontSize: 13, background: accent }}
+                >
+                  {tenant.name[0]?.toUpperCase()}
+                </span>
+                <p
+                  className="text-center font-semibold"
+                  style={{ fontSize: 15, color: "var(--ink)" }}
+                >
+                  {welcome}
+                </p>
+                <span
+                  className="w-full border"
+                  style={{
+                    height: 38,
+                    borderRadius: 20,
+                    borderColor: "var(--acc-b)",
+                    background: "var(--bg)",
+                  }}
+                />
+                <div
+                  className="grid w-full"
+                  style={{ gridTemplateColumns: "1fr 1fr", gap: 8 }}
+                >
+                  {[0, 1, 2, 3].map((i) => (
+                    <span
+                      key={i}
+                      className="border"
+                      style={{
+                        height: 56,
+                        borderRadius: 9,
+                        borderColor: "var(--line)",
+                        background: "var(--bg)",
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </PreviewPanel>
           </div>
           <SaveBar saved={saved === "1"} cancelHref="/app/settings/portal" />
         </form>
@@ -196,104 +304,151 @@ export default async function PortalSettingsPage({
         <form action={savePortalConfig} className="flex flex-col" style={{ gap: 22 }}>
           <input type="hidden" name="section" value="widget" />
           <div
-            className="grid items-start gap-4"
-            style={{ gridTemplateColumns: "minmax(380px, 1.2fr) minmax(300px, 1fr)" }}
+            className="st-rise grid items-start"
+            style={{ gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: 20 }}
           >
-            <div className="flex flex-col gap-4">
-              <Card>
-                <div className="flex flex-col gap-4">
-                  <Toggle
-                    name="widgetEnabled"
-                    defaultChecked={widget.enabled !== false}
-                    label="Widget embarquable activé"
-                    hint="Le bouton d'aide s'affiche sur votre site avec le snippet ci-dessous."
-                  />
-                  <div className="grid gap-3" style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
-                    <Field label="Couleur">
-                      <input
-                        type="color"
-                        name="widgetColor"
-                        defaultValue={widget.color ?? accent}
-                        className="h-9 w-full rounded-md border"
-                        style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-                      />
-                    </Field>
-                    <Field label="Position">
-                      <Select name="widgetPosition" defaultValue={widget.position ?? "right"}>
-                        <option value="right">En bas à droite</option>
-                        <option value="left">En bas à gauche</option>
-                      </Select>
-                    </Field>
-                    <Field label="Titre du bouton">
-                      <TextInput name="widgetTitle" defaultValue={widget.title ?? "Besoin d'aide ?"} />
-                    </Field>
-                  </div>
-                </div>
-              </Card>
-              <Card title="Snippet à coller sur votre site">
-                <pre
-                  className="overflow-x-auto rounded-md border p-3 font-mono"
-                  style={{
-                    fontSize: 12,
-                    background: "var(--sunk)",
-                    borderColor: "var(--line)",
-                    color: "var(--ink)",
-                  }}
-                >
-                  {snippet}
-                </pre>
-              </Card>
-            </div>
+            <div className="flex flex-col" style={{ gap: 16 }}>
+              <TogglePanel>
+                <Toggle
+                  name="widgetEnabled"
+                  defaultChecked={widget.enabled !== false}
+                  label="Widget embarquable activé"
+                  hint="Le bouton d'aide s'affiche sur votre site avec le snippet ci-contre."
+                />
+              </TogglePanel>
 
-            {/* Aperçu widget */}
-            <Card title="Aperçu du widget">
               <div
-                className="relative overflow-hidden rounded-lg border"
-                style={{ borderColor: "var(--line-2)", background: "var(--canvas)", height: 300 }}
+                className="grid"
+                style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
               >
-                <div
-                  className="absolute bottom-4 flex flex-col gap-2"
-                  style={widget.position === "left" ? { left: 16 } : { right: 16 }}
-                >
-                  <div
-                    className="flex flex-col overflow-hidden rounded-lg border"
+                <Field label="Titre du bouton">
+                  <input
+                    name="widgetTitle"
+                    defaultValue={widget.title ?? "Besoin d'aide ?"}
+                    maxLength={60}
+                    className="border"
                     style={{
-                      width: 200,
+                      ...CONTROL,
                       borderColor: "var(--line)",
                       background: "var(--bg)",
-                      boxShadow: "0 10px 26px rgba(17,33,28,.16)",
+                      color: "var(--ink)",
                     }}
+                  />
+                </Field>
+                <Field label="Position sur la page">
+                  <Select
+                    name="widgetPosition"
+                    defaultValue={widget.position ?? "right"}
+                    style={CONTROL}
                   >
-                    <span
-                      className="px-3 py-2 font-semibold text-white"
-                      style={{ fontSize: 12, background: widget.color ?? accent }}
-                    >
-                      {tenant.name}
-                    </span>
-                    <span className="px-3 py-2" style={{ fontSize: 11.5, color: "var(--ink-2)" }}>
-                      {config.welcomeText || "Comment pouvons-nous vous aider ?"}
-                    </span>
-                    <span
-                      className="mx-3 mb-3 rounded-md border px-2 py-1.5"
-                      style={{ fontSize: 11, borderColor: "var(--line)", color: "var(--ink-3)" }}
-                    >
-                      Écrivez votre message…
-                    </span>
-                  </div>
-                  <span
-                    className="inline-flex items-center gap-1.5 self-end rounded-full px-3 font-semibold text-white"
-                    style={{
-                      height: 34,
-                      fontSize: 12,
-                      background: widget.color ?? accent,
-                      alignSelf: widget.position === "left" ? "flex-start" : "flex-end",
-                    }}
-                  >
-                    💬 {widget.title ?? "Besoin d'aide ?"}
+                    <option value="right">En bas à droite</option>
+                    <option value="left">En bas à gauche</option>
+                  </Select>
+                </Field>
+              </div>
+
+              <Field label="Couleur du widget" hint="Reprend l'accent du workspace par défaut.">
+                <div
+                  className="flex items-center border"
+                  style={{
+                    ...CONTROL,
+                    gap: 9,
+                    borderColor: "var(--line)",
+                    background: "var(--bg)",
+                  }}
+                >
+                  <input
+                    type="color"
+                    name="widgetColor"
+                    defaultValue={widgetColor}
+                    aria-label="Couleur du widget"
+                    style={{ width: 30, height: 20, border: 0, background: "transparent", padding: 0 }}
+                  />
+                  <span className="font-mono" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                    {widgetColor.toUpperCase()}
                   </span>
                 </div>
+              </Field>
+            </div>
+
+            {/* Aperçu du widget */}
+            <PreviewPanel label="Aperçu du widget">
+              <div className="flex flex-col" style={{ padding: 18, gap: 14 }}>
+                <div
+                  className="relative overflow-hidden border"
+                  style={{
+                    height: 200,
+                    borderRadius: 9,
+                    borderColor: "var(--line)",
+                    background: "var(--sunk)",
+                  }}
+                >
+                  <div
+                    className="absolute overflow-hidden border"
+                    style={{
+                      bottom: 14,
+                      ...(widget.position === "left" ? { left: 14 } : { right: 14 }),
+                      width: 210,
+                      borderRadius: 12,
+                      borderColor: "var(--line)",
+                      background: "var(--panel)",
+                      boxShadow: "0 8px 24px rgba(0,0,0,.14)",
+                    }}
+                  >
+                    <div
+                      className="truncate font-semibold text-white"
+                      style={{ padding: "11px 13px", fontSize: 12.5, background: widgetColor }}
+                    >
+                      {widgetTitle}
+                    </div>
+                    <div
+                      className="flex flex-col"
+                      style={{ padding: "11px 13px", gap: 7 }}
+                    >
+                      <span
+                        className="border"
+                        style={{
+                          height: 26,
+                          borderRadius: 6,
+                          borderColor: "var(--line)",
+                          background: "var(--bg)",
+                        }}
+                      />
+                      <span
+                        className="border"
+                        style={{
+                          height: 52,
+                          borderRadius: 6,
+                          borderColor: "var(--line)",
+                          background: "var(--bg)",
+                        }}
+                      />
+                      <span style={{ height: 28, borderRadius: 6, background: widgetColor }} />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col" style={{ gap: 6 }}>
+                  <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
+                    Snippet à coller avant &lt;/body&gt;
+                  </span>
+                  <code
+                    className="border font-mono"
+                    style={{
+                      padding: 11,
+                      borderRadius: 7,
+                      borderColor: "var(--line)",
+                      background: "var(--sunk)",
+                      fontSize: 11.5,
+                      color: "var(--ink-2)",
+                      lineHeight: 1.6,
+                      wordBreak: "break-all",
+                    }}
+                  >
+                    {snippet}
+                  </code>
+                </div>
               </div>
-            </Card>
+            </PreviewPanel>
           </div>
           <SaveBar saved={saved === "1"} cancelHref="/app/settings/portal?tab=widget" />
         </form>

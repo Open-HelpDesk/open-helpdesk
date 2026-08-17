@@ -6,8 +6,9 @@
  *
  * Usage : pnpm db:seed (rejouable — met à niveau une base déjà seedée).
  */
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import { db } from "../client";
+import { installDemoHistory } from "./history";
 import {
   automationRules,
   businessHours,
@@ -109,6 +110,256 @@ async function ensureMemberships(tenantId: string) {
  * Journal des emails rejetés du jeu de démonstration (ST-03 du design) : montre les
  * quatre motifs que le pipeline sait produire, avec des dates échelonnées.
  */
+/**
+ * Les cinq demandes du portail de démonstration (PT-05 du design) et le fil complet
+ * du ticket #4821 (PT-06 : quatre messages publics alternés). Sans elles, l'onglet
+ * « Résolues » tombe sur l'état vide et la bulle agent teintée n'apparaît jamais.
+ * Rejouable : chaque ticket n'est créé que s'il manque.
+ */
+async function ensureDemoRequests(tenantId: string) {
+  const [julien] = await db
+    .select()
+    .from(contacts)
+    .where(and(eq(contacts.tenantId, tenantId), eq(contacts.email, "julien.lambert@nordfil.example")));
+  const [marie] = await db
+    .select()
+    .from(users)
+    .where(and(eq(users.tenantId, tenantId), eq(users.email, "marie.dupont@acme.example")));
+  const [nordfil] = await db
+    .select()
+    .from(organizations)
+    .where(and(eq(organizations.tenantId, tenantId), eq(organizations.name, "Nordfil SAS")));
+  if (!julien || !marie || !nordfil) return;
+
+  const DAY = 24 * HOUR;
+  const now = Date.now();
+
+  // 1. Le fil public complet de #4821 (le seed n'avait que le premier message).
+  const [ref] = await db
+    .select()
+    .from(tickets)
+    .where(and(eq(tickets.tenantId, tenantId), eq(tickets.number, 4821)));
+  if (ref) {
+    const base = ref.createdAt.getTime();
+    // Idempotent message par message : le fil peut déjà contenir d'autres réponses.
+    const present = await db
+      .select({ body: ticketMessages.bodyText })
+      .from(ticketMessages)
+      .where(eq(ticketMessages.ticketId, ref.id));
+    const has = (needle: string) => present.some((m) => (m.body ?? "").includes(needle));
+
+    const thread = [
+      {
+        tenantId,
+        ticketId: ref.id,
+        kind: "public_reply" as const,
+        authorType: "agent" as const,
+        authorId: marie.id,
+        bodyText:
+          "Bonjour Julien, merci pour le signalement. Je reproduis bien l'erreur sur " +
+          "les factures de plus de 50 lignes. Je remonte à l'équipe technique et je " +
+          "reviens vers vous avant midi.",
+        createdAt: new Date(base + 29 * 60 * 1000),
+      },
+      {
+        tenantId,
+        ticketId: ref.id,
+        kind: "public_reply" as const,
+        authorType: "contact" as const,
+        authorId: julien.id,
+        source: "email" as const,
+        bodyText:
+          "Merci pour le retour rapide. Avez-vous une estimation ? Notre direction " +
+          "financière attend l'export pour vendredi 17 h au plus tard.",
+        createdAt: new Date(base + 166 * 60 * 1000),
+      },
+      {
+        tenantId,
+        ticketId: ref.id,
+        kind: "public_reply" as const,
+        authorType: "agent" as const,
+        authorId: marie.id,
+        bodyText:
+          "Le correctif est déployé depuis 14 h. L'export fonctionne à nouveau, y " +
+          "compris sur les factures volumineuses. Pouvez-vous confirmer de votre côté ?",
+        createdAt: new Date(base + 308 * 60 * 1000),
+      },
+    ];
+
+    const missing = thread.filter((m) => !has((m.bodyText ?? "").slice(0, 40)));
+    if (missing.length > 0) await db.insert(ticketMessages).values(missing);
+  }
+
+  // 2. Les quatre autres demandes listées par le design.
+  const others = [
+    {
+      number: 4817,
+      subject: "Question sur la facturation annuelle",
+      status: "waiting" as const,
+      priority: "normal" as const,
+      createdAt: new Date(now - 2 * DAY),
+      body:
+        "Bonjour, nous souhaitons passer à la facturation annuelle. Pouvez-vous nous " +
+        "confirmer le prorata appliqué sur le mois en cours ?",
+      reply:
+        "Bonjour, c'est possible à tout moment. Pouvez-vous me confirmer le nombre de " +
+        "sièges à facturer pour l'année à venir ?",
+    },
+    {
+      number: 4790,
+      subject: "Ajouter deux utilisateurs au compte",
+      status: "resolved" as const,
+      priority: "normal" as const,
+      createdAt: new Date(now - 6 * DAY),
+      resolvedAt: new Date(now - 4 * DAY),
+      body: "Nous aimerions ajouter deux collaborateurs à notre espace. Quelle est la marche à suivre ?",
+      reply:
+        "C'est fait : les deux comptes sont créés et ont reçu leur invitation. " +
+        "N'hésitez pas si un accès manque.",
+    },
+    {
+      number: 4756,
+      subject: "Question sur les relances automatiques",
+      status: "resolved" as const,
+      priority: "low" as const,
+      createdAt: new Date(now - 17 * DAY),
+      resolvedAt: new Date(now - 14 * DAY),
+      body: "Est-il possible de désactiver les relances automatiques pour notre organisation ?",
+      reply:
+        "Oui, le réglage se trouve dans les préférences de votre organisation. " +
+        "Je l'ai désactivé pour vous.",
+    },
+    {
+      number: 4702,
+      subject: "Erreur au premier import CSV",
+      status: "closed" as const,
+      priority: "normal" as const,
+      createdAt: new Date(now - 34 * DAY),
+      resolvedAt: new Date(now - 31 * DAY),
+      closedAt: new Date(now - 30 * DAY),
+      body: "L'import de notre fichier clients échoue avec une erreur de format à la ligne 42.",
+      reply:
+        "Le fichier utilisait des points-virgules comme séparateurs. Après conversion en " +
+        "virgules, l'import passe. Je clos la demande.",
+    },
+  ];
+
+  for (const t of others) {
+    const [already] = await db
+      .select({ id: tickets.id })
+      .from(tickets)
+      .where(and(eq(tickets.tenantId, tenantId), eq(tickets.number, t.number)));
+    if (already) continue;
+
+    const [created] = await db
+      .insert(tickets)
+      .values({
+        tenantId,
+        number: t.number,
+        subject: t.subject,
+        status: t.status,
+        priority: t.priority,
+        channel: "portal",
+        requesterId: julien.id,
+        organizationId: nordfil.id,
+        assigneeId: marie.id,
+        createdAt: t.createdAt,
+        updatedAt: t.resolvedAt ?? t.createdAt,
+        firstRepliedAt: new Date(t.createdAt.getTime() + 2 * HOUR),
+        resolvedAt: t.resolvedAt ?? null,
+        closedAt: t.closedAt ?? null,
+      })
+      .returning();
+    if (!created) continue;
+
+    await db.insert(ticketMessages).values([
+      {
+        tenantId,
+        ticketId: created.id,
+        kind: "public_reply" as const,
+        authorType: "contact" as const,
+        authorId: julien.id,
+        source: "portal" as const,
+        bodyText: t.body,
+        createdAt: t.createdAt,
+      },
+      {
+        tenantId,
+        ticketId: created.id,
+        kind: "public_reply" as const,
+        authorType: "agent" as const,
+        authorId: marie.id,
+        bodyText: t.reply,
+        createdAt: new Date(t.createdAt.getTime() + 2 * HOUR),
+      },
+    ]);
+  }
+}
+
+/**
+ * Les deux agents invités du design (ST-02) : ils rendent visibles l'état « Invité »
+ * et l'action « Renvoyer », inatteignables avec cinq agents tous actifs.
+ * Nicolas est Viewer (siège gratuit), Amina est Agent de l'équipe Produit.
+ */
+/**
+ * Dernier accès des agents actifs (ST-02 du design : « il y a 4 min » → « il y a 3 j »).
+ * Sans ces dates la colonne affiche « — » partout et l'écran paraît inachevé.
+ */
+async function ensureLastSeen(tenantId: string) {
+  const MIN = 60 * 1000;
+  const seen: [string, number][] = [
+    ["marie.dupont@acme.example", 4 * MIN],
+    ["thomas.roux@acme.example", 22 * MIN],
+    ["claire.bonnet@acme.example", 60 * MIN],
+    ["sofiane.amrani@acme.example", 26 * HOUR],
+    ["elise.chabot@acme.example", 3 * 24 * HOUR],
+  ];
+  for (const [email, ago] of seen) {
+    await db
+      .update(users)
+      .set({ lastSeenAt: new Date(Date.now() - ago) })
+      .where(and(eq(users.tenantId, tenantId), eq(users.email, email), isNull(users.lastSeenAt)));
+  }
+}
+
+async function ensureInvitedAgents(tenantId: string) {
+  const invited = [
+    { name: "Nicolas Fabre", email: "nicolas.fabre@acme.example", role: "viewer" as const, team: null },
+    { name: "Amina Traoré", email: "amina.traore@acme.example", role: "agent" as const, team: "Produit" },
+  ];
+
+  for (const person of invited) {
+    const [already] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(and(eq(users.tenantId, tenantId), eq(users.email, person.email)));
+    if (already) continue;
+
+    const [created] = await db
+      .insert(users)
+      .values({
+        tenantId,
+        name: person.name,
+        email: person.email,
+        role: person.role,
+        status: "invited",
+      })
+      .returning();
+    if (!created || !person.team) continue;
+
+    const [team] = await db
+      .select({ id: teams.id })
+      .from(teams)
+      .where(and(eq(teams.tenantId, tenantId), eq(teams.name, person.team)));
+    if (team) {
+      await db
+        .insert(teamMembers)
+        .values({ tenantId, teamId: team.id, userId: created.id })
+        .onConflictDoNothing();
+    }
+  }
+}
+
 async function ensureRejectedEmails(tenantId: string) {
   const existing = await db
     .select({ id: rejectedEmails.id })
@@ -616,7 +867,12 @@ async function seed() {
   await resetAndInstallDefaults(tenant.id);
   await ensureMemberships(tenant.id);
   await ensureCsat(tenant.id);
+  await ensureInvitedAgents(tenant.id);
+  await ensureLastSeen(tenant.id);
+  await ensureDemoRequests(tenant.id);
   await ensureRejectedEmails(tenant.id);
+  const historyCount = await installDemoHistory(tenant.id);
+  if (historyCount > 0) console.log(`OK — ${historyCount} tickets d'historique (90 jours) générés.`);
   await ensureKb(tenant.id);
   await ensureOrgAdmin(tenant.id);
 
