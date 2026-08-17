@@ -115,6 +115,13 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
   const contactIds = contactRows.map((c) => c.id);
   if (agentIds.length === 0 || contactIds.length === 0) return 0;
 
+  // Agent de démonstration : celui avec lequel on se connecte pour l'examen.
+  const [demoRow] = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(and(eq(users.tenantId, tenantId), eq(users.email, "claire.bonnet@acme.example")));
+  const demoAgentId = demoRow?.id ?? agentIds[0]!;
+
   const taken = new Set(existing.map(() => 0));
   const used = await db
     .select({ number: tickets.number })
@@ -137,15 +144,22 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
   for (let number = FIRST_NUMBER; number <= LAST_NUMBER; number++) {
     if (taken.has(number)) continue;
 
+    // Les 22 derniers numéros forment la file courante : tickets des 3 derniers jours,
+    // encore ouverts, majoritairement assignés à l'agent de démonstration — sans eux
+    // l'écran d'accueil « Mes tickets » est vide alors que le design le montre plein.
+    const isCurrentQueue = number > LAST_NUMBER - 22;
+
     // Répartition sur 90 jours : les numéros croissants sont plus récents.
     const progress = (number - FIRST_NUMBER) / (LAST_NUMBER - FIRST_NUMBER);
-    const daysAgo = Math.max(0, Math.round(90 - progress * 90 + (rnd.next() * 6 - 3)));
+    const daysAgo = isCurrentQueue
+      ? rnd.int(4)
+      : Math.max(2, Math.round(90 - progress * 90 + (rnd.next() * 6 - 3)));
 
     // Heures ouvrées : 8 h → 18 h, creux à midi, très peu le week-end.
     const dayStart = new Date(now - daysAgo * DAY);
     dayStart.setHours(0, 0, 0, 0);
     const weekday = dayStart.getDay();
-    if ((weekday === 0 || weekday === 6) && rnd.next() > 0.12) continue;
+    if (!isCurrentQueue && (weekday === 0 || weekday === 6) && rnd.next() > 0.12) continue;
 
     const hour = rnd.weighted<number>([
       [8, 6], [9, 12], [10, 14], [11, 13], [12, 5], [13, 6],
@@ -154,7 +168,8 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
     const createdAt = new Date(dayStart.getTime() + hour * HOUR + rnd.int(60) * 60 * 1000);
     if (createdAt.getTime() > now) continue;
 
-    const agentId = rnd.pick(agentIds);
+    // L'agent de démonstration (le premier inscrit) porte la moitié de la file courante.
+    const agentId = isCurrentQueue && rnd.next() < 0.5 ? demoAgentId : rnd.pick(agentIds);
     const contactId = rnd.pick(contactIds);
     const priority = rnd.weighted([
       ["low", 12],
@@ -180,23 +195,45 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
       : firstReplyTargetH * (1.2 + rnd.next() * 2);
     const firstRepliedAt = new Date(createdAt.getTime() + firstReplyH * HOUR);
 
-    // Un ticket ancien est presque toujours clos ; un ticket récent peut être ouvert.
-    const status = rnd.weighted(
+    // Un ticket passé n'est JAMAIS laissé ouvert : sinon son échéance SLA, calculée à
+    // la création, serait dépassée de plusieurs semaines et toute la file paraîtrait
+    // en incendie. Seuls les cinq derniers jours portent des tickets en cours.
+    let status = isCurrentQueue
+      ? rnd.weighted([
+          ["open", 42],
+          ["waiting", 22],
+          ["new", 24],
+          ["on_hold", 6],
+          ["resolved", 6],
+        ] as ["open" | "waiting" | "new" | "on_hold" | "resolved", number][])
+      : rnd.weighted(
       daysAgo > 21
-        ? ([["closed", 78], ["resolved", 20], ["on_hold", 2]] as [
-            "closed" | "resolved" | "on_hold",
-            number,
-          ][])
-        : daysAgo > 6
-          ? ([["closed", 34], ["resolved", 40], ["open", 16], ["waiting", 10]] as [
-              "closed" | "resolved" | "open" | "waiting",
-              number,
-            ][])
-          : ([["resolved", 32], ["open", 30], ["waiting", 20], ["new", 18]] as [
-              "resolved" | "open" | "waiting" | "new",
-              number,
-            ][]),
+        ? ([["closed", 82], ["resolved", 18]] as ["closed" | "resolved", number][])
+        : daysAgo > 5
+          ? ([["closed", 42], ["resolved", 58]] as ["closed" | "resolved", number][])
+          : ([
+              ["resolved", 46],
+              ["open", 24],
+              ["waiting", 16],
+              ["on_hold", 4],
+              ["new", 10],
+            ] as ["resolved" | "open" | "waiting" | "on_hold" | "new", number][]),
     );
+
+    // Garde-fou : un ticket encore ouvert dont l'échéance est loin derrière n'existe
+    // pas dans une file saine. On tolère un léger dépassement (< 12 h) pour que la
+    // vue « Bientôt en retard » et les badges rouges aient de quoi s'illustrer.
+    let resolveDueAt = new Date(createdAt.getTime() + resolveTargetH * HOUR);
+    const stillOpen = status !== "resolved" && status !== "closed";
+    if (stillOpen && resolveDueAt.getTime() < now - 12 * HOUR) {
+      // Dans la file courante on reporte l'échéance (le ticket vient d'être requalifié) ;
+      // ailleurs, un ticket si ancien aurait été traité depuis longtemps.
+      if (isCurrentQueue) {
+        resolveDueAt = new Date(now + (2 + rnd.next() * 30) * HOUR);
+      } else {
+        status = "resolved";
+      }
+    }
 
     const resolvedAt =
       status === "resolved" || status === "closed"
@@ -226,7 +263,7 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
       updatedAt: closedAt ?? resolvedAt ?? firstRepliedAt,
       firstRepliedAt: replied ? firstRepliedAt : null,
       firstReplyDueAt: new Date(createdAt.getTime() + firstReplyTargetH * HOUR),
-      resolveDueAt: new Date(createdAt.getTime() + resolveTargetH * HOUR),
+      resolveDueAt,
       resolvedAt,
       closedAt: closedAt && closedAt.getTime() <= now ? closedAt : null,
     });

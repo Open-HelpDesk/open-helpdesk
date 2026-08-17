@@ -322,6 +322,48 @@ async function ensureLastSeen(tenantId: string) {
   }
 }
 
+/**
+ * Un contact nommé par organisation cliente : les listes et les fils affichent un nom,
+ * pas une adresse. Les contacts créés par l'ingestion email restent anonymes tant
+ * qu'aucun nom n'a été transmis — ici on complète ceux du jeu de démonstration.
+ */
+async function ensureNamedContacts(tenantId: string) {
+  const wanted = [
+    { name: "Marc Petit", email: "marc.petit@studiokaori.example", org: "Studio Kaori" },
+  ];
+
+  for (const person of wanted) {
+    const [existing] = await db
+      .select()
+      .from(contacts)
+      .where(and(eq(contacts.tenantId, tenantId), eq(contacts.email, person.email)));
+
+    const contactId =
+      existing?.id ??
+      (
+        await db
+          .insert(contacts)
+          .values({ tenantId, name: person.name, email: person.email, locale: "fr" })
+          .returning()
+      )[0]?.id;
+    if (!contactId) continue;
+    if (existing && !existing.name) {
+      await db.update(contacts).set({ name: person.name }).where(eq(contacts.id, contactId));
+    }
+
+    const [org] = await db
+      .select({ id: organizations.id })
+      .from(organizations)
+      .where(and(eq(organizations.tenantId, tenantId), eq(organizations.name, person.org)));
+    if (org) {
+      await db
+        .insert(contactOrganizations)
+        .values({ tenantId, contactId, organizationId: org.id })
+        .onConflictDoNothing();
+    }
+  }
+}
+
 async function ensureInvitedAgents(tenantId: string) {
   const invited = [
     { name: "Nicolas Fabre", email: "nicolas.fabre@acme.example", role: "viewer" as const, team: null },
@@ -867,6 +909,7 @@ async function seed() {
   await resetAndInstallDefaults(tenant.id);
   await ensureMemberships(tenant.id);
   await ensureCsat(tenant.id);
+  await ensureNamedContacts(tenant.id);
   await ensureInvitedAgents(tenant.id);
   await ensureLastSeen(tenant.id);
   await ensureDemoRequests(tenant.id);
