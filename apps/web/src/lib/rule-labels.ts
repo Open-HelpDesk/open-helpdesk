@@ -68,6 +68,16 @@ export const FIELD_VALUE_OPTIONS: Record<string, { value: string; label: string 
   ],
 };
 
+/** Libellés FR des types de champs personnalisés (ST-04). */
+export const FIELD_TYPE_LABELS: Record<string, string> = {
+  text: "Texte",
+  select: "Liste",
+  multi_select: "Multi-sélection",
+  date: "Date",
+  number: "Nombre",
+  checkbox: "Case à cocher",
+};
+
 const VALUELESS_OPERATORS = new Set(["empty", "not_empty"]);
 
 type ConditionLike = { field: string; operator: string; value?: string | number };
@@ -110,4 +120,61 @@ export function ruleSummary(
     }
   });
   return `Si ${conds.join(" et ") || "toujours"} → ${acts.join(" · ") || "aucune action"}`;
+}
+
+/**
+ * Résumé des actions d'une macro (ST-06) : « Insérer un texte · Statut → Ouvert »,
+ * « Note interne · Priorité → Haute · Tag incident ».
+ */
+export function macroActionsSummary(
+  actions: ActionLike[],
+  teamNameById?: Map<string, string>,
+): string {
+  const parts = actions.map((a) => {
+    switch (a.type) {
+      case "insert_text":
+        return "Insérer un texte";
+      case "insert_note":
+        return "Note interne";
+      case "set_status": {
+        const opt = FIELD_VALUE_OPTIONS.status?.find((o) => o.value === a.value);
+        return `Statut → ${opt?.label ?? a.value}`;
+      }
+      case "set_priority": {
+        const opt = FIELD_VALUE_OPTIONS.priority?.find((o) => o.value === a.value);
+        return `Priorité → ${opt?.label ?? a.value}`;
+      }
+      case "assign_team":
+        return `Équipe → ${teamNameById?.get(String(a.value ?? "")) ?? "équipe"}`;
+      case "assign_user":
+        return "Assigner →";
+      case "add_tags":
+        return `Tag ${(Array.isArray(a.value) ? a.value : []).join(", ")}`;
+      default:
+        return String(a.type);
+    }
+  });
+  return parts.join(" · ") || "Aucune action";
+}
+
+/** « 15 min », « 4 h », « 2 j » — affichage des cibles SLA (ST-07). */
+export function formatDurationFr(minutes?: number | null): string {
+  if (!minutes || minutes <= 0) return "";
+  if (minutes % (24 * 60) === 0) return `${minutes / (24 * 60)} j`;
+  if (minutes % 60 === 0) return `${minutes / 60} h`;
+  return `${minutes} min`;
+}
+
+/** Parse « 15 min » / « 4 h » / « 2 j » (aussi « 90 » = minutes) → minutes, ou null. */
+export function parseDurationFr(raw: string): number | null {
+  const s = raw.trim().toLowerCase().replace(",", ".");
+  if (!s) return null;
+  const m = /^(\d+(?:\.\d+)?)\s*(min|mn|m|h|j|jour|jours)?$/.exec(s);
+  if (!m) return null;
+  const n = Number(m[1]);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  const unit = m[2] ?? "min";
+  if (unit === "h") return Math.round(n * 60);
+  if (unit === "j" || unit === "jour" || unit === "jours") return Math.round(n * 24 * 60);
+  return Math.round(n);
 }

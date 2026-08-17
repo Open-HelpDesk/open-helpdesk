@@ -1,129 +1,184 @@
 import Link from "next/link";
 import { requireAgent } from "@/lib/session";
-import { automationRules, automationRuns, db } from "@openhelpdesk/db";
-import { and, asc, count, eq, gt } from "drizzle-orm";
+import { automationRules, automationRuns, db, tickets } from "@openhelpdesk/db";
+import { and, asc, count, desc, eq, gt } from "drizzle-orm";
 import { ruleSummary } from "@/lib/rule-labels";
 import { relativeFr } from "@/lib/format";
+import { EmptyState, PageHeader, PageShell } from "@/components/settings-page";
+import { Drawer } from "@/components/settings-overlays";
 import { deleteRule, duplicateRule, moveRule, toggleRule } from "./actions";
 
+/** Modèles de l'état vide — verbatim design (ST-05). */
+const TEMPLATES: { key: string; name: string; description: string }[] = [
+  { key: "ack", name: "Accusé de réception", description: "Répond automatiquement à chaque nouveau ticket." },
+  { key: "escalade", name: "Escalade urgente", description: "Assigne les tickets Urgents à l'équipe Escalade." },
+  { key: "relance", name: "Relance client à 48 h", description: "Relance les tickets En attente sans réponse depuis 2 jours." },
+  { key: "cloture", name: "Clôture automatique à J+4", description: "Passe les tickets Résolus en Clos après 4 jours." },
+];
+
 /**
- * ST-05 — Automatisations : liste (specs/11). Deux onglets (déclencheurs / règles
- * horaires), liste ordonnée (l'ordre d'exécution compte), toggle actif, exécutions 7 j.
- * Reste à venir : drag & drop (flèches pour l'instant), « Tester sur un ticket », drawer
- * du journal par règle.
+ * ST-05 — Automatisations (1000 px) : liste ordonnée (poignée ⠿ + numéro mono),
+ * résumé lisible, exécutions 7 j réelles, toggle, journal en drawer
+ * (automationRuns réels), dupliquer/supprimer. État vide avec 4 modèles.
  */
 export default async function AutomationsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ kind?: string }>;
+  searchParams: Promise<{ saved?: string }>;
 }) {
   const { tenant } = await requireAgent();
-  const { kind: kindParam } = await searchParams;
-  const kind = kindParam === "scheduled" ? "scheduled" : "trigger";
+  const { saved } = await searchParams;
 
   const rules = await db
     .select()
     .from(automationRules)
-    .where(and(eq(automationRules.tenantId, tenant.id), eq(automationRules.kind, kind)))
+    .where(eq(automationRules.tenantId, tenant.id))
     .orderBy(asc(automationRules.position), asc(automationRules.createdAt));
 
-  const runs7d = new Map<string, number>();
+  const since = new Date(Date.now() - 7 * 24 * 3600 * 1000);
+  const runCounts = await db
+    .select({ ruleId: automationRuns.ruleId, n: count() })
+    .from(automationRuns)
+    .where(and(eq(automationRuns.tenantId, tenant.id), gt(automationRuns.createdAt, since)))
+    .groupBy(automationRuns.ruleId);
+  const runs7d = new Map(runCounts.map((r) => [r.ruleId, r.n]));
+
+  // Journal par règle (drawer) — 20 dernières exécutions avec le n° de ticket.
+  const journals = new Map<
+    string,
+    { createdAt: Date; ticketNumber: number | null; actionsApplied: unknown }[]
+  >();
   for (const rule of rules) {
-    const [row] = await db
-      .select({ n: count() })
+    const rows = await db
+      .select({
+        createdAt: automationRuns.createdAt,
+        actionsApplied: automationRuns.actionsApplied,
+        ticketNumber: tickets.number,
+      })
       .from(automationRuns)
-      .where(
-        and(
-          eq(automationRuns.ruleId, rule.id),
-          gt(automationRuns.createdAt, new Date(Date.now() - 7 * 24 * 3600 * 1000)),
-        ),
-      );
-    runs7d.set(rule.id, row?.n ?? 0);
+      .leftJoin(tickets, eq(automationRuns.ticketId, tickets.id))
+      .where(and(eq(automationRuns.tenantId, tenant.id), eq(automationRuns.ruleId, rule.id)))
+      .orderBy(desc(automationRuns.createdAt))
+      .limit(20);
+    journals.set(rule.id, rows);
   }
 
-  return (
-    <div>
-      <div className="mb-4 flex items-center gap-3">
-        <h1 className="text-lg font-semibold">Automatisations</h1>
-        <span className="flex-1" />
-        <Link
-          href={`/app/settings/automations/new?kind=${kind}`}
-          className="rounded-md px-3 py-1.5 text-sm font-semibold text-white"
-          style={{ background: "var(--acc)" }}
-        >
-          Nouvelle règle
-        </Link>
-      </div>
+  const tabs = [
+    { label: "Déclencheurs", href: "/app/settings/automations", active: true },
+    { label: "Éditeur", href: "/app/settings/automations/new", active: false },
+  ];
 
-      <div className="mb-4 flex gap-1 border-b" style={{ borderColor: "var(--line)" }}>
-        {(
-          [
-            ["trigger", "Déclencheurs"],
-            ["scheduled", "Règles horaires"],
-          ] as const
-        ).map(([k, label]) => (
+  return (
+    <PageShell maxWidth={1000}>
+      <PageHeader
+        code="ST-05"
+        title="Automatisations"
+        subtitle="Règles « quand X alors Y ». L'ordre d'exécution compte."
+        tabs={tabs}
+        actions={
           <Link
-            key={k}
-            href={`/app/settings/automations?kind=${k}`}
-            className="border-b-2 px-3 py-2 text-sm font-medium"
-            style={
-              kind === k
-                ? { borderColor: "var(--acc)", color: "var(--acc)" }
-                : { borderColor: "transparent", color: "var(--mute)" }
-            }
+            href="/app/settings/automations/new"
+            className="inline-flex items-center rounded-md px-3.5 font-semibold text-white"
+            style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
           >
-            {label}
+            Nouvelle règle
           </Link>
-        ))}
-      </div>
+        }
+      />
+
+      {saved === "1" && <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>}
 
       {rules.length === 0 ? (
-        <p className="py-16 text-center text-sm" style={{ color: "var(--mute)" }}>
-          Aucune règle. Créez la première — accusé de réception, escalade, relance…
-        </p>
+        <EmptyState
+          title="Aucune automatisation"
+          text="Partez d'un modèle éprouvé, puis adaptez-le à votre organisation."
+        >
+          <div
+            className="mx-auto mt-4 grid max-w-xl gap-2 text-left"
+            style={{ gridTemplateColumns: "1fr 1fr" }}
+          >
+            {TEMPLATES.map((t) => (
+              <Link
+                key={t.key}
+                href={`/app/settings/automations/new?template=${t.key}`}
+                className="rounded-lg border p-3"
+                style={{ borderColor: "var(--line)", background: "var(--bg)" }}
+              >
+                <span className="block font-semibold" style={{ fontSize: 13, color: "var(--ink)" }}>
+                  {t.name}
+                </span>
+                <span className="block" style={{ fontSize: 12, color: "var(--ink-2)" }}>
+                  {t.description}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </EmptyState>
       ) : (
         <ul className="flex flex-col gap-2">
           {rules.map((rule, index) => (
             <li
               key={rule.id}
-              className="flex items-center gap-3 rounded-lg border p-3"
-              style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+              className="flex items-center gap-3 rounded-[10px] border"
+              style={{
+                background: "var(--panel)",
+                borderColor: "var(--line)",
+                padding: "10px 14px",
+                opacity: rule.active ? 1 : 0.7,
+              }}
             >
-              <div className="flex flex-col">
-                <form action={moveRule}>
-                  <input type="hidden" name="ruleId" value={rule.id} />
-                  <input type="hidden" name="direction" value="up" />
-                  <button
-                    disabled={index === 0}
-                    className="block text-xs disabled:opacity-30"
-                    style={{ color: "var(--mute)" }}
-                    title="Monter"
-                  >
-                    ▲
-                  </button>
-                </form>
-                <form action={moveRule}>
-                  <input type="hidden" name="ruleId" value={rule.id} />
-                  <input type="hidden" name="direction" value="down" />
-                  <button
-                    disabled={index === rules.length - 1}
-                    className="block text-xs disabled:opacity-30"
-                    style={{ color: "var(--mute)" }}
-                    title="Descendre"
-                  >
-                    ▼
-                  </button>
-                </form>
-              </div>
+              {/* Poignée + numéro d'ordre */}
+              <span className="flex items-center gap-1.5">
+                <span
+                  aria-hidden
+                  title="Réordonner"
+                  style={{ color: "var(--ink-3)", fontSize: 13, cursor: "grab" }}
+                >
+                  ⠿
+                </span>
+                <span
+                  className="font-mono tabular-nums"
+                  style={{ fontSize: 11, color: "var(--ink-3)" }}
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="flex flex-col">
+                  <form action={moveRule}>
+                    <input type="hidden" name="ruleId" value={rule.id} />
+                    <input type="hidden" name="direction" value="up" />
+                    <button
+                      disabled={index === 0}
+                      className="block leading-none disabled:opacity-30"
+                      style={{ color: "var(--ink-3)", fontSize: 9 }}
+                      title="Monter"
+                    >
+                      ▲
+                    </button>
+                  </form>
+                  <form action={moveRule}>
+                    <input type="hidden" name="ruleId" value={rule.id} />
+                    <input type="hidden" name="direction" value="down" />
+                    <button
+                      disabled={index === rules.length - 1}
+                      className="block leading-none disabled:opacity-30"
+                      style={{ color: "var(--ink-3)", fontSize: 9 }}
+                      title="Descendre"
+                    >
+                      ▼
+                    </button>
+                  </form>
+                </span>
+              </span>
 
               <div className="min-w-0 flex-1">
                 <Link
                   href={`/app/settings/automations/${rule.id}`}
-                  className="block truncate text-sm font-semibold"
+                  className="block truncate font-semibold"
+                  style={{ fontSize: 13.5, color: "var(--ink)" }}
                 >
                   {rule.name}
                 </Link>
-                <p className="truncate text-xs" style={{ color: "var(--mute)" }}>
+                <p className="truncate" style={{ fontSize: 12, color: "var(--ink-2)" }}>
                   {ruleSummary(
                     (rule.conditionsAll as never[]) ?? [],
                     (rule.conditionsAny as never[]) ?? [],
@@ -132,14 +187,12 @@ export default async function AutomationsPage({
                 </p>
               </div>
 
-              <span className="whitespace-nowrap font-mono text-xs tabular-nums" style={{ color: "var(--mute)" }}>
-                {runs7d.get(rule.id)} exéc. / 7 j
+              <span
+                className="whitespace-nowrap font-mono tabular-nums"
+                style={{ fontSize: 11.5, color: "var(--ink-3)" }}
+              >
+                {runs7d.get(rule.id) ?? 0} exéc. / 7 j
               </span>
-              {rule.lastRunAt && (
-                <span className="whitespace-nowrap text-xs" style={{ color: "var(--mute)" }}>
-                  {relativeFr(rule.lastRunAt)}
-                </span>
-              )}
 
               <form action={toggleRule}>
                 <input type="hidden" name="ruleId" value={rule.id} />
@@ -147,28 +200,49 @@ export default async function AutomationsPage({
                   type="submit"
                   role="switch"
                   aria-checked={rule.active}
-                  className="relative h-5 w-9 rounded-full"
-                  style={{ background: rule.active ? "var(--acc)" : "var(--line)" }}
+                  className="relative rounded-full"
+                  style={{
+                    width: 34,
+                    height: 20,
+                    background: rule.active ? "var(--acc)" : "var(--line)",
+                  }}
                   title={rule.active ? "Désactiver" : "Activer"}
                 >
                   <span
-                    className="absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all"
-                    style={{ left: rule.active ? 18 : 2 }}
+                    className="absolute rounded-full bg-white transition-all"
+                    style={{ top: 2, width: 16, height: 16, left: rule.active ? 16 : 2 }}
                   />
                 </button>
               </form>
 
+              <Drawer
+                title={`Journal — ${rule.name}`}
+                trigger={<>Journal</>}
+                triggerClassName="rounded-md border px-2 py-1 font-medium"
+                triggerStyle={{
+                  fontSize: 12,
+                  borderColor: "var(--line)",
+                  color: "var(--ink)",
+                  background: "var(--panel)",
+                }}
+              >
+                <RuleJournal rows={journals.get(rule.id) ?? []} />
+              </Drawer>
+
               <form action={duplicateRule}>
                 <input type="hidden" name="ruleId" value={rule.id} />
-                <button className="rounded border px-2 py-1 text-xs" style={{ borderColor: "var(--line)" }}>
+                <button
+                  className="rounded-md border px-2 py-1 font-medium"
+                  style={{ fontSize: 12, borderColor: "var(--line)", color: "var(--ink)" }}
+                >
                   Dupliquer
                 </button>
               </form>
               <form action={deleteRule}>
                 <input type="hidden" name="ruleId" value={rule.id} />
                 <button
-                  className="rounded border px-2 py-1 text-xs"
-                  style={{ borderColor: "var(--dang)", color: "var(--dang)" }}
+                  className="rounded-md border px-2 py-1 font-medium"
+                  style={{ fontSize: 12, borderColor: "var(--dang)", color: "var(--dang)" }}
                 >
                   Supprimer
                 </button>
@@ -177,6 +251,47 @@ export default async function AutomationsPage({
           ))}
         </ul>
       )}
-    </div>
+    </PageShell>
+  );
+}
+
+function RuleJournal({
+  rows,
+}: {
+  rows: { createdAt: Date; ticketNumber: number | null; actionsApplied: unknown }[];
+}) {
+  if (rows.length === 0) {
+    return (
+      <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
+        Aucune exécution enregistrée pour cette règle.
+      </p>
+    );
+  }
+  return (
+    <ul className="flex flex-col gap-2">
+      {rows.map((r, i) => (
+        <li
+          key={i}
+          className="rounded-md border px-3 py-2"
+          style={{ borderColor: "var(--line-2)", background: "var(--sunk)" }}
+        >
+          <div className="flex items-center gap-2">
+            <span className="font-mono font-semibold" style={{ fontSize: 12, color: "var(--ink)" }}>
+              {r.ticketNumber != null ? `#${r.ticketNumber}` : "—"}
+            </span>
+            <span className="flex-1" />
+            <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>{relativeFr(r.createdAt)}</span>
+          </div>
+          <p className="mt-0.5 truncate font-mono" style={{ fontSize: 11, color: "var(--ink-2)" }}>
+            {Array.isArray(r.actionsApplied)
+              ? (r.actionsApplied as { type?: string }[])
+                  .map((a) => a?.type ?? "")
+                  .filter(Boolean)
+                  .join(" · ") || "aucune action"
+              : "aucune action"}
+          </p>
+        </li>
+      ))}
+    </ul>
   );
 }

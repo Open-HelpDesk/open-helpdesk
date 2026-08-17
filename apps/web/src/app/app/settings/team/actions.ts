@@ -1,40 +1,42 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { db, tickets, users } from "@openhelpdesk/db";
+import { db, mailboxes, teamMembers, teams, tickets, users } from "@openhelpdesk/db";
 import { and, eq, inArray } from "drizzle-orm";
-import { requireAgent } from "@/lib/session";
+import { requireManager } from "../guard";
 
-async function requireManager() {
-  const current = await requireAgent();
-  if (current.agent.role !== "owner" && current.agent.role !== "admin") {
-    throw new Error("Réservé aux rôles Owner et Admin.");
-  }
-  return current;
-}
-
-export async function inviteAgent(formData: FormData) {
+/** ST-02 — Invitation multi-emails (séparés par des virgules) avec un rôle commun. */
+export async function inviteAgents(formData: FormData) {
   const { tenant } = await requireManager();
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  const name = String(formData.get("name") ?? "").trim();
+  const emailsRaw = String(formData.get("emails") ?? "");
   const role = String(formData.get("role") ?? "agent");
-  if (!email || !name) return;
+  const safeRole = (["admin", "agent", "viewer"].includes(role) ? role : "agent") as
+    | "admin"
+    | "agent"
+    | "viewer";
 
-  await db
-    .insert(users)
-    .values({
-      tenantId: tenant.id,
-      email,
-      name,
-      role: (["admin", "agent", "viewer"].includes(role) ? role : "agent") as
-        | "admin"
-        | "agent"
-        | "viewer",
-      status: "invited",
-    })
-    .onConflictDoNothing();
+  const emails = emailsRaw
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+  if (emails.length === 0) return;
+
+  for (const email of emails) {
+    const localPart = email.split("@")[0] ?? email;
+    const name = localPart
+      .split(/[._-]+/)
+      .filter(Boolean)
+      .map((p) => p[0]!.toUpperCase() + p.slice(1))
+      .join(" ");
+    await db
+      .insert(users)
+      .values({ tenantId: tenant.id, email, name: name || email, role: safeRole, status: "invited" })
+      .onConflictDoNothing();
+  }
 
   revalidatePath("/app/settings/team");
+  redirect("/app/settings/team?saved=1");
 }
 
 export async function updateAgentRole(formData: FormData) {
@@ -88,4 +90,113 @@ export async function toggleAgentActive(formData: FormData) {
       );
   }
   revalidatePath("/app/settings/team");
+}
+
+/** Renvoi d'invitation — l'envoi réel arrive avec le canal email managé (no-op honnête). */
+export async function resendInvite(formData: FormData) {
+  const { tenant } = await requireManager();
+  const userId = String(formData.get("userId"));
+  const [target] = await db
+    .select()
+    .from(users)
+    .where(and(eq(users.tenantId, tenant.id), eq(users.id, userId)));
+  if (!target || target.status !== "invited") return;
+  revalidatePath("/app/settings/team");
+}
+
+/* ---------- Onglet Équipes — CRUD teams / teamMembers ---------- */
+
+function memberIdsOf(formData: FormData): string[] {
+  return formData.getAll("memberIds").map(String).filter(Boolean);
+}
+
+export async function createTeam(formData: FormData) {
+  const { tenant } = await requireManager();
+  const name = String(formData.get("name") ?? "").trim().slice(0, 80);
+  if (!name) return;
+  const bhId = String(formData.get("businessHoursId") ?? "");
+
+  const [team] = await db
+    .insert(teams)
+    .values({ tenantId: tenant.id, name, businessHoursId: bhId || null })
+    .returning();
+
+  const memberIds = memberIdsOf(formData);
+  if (team && memberIds.length > 0) {
+    const valid = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(and(eq(users.tenantId, tenant.id), inArray(users.id, memberIds)));
+    if (valid.length > 0) {
+      await db
+        .insert(teamMembers)
+        .values(valid.map((u) => ({ tenantId: tenant.id, teamId: team.id, userId: u.id })))
+        .onConflictDoNothing();
+    }
+  }
+
+  revalidatePath("/app/settings/team");
+  redirect("/app/settings/team?tab=teams&saved=1");
+}
+
+export async function updateTeam(formData: FormData) {
+  const { tenant } = await requireManager();
+  const teamId = String(formData.get("teamId") ?? "");
+  const name = String(formData.get("name") ?? "").trim().slice(0, 80);
+  const bhId = String(formData.get("businessHoursId") ?? "");
+  if (!teamId || !name) return;
+
+  const [team] = await db
+    .select()
+    .from(teams)
+    .where(and(eq(teams.tenantId, tenant.id), eq(teams.id, teamId)));
+  if (!team) return;
+
+  await db
+    .update(teams)
+    .set({ name, businessHoursId: bhId || null })
+    .where(eq(teams.id, team.id));
+
+  // Remplace la composition (membres cochés dans le drawer).
+  await db.delete(teamMembers).where(eq(teamMembers.teamId, team.id));
+  const memberIds = memberIdsOf(formData);
+  if (memberIds.length > 0) {
+    const valid = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(and(eq(users.tenantId, tenant.id), inArray(users.id, memberIds)));
+    if (valid.length > 0) {
+      await db
+        .insert(teamMembers)
+        .values(valid.map((u) => ({ tenantId: tenant.id, teamId: team.id, userId: u.id })))
+        .onConflictDoNothing();
+    }
+  }
+
+  revalidatePath("/app/settings/team");
+  redirect("/app/settings/team?tab=teams&saved=1");
+}
+
+export async function deleteTeam(formData: FormData) {
+  const { tenant } = await requireManager();
+  const teamId = String(formData.get("teamId") ?? "");
+  const [team] = await db
+    .select()
+    .from(teams)
+    .where(and(eq(teams.tenantId, tenant.id), eq(teams.id, teamId)));
+  if (!team) return;
+
+  // Détache les références non-cascade avant suppression.
+  await db
+    .update(tickets)
+    .set({ teamId: null })
+    .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.teamId, team.id)));
+  await db
+    .update(mailboxes)
+    .set({ defaultTeamId: null })
+    .where(and(eq(mailboxes.tenantId, tenant.id), eq(mailboxes.defaultTeamId, team.id)));
+  await db.delete(teams).where(eq(teams.id, team.id));
+
+  revalidatePath("/app/settings/team");
+  redirect("/app/settings/team?tab=teams");
 }

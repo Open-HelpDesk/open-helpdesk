@@ -1,25 +1,75 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAgent } from "@/lib/session";
 import { automationRules, db, teams, users } from "@openhelpdesk/db";
 import { and, asc, eq, ne } from "drizzle-orm";
-import { ActionsBuilder, ConditionsBuilder } from "@/components/rule-builders";
-import { saveRule } from "../actions";
+import type { Action, Condition } from "@/components/rule-builders";
+import { RuleEditorBody } from "@/components/settings-rule-editor";
+import { Field, PageHeader, PageShell, SaveBar, TextInput, Toggle } from "@/components/settings-page";
+import { saveRule, testRule } from "../actions";
+
+/** Modèles pré-remplis (état vide ST-05). */
+const TEMPLATES: Record<
+  string,
+  { name: string; kind: "trigger" | "scheduled"; all: Condition[]; actions: Action[] }
+> = {
+  ack: {
+    name: "Accusé de réception",
+    kind: "trigger",
+    all: [{ field: "event", operator: "is", value: "ticket.created" }],
+    actions: [
+      {
+        type: "email_contact",
+        value:
+          "Bonjour {{contact.name}}, nous avons bien reçu votre demande et revenons vers vous sous 4 heures ouvrées.",
+      },
+    ],
+  },
+  escalade: {
+    name: "Escalade urgente",
+    kind: "trigger",
+    all: [{ field: "priority", operator: "is", value: "urgent" }],
+    actions: [{ type: "assign_team", value: "" }],
+  },
+  relance: {
+    name: "Relance client à 48 h",
+    kind: "scheduled",
+    all: [
+      { field: "status", operator: "is", value: "waiting" },
+      { field: "hours_since_updated", operator: "gte", value: 48 },
+    ],
+    actions: [
+      {
+        type: "email_contact",
+        value:
+          "Bonjour {{contact.name}}, nous restons dans l'attente de votre retour sur le ticket {{ticket.number}}.",
+      },
+    ],
+  },
+  cloture: {
+    name: "Clôture automatique à J+4",
+    kind: "scheduled",
+    all: [
+      { field: "status", operator: "is", value: "resolved" },
+      { field: "hours_since_updated", operator: "gte", value: 96 },
+    ],
+    actions: [{ type: "set_status", value: "closed" }],
+  },
+};
 
 /**
- * ST-05 — Éditeur de règle : bloc SI (toutes / au moins une) + bloc ALORS (actions
- * empilées). Reste à venir : « Tester sur un ticket existant » avec résultat simulé.
+ * ST-05 — Éditeur de règle (1000 px) : bloc SI (bordure --open), bloc ALORS (accent),
+ * « Tester sur un ticket existant » fonctionnel (simulation, aucune écriture).
  */
 export default async function RuleEditorPage({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ kind?: string }>;
+  searchParams: Promise<{ kind?: string; template?: string; saved?: string }>;
 }) {
   const { tenant } = await requireAgent();
   const { id } = await params;
-  const { kind: kindParam } = await searchParams;
+  const { kind: kindParam, template: templateKey, saved } = await searchParams;
   const isNew = id === "new";
 
   const rule = isNew
@@ -32,7 +82,9 @@ export default async function RuleEditorPage({
       )[0];
   if (!isNew && !rule) notFound();
 
-  const kind = rule?.kind ?? (kindParam === "scheduled" ? "scheduled" : "trigger");
+  const template = isNew && templateKey ? TEMPLATES[templateKey] : undefined;
+  const kind =
+    rule?.kind ?? template?.kind ?? (kindParam === "scheduled" ? "scheduled" : "trigger");
 
   const [agents, teamRows] = await Promise.all([
     db
@@ -47,74 +99,52 @@ export default async function RuleEditorPage({
       .orderBy(asc(teams.name)),
   ]);
 
+  const initialAll = ((rule?.conditionsAll as Condition[]) ?? template?.all ?? []) as Condition[];
+  const initialAny = ((rule?.conditionsAny as Condition[]) ?? []) as Condition[];
+  const initialActions = ((rule?.actions as Action[]) ?? template?.actions ?? []) as Action[];
+
+  const tabs = [
+    { label: "Déclencheurs", href: "/app/settings/automations", active: false },
+    { label: "Éditeur", href: "#", active: true },
+  ];
+
   return (
-    <div>
-      <Link href="/app/settings/automations" className="font-mono text-xs" style={{ color: "var(--mute)" }}>
-        ← Automatisations
-      </Link>
-      <h1 className="mb-1 mt-2 text-lg font-semibold">
-        {isNew ? "Nouvelle règle" : `Modifier « ${rule!.name} »`}
-      </h1>
-      <p className="mb-5 text-sm" style={{ color: "var(--mute)" }}>
-        {kind === "trigger"
-          ? "Déclencheur : évalué à chaque événement (création, mise à jour, message reçu)."
-          : "Règle horaire : évaluée périodiquement par le worker (conditions temporelles)."}
-      </p>
+    <PageShell maxWidth={1000}>
+      <PageHeader
+        code="ST-05"
+        title="Automatisations"
+        subtitle="Règles « quand X alors Y ». L'ordre d'exécution compte."
+        tabs={tabs}
+      />
 
       <form action={saveRule} className="flex flex-col gap-4">
         <input type="hidden" name="ruleId" value={isNew ? "" : rule!.id} />
         <input type="hidden" name="kind" value={kind} />
 
-        <label className="flex flex-col gap-1 text-xs font-semibold" style={{ color: "var(--mute)" }}>
-          NOM DE LA RÈGLE
-          <input
-            name="name"
-            required
-            defaultValue={rule?.name ?? ""}
-            className="max-w-md rounded-md border px-3 py-2 text-sm font-normal"
-            style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
-          />
-        </label>
+        <div className="flex flex-wrap items-end gap-4">
+          <Field label="Nom de la règle" style={{ minWidth: 320 }}>
+            <TextInput name="name" required defaultValue={rule?.name ?? template?.name ?? ""} />
+          </Field>
+          <span className="pb-1" style={{ fontSize: 12, color: "var(--ink-3)" }}>
+            {kind === "trigger"
+              ? "Déclencheur : évalué à chaque événement (création, mise à jour, message reçu)."
+              : "Règle horaire : évaluée périodiquement par le worker (conditions temporelles)."}
+          </span>
+        </div>
 
-        <ConditionsBuilder
-          name="conditionsAll"
-          label="SI — toutes ces conditions"
-          initial={(rule?.conditionsAll as never[]) ?? []}
-        />
-        <ConditionsBuilder
-          name="conditionsAny"
-          label="SI — au moins une de ces conditions (optionnel)"
-          initial={(rule?.conditionsAny as never[]) ?? []}
-        />
-        <ActionsBuilder
-          name="actions"
-          initial={(rule?.actions as never[]) ?? []}
+        <RuleEditorBody
+          initialAll={initialAll}
+          initialAny={initialAny}
+          initialActions={initialActions}
           agents={agents}
           teams={teamRows}
+          testAction={testRule}
         />
 
-        <label className="inline-flex items-center gap-2 text-sm">
-          <input type="checkbox" name="active" defaultChecked={rule?.active ?? true} />
-          Règle active
-        </label>
+        <Toggle name="active" defaultChecked={rule?.active ?? true} label="Règle active" />
 
-        <div className="flex gap-2">
-          <button
-            type="submit"
-            className="rounded-md px-4 py-2 text-sm font-semibold text-white"
-            style={{ background: "var(--acc)" }}
-          >
-            Enregistrer
-          </button>
-          <Link
-            href="/app/settings/automations"
-            className="rounded-md border px-4 py-2 text-sm font-medium"
-            style={{ borderColor: "var(--line)" }}
-          >
-            Annuler
-          </Link>
-        </div>
+        <SaveBar saved={saved === "1"} cancelHref="/app/settings/automations" />
       </form>
-    </div>
+    </PageShell>
   );
 }

@@ -2,9 +2,11 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { automationRules, db } from "@openhelpdesk/db";
-import { and, asc, eq, not } from "drizzle-orm";
-import { requireAgent } from "@/lib/session";
+import { automationRules, db, tickets } from "@openhelpdesk/db";
+import { and, asc, desc, eq, isNull, not } from "drizzle-orm";
+import { evaluateConditions, type Condition, type RuleEvent } from "@openhelpdesk/rules";
+import { ruleSummary } from "@/lib/rule-labels";
+import { requireManager } from "../guard";
 
 const VALID_FIELDS = new Set([
   "event",
@@ -31,39 +33,37 @@ const VALID_ACTIONS = new Set([
   "email_contact",
 ]);
 
-function parseConditions(raw: unknown): { field: string; operator: string; value?: unknown }[] {
-  if (typeof raw !== "string") return [];
-  try {
-    const parsed = JSON.parse(raw) as unknown[];
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter(
-      (c): c is { field: string; operator: string; value?: unknown } =>
-        typeof c === "object" &&
-        c !== null &&
-        VALID_FIELDS.has((c as { field?: string }).field ?? "") &&
-        VALID_OPERATORS.has((c as { operator?: string }).operator ?? ""),
-    );
-  } catch {
-    return [];
-  }
+function sanitizeConditions(raw: unknown): { field: string; operator: string; value?: unknown }[] {
+  const parsed = typeof raw === "string" ? safeParse(raw) : raw;
+  if (!Array.isArray(parsed)) return [];
+  return parsed.filter(
+    (c): c is { field: string; operator: string; value?: unknown } =>
+      typeof c === "object" &&
+      c !== null &&
+      VALID_FIELDS.has((c as { field?: string }).field ?? "") &&
+      VALID_OPERATORS.has((c as { operator?: string }).operator ?? ""),
+  );
 }
 
-function parseActions(raw: unknown): { type: string; value?: unknown }[] {
-  if (typeof raw !== "string") return [];
+function sanitizeActions(raw: unknown): { type: string; value?: unknown }[] {
+  const parsed = typeof raw === "string" ? safeParse(raw) : raw;
+  if (!Array.isArray(parsed)) return [];
+  return parsed.filter(
+    (a): a is { type: string; value?: unknown } =>
+      typeof a === "object" && a !== null && VALID_ACTIONS.has((a as { type?: string }).type ?? ""),
+  );
+}
+
+function safeParse(raw: string): unknown {
   try {
-    const parsed = JSON.parse(raw) as unknown[];
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter(
-      (a): a is { type: string; value?: unknown } =>
-        typeof a === "object" && a !== null && VALID_ACTIONS.has((a as { type?: string }).type ?? ""),
-    );
+    return JSON.parse(raw);
   } catch {
     return [];
   }
 }
 
 export async function saveRule(formData: FormData) {
-  const { tenant } = await requireAgent();
+  const { tenant } = await requireManager();
   const ruleId = String(formData.get("ruleId") ?? "");
   const kind = formData.get("kind") === "scheduled" ? "scheduled" : "trigger";
   const name = String(formData.get("name") ?? "").trim();
@@ -71,9 +71,9 @@ export async function saveRule(formData: FormData) {
 
   const values = {
     name,
-    conditionsAll: parseConditions(formData.get("conditionsAll")),
-    conditionsAny: parseConditions(formData.get("conditionsAny")),
-    actions: parseActions(formData.get("actions")),
+    conditionsAll: sanitizeConditions(formData.get("conditionsAll")),
+    conditionsAny: sanitizeConditions(formData.get("conditionsAny")),
+    actions: sanitizeActions(formData.get("actions")),
     active: formData.get("active") === "on",
   };
 
@@ -86,17 +86,17 @@ export async function saveRule(formData: FormData) {
     const existing = await db
       .select({ position: automationRules.position })
       .from(automationRules)
-      .where(and(eq(automationRules.tenantId, tenant.id), eq(automationRules.kind, kind)));
+      .where(eq(automationRules.tenantId, tenant.id));
     const position = existing.length > 0 ? Math.max(...existing.map((r) => r.position)) + 1 : 0;
     await db.insert(automationRules).values({ tenantId: tenant.id, kind, position, ...values });
   }
 
   revalidatePath("/app/settings/automations");
-  redirect(`/app/settings/automations?kind=${kind}`);
+  redirect("/app/settings/automations?saved=1");
 }
 
 export async function toggleRule(formData: FormData) {
-  const { tenant } = await requireAgent();
+  const { tenant } = await requireManager();
   const ruleId = String(formData.get("ruleId"));
   await db
     .update(automationRules)
@@ -106,7 +106,7 @@ export async function toggleRule(formData: FormData) {
 }
 
 export async function deleteRule(formData: FormData) {
-  const { tenant } = await requireAgent();
+  const { tenant } = await requireManager();
   const ruleId = String(formData.get("ruleId"));
   await db
     .delete(automationRules)
@@ -115,7 +115,7 @@ export async function deleteRule(formData: FormData) {
 }
 
 export async function duplicateRule(formData: FormData) {
-  const { tenant } = await requireAgent();
+  const { tenant } = await requireManager();
   const ruleId = String(formData.get("ruleId"));
   const [rule] = await db
     .select()
@@ -137,30 +137,24 @@ export async function duplicateRule(formData: FormData) {
 
 /** L'ordre d'exécution compte : échange de positions avec la règle voisine. */
 export async function moveRule(formData: FormData) {
-  const { tenant } = await requireAgent();
+  const { tenant } = await requireManager();
   const ruleId = String(formData.get("ruleId"));
   const direction = formData.get("direction") === "up" ? "up" : "down";
-
-  const [rule] = await db
-    .select()
-    .from(automationRules)
-    .where(and(eq(automationRules.tenantId, tenant.id), eq(automationRules.id, ruleId)));
-  if (!rule) return;
 
   const siblings = await db
     .select()
     .from(automationRules)
-    .where(and(eq(automationRules.tenantId, tenant.id), eq(automationRules.kind, rule.kind)))
+    .where(eq(automationRules.tenantId, tenant.id))
     .orderBy(asc(automationRules.position), asc(automationRules.createdAt));
 
-  const index = siblings.findIndex((r) => r.id === rule.id);
-  const swapWith = direction === "up" ? siblings[index - 1] : siblings[index + 1];
-  if (!swapWith) return;
+  const index = siblings.findIndex((r) => r.id === ruleId);
+  if (index < 0) return;
+  const swapIndex = direction === "up" ? index - 1 : index + 1;
+  if (swapIndex < 0 || swapIndex >= siblings.length) return;
 
   // Positions normalisées à l'index pour éviter les doublons hérités.
   const reordered = [...siblings];
-  reordered[index] = swapWith;
-  reordered[direction === "up" ? index - 1 : index + 1] = rule;
+  [reordered[index], reordered[swapIndex]] = [reordered[swapIndex]!, reordered[index]!];
   for (let i = 0; i < reordered.length; i++) {
     await db
       .update(automationRules)
@@ -168,4 +162,44 @@ export async function moveRule(formData: FormData) {
       .where(eq(automationRules.id, reordered[i]!.id));
   }
   revalidatePath("/app/settings/automations");
+}
+
+/**
+ * « Tester sur un ticket existant » (ST-05) : simulation sur le ticket le plus
+ * récent via evaluateConditions — AUCUNE modification appliquée.
+ */
+export async function testRule(payload: {
+  conditionsAll: unknown;
+  conditionsAny: unknown;
+  actions: unknown;
+}): Promise<{ ok: boolean; text: string }> {
+  const { tenant } = await requireManager();
+  const conditionsAll = sanitizeConditions(payload.conditionsAll) as Condition[];
+  const conditionsAny = sanitizeConditions(payload.conditionsAny) as Condition[];
+  const actions = sanitizeActions(payload.actions);
+
+  const [ticket] = await db
+    .select()
+    .from(tickets)
+    .where(and(eq(tickets.tenantId, tenant.id), isNull(tickets.deletedAt)))
+    .orderBy(desc(tickets.createdAt))
+    .limit(1);
+
+  if (!ticket) {
+    return { ok: false, text: "Aucun ticket dans le workspace — créez un ticket pour tester." };
+  }
+
+  // L'événement simulé suit la condition « Événement » si elle est posée.
+  const eventCondition = conditionsAll.find((c) => c.field === "event" && c.operator === "is");
+  const event = (eventCondition?.value as RuleEvent) ?? "ticket.updated";
+
+  const matches = evaluateConditions({ event, ticket }, conditionsAll, conditionsAny);
+  const label = `#${ticket.number}`;
+
+  if (!matches) {
+    return { ok: false, text: `${label} → la règle ne s'appliquerait pas (conditions non remplies).` };
+  }
+
+  const summary = ruleSummary([], [], actions as never[]).replace(/^Si toujours → /, "");
+  return { ok: true, text: `${label} → la règle s'appliquerait : ${summary}` };
 }

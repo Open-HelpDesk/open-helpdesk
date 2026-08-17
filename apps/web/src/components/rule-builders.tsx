@@ -2,8 +2,10 @@
 
 /**
  * Builders conditions / actions (ST-05, réutilisés par ST-07 et les vues) :
- * lignes champ-opérateur-valeur, groupes « toutes » / « au moins une ».
- * L'état est sérialisé en JSON dans un input caché lu par la server action.
+ * lignes champ-opérateur-valeur en grid `1fr 140px 1fr 30px` (design ST-05),
+ * groupes « toutes » / « au moins une ». L'état est sérialisé en JSON dans un
+ * input caché lu par la server action. Mode contrôlé optionnel (rows/onChange)
+ * pour l'éditeur ST-05 qui doit lire l'état courant (« Tester sur un ticket »).
  */
 import { useState } from "react";
 import { X } from "lucide-react";
@@ -14,8 +16,8 @@ import {
   OPERATOR_LABELS,
 } from "@/lib/rule-labels";
 
-type Condition = { field: string; operator: string; value?: string | number };
-type Action = { type: string; value?: unknown };
+export type Condition = { field: string; operator: string; value?: string | number };
+export type Action = { type: string; value?: unknown };
 
 const NUMERIC_FIELDS = new Set(["hours_since_created", "hours_since_updated"]);
 const VALUELESS = new Set(["empty", "not_empty"]);
@@ -53,14 +55,17 @@ function ConditionRow({
   const operators = OPERATORS_BY_FIELD[condition.field] ?? ["is"];
   const options = FIELD_VALUE_OPTIONS[condition.field];
   return (
-    <div className="flex items-center gap-1.5">
+    <div
+      className="grid items-center gap-1.5"
+      style={{ gridTemplateColumns: "1fr 140px 1fr 30px" }}
+    >
       <select
         value={condition.field}
         onChange={(e) => {
           const field = e.target.value;
           onChange({ field, operator: OPERATORS_BY_FIELD[field]?.[0] ?? "is", value: "" });
         }}
-        className="rounded-md border px-2 py-1.5 text-sm"
+        className="min-w-0 rounded-md border px-2 py-1.5 text-sm"
         style={inputStyle}
       >
         {Object.entries(FIELD_LABELS).map(([v, l]) => (
@@ -72,7 +77,7 @@ function ConditionRow({
       <select
         value={condition.operator}
         onChange={(e) => onChange({ ...condition, operator: e.target.value })}
-        className="rounded-md border px-2 py-1.5 text-sm"
+        className="min-w-0 rounded-md border px-2 py-1.5 text-sm"
         style={inputStyle}
       >
         {operators.map((op) => (
@@ -81,38 +86,45 @@ function ConditionRow({
           </option>
         ))}
       </select>
-      {!VALUELESS.has(condition.operator) &&
-        (options ? (
-          <select
-            value={String(condition.value ?? "")}
-            onChange={(e) => onChange({ ...condition, value: e.target.value })}
-            className="rounded-md border px-2 py-1.5 text-sm"
-            style={inputStyle}
-          >
-            <option value="">—</option>
-            {options.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <input
-            type={NUMERIC_FIELDS.has(condition.field) ? "number" : "text"}
-            value={String(condition.value ?? "")}
-            onChange={(e) =>
-              onChange({
-                ...condition,
-                value: NUMERIC_FIELDS.has(condition.field)
-                  ? Number(e.target.value)
-                  : e.target.value,
-              })
-            }
-            className="w-44 rounded-md border px-2 py-1.5 text-sm"
-            style={inputStyle}
-          />
-        ))}
-      <button type="button" onClick={onRemove} title="Retirer" style={{ color: "var(--mute)" }}>
+      {VALUELESS.has(condition.operator) ? (
+        <span />
+      ) : options ? (
+        <select
+          value={String(condition.value ?? "")}
+          onChange={(e) => onChange({ ...condition, value: e.target.value })}
+          className="min-w-0 rounded-md border px-2 py-1.5 text-sm"
+          style={inputStyle}
+        >
+          <option value="">—</option>
+          {options.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type={NUMERIC_FIELDS.has(condition.field) ? "number" : "text"}
+          value={String(condition.value ?? "")}
+          onChange={(e) =>
+            onChange({
+              ...condition,
+              value: NUMERIC_FIELDS.has(condition.field)
+                ? Number(e.target.value)
+                : e.target.value,
+            })
+          }
+          className="min-w-0 rounded-md border px-2 py-1.5 text-sm"
+          style={inputStyle}
+        />
+      )}
+      <button
+        type="button"
+        onClick={onRemove}
+        title="Retirer"
+        className="justify-self-center"
+        style={{ color: "var(--ink-3)" }}
+      >
         <X size={14} />
       </button>
     </div>
@@ -123,17 +135,28 @@ export function ConditionsBuilder({
   name,
   label,
   initial,
+  rows: controlled,
+  onChange,
+  bare,
 }: {
   name: string;
-  label: string;
+  label?: string;
   initial: Condition[];
+  /** Mode contrôlé (ST-05) : l'état vit chez le parent. */
+  rows?: Condition[];
+  onChange?: (rows: Condition[]) => void;
+  /** Sans cadre fieldset — utilisé dans les blocs SI/ALORS de l'éditeur ST-05. */
+  bare?: boolean;
 }) {
-  const [rows, setRows] = useState<Condition[]>(initial);
-  return (
-    <fieldset className="rounded-lg border p-3" style={{ borderColor: "var(--line)", background: "var(--panel)" }}>
-      <legend className="px-1 text-xs font-semibold" style={{ color: "var(--mute)" }}>
-        {label}
-      </legend>
+  const [internal, setInternal] = useState<Condition[]>(initial);
+  const rows = controlled ?? internal;
+  const setRows = (next: Condition[]) => {
+    if (!controlled) setInternal(next);
+    onChange?.(next);
+  };
+
+  const body = (
+    <>
       <input type="hidden" name={name} value={JSON.stringify(rows)} />
       <div className="flex flex-col gap-2">
         {rows.map((c, i) => (
@@ -148,11 +171,27 @@ export function ConditionsBuilder({
           type="button"
           onClick={() => setRows([...rows, { field: "status", operator: "is", value: "open" }])}
           className="self-start rounded-md border border-dashed px-2 py-1 text-xs"
-          style={{ borderColor: "var(--line)", color: "var(--mute)" }}
+          style={{ borderColor: "var(--line)", color: "var(--ink-2)" }}
         >
           + Ajouter une condition
         </button>
       </div>
+    </>
+  );
+
+  if (bare) return <div>{body}</div>;
+
+  return (
+    <fieldset
+      className="rounded-lg border p-3"
+      style={{ borderColor: "var(--line)", background: "var(--panel)" }}
+    >
+      {label && (
+        <legend className="px-1 text-xs font-semibold" style={{ color: "var(--ink-2)" }}>
+          {label}
+        </legend>
+      )}
+      {body}
     </fieldset>
   );
 }
@@ -162,23 +201,31 @@ export function ActionsBuilder({
   initial,
   agents,
   teams,
+  rows: controlled,
+  onChange,
+  bare,
 }: {
   name: string;
   initial: Action[];
   agents: { id: string; name: string }[];
   teams: { id: string; name: string }[];
+  rows?: Action[];
+  onChange?: (rows: Action[]) => void;
+  bare?: boolean;
 }) {
-  const [rows, setRows] = useState<Action[]>(initial);
+  const [internal, setInternal] = useState<Action[]>(initial);
+  const rows = controlled ?? internal;
+  const setRows = (next: Action[]) => {
+    if (!controlled) setInternal(next);
+    onChange?.(next);
+  };
 
   function update(i: number, next: Action) {
     setRows(rows.map((r, j) => (j === i ? next : r)));
   }
 
-  return (
-    <fieldset className="rounded-lg border p-3" style={{ borderColor: "var(--line)", background: "var(--panel)" }}>
-      <legend className="px-1 text-xs font-semibold" style={{ color: "var(--mute)" }}>
-        ALORS — actions appliquées dans l'ordre
-      </legend>
+  const body = (
+    <>
       <input type="hidden" name={name} value={JSON.stringify(rows)} />
       <div className="flex flex-col gap-2">
         {rows.map((a, i) => (
@@ -187,10 +234,12 @@ export function ActionsBuilder({
               value={a.type}
               onChange={(e) => {
                 const type = e.target.value;
-                update(i, {
-                  type,
-                  value: type === "add_tags" ? [] : type === "email_contact" ? "" : "",
-                });
+                update(
+                  i,
+                  type === "assign_round_robin"
+                    ? { type }
+                    : { type, value: type === "add_tags" ? [] : "" },
+                );
               }}
               className="rounded-md border px-2 py-1.5 text-sm"
               style={inputStyle}
@@ -247,6 +296,11 @@ export function ActionsBuilder({
                 ))}
               </select>
             )}
+            {a.type === "assign_round_robin" && (
+              <span className="px-1 py-1.5 text-xs" style={{ color: "var(--ink-3)" }}>
+                Agent actif le moins chargé de l'équipe du ticket.
+              </span>
+            )}
             {a.type === "add_tags" && (
               <input
                 placeholder="tags séparés par des virgules"
@@ -279,7 +333,7 @@ export function ActionsBuilder({
               onClick={() => setRows(rows.filter((_, j) => j !== i))}
               title="Retirer"
               className="mt-2"
-              style={{ color: "var(--mute)" }}
+              style={{ color: "var(--ink-3)" }}
             >
               <X size={14} />
             </button>
@@ -289,11 +343,25 @@ export function ActionsBuilder({
           type="button"
           onClick={() => setRows([...rows, { type: "set_status", value: "open" }])}
           className="self-start rounded-md border border-dashed px-2 py-1 text-xs"
-          style={{ borderColor: "var(--line)", color: "var(--mute)" }}
+          style={{ borderColor: "var(--line)", color: "var(--ink-2)" }}
         >
           + Ajouter une action
         </button>
       </div>
+    </>
+  );
+
+  if (bare) return <div>{body}</div>;
+
+  return (
+    <fieldset
+      className="rounded-lg border p-3"
+      style={{ borderColor: "var(--line)", background: "var(--panel)" }}
+    >
+      <legend className="px-1 text-xs font-semibold" style={{ color: "var(--ink-2)" }}>
+        ALORS — actions appliquées dans l'ordre
+      </legend>
+      {body}
     </fieldset>
   );
 }

@@ -1,9 +1,30 @@
 import { requireAgent } from "@/lib/session";
-import { db, users } from "@openhelpdesk/db";
+import { businessHours, db, teamMembers, teams, users } from "@openhelpdesk/db";
 import { asc, eq } from "drizzle-orm";
 import { relativeFr } from "@/lib/format";
 import { Avatar } from "@/components/ticket-bits";
-import { inviteAgent, toggleAgentActive, updateAgentRole } from "./actions";
+import { entitlementsFor, seatQuota } from "@/lib/entitlements";
+import {
+  Card,
+  Field,
+  Gauge,
+  GridHead,
+  PageHeader,
+  PageShell,
+  Select,
+  StatusPill,
+  TextInput,
+} from "@/components/settings-page";
+import { AutoSubmitSelect, Drawer } from "@/components/settings-overlays";
+import {
+  createTeam,
+  deleteTeam,
+  inviteAgents,
+  resendInvite,
+  toggleAgentActive,
+  updateAgentRole,
+  updateTeam,
+} from "./actions";
 
 const ROLE_LABELS: Record<string, string> = {
   owner: "Owner",
@@ -12,184 +33,418 @@ const ROLE_LABELS: Record<string, string> = {
   viewer: "Viewer",
 };
 
-/**
- * ST-02 — Agents, équipes & rôles (specs/11). Onglet Agents : table avec rôle
- * modifiable, invitations, désactivation (tickets repassés en non-assignés).
- * Reste à venir : onglet Équipes complet, renvoi d'invitation par email, quotas sièges.
- */
-export default async function TeamPage() {
-  const { tenant, agent: me } = await requireAgent();
-  const agents = await db
-    .select()
-    .from(users)
-    .where(eq(users.tenantId, tenant.id))
-    .orderBy(asc(users.name));
+const AGENT_GRID = "minmax(190px,1.4fr) 150px 180px 130px 110px 80px";
 
-  const activeCount = agents.filter((a) => a.status === "active").length;
+/**
+ * ST-02 — Agents, équipes & rôles (1100 px) : carte sièges avec jauge, invitation
+ * multi-emails, table des agents (rôle inline), onglet Équipes fonctionnel
+ * (cartes + drawer CRUD teams/teamMembers).
+ */
+export default async function TeamPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string; saved?: string }>;
+}) {
+  const { tenant, agent: me } = await requireAgent();
+  const { tab, saved } = await searchParams;
+  const activeTab = tab === "teams" ? "teams" : "agents";
+
+  const [agents, teamRows, memberRows, calendars] = await Promise.all([
+    db.select().from(users).where(eq(users.tenantId, tenant.id)).orderBy(asc(users.name)),
+    db.select().from(teams).where(eq(teams.tenantId, tenant.id)).orderBy(asc(teams.name)),
+    db.select().from(teamMembers).where(eq(teamMembers.tenantId, tenant.id)),
+    db
+      .select({ id: businessHours.id, name: businessHours.name })
+      .from(businessHours)
+      .where(eq(businessHours.tenantId, tenant.id))
+      .orderBy(asc(businessHours.name)),
+  ]);
+
+  const seats = agents.filter((a) => a.status === "active" && a.role !== "viewer").length;
+  const quota = seatQuota(entitlementsFor(tenant.plan));
+
+  const teamsByUser = new Map<string, string[]>();
+  const usersByTeam = new Map<string, string[]>();
+  const teamNameById = new Map(teamRows.map((t) => [t.id, t.name]));
+  for (const m of memberRows) {
+    teamsByUser.set(m.userId, [
+      ...(teamsByUser.get(m.userId) ?? []),
+      teamNameById.get(m.teamId) ?? "",
+    ]);
+    usersByTeam.set(m.teamId, [...(usersByTeam.get(m.teamId) ?? []), m.userId]);
+  }
+  const agentById = new Map(agents.map((a) => [a.id, a]));
+  const calendarNameById = new Map(calendars.map((c) => [c.id, c.name]));
+  const activeAgents = agents.filter((a) => a.status !== "disabled");
+
+  const tabs = [
+    { label: "Agents", href: "/app/settings/team", active: activeTab === "agents" },
+    { label: "Équipes", href: "/app/settings/team?tab=teams", active: activeTab === "teams" },
+  ];
 
   return (
-    <div>
-      <h1 className="text-lg font-semibold">Agents & équipes</h1>
-      <p className="mb-5 mt-1 text-sm" style={{ color: "var(--mute)" }}>
-        {activeCount} agent{activeCount > 1 ? "s" : ""} actif{activeCount > 1 ? "s" : ""} ·{" "}
-        {agents.length} au total
-      </p>
+    <PageShell maxWidth={1100}>
+      <PageHeader
+        code="ST-02"
+        title="Agents, équipes & rôles"
+        subtitle="Gérez les accès, les rôles et la répartition des agents en équipes."
+        tabs={tabs}
+      />
 
-      {/* Invitation */}
-      <form
-        action={inviteAgent}
-        className="mb-6 flex flex-wrap items-end gap-2 rounded-lg border p-4"
-        style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-      >
-        <label className="flex flex-col gap-1 text-xs font-semibold" style={{ color: "var(--mute)" }}>
-          EMAIL
-          <input
-            name="email"
-            type="email"
-            required
-            placeholder="prenom.nom@entreprise.fr"
-            className="w-56 rounded-md border px-2 py-1.5 text-sm font-normal"
-            style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-xs font-semibold" style={{ color: "var(--mute)" }}>
-          NOM
-          <input
-            name="name"
-            required
-            className="w-44 rounded-md border px-2 py-1.5 text-sm font-normal"
-            style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-xs font-semibold" style={{ color: "var(--mute)" }}>
-          RÔLE
-          <select
-            name="role"
-            defaultValue="agent"
-            className="rounded-md border px-2 py-1.5 text-sm font-normal"
-            style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
-          >
-            <option value="admin">Admin</option>
-            <option value="agent">Agent</option>
-            <option value="viewer">Viewer</option>
-          </select>
-        </label>
-        <button
-          type="submit"
-          className="rounded-md px-3 py-1.5 text-sm font-semibold text-white"
-          style={{ background: "var(--acc)" }}
-        >
-          Inviter
-        </button>
-      </form>
+      {saved === "1" && (
+        <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>
+      )}
 
-      {/* Table des agents */}
-      <table className="w-full text-sm">
-        <thead>
-          <tr
-            className="border-b text-left font-mono text-[11px] uppercase tracking-wider"
-            style={{ borderColor: "var(--line)", color: "var(--mute)" }}
+      {activeTab === "agents" ? (
+        <>
+          {/* Carte sièges */}
+          <Card>
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold" style={{ fontSize: 14, color: "var(--ink)" }}>
+                  {seats} / {quota} sièges utilisés
+                </p>
+                <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                  Les rôles Viewer sont gratuits et illimités.
+                </p>
+              </div>
+              <Gauge value={seats} max={quota} width={160} />
+            </div>
+          </Card>
+
+          {/* Barre d'invitation */}
+          <form
+            action={inviteAgents}
+            className="flex flex-wrap items-center gap-2 rounded-[10px] border"
+            style={{ background: "var(--panel)", borderColor: "var(--line)", padding: 14 }}
           >
-            <th className="py-2 font-semibold">Agent</th>
-            <th className="font-semibold">Rôle</th>
-            <th className="font-semibold">Statut</th>
-            <th className="font-semibold">Dernier accès</th>
-            <th className="text-right font-semibold">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {agents.map((a) => {
-            const isSelf = a.id === me.id;
-            const canManage = !isSelf && (me.role === "owner" || a.role !== "owner");
-            return (
-              <tr key={a.id} className="border-b align-middle" style={{ borderColor: "var(--line)" }}>
-                <td className="py-2.5">
-                  <span className="flex items-center gap-2 font-medium">
-                    <Avatar name={a.name} size={24} />
-                    <span>
-                      {a.name}
-                      {isSelf && (
-                        <span className="ml-1 text-xs" style={{ color: "var(--mute)" }}>
-                          (vous)
+            <TextInput
+              name="emails"
+              required
+              placeholder="email@entreprise.fr, autre@entreprise.fr"
+              className="min-w-0 flex-1"
+              style={{ minWidth: 240 }}
+            />
+            <Select name="role" defaultValue="agent" style={{ width: 140 }}>
+              <option value="admin">Admin</option>
+              <option value="agent">Agent</option>
+              <option value="viewer">Viewer</option>
+            </Select>
+            <button
+              type="submit"
+              className="rounded-md px-3.5 font-semibold text-white"
+              style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+            >
+              Inviter
+            </button>
+          </form>
+
+          {/* Table des agents */}
+          <div
+            className="overflow-x-auto rounded-[10px] border"
+            style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+          >
+            <div style={{ minWidth: 880 }}>
+              <GridHead
+                template={AGENT_GRID}
+                columns={["Agent", "Rôle", "Équipes", "Dernier accès", "Statut", ""]}
+              />
+              {agents.map((a) => {
+                const isSelf = a.id === me.id;
+                const canManage = !isSelf && (me.role === "owner" || a.role !== "owner");
+                const teamNames = (teamsByUser.get(a.id) ?? []).filter(Boolean);
+                return (
+                  <div
+                    key={a.id}
+                    className="grid items-center gap-3 border-t"
+                    style={{
+                      gridTemplateColumns: AGENT_GRID,
+                      padding: "10px 14px",
+                      borderColor: "var(--line-2)",
+                    }}
+                  >
+                    <span className="flex min-w-0 items-center gap-2.5">
+                      <Avatar name={a.name} size={26} />
+                      <span className="min-w-0">
+                        <span
+                          className="block truncate font-medium"
+                          style={{ fontSize: 13, color: "var(--ink)" }}
+                        >
+                          {a.name}
+                          {isSelf && (
+                            <span style={{ color: "var(--ink-3)", fontWeight: 400 }}> (vous)</span>
+                          )}
                         </span>
-                      )}
-                      <span className="block text-xs font-normal" style={{ color: "var(--mute)" }}>
-                        {a.email}
+                        <span
+                          className="block truncate"
+                          style={{ fontSize: 11.5, color: "var(--ink-3)" }}
+                        >
+                          {a.email}
+                        </span>
                       </span>
                     </span>
-                  </span>
-                </td>
-                <td>
-                  {canManage ? (
-                    <form action={updateAgentRole} className="flex items-center gap-1">
-                      <input type="hidden" name="userId" value={a.id} />
-                      <select
-                        name="role"
-                        defaultValue={a.role}
-                        className="rounded-md border px-1.5 py-1 text-xs"
-                        style={{ borderColor: "var(--line)", background: "var(--bg)" }}
+                    <span>
+                      {canManage ? (
+                        <form action={updateAgentRole}>
+                          <input type="hidden" name="userId" value={a.id} />
+                          <AutoSubmitSelect
+                            name="role"
+                            defaultValue={a.role}
+                            options={[
+                              ...(me.role === "owner" ? [{ value: "owner", label: "Owner" }] : []),
+                              { value: "admin", label: "Admin" },
+                              { value: "agent", label: "Agent" },
+                              { value: "viewer", label: "Viewer" },
+                            ]}
+                            style={{ width: 110 }}
+                          />
+                        </form>
+                      ) : (
+                        <span style={{ fontSize: 13, color: "var(--ink)" }}>
+                          {ROLE_LABELS[a.role]}
+                        </span>
+                      )}
+                    </span>
+                    <span
+                      className="truncate"
+                      style={{ fontSize: 12.5, color: teamNames.length ? "var(--ink)" : "var(--ink-3)" }}
+                    >
+                      {teamNames.length > 0 ? teamNames.join(", ") : "—"}
+                    </span>
+                    <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+                      {a.lastSeenAt ? relativeFr(a.lastSeenAt) : "—"}
+                    </span>
+                    <span>
+                      {a.status === "active" ? (
+                        <StatusPill tone="ok">Actif</StatusPill>
+                      ) : a.status === "invited" ? (
+                        <StatusPill tone="wait">Invité</StatusPill>
+                      ) : (
+                        <StatusPill tone="closed">Désactivé</StatusPill>
+                      )}
+                    </span>
+                    <span className="text-right">
+                      {canManage &&
+                        (a.status === "invited" ? (
+                          <form action={resendInvite} className="inline">
+                            <input type="hidden" name="userId" value={a.id} />
+                            <button
+                              className="rounded-md border px-2 py-1 font-medium"
+                              style={{
+                                fontSize: 12,
+                                borderColor: "var(--line)",
+                                color: "var(--ink)",
+                              }}
+                            >
+                              Renvoyer
+                            </button>
+                          </form>
+                        ) : (
+                          <form action={toggleAgentActive} className="inline">
+                            <input type="hidden" name="userId" value={a.id} />
+                            <button
+                              className="rounded-md border px-2 py-1 font-medium"
+                              style={
+                                a.status === "disabled"
+                                  ? { fontSize: 12, borderColor: "var(--line)", color: "var(--ink)" }
+                                  : { fontSize: 12, borderColor: "var(--dang)", color: "var(--dang)" }
+                              }
+                            >
+                              {a.status === "disabled" ? "Réactiver" : "Désactiver"}
+                            </button>
+                          </form>
+                        ))}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
+            Désactiver un agent repasse ses tickets ouverts en non-assignés.
+          </p>
+        </>
+      ) : (
+        <>
+          <div className="flex items-center">
+            <span className="flex-1" />
+            <Drawer
+              title="Nouvelle équipe"
+              trigger={<>Nouvelle équipe</>}
+              triggerClassName="rounded-md px-3.5 font-semibold text-white"
+              triggerStyle={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+            >
+              <TeamForm
+                action={createTeam}
+                calendars={calendars}
+                agents={activeAgents}
+                memberIds={[]}
+              />
+            </Drawer>
+          </div>
+
+          <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))" }}>
+            {teamRows.length === 0 && (
+              <Card>
+                <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
+                  Aucune équipe. Créez la première pour répartir les tickets.
+                </p>
+              </Card>
+            )}
+            {teamRows.map((t) => {
+              const memberIds = usersByTeam.get(t.id) ?? [];
+              const members = memberIds
+                .map((id) => agentById.get(id))
+                .filter((a): a is NonNullable<typeof a> => Boolean(a));
+              const calName = t.businessHoursId
+                ? (calendarNameById.get(t.businessHoursId) ?? "—")
+                : "Astreinte 24/7";
+              return (
+                <Card key={t.id}>
+                  <div className="flex items-start gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold" style={{ fontSize: 14, color: "var(--ink)" }}>
+                        {t.name}
+                      </p>
+                      <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                        {members.length} membre{members.length > 1 ? "s" : ""} · {calName}
+                      </p>
+                    </div>
+                    <Drawer
+                      title={`Modifier « ${t.name} »`}
+                      trigger={<>Modifier</>}
+                      triggerClassName="rounded-md border px-2 py-1 font-medium"
+                      triggerStyle={{
+                        fontSize: 12,
+                        borderColor: "var(--line)",
+                        color: "var(--ink)",
+                        background: "var(--panel)",
+                      }}
+                    >
+                      <TeamForm
+                        action={updateTeam}
+                        teamId={t.id}
+                        name={t.name}
+                        businessHoursId={t.businessHoursId}
+                        calendars={calendars}
+                        agents={activeAgents}
+                        memberIds={memberIds}
+                      />
+                    </Drawer>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {members.length === 0 && (
+                      <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>Aucun membre.</span>
+                    )}
+                    {members.map((m) => (
+                      <span
+                        key={m.id}
+                        className="inline-flex items-center gap-1.5 rounded-full border"
+                        style={{
+                          fontSize: 12,
+                          padding: "2px 8px 2px 3px",
+                          borderColor: "var(--line)",
+                          background: "var(--sunk)",
+                          color: "var(--ink)",
+                        }}
                       >
-                        {me.role === "owner" && <option value="owner">Owner</option>}
-                        <option value="admin">Admin</option>
-                        <option value="agent">Agent</option>
-                        <option value="viewer">Viewer</option>
-                      </select>
-                      <button
-                        type="submit"
-                        className="rounded border px-1.5 py-1 text-xs"
-                        style={{ borderColor: "var(--line)" }}
-                      >
-                        OK
-                      </button>
-                    </form>
-                  ) : (
-                    ROLE_LABELS[a.role]
-                  )}
-                </td>
-                <td>
-                  <span
-                    className="rounded-full px-2 py-0.5 text-xs font-medium"
-                    style={
-                      a.status === "active"
-                        ? { background: "var(--ok-t)", color: "var(--ok)" }
-                        : a.status === "invited"
-                          ? { background: "var(--wait-t)", color: "var(--wait)" }
-                          : { background: "var(--closed-t)", color: "var(--closed)" }
-                    }
-                  >
-                    {a.status === "active" ? "Actif" : a.status === "invited" ? "Invité" : "Désactivé"}
-                  </span>
-                </td>
-                <td className="text-xs" style={{ color: "var(--mute)" }}>
-                  {a.lastSeenAt ? relativeFr(a.lastSeenAt) : "—"}
-                </td>
-                <td className="text-right">
-                  {canManage && (
-                    <form action={toggleAgentActive} className="inline">
-                      <input type="hidden" name="userId" value={a.id} />
-                      <button
-                        type="submit"
-                        className="rounded-md border px-2 py-1 text-xs font-medium"
-                        style={
-                          a.status === "disabled"
-                            ? { borderColor: "var(--line)" }
-                            : { borderColor: "var(--dang)", color: "var(--dang)" }
-                        }
-                      >
-                        {a.status === "disabled" ? "Réactiver" : "Désactiver"}
-                      </button>
-                    </form>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <p className="mt-3 text-xs" style={{ color: "var(--mute)" }}>
-        Désactiver un agent repasse ses tickets ouverts en non-assignés. L'envoi de
-        l'email d'invitation arrive avec le canal email managé.
-      </p>
-    </div>
+                        <Avatar name={m.name} size={18} />
+                        {m.name}
+                      </span>
+                    ))}
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </PageShell>
+  );
+}
+
+/** Formulaire d'équipe (drawer) — création et édition partagent le même corps. */
+function TeamForm({
+  action,
+  teamId,
+  name,
+  businessHoursId,
+  calendars,
+  agents,
+  memberIds,
+}: {
+  action: (formData: FormData) => Promise<void>;
+  teamId?: string;
+  name?: string;
+  businessHoursId?: string | null;
+  calendars: { id: string; name: string }[];
+  agents: { id: string; name: string; email: string }[];
+  memberIds: string[];
+}) {
+  return (
+    <form action={action} className="flex h-full flex-col gap-4">
+      {teamId && <input type="hidden" name="teamId" value={teamId} />}
+      <Field label="Nom de l'équipe">
+        <TextInput name="name" required defaultValue={name ?? ""} placeholder="Support N1" />
+      </Field>
+      <Field label="Horaires ouvrés" hint="Les calendriers se gèrent dans SLA & horaires ouvrés.">
+        <Select name="businessHoursId" defaultValue={businessHoursId ?? ""}>
+          <option value="">Astreinte 24/7</option>
+          {calendars.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </Select>
+      </Field>
+      <div className="flex flex-col gap-1.5">
+        <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
+          Membres
+        </span>
+        <div
+          className="flex max-h-64 flex-col gap-1 overflow-y-auto rounded-md border p-2"
+          style={{ borderColor: "var(--line)", background: "var(--bg)" }}
+        >
+          {agents.map((a) => (
+            <label key={a.id} className="flex items-center gap-2" style={{ fontSize: 13 }}>
+              <input
+                type="checkbox"
+                name="memberIds"
+                value={a.id}
+                defaultChecked={memberIds.includes(a.id)}
+              />
+              <span style={{ color: "var(--ink)" }}>{a.name}</span>
+              <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>{a.email}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div className="mt-auto flex items-center gap-2 border-t pt-3" style={{ borderColor: "var(--line)" }}>
+        {teamId && (
+          <button
+            type="submit"
+            formAction={deleteTeam}
+            className="rounded-md border px-3 font-medium"
+            style={{
+              height: 32,
+              fontSize: 13,
+              borderColor: "var(--dang)",
+              color: "var(--dang)",
+              background: "var(--panel)",
+            }}
+          >
+            Supprimer
+          </button>
+        )}
+        <span className="flex-1" />
+        <button
+          type="submit"
+          className="rounded-md px-3.5 font-semibold text-white"
+          style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+        >
+          Enregistrer
+        </button>
+      </div>
+    </form>
   );
 }
