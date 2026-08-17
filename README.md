@@ -5,7 +5,12 @@ dossier `/ee` sous licence commerciale), et une offre cloud managée en sous-dom
 `open-helpdesk.com`.
 
 - **Spécifications** (51 écrans, v1.2) : [`specs/`](specs/README.md)
-- **Maquettes validées** : [`design/`](design/)
+- **Maquettes validées** : [`design/`](design/) — références d'implémentation extraites
+  dans [`design-notes/`](design-notes/)
+- **Fidélité design** : les 32 écrans produit (AG-01→10, ST-01→14, PT-01→08) sont
+  implémentés au plus près des maquettes ; les défauts imaginés par le design (macros,
+  politiques SLA, règles, équipes, horaires, champs) sont installés dans tout nouveau
+  workspace par `packages/db/src/seed/defaults.ts`
 
 ## Structure
 
