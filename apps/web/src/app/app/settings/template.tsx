@@ -1,7 +1,4 @@
-/**
- * Transition d'écran de l'administration — classe commune à tout le produit
- * (.screen-rise, .18s). `.st-rise` reste réservée aux bascules d'onglets internes.
- */
+/** Transition d'écran st-rise .18s à chaque commutation de page (gabarit commun). */
 export default function SettingsTemplate({ children }: { children: React.ReactNode }) {
-  return <div className="screen-rise">{children}</div>;
+  return <div className="st-rise">{children}</div>;
 }
