@@ -286,20 +286,98 @@ export default async function SlaPage({
           />
 
           {selected && (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
-                gap: 14,
-                alignItems: "start",
-              }}
-            >
-              {/* Cibles de la politique sélectionnée */}
-              <form action={saveSlaTargets} className="flex flex-col gap-2.5">
-                <input type="hidden" name="policyId" value={selected.id} />
+            <div className="flex flex-col gap-4">
+              {/* Titre des cibles + édition du nom/conditions. Le drawer porte son
+                  propre <form> : il reste hors du formulaire des cibles. */}
+              <div className="flex flex-wrap items-center gap-2">
                 <div style={{ fontSize: 14.5, fontWeight: 600 }}>
                   Cibles — «&nbsp;{selected.name}&nbsp;»
                 </div>
+                <span className="flex-1" />
+                <Drawer
+                  trigger={
+                    <span
+                      className="inline-flex items-center rounded-md border px-3 font-medium"
+                      style={{
+                        height: 32,
+                        fontSize: 12.5,
+                        borderColor: "var(--line)",
+                        background: "var(--panel)",
+                        color: "var(--ink)",
+                      }}
+                    >
+                      Modifier le nom et les conditions
+                    </span>
+                  }
+                  title={`Politique « ${selected.name} »`}
+                >
+                  <form action={savePolicyMeta} className="flex flex-col gap-4">
+                    <input type="hidden" name="policyId" value={selected.id} />
+                    <label className="flex flex-col gap-1.5">
+                      <span
+                        className="font-semibold"
+                        style={{ fontSize: 12.5, color: "var(--ink-2)" }}
+                      >
+                        Nom
+                      </span>
+                      <input
+                        name="name"
+                        required
+                        defaultValue={selected.name}
+                        style={{
+                          height: 36,
+                          padding: "0 11px",
+                          border: "1px solid var(--line)",
+                          borderRadius: 6,
+                          background: "var(--bg)",
+                          color: "var(--ink)",
+                          fontSize: 13.5,
+                        }}
+                      />
+                    </label>
+                    {selected.isDefault ? (
+                      <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                        La politique par défaut s'applique à tous les tickets restants : ses
+                        conditions ne sont pas modifiables, et elle ne peut pas être supprimée.
+                      </p>
+                    ) : (
+                      <ConditionsBuilder
+                        name="conditions"
+                        label="S'APPLIQUE SI — toutes ces conditions"
+                        initial={(selected.conditions as never[]) ?? []}
+                      />
+                    )}
+                    <button
+                      type="submit"
+                      className="self-start rounded-md px-3.5 font-semibold text-white"
+                      style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+                    >
+                      Enregistrer
+                    </button>
+                  </form>
+                  {!selected.isDefault && (
+                    <form action={deleteSlaPolicy} className="mt-2">
+                      <input type="hidden" name="policyId" value={selected.id} />
+                      <button
+                        className="rounded-md border px-3 font-medium"
+                        style={{
+                          height: 32,
+                          fontSize: 12.5,
+                          borderColor: "var(--dang)",
+                          color: "var(--dang)",
+                          background: "var(--panel)",
+                        }}
+                      >
+                        Supprimer cette politique
+                      </button>
+                    </form>
+                  )}
+                </Drawer>
+              </div>
+
+              {/* Cibles de la politique sélectionnée */}
+              <form action={saveSlaTargets} className="flex flex-col gap-2.5">
+                <input type="hidden" name="policyId" value={selected.id} />
                 <div
                   style={{
                     border: "1px solid var(--line)",
@@ -415,11 +493,7 @@ export default async function SlaPage({
                     </SelectBox>
                   </label>
                 </div>
-                <SaveBar saved={saved === "1"} cancelHref="/app/settings/sla" />
-              </form>
-
-              {/* Exemple calculé + édition du nom/conditions */}
-              <div className="flex flex-col gap-3">
+                {/* Exemple calculé — sous la grille de cibles, pleine largeur */}
                 <div
                   style={{
                     border: "1px solid var(--acc-b)",
@@ -429,6 +503,7 @@ export default async function SlaPage({
                     display: "flex",
                     flexDirection: "column",
                     gap: 9,
+                    marginTop: 4,
                   }}
                 >
                   <div
@@ -459,89 +534,8 @@ export default async function SlaPage({
                   </div>
                 </div>
 
-                <Drawer
-                  trigger={
-                    <span
-                      className="inline-flex items-center rounded-md border px-3 font-medium"
-                      style={{
-                        height: 32,
-                        fontSize: 12.5,
-                        borderColor: "var(--line)",
-                        background: "var(--panel)",
-                        color: "var(--ink)",
-                      }}
-                    >
-                      Modifier le nom et les conditions
-                    </span>
-                  }
-                  title={`Politique « ${selected.name} »`}
-                >
-                  <form action={savePolicyMeta} className="flex flex-col gap-4">
-                    <input type="hidden" name="policyId" value={selected.id} />
-                    <label className="flex flex-col gap-1.5">
-                      <span
-                        className="font-semibold"
-                        style={{ fontSize: 12.5, color: "var(--ink-2)" }}
-                      >
-                        Nom
-                      </span>
-                      <input
-                        name="name"
-                        required
-                        defaultValue={selected.name}
-                        style={{
-                          height: 36,
-                          padding: "0 11px",
-                          border: "1px solid var(--line)",
-                          borderRadius: 6,
-                          background: "var(--bg)",
-                          color: "var(--ink)",
-                          fontSize: 13.5,
-                        }}
-                      />
-                    </label>
-                    {selected.isDefault ? (
-                      <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                        La politique par défaut s'applique à tous les tickets restants : ses
-                        conditions ne sont pas modifiables, et elle ne peut pas être supprimée.
-                      </p>
-                    ) : (
-                      <ConditionsBuilder
-                        name="conditions"
-                        label="S'APPLIQUE SI — toutes ces conditions"
-                        initial={(selected.conditions as never[]) ?? []}
-                      />
-                    )}
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="submit"
-                        className="rounded-md px-3.5 font-semibold text-white"
-                        style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
-                      >
-                        Enregistrer
-                      </button>
-                      <span className="flex-1" />
-                    </div>
-                  </form>
-                  {!selected.isDefault && (
-                    <form action={deleteSlaPolicy} className="mt-2">
-                      <input type="hidden" name="policyId" value={selected.id} />
-                      <button
-                        className="rounded-md border px-3 font-medium"
-                        style={{
-                          height: 32,
-                          fontSize: 12.5,
-                          borderColor: "var(--dang)",
-                          color: "var(--dang)",
-                          background: "var(--panel)",
-                        }}
-                      >
-                        Supprimer cette politique
-                      </button>
-                    </form>
-                  )}
-                </Drawer>
-              </div>
+                <SaveBar saved={saved === "1"} cancelHref="/app/settings/sla" />
+              </form>
             </div>
           )}
         </div>
