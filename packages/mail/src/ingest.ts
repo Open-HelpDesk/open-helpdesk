@@ -41,6 +41,11 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
   const [loop] = await db.select().from(mailboxes).where(eq(mailboxes.address, fromAddress));
   if (loop) return { outcome: "rejected", reason: "loop" };
 
+  // Le premier email reçu prouve que le routage fonctionne (transfert vérifié — ST-03).
+  if (!mailbox.verified) {
+    await db.update(mailboxes).set({ verified: true }).where(eq(mailboxes.id, mailbox.id));
+  }
+
   // 3. Contact (+ organisation par domaine)
   let [contact] = await db
     .select()

@@ -2,10 +2,10 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { auditEvents, db, emailSettings, mailboxes, teams } from "@openhelpdesk/db";
+import { auditEvents, db, emailSettings, mailboxes, teams, ticketForms } from "@openhelpdesk/db";
 import { and, asc, eq, ne } from "drizzle-orm";
 import { decryptSecrets, encryptSecrets, secretHint } from "@openhelpdesk/crypto";
-import { sendTenantEmail, transportFor } from "@openhelpdesk/mail";
+import { sendTenantEmail, transportFor, verifyImapMailbox } from "@openhelpdesk/mail";
 import { requireManager } from "../guard";
 
 /** ST-03 — Ajout d'une adresse de réception (transfert ou IMAP, jamais « fournie »). */
@@ -236,6 +236,113 @@ export async function sendEmailTest() {
       })
       .where(eq(emailSettings.id, row.id));
   }
+
+  revalidatePath("/app/settings/email");
+}
+
+
+/* ---------- Adresses : création/édition unifiée (transfert + IMAP) ---------- */
+
+/** Crée ou met à jour une adresse de réception. Le mot de passe IMAP est chiffré. */
+export async function saveMailbox(formData: FormData) {
+  const { tenant } = await requireManager();
+  const mailboxId = String(formData.get("mailboxId") ?? "");
+  const address = String(formData.get("address") ?? "").trim().toLowerCase();
+  const kind = formData.get("kind") === "imap" ? ("imap" as const) : ("forwarding" as const);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) return;
+
+  const [existing] = mailboxId
+    ? await db
+        .select()
+        .from(mailboxes)
+        .where(and(eq(mailboxes.tenantId, tenant.id), eq(mailboxes.id, mailboxId)))
+    : [];
+  if (mailboxId && !existing) return;
+  if (existing?.kind === "provided") return; // l'adresse fournie ne se modifie pas ici
+
+  const teamRaw = String(formData.get("defaultTeamId") ?? "");
+  let defaultTeamId: string | null = null;
+  if (teamRaw) {
+    const [team] = await db
+      .select({ id: teams.id })
+      .from(teams)
+      .where(and(eq(teams.tenantId, tenant.id), eq(teams.id, teamRaw)));
+    defaultTeamId = team?.id ?? null;
+  }
+  const formRaw = String(formData.get("formId") ?? "");
+  let formId: string | null = null;
+  if (formRaw) {
+    const [form] = await db
+      .select({ id: ticketForms.id })
+      .from(ticketForms)
+      .where(and(eq(ticketForms.tenantId, tenant.id), eq(ticketForms.id, formRaw)));
+    formId = form?.id ?? null;
+  }
+
+  const imapPassword = String(formData.get("imapPassword") ?? "").trim();
+  const port = Number(formData.get("imapPort") ?? 0);
+  const imap =
+    kind === "imap"
+      ? {
+          imapHost: String(formData.get("imapHost") ?? "").trim() || null,
+          imapPort: Number.isFinite(port) && port > 0 && port < 65536 ? port : null,
+          imapSecure: formData.get("imapSecure") !== "false",
+          imapUser: String(formData.get("imapUser") ?? "").trim() || null,
+          encryptedSecrets: imapPassword
+            ? encryptSecrets({ password: imapPassword })
+            : (existing?.encryptedSecrets ?? null),
+        }
+      : {
+          imapHost: null,
+          imapPort: null,
+          imapSecure: true,
+          imapUser: null,
+          encryptedSecrets: null,
+        };
+
+  const values = {
+    address,
+    kind,
+    defaultTeamId,
+    formId,
+    ...imap,
+    // Un changement de configuration remet la vérification à zéro.
+    verified: false,
+    syncError: null,
+  };
+
+  if (existing) {
+    await db.update(mailboxes).set(values).where(eq(mailboxes.id, existing.id));
+  } else {
+    await db
+      .insert(mailboxes)
+      .values({ tenantId: tenant.id, ...values })
+      .onConflictDoNothing();
+  }
+
+  revalidatePath("/app/settings/email");
+  redirect("/app/settings/email?saved=1");
+}
+
+/** Bouton « Tester » d'une adresse IMAP : connexion réelle, statut mis à jour. */
+export async function verifyMailbox(formData: FormData) {
+  const { tenant } = await requireManager();
+  const mailboxId = String(formData.get("mailboxId") ?? "");
+  const [row] = await db
+    .select()
+    .from(mailboxes)
+    .where(and(eq(mailboxes.tenantId, tenant.id), eq(mailboxes.id, mailboxId)));
+  if (!row || row.kind !== "imap") return;
+
+  const result = await verifyImapMailbox(row);
+  await db
+    .update(mailboxes)
+    .set({
+      verified: result.ok,
+      lastSyncAt: new Date(),
+      syncError: result.ok ? null : result.detail.slice(0, 500),
+    })
+    .where(eq(mailboxes.id, row.id));
 
   revalidatePath("/app/settings/email");
 }

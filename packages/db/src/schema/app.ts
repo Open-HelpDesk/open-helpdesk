@@ -220,10 +220,21 @@ export const mailboxes = app.table(
     /** Une adresse appartient à exactement un tenant — clé de résolution à l'ingestion. */
     address: text("address").notNull(),
     kind: mailboxKind("kind").notNull().default("provided"),
+    /** Transfert : passe à vrai au premier email reçu. IMAP : à la première connexion. */
     verified: boolean("verified").notNull().default(false),
     senderName: text("sender_name"),
     signatureHtml: text("signature_html"),
     defaultTeamId: uuid("default_team_id").references(() => teams.id),
+    /** Formulaire appliqué aux tickets créés depuis cette adresse (ST-03). */
+    formId: uuid("form_id").references(() => ticketForms.id),
+    /** Connexion IMAP (kind = imap) — le mot de passe vit dans encryptedSecrets. */
+    imapHost: text("imap_host"),
+    imapPort: integer("imap_port"),
+    imapSecure: boolean("imap_secure").notNull().default(true),
+    imapUser: text("imap_user"),
+    encryptedSecrets: text("encrypted_secrets"),
+    lastSyncAt: timestamp("last_sync_at", { withTimezone: true }),
+    syncError: text("sync_error"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [uniqueIndex("mailboxes_address").on(t.address)],

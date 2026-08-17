@@ -2,37 +2,19 @@
 
 /**
  * ST-03 — Configuration du fournisseur d'envoi, par workspace.
- * Cartes de fournisseurs (SMTP / Resend / Brevo / Mailjet / aucun envoi), champs
- * adaptés au fournisseur choisi, préréglages SMTP du marché. Les secrets ne sont
- * jamais renvoyés au navigateur : le champ reste vide et un indice « ••••1a2b »
- * indique qu'un secret est déjà enregistré.
+ * Cartes-radio des fournisseurs (pattern du design system), champs adaptés au choix,
+ * préréglages SMTP du marché. Les secrets ne sont jamais renvoyés au navigateur :
+ * champ vide + indice « ••••1a2b » quand un secret est déjà enregistré.
  */
 import { useState } from "react";
-import { PROVIDER_META, SMTP_PRESETS, type MailProvider } from "@openhelpdesk/mail/provider-meta";
+import {
+  PROVIDER_META,
+  SMTP_PRESETS,
+  type MailProvider,
+} from "@openhelpdesk/mail/provider-meta";
+import { Field, Select, TextInput } from "@/components/settings-page";
 
 const PROVIDERS: MailProvider[] = ["smtp", "resend", "brevo", "mailjet", "console"];
-
-const fieldStyle = {
-  height: 36,
-  padding: "0 11px",
-  border: "1px solid var(--line)",
-  borderRadius: 6,
-  background: "var(--bg)",
-  color: "var(--ink)",
-  fontSize: 13.5,
-  width: "100%",
-} as const;
-
-function Label({ children, hint }: { children: React.ReactNode; hint?: string }) {
-  return (
-    <>
-      <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-        {children}
-      </span>
-      {hint && <span style={{ fontSize: 12, color: "var(--ink-3)" }}>{hint}</span>}
-    </>
-  );
-}
 
 export function ProviderForm({
   initial,
@@ -64,246 +46,59 @@ export function ProviderForm({
   }
 
   const meta = PROVIDER_META[provider];
+  const keptHint = (label: string) =>
+    secretHint ? `${label} enregistré : ${secretHint}. Laisser vide pour le conserver.` : undefined;
 
   return (
     <div className="flex flex-col gap-4">
       <input type="hidden" name="provider" value={provider} />
 
-      {/* Choix du fournisseur */}
-      <div>
-        <p className="mb-2 font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-          Fournisseur d'envoi
-        </p>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
-            gap: 10,
-          }}
-        >
-          {PROVIDERS.map((key) => {
-            const active = provider === key;
-            return (
-              <button
-                type="button"
-                key={key}
-                onClick={() => setProvider(key)}
-                className="text-left"
-                style={{
-                  padding: "13px 15px",
-                  borderRadius: 10,
-                  border: `1px solid ${active ? "var(--acc)" : "var(--line)"}`,
-                  background: active ? "var(--acc-t)" : "var(--panel)",
-                }}
-              >
-                <span
-                  className="block font-semibold"
-                  style={{ fontSize: 15, color: active ? "var(--acc)" : "var(--ink)" }}
-                >
-                  {PROVIDER_META[key].label}
-                </span>
-                <span className="block" style={{ fontSize: 13, color: "var(--ink-3)" }}>
-                  {PROVIDER_META[key].hint}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Identité d'expédition */}
+      {/* Cartes-radio des fournisseurs */}
       <div
+        role="radiogroup"
+        aria-label="Fournisseur d'envoi"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
-          gap: 13,
+          gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
+          gap: 10,
         }}
       >
-        <label className="flex flex-col gap-1.5">
-          <Label>Nom d'expéditeur</Label>
-          <input name="fromName" defaultValue={initial.fromName} placeholder="Acme Support" style={fieldStyle} />
-        </label>
-        <label className="flex flex-col gap-1.5">
-          <Label hint="Doit appartenir à un domaine que vous authentifiez ci-dessous.">
-            Adresse d'expédition
-          </Label>
-          <input
-            name="fromAddress"
-            type="email"
-            defaultValue={initial.fromAddress}
-            placeholder="support@votre-domaine.fr"
-            className="font-mono"
-            style={fieldStyle}
-          />
-        </label>
-        <label className="flex flex-col gap-1.5">
-          <Label hint="Laisser vide pour utiliser l'adresse d'expédition.">Répondre à</Label>
-          <input
-            name="replyTo"
-            type="email"
-            defaultValue={initial.replyTo}
-            className="font-mono"
-            style={fieldStyle}
-          />
-        </label>
+        {PROVIDERS.map((key) => {
+          const active = provider === key;
+          return (
+            <button
+              type="button"
+              role="radio"
+              aria-checked={active}
+              key={key}
+              onClick={() => setProvider(key)}
+              className="text-left"
+              style={{
+                padding: "13px 15px",
+                borderRadius: 10,
+                border: `1px solid ${active ? "var(--acc)" : "var(--line)"}`,
+                background: active ? "var(--acc-t)" : "var(--panel)",
+                cursor: "pointer",
+              }}
+            >
+              <span
+                className="block font-semibold"
+                style={{ fontSize: 14.5, color: active ? "var(--acc)" : "var(--ink)" }}
+              >
+                {PROVIDER_META[key].label}
+              </span>
+              <span
+                className="block"
+                style={{ fontSize: 12.5, color: "var(--ink-3)", textWrap: "pretty" }}
+              >
+                {PROVIDER_META[key].hint}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
-      {/* Champs propres au fournisseur */}
-      {provider === "smtp" && (
-        <div className="flex flex-col gap-3">
-          <label className="flex flex-col gap-1.5" style={{ maxWidth: 320 }}>
-            <Label hint="Remplit l'hôte et le port du relais choisi.">Préréglage</Label>
-            <select
-              defaultValue="custom"
-              onChange={(e) => applyPreset(e.target.value)}
-              style={fieldStyle}
-            >
-              {SMTP_PRESETS.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(220px,2fr) 110px minmax(160px,1fr)",
-              gap: 13,
-            }}
-          >
-            <label className="flex flex-col gap-1.5">
-              <Label>Hôte SMTP</Label>
-              <input
-                name="smtpHost"
-                value={host}
-                onChange={(e) => setHost(e.target.value)}
-                placeholder="smtp.votre-domaine.fr"
-                className="font-mono"
-                style={fieldStyle}
-              />
-            </label>
-            <label className="flex flex-col gap-1.5">
-              <Label>Port</Label>
-              <input
-                name="smtpPort"
-                value={port}
-                onChange={(e) => setPort(e.target.value)}
-                inputMode="numeric"
-                className="font-mono tabular-nums"
-                style={fieldStyle}
-              />
-            </label>
-            <label className="flex flex-col gap-1.5">
-              <Label>Chiffrement</Label>
-              <select
-                name="smtpSecure"
-                value={secure ? "true" : "false"}
-                onChange={(e) => setSecure(e.target.value === "true")}
-                style={fieldStyle}
-              >
-                <option value="false">STARTTLS (587, 25)</option>
-                <option value="true">TLS implicite (465)</option>
-              </select>
-            </label>
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
-              gap: 13,
-            }}
-          >
-            <label className="flex flex-col gap-1.5">
-              <Label hint="Laisser vide pour un relais sans authentification.">
-                Identifiant
-              </Label>
-              <input
-                name="smtpUser"
-                defaultValue={initial.smtpUser}
-                className="font-mono"
-                style={fieldStyle}
-              />
-            </label>
-            <label className="flex flex-col gap-1.5">
-              <Label
-                hint={
-                  secretHint
-                    ? `Enregistré : ${secretHint}. Laisser vide pour le conserver.`
-                    : undefined
-                }
-              >
-                Mot de passe SMTP
-              </Label>
-              <input
-                name="secret"
-                type="password"
-                autoComplete="new-password"
-                placeholder={secretHint ? "•••••••• (inchangé)" : ""}
-                style={fieldStyle}
-              />
-            </label>
-          </div>
-        </div>
-      )}
-
-      {(provider === "resend" || provider === "brevo") && (
-        <label className="flex flex-col gap-1.5" style={{ maxWidth: 480 }}>
-          <Label
-            hint={
-              secretHint
-                ? `Enregistrée : ${secretHint}. Laisser vide pour la conserver. ${meta.hint}`
-                : meta.hint
-            }
-          >
-            {meta.secretLabel}
-          </Label>
-          <input
-            name="secret"
-            type="password"
-            autoComplete="off"
-            placeholder={secretHint ? "•••••••• (inchangée)" : provider === "resend" ? "re_…" : "xkeysib-…"}
-            style={fieldStyle}
-          />
-        </label>
-      )}
-
-      {provider === "mailjet" && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
-            gap: 13,
-          }}
-        >
-          <label className="flex flex-col gap-1.5">
-            <Label hint={secretHint ? `Enregistrée : ${secretHint}.` : meta.hint}>
-              Clé d'API (publique)
-            </Label>
-            <input
-              name="secret"
-              type="password"
-              autoComplete="off"
-              placeholder={secretHint ? "•••••••• (inchangée)" : ""}
-              style={fieldStyle}
-            />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <Label hint="Laisser les deux champs vides conserve les clés enregistrées.">
-              Clé privée (secret)
-            </Label>
-            <input
-              name="secret2"
-              type="password"
-              autoComplete="off"
-              placeholder={secretHint ? "•••••••• (inchangée)" : ""}
-              style={fieldStyle}
-            />
-          </label>
-        </div>
-      )}
-
-      {provider === "console" && (
+      {provider === "console" ? (
         <p
           style={{
             fontSize: 13,
@@ -316,6 +111,150 @@ export function ProviderForm({
           Aucun email ne sera envoyé : les messages sont écrits dans les journaux du
           serveur. À réserver au développement.
         </p>
+      ) : (
+        <>
+          {/* Identité d'expédition */}
+          <div
+            className="grid gap-3"
+            style={{ gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))" }}
+          >
+            <Field label="Nom d'expéditeur">
+              <TextInput name="fromName" defaultValue={initial.fromName} placeholder="Acme Support" />
+            </Field>
+            <Field
+              label="Adresse d'expédition"
+              hint="Doit appartenir à un domaine authentifié (voir DNS ci-dessous)."
+            >
+              <TextInput
+                name="fromAddress"
+                type="email"
+                defaultValue={initial.fromAddress}
+                placeholder="support@votre-domaine.fr"
+                className="font-mono"
+              />
+            </Field>
+            <Field label="Répondre à" hint="Vide = adresse d'expédition.">
+              <TextInput
+                name="replyTo"
+                type="email"
+                defaultValue={initial.replyTo}
+                className="font-mono"
+              />
+            </Field>
+          </div>
+
+          {/* Champs propres au fournisseur */}
+          {provider === "smtp" && (
+            <div className="flex flex-col gap-3">
+              <Field
+                label="Préréglage"
+                hint="Remplit l'hôte, le port et le chiffrement du relais choisi."
+                style={{ maxWidth: 320 }}
+              >
+                <Select defaultValue="custom" onChange={(e) => applyPreset(e.target.value)}>
+                  {SMTP_PRESETS.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.label}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <div
+                className="grid gap-3"
+                style={{ gridTemplateColumns: "minmax(200px,2fr) 100px minmax(170px,1fr)" }}
+              >
+                <Field label="Hôte SMTP">
+                  <TextInput
+                    name="smtpHost"
+                    value={host}
+                    onChange={(e) => setHost(e.target.value)}
+                    placeholder="smtp.votre-domaine.fr"
+                    className="font-mono"
+                  />
+                </Field>
+                <Field label="Port">
+                  <TextInput
+                    name="smtpPort"
+                    value={port}
+                    onChange={(e) => setPort(e.target.value)}
+                    inputMode="numeric"
+                    className="font-mono tabular-nums"
+                  />
+                </Field>
+                <Field label="Chiffrement">
+                  <Select
+                    name="smtpSecure"
+                    value={secure ? "true" : "false"}
+                    onChange={(e) => setSecure(e.target.value === "true")}
+                  >
+                    <option value="false">STARTTLS (587, 25)</option>
+                    <option value="true">TLS implicite (465)</option>
+                  </Select>
+                </Field>
+              </div>
+              <div
+                className="grid gap-3"
+                style={{ gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))" }}
+              >
+                <Field label="Identifiant" hint="Vide = relais sans authentification.">
+                  <TextInput name="smtpUser" defaultValue={initial.smtpUser} className="font-mono" />
+                </Field>
+                <Field label="Mot de passe SMTP" hint={keptHint("Mot de passe")}>
+                  <TextInput
+                    name="secret"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder={secretHint ? "•••••••• (inchangé)" : ""}
+                  />
+                </Field>
+              </div>
+            </div>
+          )}
+
+          {(provider === "resend" || provider === "brevo") && (
+            <Field
+              label={meta.secretLabel ?? "Clé d'API"}
+              hint={keptHint("Clé") ?? meta.hint}
+              style={{ maxWidth: 460 }}
+            >
+              <TextInput
+                name="secret"
+                type="password"
+                autoComplete="off"
+                placeholder={
+                  secretHint ? "•••••••• (inchangée)" : provider === "resend" ? "re_…" : "xkeysib-…"
+                }
+                className="font-mono"
+              />
+            </Field>
+          )}
+
+          {provider === "mailjet" && (
+            <div
+              className="grid gap-3"
+              style={{ gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))" }}
+            >
+              <Field label="Clé d'API (publique)" hint={keptHint("Clé")}>
+                <TextInput
+                  name="secret"
+                  type="password"
+                  autoComplete="off"
+                  placeholder={secretHint ? "•••••••• (inchangée)" : ""}
+                  className="font-mono"
+                />
+              </Field>
+              <Field label="Clé privée (secret)" hint="Les deux champs vides = clés conservées.">
+                <TextInput
+                  name="secret2"
+                  type="password"
+                  autoComplete="off"
+                  placeholder={secretHint ? "•••••••• (inchangée)" : ""}
+                  className="font-mono"
+                />
+              </Field>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

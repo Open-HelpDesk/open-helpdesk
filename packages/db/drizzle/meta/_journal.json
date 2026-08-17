@@ -57,6 +57,13 @@
       "when": 1786997214092,
       "tag": "0007_fluffy_hannibal_king",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1786998318310,
+      "tag": "0008_flimsy_living_lightning",
+      "breakpoints": true
     }
   ]
 }

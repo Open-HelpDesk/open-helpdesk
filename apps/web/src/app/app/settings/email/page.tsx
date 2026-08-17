@@ -9,7 +9,6 @@ import {
   resolveMailConfig,
 } from "@openhelpdesk/mail";
 import { relativeFr } from "@/lib/format";
-import { ProviderForm } from "./provider-form";
 import {
   Card,
   Field,
@@ -17,25 +16,31 @@ import {
   PageHeader,
   PageShell,
   SaveBar,
-  Select,
   StatusPill,
   TextInput,
 } from "@/components/settings-page";
-import { Drawer } from "@/components/settings-overlays";
+import { CopyButton, Drawer } from "@/components/settings-overlays";
+import { MailboxForm } from "./mailbox-form";
+import { ProviderForm } from "./provider-form";
 import {
-  addMailbox,
   deleteMailbox,
-  recheckDns,
   saveEmailProvider,
   saveSending,
   sendEmailTest,
   testEmailConnection,
+  verifyMailbox,
 } from "./actions";
 
-const ADDRESS_GRID = "minmax(240px,1.4fr) 130px 140px 160px 140px";
-const DNS_GRID = "96px 76px 150px 1fr 110px";
+const ADDRESS_GRID = "minmax(220px,1.3fr) 110px 150px 140px 130px 120px";
+const DNS_GRID = "96px 76px 170px 1fr 130px";
+const SEND_GRID = "minmax(190px,1fr) minmax(190px,1.4fr) 130px 100px 90px";
 const REJECT_GRID = "minmax(220px,1fr) minmax(200px,1.2fr) 170px 110px";
-const SEND_GRID = "minmax(200px,1fr) minmax(200px,1.4fr) 130px 110px 100px";
+
+const KIND_LABELS: Record<string, string> = {
+  provided: "Fournie",
+  forwarding: "Transfert",
+  imap: "IMAP",
+};
 
 const KIND_EMAIL_LABELS: Record<string, string> = {
   ticket_reply: "Réponse ticket",
@@ -47,26 +52,47 @@ const KIND_EMAIL_LABELS: Record<string, string> = {
   other: "Autre",
 };
 
-const KIND_LABELS: Record<string, string> = {
-  provided: "Fournie",
-  forwarding: "Transfert",
-  imap: "IMAP",
-};
+/** Statut d'une adresse de réception, au format pilule du design system. */
+function mailboxStatus(m: typeof mailboxes.$inferSelect) {
+  if (m.kind === "provided") return <StatusPill tone="ok">Vérifiée</StatusPill>;
+  if (m.kind === "forwarding") {
+    return m.verified ? (
+      <StatusPill tone="ok">Vérifiée</StatusPill>
+    ) : (
+      <span title="Passe en « Vérifiée » au premier email reçu.">
+        <StatusPill tone="wait">En attente</StatusPill>
+      </span>
+    );
+  }
+  if (m.syncError) {
+    return (
+      <span title={m.syncError}>
+        <StatusPill tone="dang">Erreur</StatusPill>
+      </span>
+    );
+  }
+  return m.verified ? (
+    <StatusPill tone="ok">Connectée</StatusPill>
+  ) : (
+    <StatusPill tone="wait">À tester</StatusPill>
+  );
+}
 
 /**
- * ST-03 — Canal email (1040 px) : adresses de réception réelles, domaine d'envoi
- * (tableau DNS informatif), envoi (expéditeur + signature sur la mailbox principale),
- * journal des emails rejetés (état vide honnête).
+ * ST-03 — Canal email (1040 px), deux onglets :
+ * Réception (adresses transfert/IMAP, webhooks fournisseurs, emails rejetés) et
+ * Envoi (fournisseur par workspace, tests, DNS générés, journal des envois).
  */
 export default async function EmailSettingsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ tab?: string; saved?: string }>;
 }) {
   const { tenant } = await requireAgent();
-  const { saved } = await searchParams;
+  const { tab, saved } = await searchParams;
+  const activeTab = tab === "envoi" ? "envoi" : "reception";
 
-  const [boxes, teamRows, forms] = await Promise.all([
+  const [boxes, teamRows, forms, settingsRow, resolved, deliveries] = await Promise.all([
     db
       .select()
       .from(mailboxes)
@@ -82,16 +108,6 @@ export default async function EmailSettingsPage({
       .from(ticketForms)
       .where(eq(ticketForms.tenantId, tenant.id))
       .orderBy(asc(ticketForms.position)),
-  ]);
-
-  const teamNameById = new Map(teamRows.map((t) => [t.id, t.name]));
-  const providedAddress =
-    boxes.find((m) => m.kind === "provided")?.address ??
-    `support@${tenant.slug}.open-helpdesk.com`;
-  const principal = boxes.find((m) => m.kind === "provided") ?? boxes[0];
-
-  // Configuration d'envoi du workspace + repli d'instance effectivement utilisé.
-  const [settingsRow, resolved, deliveries] = await Promise.all([
     getEmailSettings(tenant.id),
     resolveMailConfig(tenant.id),
     db
@@ -102,6 +118,13 @@ export default async function EmailSettingsPage({
       .limit(8),
   ]);
 
+  const teamNameById = new Map(teamRows.map((t) => [t.id, t.name]));
+  const formNameById = new Map(forms.map((f) => [f.id, f.name]));
+  const providedAddress =
+    boxes.find((m) => m.kind === "provided")?.address ??
+    `support@${tenant.slug}.open-helpdesk.com`;
+  const principal = boxes.find((m) => m.kind === "provided") ?? boxes[0];
+
   const sendingDomain = domainOf(settingsRow?.fromAddress ?? resolved.from);
   const dnsRecords = dnsRecordsFor({
     provider: resolved.provider,
@@ -109,421 +132,539 @@ export default async function EmailSettingsPage({
     smtpHost: settingsRow?.smtpHost,
   });
 
+  // Webhooks de réception : URL affichée avec le secret masqué, copiée avec le vrai.
+  const baseDomain = process.env.BASE_DOMAIN ?? "localhost:3000";
+  const protocol = baseDomain.includes("localhost") ? "http" : "https";
+  const ingressBase = `${protocol}://${tenant.slug}.${baseDomain}/api/ingress`;
+  const ingressSecret = process.env.MAIL_INGRESS_SECRET ?? "dev-ingress-secret";
+  const webhooks = [
+    {
+      name: "Brevo — Inbound parsing",
+      hint: "Brevo → Transactionnel → Paramètres → Inbound parsing : collez cette URL.",
+      path: "brevo",
+    },
+    {
+      name: "Mailjet — Parse API",
+      hint: "Mailjet → Email API → Parse API : créez une route vers cette URL.",
+      path: "mailjet",
+    },
+    {
+      name: "Webhook générique (JSON normalisé)",
+      hint: "Pour vos intégrations : POST avec l'en-tête x-ingress-secret.",
+      path: "email",
+    },
+  ];
+
+  const tabs = [
+    {
+      label: "Réception",
+      href: "/app/settings/email",
+      active: activeTab === "reception",
+    },
+    {
+      label: "Envoi",
+      href: "/app/settings/email?tab=envoi",
+      active: activeTab === "envoi",
+    },
+  ];
+
   return (
     <PageShell maxWidth={1040}>
       <PageHeader
         code="ST-03"
         title="Canal email"
         subtitle="Adresses de réception, délivrabilité et journal des emails rejetés."
+        tabs={tabs}
         actions={
-          <Drawer
-            title="Ajouter une adresse"
-            trigger={<>Ajouter une adresse</>}
-            triggerClassName="rounded-md px-3.5 font-semibold text-white"
-            triggerStyle={{ height: 32, fontSize: 13, background: "var(--acc)" }}
-          >
-            <form action={addMailbox} className="flex h-full flex-col gap-4">
-              <Field label="Adresse">
-                <TextInput
-                  name="address"
-                  type="email"
-                  required
-                  placeholder="support@votre-domaine.fr"
-                />
-              </Field>
-              <Field label="Méthode">
-                <Select name="kind" defaultValue="forwarding">
-                  <option value="forwarding">Transfert vers l'adresse fournie</option>
-                  <option value="imap">Connexion IMAP</option>
-                </Select>
-              </Field>
-              <Field
-                label="Adresse de transfert"
-                hint="Configurez cette redirection chez votre fournisseur, puis envoyez un email de test."
-              >
-                <TextInput readOnly value={providedAddress} className="font-mono" />
-              </Field>
-              <Field label="Formulaire cible">
-                <Select name="formId" defaultValue="">
-                  <option value="">Formulaire par défaut</option>
-                  {forms.map((f) => (
-                    <option key={f.id} value={f.id}>
-                      {f.name}
-                    </option>
-                  ))}
-                </Select>
-              </Field>
-              <Field label="Équipe par défaut">
-                <Select name="defaultTeamId" defaultValue="">
-                  <option value="">Aucune</option>
-                  {teamRows.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.name}
-                    </option>
-                  ))}
-                </Select>
-              </Field>
-              <div className="mt-auto flex justify-end border-t pt-3" style={{ borderColor: "var(--line)" }}>
-                <button
-                  type="submit"
-                  className="rounded-md px-3.5 font-semibold text-white"
-                  style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
-                >
-                  Ajouter
-                </button>
-              </div>
-            </form>
-          </Drawer>
+          activeTab === "reception" ? (
+            <Drawer
+              title="Ajouter une adresse"
+              trigger={<>Ajouter une adresse</>}
+              triggerClassName="rounded-md px-3.5 font-semibold text-white"
+              triggerStyle={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+            >
+              <MailboxForm
+                forwardTarget={providedAddress}
+                teams={teamRows}
+                forms={forms}
+                secretHint={null}
+              />
+            </Drawer>
+          ) : undefined
         }
       />
 
-      {saved === "1" && <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>}
-
-      {/* Adresses */}
-      <div
-        className="overflow-x-auto rounded-[10px] border"
-        style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-      >
-        <div style={{ minWidth: 840 }}>
-          <GridHead
-            template={ADDRESS_GRID}
-            columns={["Adresse", "Type", "Vérification", "Formulaire", "Équipe"]}
-          />
-          {boxes.length === 0 && (
-            <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-              Aucune adresse. L'adresse fournie {providedAddress} sera créée au premier envoi.
-            </p>
-          )}
-          {boxes.map((m) => (
-            <div
-              key={m.id}
-              className="grid items-center gap-3 border-t"
-              style={{
-                gridTemplateColumns: ADDRESS_GRID,
-                padding: "10px 14px",
-                borderColor: "var(--line-2)",
-              }}
-            >
-              <span className="flex min-w-0 items-center gap-2">
-                <span className="truncate font-mono" style={{ fontSize: 13, color: "var(--ink)" }}>
-                  {m.address}
-                </span>
-                {m.kind !== "provided" && (
-                  <form action={deleteMailbox} className="inline">
-                    <input type="hidden" name="mailboxId" value={m.id} />
-                    <button
-                      title="Supprimer l'adresse"
-                      style={{ fontSize: 12, color: "var(--ink-3)" }}
-                    >
-                      ✕
-                    </button>
-                  </form>
-                )}
-              </span>
-              <span style={{ fontSize: 12.5, color: "var(--ink)" }}>{KIND_LABELS[m.kind]}</span>
-              <span>
-                {m.verified ? (
-                  <StatusPill tone="ok">Vérifiée</StatusPill>
-                ) : (
-                  <StatusPill tone="wait">En attente</StatusPill>
-                )}
-              </span>
-              <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>—</span>
-              <span
-                style={{
-                  fontSize: 12.5,
-                  color: m.defaultTeamId ? "var(--ink)" : "var(--ink-3)",
-                }}
-              >
-                {m.defaultTeamId ? (teamNameById.get(m.defaultTeamId) ?? "—") : "—"}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Envoi des emails — fournisseur du workspace */}
-      <Card
-        title="Envoi des emails"
-        action={
-          <span className="flex items-center gap-2">
-            {settingsRow?.testStatus === "ok" ? (
-              <StatusPill tone="ok">Testé avec succès</StatusPill>
-            ) : settingsRow?.testStatus === "failed" ? (
-              <StatusPill tone="dang">Test en échec</StatusPill>
-            ) : resolved.provider === "console" ? (
-              <StatusPill tone="wait">Aucun envoi</StatusPill>
-            ) : (
-              <StatusPill tone="closed">Non testé</StatusPill>
-            )}
-          </span>
-        }
-      >
-        <div className="flex flex-col gap-4">
-          {/* Ce qui est réellement utilisé aujourd'hui */}
-          <p
-            style={{
-              fontSize: 12.5,
-              color: resolved.provider === "console" ? "var(--wait)" : "var(--ink-2)",
-              background: resolved.provider === "console" ? "var(--wait-t)" : "var(--sunk)",
-              borderRadius: 8,
-              padding: "10px 13px",
-            }}
-          >
-            {resolved.source === "tenant" && (
-              <>
-                Ce workspace envoie via <strong>{PROVIDER_META[resolved.provider].label}</strong>{" "}
-                depuis <span className="font-mono">{resolved.from}</span>.
-              </>
-            )}
-            {resolved.source === "instance" && (
-              <>
-                Aucun fournisseur propre à ce workspace : envoi via la configuration de
-                l'instance (<strong>{PROVIDER_META[resolved.provider].label}</strong>) depuis{" "}
-                <span className="font-mono">{resolved.from}</span>.
-              </>
-            )}
-            {resolved.source === "default" && (
-              <>
-                Aucun envoi réel : les emails sont écrits dans les journaux du serveur.
-                Choisissez un fournisseur ci-dessous pour que vos clients reçoivent
-                vraiment les réponses.
-              </>
-            )}
-          </p>
-
-          <form action={saveEmailProvider} className="flex flex-col gap-4">
-            <ProviderForm
-              secretHint={settingsRow?.secretHint ?? null}
-              initial={{
-                provider: settingsRow?.provider ?? "console",
-                fromName: settingsRow?.fromName ?? principal?.senderName ?? "",
-                fromAddress: settingsRow?.fromAddress ?? "",
-                replyTo: settingsRow?.replyTo ?? "",
-                smtpHost: settingsRow?.smtpHost ?? "",
-                smtpPort: settingsRow?.smtpPort ?? 587,
-                smtpSecure: settingsRow?.smtpSecure ?? false,
-                smtpUser: settingsRow?.smtpUser ?? "",
-              }}
-            />
-            <SaveBar saved={saved === "1"} cancelHref="/app/settings/email" />
-          </form>
-
-          {/* Tests */}
-          <div
-            className="flex flex-wrap items-center gap-2 border-t pt-3"
-            style={{ borderColor: "var(--line-2)" }}
-          >
-            <form action={testEmailConnection}>
-              <button
-                className="rounded-md border px-3 font-medium"
-                style={{
-                  height: 32,
-                  fontSize: 12.5,
-                  borderColor: "var(--line)",
-                  background: "var(--panel)",
-                  color: "var(--ink)",
-                }}
-              >
-                Tester la connexion
-              </button>
-            </form>
-            <form action={sendEmailTest}>
-              <button
-                className="rounded-md px-3.5 font-semibold text-white"
-                style={{ height: 32, fontSize: 12.5, background: "var(--acc)" }}
-              >
-                Envoyer un email de test
-              </button>
-            </form>
-            {settingsRow?.lastTestedAt && (
-              <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                Dernier test {relativeFr(settingsRow.lastTestedAt)}
-              </span>
-            )}
-          </div>
-
-          {settingsRow?.testStatus !== "untested" && settingsRow?.lastTestedAt && (
-            <p
-              style={{
-                fontSize: 13,
-                fontWeight: 500,
-                borderRadius: 8,
-                padding: "11px 13px",
-                background: settingsRow.testStatus === "ok" ? "var(--ok-t)" : "var(--dang-t)",
-                color: settingsRow.testStatus === "ok" ? "var(--ok)" : "var(--dang)",
-              }}
-            >
-              {settingsRow.testStatus === "ok"
-                ? "Configuration valide — l'envoi fonctionne pour ce workspace."
-                : settingsRow.testError}
-            </p>
-          )}
-        </div>
-      </Card>
-
-      {/* Signature appliquée aux réponses */}
-      <form action={saveSending} className="flex flex-col" style={{ gap: 22 }}>
-        <Card title="Signature des réponses">
-          <div className="flex flex-col gap-4">
-            <Field label="Nom affiché sur l'adresse de réception" hint={providedAddress}>
-              <TextInput
-                name="senderName"
-                defaultValue={principal?.senderName ?? ""}
-                placeholder={`${tenant.name} Support`}
-              />
-            </Field>
-            <Field label="Signature globale">
-              <textarea
-                name="signatureHtml"
-                rows={3}
-                defaultValue={principal?.signatureHtml ?? ""}
-                placeholder={`— L'équipe ${tenant.name} Support`}
-                className="rounded-md border px-2.5 py-1.5 text-sm"
-                style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
-              />
-            </Field>
-          </div>
-        </Card>
-        <SaveBar saved={saved === "2"} cancelHref="/app/settings/email" />
-      </form>
-
-      {/* Domaine d'envoi — enregistrements générés pour le domaine configuré */}
-      <Card title="Authentifier votre domaine d'envoi">
-        {!sendingDomain ? (
-          <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-            Renseignez une adresse d'expédition ci-dessus pour obtenir les enregistrements
-            DNS à publier.
-          </p>
-        ) : (
-          <>
-            <p className="mb-3" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-              À publier sur la zone DNS de <span className="font-mono">{sendingDomain}</span> pour
-              que vos emails ne partent pas en indésirable.
-            </p>
+      {activeTab === "reception" ? (
+        <>
+          {/* Adresses de réception */}
+          <Card title="Adresses de réception" style={{ padding: 0 }}>
             <div className="overflow-x-auto">
-              <div style={{ minWidth: 720 }}>
-                <GridHead template={DNS_GRID} columns={["Enreg.", "Type", "Hôte", "Valeur", ""]} />
-                {dnsRecords.map((r) => (
+              <div style={{ minWidth: 900 }}>
+                <GridHead
+                  template={ADDRESS_GRID}
+                  columns={["Adresse", "Méthode", "Statut", "Formulaire", "Équipe", ""]}
+                />
+                {boxes.length === 0 && (
+                  <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
+                    Aucune adresse. L'adresse fournie {providedAddress} sera créée au premier envoi.
+                  </p>
+                )}
+                {boxes.map((m) => (
                   <div
-                    key={r.label}
+                    key={m.id}
                     className="grid items-center gap-3 border-t"
                     style={{
-                      gridTemplateColumns: DNS_GRID,
-                      padding: "9px 14px",
+                      gridTemplateColumns: ADDRESS_GRID,
+                      padding: "10px 14px",
                       borderColor: "var(--line-2)",
                     }}
                   >
-                    <span className="font-medium" style={{ fontSize: 12.5, color: "var(--ink)" }}>
-                      {r.label}
+                    <span className="min-w-0">
+                      <span
+                        className="block truncate font-mono"
+                        style={{ fontSize: 13, color: "var(--ink)" }}
+                      >
+                        {m.address}
+                      </span>
+                      {m.kind === "imap" && m.lastSyncAt && (
+                        <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
+                          relevée {relativeFr(m.lastSyncAt)}
+                        </span>
+                      )}
                     </span>
-                    <span className="font-mono" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                      {r.type}
+                    <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                      {KIND_LABELS[m.kind]}
                     </span>
-                    <span className="truncate font-mono" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                      {r.host}
+                    <span>{mailboxStatus(m)}</span>
+                    <span className="truncate" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                      {m.formId ? (formNameById.get(m.formId) ?? "—") : "Par défaut"}
                     </span>
-                    <span className="truncate font-mono" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                      {r.value || "—"}
+                    <span className="truncate" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                      {m.defaultTeamId ? (teamNameById.get(m.defaultTeamId) ?? "—") : "—"}
                     </span>
-                    <span className="text-right">
-                      {r.fromProvider ? (
-                        <StatusPill tone="wait">Chez le fournisseur</StatusPill>
-                      ) : (
-                        <StatusPill tone="closed">À publier</StatusPill>
+                    <span className="flex items-center justify-end gap-1.5">
+                      {m.kind === "imap" && (
+                        <form action={verifyMailbox}>
+                          <input type="hidden" name="mailboxId" value={m.id} />
+                          <button
+                            className="rounded-md border px-2 font-medium"
+                            style={{
+                              height: 26,
+                              fontSize: 12,
+                              borderColor: "var(--line)",
+                              background: "var(--panel)",
+                              color: "var(--ink)",
+                            }}
+                          >
+                            Tester
+                          </button>
+                        </form>
+                      )}
+                      {m.kind !== "provided" && (
+                        <>
+                          <Drawer
+                            title={`Modifier ${m.address}`}
+                            trigger={<>Modifier</>}
+                            triggerClassName="rounded-md border px-2 font-medium"
+                            triggerStyle={{
+                              height: 26,
+                              fontSize: 12,
+                              borderColor: "var(--line)",
+                              background: "var(--panel)",
+                              color: "var(--ink)",
+                            }}
+                          >
+                            <MailboxForm
+                              mailbox={{
+                                id: m.id,
+                                address: m.address,
+                                kind: m.kind as "forwarding" | "imap",
+                                formId: m.formId,
+                                defaultTeamId: m.defaultTeamId,
+                                imapHost: m.imapHost,
+                                imapPort: m.imapPort,
+                                imapSecure: m.imapSecure,
+                                imapUser: m.imapUser,
+                              }}
+                              forwardTarget={providedAddress}
+                              teams={teamRows}
+                              forms={forms}
+                              secretHint={m.encryptedSecrets ? "••••••••" : null}
+                            />
+                          </Drawer>
+                          <form action={deleteMailbox}>
+                            <input type="hidden" name="mailboxId" value={m.id} />
+                            <button
+                              title="Supprimer l'adresse"
+                              className="rounded-md border px-2 font-medium"
+                              style={{
+                                height: 26,
+                                fontSize: 12,
+                                borderColor: "var(--dang)",
+                                color: "var(--dang)",
+                                background: "var(--panel)",
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </form>
+                        </>
                       )}
                     </span>
                   </div>
                 ))}
               </div>
             </div>
-            <ul className="mt-3 flex flex-col gap-1 border-t pt-3" style={{ borderColor: "var(--line-2)" }}>
-              {dnsRecords
-                .filter((r) => r.hint)
-                .map((r) => (
-                  <li key={r.label} style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                    <strong>{r.label}</strong> — {r.hint}
-                  </li>
-                ))}
-            </ul>
-          </>
-        )}
-      </Card>
+          </Card>
 
-      {/* Journal d'envoi */}
-      <Card title="Derniers envois">
-        {deliveries.length === 0 ? (
-          <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-            Aucun email envoyé depuis ce workspace pour l'instant.
-          </p>
-        ) : (
-          <div className="overflow-x-auto">
-            <div style={{ minWidth: 720 }}>
-              <GridHead
-                template={SEND_GRID}
-                columns={["Destinataire", "Sujet", "Nature", "Statut", "Date"]}
-              />
-              {deliveries.map((d) => (
+          {/* Webhooks de réception fournisseurs */}
+          <Card title="Recevoir via un fournisseur">
+            <p className="mb-3" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+              Si votre domaine est géré par Brevo ou Mailjet, leur webhook de réception
+              transforme chaque email entrant en ticket — sans transfert ni IMAP.
+            </p>
+            <div className="flex flex-col">
+              {webhooks.map((w, index) => (
                 <div
-                  key={d.id}
-                  className="grid items-center gap-3 border-t"
+                  key={w.path}
+                  className="flex flex-wrap items-center gap-3 border-t py-2.5"
                   style={{
-                    gridTemplateColumns: SEND_GRID,
-                    padding: "9px 14px",
-                    borderColor: "var(--line-2)",
+                    borderColor: index === 0 ? "transparent" : "var(--line-2)",
                   }}
                 >
-                  <span className="truncate font-mono" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                    {d.toAddress}
-                  </span>
-                  <span className="truncate" style={{ fontSize: 12.5, color: "var(--ink)" }}>
-                    {d.subject}
-                  </span>
-                  <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                    {KIND_EMAIL_LABELS[d.kind] ?? d.kind}
-                  </span>
-                  <span title={d.error ?? undefined}>
-                    {d.status === "sent" ? (
-                      <StatusPill tone="ok">Envoyé</StatusPill>
-                    ) : d.status === "failed" ? (
-                      <StatusPill tone="dang">Échec</StatusPill>
-                    ) : (
-                      <StatusPill tone="wait">En file</StatusPill>
-                    )}
-                  </span>
-                  <span
-                    className="text-right tabular-nums"
-                    style={{ fontSize: 12, color: "var(--ink-3)" }}
+                  <div style={{ minWidth: 230 }}>
+                    <p className="font-medium" style={{ fontSize: 13, color: "var(--ink)" }}>
+                      {w.name}
+                    </p>
+                    <p style={{ fontSize: 12, color: "var(--ink-3)" }}>{w.hint}</p>
+                  </div>
+                  <code
+                    className="min-w-0 flex-1 truncate rounded-md border px-2.5 py-1.5 font-mono"
+                    style={{
+                      fontSize: 12,
+                      borderColor: "var(--line)",
+                      background: "var(--sunk)",
+                      color: "var(--ink-2)",
+                    }}
                   >
-                    {relativeFr(d.createdAt)}
-                  </span>
+                    {ingressBase}/{w.path}?secret=••••••••
+                  </code>
+                  <CopyButton
+                    text={`${ingressBase}/${w.path}?secret=${ingressSecret}`}
+                    label="Copier l'URL"
+                  />
                 </div>
               ))}
             </div>
-          </div>
-        )}
-        {deliveries.some((d) => d.status === "failed") && (
-          <p className="mt-3" style={{ fontSize: 12, color: "var(--dang)" }}>
-            Les envois en échec sont réessayés automatiquement par le worker (5 tentatives,
-            délai croissant). Le motif exact s'affiche au survol du statut.
-          </p>
-        )}
-      </Card>
+          </Card>
 
-      {/* Emails rejetés */}
-      <Card title="Emails rejetés">
-        <div className="overflow-x-auto">
-          <div style={{ minWidth: 700 }}>
-            <GridHead
-              template={REJECT_GRID}
-              columns={["Expéditeur", "Sujet", "Motif", "Date"]}
-            />
-            <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-              Aucun email rejeté sur les 30 derniers jours.
-            </p>
-          </div>
-        </div>
-      </Card>
+          {/* Emails rejetés */}
+          <Card title="Emails rejetés">
+            <div className="overflow-x-auto">
+              <div style={{ minWidth: 700 }}>
+                <GridHead
+                  template={REJECT_GRID}
+                  columns={["Expéditeur", "Sujet", "Motif", "Date"]}
+                />
+                <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
+                  Aucun email rejeté sur les 30 derniers jours.
+                </p>
+              </div>
+            </div>
+          </Card>
+        </>
+      ) : (
+        <>
+          {/* Fournisseur d'envoi */}
+          <Card
+            title="Fournisseur d'envoi"
+            action={
+              settingsRow?.testStatus === "ok" ? (
+                <StatusPill tone="ok">Testé avec succès</StatusPill>
+              ) : settingsRow?.testStatus === "failed" ? (
+                <StatusPill tone="dang">Test en échec</StatusPill>
+              ) : resolved.provider === "console" ? (
+                <StatusPill tone="wait">Aucun envoi</StatusPill>
+              ) : (
+                <StatusPill tone="closed">Non testé</StatusPill>
+              )
+            }
+          >
+            <div className="flex flex-col gap-4">
+              <p
+                style={{
+                  fontSize: 12.5,
+                  color: resolved.provider === "console" ? "var(--wait)" : "var(--ink-2)",
+                  background: resolved.provider === "console" ? "var(--wait-t)" : "var(--sunk)",
+                  borderRadius: 8,
+                  padding: "10px 13px",
+                }}
+              >
+                {resolved.source === "tenant" && (
+                  <>
+                    Ce workspace envoie via{" "}
+                    <strong>{PROVIDER_META[resolved.provider].label}</strong> depuis{" "}
+                    <span className="font-mono">{resolved.from}</span>.
+                  </>
+                )}
+                {resolved.source === "instance" && (
+                  <>
+                    Aucun fournisseur propre à ce workspace : envoi via la configuration de
+                    l'instance (<strong>{PROVIDER_META[resolved.provider].label}</strong>) depuis{" "}
+                    <span className="font-mono">{resolved.from}</span>.
+                  </>
+                )}
+                {resolved.source === "default" && (
+                  <>
+                    Aucun envoi réel : les emails sont écrits dans les journaux du serveur.
+                    Choisissez un fournisseur ci-dessous pour que vos clients reçoivent
+                    vraiment les réponses.
+                  </>
+                )}
+              </p>
+
+              <form action={saveEmailProvider} className="flex flex-col gap-4">
+                <ProviderForm
+                  secretHint={settingsRow?.secretHint ?? null}
+                  initial={{
+                    provider: settingsRow?.provider ?? "console",
+                    fromName: settingsRow?.fromName ?? principal?.senderName ?? "",
+                    fromAddress: settingsRow?.fromAddress ?? "",
+                    replyTo: settingsRow?.replyTo ?? "",
+                    smtpHost: settingsRow?.smtpHost ?? "",
+                    smtpPort: settingsRow?.smtpPort ?? 587,
+                    smtpSecure: settingsRow?.smtpSecure ?? false,
+                    smtpUser: settingsRow?.smtpUser ?? "",
+                  }}
+                />
+                <SaveBar saved={saved === "1"} cancelHref="/app/settings/email?tab=envoi" />
+              </form>
+
+              <div
+                className="flex flex-wrap items-center gap-2 border-t pt-3"
+                style={{ borderColor: "var(--line-2)" }}
+              >
+                <form action={testEmailConnection}>
+                  <button
+                    className="rounded-md border px-3 font-medium"
+                    style={{
+                      height: 32,
+                      fontSize: 12.5,
+                      borderColor: "var(--line)",
+                      background: "var(--panel)",
+                      color: "var(--ink)",
+                    }}
+                  >
+                    Tester la connexion
+                  </button>
+                </form>
+                <form action={sendEmailTest}>
+                  <button
+                    className="rounded-md px-3.5 font-semibold text-white"
+                    style={{ height: 32, fontSize: 12.5, background: "var(--acc)" }}
+                  >
+                    Envoyer un email de test
+                  </button>
+                </form>
+                {settingsRow?.lastTestedAt && (
+                  <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
+                    Dernier test {relativeFr(settingsRow.lastTestedAt)}
+                  </span>
+                )}
+              </div>
+
+              {settingsRow?.testStatus !== "untested" && settingsRow?.lastTestedAt && (
+                <p
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 500,
+                    borderRadius: 8,
+                    padding: "11px 13px",
+                    background:
+                      settingsRow.testStatus === "ok" ? "var(--ok-t)" : "var(--dang-t)",
+                    color: settingsRow.testStatus === "ok" ? "var(--ok)" : "var(--dang)",
+                  }}
+                >
+                  {settingsRow.testStatus === "ok"
+                    ? "Configuration valide — l'envoi fonctionne pour ce workspace."
+                    : settingsRow.testError}
+                </p>
+              )}
+            </div>
+          </Card>
+
+          {/* Signature */}
+          <form action={saveSending} className="flex flex-col" style={{ gap: 22 }}>
+            <Card title="Signature des réponses">
+              <div className="flex flex-col gap-4">
+                <Field label="Nom affiché sur l'adresse de réception" hint={providedAddress}>
+                  <TextInput
+                    name="senderName"
+                    defaultValue={principal?.senderName ?? ""}
+                    placeholder={`${tenant.name} Support`}
+                  />
+                </Field>
+                <Field label="Signature globale">
+                  <textarea
+                    name="signatureHtml"
+                    rows={3}
+                    defaultValue={principal?.signatureHtml ?? ""}
+                    placeholder={`— L'équipe ${tenant.name} Support`}
+                    className="rounded-md border px-2.5 py-1.5 text-sm"
+                    style={{
+                      borderColor: "var(--line)",
+                      background: "var(--bg)",
+                      color: "var(--ink)",
+                    }}
+                  />
+                </Field>
+              </div>
+            </Card>
+            <SaveBar saved={saved === "2"} cancelHref="/app/settings/email?tab=envoi" />
+          </form>
+
+          {/* DNS */}
+          <Card title="Authentifier votre domaine d'envoi">
+            {!sendingDomain ? (
+              <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
+                Renseignez une adresse d'expédition ci-dessus pour obtenir les
+                enregistrements DNS à publier.
+              </p>
+            ) : (
+              <>
+                <p className="mb-3" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                  À publier sur la zone DNS de{" "}
+                  <span className="font-mono">{sendingDomain}</span> pour que vos emails ne
+                  partent pas en indésirable.
+                </p>
+                <div className="overflow-x-auto">
+                  <div style={{ minWidth: 720 }}>
+                    <GridHead
+                      template={DNS_GRID}
+                      columns={["Enreg.", "Type", "Hôte", "Valeur", ""]}
+                    />
+                    {dnsRecords.map((r) => (
+                      <div
+                        key={r.label}
+                        className="grid items-center gap-3 border-t"
+                        style={{
+                          gridTemplateColumns: DNS_GRID,
+                          padding: "9px 14px",
+                          borderColor: "var(--line-2)",
+                        }}
+                      >
+                        <span
+                          className="font-medium"
+                          style={{ fontSize: 12.5, color: "var(--ink)" }}
+                        >
+                          {r.label}
+                        </span>
+                        <span className="font-mono" style={{ fontSize: 12, color: "var(--ink-2)" }}>
+                          {r.type}
+                        </span>
+                        <span
+                          className="truncate font-mono"
+                          style={{ fontSize: 12, color: "var(--ink-2)" }}
+                        >
+                          {r.host}
+                        </span>
+                        <span
+                          className="truncate font-mono"
+                          style={{ fontSize: 12, color: "var(--ink-2)" }}
+                        >
+                          {r.value || "—"}
+                        </span>
+                        <span className="text-right">
+                          {r.fromProvider ? (
+                            <StatusPill tone="wait">Chez le fournisseur</StatusPill>
+                          ) : (
+                            <StatusPill tone="closed">À publier</StatusPill>
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <ul
+                  className="mt-3 flex flex-col gap-1 border-t pt-3"
+                  style={{ borderColor: "var(--line-2)" }}
+                >
+                  {dnsRecords
+                    .filter((r) => r.hint)
+                    .map((r) => (
+                      <li key={r.label} style={{ fontSize: 12, color: "var(--ink-3)" }}>
+                        <strong>{r.label}</strong> — {r.hint}
+                      </li>
+                    ))}
+                </ul>
+              </>
+            )}
+          </Card>
+
+          {/* Journal */}
+          <Card title="Derniers envois">
+            {deliveries.length === 0 ? (
+              <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
+                Aucun email envoyé depuis ce workspace pour l'instant.
+              </p>
+            ) : (
+              <div className="overflow-x-auto">
+                <div style={{ minWidth: 720 }}>
+                  <GridHead
+                    template={SEND_GRID}
+                    columns={["Destinataire", "Sujet", "Nature", "Statut", "Date"]}
+                  />
+                  {deliveries.map((d) => (
+                    <div
+                      key={d.id}
+                      className="grid items-center gap-3 border-t"
+                      style={{
+                        gridTemplateColumns: SEND_GRID,
+                        padding: "9px 14px",
+                        borderColor: "var(--line-2)",
+                      }}
+                    >
+                      <span
+                        className="truncate font-mono"
+                        style={{ fontSize: 12, color: "var(--ink-2)" }}
+                      >
+                        {d.toAddress}
+                      </span>
+                      <span className="truncate" style={{ fontSize: 12.5, color: "var(--ink)" }}>
+                        {d.subject}
+                      </span>
+                      <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
+                        {KIND_EMAIL_LABELS[d.kind] ?? d.kind}
+                      </span>
+                      <span title={d.error ?? undefined}>
+                        {d.status === "sent" ? (
+                          <StatusPill tone="ok">Envoyé</StatusPill>
+                        ) : d.status === "failed" ? (
+                          <StatusPill tone="dang">Échec</StatusPill>
+                        ) : (
+                          <StatusPill tone="wait">En file</StatusPill>
+                        )}
+                      </span>
+                      <span
+                        className="text-right tabular-nums"
+                        style={{ fontSize: 12, color: "var(--ink-3)" }}
+                      >
+                        {relativeFr(d.createdAt)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {deliveries.some((d) => d.status === "failed") && (
+              <p className="mt-3" style={{ fontSize: 12, color: "var(--dang)" }}>
+                Les envois en échec sont réessayés automatiquement par le worker (5
+                tentatives, délai croissant). Le motif exact s'affiche au survol du statut.
+              </p>
+            )}
+          </Card>
+        </>
+      )}
     </PageShell>
   );
 }

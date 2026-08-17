@@ -2,7 +2,13 @@ import { Queue, Worker, type Processor } from "bullmq";
 import IORedis from "ioredis";
 import { lt } from "drizzle-orm";
 import { db, ssoAuthEvents } from "@openhelpdesk/db";
-import { deliverEmail, ingestEmail, type InboundEmail, type MailSendJob } from "@openhelpdesk/mail";
+import {
+  deliverEmail,
+  ingestEmail,
+  pollAllImapMailboxes,
+  type InboundEmail,
+  type MailSendJob,
+} from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated, runScheduledRules, scanSlaTimers } from "@openhelpdesk/rules";
 import { QUEUE_NAMES, type QueueName } from "./queues";
 
@@ -36,6 +42,22 @@ const processors: Record<QueueName, Processor> = {
     // Lever l'erreur laisse BullMQ réessayer avec son backoff exponentiel.
     if (!result.sent) throw new Error(result.error ?? "envoi échoué");
     console.log(`[mail-send] livraison ${deliveryId} envoyée (${result.messageId ?? "sans id"})`);
+  },
+  "imap-poll": async () => {
+    const polls = await pollAllImapMailboxes();
+    for (const poll of polls) {
+      if (poll.error) {
+        console.error(`[imap-poll] ${poll.address} : ${poll.error}`);
+        continue;
+      }
+      for (const result of poll.results) {
+        if (result.outcome === "created") await onTicketCreated(result.tenantId, result.ticketId);
+        if (result.outcome === "appended") await onContactMessage(result.tenantId, result.ticketId);
+      }
+      if (poll.fetched > 0) {
+        console.log(`[imap-poll] ${poll.address} : ${poll.fetched} message(s) relevé(s)`);
+      }
+    }
   },
   automations: async () => {
     const applied = await runScheduledRules();
@@ -71,6 +93,7 @@ for (const w of workers) {
 async function registerSchedulers() {
   const schedules: Array<[QueueName, number]> = [
     ["sla-timers", 60_000],
+    ["imap-poll", 60_000],
     ["automations", 300_000],
     ["housekeeping", DAY_MS],
   ];

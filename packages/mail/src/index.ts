@@ -34,3 +34,11 @@ export {
 } from "./outbox";
 export { dnsRecordsFor, domainOf, type DnsRecord } from "./dns";
 export { sendTicketReplyEmail } from "./send";
+export {
+  pollAllImapMailboxes,
+  pollImapMailbox,
+  verifyImapMailbox,
+  type ImapPollResult,
+  type MailboxRow,
+} from "./imap";
+export { parseBrevoInbound, parseMailjetInbound } from "./inbound-adapters";
