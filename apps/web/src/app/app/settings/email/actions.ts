@@ -2,8 +2,10 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { db, mailboxes, teams } from "@openhelpdesk/db";
+import { auditEvents, db, emailSettings, mailboxes, teams } from "@openhelpdesk/db";
 import { and, asc, eq, ne } from "drizzle-orm";
+import { decryptSecrets, encryptSecrets, secretHint } from "@openhelpdesk/crypto";
+import { sendTenantEmail, transportFor } from "@openhelpdesk/mail";
 import { requireManager } from "../guard";
 
 /** ST-03 — Ajout d'une adresse de réception (transfert ou IMAP, jamais « fournie »). */
@@ -88,5 +90,152 @@ export async function saveSending(formData: FormData) {
 /** « Revérifier » — la vérification DNS réelle arrive avec le canal email managé. */
 export async function recheckDns() {
   await requireManager();
+  revalidatePath("/app/settings/email");
+}
+
+/* ---------- Configuration du fournisseur d'envoi (par workspace) ---------- */
+
+const PROVIDERS = new Set(["console", "smtp", "resend", "brevo", "mailjet"]);
+
+/** Enregistre le fournisseur et ses identifiants (secrets chiffrés au repos). */
+export async function saveEmailProvider(formData: FormData) {
+  const { tenant, agent } = await requireManager();
+  const provider = String(formData.get("provider") ?? "console");
+  if (!PROVIDERS.has(provider)) return;
+
+  const secret = String(formData.get("secret") ?? "").trim();
+  const secret2 = String(formData.get("secret2") ?? "").trim();
+
+  const [existing] = await db
+    .select()
+    .from(emailSettings)
+    .where(eq(emailSettings.tenantId, tenant.id));
+
+  // Secrets : conservés si les champs sont laissés vides (ils ne sont jamais réaffichés).
+  let encryptedSecrets = existing?.encryptedSecrets ?? null;
+  let hint = existing?.secretHint ?? null;
+  if (secret) {
+    const secrets: Record<string, string> =
+      provider === "smtp"
+        ? { password: secret }
+        : provider === "mailjet"
+          ? { apiKey: secret, apiSecret: secret2 }
+          : { apiKey: secret };
+    encryptedSecrets = encryptSecrets(secrets);
+    hint = secretHint(secret);
+  } else if (provider === "mailjet" && secret2 && encryptedSecrets) {
+    // Seule la clé privée change.
+    const current = decryptSecrets(encryptedSecrets);
+    encryptedSecrets = encryptSecrets({ ...current, apiSecret: secret2 });
+  }
+
+  const port = Number(formData.get("smtpPort") ?? 0);
+  const values = {
+    provider: provider as "console" | "smtp" | "resend" | "brevo" | "mailjet",
+    fromName: String(formData.get("fromName") ?? "").trim().slice(0, 120) || null,
+    fromAddress: String(formData.get("fromAddress") ?? "").trim().toLowerCase() || null,
+    replyTo: String(formData.get("replyTo") ?? "").trim().toLowerCase() || null,
+    smtpHost: String(formData.get("smtpHost") ?? "").trim() || null,
+    smtpPort: Number.isFinite(port) && port > 0 && port < 65536 ? port : null,
+    smtpSecure: formData.get("smtpSecure") === "true",
+    smtpUser: String(formData.get("smtpUser") ?? "").trim() || null,
+    encryptedSecrets,
+    secretHint: hint,
+    // Toute modification de configuration invalide le dernier test.
+    testStatus: "untested" as const,
+    testError: null,
+    updatedAt: new Date(),
+  };
+
+  if (existing) {
+    await db.update(emailSettings).set(values).where(eq(emailSettings.id, existing.id));
+  } else {
+    await db.insert(emailSettings).values({ tenantId: tenant.id, ...values });
+  }
+
+  await db.insert(auditEvents).values({
+    tenantId: tenant.id,
+    actorType: "user",
+    actorId: agent.id,
+    action: `Fournisseur d'envoi email configuré : ${provider}`,
+    targetType: "email_settings",
+  });
+
+  revalidatePath("/app/settings/email");
+  redirect("/app/settings/email?saved=1");
+}
+
+/** Test de connexion : vérifie la configuration enregistrée sans envoyer d'email. */
+export async function testEmailConnection() {
+  const { tenant } = await requireManager();
+  const [row] = await db
+    .select()
+    .from(emailSettings)
+    .where(eq(emailSettings.tenantId, tenant.id));
+
+  let result: { ok: boolean; detail: string };
+  if (!row || row.provider === "console") {
+    result = {
+      ok: false,
+      detail:
+        "Aucun fournisseur configuré pour ce workspace : les emails sont seulement journalisés.",
+    };
+  } else {
+    const transport = transportFor(row);
+    result = transport.verify
+      ? await transport.verify()
+      : { ok: true, detail: "Ce transport n'expose pas de test de connexion." };
+  }
+
+  if (row) {
+    await db
+      .update(emailSettings)
+      .set({
+        testStatus: result.ok ? "ok" : "failed",
+        testError: result.ok ? null : result.detail.slice(0, 1000),
+        lastTestedAt: new Date(),
+      })
+      .where(eq(emailSettings.id, row.id));
+  }
+
+  revalidatePath("/app/settings/email");
+}
+
+/** Envoi réel d'un email de test à l'agent connecté — apparaît dans le journal. */
+export async function sendEmailTest() {
+  const { tenant, agent } = await requireManager();
+
+  const result = await sendTenantEmail({
+    tenantId: tenant.id,
+    to: agent.email,
+    kind: "test",
+    immediate: true,
+    subject: `Test d'envoi — ${tenant.name}`,
+    text:
+      `Bonjour ${agent.name},\n\n` +
+      `Cet email confirme que l'envoi fonctionne pour le workspace « ${tenant.name} ».\n\n` +
+      `Si vous le recevez, vos agents peuvent répondre aux tickets par email, et vos ` +
+      `clients recevront les accusés de réception, les liens de connexion au portail et ` +
+      `les enquêtes de satisfaction.\n\n` +
+      `— Open HelpDesk`,
+  });
+
+  const [row] = await db
+    .select({ id: emailSettings.id })
+    .from(emailSettings)
+    .where(eq(emailSettings.tenantId, tenant.id));
+  if (row) {
+    await db
+      .update(emailSettings)
+      .set({
+        testStatus: result.sent ? "ok" : "failed",
+        testError: result.sent
+          ? null
+          : (result.error ?? "Envoi impossible").slice(0, 1000),
+        lastTestedAt: new Date(),
+      })
+      .where(eq(emailSettings.id, row.id));
+  }
+
   revalidatePath("/app/settings/email");
 }

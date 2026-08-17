@@ -2,7 +2,7 @@ import { Queue, Worker, type Processor } from "bullmq";
 import IORedis from "ioredis";
 import { lt } from "drizzle-orm";
 import { db, ssoAuthEvents } from "@openhelpdesk/db";
-import { ingestEmail, type InboundEmail } from "@openhelpdesk/mail";
+import { deliverEmail, ingestEmail, type InboundEmail, type MailSendJob } from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated, runScheduledRules, scanSlaTimers } from "@openhelpdesk/rules";
 import { QUEUE_NAMES, type QueueName } from "./queues";
 
@@ -29,6 +29,13 @@ const processors: Record<QueueName, Processor> = {
     if (result.outcome === "appended") await onContactMessage(result.tenantId, result.ticketId);
     console.log(`[mail-ingest] job ${job.id} → ${result.outcome}`);
     return result;
+  },
+  "mail-send": async (job) => {
+    const { deliveryId, text, headers } = job.data as MailSendJob;
+    const result = await deliverEmail(deliveryId, { text, headers });
+    // Lever l'erreur laisse BullMQ réessayer avec son backoff exponentiel.
+    if (!result.sent) throw new Error(result.error ?? "envoi échoué");
+    console.log(`[mail-send] livraison ${deliveryId} envoyée (${result.messageId ?? "sans id"})`);
   },
   automations: async () => {
     const applied = await runScheduledRules();

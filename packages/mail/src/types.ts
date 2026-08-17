@@ -23,6 +23,7 @@ export type IngestResult =
 export type OutgoingEmail = {
   from: string;
   to: string;
+  replyTo?: string;
   subject: string;
   text: string;
   headers?: Record<string, string>;
@@ -30,4 +31,16 @@ export type OutgoingEmail = {
 
 export interface MailTransport {
   send(mail: OutgoingEmail): Promise<{ messageId?: string }>;
+  /** Test de configuration sans envoyer d'email (connexion SMTP, validité de la clé). */
+  verify?(): Promise<{ ok: boolean; detail: string }>;
 }
+
+/** Nature de l'email, pour le journal d'envoi (ST-03). */
+export type MailKind =
+  | "ticket_reply"
+  | "csat"
+  | "magic_link"
+  | "rule"
+  | "invitation"
+  | "test"
+  | "other";

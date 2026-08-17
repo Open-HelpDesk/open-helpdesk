@@ -5,7 +5,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { contacts, db, tenants, tickets } from "@openhelpdesk/db";
 import { and, eq, isNull } from "drizzle-orm";
-import { getTransport } from "@openhelpdesk/mail";
+import { sendTenantEmail } from "@openhelpdesk/mail";
 
 const SECRET = process.env.BETTER_AUTH_SECRET ?? "dev-secret-change-me";
 const BASE_DOMAIN = process.env.BASE_DOMAIN ?? "localhost:3000";
@@ -45,9 +45,11 @@ export async function maybeSendCsat(tenantId: string, ticketId: string): Promise
     config.question ?? "Comment évaluez-vous la réponse apportée à votre demande ?";
 
   try {
-    await getTransport().send({
-      from: process.env.MAIL_FROM ?? `support@${tenant.slug}.${BASE_DOMAIN}`,
+    await sendTenantEmail({
+      tenantId,
       to: requester.email,
+      kind: "csat",
+      ticketId: ticket.id,
       subject: `Votre avis sur la demande #${ticket.number}`,
       text:
         `Bonjour${requester.name ? ` ${requester.name}` : ""},\n\n` +

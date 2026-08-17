@@ -48,6 +48,22 @@ services:
       timeout: 3s
       retries: 10
 
+  # Serveur SMTP de développement : capture tous les emails et les affiche
+  # sur http://localhost:8026 (aucun email ne sort de la machine).
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "${OHD_MAILPIT_SMTP_PORT:-1026}:1025"
+      - "${OHD_MAILPIT_UI_PORT:-8026}:8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
 volumes:
   pgdata:
   redisdata:

@@ -150,11 +150,14 @@ export function SaveBar({
 /** Carte de section — panel, bordure --line, radius 10. */
 export function Card({
   title,
+  action,
   children,
   style,
   danger,
 }: {
   title?: string;
+  /** Contenu aligné à droite du titre (badge de statut, lien…). */
+  action?: ReactNode;
   children: ReactNode;
   style?: CSSProperties;
   danger?: boolean;
@@ -169,17 +172,27 @@ export function Card({
         ...style,
       }}
     >
-      {title && (
-        <h2
-          className="mb-3 font-mono font-bold uppercase"
-          style={{
-            fontSize: 10.5,
-            letterSpacing: "0.07em",
-            color: danger ? "var(--dang)" : "var(--ink-3)",
-          }}
-        >
-          {title}
-        </h2>
+      {(title || action) && (
+        <div className="mb-3 flex items-center gap-2">
+          {title && (
+            <h2
+              className="font-mono font-bold uppercase"
+              style={{
+                fontSize: 10.5,
+                letterSpacing: "0.07em",
+                color: danger ? "var(--dang)" : "var(--ink-3)",
+              }}
+            >
+              {title}
+            </h2>
+          )}
+          {action && (
+            <>
+              <span className="flex-1" />
+              {action}
+            </>
+          )}
+        </div>
       )}
       {children}
     </section>

@@ -4,17 +4,23 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./provider-meta": "./src/provider-meta.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@openhelpdesk/crypto": "workspace:*",
     "@openhelpdesk/db": "workspace:*",
-    "drizzle-orm": "^0.44.0"
+    "bullmq": "^5.44.0",
+    "drizzle-orm": "^0.44.0",
+    "ioredis": "^5.6.0",
+    "nodemailer": "^7.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@types/nodemailer": "^6.4.17",
     "typescript": "^5.8.0"
   }
 }

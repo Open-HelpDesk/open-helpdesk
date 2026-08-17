@@ -11,6 +11,7 @@
   "dependencies": {
     "@openhelpdesk/config": "workspace:*",
     "@openhelpdesk/db": "workspace:*",
+    "@openhelpdesk/crypto": "workspace:*",
     "@openhelpdesk/mail": "workspace:*",
     "@openhelpdesk/rules": "workspace:*",
     "bullmq": "^5.44.0",

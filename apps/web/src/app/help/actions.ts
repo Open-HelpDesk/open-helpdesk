@@ -14,7 +14,7 @@ import {
   ticketMessages,
 } from "@openhelpdesk/db";
 import { and, arrayContains, eq, sql } from "drizzle-orm";
-import { getTransport } from "@openhelpdesk/mail";
+import { sendTenantEmail } from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated } from "@openhelpdesk/rules";
 import {
   PORTAL_COOKIE,
@@ -64,9 +64,10 @@ async function sendMagicLinkEmail(
 ) {
   const token = magicLinkToken(tenant.id, contact.id);
   const url = `${PROTOCOL}://${tenant.slug}.${BASE_DOMAIN}/help/auth?token=${token}&to=${encodeURIComponent(redirectTo)}`;
-  await getTransport().send({
-    from: process.env.MAIL_FROM ?? `support@${tenant.slug}.${BASE_DOMAIN}`,
+  await sendTenantEmail({
+    tenantId: tenant.id,
     to: contact.email,
+    kind: "magic_link",
     subject: `Votre lien de connexion — ${tenant.name}`,
     text:
       `Bonjour,\n\nCliquez sur ce lien pour accéder à vos demandes (valable 15 minutes) :\n` +

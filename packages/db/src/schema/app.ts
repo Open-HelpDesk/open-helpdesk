@@ -229,6 +229,83 @@ export const mailboxes = app.table(
   (t) => [uniqueIndex("mailboxes_address").on(t.address)],
 );
 
+/* ---------- Envoi email : fournisseur par tenant (ST-03) ---------- */
+
+export const mailProvider = app.enum("mail_provider", [
+  /** Journalise sans envoyer — défaut en développement. */
+  "console",
+  /** Serveur SMTP quelconque : auto-hébergé, ou relais Brevo/Mailjet/SES/Postmark… */
+  "smtp",
+  "resend",
+  "brevo",
+  "mailjet",
+]);
+
+export const mailTestStatus = app.enum("mail_test_status", ["untested", "ok", "failed"]);
+
+export const emailSettings = app.table(
+  "email_settings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .unique()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    provider: mailProvider("provider").notNull().default("console"),
+    /** Identité d'expédition. */
+    fromName: text("from_name"),
+    fromAddress: text("from_address"),
+    replyTo: text("reply_to"),
+    /** SMTP — le mot de passe vit dans encryptedSecrets. */
+    smtpHost: text("smtp_host"),
+    smtpPort: integer("smtp_port"),
+    /** true = TLS implicite (465) ; false = STARTTLS (587/25). */
+    smtpSecure: boolean("smtp_secure").notNull().default(false),
+    smtpUser: text("smtp_user"),
+    /** Secrets chiffrés AES-256-GCM (@openhelpdesk/crypto) : { password, apiKey, apiSecret }. */
+    encryptedSecrets: text("encrypted_secrets"),
+    /** Suffixe affichable du secret principal (« ••••••1a2b »). */
+    secretHint: text("secret_hint"),
+    /** Résultat du dernier test de connexion / d'envoi. */
+    testStatus: mailTestStatus("test_status").notNull().default("untested"),
+    testError: text("test_error"),
+    lastTestedAt: timestamp("last_tested_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("email_settings_tenant").on(t.tenantId)],
+);
+
+export const emailDeliveryStatus = app.enum("email_delivery_status", [
+  "queued",
+  "sent",
+  "failed",
+]);
+
+/** Journal des envois — aucun email perdu, et alimente le suivi de ST-03. */
+export const emailDeliveries = app.table(
+  "email_deliveries",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    toAddress: text("to_address").notNull(),
+    subject: text("subject").notNull(),
+    /** « ticket_reply », « csat », « magic_link », « rule », « test »… */
+    kind: text("kind").notNull().default("other"),
+    provider: mailProvider("provider").notNull(),
+    status: emailDeliveryStatus("status").notNull().default("queued"),
+    providerMessageId: text("provider_message_id"),
+    error: text("error"),
+    attempts: integer("attempts").notNull().default(0),
+    ticketId: uuid("ticket_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+  },
+  (t) => [index("email_deliveries_tenant_created").on(t.tenantId, t.createdAt)],
+);
+
 /* ---------- SLA & horaires ---------- */
 
 export const businessHours = app.table("business_hours", {

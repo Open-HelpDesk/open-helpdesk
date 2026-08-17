@@ -19,13 +19,15 @@ apps/
   web/       Produit : espace agent + admin tenant + portail client (Next.js)
   console/   Control plane cloud — console interne (Next.js, accent cuivre)
   www/       Site vitrine + signup (Next.js)
-  worker/    Jobs BullMQ : SLA, ingestion email, automatisations, provisioning
+  worker/    Jobs BullMQ : SLA, envoi et ingestion email, automatisations, provisioning
 packages/
   config/    Constantes partagées (statuts, plans, sous-domaines réservés…)
+  crypto/    Chiffrement AES-256-GCM des secrets (SMTP, clés d'API, SSO)
+  mail/      Envoi (SMTP, Resend, Brevo, Mailjet) + ingestion + boîte d'envoi
   db/        Schémas PostgreSQL app + cloud (Drizzle), RLS, seed de démo
   ui/        Design system — tokens extraits des maquettes
 ee/          Fonctionnalités sous licence commerciale (SSO, audit log, IA…)
-docker/      postgres + redis + minio pour le développement et l'auto-hébergement
+docker/      postgres + redis + minio + mailpit (SMTP de développement)
 ```
 
 ## Démarrage
@@ -41,6 +43,12 @@ pnpm db:seed                    # workspace de démo « Acme Support »
 pnpm db:seed:auth               # comptes agents de démo
 pnpm dev                        # web :3000 · console :3001 · www :3002 · worker
 ```
+
+Les emails de développement sont capturés par **Mailpit** : http://localhost:8026.
+Pour envoyer pour de vrai, chaque workspace choisit son fournisseur dans
+**Paramètres → Canaux → Email** (SMTP, Resend, Brevo ou Mailjet — identifiants chiffrés
+en base). En auto-hébergement mono-tenant, les variables `SMTP_*` / `*_API_KEY` de
+`.env` servent de configuration d'instance par défaut.
 
 Puis ouvrir **http://acme.localhost:3000** — le middleware résout le tenant par
 sous-domaine ({slug}.BASE_DOMAIN, voir `.env.example`). Connexion de démo :
