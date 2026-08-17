@@ -88,3 +88,39 @@ export async function getAttachmentBody(storageKey: string) {
   const result = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: storageKey }));
   return result.Body;
 }
+
+/* ---------- Images des articles de la base de connaissances ---------- */
+
+const KB_PREFIX = "kb";
+
+/**
+ * Range une image d'article et renvoie son URL de lecture. La clé porte le
+ * tenant : c'est ce qui permet à la route publique de refuser une image
+ * appartenant à un autre workspace.
+ */
+export async function saveKbImage(tenantId: string, file: File): Promise<string> {
+  await ensureBucket();
+  const filename = sanitizeFilename(file.name);
+  const relative = `${tenantId}/${randomUUID()}-${filename}`;
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: `${KB_PREFIX}/${relative}`,
+      Body: Buffer.from(await file.arrayBuffer()),
+      ContentType: file.type || "application/octet-stream",
+    }),
+  );
+  return `/api/kb/images/${relative}`;
+}
+
+export async function getKbImageBody(relativeKey: string) {
+  await ensureBucket();
+  try {
+    const result = await s3.send(
+      new GetObjectCommand({ Bucket: BUCKET, Key: `${KB_PREFIX}/${relativeKey}` }),
+    );
+    return result.Body;
+  } catch {
+    return null;
+  }
+}

@@ -107,6 +107,18 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
                 ))}
               </ul>
             );
+          case "image":
+            return (
+              // Dimensions inconnues à l'écriture : le ratio est porté par l'image.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={i}
+                src={block.src}
+                alt={block.alt}
+                className="h-auto max-w-full rounded-[10px] border"
+                style={{ borderColor: "var(--line)" }}
+              />
+            );
           case "code":
             return (
               <div

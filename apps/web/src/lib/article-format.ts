@@ -9,6 +9,7 @@
  *           (le texte après les backticks devient l'en-tête) · « - » liste à puces
  *           · « 1. » étapes numérotées · ligne vide = nouveau paragraphe.
  * En ligne : **gras** · *italique* · `code` · [texte](https://lien).
+ * Image   : ![description](url) seule sur sa ligne.
  */
 
 export type InlineToken =
@@ -24,7 +25,8 @@ export type ArticleBlock =
   | { type: "h3"; text: string; id: string }
   | { type: "callout"; text: string }
   | { type: "code"; title: string; body: string }
-  | { type: "list"; ordered: boolean; items: string[] };
+  | { type: "list"; ordered: boolean; items: string[] }
+  | { type: "image"; src: string; alt: string };
 
 export function slugify(text: string): string {
   return text
@@ -64,6 +66,14 @@ export function parseArticle(body: string): ArticleBlock[] {
       }
       i += 1; // fence de fermeture
       blocks.push({ type: "code", title, body: code.join("\n") });
+      continue;
+    }
+
+    const image = line.trim().match(/^!\[([^\]]*)\]\(([^)\s]+)\)$/);
+    if (image) {
+      flush();
+      blocks.push({ type: "image", src: image[2]!, alt: image[1]! });
+      i += 1;
       continue;
     }
 
@@ -156,6 +166,7 @@ export function plainText(body: string): string {
     .map((b) => {
       if (b.type === "code") return b.body;
       if (b.type === "list") return b.items.join(" ");
+      if (b.type === "image") return b.alt;
       return b.text;
     })
     .join(" ")

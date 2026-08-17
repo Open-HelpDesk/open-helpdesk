@@ -1,72 +1,123 @@
 "use client";
 
 /**
- * Corps de l'éditeur d'article : barre d'outils réellement branchée sur le format
- * de la base de connaissances, raccourcis clavier, et aperçu rendu par le MÊME
- * composant que le portail — ce qui s'affiche ici est ce que le client verra.
+ * Éditeur d'article — édition visuelle (TipTap/ProseMirror).
  *
- * La barre ne propose que ce que le format sait rendre : proposer « souligné »
- * produirait des caractères bruts côté client.
+ * L'agent met en forme et voit le résultat : aucun balisage n'apparaît à l'écran.
+ * La conversion vers le format stocké se fait à chaque frappe dans un champ caché,
+ * ce qui laisse la server action existante inchangée et garde le portail compatible
+ * avec les articles déjà publiés.
+ *
+ * Seules les mises en forme que le portail sait rendre sont proposées : barré et
+ * souligné sont désactivés, ils seraient perdus à la publication.
  */
-import { useRef, useState } from "react";
-import { ArticleBody } from "@/components/article-body";
-import { parseArticle, plainText } from "@/lib/article-format";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { EditorContent, useEditor, type Editor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import { CodeBlock } from "@tiptap/extension-code-block";
+import { docToMarkup, markupToHtml, type EditorNode } from "@/lib/article-convert";
+import { plainText } from "@/lib/article-format";
 
-type Outil = {
+type Action = {
   cle: string;
   libelle: string;
   titre: string;
-  /** Encadre la sélection (gras, code…). */
-  entoure?: [string, string];
-  /** Préfixe chaque ligne sélectionnée (titres, listes, citations). */
-  prefixe?: string;
-  /** Numérote les lignes sélectionnées. */
-  numerote?: boolean;
-  /** Insère un bloc complet à la ligne. */
-  bloc?: string;
-  raccourci?: string;
+  actif: (e: Editor) => boolean;
+  lancer: (e: Editor) => void;
   style?: React.CSSProperties;
 };
 
-const OUTILS: Outil[] = [
-  { cle: "h2", libelle: "T", titre: "Titre de section (## )", prefixe: "## ", style: { fontWeight: 700 } },
+const ACTIONS: Action[] = [
+  {
+    cle: "h2",
+    libelle: "T",
+    titre: "Titre de section",
+    actif: (e) => e.isActive("heading", { level: 2 }),
+    lancer: (e) => e.chain().focus().toggleHeading({ level: 2 }).run(),
+    style: { fontWeight: 700 },
+  },
   {
     cle: "h3",
     libelle: "t",
-    titre: "Sous-titre (### )",
-    prefixe: "### ",
+    titre: "Sous-titre",
+    actif: (e) => e.isActive("heading", { level: 3 }),
+    lancer: (e) => e.chain().focus().toggleHeading({ level: 3 }).run(),
     style: { fontWeight: 600, fontSize: 11.5 },
   },
   {
     cle: "gras",
     libelle: "B",
     titre: "Gras (⌘B)",
-    entoure: ["**", "**"],
-    raccourci: "b",
+    actif: (e) => e.isActive("bold"),
+    lancer: (e) => e.chain().focus().toggleBold().run(),
     style: { fontWeight: 700 },
   },
   {
     cle: "italique",
     libelle: "I",
     titre: "Italique (⌘I)",
-    entoure: ["*", "*"],
-    raccourci: "i",
+    actif: (e) => e.isActive("italic"),
+    lancer: (e) => e.chain().focus().toggleItalic().run(),
     style: { fontStyle: "italic" },
   },
-  { cle: "puces", libelle: "•", titre: "Liste à puces", prefixe: "- " },
-  { cle: "etapes", libelle: "1.", titre: "Étapes numérotées", numerote: true, style: { fontSize: 11 } },
   {
-    cle: "lien",
-    libelle: "🔗",
-    titre: "Lien (⌘K)",
-    entoure: ["[", "](https://)"],
-    raccourci: "k",
+    cle: "puces",
+    libelle: "•",
+    titre: "Liste à puces",
+    actif: (e) => e.isActive("bulletList"),
+    lancer: (e) => e.chain().focus().toggleBulletList().run(),
+  },
+  {
+    cle: "etapes",
+    libelle: "1.",
+    titre: "Étapes numérotées",
+    actif: (e) => e.isActive("orderedList"),
+    lancer: (e) => e.chain().focus().toggleOrderedList().run(),
     style: { fontSize: 11 },
   },
-  { cle: "encadre", libelle: "❝", titre: "Encadré (mise en garde)", prefixe: "> " },
-  { cle: "code", libelle: "‹›", titre: "Code en ligne", entoure: ["`", "`"], style: { fontSize: 11 } },
-  { cle: "bloc", libelle: "▤", titre: "Bloc de code", bloc: "```titre du bloc\n\n```" },
+  {
+    cle: "encadre",
+    libelle: "❝",
+    titre: "Encadré (mise en garde)",
+    actif: (e) => e.isActive("blockquote"),
+    lancer: (e) => e.chain().focus().toggleBlockquote().run(),
+  },
+  {
+    cle: "code",
+    libelle: "‹›",
+    titre: "Code en ligne",
+    actif: (e) => e.isActive("code"),
+    lancer: (e) => e.chain().focus().toggleCode().run(),
+    style: { fontSize: 11 },
+  },
+  {
+    cle: "bloc",
+    libelle: "▤",
+    titre: "Bloc de code",
+    actif: (e) => e.isActive("codeBlock"),
+    lancer: (e) => e.chain().focus().toggleCodeBlock().run(),
+  },
 ];
+
+/**
+ * Bloc de code portant un titre (« Format du nom de fichier » dans le design).
+ * L'attribut standard « language » ne convient pas : il est rendu en classe CSS,
+ * donc tronqué au premier espace.
+ */
+const BlocCodeTitre = CodeBlock.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      titre: {
+        default: "",
+        parseHTML: (element: HTMLElement) => element.getAttribute("data-titre") ?? "",
+        renderHTML: (attributes: Record<string, unknown>) =>
+          attributes.titre ? { "data-titre": String(attributes.titre) } : {},
+      },
+    };
+  },
+});
 
 export function ArticleEditor({
   defaultTitle,
@@ -75,76 +126,98 @@ export function ArticleEditor({
   defaultTitle: string;
   defaultBody: string;
 }) {
-  const zone = useRef<HTMLTextAreaElement>(null);
-  const [corps, setCorps] = useState(defaultBody);
-  const [apercu, setApercu] = useState(false);
+  const [markup, setMarkup] = useState(defaultBody);
+  const [depot, setDepot] = useState(false);
+  const [erreur, setErreur] = useState<string | null>(null);
+  const [pretPourRendu, setPretPourRendu] = useState(false);
+  const fichier = useRef<HTMLInputElement>(null);
 
-  /** Applique un outil à la sélection courante, puis replace le curseur. */
-  function appliquer(outil: Outil) {
-    const el = zone.current;
-    if (!el) return;
-    const debut = el.selectionStart;
-    const fin = el.selectionEnd;
-    const avant = corps.slice(0, debut);
-    const selection = corps.slice(debut, fin);
-    const apres = corps.slice(fin);
+  const editor = useEditor({
+    // Le rendu initial doit être identique au serveur : TipTap monte après coup.
+    immediatelyRender: false,
+    extensions: [
+      StarterKit.configure({
+        heading: { levels: [2, 3] },
+        // Le format du portail ne rend ni le barré, ni le souligné, ni les filets.
+        strike: false,
+        underline: false,
+        horizontalRule: false,
+        codeBlock: false,
+        link: { openOnClick: false, HTMLAttributes: { rel: "noopener" } },
+      }),
+      BlocCodeTitre,
+      Image.configure({ HTMLAttributes: { class: "kb-image" } }),
+    ],
+    content: markupToHtml(defaultBody),
+    editorProps: {
+      attributes: {
+        class: "kb-prose",
+        "aria-label": "Corps de l'article",
+      },
+    },
+    onUpdate: ({ editor: e }) => setMarkup(docToMarkup(e.getJSON() as EditorNode)),
+  });
 
-    let insertion: string;
-    let curseurDebut: number;
-    let curseurFin: number;
+  useEffect(() => setPretPourRendu(true), []);
 
-    if (outil.entoure) {
-      const [ouvre, ferme] = outil.entoure;
-      insertion = `${ouvre}${selection}${ferme}`;
-      // Sans sélection, on place le curseur entre les marqueurs.
-      curseurDebut = selection ? debut : debut + ouvre.length;
-      curseurFin = selection ? debut + insertion.length : curseurDebut;
-    } else if (outil.bloc) {
-      const saut = avant && !avant.endsWith("\n") ? "\n" : "";
-      insertion = `${saut}${outil.bloc}`;
-      // Curseur sur la ligne vide entre les deux fences.
-      curseurDebut = debut + saut.length + outil.bloc.indexOf("\n") + 1;
-      curseurFin = curseurDebut;
-    } else {
-      // Préfixes de ligne : on remonte au début de la première ligne touchée.
-      const debutLigne = corps.lastIndexOf("\n", debut - 1) + 1;
-      const zoneLignes = corps.slice(debutLigne, fin) || "";
-      const lignes = zoneLignes.split("\n");
-      const transformees = lignes.map((ligne, i) => {
-        const nette = ligne.replace(/^(#{2,3}\s+|[-*]\s+|>\s+|\d+[.)]\s+)/, "");
-        return outil.numerote ? `${i + 1}. ${nette}` : `${outil.prefixe}${nette}`;
-      });
-      insertion = transformees.join("\n");
-      const nouveau = corps.slice(0, debutLigne) + insertion + corps.slice(fin);
-      setCorps(nouveau);
-      requestAnimationFrame(() => {
-        el.focus();
-        el.setSelectionRange(debutLigne + insertion.length, debutLigne + insertion.length);
-      });
-      return;
-    }
+  /** Dépose les fichiers image reçus et les insère à la suite. */
+  const televerser = useCallback(
+    async (fichiers: File[]) => {
+      const images = fichiers.filter((f) => f.type.startsWith("image/"));
+      if (images.length === 0 || !editor) return;
+      setErreur(null);
+      for (const image of images) {
+        const corps = new FormData();
+        corps.append("file", image);
+        try {
+          const reponse = await fetch("/api/kb/images", { method: "POST", body: corps });
+          const donnees = (await reponse.json()) as { url?: string; detail?: string };
+          if (!reponse.ok || !donnees.url) {
+            setErreur(donnees.detail ?? "Image refusée.");
+            continue;
+          }
+          // Après le bloc courant : une image déposée dans une étape de liste
+          // s'imbriquerait dans celle-ci.
+          const apresBloc = editor.state.selection.$to.after(1);
+          editor
+            .chain()
+            .focus()
+            .insertContentAt(apresBloc, { type: "image", attrs: { src: donnees.url, alt: image.name } })
+            .run();
+        } catch {
+          setErreur("Le dépôt a échoué. Réessayez.");
+        }
+      }
+    },
+    [editor],
+  );
 
-    setCorps(avant + insertion + apres);
-    requestAnimationFrame(() => {
-      el.focus();
-      el.setSelectionRange(curseurDebut, curseurFin);
-    });
-  }
-
-  function surTouche(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (!(e.metaKey || e.ctrlKey)) return;
-    const outil = OUTILS.find((o) => o.raccourci === e.key.toLowerCase());
-    if (!outil) return;
-    e.preventDefault();
-    appliquer(outil);
-  }
-
-  const mots = plainText(corps).split(/\s+/).filter(Boolean).length;
+  const mots = plainText(markup).split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.round(mots / 200));
 
   return (
-    <div className="min-w-0 flex-1 overflow-y-auto px-8 py-6">
-      <div className="mx-auto" style={{ maxWidth: apercu ? 1180 : "68ch" }}>
+    <div
+      className="min-w-0 flex-1 overflow-y-auto px-8 py-6"
+      onDragOver={(e) => {
+        if (!e.dataTransfer.types.includes("Files")) return;
+        e.preventDefault();
+        setDepot(true);
+      }}
+      onDragLeave={(e) => {
+        if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+        setDepot(false);
+      }}
+      onDrop={(e) => {
+        if (!e.dataTransfer.files.length) return;
+        e.preventDefault();
+        setDepot(false);
+        void televerser([...e.dataTransfer.files]);
+      }}
+    >
+      {/* Le format stocké voyage ici : la server action ne change pas. */}
+      <input type="hidden" name="body" value={markup} />
+
+      <div className="mx-auto" style={{ maxWidth: "72ch" }}>
         <input
           name="title"
           required
@@ -155,92 +228,118 @@ export function ArticleEditor({
         />
 
         <div
-          className="mb-3 mt-4 flex flex-wrap items-center gap-0.5 border-b pb-2"
-          style={{ borderColor: "var(--line-2)" }}
+          className="sticky top-0 z-10 mb-4 mt-4 flex flex-wrap items-center gap-0.5 border-b pb-2"
+          style={{ borderColor: "var(--line-2)", background: "var(--bg)" }}
         >
-          {OUTILS.map((outil) => (
-            <button
-              key={outil.cle}
-              type="button"
-              title={outil.titre}
-              aria-label={outil.titre}
-              onClick={() => appliquer(outil)}
-              className="flex items-center justify-center hover:bg-[var(--sunk)]"
-              style={{
-                width: 26,
-                height: 24,
-                borderRadius: 5,
-                color: "var(--ink-2)",
-                fontSize: 12.5,
-                ...outil.style,
-              }}
-            >
-              {outil.libelle}
-            </button>
-          ))}
+          {editor &&
+            ACTIONS.map((action) => {
+              const actif = action.actif(editor);
+              return (
+                <button
+                  key={action.cle}
+                  type="button"
+                  title={action.titre}
+                  aria-label={action.titre}
+                  aria-pressed={actif}
+                  onClick={() => action.lancer(editor)}
+                  className="flex items-center justify-center hover:bg-[var(--sunk)]"
+                  style={{
+                    width: 26,
+                    height: 24,
+                    borderRadius: 5,
+                    fontSize: 12.5,
+                    background: actif ? "var(--acc-t)" : "transparent",
+                    color: actif ? "var(--acc)" : "var(--ink-2)",
+                    ...action.style,
+                  }}
+                >
+                  {action.libelle}
+                </button>
+              );
+            })}
+
+          <button
+            type="button"
+            title="Insérer un lien (⌘K)"
+            aria-label="Insérer un lien"
+            onClick={() => {
+              if (!editor) return;
+              const actuel = String(editor.getAttributes("link").href ?? "");
+              const url = window.prompt("Adresse du lien", actuel || "https://");
+              if (url === null) return;
+              if (!url.trim()) {
+                editor.chain().focus().unsetLink().run();
+                return;
+              }
+              editor.chain().focus().extendMarkRange("link").setLink({ href: url.trim() }).run();
+            }}
+            className="flex items-center justify-center hover:bg-[var(--sunk)]"
+            style={{
+              width: 26,
+              height: 24,
+              borderRadius: 5,
+              fontSize: 11,
+              background: editor?.isActive("link") ? "var(--acc-t)" : "transparent",
+              color: editor?.isActive("link") ? "var(--acc)" : "var(--ink-2)",
+            }}
+          >
+            🔗
+          </button>
+
+          <button
+            type="button"
+            title="Insérer une image"
+            aria-label="Insérer une image"
+            onClick={() => fichier.current?.click()}
+            className="flex items-center justify-center hover:bg-[var(--sunk)]"
+            style={{ width: 26, height: 24, borderRadius: 5, fontSize: 11, color: "var(--ink-2)" }}
+          >
+            🖼
+          </button>
+          <input
+            ref={fichier}
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              void televerser([...(e.target.files ?? [])]);
+              e.target.value = "";
+            }}
+          />
 
           <span className="flex-1" />
           <span className="tabular-nums" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
             {mots} mot{mots > 1 ? "s" : ""} · {minutes} min de lecture
           </span>
-          <button
-            type="button"
-            onClick={() => setApercu((v) => !v)}
-            aria-pressed={apercu}
-            className="ml-2 rounded-md border px-2.5 font-medium"
-            style={{
-              height: 26,
-              fontSize: 12,
-              borderColor: apercu ? "var(--acc)" : "var(--line)",
-              background: apercu ? "var(--acc-t)" : "var(--panel)",
-              color: apercu ? "var(--acc)" : "var(--ink-2)",
-            }}
-          >
-            Aperçu
-          </button>
         </div>
+
+        {erreur && (
+          <p
+            className="mb-3 rounded-md px-3 py-2"
+            style={{ fontSize: 12.5, background: "var(--dang-t)", color: "var(--dang)" }}
+          >
+            {erreur}
+          </p>
+        )}
 
         <div
-          className="grid gap-7"
-          style={{ gridTemplateColumns: apercu ? "minmax(0,1fr) minmax(0,1fr)" : "1fr" }}
+          style={{
+            borderRadius: 10,
+            outline: depot ? "2px dashed var(--acc)" : "none",
+            outlineOffset: 8,
+          }}
         >
-          <textarea
-            ref={zone}
-            name="body"
-            required
-            rows={22}
-            value={corps}
-            onChange={(e) => setCorps(e.target.value)}
-            onKeyDown={surTouche}
-            placeholder="Corps de l'article — ## titre, - liste, 1. étapes, > encadré, **gras**…"
-            className="w-full resize-y border-0 outline-none"
-            style={{
-              fontSize: 14.5,
-              lineHeight: 1.65,
-              background: "transparent",
-              color: "var(--ink)",
-              fontFamily: apercu ? "var(--font-mono)" : undefined,
-            }}
-          />
-
-          {apercu && (
-            <div className="min-w-0">
-              <p
-                className="mb-3 font-mono font-bold uppercase"
-                style={{ fontSize: 10.5, letterSpacing: "0.07em", color: "var(--ink-3)" }}
-              >
-                Vu par le client
-              </p>
-              {corps.trim() ? (
-                <ArticleBody blocks={parseArticle(corps)} />
-              ) : (
-                <p style={{ fontSize: 13.5, color: "var(--ink-3)" }}>
-                  L'aperçu s'affiche dès les premières lignes.
-                </p>
-              )}
-            </div>
+          {pretPourRendu ? (
+            <EditorContent editor={editor} />
+          ) : (
+            <p style={{ fontSize: 14.5, color: "var(--ink-3)" }}>Chargement de l'éditeur…</p>
           )}
         </div>
+
+        <p className="mt-4" style={{ fontSize: 12, color: "var(--ink-3)" }}>
+          Glissez une image dans la page pour l'insérer.
+        </p>
       </div>
     </div>
   );

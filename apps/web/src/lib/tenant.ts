@@ -9,3 +9,12 @@ export async function getTenantSlug(): Promise<string> {
   }
   return slug;
 }
+
+/** Tenant courant (résolu depuis le domaine) — pour les routes publiques. */
+export async function getTenantFromHeaders() {
+  const { db, tenants } = await import("@openhelpdesk/db");
+  const { eq } = await import("drizzle-orm");
+  const slug = await getTenantSlug();
+  const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug));
+  return tenant ?? null;
+}

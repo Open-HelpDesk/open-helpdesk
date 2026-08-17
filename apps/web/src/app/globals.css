@@ -74,3 +74,147 @@ body {
   font-size: 10px;
   line-height: 1.3;
 }
+
+/* ---------- Éditeur d'article : le texte s'affiche comme il sera publié ---------- */
+.kb-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--ink);
+  outline: none;
+  text-wrap: pretty;
+}
+
+.kb-prose > * {
+  margin: 0;
+}
+
+.kb-prose h2 {
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.kb-prose h3 {
+  margin-top: 4px;
+  font-size: 17.5px;
+  font-weight: 600;
+}
+
+/* Puces et étapes : mêmes repères que sur le portail (pastille numérotée). */
+.kb-prose ul,
+.kb-prose ol {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.kb-prose ol {
+  counter-reset: kb-etape;
+  gap: 11px;
+}
+
+.kb-prose li {
+  position: relative;
+  padding-left: 34px;
+}
+
+.kb-prose li > p {
+  margin: 0;
+}
+
+.kb-prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 12px;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--acc);
+}
+
+.kb-prose ol > li {
+  counter-increment: kb-etape;
+}
+
+.kb-prose ol > li::before {
+  content: counter(kb-etape);
+  position: absolute;
+  left: 0;
+  top: 3px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--acc-t);
+  color: var(--acc);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.kb-prose blockquote {
+  padding: 15px 18px;
+  border-left: 3px solid var(--acc);
+  border-radius: 0 10px 10px 0;
+  background: var(--acc-t);
+  font-size: 15.5px;
+}
+
+.kb-prose pre {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+.kb-prose code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--sunk);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+.kb-prose pre code {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+}
+
+.kb-prose a {
+  color: var(--acc);
+  text-decoration: underline;
+}
+
+.kb-prose img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.kb-prose img.ProseMirror-selectednode {
+  outline: 2px solid var(--acc);
+  outline-offset: 2px;
+}
+
+/* Invite affichée tant que l'article est vide. */
+.kb-prose p.is-editor-empty:first-child::before {
+  content: "Rédigez votre article…";
+  float: left;
+  height: 0;
+  color: var(--ink-3);
+  pointer-events: none;
+}
