@@ -23,12 +23,40 @@ import type { InboundEmail, IngestResult } from "./types";
 
 const REOPEN_FROM = new Set(["waiting", "on_hold", "resolved"]);
 
+/** Expéditeurs techniques : un ticket n'y servirait à rien, personne ne les lit. */
+const SYSTEM_SENDERS = /^(mailer-daemon|postmaster|bounces?|bounce-|nobody)[@+-]/i;
+
+/**
+ * Écarte les messages émis par une machine : rapports de non-délivrance et
+ * réponses automatiques d'absence. Sans ce garde-fou, notre accusé de réception
+ * et l'auto-répondeur du correspondant se répondent en boucle.
+ */
+function automaticKind(mail: InboundEmail): "bounce" | "auto_reply" | null {
+  const h = mail.headers ?? {};
+  const contentType = h["content-type"] ?? "";
+  if (
+    SYSTEM_SENDERS.test(mail.from.address) ||
+    /report-type=["']?delivery-status/i.test(contentType) ||
+    h["x-failed-recipients"]
+  ) {
+    return "bounce";
+  }
+  // RFC 3834 : tout sauf « no » désigne un message généré automatiquement.
+  const autoSubmitted = (h["auto-submitted"] ?? "").trim().toLowerCase();
+  if (autoSubmitted && autoSubmitted !== "no") {
+    return autoSubmitted.startsWith("auto-replied") ? "auto_reply" : "bounce";
+  }
+  if (h["x-autoreply"] || h["x-autorespond"] || h["x-vacation-response"]) return "auto_reply";
+  if ((h["precedence"] ?? "").trim().toLowerCase() === "auto_reply") return "auto_reply";
+  return null;
+}
+
 /** Trace un rejet dans le journal de ST-03 (jamais bloquant pour l'ingestion). */
 async function logRejection(
   tenantId: string,
   fromAddress: string,
   subject: string,
-  reason: "loop" | "blocked_sender" | "empty" | "spam",
+  reason: "loop" | "blocked_sender" | "empty" | "spam" | "bounce" | "auto_reply",
 ): Promise<void> {
   try {
     await db.insert(rejectedEmails).values({
@@ -65,6 +93,13 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
   if (loop) {
     await logRejection(tenantId, fromAddress, mail.subject, "loop");
     return { outcome: "rejected", reason: "loop" };
+  }
+
+  // 2b. Messages automatiques : non-délivrance et réponses d'absence
+  const automatic = automaticKind(mail);
+  if (automatic) {
+    await logRejection(tenantId, fromAddress, mail.subject, automatic);
+    return { outcome: "rejected", reason: automatic };
   }
 
   // Le premier email reçu prouve que le routage fonctionne (transfert vérifié — ST-03).

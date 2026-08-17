@@ -61,6 +61,8 @@ const KIND_EMAIL_LABELS: Record<string, string> = {
 
 const REJECT_REASONS: Record<string, { label: string; tone: "wait" | "dang" | "closed" }> = {
   loop: { label: "Boucle détectée", tone: "wait" },
+  bounce: { label: "Bounce automatique", tone: "closed" },
+  auto_reply: { label: "Réponse automatique", tone: "wait" },
   blocked_sender: { label: "Expéditeur bloqué", tone: "dang" },
   empty: { label: "Message vide", tone: "closed" },
   spam: { label: "Spam", tone: "dang" },

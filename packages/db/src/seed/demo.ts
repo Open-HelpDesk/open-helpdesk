@@ -20,6 +20,7 @@ import {
   mailboxes,
   orgAdminGrants,
   organizations,
+  rejectedEmails,
   slaPolicies,
   teamMembers,
   teams,
@@ -104,6 +105,50 @@ async function ensureMemberships(tenantId: string) {
 }
 
 /* ---------- CSAT (ST-08) ---------- */
+/**
+ * Journal des emails rejetés du jeu de démonstration (ST-03 du design) : montre les
+ * quatre motifs que le pipeline sait produire, avec des dates échelonnées.
+ */
+async function ensureRejectedEmails(tenantId: string) {
+  const existing = await db
+    .select({ id: rejectedEmails.id })
+    .from(rejectedEmails)
+    .where(eq(rejectedEmails.tenantId, tenantId));
+  if (existing.length > 0) return;
+
+  const now = Date.now();
+  await db.insert(rejectedEmails).values([
+    {
+      tenantId,
+      fromAddress: "no-reply@spamsource.xyz",
+      subject: "Gagnez 3000 € par semaine",
+      reason: "spam",
+      createdAt: new Date(now - 3 * HOUR),
+    },
+    {
+      tenantId,
+      fromAddress: "support@acme.fr",
+      subject: "Re: Re: Re: Ticket #4788",
+      reason: "loop",
+      createdAt: new Date(now - 9 * HOUR),
+    },
+    {
+      tenantId,
+      fromAddress: "mailer-daemon@orange.fr",
+      subject: "Undelivered Mail Returned to Sender",
+      reason: "bounce",
+      createdAt: new Date(now - 28 * HOUR),
+    },
+    {
+      tenantId,
+      fromAddress: "newsletter@partenaire.com",
+      subject: "Votre lettre d'information de septembre",
+      reason: "blocked_sender",
+      createdAt: new Date(now - 52 * HOUR),
+    },
+  ]);
+}
+
 async function ensureCsat(tenantId: string) {
   const [tenant] = await db.select().from(tenants).where(eq(tenants.id, tenantId));
   const config = (tenant?.csatConfig ?? {}) as { enabled?: boolean };
@@ -570,6 +615,7 @@ async function seed() {
   await resetAndInstallDefaults(tenant.id);
   await ensureMemberships(tenant.id);
   await ensureCsat(tenant.id);
+  await ensureRejectedEmails(tenant.id);
   await ensureKb(tenant.id);
   await ensureOrgAdmin(tenant.id);
 

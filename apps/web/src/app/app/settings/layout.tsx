@@ -36,11 +36,15 @@ export default async function SettingsLayout({ children }: { children: React.Rea
         }
         .st-toggle .st-knob::after {
           content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
-          border-radius: 999px; background: var(--bg); box-shadow: 0 1px 2px rgba(17,33,28,.2);
+          border-radius: 999px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25);
           transition: left .15s ease;
         }
         .st-toggle input:checked + .st-knob { background: var(--acc); }
         .st-toggle input:checked + .st-knob::after { left: 16px; }
+        .st-toggle input:focus-visible + .st-knob { outline: 2px solid var(--acc); outline-offset: 2px; }
+        /* Ligne cliquable d'une liste réordonnable (ST-07) : survol --sunk. */
+        .st-row { transition: background .12s ease; }
+        .st-row:hover { background: var(--sunk); }
       `}</style>
       <SettingsNav />
       <div className="min-w-0 flex-1 overflow-y-auto" style={{ background: "var(--canvas)" }}>

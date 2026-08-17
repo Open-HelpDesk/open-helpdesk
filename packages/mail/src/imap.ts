@@ -95,6 +95,13 @@ async function parseSource(source: Buffer, mailboxAddress: string): Promise<Inbo
     : parsed.references
       ? [parsed.references]
       : [];
+  // En-têtes en minuscules pour la détection des messages automatiques.
+  const headers: Record<string, string> = {};
+  for (const { key, line } of parsed.headerLines ?? []) {
+    const colon = line.indexOf(":");
+    if (colon > 0) headers[key.toLowerCase()] = line.slice(colon + 1).trim();
+  }
+
   return {
     // L'email a atterri dans CETTE boîte : c'est elle qui route, pas l'en-tête To
     // (listes de diffusion, Cci et alias réécrivent souvent le To).
@@ -106,6 +113,7 @@ async function parseSource(source: Buffer, mailboxAddress: string): Promise<Inbo
     messageId: parsed.messageId ?? undefined,
     inReplyTo: parsed.inReplyTo ?? undefined,
     references,
+    headers,
   };
 }
 

@@ -13,12 +13,26 @@ export type InboundEmail = {
   messageId?: string;
   inReplyTo?: string;
   references?: string[];
+  /**
+   * En-têtes bruts en minuscules — servent à écarter les messages automatiques
+   * (Auto-Submitted RFC 3834, rapports de non-délivrance). Facultatif : un
+   * transport qui ne les fournit pas reste ingéré normalement.
+   */
+  headers?: Record<string, string>;
 };
+
+export type RejectionReason =
+  | "unknown_mailbox"
+  | "loop"
+  | "blocked_sender"
+  | "empty"
+  | "bounce"
+  | "auto_reply";
 
 export type IngestResult =
   | { outcome: "created"; ticketId: string; number: number; tenantId: string }
   | { outcome: "appended"; ticketId: string; number: number; tenantId: string }
-  | { outcome: "rejected"; reason: "unknown_mailbox" | "loop" | "blocked_sender" | "empty" };
+  | { outcome: "rejected"; reason: RejectionReason };
 
 export type OutgoingEmail = {
   from: string;

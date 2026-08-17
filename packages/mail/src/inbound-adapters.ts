@@ -30,6 +30,17 @@ function parseReferences(value: unknown): string[] {
   return [];
 }
 
+/** Tous les en-têtes fournisseur, clés en minuscules (détection des messages automatiques). */
+function lowerHeaders(headers: unknown): Record<string, string> {
+  if (!headers || typeof headers !== "object") return {};
+  const out: Record<string, string> = {};
+  for (const [key, value] of Object.entries(headers as Record<string, unknown>)) {
+    if (typeof value === "string") out[key.toLowerCase()] = value;
+    else if (Array.isArray(value) && typeof value[0] === "string") out[key.toLowerCase()] = value[0];
+  }
+  return out;
+}
+
 /** En-têtes fournisseur : casse et forme variables ("Message-Id", "message-id", tableaux). */
 function header(headers: unknown, name: string): string | undefined {
   if (!headers || typeof headers !== "object") return undefined;
@@ -77,6 +88,7 @@ export function parseBrevoInbound(body: unknown): InboundEmail[] {
       messageId: str(item.MessageId) ?? header(item.Headers, "message-id"),
       inReplyTo: str(item.InReplyTo) ?? header(item.Headers, "in-reply-to"),
       references: parseReferences(header(item.Headers, "references")),
+      headers: lowerHeaders(item.Headers),
     });
   }
   return emails;
@@ -115,6 +127,7 @@ export function parseMailjetInbound(body: unknown): InboundEmail[] {
       messageId: header(payload.Headers, "message-id"),
       inReplyTo: header(payload.Headers, "in-reply-to"),
       references: parseReferences(header(payload.Headers, "references")),
+      headers: lowerHeaders(payload.Headers),
     },
   ];
 }
