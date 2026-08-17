@@ -32,7 +32,7 @@ export async function addMailbox(formData: FormData) {
     .onConflictDoNothing();
 
   revalidatePath("/app/settings/email");
-  redirect("/app/settings/email?saved=1");
+  redirect("/app/settings/email?tab=reception&saved=1");
 }
 
 export async function deleteMailbox(formData: FormData) {
@@ -84,7 +84,7 @@ export async function saveSending(formData: FormData) {
   }
 
   revalidatePath("/app/settings/email");
-  redirect("/app/settings/email?saved=1");
+  redirect("/app/settings/email?saved=2");
 }
 
 /** « Revérifier » — la vérification DNS réelle arrive avec le canal email managé. */
@@ -321,7 +321,7 @@ export async function saveMailbox(formData: FormData) {
   }
 
   revalidatePath("/app/settings/email");
-  redirect("/app/settings/email?saved=1");
+  redirect("/app/settings/email?tab=reception&saved=1");
 }
 
 /** Bouton « Tester » d'une adresse IMAP : connexion réelle, statut mis à jour. */

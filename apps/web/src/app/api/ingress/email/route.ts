@@ -9,7 +9,9 @@ import { onContactMessage, onTicketCreated } from "@openhelpdesk/rules";
 
 export async function POST(request: NextRequest) {
   const secret = process.env.MAIL_INGRESS_SECRET ?? "dev-ingress-secret";
-  if (request.headers.get("x-ingress-secret") !== secret) {
+  const provided =
+    request.nextUrl.searchParams.get("secret") ?? request.headers.get("x-ingress-secret");
+  if (provided !== secret) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

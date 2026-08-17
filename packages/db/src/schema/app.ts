@@ -317,6 +317,23 @@ export const emailDeliveries = app.table(
   (t) => [index("email_deliveries_tenant_created").on(t.tenantId, t.createdAt)],
 );
 
+/** Journal des emails entrants rejetés (ST-03) — rétention 30 jours (housekeeping). */
+export const rejectedEmails = app.table(
+  "rejected_emails",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    fromAddress: text("from_address").notNull(),
+    subject: text("subject"),
+    /** loop · blocked_sender · empty · spam */
+    reason: text("reason").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("rejected_emails_tenant_created").on(t.tenantId, t.createdAt)],
+);
+
 /* ---------- SLA & horaires ---------- */
 
 export const businessHours = app.table("business_hours", {

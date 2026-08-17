@@ -14,6 +14,7 @@ import {
   mailboxes,
   nextTicketNumber,
   organizations,
+  rejectedEmails,
   ticketMessages,
   tickets,
 } from "@openhelpdesk/db";
@@ -22,14 +23,31 @@ import type { InboundEmail, IngestResult } from "./types";
 
 const REOPEN_FROM = new Set(["waiting", "on_hold", "resolved"]);
 
+/** Trace un rejet dans le journal de ST-03 (jamais bloquant pour l'ingestion). */
+async function logRejection(
+  tenantId: string,
+  fromAddress: string,
+  subject: string,
+  reason: "loop" | "blocked_sender" | "empty" | "spam",
+): Promise<void> {
+  try {
+    await db.insert(rejectedEmails).values({
+      tenantId,
+      fromAddress: fromAddress || "(expéditeur inconnu)",
+      subject: subject.slice(0, 300) || null,
+      reason,
+    });
+  } catch (err) {
+    console.error("[mail] journalisation du rejet impossible :", err);
+  }
+}
+
 export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
   const recipientAddresses = mail.to.map((a) => a.toLowerCase().trim());
   const fromAddress = mail.from.address.toLowerCase().trim();
   const bodyText = (mail.text ?? "").trim();
 
-  if (!fromAddress || (!bodyText && !mail.html)) return { outcome: "rejected", reason: "empty" };
-
-  // 1. Boîte → tenant
+  // 1. Boîte → tenant (résolue d'abord : les rejets suivants sont journalisés par tenant)
   const [mailbox] = await db
     .select()
     .from(mailboxes)
@@ -37,9 +55,17 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
   if (!mailbox) return { outcome: "rejected", reason: "unknown_mailbox" };
   const tenantId = mailbox.tenantId;
 
+  if (!fromAddress || (!bodyText && !mail.html)) {
+    await logRejection(tenantId, fromAddress, mail.subject, "empty");
+    return { outcome: "rejected", reason: "empty" };
+  }
+
   // 2. Anti-boucle : l'expéditeur est une boîte du produit
   const [loop] = await db.select().from(mailboxes).where(eq(mailboxes.address, fromAddress));
-  if (loop) return { outcome: "rejected", reason: "loop" };
+  if (loop) {
+    await logRejection(tenantId, fromAddress, mail.subject, "loop");
+    return { outcome: "rejected", reason: "loop" };
+  }
 
   // Le premier email reçu prouve que le routage fonctionne (transfert vérifié — ST-03).
   if (!mailbox.verified) {
@@ -51,7 +77,10 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
     .select()
     .from(contacts)
     .where(and(eq(contacts.tenantId, tenantId), eq(contacts.email, fromAddress)));
-  if (contact?.blocked) return { outcome: "rejected", reason: "blocked_sender" };
+  if (contact?.blocked) {
+    await logRejection(tenantId, fromAddress, mail.subject, "blocked_sender");
+    return { outcome: "rejected", reason: "blocked_sender" };
+  }
 
   const domain = fromAddress.split("@")[1] ?? "";
   const [orgByDomain] = domain

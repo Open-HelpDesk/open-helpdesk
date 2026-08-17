@@ -16,6 +16,15 @@ import { Field, Select, TextInput } from "@/components/settings-page";
 
 const PROVIDERS: MailProvider[] = ["smtp", "resend", "brevo", "mailjet", "console"];
 
+/** Monogramme décoratif de chaque fournisseur (teintes du design system). */
+const MONOGRAMS: Record<MailProvider, { glyph: string; bg: string; color: string }> = {
+  smtp: { glyph: "@", bg: "var(--open-t)", color: "var(--open)" },
+  resend: { glyph: "R", bg: "var(--new-t)", color: "var(--new)" },
+  brevo: { glyph: "B", bg: "var(--ok-t)", color: "var(--ok)" },
+  mailjet: { glyph: "M", bg: "var(--wait-t)", color: "var(--wait)" },
+  console: { glyph: ">_", bg: "var(--sunk)", color: "var(--ink-3)" },
+};
+
 export function ProviderForm({
   initial,
   secretHint,
@@ -65,6 +74,7 @@ export function ProviderForm({
       >
         {PROVIDERS.map((key) => {
           const active = provider === key;
+          const mono = MONOGRAMS[key];
           return (
             <button
               type="button"
@@ -74,22 +84,49 @@ export function ProviderForm({
               onClick={() => setProvider(key)}
               className="text-left"
               style={{
-                padding: "13px 15px",
+                padding: "12px 13px",
                 borderRadius: 10,
                 border: `1px solid ${active ? "var(--acc)" : "var(--line)"}`,
                 background: active ? "var(--acc-t)" : "var(--panel)",
+                boxShadow: active ? "inset 0 0 0 1px var(--acc)" : "none",
                 cursor: "pointer",
               }}
             >
-              <span
-                className="block font-semibold"
-                style={{ fontSize: 14.5, color: active ? "var(--acc)" : "var(--ink)" }}
-              >
-                {PROVIDER_META[key].label}
+              <span className="flex items-center gap-2.5">
+                <span
+                  aria-hidden
+                  className="flex shrink-0 items-center justify-center rounded-md font-mono font-bold"
+                  style={{ width: 28, height: 28, fontSize: 13, background: mono.bg, color: mono.color }}
+                >
+                  {mono.glyph}
+                </span>
+                <span
+                  className="min-w-0 flex-1 truncate font-semibold"
+                  style={{ fontSize: 14, color: active ? "var(--acc)" : "var(--ink)" }}
+                >
+                  {PROVIDER_META[key].label}
+                </span>
+                <span
+                  aria-hidden
+                  className="flex shrink-0 items-center justify-center rounded-full"
+                  style={{
+                    width: 15,
+                    height: 15,
+                    border: `1.5px solid ${active ? "var(--acc)" : "var(--line)"}`,
+                    background: "var(--panel)",
+                  }}
+                >
+                  {active && (
+                    <span
+                      className="rounded-full"
+                      style={{ width: 7, height: 7, background: "var(--acc)" }}
+                    />
+                  )}
+                </span>
               </span>
               <span
-                className="block"
-                style={{ fontSize: 12.5, color: "var(--ink-3)", textWrap: "pretty" }}
+                className="mt-1.5 block"
+                style={{ fontSize: 12, lineHeight: 1.45, color: "var(--ink-3)", textWrap: "pretty" }}
               >
                 {PROVIDER_META[key].hint}
               </span>
@@ -102,8 +139,8 @@ export function ProviderForm({
         <p
           style={{
             fontSize: 13,
-            color: "var(--wait)",
-            background: "var(--wait-t)",
+            color: "var(--ink-2)",
+            background: "var(--sunk)",
             borderRadius: 8,
             padding: "10px 13px",
           }}

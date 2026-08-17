@@ -1,7 +1,7 @@
 import { Queue, Worker, type Processor } from "bullmq";
 import IORedis from "ioredis";
 import { lt } from "drizzle-orm";
-import { db, ssoAuthEvents } from "@openhelpdesk/db";
+import { db, rejectedEmails, ssoAuthEvents } from "@openhelpdesk/db";
 import {
   deliverEmail,
   ingestEmail,
@@ -71,6 +71,10 @@ const processors: Record<QueueName, Processor> = {
     await db
       .delete(ssoAuthEvents)
       .where(lt(ssoAuthEvents.createdAt, new Date(Date.now() - 90 * DAY_MS)));
+    // Rétention 30 j du journal des emails rejetés (ST-03).
+    await db
+      .delete(rejectedEmails)
+      .where(lt(rejectedEmails.createdAt, new Date(Date.now() - 30 * DAY_MS)));
     console.log("[housekeeping] purges effectuées");
   },
 };

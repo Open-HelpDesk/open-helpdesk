@@ -64,6 +64,13 @@
       "when": 1786998318310,
       "tag": "0008_flimsy_living_lightning",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1786999221153,
+      "tag": "0009_loud_sunfire",
+      "breakpoints": true
     }
   ]
 }

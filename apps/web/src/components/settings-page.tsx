@@ -110,18 +110,21 @@ export function SaveBar({
   saved,
   cancelHref,
   submitLabel = "Enregistrer",
+  surface = "canvas",
 }: {
   saved?: boolean;
   cancelHref: string;
   submitLabel?: string;
+  /** « panel » quand la barre vit DANS une carte (fond blanc), « canvas » en pied de page. */
+  surface?: "canvas" | "panel";
 }) {
   return (
     <div
       className="sticky bottom-0 z-10 flex items-center gap-2 border-t"
       style={{
         padding: "10px 0",
-        borderColor: "var(--line)",
-        background: "var(--canvas)",
+        borderColor: surface === "panel" ? "var(--line-2)" : "var(--line)",
+        background: `var(--${surface})`,
         marginTop: 4,
       }}
     >
@@ -162,6 +165,8 @@ export function Card({
   style?: CSSProperties;
   danger?: boolean;
 }) {
+  // Carte « flush » (padding 0, tables pleine largeur) : l'en-tête garde son retrait.
+  const flush = style?.padding === 0;
   return (
     <section
       className="rounded-[10px] border"
@@ -173,7 +178,10 @@ export function Card({
       }}
     >
       {(title || action) && (
-        <div className="mb-3 flex items-center gap-2">
+        <div
+          className="flex items-center gap-2"
+          style={flush ? { padding: "14px 14px 12px" } : { marginBottom: 12 }}
+        >
           {title && (
             <h2
               className="font-mono font-bold uppercase"

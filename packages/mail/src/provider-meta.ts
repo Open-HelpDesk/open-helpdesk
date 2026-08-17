@@ -12,8 +12,8 @@ export const PROVIDER_META: Record<
   { label: string; hint: string; secretLabel?: string; docsHost?: string }
 > = {
   console: {
-    label: "Aucun envoi (développement)",
-    hint: "Les emails sont écrits dans les journaux du serveur, rien ne part.",
+    label: "Mode développement",
+    hint: "Aucun envoi réel : les emails sont écrits dans les journaux du serveur.",
   },
   smtp: {
     label: "Serveur SMTP",
