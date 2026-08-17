@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { requireAgent } from "@/lib/session";
-import { automationRules, automationRuns, db, tickets } from "@openhelpdesk/db";
+import { automationRules, automationRuns, db, teams, tickets } from "@openhelpdesk/db";
 import { and, asc, count, desc, eq, gt } from "drizzle-orm";
 import { ruleSummary } from "@/lib/rule-labels";
 import { relativeFr } from "@/lib/format";
@@ -41,6 +41,13 @@ export default async function AutomationsPage({
     .from(automationRules)
     .where(eq(automationRules.tenantId, tenant.id))
     .orderBy(asc(automationRules.position), asc(automationRules.kind), asc(automationRules.name));
+
+  // Noms d'équipe : le résumé du design lit « assigner à Escalade », pas un identifiant.
+  const teamRows = await db
+    .select({ id: teams.id, name: teams.name })
+    .from(teams)
+    .where(eq(teams.tenantId, tenant.id));
+  const teamNames = new Map(teamRows.map((t) => [t.id, t.name]));
 
   const since = new Date(Date.now() - 7 * 24 * 3600 * 1000);
   const runCounts = await db
@@ -188,6 +195,7 @@ export default async function AutomationsPage({
                       (rule.conditionsAll as never[]) ?? [],
                       (rule.conditionsAny as never[]) ?? [],
                       (rule.actions as never[]) ?? [],
+                      teamNames,
                     )}
                   </p>
                 </div>

@@ -89,37 +89,81 @@ function valueLabel(c: ConditionLike): string {
   return found?.label ?? String(c.value ?? "");
 }
 
-/** « Si sujet contient « urgent » et canal est Email → priorité Urgente · +tags » */
+/**
+ * Résumé lisible au style du design : « Si ticket créé → envoyer un email au contact »,
+ * « Si priorité = Urgente → assigner à Escalade », « Si statut = En attente depuis 48 h ».
+ * Volontairement plus court que le builder : c'est une ligne de liste, pas un formulaire.
+ */
+function conditionText(c: ConditionLike, teamNames?: Map<string, string>): string {
+  // L'événement se lit seul : « ticket créé », sans nom de champ.
+  if (c.field === "event") return valueLabel(c).toLowerCase();
+  // « non assigné » plutôt que « Assigné est vide ».
+  if (c.field === "assignee" && c.operator === "empty") return "non assigné";
+  if (c.field === "assignee" && c.operator === "not_empty") return "assigné";
+  // Ancienneté : « depuis 48 h » ou « depuis 4 j ».
+  if (c.field === "hours_since_created" || c.field === "hours_since_updated") {
+    const hours = Number(c.value ?? 0);
+    const duration = hours >= 24 && hours % 24 === 0 ? `${hours / 24} j` : `${hours} h`;
+    return `depuis ${duration}`;
+  }
+  const field = FIELD_LABELS[c.field]?.toLowerCase() ?? c.field;
+  if (VALUELESS_OPERATORS.has(c.operator)) {
+    return `${field} ${OPERATOR_LABELS[c.operator] ?? c.operator}`;
+  }
+  const operator = c.operator === "is" ? "=" : (OPERATOR_LABELS[c.operator] ?? c.operator);
+  const value =
+    c.field === "team" ? (teamNames?.get(String(c.value)) ?? valueLabel(c)) : valueLabel(c);
+  return `${field} ${operator} ${value}`;
+}
+
+function actionText(a: ActionLike, teamNames?: Map<string, string>): string {
+  switch (a.type) {
+    case "set_status": {
+      const label = FIELD_VALUE_OPTIONS.status?.find((o) => o.value === a.value)?.label;
+      return `passer en ${label ?? String(a.value)}`;
+    }
+    case "set_priority": {
+      const label = FIELD_VALUE_OPTIONS.priority?.find((o) => o.value === a.value)?.label;
+      return `priorité ${label ?? String(a.value)}`;
+    }
+    case "assign_team":
+      return `assigner à ${teamNames?.get(String(a.value)) ?? "une équipe"}`;
+    case "assign_user":
+      return "assigner à un agent";
+    case "assign_round_robin":
+      return "assigner au prochain agent";
+    case "add_tags":
+      return `ajouter ${(Array.isArray(a.value) ? a.value : []).join(", ")}`;
+    case "email_contact":
+      return "envoyer un email au contact";
+    default:
+      return (ACTION_LABELS[a.type] ?? a.type).toLowerCase();
+  }
+}
+
 export function ruleSummary(
   conditionsAll: ConditionLike[],
   conditionsAny: ConditionLike[],
   actions: ActionLike[],
+  teamNames?: Map<string, string>,
 ): string {
   const conds = [
-    ...conditionsAll.map(
-      (c) =>
-        `${FIELD_LABELS[c.field] ?? c.field} ${OPERATOR_LABELS[c.operator] ?? c.operator}${
-          VALUELESS_OPERATORS.has(c.operator) ? "" : ` « ${valueLabel(c)} »`
-        }`,
-    ),
-    ...(conditionsAny.length > 0 ? [`au moins une de ${conditionsAny.length} condition(s)`] : []),
+    ...conditionsAll.map((c) => conditionText(c, teamNames)),
+    ...(conditionsAny.length > 0
+      ? [`au moins une de ${conditionsAny.length} condition${conditionsAny.length > 1 ? "s" : ""}`]
+      : []),
   ];
-  const acts = actions.map((a) => {
-    switch (a.type) {
-      case "set_status":
-      case "set_priority": {
-        const opts = FIELD_VALUE_OPTIONS[a.type === "set_status" ? "status" : "priority"];
-        return `${ACTION_LABELS[a.type]} → ${opts?.find((o) => o.value === a.value)?.label ?? a.value}`;
-      }
-      case "add_tags":
-        return `+tags ${(Array.isArray(a.value) ? a.value : []).join(", ")}`;
-      case "email_contact":
-        return "email au contact";
-      default:
-        return ACTION_LABELS[a.type] ?? a.type;
+  const acts = actions.map((a) => actionText(a, teamNames));
+  // Une durée complète la condition précédente : « statut = En attente depuis 2 j ».
+  const phrase = conds.reduce<string[]>((acc, part) => {
+    if (part.startsWith("depuis ") && acc.length > 0) {
+      acc[acc.length - 1] = `${acc[acc.length - 1]} ${part}`;
+      return acc;
     }
-  });
-  return `Si ${conds.join(" et ") || "toujours"} → ${acts.join(" · ") || "aucune action"}`;
+    acc.push(part);
+    return acc;
+  }, []);
+  return `Si ${phrase.join(" et ") || "toujours"} → ${acts.join(" · ") || "aucune action"}`;
 }
 
 /**

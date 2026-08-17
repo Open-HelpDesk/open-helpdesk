@@ -24,14 +24,14 @@ export function AccentPicker({ name, initial }: { name: string; initial: string 
             onClick={() => setValue(c)}
             title={c}
             aria-pressed={selected}
-            className="rounded-full"
             style={{
               width: 30,
               height: 30,
+              borderRadius: 7,
               background: c,
-              border: "2px solid var(--bg)",
-              outline: selected ? "2px solid var(--ink)" : "1px solid var(--line)",
-              outlineOffset: 1,
+              // Design : la sélection est un seul contour --ink, rien sur les autres.
+              outline: selected ? "2px solid var(--ink)" : "none",
+              outlineOffset: 2,
             }}
           />
         );
@@ -41,8 +41,16 @@ export function AccentPicker({ name, initial }: { name: string; initial: string 
         onChange={(e) => setValue(e.target.value)}
         spellCheck={false}
         aria-label="Couleur hexadécimale"
-        className="w-24 rounded-md border px-2 py-1.5 font-mono text-sm"
-        style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
+        className="font-mono"
+        style={{
+          width: 92,
+          padding: "5px 10px",
+          border: "1px solid var(--line)",
+          borderRadius: 6,
+          fontSize: 12.5,
+          background: "var(--bg)",
+          color: "var(--ink-2)",
+        }}
       />
     </div>
   );

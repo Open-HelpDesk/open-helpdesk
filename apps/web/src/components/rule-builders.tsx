@@ -170,8 +170,8 @@ export function ConditionsBuilder({
         <button
           type="button"
           onClick={() => setRows([...rows, { field: "status", operator: "is", value: "open" }])}
-          className="self-start rounded-md border border-dashed px-2 py-1 text-xs"
-          style={{ borderColor: "var(--line)", color: "var(--ink-2)" }}
+          className="self-start"
+          style={{ fontSize: 12.5, fontWeight: 500, color: "var(--acc-2)" }}
         >
           + Ajouter une condition
         </button>
@@ -342,8 +342,8 @@ export function ActionsBuilder({
         <button
           type="button"
           onClick={() => setRows([...rows, { type: "set_status", value: "open" }])}
-          className="self-start rounded-md border border-dashed px-2 py-1 text-xs"
-          style={{ borderColor: "var(--line)", color: "var(--ink-2)" }}
+          className="self-start"
+          style={{ fontSize: 12.5, fontWeight: 500, color: "var(--acc-2)" }}
         >
           + Ajouter une action
         </button>
