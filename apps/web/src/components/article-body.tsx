@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { parseInline, type ArticleBlock } from "@/lib/article-format";
 
 /**
- * Rendu d'un corps d'article (PT-03) — mesures de la maquette : 68ch, 16.5/1.7.
+ * Rendu d'un corps d'article (PT-03) — mesures de la maquette : 66ch, 17/1.75.
  *
  * Aucune directive « use client » : le portail le rend côté serveur, l'aperçu de
  * l'éditeur le rend côté client. Le même composant des deux côtés, c'est ce qui
@@ -45,7 +45,7 @@ function inline(text: string): ReactNode[] {
 export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
   return (
     <div
-      className="flex max-w-[68ch] flex-col gap-[17px] text-[16.5px] leading-[1.7]"
+      className="flex max-w-[66ch] flex-col gap-[18px] text-[17px] leading-[1.75]"
       style={{ textWrap: "pretty" }}
     >
       {blocks.map((block, i) => {
@@ -55,25 +55,42 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
               <h2
                 key={i}
                 id={block.id}
-                className="pt-h2 mt-2.5 text-[22px] font-semibold tracking-[-0.015em]"
+                className="pt-h2 pt-title mt-3.5 text-[25px] leading-[1.2] tracking-[-0.015em]"
               >
                 {block.text}
               </h2>
             );
           case "h3":
             return (
-              <h3 key={i} id={block.id} className="mt-1 text-[17.5px] font-semibold">
+              <h3 key={i} id={block.id} className="mt-1 text-[18px] font-semibold">
                 {block.text}
               </h3>
             );
           case "callout":
+            // La maquette a troqué le filet latéral pour une carte teintée à icône :
+            // l'encadré se lit comme un aparté, plus comme une citation.
             return (
               <div
                 key={i}
-                className="rounded-r-[10px] px-[18px] py-[15px] text-[15.5px]"
-                style={{ background: "var(--acc-t)", borderLeft: "3px solid var(--acc)" }}
+                className="flex items-start gap-[13px] rounded-[14px] border px-[19px] py-[17px]"
+                style={{ background: "var(--acc-t)", borderColor: "var(--acc-b)" }}
               >
-                {inline(block.text)}
+                <svg
+                  aria-hidden
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="var(--acc)"
+                  strokeWidth="1.9"
+                  className="mt-[3px] flex-none"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 8h.01M11 12h1v5h1" />
+                </svg>
+                <span className="text-[15.5px] leading-[1.6]" style={{ color: "var(--ink)" }}>
+                  {inline(block.text)}
+                </span>
               </div>
             );
           case "list":
@@ -115,7 +132,7 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
                 key={i}
                 src={block.src}
                 alt={block.alt}
-                className="h-auto max-w-full rounded-[10px] border"
+                className="h-auto max-w-full rounded-[14px] border"
                 style={{ borderColor: "var(--line)" }}
               />
             );
@@ -123,12 +140,12 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
             return (
               <div
                 key={i}
-                className="overflow-hidden rounded-[10px] border"
-                style={{ borderColor: "var(--line)" }}
+                className="overflow-hidden rounded-xl border"
+                style={{ background: "var(--panel)", borderColor: "var(--line)" }}
               >
                 {block.title && (
                   <div
-                    className="border-b px-3.5 py-[9px] font-mono text-[13px]"
+                    className="border-b px-[15px] py-2.5 text-[11.5px] font-semibold uppercase tracking-[0.09em]"
                     style={{
                       background: "var(--sunk)",
                       borderColor: "var(--line)",
@@ -139,8 +156,8 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
                   </div>
                 )}
                 <div
-                  className="overflow-x-auto whitespace-pre p-3.5 font-mono text-sm"
-                  style={{ color: "var(--ink-2)" }}
+                  className="overflow-x-auto whitespace-pre p-[15px] font-mono text-sm"
+                  style={{ color: "var(--ink)" }}
                 >
                   {block.body}
                 </div>

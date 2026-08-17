@@ -28,28 +28,33 @@ export default async function NewRequestPage({
   const modules = tenant ? await getModuleOptions(tenant.id) : [];
 
   return (
-    <div className="pt-rise px-8 py-11 max-sm:px-[18px] max-sm:py-7">
-      <div className="mx-auto flex max-w-[680px] flex-col gap-[22px]">
-        <header className="flex flex-col gap-2">
-          <h1 className="text-[30px] font-semibold tracking-[-0.025em]">Soumettre une demande</h1>
-          <p className="text-base" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+    <div className="pt-rise px-9 pb-[60px] pt-12 max-sm:px-[18px] max-sm:py-[30px]">
+      <div className="mx-auto flex max-w-[700px] flex-col gap-[26px]">
+        <header className="flex flex-col gap-2.5">
+          <h1 className="pt-title text-4xl leading-[1.1] tracking-[-0.02em] max-sm:text-[27px]">
+            Soumettre une demande
+          </h1>
+          <p
+            className="text-[16.5px] leading-[1.6]"
+            style={{ color: "var(--ink-2)", textWrap: "pretty" }}
+          >
             Décrivez votre situation. Nous répondons sous 4 heures ouvrées.
           </p>
         </header>
 
-        <form action={submitRequest} className="flex flex-col gap-[17px]">
+        <form action={submitRequest} className="flex flex-col gap-5">
           {/* Type de demande */}
-          <fieldset className="flex flex-col gap-[7px]">
-            <legend className="pb-[7px] text-sm font-semibold">Type de demande</legend>
-            <div className="grid grid-cols-2 gap-[9px] max-sm:grid-cols-1">
+          <fieldset className="flex flex-col gap-[9px]">
+            <legend className="pt-label pb-[9px]">Type de demande</legend>
+            <div className="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
               {REQUEST_TYPES.map(([name, desc], i) => (
                 <label
                   key={name}
-                  className="pt-choice relative flex flex-col gap-[3px] rounded-[10px] px-[15px] py-[13px]"
+                  className="pt-choice relative flex flex-col gap-1 rounded-xl px-4 py-[15px]"
                 >
                   <input type="radio" name="type" value={name} defaultChecked={i === 0} />
                   <span className="pt-choice-name text-[15px] font-semibold">{name}</span>
-                  <span className="text-[13.5px]" style={{ color: "var(--ink-3)" }}>
+                  <span className="text-[13.5px] leading-[1.45]" style={{ color: "var(--ink-3)" }}>
                     {desc}
                   </span>
                 </label>
@@ -58,13 +63,13 @@ export default async function NewRequestPage({
           </fieldset>
 
           {/* Email */}
-          <div className="flex flex-col gap-[7px]">
-            <label htmlFor="pt-email" className="text-sm font-semibold">
+          <div className="flex flex-col gap-[9px]">
+            <label htmlFor="pt-email" className="pt-label">
               Votre email
             </label>
             {session ? (
               <div
-                className="flex h-[46px] items-center rounded-[9px] border px-[13px] text-[15.5px]"
+                className="flex h-[50px] items-center rounded-[11px] border px-[15px] text-[15.5px]"
                 style={{
                   background: "var(--sunk)",
                   borderColor: "var(--line)",
@@ -79,7 +84,7 @@ export default async function NewRequestPage({
                 name="email"
                 type="email"
                 required
-                className="pt-input h-[46px] px-[13px] text-[15.5px]"
+                className="pt-input h-[50px] px-[15px] text-[15.5px]"
               />
             )}
           </div>
@@ -89,18 +94,18 @@ export default async function NewRequestPage({
 
           {/* Module concerné / Urgence — une seule colonne si le tenant n'a pas de modules. */}
           <div
-            className={`grid gap-3 max-sm:grid-cols-1 ${modules.length > 0 ? "grid-cols-2" : "grid-cols-1"}`}
+            className={`grid gap-3.5 max-sm:grid-cols-1 ${modules.length > 0 ? "grid-cols-2" : "grid-cols-1"}`}
           >
             {modules.length > 0 && (
-              <div className="flex flex-col gap-[7px]">
-                <label htmlFor="pt-module" className="text-sm font-semibold">
+              <div className="flex flex-col gap-[9px]">
+                <label htmlFor="pt-module" className="pt-label">
                   Module concerné
                 </label>
                 <div className="relative">
                   <select
                     id="pt-module"
                     name="module"
-                    className="pt-input h-[46px] w-full appearance-none px-[13px] text-[15.5px]"
+                    className="pt-input h-[50px] w-full appearance-none px-[15px] text-[15.5px]"
                   >
                     {modules.map((m) => (
                       <option key={m} value={m}>
@@ -108,14 +113,14 @@ export default async function NewRequestPage({
                       </option>
                     ))}
                   </select>
-                  <span className="pointer-events-none absolute right-[13px] top-1/2 -translate-y-1/2 text-[10px] opacity-45">
+                  <span className="pointer-events-none absolute right-[15px] top-1/2 -translate-y-1/2 text-[10px] opacity-40">
                     ▾
                   </span>
                 </div>
               </div>
             )}
-            <div className="flex flex-col gap-[7px]">
-              <label htmlFor="pt-urgency" className="text-sm font-semibold">
+            <div className="flex flex-col gap-[9px]">
+              <label htmlFor="pt-urgency" className="pt-label">
                 Urgence
               </label>
               <div className="relative">
@@ -123,7 +128,7 @@ export default async function NewRequestPage({
                   id="pt-urgency"
                   name="urgency"
                   defaultValue="Normale"
-                  className="pt-input h-[46px] w-full appearance-none px-[13px] text-[15.5px]"
+                  className="pt-input h-[50px] w-full appearance-none px-[15px] text-[15.5px]"
                 >
                   {URGENCIES.map((u) => (
                     <option key={u} value={u}>
@@ -131,7 +136,7 @@ export default async function NewRequestPage({
                     </option>
                   ))}
                 </select>
-                <span className="pointer-events-none absolute right-[13px] top-1/2 -translate-y-1/2 text-[10px] opacity-45">
+                <span className="pointer-events-none absolute right-[15px] top-1/2 -translate-y-1/2 text-[10px] opacity-40">
                   ▾
                 </span>
               </div>
@@ -139,15 +144,15 @@ export default async function NewRequestPage({
           </div>
 
           {/* Description */}
-          <div className="flex flex-col gap-[7px]">
-            <label htmlFor="pt-body" className="text-sm font-semibold">
+          <div className="flex flex-col gap-[9px]">
+            <label htmlFor="pt-body" className="pt-label">
               Description
             </label>
             <textarea
               id="pt-body"
               name="body"
               required
-              className="pt-input min-h-[130px] resize-y p-[13px] text-[15.5px] leading-[1.6]"
+              className="pt-input min-h-[140px] resize-y p-[15px] text-[15.5px] leading-[1.65]"
             />
           </div>
 
@@ -156,8 +161,8 @@ export default async function NewRequestPage({
 
           <button
             type="submit"
-            className="grid h-[50px] w-full place-items-center rounded-[10px] text-base font-semibold text-white"
-            style={{ background: "var(--acc)" }}
+            className="grid h-[52px] w-full place-items-center rounded-[11px] text-base font-semibold text-white"
+            style={{ background: "var(--cta-a)", boxShadow: "var(--sh-2)" }}
           >
             Envoyer la demande
           </button>

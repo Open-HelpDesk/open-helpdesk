@@ -25,7 +25,16 @@ export default async function HelpLayout({ children }: { children: React.ReactNo
         lineHeight: 1.55,
         background: "var(--canvas)",
         color: "var(--ink)",
-        ...(custom ? ({ "--acc": accent, "--acc-2": accent } as React.CSSProperties) : {}),
+        // L'accent du tenant emporte aussi le dégradé des boutons pleins : sinon
+        // une marque personnalisée garderait le vert du design system en aplat.
+        ...(custom
+          ? ({
+              "--acc": accent,
+              "--acc-2": accent,
+              "--cta-a": accent,
+              "--cta-b": `color-mix(in srgb, ${accent} 65%, #000)`,
+            } as React.CSSProperties)
+          : {}),
       }}
     >
       {children}

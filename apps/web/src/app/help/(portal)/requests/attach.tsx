@@ -19,8 +19,8 @@ export function DropZone() {
 
   return (
     <label
-      className="flex cursor-pointer flex-col items-center gap-1.5 rounded-[10px] border border-dashed p-5 text-center"
-      style={{ borderColor: "var(--line)" }}
+      className="pt-dashed flex cursor-pointer flex-col items-center gap-[7px] rounded-[14px] p-[26px] text-center"
+      style={{ background: "var(--canvas)" }}
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => {
         e.preventDefault();
@@ -30,6 +30,18 @@ export function DropZone() {
         }
       }}
     >
+      <svg
+        aria-hidden
+        viewBox="0 0 24 24"
+        width="22"
+        height="22"
+        fill="none"
+        stroke="var(--ink-3)"
+        strokeWidth="1.7"
+      >
+        <path d="M12 16V4m0 0L8 8m4-4l4 4" />
+        <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+      </svg>
       <span className="text-[14.5px] font-medium">Déposez vos fichiers ici</span>
       <span className="text-[13px]" style={{ color: "var(--ink-3)" }}>
         PNG, JPG, PDF — 10 Mo maximum

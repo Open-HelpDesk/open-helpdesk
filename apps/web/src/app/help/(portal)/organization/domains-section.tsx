@@ -35,9 +35,9 @@ export function DomainsSection({
     members.filter((m) => m.email.toLowerCase().endsWith(`@${domain}`)).length;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-[22px]">
       <p
-        className="max-w-[68ch] text-[14.5px]"
+        className="max-w-[66ch] text-[14.5px] leading-[1.65]"
         style={{ color: "var(--ink-2)", textWrap: "pretty" }}
       >
         Un domaine doit être vérifié avant de pouvoir porter une connexion SSO. Cette vérification
@@ -51,25 +51,26 @@ export function DomainsSection({
           return (
             <div
               key={d.id}
-              className="overflow-hidden rounded-[11px] border"
+              className="overflow-hidden rounded-[14px] border"
               style={{
                 background: "var(--panel)",
                 borderColor: verified ? "var(--line)" : "var(--wait)",
+                boxShadow: "var(--sh-1)",
               }}
             >
               <div
-                className="flex flex-wrap items-center gap-3 px-4 py-3.5"
+                className="flex flex-wrap items-center gap-[13px] px-[18px] py-4"
                 style={{ background: verified ? "transparent" : "var(--wait-t)" }}
               >
                 <span
                   className="h-[9px] w-[9px] flex-none rounded-full"
                   style={{ background: verified ? "var(--ok)" : "var(--wait)" }}
                 />
-                <span className="min-w-[140px] flex-1 font-mono text-[15px] font-semibold">
+                <span className="min-w-[140px] flex-1 font-mono text-[15px] font-medium">
                   {d.domain}
                 </span>
                 <span
-                  className="whitespace-nowrap rounded-[20px] px-2.5 py-0.5 text-[12.5px] font-semibold"
+                  className="whitespace-nowrap rounded-full px-[11px] py-[3px] text-[12.5px] font-semibold"
                   style={
                     verified
                       ? { background: "var(--ok-t)", color: "var(--ok)" }
@@ -84,15 +85,18 @@ export function DomainsSection({
               </div>
               {!verified && (
                 <div
-                  className="flex flex-col gap-[11px] border-t px-4 py-3.5"
+                  className="flex flex-col gap-3 border-t px-[18px] py-4"
                   style={{ borderColor: "var(--line-2)" }}
                 >
-                  <p className="text-[13.5px]" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+                  <p
+                    className="text-[13.5px] leading-[1.55]"
+                    style={{ color: "var(--ink-2)", textWrap: "pretty" }}
+                  >
                     Ajoutez cet enregistrement TXT à la zone DNS de{" "}
                     <span className="font-mono">{d.domain}</span>, puis lancez la vérification.
                   </p>
                   <div
-                    className="break-all rounded-[9px] border px-[15px] py-[13px] font-mono text-[13px]"
+                    className="break-all rounded-[11px] border px-4 py-3.5 font-mono text-[13px]"
                     style={{
                       background: "var(--sunk)",
                       borderColor: "var(--line)",
@@ -107,13 +111,13 @@ export function DomainsSection({
                       {relativeLongFr(d.lastCheckedAt)}).
                     </p>
                   )}
-                  <div className="flex flex-wrap gap-[9px]">
+                  <div className="flex flex-wrap gap-2.5">
                     <form action={verifyOrgDomain}>
                       <input type="hidden" name="id" value={d.id} />
                       <button
                         type="submit"
-                        className="grid min-h-10 place-items-center whitespace-nowrap rounded-lg px-4 py-[9px] text-sm font-semibold text-white"
-                        style={{ background: "var(--acc)" }}
+                        className="grid min-h-[42px] place-items-center whitespace-nowrap rounded-[9px] px-[18px] py-2.5 text-sm font-semibold text-white"
+                        style={{ background: "var(--cta-a)" }}
                       >
                         Vérifier maintenant
                       </button>
@@ -121,7 +125,7 @@ export function DomainsSection({
                     <CopyButton
                       text={record}
                       label="Copier l'enregistrement"
-                      className="grid min-h-10 place-items-center whitespace-nowrap rounded-lg border px-4 py-[9px] text-sm"
+                      className="grid min-h-[42px] place-items-center whitespace-nowrap rounded-[9px] border px-[18px] py-2.5 text-sm"
                       style={{
                         borderColor: "var(--line)",
                         background: "var(--panel)",
@@ -137,12 +141,11 @@ export function DomainsSection({
 
         {/* + Ajouter un domaine */}
         <details
-          className="pt-acc rounded-[11px] border border-dashed"
-          style={{ borderColor: "var(--line)" }}
+          className="pt-acc pt-dashed rounded-[14px]"
           open={Boolean(error)}
         >
           <summary
-            className="rounded-[11px] px-4 py-3.5 text-center text-sm"
+            className="rounded-[14px] px-[18px] py-4 text-center text-sm"
             style={{ color: "var(--ink-3)" }}
           >
             + Ajouter un domaine
@@ -159,12 +162,12 @@ export function DomainsSection({
                 required
                 defaultValue={domainValue ?? ""}
                 placeholder="entreprise.fr"
-                className="pt-input h-[42px] min-w-[220px] flex-1 px-[13px] font-mono text-sm"
+                className="pt-input h-[42px] min-w-[220px] flex-1 px-3.5 font-mono text-sm"
               />
               <button
                 type="submit"
-                className="grid h-[42px] place-items-center rounded-lg px-4 text-sm font-semibold text-white"
-                style={{ background: "var(--acc)" }}
+                className="grid h-[42px] place-items-center rounded-[9px] px-[18px] text-sm font-semibold text-white"
+                style={{ background: "var(--cta-a)" }}
               >
                 Ajouter
               </button>

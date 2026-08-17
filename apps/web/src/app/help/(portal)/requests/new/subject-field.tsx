@@ -35,8 +35,8 @@ export function SubjectWithDeflection({ defaultSubject = "" }: { defaultSubject?
   }, [subject]);
 
   return (
-    <div className="flex flex-col gap-[7px]">
-      <label htmlFor="pt-subject" className="text-sm font-semibold">
+    <div className="flex flex-col gap-[9px]">
+      <label htmlFor="pt-subject" className="pt-label">
         Sujet
       </label>
       <input
@@ -45,14 +45,17 @@ export function SubjectWithDeflection({ defaultSubject = "" }: { defaultSubject?
         required
         value={subject}
         onChange={(e) => setSubject(e.target.value)}
-        className="pt-input h-[46px] px-[13px] text-[15.5px]"
+        className="pt-input h-[50px] px-[15px] text-[15.5px]"
       />
       {suggestions.length > 0 && (
         <div
-          className="mt-1 flex flex-col gap-[9px] rounded-[10px] border px-[15px] py-[13px]"
+          className="mt-1.5 flex flex-col gap-[11px] rounded-[14px] border px-[18px] py-4"
           style={{ background: "var(--acc-t)", borderColor: "var(--acc-b)" }}
         >
-          <p className="text-[13.5px] font-semibold" style={{ color: "var(--acc)" }}>
+          <p
+            className="text-[13px] font-semibold tracking-[0.02em]"
+            style={{ color: "var(--acc)" }}
+          >
             Ces articles répondent peut-être à votre question
           </p>
           {suggestions.map((s) => (
@@ -60,10 +63,13 @@ export function SubjectWithDeflection({ defaultSubject = "" }: { defaultSubject?
               key={s.slug}
               href={`/help/articles/${s.slug}`}
               target="_blank"
-              className="flex items-center gap-[9px] text-[14.5px] font-medium"
+              className="flex items-center gap-2.5 text-[14.5px] font-medium"
               style={{ color: "var(--acc-2)" }}
             >
-              → {s.title}
+              <span aria-hidden style={{ color: "var(--acc-b)" }}>
+                →
+              </span>
+              {s.title}
             </a>
           ))}
         </div>

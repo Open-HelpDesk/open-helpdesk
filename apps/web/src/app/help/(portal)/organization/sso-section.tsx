@@ -59,12 +59,12 @@ function Field({
           type={type}
           defaultValue={defaultValue}
           placeholder={placeholder}
-          className={`pt-input mt-1.5 h-[46px] w-full px-[13px] text-[14.5px] font-normal ${mono ? "font-mono" : ""}`}
+          className={`pt-input mt-[7px] h-[50px] w-full px-[15px] text-[14.5px] font-normal ${mono ? "font-mono" : ""}`}
           style={{ color: "var(--ink)" }}
         />
       </label>
       {hint && (
-        <p className="text-[13px]" style={{ color: "var(--ink-3)", textWrap: "pretty" }}>
+        <p className="text-[13px] leading-[1.5]" style={{ color: "var(--ink-3)", textWrap: "pretty" }}>
           {hint}
         </p>
       )}
@@ -110,15 +110,16 @@ export function SsoSection({
     : undefined;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-7">
       {/* Bandeau d'activation */}
       <div
-        className="flex items-start gap-3.5 rounded-[11px] border px-[18px] py-4"
-        style={
-          active
+        className="flex items-start gap-[15px] rounded-2xl border px-5 py-[18px]"
+        style={{
+          boxShadow: "var(--sh-1)",
+          ...(active
             ? { borderColor: "var(--acc-b)", background: "var(--acc-t)" }
-            : { borderColor: "var(--line)", background: "var(--panel)" }
-        }
+            : { borderColor: "var(--line)", background: "var(--panel)" }),
+        }}
       >
         <form action={toggleSsoEnabled} className="flex-none">
           <button
@@ -131,9 +132,11 @@ export function SsoSection({
         </form>
         <div className="flex min-w-0 flex-1 flex-col gap-[3px]">
           <div className="flex flex-wrap items-center gap-2.5">
-            <p className="text-base font-semibold">Connexion par compte d'entreprise</p>
+            <p className="text-[16.5px] font-semibold tracking-[-0.01em]">
+              Connexion par compte d'entreprise
+            </p>
             <span
-              className="rounded-[20px] px-[9px] py-0.5 text-xs font-semibold"
+              className="rounded-full px-2.5 py-[3px] text-xs font-semibold"
               style={
                 active
                   ? { background: "var(--ok-t)", color: "var(--ok)" }
@@ -143,7 +146,10 @@ export function SsoSection({
               {active ? "Active" : "Inactive"}
             </span>
           </div>
-          <p className="text-[14.5px]" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+          <p
+            className="text-[14.5px] leading-[1.6]"
+            style={{ color: "var(--ink-2)", textWrap: "pretty" }}
+          >
             Vos collaborateurs saisissent leur email professionnel et sont redirigés vers votre
             fournisseur d'identité. Aucun mot de passe à créer.
           </p>
@@ -151,8 +157,8 @@ export function SsoSection({
       </div>
 
       {/* Fournisseur d'identité */}
-      <div className="flex flex-col gap-[13px]">
-        <p className="text-base font-semibold">Votre fournisseur d'identité</p>
+      <div className="flex flex-col gap-3.5">
+        <p className="pt-eyebrow">Votre fournisseur d'identité</p>
         <div className="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
           {SSO_PROVIDERS.map((p) => {
             const selected = p.key === provider;
@@ -160,12 +166,13 @@ export function SsoSection({
               <Link
                 key={p.key}
                 href={`/help/organization?tab=sso&provider=${p.key}`}
-                className="flex flex-col gap-[3px] rounded-[10px] border px-[15px] py-3.5 hover:no-underline"
-                style={
-                  selected
+                className="flex flex-col gap-1 rounded-xl border px-4 py-[15px] transition-all duration-150 hover:no-underline"
+                style={{
+                  boxShadow: selected ? "var(--sh-1)" : "none",
+                  ...(selected
                     ? { borderColor: "var(--acc)", background: "var(--acc-t)" }
-                    : { borderColor: "var(--line)", background: "var(--panel)" }
-                }
+                    : { borderColor: "var(--line)", background: "var(--panel)" }),
+                }}
               >
                 <span
                   className="text-[15px] font-semibold"
@@ -182,14 +189,17 @@ export function SsoSection({
         </div>
       </div>
 
-      <form action={saveSsoConnection} className="flex flex-col gap-6">
+      <form action={saveSsoConnection} className="flex flex-col gap-7">
         <input type="hidden" name="provider" value={provider} />
 
         {/* Paramètres de connexion */}
-        <div className="flex flex-col gap-[13px]">
-          <div className="flex flex-wrap items-baseline gap-2.5">
-            <p className="text-base font-semibold">Paramètres de connexion</p>
-            <span className="text-[13.5px]" style={{ color: "var(--ink-3)" }}>
+        <div className="flex flex-col gap-3.5">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <p className="pt-eyebrow">Paramètres de connexion</p>
+            <span
+              className="rounded-full px-[9px] py-0.5 font-mono text-[11.5px]"
+              style={{ background: "var(--sunk)", color: "var(--ink-3)" }}
+            >
               {isSaml ? "SAML 2.0" : "OpenID Connect"}
             </span>
           </div>
@@ -207,7 +217,7 @@ export function SsoSection({
                   Certificat de signature
                 </p>
                 <div
-                  className="flex min-h-[46px] items-center rounded-[9px] border px-[13px] text-[14.5px]"
+                  className="flex min-h-[50px] items-center rounded-[11px] border px-[15px] text-[14.5px]"
                   style={{
                     borderColor: "var(--line)",
                     background: "var(--bg)",
@@ -239,22 +249,31 @@ export function SsoSection({
         </div>
 
         {/* À copier dans votre fournisseur */}
-        <div className="flex flex-col gap-[11px]">
-          <p className="text-base font-semibold">À copier dans votre fournisseur</p>
+        <div className="flex flex-col gap-3">
+          <p className="pt-eyebrow">À copier dans votre fournisseur</p>
           <div
-            className="overflow-hidden rounded-[11px] border"
-            style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+            className="overflow-hidden rounded-[14px] border"
+            style={{
+              background: "var(--panel)",
+              borderColor: "var(--line)",
+              boxShadow: "var(--sh-1)",
+            }}
           >
             {spValues.map(([k, v]) => (
               <div
                 key={k}
-                className="grid grid-cols-[minmax(150px,180px)_1fr_80px] items-center gap-3 border-b px-4 py-[13px] max-sm:grid-cols-1"
+                className="grid grid-cols-[minmax(150px,180px)_1fr_80px] items-center gap-3 border-b px-[17px] py-3.5 max-sm:grid-cols-1"
                 style={{ borderColor: "var(--line-2)" }}
               >
                 <span className="text-[13.5px] font-semibold" style={{ color: "var(--ink-2)" }}>
                   {k}
                 </span>
-                <span className="min-w-0 truncate font-mono text-[13px]">{v}</span>
+                <span
+                  className="min-w-0 truncate font-mono text-[13px]"
+                  style={{ color: "var(--ink-2)" }}
+                >
+                  {v}
+                </span>
                 <CopyButton
                   text={v}
                   label="Copier"
@@ -269,8 +288,12 @@ export function SsoSection({
         {/* Mode strict + JIT */}
         <div className="flex flex-col gap-[11px]" data-sso-toggles>
           <label
-            className="pt-switch-label relative flex items-start gap-[13px] rounded-[10px] border px-4 py-3.5"
-            style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+            className="pt-switch-label relative flex items-start gap-3.5 rounded-[14px] border px-[18px] py-4"
+            style={{
+              background: "var(--panel)",
+              borderColor: "var(--line)",
+              boxShadow: "var(--sh-1)",
+            }}
           >
             <input type="checkbox" name="strict" defaultChecked={conn?.strictMode ?? false} />
             <span className="pt-switch mt-px" />
@@ -279,7 +302,7 @@ export function SsoSection({
                 Imposer le SSO à mes collaborateurs
               </span>
               <span
-                className="block text-[13.5px]"
+                className="block text-[13.5px] leading-[1.55]"
                 style={{ color: "var(--ink-3)", textWrap: "pretty" }}
               >
                 Le lien par email est désactivé pour les adresses{" "}
@@ -289,7 +312,7 @@ export function SsoSection({
             </span>
           </label>
           <div
-            className="pt-strict-warning rounded-[10px] border px-4 py-3.5 text-sm"
+            className="pt-strict-warning rounded-[14px] border px-[18px] py-[15px] text-sm leading-[1.6]"
             style={{
               background: "var(--wait-t)",
               borderColor: "var(--wait)",
@@ -301,8 +324,12 @@ export function SsoSection({
             à leurs demandes. Nous conservons toujours votre accès administrateur par lien email.
           </div>
           <label
-            className="pt-switch-label relative flex items-start gap-[13px] rounded-[10px] border px-4 py-3.5"
-            style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+            className="pt-switch-label relative flex items-start gap-3.5 rounded-[14px] border px-[18px] py-4"
+            style={{
+              background: "var(--panel)",
+              borderColor: "var(--line)",
+              boxShadow: "var(--sh-1)",
+            }}
           >
             <input type="checkbox" name="jit" defaultChecked={conn?.jitEnabled ?? true} />
             <span className="pt-switch mt-px" />
@@ -311,7 +338,7 @@ export function SsoSection({
                 Créer les comptes à la première connexion
               </span>
               <span
-                className="block text-[13.5px]"
+                className="block text-[13.5px] leading-[1.55]"
                 style={{ color: "var(--ink-3)", textWrap: "pretty" }}
               >
                 Un collaborateur inconnu qui se connecte via votre fournisseur est rattaché
@@ -323,18 +350,18 @@ export function SsoSection({
 
         {/* Test de connexion — seul état idle (le flux réel arrive au Lot 5b) */}
         <div
-          className="flex flex-wrap items-center gap-3.5 rounded-[11px] border px-[18px] py-4"
+          className="flex flex-wrap items-center gap-4 rounded-2xl border px-5 py-[18px]"
           style={{ background: "var(--panel)", borderColor: "var(--line)" }}
         >
           <button
             type="submit"
-            className="grid min-h-11 place-items-center whitespace-nowrap rounded-[9px] px-5 py-2.5 text-[15px] font-semibold text-white"
-            style={{ background: "var(--acc)" }}
+            className="grid min-h-[46px] place-items-center whitespace-nowrap rounded-[10px] px-[22px] py-[11px] text-[15px] font-semibold text-white"
+            style={{ background: "var(--cta-a)", boxShadow: "var(--sh-1)" }}
           >
             Tester la connexion
           </button>
           <p
-            className="min-w-[200px] flex-1 text-[14.5px] font-[450]"
+            className="min-w-[200px] flex-1 text-[14.5px] font-[450] leading-[1.6]"
             style={{ color: "var(--ink-2)", textWrap: "pretty" }}
           >
             Une fenêtre s'ouvrira vers votre fournisseur. Rien n'est activé tant que le test n'a

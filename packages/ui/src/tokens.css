@@ -95,37 +95,62 @@
 
 /* ---------- 1ter. Portail client (.surface-portal) — palette maquette PT ---------- */
 .surface-portal {
-  --canvas: #fafbfa;
+  --canvas: #f6f9f7;
   --bg: #ffffff;
   --panel: #ffffff;
-  --sunk: #f2f5f3;
-  --line: #e3e8e5;
-  --line-2: #eff2f0;
-  --ink: #101f1a;
-  --ink-2: #55665f;
-  --ink-3: #87968f;
-  --mute: #87968f;
+  --sunk: #f1f5f2;
+  --line: #e4e9e6;
+  --line-2: #eef2f0;
+  --ink: #0d1c17;
+  --ink-2: #51625b;
+  --ink-3: #84948d;
+  --mute: #84948d;
   --acc: #0b5f46;
   --acc-2: #0e7a58;
-  --acc-t: #e7f1ec;
-  --acc-b: #bfdbcf;
+  --acc-t: #eaf3ee;
+  --acc-b: #c7ddd3;
+  /* Statuts : le portail décale légèrement les fonds teintés du produit. */
+  --wait-t: #fdf2e3;
+  --ok-t: #e5f1ea;
+  --open-t: #e9eefc;
+  /* Aplat des boutons pleins et de la carte CTA : dégradé --cta-a → --cta-b.
+     Distinct de --acc, qui reste substituable par l'accent du tenant. */
+  --cta-a: #0b5f46;
+  --cta-b: #073e2d;
+  /* Échelle d'ombres : 1 posé (cartes), 2 flottant (recherche, boutons pleins),
+     3 détaché (dropdown, carte CTA, carte de connexion). */
+  --sh-1: 0 1px 2px rgb(13 28 23 / 4%);
+  --sh-2:
+    0 1px 2px rgb(13 28 23 / 4%), 0 10px 26px -14px rgb(13 28 23 / 16%);
+  --sh-3:
+    0 2px 4px rgb(13 28 23 / 5%), 0 26px 54px -22px rgb(11 95 70 / 34%);
+  /* Titres en serif : logo, hero, titres de page, h2 d'article. */
+  --font-title: Newsreader, "Iowan Old Style", Georgia, serif;
 }
 [data-theme="dark"] .surface-portal,
 .surface-portal[data-theme="dark"] {
-  --canvas: #090e0d;
+  --canvas: #080d0c;
   --bg: #0d1312;
-  --panel: #121a17;
-  --sunk: #0a100e;
-  --line: #222d29;
-  --line-2: #19221f;
-  --ink: #e7eeea;
-  --ink-2: #94a69f;
-  --ink-3: #697b75;
-  --mute: #697b75;
+  --panel: #131b18;
+  --sunk: #0b1110;
+  --line: #232e2a;
+  --line-2: #1a2320;
+  --ink: #e8efeb;
+  --ink-2: #96a8a1;
+  --ink-3: #6b7d77;
+  --mute: #6b7d77;
   --acc: #34c08d;
-  --acc-2: #48d0a0;
+  --acc-2: #4ad3a3;
   --acc-t: #12291f;
-  --acc-b: #1e4536;
+  --acc-b: #22503e;
+  --wait-t: #2c2013;
+  --ok-t: #122a20;
+  --open-t: #141f38;
+  --cta-a: #11533d;
+  --cta-b: #0a3327;
+  --sh-1: 0 1px 2px rgb(0 0 0 / 30%);
+  --sh-2: 0 1px 2px rgb(0 0 0 / 30%), 0 12px 28px -16px rgb(0 0 0 / 70%);
+  --sh-3: 0 2px 6px rgb(0 0 0 / 40%), 0 28px 56px -24px rgb(0 0 0 / 80%);
 }
 
 /* ---------- 2. Console cloud — clair ----------

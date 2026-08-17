@@ -9,7 +9,7 @@ import { ArticleBody } from "@/components/article-body";
 import { parseArticle } from "@/lib/article-format";
 import { VoteBlock } from "./vote-block";
 
-/** PT-03 — Article : rendu riche 68ch, méta, vote, articles liés, TOC « Sur cette page ». */
+/** PT-03 — Article : rendu riche 66ch, méta, vote, articles liés, TOC « Sur cette page ». */
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const tenant = await getPortalTenant();
   const { slug } = await params;
@@ -29,11 +29,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const toc = blocks.filter((b) => b.type === "h2");
 
   return (
-    <div className="pt-rise px-8 py-11 max-sm:px-[18px] max-sm:py-7">
-      <div className="mx-auto grid max-w-[1040px] grid-cols-[1fr_200px] gap-11 max-md:grid-cols-1">
-        <div className="flex min-w-0 flex-col gap-[22px]">
+    <div className="pt-rise px-9 pb-16 pt-12 max-sm:px-[18px] max-sm:py-[30px]">
+      <div className="mx-auto grid max-w-[1060px] grid-cols-[1fr_210px] gap-12 max-md:grid-cols-1">
+        <div className="flex min-w-0 flex-col gap-6">
           <nav
-            className="flex flex-wrap items-center gap-2 text-[13.5px]"
+            className="flex flex-wrap items-center gap-[9px] text-[13px]"
             style={{ color: "var(--ink-3)" }}
           >
             <Link href="/help" style={{ color: "inherit" }}>
@@ -51,14 +51,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <span style={{ color: "var(--ink-2)" }}>{article.title}</span>
           </nav>
 
-          <header className="flex flex-col gap-[9px]">
+          <header className="flex flex-col gap-[11px]">
             <h1
-              className="text-[34px] font-semibold leading-[1.15] tracking-[-0.03em]"
+              className="pt-title text-[42px] leading-[1.08] tracking-[-0.022em] max-sm:text-[29px]"
               style={{ textWrap: "balance" }}
             >
               {article.title}
             </h1>
-            <p className="text-[13.5px]" style={{ color: "var(--ink-3)" }}>
+            <p className="text-[13px] tracking-[0.01em]" style={{ color: "var(--ink-3)" }}>
               Mis à jour le {dateLongFr(article.updatedAt)} · {readingMinutesFr(body)} min de
               lecture
             </p>
@@ -69,10 +69,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <VoteBlock slug={article.slug} title={article.title} />
 
           {related.length > 0 && (
-            <section className="flex flex-col gap-2.5">
+            <section className="mt-2 flex flex-col gap-[11px]">
               <h2
-                className="text-[12.5px] font-semibold uppercase tracking-[0.06em]"
-                style={{ color: "var(--ink-3)" }}
+                className="pt-eyebrow"
               >
                 Articles liés
               </h2>
@@ -80,9 +79,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 <Link
                   key={r.slug}
                   href={`/help/articles/${r.slug}`}
-                  className="pt-related rounded-[10px] px-4 py-[13px] text-[15px]"
+                  className="pt-related flex items-center gap-3 rounded-xl px-[18px] py-[15px] text-[15px]"
                 >
-                  {r.title}
+                  <span className="min-w-0 flex-1 font-medium">{r.title}</span>
+                  <span aria-hidden className="text-[15px]" style={{ color: "var(--acc-b)" }}>
+                    →
+                  </span>
                 </Link>
               ))}
             </section>
@@ -90,10 +92,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         </div>
 
         {toc.length > 0 && (
-          <aside className="flex flex-col gap-[7px] self-start max-md:hidden">
+          <aside className="sticky top-0 flex flex-col gap-0.5 self-start max-md:hidden">
             <p
-              className="pb-1 text-[12.5px] font-semibold uppercase tracking-[0.06em]"
-              style={{ color: "var(--ink-3)" }}
+              className="pb-2.5 pt-eyebrow"
             >
               Sur cette page
             </p>
@@ -101,7 +102,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               <a
                 key={h.id}
                 href={`#${h.id}`}
-                className="py-1.5 pl-3 text-[14.5px] hover:no-underline"
+                className={`py-2 pl-3.5 text-[14.5px] leading-[1.45] hover:no-underline ${i === 0 ? "font-semibold" : "font-[450]"}`}
                 style={{
                   borderLeft: `2px solid ${i === 0 ? "var(--acc)" : "var(--line)"}`,
                   color: i === 0 ? "var(--acc-2)" : "var(--ink-2)",

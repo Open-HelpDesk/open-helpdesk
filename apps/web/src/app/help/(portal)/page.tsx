@@ -4,7 +4,7 @@ import { listPublishedCategories, popularArticles } from "@/lib/portal-data";
 import { numberFr, pluralFr } from "../portal-format";
 import { PortalSearchBar } from "./search-bar";
 
-/** PT-01 — Accueil du centre d'aide : hero teinté, recherche typeahead, catégories, top articles. */
+/** PT-01 — Accueil : hero dégradé, recherche typeahead, catégories, top articles, carte CTA. */
 export default async function HelpHome() {
   const tenant = await getPortalTenant();
   if (!tenant) return null;
@@ -18,31 +18,44 @@ export default async function HelpHome() {
 
   return (
     <div className="pt-rise-hero">
-      {/* Hero */}
+      {/* Hero — le fond teinté se dissout vers --bg, sans trait de séparation dur. */}
       <div
-        className="flex flex-col items-center gap-5 border-b px-8 py-14 max-sm:px-[18px] max-sm:py-[34px]"
-        style={{ background: "var(--acc-t)", borderColor: "var(--acc-b)" }}
+        className="border-b px-9 py-[68px] max-sm:px-[18px] max-sm:py-[38px]"
+        style={{
+          background: "linear-gradient(180deg, var(--acc-t) 0%, var(--bg) 92%)",
+          borderColor: "var(--line-2)",
+        }}
       >
-        <div className="flex max-w-[600px] flex-col gap-[9px] text-center">
-          <h1
-            className="text-[38px] font-semibold leading-[1.15] tracking-[-0.025em] max-sm:text-[26px]"
-            style={{ textWrap: "balance" }}
+        <div className="mx-auto flex max-w-[640px] flex-col items-center gap-6">
+          <p
+            className="text-[11.5px] font-semibold uppercase tracking-[0.16em]"
+            style={{ color: "var(--acc)" }}
           >
-            {welcome}
-          </h1>
-          <p className="text-base" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
-            Parcourez les guides, ou contactez notre équipe du lundi au vendredi, de 9 h à 18 h.
+            Centre d'aide
           </p>
+          <div className="flex flex-col gap-[13px] text-center">
+            <h1
+              className="pt-title text-[46px] leading-[1.08] tracking-[-0.02em] max-sm:text-[30px]"
+              style={{ textWrap: "balance" }}
+            >
+              {welcome}
+            </h1>
+            <p
+              className="mx-auto max-w-[50ch] text-[16.5px]"
+              style={{ color: "var(--ink-2)", textWrap: "pretty" }}
+            >
+              Parcourez les guides, ou contactez notre équipe du lundi au vendredi, de 9 h à 18 h.
+            </p>
+          </div>
+          <PortalSearchBar />
         </div>
-        <PortalSearchBar />
       </div>
 
       {/* Contenu */}
-      <div className="mx-auto flex w-full max-w-[1040px] flex-col gap-[38px] px-8 py-11 max-sm:px-[18px] max-sm:py-7">
-        <section className="flex flex-col gap-[15px]">
+      <div className="mx-auto flex w-full max-w-[1060px] flex-col gap-[46px] px-9 pb-14 pt-12 max-sm:px-[18px] max-sm:py-[30px]">
+        <section className="flex flex-col gap-4">
           <h2
-            className="text-[12.5px] font-semibold uppercase tracking-[0.07em]"
-            style={{ color: "var(--ink-3)" }}
+            className="pt-eyebrow"
           >
             Catégories
           </h2>
@@ -51,22 +64,33 @@ export default async function HelpHome() {
               <Link
                 key={c.id}
                 href={`/help/categories/${c.slug}`}
-                className="pt-card-cat flex flex-col gap-2 rounded-xl p-5 hover:no-underline"
+                className="pt-card-cat flex flex-col gap-[9px] rounded-2xl p-[22px] hover:no-underline"
                 style={{ color: "var(--ink)" }}
               >
                 <span
-                  className="grid h-[34px] w-[34px] place-items-center rounded-[9px] text-[17px]"
+                  className="mb-[3px] grid h-[38px] w-[38px] place-items-center rounded-[11px] text-[18px]"
                   style={{ background: "var(--acc-t)", color: "var(--acc)" }}
                 >
                   {c.icon ?? "◆"}
                 </span>
-                <span className="text-base font-semibold tracking-[-0.01em]">{c.name}</span>
+                <span className="text-[16.5px] font-semibold tracking-[-0.012em]">{c.name}</span>
                 {c.description && (
-                  <span className="text-sm" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+                  <span
+                    className="text-sm leading-[1.5]"
+                    style={{ color: "var(--ink-2)", textWrap: "pretty" }}
+                  >
                     {c.description}
                   </span>
                 )}
-                <span className="mt-0.5 text-[13px]" style={{ color: "var(--ink-3)" }}>
+                <span
+                  className="mt-[3px] flex items-center gap-[7px] text-[12.5px]"
+                  style={{ color: "var(--ink-3)" }}
+                >
+                  <span
+                    aria-hidden
+                    className="h-1 w-1 rounded-full"
+                    style={{ background: "var(--acc-b)" }}
+                  />
                   {pluralFr(c.articleCount, "article")}
                 </span>
               </Link>
@@ -75,29 +99,38 @@ export default async function HelpHome() {
         </section>
 
         <div className="grid grid-cols-[1.5fr_1fr] gap-[26px] max-md:grid-cols-1">
-          <section className="flex min-w-0 flex-col gap-3.5">
+          <section className="flex min-w-0 flex-col gap-4">
             <h2
-              className="text-[12.5px] font-semibold uppercase tracking-[0.07em]"
-              style={{ color: "var(--ink-3)" }}
+              className="pt-eyebrow"
             >
               Les plus consultés
             </h2>
             <div
-              className="overflow-hidden rounded-xl border"
-              style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+              className="overflow-hidden rounded-2xl border"
+              style={{
+                background: "var(--panel)",
+                borderColor: "var(--line)",
+                boxShadow: "var(--sh-1)",
+              }}
             >
               {popular.map((a, i) => (
                 <Link
                   key={a.slug}
                   href={`/help/articles/${a.slug}`}
-                  className="pt-row flex items-center gap-3.5 border-b px-[18px] py-[15px] hover:no-underline"
+                  className="pt-row flex items-center gap-[15px] border-b px-5 py-4 hover:no-underline"
                   style={{ borderColor: "var(--line-2)", color: "var(--ink)" }}
                 >
-                  <span className="w-4 flex-none font-mono text-xs" style={{ color: "var(--ink-3)" }}>
+                  <span
+                    className="pt-title w-[18px] flex-none text-base"
+                    style={{ color: "var(--acc-b)" }}
+                  >
                     {i + 1}
                   </span>
                   <span className="min-w-0 flex-1 text-[15px] font-medium">{a.title}</span>
-                  <span className="whitespace-nowrap text-[13px]" style={{ color: "var(--ink-3)" }}>
+                  <span
+                    className="whitespace-nowrap text-[12.5px] tabular-nums"
+                    style={{ color: "var(--ink-3)" }}
+                  >
                     {numberFr(a.viewCount)} vues
                   </span>
                 </Link>
@@ -106,19 +139,25 @@ export default async function HelpHome() {
           </section>
 
           <aside
-            className="flex flex-col gap-[11px] self-start rounded-xl p-6 text-white"
-            style={{ background: "var(--acc)" }}
+            className="flex flex-col gap-3 self-start rounded-[18px] p-[26px] text-white"
+            style={{
+              background: "linear-gradient(155deg, var(--cta-a) 0%, var(--cta-b) 100%)",
+              boxShadow: "var(--sh-3)",
+            }}
           >
-            <p className="text-lg font-semibold tracking-[-0.01em]" style={{ textWrap: "balance" }}>
+            <p
+              className="pt-title text-[22px] leading-[1.2] tracking-[-0.01em]"
+              style={{ textWrap: "balance" }}
+            >
               Vous ne trouvez pas ce que vous cherchez ?
             </p>
-            <p className="text-[14.5px] opacity-[.82]" style={{ textWrap: "pretty" }}>
+            <p className="text-[14.5px] leading-[1.6] opacity-[.78]" style={{ textWrap: "pretty" }}>
               Notre équipe répond en moyenne en 34 minutes pendant les heures ouvrées.
             </p>
             <Link
               href="/help/requests/new"
-              className="mt-1 grid h-11 place-items-center rounded-[9px] bg-white text-[15px] font-semibold hover:no-underline"
-              style={{ color: "var(--acc)" }}
+              className="mt-1.5 grid h-[46px] place-items-center rounded-[10px] bg-white text-[15px] font-semibold hover:no-underline"
+              style={{ color: "var(--cta-a)" }}
             >
               Soumettre une demande
             </Link>

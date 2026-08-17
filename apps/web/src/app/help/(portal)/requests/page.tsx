@@ -65,15 +65,17 @@ export default async function RequestsPage({
     : TABS;
 
   return (
-    <div className="pt-rise px-8 py-11 max-sm:px-[18px] max-sm:py-7">
-      <div className="mx-auto flex max-w-[900px] flex-col gap-5">
-        <div className="flex flex-wrap items-end gap-3.5">
-          <h1 className="text-[30px] font-semibold tracking-[-0.025em]">Mes demandes</h1>
+    <div className="pt-rise px-9 pb-[60px] pt-12 max-sm:px-[18px] max-sm:py-[30px]">
+      <div className="mx-auto flex max-w-[920px] flex-col gap-[22px]">
+        <div className="flex flex-wrap items-center gap-4">
+          <h1 className="pt-title text-4xl leading-[1.1] tracking-[-0.02em] max-sm:text-[27px]">
+            Mes demandes
+          </h1>
           <span className="flex-1" />
           <Link
             href="/help/requests/new"
-            className="grid h-11 place-items-center rounded-[9px] px-[18px] text-[15px] font-semibold text-white hover:no-underline"
-            style={{ background: "var(--acc)" }}
+            className="grid h-[46px] place-items-center whitespace-nowrap rounded-[10px] px-5 text-[15px] font-semibold text-white hover:no-underline"
+            style={{ background: "var(--cta-a)", boxShadow: "var(--sh-2)" }}
           >
             Nouvelle demande
           </Link>
@@ -86,7 +88,7 @@ export default async function RequestsPage({
               <Link
                 key={key}
                 href={`/help/requests${key === "open" ? "" : `?tab=${key}`}`}
-                className={`-mb-px whitespace-nowrap border-b-2 px-3.5 py-[11px] text-[15px] hover:no-underline ${active ? "font-semibold" : "font-[450]"}`}
+                className={`-mb-px whitespace-nowrap border-b-2 px-3.5 py-3 text-[15px] transition-colors duration-150 hover:no-underline ${active ? "font-semibold" : "font-[450]"}`}
                 style={{
                   color: active ? "var(--ink)" : "var(--ink-3)",
                   borderColor: active ? "var(--acc)" : "transparent",
@@ -99,14 +101,14 @@ export default async function RequestsPage({
         </nav>
 
         {requests.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 py-[60px] text-center">
-            <svg viewBox="0 0 64 64" width="70" height="70" fill="none" stroke="var(--line)" strokeWidth="2">
-              <rect x="12" y="8" width="40" height="48" rx="5" />
+          <div className="flex flex-col items-center gap-[13px] py-[68px] text-center">
+            <svg viewBox="0 0 64 64" width="76" height="76" fill="none" stroke="var(--line)" strokeWidth="2">
+              <rect x="12" y="8" width="40" height="48" rx="6" />
               <path d="M22 22h20M22 32h20M22 42h12" stroke="var(--acc-b)" />
             </svg>
-            <p className="text-[19px] font-semibold">Aucune demande</p>
+            <p className="pt-title text-[23px]">Aucune demande</p>
             <p
-              className="max-w-[380px] text-[15.5px]"
+              className="max-w-[42ch] text-[15.5px] leading-[1.6]"
               style={{ color: "var(--ink-2)", textWrap: "pretty" }}
             >
               Vos demandes de support apparaîtront ici, avec leur statut et l'historique des
@@ -114,49 +116,65 @@ export default async function RequestsPage({
             </p>
             <Link
               href="/help/requests/new"
-              className="grid h-[46px] place-items-center rounded-[9px] px-5 text-[15px] font-semibold text-white hover:no-underline"
-              style={{ background: "var(--acc)" }}
+              className="mt-1.5 grid h-12 place-items-center rounded-[10px] px-[22px] text-[15px] font-semibold text-white hover:no-underline"
+              style={{ background: "var(--cta-a)", boxShadow: "var(--sh-2)" }}
             >
               Soumettre une demande
             </Link>
           </div>
         ) : (
           <div
-            className="overflow-hidden rounded-xl border"
-            style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+            className="overflow-hidden rounded-2xl border"
+            style={{
+              background: "var(--panel)",
+              borderColor: "var(--line)",
+              boxShadow: "var(--sh-1)",
+            }}
           >
-            {requests.map((r) => (
-              <Link
-                key={r.number}
-                href={`/help/requests/${r.number}`}
-                className="pt-row flex flex-wrap items-center gap-4 border-b px-[18px] py-4 hover:no-underline"
-                style={{ borderColor: "var(--line-2)", color: "var(--ink)" }}
-              >
-                <span className="w-[52px] flex-none font-mono text-[13px]" style={{ color: "var(--ink-3)" }}>
-                  #{r.number}
-                </span>
-                <span className="flex min-w-[180px] flex-1 flex-col gap-0.5">
-                  <span className="text-[15.5px] font-medium">{r.subject}</span>
-                  <span className="text-[13.5px]" style={{ color: "var(--ink-3)" }}>
-                    {activityLabel(r)}
-                  </span>
-                </span>
-                {r.status === "waiting" && (
-                  <span
-                    className="whitespace-nowrap rounded-[20px] px-2.5 py-[3px] text-[12.5px] font-semibold"
-                    style={{ background: "var(--wait-t)", color: "var(--wait)" }}
-                  >
-                    Réponse attendue
-                  </span>
-                )}
-                <span
-                  className="whitespace-nowrap rounded-[20px] px-[11px] py-[3px] text-[13px] font-semibold"
-                  style={statusBadgeStyle(r.status)}
+            {requests.map((r) => {
+              const badge = statusBadgeStyle(r.status);
+              return (
+                <Link
+                  key={r.number}
+                  href={`/help/requests/${r.number}`}
+                  className="pt-row flex flex-wrap items-center gap-4 border-b px-5 py-[18px] hover:no-underline"
+                  style={{ borderColor: "var(--line-2)", color: "var(--ink)" }}
                 >
-                  {PORTAL_STATUS_LABELS[r.status]}
-                </span>
-              </Link>
-            ))}
+                  <span
+                    className="w-[52px] flex-none font-mono text-[12.5px]"
+                    style={{ color: "var(--ink-3)" }}
+                  >
+                    #{r.number}
+                  </span>
+                  <span className="flex min-w-[180px] flex-1 flex-col gap-[3px]">
+                    <span className="text-[15.5px] font-medium">{r.subject}</span>
+                    <span className="text-[13px]" style={{ color: "var(--ink-3)" }}>
+                      {activityLabel(r)}
+                    </span>
+                  </span>
+                  {r.status === "waiting" && (
+                    <span
+                      className="whitespace-nowrap rounded-full px-[11px] py-1 text-xs font-semibold"
+                      style={{ background: "var(--wait-t)", color: "var(--wait)" }}
+                    >
+                      Réponse attendue
+                    </span>
+                  )}
+                  {/* Pastille + libellé : le statut se repère à la couleur avant d'être lu. */}
+                  <span
+                    className="inline-flex items-center gap-[7px] whitespace-nowrap rounded-full py-[5px] pl-2.5 pr-3 text-[12.5px] font-semibold"
+                    style={badge}
+                  >
+                    <span
+                      aria-hidden
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: badge.color }}
+                    />
+                    {PORTAL_STATUS_LABELS[r.status]}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>

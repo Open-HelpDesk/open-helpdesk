@@ -50,19 +50,26 @@ export default async function OrganizationPage({
   const allOrgDomains = [...new Set([...verifiedDomainNames, ...org.emailDomains])];
 
   return (
-    <div className="pt-rise px-8 py-11 max-sm:px-[18px] max-sm:py-7">
-      <div className="mx-auto flex max-w-[900px] flex-col gap-6">
+    <div className="pt-rise px-9 pb-[60px] pt-12 max-sm:px-[18px] max-sm:py-[30px]">
+      <div className="mx-auto flex max-w-[920px] flex-col gap-[26px]">
         {/* En-tête */}
-        <header className="flex flex-wrap items-start gap-3.5">
+        <header className="flex flex-wrap items-start gap-4">
           <span
-            className="grid h-11 w-11 flex-none place-items-center rounded-[11px] text-[15px] font-bold"
-            style={{ background: "var(--acc-t)", color: "var(--acc)" }}
+            className="grid h-12 w-12 flex-none place-items-center rounded-[13px] border text-[15px] font-bold"
+            style={{
+              background: "var(--acc-t)",
+              borderColor: "var(--acc-b)",
+              color: "var(--acc)",
+            }}
           >
             {initialsFr(org.name)}
           </span>
-          <div className="flex min-w-[200px] flex-1 flex-col gap-[5px]">
-            <h1 className="text-[26px] font-semibold tracking-[-0.025em]">{org.name}</h1>
-            <p className="text-[14.5px]" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+          <div className="flex min-w-[200px] flex-1 flex-col gap-1.5">
+            <h1 className="pt-title text-[29px] leading-[1.1] tracking-[-0.02em]">{org.name}</h1>
+            <p
+              className="max-w-[64ch] text-[14.5px] leading-[1.6]"
+              style={{ color: "var(--ink-2)", textWrap: "pretty" }}
+            >
               Vous êtes administrateur de cette organisation. Ce que vous réglez ici s'applique{" "}
               {members.length === 1 ? "à la personne" : `aux ${numberFr(members.length)} personnes`}{" "}
               de {org.name} qui {members.length === 1 ? "utilise" : "utilisent"} le support{" "}
@@ -79,7 +86,7 @@ export default async function OrganizationPage({
               <Link
                 key={key}
                 href={`/help/organization${key === "sso" ? "" : `?tab=${key}`}`}
-                className={`-mb-px whitespace-nowrap border-b-2 px-3.5 py-[11px] text-[15px] hover:no-underline ${active ? "font-semibold" : "font-[450]"}`}
+                className={`-mb-px whitespace-nowrap border-b-2 px-3.5 py-3 text-[15px] transition-colors duration-150 hover:no-underline ${active ? "font-semibold" : "font-[450]"}`}
                 style={{
                   color: active ? "var(--ink)" : "var(--ink-3)",
                   borderColor: active ? "var(--acc)" : "transparent",

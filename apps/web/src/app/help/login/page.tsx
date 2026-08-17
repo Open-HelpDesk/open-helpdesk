@@ -17,54 +17,71 @@ export default async function PortalLoginPage({
   const name = tenant?.name ?? "Centre d'aide";
 
   return (
-    <div className="grid min-h-screen place-items-center px-6 py-12">
-      <div className="pt-rise flex w-[400px] max-w-full flex-col gap-[18px]">
-        <div className="flex flex-col items-center gap-[11px]">
+    <div
+      className="grid min-h-screen place-items-center px-6 py-14"
+      style={{ background: "linear-gradient(180deg, var(--acc-t) 0%, var(--canvas) 60%)" }}
+    >
+      <div className="pt-rise flex w-[414px] max-w-full flex-col gap-5">
+        <div className="flex flex-col items-center gap-[13px]">
           <div
-            className="grid h-[42px] w-[42px] place-items-center rounded-[11px] text-lg font-bold text-white"
-            style={{ background: "var(--acc)" }}
+            className="pt-title grid h-[46px] w-[46px] place-items-center rounded-[13px] text-[21px] font-semibold text-white"
+            style={{ background: "var(--cta-a)", boxShadow: "var(--sh-2)" }}
           >
             {name[0]?.toUpperCase() ?? "?"}
           </div>
-          <h1 className="text-xl font-semibold tracking-[-0.02em]">Suivre vos demandes</h1>
+          <h1 className="pt-title text-2xl tracking-[-0.015em]">Suivre vos demandes</h1>
         </div>
 
         <div
-          className="flex flex-col gap-[15px] rounded-xl border p-6"
-          style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+          className="flex flex-col gap-4 rounded-[18px] border p-[26px]"
+          style={{
+            background: "var(--panel)",
+            borderColor: "var(--line)",
+            boxShadow: "var(--sh-3)",
+          }}
         >
           {sent ? (
-            <div className="flex flex-col items-center gap-[11px] py-2 text-center">
+            <div className="flex flex-col items-center gap-3 py-2 text-center">
               <div
-                className="grid h-12 w-12 place-items-center rounded-full text-[22px]"
+                className="grid h-[52px] w-[52px] place-items-center rounded-full text-[23px]"
                 style={{ background: "var(--acc-t)", color: "var(--acc)" }}
               >
                 ✉
               </div>
-              <p className="text-[17px] font-semibold">Consultez votre boîte de réception</p>
-              <p className="text-[15px]" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+              <p className="pt-title text-xl">Consultez votre boîte de réception</p>
+              <p
+                className="text-[15px] leading-[1.6]"
+                style={{ color: "var(--ink-2)", textWrap: "pretty" }}
+              >
                 Nous avons envoyé un lien de connexion{e ? ` à ${e}` : ""}. Il expire dans
                 15 minutes.
               </p>
-              <Link href="/help/login" className="text-sm" style={{ color: "var(--acc-2)" }}>
+              <Link
+                href="/help/login"
+                className="text-sm font-medium"
+                style={{ color: "var(--acc-2)" }}
+              >
                 Utiliser une autre adresse
               </Link>
             </div>
           ) : (
             <>
-              <p className="text-[15px]" style={{ color: "var(--ink-2)", textWrap: "pretty" }}>
+              <p
+                className="text-[15px] leading-[1.6]"
+                style={{ color: "var(--ink-2)", textWrap: "pretty" }}
+              >
                 Saisissez votre email : nous vous enverrons un lien de connexion. Aucun mot de
                 passe à retenir.
               </p>
               {error === "expired" && (
                 <p
-                  className="rounded-[9px] px-3 py-2.5 text-sm"
+                  className="rounded-[11px] px-3.5 py-2.5 text-sm"
                   style={{ background: "var(--dang-t)", color: "var(--dang)" }}
                 >
                   Ce lien est expiré ou invalide. Demandez-en un nouveau.
                 </p>
               )}
-              <form action={requestMagicLink} className="flex flex-col gap-[15px]">
+              <form action={requestMagicLink} className="flex flex-col gap-4">
                 <div className="flex flex-col gap-[7px]">
                   <label
                     htmlFor="pt-login-email"
@@ -78,13 +95,13 @@ export default async function PortalLoginPage({
                     name="email"
                     type="email"
                     required
-                    className="pt-input h-[46px] px-[13px] text-[15.5px]"
+                    className="pt-input h-12 px-3.5 text-[15.5px]"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="grid h-[46px] place-items-center rounded-[9px] text-[15px] font-semibold text-white"
-                  style={{ background: "var(--acc)" }}
+                  className="grid h-12 place-items-center rounded-[11px] text-[15px] font-semibold text-white"
+                  style={{ background: "var(--cta-a)" }}
                 >
                   Recevoir le lien
                 </button>

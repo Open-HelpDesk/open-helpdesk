@@ -21,7 +21,7 @@ function statusInk(status: string): string {
 }
 
 /**
- * PT-06 — Détail d'une demande : fil de cartes (client panel / agent teinté),
+ * PT-06 — Détail d'une demande : fil à rail d'avatars (client panel / agent teinté),
  * zone de réponse, bloc CSAT si résolue, sidebar méta + résoudre/rouvrir.
  */
 export default async function RequestPage({ params }: { params: Promise<{ number: string }> }) {
@@ -40,10 +40,10 @@ export default async function RequestPage({ params }: { params: Promise<{ number
   const canReply = isMine && ticket.status !== "closed";
 
   return (
-    <div className="pt-rise px-8 py-11 max-sm:px-[18px] max-sm:py-7">
-      <div className="mx-auto grid max-w-[940px] grid-cols-[1fr_260px] gap-8 max-md:grid-cols-1">
-        <div className="flex min-w-0 flex-col gap-5">
-          <nav className="flex items-center gap-2 text-[13.5px]" style={{ color: "var(--ink-3)" }}>
+    <div className="pt-rise px-9 pb-[60px] pt-12 max-sm:px-[18px] max-sm:py-[30px]">
+      <div className="mx-auto grid max-w-[960px] grid-cols-[1fr_264px] gap-9 max-md:grid-cols-1">
+        <div className="flex min-w-0 flex-col gap-6">
+          <nav className="flex items-center gap-[9px] text-[13px]" style={{ color: "var(--ink-3)" }}>
             <Link href="/help/requests" style={{ color: "inherit" }}>
               Mes demandes
             </Link>
@@ -54,14 +54,16 @@ export default async function RequestPage({ params }: { params: Promise<{ number
           </nav>
 
           <h1
-            className="text-[26px] font-semibold tracking-[-0.02em]"
+            className="pt-title text-[31px] leading-[1.12] tracking-[-0.02em] max-sm:text-2xl"
             style={{ textWrap: "balance" }}
           >
             {ticket.subject}
           </h1>
 
-          {/* Fil — messages publics uniquement */}
-          <div className="flex flex-col gap-3.5">
+          {/* Fil — messages publics uniquement. L'avatar sort de la carte et se
+              relie au message suivant par un rail : la conversation se suit
+              verticalement au lieu d'empiler des cartes indépendantes. */}
+          <div className="flex flex-col">
             {messages.map((m) => {
               const isAgent = m.authorType === "agent";
               const agentName = isAgent && m.authorId ? agentsById.get(m.authorId) : null;
@@ -82,57 +84,63 @@ export default async function RequestPage({ params }: { params: Promise<{ number
               const cardLine = isAgent ? "var(--acc-b)" : "var(--line)";
               const files = attachmentsByMessage.get(m.id) ?? [];
               return (
-                <article
-                  key={m.id}
-                  className="overflow-hidden rounded-xl border"
-                  style={{
-                    borderColor: cardLine,
-                    background: isAgent ? "var(--acc-t)" : "var(--panel)",
-                  }}
-                >
-                  <div
-                    className="flex items-center gap-2.5 border-b px-[15px] py-[11px]"
-                    style={{ borderColor: cardLine }}
-                  >
+                <article key={m.id} className="pt-thread-item flex items-stretch gap-3.5 pb-3.5">
+                  <div className="flex w-[34px] flex-none flex-col items-center gap-2">
                     <span
-                      className="grid h-[26px] w-[26px] place-items-center rounded-full text-[10px] font-bold"
-                      style={
-                        isAgent
-                          ? { background: "var(--acc-t)", color: "var(--acc)", border: "1px solid var(--acc-b)" }
-                          : { background: "var(--open-t)", color: "var(--open)" }
-                      }
+                      className="grid h-[34px] w-[34px] flex-none place-items-center rounded-full text-[11px] font-bold"
+                      style={{
+                        border: `1px solid ${cardLine}`,
+                        ...(isAgent
+                          ? { background: "var(--acc-t)", color: "var(--acc)" }
+                          : { background: "var(--open-t)", color: "var(--open)" }),
+                      }}
                     >
                       {initials}
                     </span>
-                    <span className="text-[14.5px] font-semibold">{author}</span>
-                    <span className="flex-1" />
-                    <span className="text-[13px]" style={{ color: "var(--ink-3)" }}>
-                      {messageTimeFr(m.createdAt)}
-                    </span>
+                    <span aria-hidden className="pt-thread-rail w-px flex-1" />
                   </div>
                   <div
-                    className="whitespace-pre-wrap px-[15px] py-3.5 text-[15.5px] leading-[1.65]"
-                    style={{ textWrap: "pretty" }}
+                    className="flex min-w-0 flex-1 flex-col gap-2 rounded-2xl border px-[18px] py-[15px]"
+                    style={{
+                      borderColor: cardLine,
+                      background: isAgent ? "var(--acc-t)" : "var(--panel)",
+                      boxShadow: "var(--sh-1)",
+                    }}
                   >
-                    {m.bodyText}
-                    {files.length > 0 && (
-                      <span className="mt-2.5 flex flex-wrap gap-1.5">
-                        {files.map((a) => (
-                          <a
-                            key={a.id}
-                            href={`/api/attachments/${a.id}`}
-                            className="rounded-md border px-2 py-0.5 font-mono text-xs hover:no-underline"
-                            style={{
-                              borderColor: "var(--line)",
-                              background: "var(--sunk)",
-                              color: "var(--ink-2)",
-                            }}
-                          >
-                            📎 {a.filename}
-                          </a>
-                        ))}
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[14.5px] font-semibold">{author}</span>
+                      <span className="flex-1" />
+                      <span
+                        className="text-[12.5px] tabular-nums"
+                        style={{ color: "var(--ink-3)" }}
+                      >
+                        {messageTimeFr(m.createdAt)}
                       </span>
-                    )}
+                    </div>
+                    <div
+                      className="whitespace-pre-wrap text-[15.5px] leading-[1.7]"
+                      style={{ textWrap: "pretty" }}
+                    >
+                      {m.bodyText}
+                      {files.length > 0 && (
+                        <span className="mt-2.5 flex flex-wrap gap-1.5">
+                          {files.map((a) => (
+                            <a
+                              key={a.id}
+                              href={`/api/attachments/${a.id}`}
+                              className="rounded-md border px-2 py-0.5 font-mono text-xs hover:no-underline"
+                              style={{
+                                borderColor: "var(--line)",
+                                background: "var(--sunk)",
+                                color: "var(--ink-2)",
+                              }}
+                            >
+                              📎 {a.filename}
+                            </a>
+                          ))}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </article>
               );
@@ -142,21 +150,23 @@ export default async function RequestPage({ params }: { params: Promise<{ number
           {/* Bloc CSAT après résolution */}
           {showCsat && (
             <div
-              className="flex flex-col gap-[13px] rounded-xl border p-5"
+              className="flex flex-col gap-3.5 rounded-2xl border p-[22px]"
               style={{ background: "var(--acc-t)", borderColor: "var(--acc-b)" }}
             >
-              <p className="text-[17px] font-semibold">Comment évaluez-vous cette réponse ?</p>
-              <div className="flex flex-wrap gap-[9px]">
+              <p className="pt-title text-xl tracking-[-0.01em]">
+                Comment évaluez-vous cette réponse ?
+              </p>
+              <div className="flex flex-wrap gap-2.5">
                 <a
                   href={`/api/csat?t=${ticket.id}&s=good&sig=${csatSignature(ticket.id, "good")}`}
-                  className="flex h-[46px] items-center gap-2 rounded-[9px] border px-[22px] text-[15px] font-semibold hover:no-underline"
+                  className="flex h-[46px] items-center gap-2 rounded-full border px-[22px] text-[15px] font-semibold hover:no-underline"
                   style={{ borderColor: "var(--ok)", background: "var(--panel)", color: "var(--ok)" }}
                 >
                   😊 Satisfait
                 </a>
                 <a
                   href={`/api/csat?t=${ticket.id}&s=bad&sig=${csatSignature(ticket.id, "bad")}`}
-                  className="flex h-[46px] items-center gap-2 rounded-[9px] border px-[22px] text-[15px] font-medium hover:no-underline"
+                  className="flex h-[46px] items-center gap-2 rounded-full border px-[22px] text-[15px] font-medium hover:no-underline"
                   style={{ borderColor: "var(--line)", background: "var(--panel)", color: "var(--ink)" }}
                 >
                   😕 Insatisfait
@@ -169,7 +179,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
                 <textarea
                   name="comment"
                   placeholder="Un commentaire à ajouter ? (facultatif)"
-                  className="min-h-[72px] w-full resize-y rounded-[9px] border p-3 text-[15px] outline-none"
+                  className="min-h-[76px] w-full resize-y rounded-[11px] border p-3.5 text-[15px] outline-none"
                   style={{
                     borderColor: "var(--line)",
                     background: "var(--panel)",
@@ -178,7 +188,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
                 />
                 <button
                   type="submit"
-                  className="grid h-10 w-fit place-items-center rounded-lg border px-4 text-sm font-medium"
+                  className="grid h-10 w-fit place-items-center rounded-[10px] border px-4 text-sm font-medium"
                   style={{ borderColor: "var(--line)", background: "var(--panel)", color: "var(--ink)" }}
                 >
                   Envoyer le commentaire
@@ -192,26 +202,30 @@ export default async function RequestPage({ params }: { params: Promise<{ number
             <form action={replyToRequest}>
               <input type="hidden" name="number" value={ticket.number} />
               <div
-                className="overflow-hidden rounded-xl border"
-                style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+                className="overflow-hidden rounded-2xl border"
+                style={{
+                  background: "var(--panel)",
+                  borderColor: "var(--line)",
+                  boxShadow: "var(--sh-1)",
+                }}
               >
                 <textarea
                   name="body"
                   required
                   placeholder="Écrire une réponse…"
-                  className="min-h-[110px] w-full resize-y bg-transparent p-3.5 text-[15.5px] outline-none"
+                  className="min-h-[112px] w-full resize-y bg-transparent p-4 text-[15.5px] outline-none"
                   style={{ color: "var(--ink)" }}
                 />
                 <div
-                  className="flex items-center gap-2.5 border-t px-3.5 py-[11px]"
-                  style={{ borderColor: "var(--line)" }}
+                  className="flex items-center gap-2.5 border-t px-3.5 py-3"
+                  style={{ borderColor: "var(--line-2)", background: "var(--canvas)" }}
                 >
                   <AttachButton />
                   <span className="flex-1" />
                   <button
                     type="submit"
-                    className="grid h-[42px] place-items-center rounded-[9px] px-5 text-[15px] font-semibold text-white"
-                    style={{ background: "var(--acc)" }}
+                    className="grid h-[42px] place-items-center rounded-[10px] px-[22px] text-[14.5px] font-semibold text-white"
+                    style={{ background: "var(--cta-a)" }}
                   >
                     Envoyer
                   </button>
@@ -224,11 +238,15 @@ export default async function RequestPage({ params }: { params: Promise<{ number
         {/* Sidebar méta */}
         <aside className="flex flex-col gap-3.5 self-start">
           <div
-            className="overflow-hidden rounded-xl border"
-            style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+            className="overflow-hidden rounded-2xl border"
+            style={{
+              background: "var(--panel)",
+              borderColor: "var(--line)",
+              boxShadow: "var(--sh-1)",
+            }}
           >
             <div
-              className="flex items-center justify-between gap-3 border-b px-[15px] py-3 text-[14.5px]"
+              className="flex items-center justify-between gap-3 border-b px-4 py-3.5 text-sm"
               style={{ borderColor: "var(--line-2)" }}
             >
               <span style={{ color: "var(--ink-3)" }}>Statut</span>
@@ -237,13 +255,13 @@ export default async function RequestPage({ params }: { params: Promise<{ number
               </span>
             </div>
             <div
-              className="flex items-center justify-between gap-3 border-b px-[15px] py-3 text-[14.5px]"
+              className="flex items-center justify-between gap-3 border-b px-4 py-3.5 text-sm"
               style={{ borderColor: "var(--line-2)" }}
             >
               <span style={{ color: "var(--ink-3)" }}>Créée le</span>
               <span className="text-right font-semibold">{dateLongFr(ticket.createdAt)}</span>
             </div>
-            <div className="flex items-center justify-between gap-3 px-[15px] py-3 text-[14.5px]">
+            <div className="flex items-center justify-between gap-3 px-4 py-3.5 text-sm">
               <span style={{ color: "var(--ink-3)" }}>Référence</span>
               <span className="text-right font-mono font-semibold">#{ticket.number}</span>
             </div>
@@ -253,12 +271,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
               <input type="hidden" name="number" value={ticket.number} />
               <button
                 type="submit"
-                className="grid h-[46px] w-full place-items-center rounded-[9px] border text-[14.5px] font-medium"
-                style={{
-                  borderColor: "var(--line)",
-                  background: "var(--panel)",
-                  color: "var(--ink)",
-                }}
+                className="pt-outline grid h-[46px] w-full place-items-center rounded-[10px] text-[14.5px] font-medium"
               >
                 {ticket.status === "resolved" ? "Rouvrir la demande" : "Marquer comme résolue"}
               </button>
