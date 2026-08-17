@@ -1,98 +1,95 @@
-import Link from "next/link";
+import { Suspense } from "react";
+import { and, count, eq, inArray, isNull } from "drizzle-orm";
 import {
-  BarChart3,
-  Bell,
-  BookOpen,
-  Building2,
-  Inbox,
-  Plus,
-  Search,
-  Settings,
-  Users,
-} from "lucide-react";
+  contacts,
+  db,
+  kbArticles,
+  kbCategories,
+  organizations,
+  tickets,
+} from "@openhelpdesk/db";
 import { requireAgent } from "@/lib/session";
 import { Avatar } from "@/components/ticket-bits";
-import { CommandPalette, SearchButton } from "@/components/command-palette";
+import { CommandPalette } from "@/components/command-palette";
+import { RailNav, TopBar, type ShellCounts } from "@/components/app-shell";
 import { SignOutButton } from "./sign-out-button";
 
 /**
- * Shell commun de l'espace agent (specs/10) : barre latérale 64 px (Inbox, Recherche,
- * Contacts, Organisations, Rapports, KB, Paramètres ; avatar en bas) + barre supérieure
- * fine (« Nouveau ticket », cloche, ⌘K). Densité élevée.
+ * Shell commun de l'espace agent (AG-03 → AG-10) : rail 64 px (logo 32×32, 7 icônes
+ * 40×40 avec états actifs, badge rouge sur Inbox = tickets ouverts de l'agent, avatar
+ * 30×30 en bas) + topbar 48 px (titre + sous-titre dynamiques, ⌘K, cloche, « + Nouveau
+ * ticket »).
  */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { tenant, agent } = await requireAgent();
+  const branding = (tenant.branding ?? {}) as { accentColor?: string };
 
-  const navItems = [
-    { href: "/app/tickets", icon: Inbox, label: "Inbox" },
-    { href: "/app/contacts", icon: Users, label: "Contacts" },
-    { href: "/app/organizations", icon: Building2, label: "Organisations" },
-    { href: "/app/reports", icon: BarChart3, label: "Rapports" },
-    { href: "/app/kb", icon: BookOpen, label: "Base de connaissances" },
-    { href: "/app/settings/team", icon: Settings, label: "Paramètres" },
-  ];
+  const [[myOpen], [contactCount], [orgCount], [articleCount], [categoryCount]] =
+    await Promise.all([
+      db
+        .select({ n: count() })
+        .from(tickets)
+        .where(
+          and(
+            eq(tickets.tenantId, tenant.id),
+            eq(tickets.assigneeId, agent.id),
+            inArray(tickets.status, ["new", "open", "waiting", "on_hold"]),
+            isNull(tickets.deletedAt),
+            isNull(tickets.mergedIntoId),
+          ),
+        ),
+      db.select({ n: count() }).from(contacts).where(eq(contacts.tenantId, tenant.id)),
+      db
+        .select({ n: count() })
+        .from(organizations)
+        .where(eq(organizations.tenantId, tenant.id)),
+      db.select({ n: count() }).from(kbArticles).where(eq(kbArticles.tenantId, tenant.id)),
+      db
+        .select({ n: count() })
+        .from(kbCategories)
+        .where(eq(kbCategories.tenantId, tenant.id)),
+    ]);
+
+  const counts: ShellCounts = {
+    inbox: myOpen?.n ?? 0,
+    contacts: contactCount?.n ?? 0,
+    organizations: orgCount?.n ?? 0,
+    kbArticles: articleCount?.n ?? 0,
+    kbCategories: categoryCount?.n ?? 0,
+  };
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Barre latérale 64 px */}
+      {/* Rail 64 px */}
       <aside
-        className="flex w-16 shrink-0 flex-col items-center gap-1 border-r py-3"
+        className="flex w-16 shrink-0 flex-col items-center border-r py-3"
         style={{ background: "var(--panel)", borderColor: "var(--line)" }}
       >
         <div
-          className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg font-bold text-white"
-          style={{ background: "var(--acc)" }}
+          className="mb-3 flex items-center justify-center font-bold text-white"
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: 8,
+            background: branding.accentColor || "var(--acc)",
+          }}
           title={tenant.name}
         >
           {tenant.name[0]?.toUpperCase()}
         </div>
-        <Link
-          href="/app/tickets"
-          title="Inbox"
-          className="rounded-lg p-2.5"
-          style={{ color: "var(--ink)" }}
-        >
-          <Inbox size={18} strokeWidth={1.8} />
-        </Link>
-        <SearchButton>
-          <Search size={18} strokeWidth={1.8} />
-        </SearchButton>
-        {navItems.slice(1).map(({ href, icon: Icon, label }) => (
-          <Link
-            key={label}
-            href={href}
-            title={label}
-            className="rounded-lg p-2.5"
-            style={{ color: href === "#" ? "var(--mute)" : "var(--ink)" }}
-          >
-            <Icon size={18} strokeWidth={1.8} />
-          </Link>
-        ))}
-        <div className="mt-auto flex flex-col items-center gap-1">
+
+        <RailNav inboxBadge={counts.inbox} />
+
+        <div className="mt-auto flex flex-col items-center gap-1.5">
           <SignOutButton />
           <Avatar name={agent.name} size={30} />
         </div>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        {/* Barre supérieure */}
-        <header
-          className="flex h-12 shrink-0 items-center gap-3 border-b px-4"
-          style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-        >
-          <span className="text-sm font-semibold">{tenant.name}</span>
-          <span className="flex-1" />
-          <Link
-            href="/app/tickets/new"
-            className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-semibold text-white"
-            style={{ background: "var(--acc)" }}
-          >
-            <Plus size={15} /> Nouveau ticket
-          </Link>
-          <button className="p-2" style={{ color: "var(--mute)" }} title="Notifications">
-            <Bell size={16} />
-          </button>
-        </header>
+        <Suspense fallback={<div style={{ height: 48 }} />}>
+          <TopBar counts={counts} />
+        </Suspense>
 
         <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
       </div>

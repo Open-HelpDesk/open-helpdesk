@@ -11,19 +11,22 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       ? "Cette identité n'est pas membre de ce workspace."
       : null,
   );
+  const [badCredentials, setBadCredentials] = useState(false);
   const [pending, setPending] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setPending(true);
     setError(null);
+    setBadCredentials(false);
     const form = new FormData(e.currentTarget);
     const { error } = await authClient.signIn.email({
       email: String(form.get("email")),
       password: String(form.get("password")),
     });
     if (error) {
-      setError("Identifiants incorrects. Vérifiez votre email et votre mot de passe.");
+      setError("Identifiants incorrects.");
+      setBadCredentials(true);
       setPending(false);
       return;
     }
@@ -33,6 +36,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
 
   async function onSocial(provider: "google" | "microsoft") {
     setError(null);
+    setBadCredentials(false);
     const { error } = await authClient.signIn.social({
       provider,
       callbackURL: "/app/tickets",
@@ -42,33 +46,58 @@ export function LoginForm({ initialError }: { initialError?: string }) {
     }
   }
 
+  const inputStyle = {
+    height: 36,
+    borderRadius: 6,
+    borderColor: badCredentials ? "var(--dang)" : "var(--line)",
+    background: "var(--bg)",
+    color: "var(--ink)",
+  } as const;
+
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3">
-      <label className="flex flex-col gap-1 text-sm font-medium">
+      <label className="flex flex-col gap-1 text-[13px] font-medium">
         Email
         <input
           name="email"
           type="email"
           required
           autoComplete="email"
-          className="rounded-md border px-3 py-2 text-sm outline-none focus:ring-2"
-          style={{ borderColor: "var(--line)", background: "var(--bg)" }}
+          placeholder="vous@entreprise.fr"
+          className="border px-3 text-sm font-normal outline-none focus:ring-2"
+          style={inputStyle}
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm font-medium">
-        Mot de passe
+      <label className="flex flex-col gap-1 text-[13px] font-medium">
+        <span className="flex items-baseline justify-between">
+          Mot de passe
+          <a
+            href="#"
+            className="font-normal"
+            style={{ color: "var(--acc-2)", fontSize: 12 }}
+          >
+            Mot de passe oublié ?
+          </a>
+        </span>
         <input
           name="password"
           type="password"
           required
           autoComplete="current-password"
-          className="rounded-md border px-3 py-2 text-sm outline-none focus:ring-2"
-          style={{ borderColor: "var(--line)", background: "var(--bg)" }}
+          className="border px-3 text-sm font-normal outline-none focus:ring-2"
+          style={inputStyle}
         />
       </label>
 
       {error && (
-        <p className="rounded-md px-3 py-2 text-sm" style={{ background: "var(--dang-t)", color: "var(--dang)" }}>
+        <p
+          className="rounded-md border px-3 py-2 text-[13px]"
+          style={{
+            background: "var(--dang-t)",
+            borderColor: "var(--dang)",
+            color: "var(--dang)",
+          }}
+        >
           {error}
         </p>
       )}
@@ -76,40 +105,37 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md px-3 py-2 text-sm font-semibold text-white disabled:opacity-60"
-        style={{ background: "var(--acc)" }}
+        className="mt-1 rounded-md text-sm font-semibold text-white disabled:opacity-60"
+        style={{ height: 38, background: "var(--acc)" }}
       >
         {pending ? "Connexion…" : "Se connecter"}
       </button>
 
-      <div className="my-1 flex items-center gap-3 text-xs" style={{ color: "var(--mute)" }}>
+      <div
+        className="my-1 flex items-center gap-3 text-[11px] font-semibold"
+        style={{ color: "var(--ink-3)" }}
+      >
         <span className="h-px flex-1" style={{ background: "var(--line)" }} />
-        ou
+        OU
         <span className="h-px flex-1" style={{ background: "var(--line)" }} />
       </div>
 
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={() => onSocial("google")}
-          className="flex-1 rounded-md border px-3 py-2 text-sm font-medium"
-          style={{ borderColor: "var(--line)" }}
-        >
-          Continuer avec Google
-        </button>
-        <button
-          type="button"
-          onClick={() => onSocial("microsoft")}
-          className="flex-1 rounded-md border px-3 py-2 text-sm font-medium"
-          style={{ borderColor: "var(--line)" }}
-        >
-          Microsoft
-        </button>
-      </div>
-
-      <a href="#" className="text-center text-xs underline" style={{ color: "var(--mute)" }}>
-        Mot de passe oublié ?
-      </a>
+      <button
+        type="button"
+        onClick={() => onSocial("google")}
+        className="rounded-md border text-[13px] font-medium"
+        style={{ height: 36, borderColor: "var(--line)", background: "var(--bg)" }}
+      >
+        Continuer avec Google
+      </button>
+      <button
+        type="button"
+        onClick={() => onSocial("microsoft")}
+        className="rounded-md border text-[13px] font-medium"
+        style={{ height: 36, borderColor: "var(--line)", background: "var(--bg)" }}
+      >
+        Continuer avec Microsoft
+      </button>
     </form>
   );
 }

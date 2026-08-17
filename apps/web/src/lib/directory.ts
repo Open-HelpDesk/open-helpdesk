@@ -3,6 +3,7 @@ import {
   contactOrganizations,
   contacts,
   db,
+  kbArticles,
   organizations,
   tickets,
 } from "@openhelpdesk/db";
@@ -157,8 +158,14 @@ export async function getOrganization(tenantId: string, id: string) {
 
 export type SearchResults = {
   tickets: { number: number; subject: string; status: string }[];
-  contacts: { id: string; name: string | null; email: string }[];
+  contacts: {
+    id: string;
+    name: string | null;
+    email: string;
+    organizationName: string | null;
+  }[];
   organizations: { id: string; name: string }[];
+  articles: { id: string; title: string; status: string; viewCount: number }[];
 };
 
 /** ILIKE pour cette tranche ; bascule vers Postgres FTS avec la recherche avancée. */
@@ -166,7 +173,7 @@ export async function searchAll(tenantId: string, q: string): Promise<SearchResu
   const like = `%${q}%`;
   const asNumber = Number(q.replace(/^#/, ""));
 
-  const [ticketRows, contactRows, orgRows] = await Promise.all([
+  const [ticketRows, contactRows, orgRows, articleRows] = await Promise.all([
     db
       .select({ number: tickets.number, subject: tickets.subject, status: tickets.status })
       .from(tickets)
@@ -195,7 +202,50 @@ export async function searchAll(tenantId: string, q: string): Promise<SearchResu
       .from(organizations)
       .where(and(eq(organizations.tenantId, tenantId), ilike(organizations.name, like)))
       .limit(5),
+    db
+      .select({
+        id: kbArticles.id,
+        title: kbArticles.title,
+        status: kbArticles.status,
+        viewCount: kbArticles.viewCount,
+      })
+      .from(kbArticles)
+      .where(and(eq(kbArticles.tenantId, tenantId), ilike(kbArticles.title, like)))
+      .orderBy(desc(kbArticles.viewCount))
+      .limit(4),
   ]);
 
-  return { tickets: ticketRows, contacts: contactRows, organizations: orgRows };
+  // Organisation principale de chaque contact trouvé (pour la combobox AG-05 et ⌘K).
+  let contactsWithOrg = contactRows.map((c) => ({
+    ...c,
+    organizationName: null as string | null,
+  }));
+  if (contactRows.length > 0) {
+    const links = await db
+      .select({
+        contactId: contactOrganizations.contactId,
+        organizationName: organizations.name,
+      })
+      .from(contactOrganizations)
+      .innerJoin(organizations, eq(organizations.id, contactOrganizations.organizationId))
+      .where(
+        inArray(
+          contactOrganizations.contactId,
+          contactRows.map((c) => c.id),
+        ),
+      );
+    const byContact = new Map<string, string>();
+    for (const l of links) if (!byContact.has(l.contactId)) byContact.set(l.contactId, l.organizationName);
+    contactsWithOrg = contactRows.map((c) => ({
+      ...c,
+      organizationName: byContact.get(c.id) ?? null,
+    }));
+  }
+
+  return {
+    tickets: ticketRows,
+    contacts: contactsWithOrg,
+    organizations: orgRows,
+    articles: articleRows,
+  };
 }

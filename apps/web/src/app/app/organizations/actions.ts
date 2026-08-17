@@ -38,7 +38,7 @@ export async function addOrgDomain(formData: FormData) {
   }
 
   if (!isValid || taken) {
-    redirect(`/app/organizations/${organizationId}?error=invalid-domain`);
+    redirect(`/app/organizations?selected=${organizationId}&error=invalid-domain`);
   }
 
   await db
@@ -50,7 +50,6 @@ export async function addOrgDomain(formData: FormData) {
     })
     .where(and(eq(organizations.tenantId, tenant.id), eq(organizations.id, organizationId)));
 
-  revalidatePath(`/app/organizations/${organizationId}`);
   revalidatePath("/app/organizations");
 }
 
@@ -64,11 +63,10 @@ export async function removeOrgDomain(formData: FormData) {
     .set({ emailDomains: sql`array_remove(${organizations.emailDomains}, ${domain})` })
     .where(and(eq(organizations.tenantId, tenant.id), eq(organizations.id, organizationId)));
 
-  revalidatePath(`/app/organizations/${organizationId}`);
   revalidatePath("/app/organizations");
 }
 
-/** « Les contacts peuvent voir les tickets de leur organisation » (AG-08 / PT-05). */
+/** « Partage des demandes » (AG-08 / PT-05). */
 export async function toggleOrgSharedTickets(formData: FormData) {
   const { tenant } = await requireAgent();
   const organizationId = String(formData.get("organizationId"));
@@ -76,5 +74,17 @@ export async function toggleOrgSharedTickets(formData: FormData) {
     .update(organizations)
     .set({ sharedTickets: not(organizations.sharedTickets) })
     .where(and(eq(organizations.tenantId, tenant.id), eq(organizations.id, organizationId)));
-  revalidatePath(`/app/organizations/${organizationId}`);
+  revalidatePath("/app/organizations");
+}
+
+/** Onglet Notes du panneau AG-08 — organizations.notes. */
+export async function updateOrgNotes(formData: FormData) {
+  const { tenant } = await requireAgent();
+  const organizationId = String(formData.get("organizationId"));
+  const notes = String(formData.get("notes") ?? "").trim();
+  await db
+    .update(organizations)
+    .set({ notes: notes || null })
+    .where(and(eq(organizations.tenantId, tenant.id), eq(organizations.id, organizationId)));
+  revalidatePath("/app/organizations");
 }

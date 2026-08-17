@@ -7,4 +7,70 @@ body {
   font-family: var(--font-ui);
   /* Densité app agent : 14 px (specs/02) */
   font-size: 14px;
+  line-height: 1.45;
+}
+
+/* ---------- Animations du design espace agent ---------- */
+@keyframes ohd-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ohd-flash {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes ohd-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ohd-rise {
+  animation: ohd-rise 0.2s ease both;
+}
+
+.ohd-rise-fast {
+  animation: ohd-rise 0.16s ease both;
+}
+
+.ohd-rise-slow {
+  animation: ohd-rise 0.25s ease both;
+}
+
+.ohd-flash {
+  animation: ohd-flash 1.2s ease-in-out infinite;
+}
+
+.ohd-spin {
+  animation: ohd-spin 0.9s linear infinite;
+}
+
+/* Touche clavier (⌘K, j, k, ↵…) */
+.ohd-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  padding: 1px 4px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--sunk);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.3;
 }

@@ -1,96 +1,67 @@
+import Link from "next/link";
+import { and, asc, eq, ne, sql } from "drizzle-orm";
+import { db, ticketForms, users } from "@openhelpdesk/db";
 import { requireAgent } from "@/lib/session";
-import { PRIORITY_LABELS_FR } from "@/lib/format";
-import { createTicket } from "../actions";
+import { NewTicketForm } from "./new-ticket-form";
 
 /**
- * AG-05 — Nouveau ticket (specs/10) : création au nom d'un client, contact créé à la
- * volée, rattachement automatique à l'organisation par domaine email.
- * Restent à venir : combobox de recherche de contact, sélecteur de formulaire,
- * corps riche, envoi email au contact.
+ * AG-05 — Nouveau ticket (design espace-agent) : carte centrée 720 px radius 12,
+ * combobox contact réelle, grille Sujet/Formulaire, description avec toolbar,
+ * 4 selects, encart « Envoyer la réponse par email », pied sunk.
  */
 export default async function NewTicketPage() {
-  await requireAgent();
+  const { tenant, agent } = await requireAgent();
+
+  const [forms, agents, tagRows] = await Promise.all([
+    db
+      .select({ id: ticketForms.id, name: ticketForms.name })
+      .from(ticketForms)
+      .where(eq(ticketForms.tenantId, tenant.id))
+      .orderBy(asc(ticketForms.position), asc(ticketForms.name)),
+    db
+      .select({ id: users.id, name: users.name })
+      .from(users)
+      .where(and(eq(users.tenantId, tenant.id), ne(users.status, "disabled")))
+      .orderBy(asc(users.name)),
+    db.execute(
+      sql`select distinct unnest(tags) as tag from app.tickets where tenant_id = ${tenant.id} order by tag limit 20`,
+    ) as unknown as Promise<{ tag: string }[]>,
+  ]);
+
   return (
-    <div className="mx-auto max-w-2xl p-8">
-      <p className="mb-1 font-mono text-xs uppercase tracking-wider" style={{ color: "var(--acc)" }}>
-        AG-05 · Nouveau ticket
-      </p>
-      <h1 className="mb-5 text-lg font-semibold">Créer un ticket</h1>
-
-      <form
-        action={createTicket}
-        className="flex flex-col gap-4 rounded-xl border p-6"
-        style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+    <div className="h-full overflow-y-auto py-8">
+      <div
+        className="ohd-rise mx-auto w-full border shadow-sm"
+        style={{
+          maxWidth: 720,
+          borderRadius: 12,
+          background: "var(--panel)",
+          borderColor: "var(--line)",
+        }}
       >
-        <div className="grid grid-cols-2 gap-3">
-          <label className="flex flex-col gap-1 text-sm font-medium">
-            Email du contact *
-            <input
-              name="email"
-              type="email"
-              required
-              placeholder="julien.lambert@nordfil.example"
-              className="rounded-md border px-3 py-2 text-sm font-normal"
-              style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-            />
-          </label>
-          <label className="flex flex-col gap-1 text-sm font-medium">
-            Nom (si nouveau contact)
-            <input
-              name="name"
-              type="text"
-              className="rounded-md border px-3 py-2 text-sm font-normal"
-              style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-            />
-          </label>
-        </div>
-
-        <label className="flex flex-col gap-1 text-sm font-medium">
-          Sujet *
-          <input
-            name="subject"
-            type="text"
-            required
-            className="rounded-md border px-3 py-2 text-sm font-normal"
-            style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-          />
-        </label>
-
-        <label className="flex flex-col gap-1 text-sm font-medium">
-          Description
-          <textarea
-            name="body"
-            rows={5}
-            className="resize-y rounded-md border px-3 py-2 text-sm font-normal"
-            style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-          />
-        </label>
-
-        <div className="flex items-center justify-between">
-          <label className="inline-flex items-center gap-2 text-sm font-medium">
-            Priorité
-            <select
-              name="priority"
-              defaultValue="normal"
-              className="rounded-md border px-2 py-1.5 text-sm font-normal"
-              style={{ borderColor: "var(--line)", background: "var(--bg)" }}
-            >
-              {Object.entries(PRIORITY_LABELS_FR).map(([k, v]) => (
-                <option key={k} value={k}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button
-            type="submit"
-            className="rounded-md px-4 py-2 text-sm font-semibold text-white"
-            style={{ background: "var(--acc)" }}
+        {/* En-tête de la carte */}
+        <div
+          className="flex items-center justify-between border-b px-6 py-4"
+          style={{ borderColor: "var(--line)" }}
+        >
+          <h1 className="text-[15px] font-semibold">Nouveau ticket</h1>
+          <Link
+            href="/app/tickets"
+            title="Fermer"
+            className="flex items-center justify-center rounded-md"
+            style={{ width: 26, height: 26, color: "var(--ink-3)" }}
           >
-            Créer le ticket
-          </button>
+            ✕
+          </Link>
         </div>
-      </form>
+
+        <NewTicketForm
+          forms={forms}
+          agents={agents}
+          tags={tagRows.map((r) => String(r.tag))}
+          meId={agent.id}
+        />
+      </div>
     </div>
   );
 }

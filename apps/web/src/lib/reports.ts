@@ -1,13 +1,19 @@
-/** Requêtes de AG-09 — Rapports. Fenêtre courante + fenêtre précédente pour les deltas. */
+/**
+ * Requêtes de AG-09 — Rapports. Fenêtre courante + fenêtre précédente pour les deltas,
+ * filtre équipe optionnel, heatmap heure × jour, borne des données pour la bannière 7 j.
+ */
 import { db } from "@openhelpdesk/db";
-import { sql } from "drizzle-orm";
+import { sql, type SQL } from "drizzle-orm";
 
 export type ReportData = Awaited<ReturnType<typeof getReportData>>;
 
 type Row = Record<string, unknown>;
 const n = (v: unknown): number => (v === null || v === undefined ? 0 : Number(v));
 
-export async function getReportData(tenantId: string, days: number) {
+export async function getReportData(tenantId: string, days: number, teamId?: string) {
+  const teamFilter: SQL = teamId ? sql` and team_id = ${teamId}` : sql``;
+  const teamFilterT: SQL = teamId ? sql` and t.team_id = ${teamId}` : sql``;
+
   const windowFor = (offset: number) => ({
     from: sql`now() - make_interval(days => ${days * (offset + 1)})`,
     to: sql`now() - make_interval(days => ${days * offset})`,
@@ -28,7 +34,7 @@ export async function getReportData(tenantId: string, days: number) {
           and (first_reply_due_at is null or (first_replied_at is not null and first_replied_at <= first_reply_due_at))
         ) as sla_ok
       from app.tickets
-      where tenant_id = ${tenantId} and deleted_at is null and merged_into_id is null
+      where tenant_id = ${tenantId} and deleted_at is null and merged_into_id is null${teamFilter}
     `)) as unknown as Row[];
     const r = rows[0] ?? {};
     const resolved = n(r.resolved);
@@ -37,7 +43,8 @@ export async function getReportData(tenantId: string, days: number) {
       resolved,
       medianFirstReplySec: r.median_first_reply_sec === null ? null : n(r.median_first_reply_sec),
       medianResolveSec: r.median_resolve_sec === null ? null : n(r.median_resolve_sec),
-      slaCompliancePct: resolved > 0 ? Math.round((n(r.sla_ok) / resolved) * 100) : null,
+      slaCompliancePct:
+        resolved > 0 ? Math.round((n(r.sla_ok) / resolved) * 1000) / 10 : null,
     };
   }
 
@@ -62,9 +69,9 @@ export async function getReportData(tenantId: string, days: number) {
   const daily = (await db.execute(sql`
     select d::date as day,
       (select count(*) from app.tickets t where t.tenant_id = ${tenantId}
-        and t.created_at >= d and t.created_at < d + interval '1 day') as created,
+        and t.created_at >= d and t.created_at < d + interval '1 day'${teamFilterT}) as created,
       (select count(*) from app.tickets t where t.tenant_id = ${tenantId}
-        and t.resolved_at >= d and t.resolved_at < d + interval '1 day') as resolved
+        and t.resolved_at >= d and t.resolved_at < d + interval '1 day'${teamFilterT}) as resolved
     from generate_series(date_trunc('day', now()) - make_interval(days => ${days - 1}),
                          date_trunc('day', now()), interval '1 day') as d
     order by d
@@ -72,7 +79,7 @@ export async function getReportData(tenantId: string, days: number) {
 
   const channels = (await db.execute(sql`
     select channel, count(*) as count from app.tickets
-    where tenant_id = ${tenantId} and created_at >= now() - make_interval(days => ${days})
+    where tenant_id = ${tenantId} and created_at >= now() - make_interval(days => ${days})${teamFilter}
     group by channel order by count desc
   `)) as unknown as Row[];
 
@@ -84,7 +91,7 @@ export async function getReportData(tenantId: string, days: number) {
       count(c.id) filter (where c.score = 'good') as csat_good,
       count(c.id) as csat_total
     from app.users u
-    left join app.tickets t on t.assignee_id = u.id and t.tenant_id = ${tenantId}
+    left join app.tickets t on t.assignee_id = u.id and t.tenant_id = ${tenantId}${teamFilterT}
     left join app.csat_responses c on c.agent_id = u.id and c.tenant_id = ${tenantId}
       and c.created_at >= now() - make_interval(days => ${days})
     where u.tenant_id = ${tenantId} and u.status != 'disabled'
@@ -93,12 +100,30 @@ export async function getReportData(tenantId: string, days: number) {
     order by resolved desc
   `)) as unknown as Row[];
 
-  const tags = (await db.execute(sql`
-    select tag, count(*) as count
-    from app.tickets, unnest(tags) as tag
-    where tenant_id = ${tenantId} and created_at >= now() - make_interval(days => ${days})
-    group by tag order by count desc limit 8
+  // Heatmap « Volume par heure et jour » — dow Postgres (0 = dimanche) × heures 7–18.
+  const heatRows = (await db.execute(sql`
+    select extract(dow from created_at) as dow, extract(hour from created_at) as hour, count(*) as n
+    from app.tickets
+    where tenant_id = ${tenantId} and created_at >= now() - make_interval(days => ${days})${teamFilter}
+    group by 1, 2
   `)) as unknown as Row[];
+  // Lignes lundi→dimanche, colonnes 7 h → 18 h (12 cases).
+  const HOURS = Array.from({ length: 12 }, (_, i) => 7 + i);
+  const DOW_ORDER = [1, 2, 3, 4, 5, 6, 0];
+  const heatmap = DOW_ORDER.map((dow) =>
+    HOURS.map((hour) => {
+      const hit = heatRows.find((r) => n(r.dow) === dow && n(r.hour) === hour);
+      return hit ? n(hit.n) : 0;
+    }),
+  );
+
+  const oldest = (await db.execute(sql`
+    select min(created_at) as oldest from app.tickets where tenant_id = ${tenantId}
+  `)) as unknown as Row[];
+  const oldestAt = oldest[0]?.oldest ? new Date(String(oldest[0].oldest)) : null;
+  const dataSpanDays = oldestAt
+    ? Math.floor((Date.now() - oldestAt.getTime()) / 86_400_000)
+    : 0;
 
   return {
     current,
@@ -117,6 +142,8 @@ export async function getReportData(tenantId: string, days: number) {
       medianFirstReplySec: r.median_first_reply_sec === null ? null : n(r.median_first_reply_sec),
       csatPct: n(r.csat_total) > 0 ? Math.round((n(r.csat_good) / n(r.csat_total)) * 100) : null,
     })),
-    tags: tags.map((r) => ({ tag: String(r.tag), count: n(r.count) })),
+    heatmap,
+    heatmapHours: HOURS,
+    dataSpanDays,
   };
 }

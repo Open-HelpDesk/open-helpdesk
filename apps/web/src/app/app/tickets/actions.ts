@@ -10,7 +10,7 @@ import {
   tickets,
   ticketMessages,
 } from "@openhelpdesk/db";
-import { and, arrayContains, eq } from "drizzle-orm";
+import { and, arrayContains, eq, inArray, sql } from "drizzle-orm";
 import { sendTicketReplyEmail } from "@openhelpdesk/mail";
 import { maybeSendCsat, onAgentReplySla, onTicketCreated, runTriggers } from "@openhelpdesk/rules";
 import { requireAgent } from "@/lib/session";
@@ -124,18 +124,28 @@ export async function sendReply(formData: FormData) {
   revalidatePath("/app/tickets");
 }
 
-/** Panneau propriétés (AG-04) : assigné, priorité, statut. */
+/** Panneau propriétés (AG-04) : assigné, équipe, priorité, type, statut. */
 export async function updateTicketProps(formData: FormData) {
   const { tenant } = await requireAgent();
   const ticketId = String(formData.get("ticketId"));
   const number = Number(formData.get("number"));
 
-  const assigneeId = String(formData.get("assigneeId") ?? "");
   const priority = String(formData.get("priority") ?? "");
   const status = String(formData.get("status") ?? "");
 
   const patch: Partial<typeof tickets.$inferInsert> = { updatedAt: new Date() };
-  patch.assigneeId = assigneeId === "" ? null : assigneeId;
+  if (formData.has("assigneeId")) {
+    const assigneeId = String(formData.get("assigneeId") ?? "");
+    patch.assigneeId = assigneeId === "" ? null : assigneeId;
+  }
+  if (formData.has("teamId")) {
+    const teamId = String(formData.get("teamId") ?? "");
+    patch.teamId = teamId === "" ? null : teamId;
+  }
+  if (formData.has("type")) {
+    const type = String(formData.get("type") ?? "");
+    patch.type = type === "" ? null : type;
+  }
   if (["low", "normal", "high", "urgent"].includes(priority)) {
     patch.priority = priority as "low" | "normal" | "high" | "urgent";
   }
@@ -158,6 +168,121 @@ export async function updateTicketProps(formData: FormData) {
 
   revalidatePath(`/app/tickets/${number}`);
   revalidatePath("/app/tickets");
+}
+
+/* ---------- AG-03 — Actions groupées (barre flottante) ---------- */
+
+export type BulkOp = "assign" | "status" | "priority" | "tag" | "delete";
+
+/** Barre de sélection multiple : Assigner / Statut / Priorité / Taguer / Supprimer. */
+export async function bulkUpdateTickets(input: {
+  ids: string[];
+  op: BulkOp;
+  value?: string;
+}) {
+  const { tenant } = await requireAgent();
+  const ids = input.ids.filter(Boolean);
+  if (ids.length === 0) return;
+
+  const scope = and(eq(tickets.tenantId, tenant.id), inArray(tickets.id, ids));
+  const value = input.value ?? "";
+
+  switch (input.op) {
+    case "assign":
+      await db
+        .update(tickets)
+        .set({ assigneeId: value === "" ? null : value, updatedAt: new Date() })
+        .where(scope);
+      break;
+    case "status":
+      if (["new", "open", "waiting", "on_hold", "resolved", "closed"].includes(value)) {
+        await db
+          .update(tickets)
+          .set({
+            status: value as typeof tickets.$inferInsert.status,
+            ...(value === "resolved" ? { resolvedAt: new Date() } : {}),
+            ...(value === "closed" ? { closedAt: new Date() } : {}),
+            updatedAt: new Date(),
+          })
+          .where(scope);
+      }
+      break;
+    case "priority":
+      if (["low", "normal", "high", "urgent"].includes(value)) {
+        await db
+          .update(tickets)
+          .set({ priority: value as "low" | "normal" | "high" | "urgent", updatedAt: new Date() })
+          .where(scope);
+      }
+      break;
+    case "tag": {
+      const tag = value.trim().toLowerCase();
+      if (tag) {
+        await db
+          .update(tickets)
+          .set({
+            tags: sql`(select array_agg(distinct t) from unnest(${tickets.tags} || ${sql`array[${tag}]::text[]`}) as t)`,
+            updatedAt: new Date(),
+          })
+          .where(scope);
+      }
+      break;
+    }
+    case "delete":
+      await db.update(tickets).set({ deletedAt: new Date() }).where(scope);
+      break;
+  }
+
+  revalidatePath("/app/tickets");
+}
+
+/* ---------- AG-04 — Fusion de tickets ---------- */
+
+/** Fusionner ce ticket dans un ticket cible : mergedIntoId + messages système + redirection. */
+export async function mergeTicket(formData: FormData) {
+  const { tenant, agent } = await requireAgent();
+  const ticketId = String(formData.get("ticketId"));
+  const targetNumber = Number(String(formData.get("targetNumber") ?? "").replace(/^#/, ""));
+  if (!Number.isInteger(targetNumber) || targetNumber <= 0) return;
+
+  const [source] = await db
+    .select()
+    .from(tickets)
+    .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.id, ticketId)));
+  if (!source || source.mergedIntoId) return;
+
+  const [target] = await db
+    .select()
+    .from(tickets)
+    .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.number, targetNumber)));
+  if (!target || target.id === source.id || target.mergedIntoId) return;
+
+  await db
+    .update(tickets)
+    .set({ mergedIntoId: target.id, status: "closed", closedAt: new Date(), updatedAt: new Date() })
+    .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.id, source.id)));
+
+  await db.insert(ticketMessages).values([
+    {
+      tenantId: tenant.id,
+      ticketId: source.id,
+      kind: "system_event" as const,
+      authorType: "system" as const,
+      bodyText: `Ticket fusionné dans #${target.number} par ${agent.name}`,
+    },
+    {
+      tenantId: tenant.id,
+      ticketId: target.id,
+      kind: "system_event" as const,
+      authorType: "system" as const,
+      bodyText: `Le ticket #${source.number} a été fusionné dans ce ticket par ${agent.name}`,
+    },
+  ]);
+
+  revalidatePath(`/app/tickets/${source.number}`);
+  revalidatePath(`/app/tickets/${target.number}`);
+  revalidatePath("/app/tickets");
+  redirect(`/app/tickets/${target.number}`);
 }
 
 /**
@@ -210,6 +335,18 @@ export async function createTicket(formData: FormData) {
     }
   }
 
+  // Options AG-05 (carte « Nouveau ticket ») — rétro-compatibles.
+  const statusInput = String(formData.get("status") ?? "");
+  const status = (
+    ["new", "open", "waiting", "on_hold"].includes(statusInput) ? statusInput : "open"
+  ) as "new" | "open" | "waiting" | "on_hold";
+  const assigneeInput = String(formData.get("assigneeId") ?? "me");
+  const assigneeId =
+    assigneeInput === "me" ? agent.id : assigneeInput === "" ? null : assigneeInput;
+  const formIdInput = String(formData.get("formId") ?? "");
+  const tag = String(formData.get("tag") ?? "").trim().toLowerCase();
+  const sendEmail = formData.get("sendEmail") === "on";
+
   const number = await nextTicketNumber(tenant.id);
   const [ticket] = await db
     .insert(tickets)
@@ -217,24 +354,50 @@ export async function createTicket(formData: FormData) {
       tenantId: tenant.id,
       number,
       subject,
-      status: "open",
+      status,
       priority,
       channel: "api",
       requesterId: contact!.id,
       organizationId: orgByDomain?.id ?? null,
-      assigneeId: agent.id,
+      assigneeId,
+      formId: formIdInput || null,
+      tags: tag ? [tag] : [],
     })
     .returning();
 
   if (body) {
-    await db.insert(ticketMessages).values({
-      tenantId: tenant.id,
-      ticketId: ticket!.id,
-      kind: "public_reply",
-      authorType: "agent",
-      authorId: agent.id,
-      bodyText: body,
-    });
+    const [message] = await db
+      .insert(ticketMessages)
+      .values({
+        tenantId: tenant.id,
+        ticketId: ticket!.id,
+        kind: "public_reply",
+        authorType: "agent",
+        authorId: agent.id,
+        bodyText: body,
+      })
+      .returning();
+
+    // « Envoyer la réponse par email au contact » (encart AG-05).
+    if (sendEmail && message) {
+      try {
+        const sent = await sendTicketReplyEmail({
+          tenantId: tenant.id,
+          ticketNumber: number,
+          subject,
+          to: email,
+          bodyText: body,
+        });
+        if (sent?.messageId) {
+          await db
+            .update(ticketMessages)
+            .set({ emailMeta: { messageId: sent.messageId } })
+            .where(eq(ticketMessages.id, message.id));
+        }
+      } catch (err) {
+        console.error("[mail] échec d'envoi à la création du ticket :", err);
+      }
+    }
   }
 
   await onTicketCreated(tenant.id, ticket!.id);
