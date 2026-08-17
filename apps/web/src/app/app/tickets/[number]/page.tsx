@@ -566,6 +566,29 @@ export default async function TicketPage({
             ))}
           </div>
         </section>
+
+        {/* Capitaliser une résolution — le savoir d'un ticket clos se perd sinon. */}
+        {!isOpen && (
+          <section className="flex flex-col" style={{ gap: 8 }}>
+            <p style={PANEL_GROUP}>Base de connaissances</p>
+            <Link
+              href={`/app/kb/new?depuis=${ticket.number}`}
+              className="inline-flex items-center justify-center rounded-md border font-medium"
+              style={{
+                height: 30,
+                fontSize: 12.5,
+                borderColor: "var(--line)",
+                background: "var(--bg)",
+                color: "var(--ink)",
+              }}
+            >
+              Transformer en article
+            </Link>
+            <p style={{ fontSize: 12, color: "var(--ink-3)", textWrap: "pretty" }}>
+              Reprend la demande et la réponse dans un brouillon à relire.
+            </p>
+          </section>
+        )}
       </aside>
     </div>
   );

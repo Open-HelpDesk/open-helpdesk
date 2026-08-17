@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAgent } from "@/lib/session";
-import { db, kbArticles, kbCategories } from "@openhelpdesk/db";
+import { db, kbArticles, kbCategories, ticketMessages, tickets } from "@openhelpdesk/db";
 import { and, asc, eq } from "drizzle-orm";
 import { relativeFr } from "@/lib/format";
 import { deleteArticle, saveArticle } from "../actions";
 import { ArticleEditor } from "./editor";
 import { ARTICLE_TEMPLATES, templateById } from "@/lib/article-templates";
+import { articleFromTicket } from "@/lib/article-from-ticket";
 
 /**
  * AG-10 — Éditeur d'article (design espace-agent) : badge « MODIFICATIONS NON
@@ -18,17 +19,17 @@ export default async function KbEditorPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ cat?: string; modele?: string }>;
+  searchParams: Promise<{ cat?: string; modele?: string; depuis?: string }>;
 }) {
   const { tenant } = await requireAgent();
   const { id } = await params;
-  const { cat, modele } = await searchParams;
+  const { cat, modele, depuis } = await searchParams;
   const isNew = id === "new";
 
 
   // Page blanche ou structure de départ : le choix précède l'éditeur (aucune
   // création en base tant que rien n'est enregistré).
-  if (isNew && !modele) {
+  if (isNew && !modele && !depuis) {
     return (
       <div className="h-full overflow-y-auto" style={{ background: "var(--canvas)" }}>
         <div className="mx-auto flex flex-col" style={{ maxWidth: 780, padding: "48px 28px" }}>
@@ -98,11 +99,36 @@ export default async function KbEditorPage({
 
   const seo = (article?.seo ?? {}) as { title?: string };
   const hasDraft = Boolean(article?.status === "published" && article?.draftBodyHtml);
+  // « Transformer en article » : le brouillon reprend la question du client et la
+  // réponse de l'agent. Rien n'est écrit avant que l'agent n'enregistre.
+  const sourceNumber = isNew && depuis ? Number(depuis) : null;
+  let depuisTicket: { number: number; title: string; body: string; missing: string[] } | null =
+    null;
+  if (sourceNumber && Number.isFinite(sourceNumber)) {
+    const [source] = await db
+      .select({ id: tickets.id, number: tickets.number, subject: tickets.subject })
+      .from(tickets)
+      .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.number, sourceNumber)));
+    if (source) {
+      const fil = await db
+        .select({
+          authorType: ticketMessages.authorType,
+          kind: ticketMessages.kind,
+          bodyText: ticketMessages.bodyText,
+        })
+        .from(ticketMessages)
+        .where(eq(ticketMessages.ticketId, source.id))
+        .orderBy(asc(ticketMessages.createdAt));
+      const brouillon = articleFromTicket(source.subject, fil);
+      depuisTicket = { number: source.number, ...brouillon };
+    }
+  }
+
   const modeleChoisi = isNew ? templateById(modele) : undefined;
   const bodyValue = article
     ? (article.draftBodyHtml ?? article.bodyHtml ?? "")
-    : (modeleChoisi?.body ?? "");
-  const titleValue = article?.title ?? modeleChoisi?.title ?? "";
+    : (depuisTicket?.body ?? modeleChoisi?.body ?? "");
+  const titleValue = article?.title ?? depuisTicket?.title ?? modeleChoisi?.title ?? "";
 
   const inputStyle = {
     height: 30,
@@ -181,7 +207,28 @@ export default async function KbEditorPage({
       </div>
 
       <div className="flex min-h-0 flex-1">
-        <ArticleEditor defaultTitle={titleValue} defaultBody={bodyValue} />
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+          {depuisTicket && (
+            <div
+              className="flex shrink-0 flex-wrap items-center gap-2 border-b px-8 py-2.5"
+              style={{ background: "var(--open-t)", borderColor: "var(--line-2)" }}
+            >
+              <span style={{ fontSize: 12.5, color: "var(--open)" }}>
+                Brouillon repris de la demande{" "}
+                <Link href={`/app/tickets/${depuisTicket.number}`} style={{ fontWeight: 600 }}>
+                  #{depuisTicket.number}
+                </Link>
+                {" — relisez-le et retirez toute donnée personnelle avant publication."}
+              </span>
+              {depuisTicket.missing.length > 0 && (
+                <span style={{ fontSize: 12, color: "var(--ink-2)" }}>
+                  Manquant : {depuisTicket.missing.join(" et ")}.
+                </span>
+              )}
+            </div>
+          )}
+          <ArticleEditor defaultTitle={titleValue} defaultBody={bodyValue} />
+        </div>
 
         {/* Rail droit — 280 px */}
         <aside
