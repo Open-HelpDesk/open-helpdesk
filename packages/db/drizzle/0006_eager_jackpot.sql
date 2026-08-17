@@ -1,0 +1,1 @@
+ALTER TABLE "app"."business_hours" ADD COLUMN "position" integer DEFAULT 0 NOT NULL;

@@ -4,10 +4,26 @@
  * ouvrées arrive avec l'écran ST-07). Le worker balaye les échéances : avertissement
  * à T-30 min, dépassement — chacun une seule fois (sla_warned_at / sla_breached_at).
  */
-import { db, slaPolicies, ticketMessages, tickets } from "@openhelpdesk/db";
+import { businessHours, db, slaPolicies, ticketMessages, tickets } from "@openhelpdesk/db";
 import { and, asc, eq, inArray, isNull, isNotNull, or } from "drizzle-orm";
 import { evaluateConditions } from "./evaluate";
+import { addBusinessMinutes, type BusinessCalendar } from "./business-hours";
 import type { Condition, SlaTargets } from "./types";
+
+/** Calendrier ouvré d'une politique — null = 24/7. */
+async function calendarFor(businessHoursId: string | null): Promise<BusinessCalendar | null> {
+  if (!businessHoursId) return null;
+  const [row] = await db
+    .select()
+    .from(businessHours)
+    .where(eq(businessHours.id, businessHoursId));
+  if (!row) return null;
+  return {
+    timezone: row.timezone,
+    weeklyHours: (row.weeklyHours ?? {}) as BusinessCalendar["weeklyHours"],
+    holidays: (row.holidays ?? []) as BusinessCalendar["holidays"],
+  };
+}
 
 const MIN = 60_000;
 const WARN_BEFORE_MS = 30 * MIN;
@@ -42,13 +58,18 @@ export async function applySlaOnCreate(tenantId: string, ticketId: string): Prom
   const targets = (policy.targets as SlaTargets)[ticket.priority];
   if (!targets) return;
 
-  const base = ticket.createdAt.getTime();
+  // Échéances calculées en heures ouvrées du calendrier de la politique (24/7 sans calendrier).
+  const calendar = await calendarFor(policy.businessHoursId);
   await db
     .update(tickets)
     .set({
       slaPolicyId: policy.id,
-      firstReplyDueAt: targets.firstReplyMin ? new Date(base + targets.firstReplyMin * MIN) : null,
-      resolveDueAt: targets.resolveMin ? new Date(base + targets.resolveMin * MIN) : null,
+      firstReplyDueAt: targets.firstReplyMin
+        ? addBusinessMinutes(ticket.createdAt, targets.firstReplyMin, calendar)
+        : null,
+      resolveDueAt: targets.resolveMin
+        ? addBusinessMinutes(ticket.createdAt, targets.resolveMin, calendar)
+        : null,
     })
     .where(eq(tickets.id, ticket.id));
 }
@@ -65,9 +86,13 @@ export async function onContactReplySla(tenantId: string, ticketId: string): Pro
   const nextReplyMin = policy ? (policy.targets as SlaTargets)[ticket.priority]?.nextReplyMin : undefined;
   if (!nextReplyMin) return;
 
+  const calendar = await calendarFor(policy?.businessHoursId ?? null);
   await db
     .update(tickets)
-    .set({ nextReplyDueAt: new Date(Date.now() + nextReplyMin * MIN), slaWarnedAt: null })
+    .set({
+      nextReplyDueAt: addBusinessMinutes(new Date(), nextReplyMin, calendar),
+      slaWarnedAt: null,
+    })
     .where(eq(tickets.id, ticket.id));
 }
 

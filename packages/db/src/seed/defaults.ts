@@ -48,6 +48,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     .values({
       tenantId,
       name: "Bureau France 9h–18h",
+      position: 0,
       timezone: "Europe/Paris",
       weeklyHours: WEEK_9_18,
       holidays: FRENCH_HOLIDAYS,
@@ -58,6 +59,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     .values({
       tenantId,
       name: "Astreinte 24/7",
+      position: 1,
       timezone: "Europe/Paris",
       weeklyHours: {},
       holidays: [],
@@ -66,6 +68,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
   await db.insert(businessHours).values({
     tenantId,
     name: "Support Benelux",
+    position: 2,
     timezone: "Europe/Brussels",
     weeklyHours: {
       mon: [["09:00", "17:30"]],

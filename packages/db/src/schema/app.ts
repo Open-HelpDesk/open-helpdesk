@@ -237,6 +237,8 @@ export const businessHours = app.table("business_hours", {
     .notNull()
     .references(() => tenants.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
+  /** Ordre d'affichage des chips de calendriers (ST-07) — pas alphabétique. */
+  position: integer("position").notNull().default(0),
   timezone: text("timezone").notNull().default("Europe/Paris"),
   /** { mon: [["09:00","18:00"]], … } */
   weeklyHours: jsonb("weekly_hours").notNull().default({}),
