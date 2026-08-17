@@ -1,5 +1,5 @@
 import { getPortalContact } from "@/lib/portal-auth";
-import { submitRequest } from "../../actions";
+import { submitRequest } from "../../../actions";
 import { SubjectWithDeflection } from "./subject-field";
 
 /**

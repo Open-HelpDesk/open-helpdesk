@@ -11,15 +11,25 @@ const VALID_FIELDS = new Set([
   "status",
   "priority",
   "channel",
+  "type",
   "subject",
   "tags",
   "assignee",
+  "team",
   "organization",
   "hours_since_created",
   "hours_since_updated",
 ]);
 const VALID_OPERATORS = new Set(["is", "is_not", "contains", "includes", "empty", "not_empty", "gte", "lte"]);
-const VALID_ACTIONS = new Set(["set_status", "set_priority", "assign_user", "assign_team", "add_tags", "email_contact"]);
+const VALID_ACTIONS = new Set([
+  "set_status",
+  "set_priority",
+  "assign_user",
+  "assign_team",
+  "assign_round_robin",
+  "add_tags",
+  "email_contact",
+]);
 
 function parseConditions(raw: unknown): { field: string; operator: string; value?: unknown }[] {
   if (typeof raw !== "string") return [];

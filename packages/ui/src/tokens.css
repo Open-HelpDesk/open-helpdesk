@@ -85,6 +85,41 @@
   --chart-2: #5a87e8;
 }
 
+/* ---------- 1ter. Portail client (.surface-portal) — palette maquette PT ---------- */
+.surface-portal {
+  --canvas: #fafbfa;
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --sunk: #f2f5f3;
+  --line: #e3e8e5;
+  --line-2: #eff2f0;
+  --ink: #101f1a;
+  --ink-2: #55665f;
+  --ink-3: #87968f;
+  --mute: #87968f;
+  --acc: #0b5f46;
+  --acc-2: #0e7a58;
+  --acc-t: #e7f1ec;
+  --acc-b: #bfdbcf;
+}
+[data-theme="dark"] .surface-portal,
+.surface-portal[data-theme="dark"] {
+  --canvas: #090e0d;
+  --bg: #0d1312;
+  --panel: #121a17;
+  --sunk: #0a100e;
+  --line: #222d29;
+  --line-2: #19221f;
+  --ink: #e7eeea;
+  --ink-2: #94a69f;
+  --ink-3: #697b75;
+  --mute: #697b75;
+  --acc: #34c08d;
+  --acc-2: #48d0a0;
+  --acc-t: #12291f;
+  --acc-b: #1e4536;
+}
+
 /* ---------- 2. Console cloud — clair ----------
  * Esthétique volontairement distincte du produit (accent cuivre, bandeau CONSOLE) :
  * aucune capture ne doit être confondue avec l'app client. */

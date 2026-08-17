@@ -84,6 +84,27 @@ export async function sendReply(formData: FormData) {
     if (!ticket.firstRepliedAt) patch.firstRepliedAt = new Date();
     await onAgentReplySla(tenant.id, ticketId);
   }
+
+  // Actions serveur de la macro appliquée (priorité, équipe, tags — ST-06).
+  const macroId = String(formData.get("macroId") ?? "");
+  if (macroId) {
+    const { macros } = await import("@openhelpdesk/db");
+    const [macro] = await db
+      .select()
+      .from(macros)
+      .where(and(eq(macros.tenantId, tenant.id), eq(macros.id, macroId)));
+    for (const action of (macro?.actions as { type: string; value?: unknown }[]) ?? []) {
+      if (action.type === "set_priority" && typeof action.value === "string") {
+        patch.priority = action.value as typeof ticket.priority;
+      } else if (action.type === "assign_team" && typeof action.value === "string") {
+        patch.teamId = action.value;
+      } else if (action.type === "assign_user" && typeof action.value === "string") {
+        patch.assigneeId = action.value;
+      } else if (action.type === "add_tags" && Array.isArray(action.value)) {
+        patch.tags = [...new Set([...ticket.tags, ...(action.value as string[])])];
+      }
+    }
+  }
   if (nextStatus && OPENING_STATUS.has(nextStatus)) {
     patch.status = nextStatus as typeof ticket.status;
   } else if (nextStatus === "resolved") {

@@ -4,7 +4,7 @@ import { csatSignature } from "@openhelpdesk/rules";
 import { getPortalContact } from "@/lib/portal-auth";
 import { PORTAL_STATUS_LABELS, getContactRequest } from "@/lib/portal-data";
 import { relativeFr } from "@/lib/format";
-import { replyToRequest, toggleRequestResolved } from "../../actions";
+import { replyToRequest, toggleRequestResolved } from "../../../actions";
 
 /**
  * PT-06 — Détail d'une demande (specs/12) : fil épuré (messages publics uniquement),

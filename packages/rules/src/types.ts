@@ -10,9 +10,11 @@ export type ConditionField =
   | "status"
   | "priority"
   | "channel"
+  | "type"
   | "subject"
   | "tags"
   | "assignee"
+  | "team"
   | "organization"
   | "hours_since_created"
   | "hours_since_updated";
@@ -38,6 +40,8 @@ export type RuleAction =
   | { type: "set_priority"; value: "low" | "normal" | "high" | "urgent" }
   | { type: "assign_user"; value: string }
   | { type: "assign_team"; value: string }
+  /** Round-robin : assigne à l'agent actif de l'équipe du ticket le moins chargé. */
+  | { type: "assign_round_robin" }
   | { type: "add_tags"; value: string[] }
   /** Corps avec variables : {{ticket.number}}, {{ticket.subject}}, {{contact.name}}. */
   | { type: "email_contact"; value: string };

@@ -4,7 +4,7 @@ import { db, kbArticles } from "@openhelpdesk/db";
 import { and, eq, sql } from "drizzle-orm";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { getPublishedArticle } from "@/lib/portal-data";
-import { voteArticle } from "../../actions";
+import { voteArticle } from "../../../actions";
 
 /** PT-03 — Article (specs/12) : corps 68ch, vote utile, articles liés. */
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {

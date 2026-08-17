@@ -2,10 +2,12 @@ import {
   automationRuns,
   contacts,
   db,
+  teamMembers,
   ticketMessages,
   tickets,
+  users,
 } from "@openhelpdesk/db";
-import { and, eq } from "drizzle-orm";
+import { and, count, eq, inArray } from "drizzle-orm";
 import { sendTicketReplyEmail } from "@openhelpdesk/mail";
 import { maybeSendCsat } from "./csat";
 import type { RuleAction } from "./types";
@@ -51,6 +53,36 @@ export async function applyActions(
         patch.teamId = action.value;
         applied.push("équipe");
         break;
+      case "assign_round_robin": {
+        // Agent actif de l'équipe du ticket ayant le moins de tickets ouverts.
+        const teamId = patch.teamId ?? ticket.teamId;
+        if (!teamId) break;
+        const members = await db
+          .select({ userId: teamMembers.userId })
+          .from(teamMembers)
+          .innerJoin(users, eq(users.id, teamMembers.userId))
+          .where(and(eq(teamMembers.teamId, teamId), eq(users.status, "active")));
+        if (members.length === 0) break;
+        const loads = await Promise.all(
+          members.map(async (m) => {
+            const [row] = await db
+              .select({ n: count() })
+              .from(tickets)
+              .where(
+                and(
+                  eq(tickets.tenantId, ticket.tenantId),
+                  eq(tickets.assigneeId, m.userId),
+                  inArray(tickets.status, ["new", "open", "waiting", "on_hold"]),
+                ),
+              );
+            return { userId: m.userId, open: row?.n ?? 0 };
+          }),
+        );
+        loads.sort((a, b) => a.open - b.open);
+        patch.assigneeId = loads[0]!.userId;
+        applied.push("assigné (round-robin)");
+        break;
+      }
       case "add_tags":
         patch.tags = [...new Set([...ticket.tags, ...action.value])];
         applied.push(`tags + ${action.value.join(", ")}`);

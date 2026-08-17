@@ -132,12 +132,18 @@ export async function listMacrosForEditor(tenantId: string) {
     .orderBy(asc(macros.category), asc(macros.name));
   return rows.map((m) => {
     const actions = (m.actions as { type: string; value?: unknown }[]) ?? [];
+    const insert = actions.find((a) => a.type === "insert_text" || a.type === "insert_note");
     return {
       id: m.id,
       name: m.name,
       category: m.category,
-      insertText: String(actions.find((a) => a.type === "insert_text")?.value ?? ""),
+      insertText: String(insert?.value ?? ""),
+      insertKind: insert?.type === "insert_note" ? ("internal_note" as const) : ("public_reply" as const),
       setStatus: String(actions.find((a) => a.type === "set_status")?.value ?? ""),
+      /** D'autres actions (priorité, équipe, tags) sont appliquées côté serveur à l'envoi. */
+      hasServerActions: actions.some((a) =>
+        ["set_priority", "assign_team", "assign_user", "add_tags"].includes(a.type),
+      ),
     };
   });
 }

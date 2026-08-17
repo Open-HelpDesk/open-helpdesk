@@ -20,6 +20,10 @@ function fieldValue(ctx: EvalContext, field: Condition["field"]): unknown {
       return ctx.ticket.priority;
     case "channel":
       return ctx.ticket.channel;
+    case "type":
+      return ctx.ticket.type;
+    case "team":
+      return ctx.ticket.teamId;
     case "subject":
       return ctx.ticket.subject;
     case "tags":

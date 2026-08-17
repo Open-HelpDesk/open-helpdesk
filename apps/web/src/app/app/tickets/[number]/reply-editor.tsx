@@ -14,7 +14,9 @@ export type MacroOption = {
   name: string;
   category: string | null;
   insertText: string;
+  insertKind: "public_reply" | "internal_note";
   setStatus: string;
+  hasServerActions: boolean;
 };
 
 export function ReplyEditor({
@@ -31,15 +33,21 @@ export function ReplyEditor({
   const [body, setBody] = useState("");
   const [kind, setKind] = useState<"public_reply" | "internal_note">("public_reply");
   const [nextStatus, setNextStatus] = useState("waiting");
+  const [appliedMacroId, setAppliedMacroId] = useState("");
 
   function applyMacro(macroId: string) {
     const macro = macros.find((m) => m.id === macroId);
     if (!macro) return;
+    const prenom = contactName.split(/\s+/)[0] ?? contactName;
     const rendered = macro.insertText
       .replaceAll("{{contact.name}}", contactName)
+      .replaceAll("{{contact.nom}}", contactName)
+      .replaceAll("{{contact.prenom}}", prenom)
       .replaceAll("{{ticket.number}}", String(ticketNumber));
     setBody((prev) => (prev ? `${prev}\n${rendered}` : rendered));
+    setKind(macro.insertKind);
     if (macro.setStatus) setNextStatus(macro.setStatus);
+    if (macro.hasServerActions || macro.setStatus) setAppliedMacroId(macro.id);
   }
 
   const inputStyle = { borderColor: "var(--line)", background: "var(--bg)" } as const;
@@ -52,6 +60,7 @@ export function ReplyEditor({
     >
       <input type="hidden" name="ticketId" value={ticketId} />
       <input type="hidden" name="kind" value={kind} />
+      <input type="hidden" name="macroId" value={appliedMacroId} />
       <div className="mb-2 flex items-center gap-4 text-sm">
         <button
           type="button"
