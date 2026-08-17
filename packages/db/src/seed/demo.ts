@@ -18,6 +18,7 @@ import {
   kbCategories,
   macros,
   mailboxes,
+  orgAdminGrants,
   organizations,
   slaPolicies,
   teamMembers,
@@ -28,6 +29,7 @@ import {
   ticketMessages,
   tickets,
   users,
+  verifiedDomains,
 } from "../schema";
 import { installDefaults } from "./defaults";
 
@@ -403,6 +405,39 @@ async function ensureKb(tenantId: string) {
   }
 }
 
+/* ---------- PT-08 : Julien = administrateur d'organisation de Nordfil ---------- */
+async function ensureOrgAdmin(tenantId: string) {
+  const [julien] = await db
+    .select()
+    .from(contacts)
+    .where(and(eq(contacts.tenantId, tenantId), eq(contacts.email, "julien.lambert@nordfil.example")));
+  const [nordfil] = await db
+    .select()
+    .from(organizations)
+    .where(and(eq(organizations.tenantId, tenantId), eq(organizations.name, "Nordfil SAS")));
+  if (!julien || !nordfil) return;
+  await db
+    .insert(orgAdminGrants)
+    .values({
+      tenantId,
+      contactId: julien.id,
+      organizationId: nordfil.id,
+      grantedByType: "agent",
+    })
+    .onConflictDoNothing();
+  await db
+    .insert(verifiedDomains)
+    .values({
+      tenantId,
+      organizationId: nordfil.id,
+      domain: "nordfil.example",
+      verificationToken: "8f2c91ab44de7013c5a6b2e9f0d18374",
+      status: "verified",
+      lastCheckedAt: new Date(),
+    })
+    .onConflictDoNothing();
+}
+
 /* ---------- Seed principal ---------- */
 async function seed() {
   console.log("Seed demo : workspace Acme Support…");
@@ -536,6 +571,7 @@ async function seed() {
   await ensureMemberships(tenant.id);
   await ensureCsat(tenant.id);
   await ensureKb(tenant.id);
+  await ensureOrgAdmin(tenant.id);
 
   console.log(
     `OK — tenant ${tenant.slug} : défauts design (SLA, macros, règles, équipes, champs) + KB installés.`,

@@ -21,8 +21,12 @@
   --sunk: #f1f4f2;
   --hi: #fff9db;
   --ink: #11211c;
+  --ink-2: #5b6b65;
+  --ink-3: #8a9993;
   --mute: #5f6f68;
   --line: #e2e7e4;
+  --line-2: #edf1ef;
+  --acc-2: #0e7a58;
   /* Notes internes — toujours jaune pâle + cadenas (jamais ambigu) */
   --note: #fffbeb;
   --note-line: #f5dfa0;
@@ -62,8 +66,12 @@
   --sunk: #0a100e;
   --hi: #2a2510;
   --ink: #e8efeb;
+  --ink-2: #94a69f;
+  --ink-3: #697b75;
   --mute: #96a59e;
   --line: #232e2a;
+  --line-2: #19221f;
+  --acc-2: #48d0a0;
   --note: #251e0c;
   --note-line: #5c4a16;
   --new: #a98bf5;
