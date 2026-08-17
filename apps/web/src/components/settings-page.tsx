@@ -10,6 +10,13 @@ import type { CSSProperties, ReactNode } from "react";
 
 export type PageTab = { label: string; href: string; active: boolean };
 
+/**
+ * Colonne de contenu d'un écran d'administration.
+ *
+ * Le design porte `max-width` sur le conteneur AVEC son padding (26px 28px 40px) et
+ * ne le centre pas : le bloc démarre au ras de la navigation. Centrer ici (ancien
+ * `mx-auto`) décalait chaque écran vers la droite et l'élargissait de 56 px.
+ */
 export function PageShell({
   maxWidth,
   children,
@@ -18,7 +25,10 @@ export function PageShell({
   children: ReactNode;
 }) {
   return (
-    <div className="mx-auto flex w-full flex-col" style={{ maxWidth, gap: 22 }}>
+    <div
+      className="flex w-full flex-col"
+      style={{ maxWidth, padding: "26px 28px 40px", gap: 22 }}
+    >
       {children}
     </div>
   );

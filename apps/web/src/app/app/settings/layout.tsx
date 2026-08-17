@@ -47,8 +47,9 @@ export default async function SettingsLayout({ children }: { children: React.Rea
         .st-row:hover { background: var(--sunk); }
       `}</style>
       <SettingsNav />
+      {/* Le padding et la largeur maximale vivent dans PageShell, comme dans le design. */}
       <div className="min-w-0 flex-1 overflow-y-auto" style={{ background: "var(--canvas)" }}>
-        <div style={{ padding: "26px 28px 40px" }}>{children}</div>
+        {children}
       </div>
     </div>
   );
