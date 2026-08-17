@@ -5,6 +5,8 @@ import { db, kbArticles, kbCategories } from "@openhelpdesk/db";
 import { and, asc, eq } from "drizzle-orm";
 import { relativeFr } from "@/lib/format";
 import { deleteArticle, saveArticle } from "../actions";
+import { ArticleEditor } from "./editor";
+import { ARTICLE_TEMPLATES, templateById } from "@/lib/article-templates";
 
 /**
  * AG-10 — Éditeur d'article (design espace-agent) : badge « MODIFICATIONS NON
@@ -16,12 +18,66 @@ export default async function KbEditorPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ cat?: string }>;
+  searchParams: Promise<{ cat?: string; modele?: string }>;
 }) {
   const { tenant } = await requireAgent();
   const { id } = await params;
-  const { cat } = await searchParams;
+  const { cat, modele } = await searchParams;
   const isNew = id === "new";
+
+
+  // Page blanche ou structure de départ : le choix précède l'éditeur (aucune
+  // création en base tant que rien n'est enregistré).
+  if (isNew && !modele) {
+    return (
+      <div className="h-full overflow-y-auto" style={{ background: "var(--canvas)" }}>
+        <div className="mx-auto flex flex-col" style={{ maxWidth: 780, padding: "48px 28px" }}>
+          <h1 className="font-semibold" style={{ fontSize: 20, letterSpacing: "-0.02em" }}>
+            Par où commencer ?
+          </h1>
+          <p className="mt-1" style={{ fontSize: 13.5, color: "var(--ink-2)" }}>
+            Un modèle pose la structure et les intertitres ; tout reste modifiable ensuite.
+          </p>
+
+          <div
+            className="mt-6 grid gap-3"
+            style={{ gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))" }}
+          >
+            {ARTICLE_TEMPLATES.map((t) => (
+              <Link
+                key={t.id}
+                href={`/app/kb/new?modele=${t.id}${cat ? `&cat=${cat}` : ""}`}
+                className="flex flex-col rounded-[10px] border hover:border-[var(--acc)]"
+                style={{ padding: "14px 15px", gap: 8, background: "var(--panel)", borderColor: "var(--line)" }}
+              >
+                <span
+                  aria-hidden
+                  className="grid place-items-center rounded-md font-mono font-bold"
+                  style={{ width: 28, height: 28, fontSize: 12.5, background: "var(--acc-t)", color: "var(--acc)" }}
+                >
+                  {t.glyph}
+                </span>
+                <span className="font-semibold" style={{ fontSize: 14, color: "var(--ink)" }}>
+                  {t.label}
+                </span>
+                <span style={{ fontSize: 12.5, lineHeight: 1.45, color: "var(--ink-3)", textWrap: "pretty" }}>
+                  {t.hint}
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          <Link
+            href={`/app/kb/new?modele=vierge${cat ? `&cat=${cat}` : ""}`}
+            className="mt-4 self-start"
+            style={{ fontSize: 13, color: "var(--acc-2)", fontWeight: 500 }}
+          >
+            Partir d'une page blanche
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const article = isNew
     ? undefined
@@ -42,7 +98,11 @@ export default async function KbEditorPage({
 
   const seo = (article?.seo ?? {}) as { title?: string };
   const hasDraft = Boolean(article?.status === "published" && article?.draftBodyHtml);
-  const bodyValue = article ? (article.draftBodyHtml ?? article.bodyHtml ?? "") : "";
+  const modeleChoisi = isNew ? templateById(modele) : undefined;
+  const bodyValue = article
+    ? (article.draftBodyHtml ?? article.bodyHtml ?? "")
+    : (modeleChoisi?.body ?? "");
+  const titleValue = article?.title ?? modeleChoisi?.title ?? "";
 
   const inputStyle = {
     height: 30,
@@ -54,8 +114,6 @@ export default async function KbEditorPage({
     fontSize: 12.5,
     padding: "0 8px",
   } as const;
-
-  const TOOLBAR = ["B", "I", "U", "S", "≔", "⛓", "❝", "‹›"];
 
   return (
     <form action={saveArticle} className="flex h-full flex-col overflow-hidden">
@@ -123,66 +181,7 @@ export default async function KbEditorPage({
       </div>
 
       <div className="flex min-h-0 flex-1">
-        {/* Corps de l'éditeur */}
-        <div className="min-w-0 flex-1 overflow-y-auto px-8 py-6">
-          <div className="mx-auto" style={{ maxWidth: "68ch" }}>
-            <input
-              name="title"
-              required
-              defaultValue={article?.title ?? ""}
-              placeholder="Titre de l'article"
-              className="w-full border-0 outline-none"
-              style={{
-                fontSize: 26,
-                fontWeight: 600,
-                background: "transparent",
-                color: "var(--ink)",
-              }}
-            />
-
-            <div
-              className="mb-3 mt-4 flex items-center gap-0.5 border-b pb-2"
-              style={{ borderColor: "var(--line-2)" }}
-            >
-              {TOOLBAR.map((label) => (
-                <button
-                  key={label}
-                  type="button"
-                  className="flex items-center justify-center"
-                  title="Mise en forme"
-                  style={{
-                    width: 26,
-                    height: 24,
-                    borderRadius: 5,
-                    color: "var(--ink-2)",
-                    fontSize: 12.5,
-                    fontWeight: label === "B" ? 700 : 500,
-                    fontStyle: label === "I" ? "italic" : undefined,
-                    textDecoration:
-                      label === "U" ? "underline" : label === "S" ? "line-through" : undefined,
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            <textarea
-              name="body"
-              required
-              rows={22}
-              defaultValue={bodyValue}
-              placeholder="Corps de l'article (markdown accepté)…"
-              className="w-full resize-y border-0 outline-none"
-              style={{
-                fontSize: 14.5,
-                lineHeight: 1.65,
-                background: "transparent",
-                color: "var(--ink)",
-              }}
-            />
-          </div>
-        </div>
+        <ArticleEditor defaultTitle={titleValue} defaultBody={bodyValue} />
 
         {/* Rail droit — 280 px */}
         <aside

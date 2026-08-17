@@ -5,7 +5,8 @@ import { and, eq, sql } from "drizzle-orm";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { getPublishedArticle } from "@/lib/portal-data";
 import { dateLongFr, readingMinutesFr } from "../../../portal-format";
-import { ArticleBody, parseArticle } from "./article-body";
+import { ArticleBody } from "@/components/article-body";
+import { parseArticle } from "@/lib/article-format";
 import { VoteBlock } from "./vote-block";
 
 /** PT-03 — Article : rendu riche 68ch, méta, vote, articles liés, TOC « Sur cette page ». */

@@ -3,6 +3,8 @@
  * le portail parle au client (« hier », « depuis 3 jours », « 4 128 vues »…).
  */
 
+import { parseArticle, parseInline } from "@/lib/article-format";
+
 const MIN = 60_000;
 const HOUR = 60 * MIN;
 const DAY = 24 * HOUR;
@@ -95,27 +97,17 @@ export function readingMinutesFr(text: string): number {
   return Math.max(1, Math.round(words / 200));
 }
 
-/** Extrait d'un corps d'article (première phrase d'intro, hors titres/callouts/code). */
+/**
+ * Extrait d'un corps d'article : le premier paragraphe réel, sans balisage.
+ * S'appuie sur l'analyseur partagé pour ne pas réinterpréter le format en double
+ * (une liste ou un sous-titre ne doit pas ressortir avec ses tirets).
+ */
 export function excerptFr(body: string | null, max = 180): string {
   if (!body) return "";
-  const lines = body.replace(/\r\n/g, "\n").split("\n");
-  const para: string[] = [];
-  let inCode = false;
-  for (const line of lines) {
-    if (line.startsWith("```")) {
-      inCode = !inCode;
-      continue;
-    }
-    if (inCode || line.startsWith("## ") || line.startsWith("> ")) {
-      if (para.length > 0) break;
-      continue;
-    }
-    if (line.trim() === "") {
-      if (para.length > 0) break;
-      continue;
-    }
-    para.push(line.trim());
-  }
-  const text = para.join(" ").replace(/\*\*([^*]+)\*\*/g, "$1");
+  const bloc = parseArticle(body).find((b) => b.type === "p");
+  if (!bloc || bloc.type !== "p") return "";
+  const text = parseInline(bloc.text)
+    .map((t) => t.text)
+    .join("");
   return text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text;
 }
