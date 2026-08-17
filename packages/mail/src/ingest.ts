@@ -51,12 +51,30 @@ function automaticKind(mail: InboundEmail): "bounce" | "auto_reply" | null {
   return null;
 }
 
+/**
+ * Verdict antispam du fournisseur (SpamAssassin et compatibles). Nous ne calculons
+ * pas de score nous-mêmes : nous faisons confiance à l'en-tête posé en amont.
+ */
+function spamVerdict(mail: InboundEmail): { score: string } | null {
+  const h = mail.headers ?? {};
+  const flagged = /^yes/i.test(h["x-spam-flag"] ?? "") || /^yes/i.test(h["x-spam"] ?? "");
+  const raw = h["x-spam-score"] ?? h["x-spam-status"] ?? h["x-rspamd-score"] ?? "";
+  const match = raw.match(/-?\d+(?:[.,]\d+)?/);
+  const score = match ? Number(match[0].replace(",", ".")) : null;
+
+  if (score !== null && (flagged || score >= 5)) {
+    return { score: `score ${score.toFixed(1).replace(".", ",")}` };
+  }
+  return flagged ? { score: "signalé par le fournisseur" } : null;
+}
+
 /** Trace un rejet dans le journal de ST-03 (jamais bloquant pour l'ingestion). */
 async function logRejection(
   tenantId: string,
   fromAddress: string,
   subject: string,
   reason: "loop" | "blocked_sender" | "empty" | "spam" | "bounce" | "auto_reply",
+  detail?: string,
 ): Promise<void> {
   try {
     await db.insert(rejectedEmails).values({
@@ -64,6 +82,7 @@ async function logRejection(
       fromAddress: fromAddress || "(expéditeur inconnu)",
       subject: subject.slice(0, 300) || null,
       reason,
+      detail: detail?.slice(0, 120) ?? null,
     });
   } catch (err) {
     console.error("[mail] journalisation du rejet impossible :", err);
@@ -100,6 +119,13 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
   if (automatic) {
     await logRejection(tenantId, fromAddress, mail.subject, automatic);
     return { outcome: "rejected", reason: automatic };
+  }
+
+  // 2c. Verdict antispam posé par le fournisseur en amont
+  const spam = spamVerdict(mail);
+  if (spam) {
+    await logRejection(tenantId, fromAddress, mail.subject, "spam", spam.score);
+    return { outcome: "rejected", reason: "spam" };
   }
 
   // Le premier email reçu prouve que le routage fonctionne (transfert vérifié — ST-03).

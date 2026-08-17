@@ -1,0 +1,1 @@
+ALTER TABLE "app"."rejected_emails" ADD COLUMN "detail" text;

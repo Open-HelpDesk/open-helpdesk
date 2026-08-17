@@ -327,8 +327,10 @@ export const rejectedEmails = app.table(
       .references(() => tenants.id, { onDelete: "cascade" }),
     fromAddress: text("from_address").notNull(),
     subject: text("subject"),
-    /** loop · blocked_sender · empty · spam */
+    /** loop · bounce · auto_reply · blocked_sender · empty · spam */
     reason: text("reason").notNull(),
+    /** Précision affichée entre parenthèses — ex. « score 9,2 » pour le spam. */
+    detail: text("detail"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("rejected_emails_tenant_created").on(t.tenantId, t.createdAt)],

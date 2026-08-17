@@ -27,7 +27,8 @@ export type RejectionReason =
   | "blocked_sender"
   | "empty"
   | "bounce"
-  | "auto_reply";
+  | "auto_reply"
+  | "spam";
 
 export type IngestResult =
   | { outcome: "created"; ticketId: string; number: number; tenantId: string }

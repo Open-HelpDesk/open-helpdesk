@@ -123,6 +123,7 @@ async function ensureRejectedEmails(tenantId: string) {
       fromAddress: "no-reply@spamsource.xyz",
       subject: "Gagnez 3000 € par semaine",
       reason: "spam",
+      detail: "score 9,2",
       createdAt: new Date(now - 3 * HOUR),
     },
     {

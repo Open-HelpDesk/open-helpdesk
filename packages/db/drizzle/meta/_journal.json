@@ -71,6 +71,13 @@
       "when": 1786999221153,
       "tag": "0009_loud_sunfire",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1787002468203,
+      "tag": "0010_supreme_morg",
+      "breakpoints": true
     }
   ]
 }

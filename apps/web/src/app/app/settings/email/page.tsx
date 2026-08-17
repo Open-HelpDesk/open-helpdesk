@@ -432,8 +432,13 @@ export default async function EmailSettingsPage({
                       <span className="truncate" style={{ fontSize: 12.5, color: "var(--ink)" }}>
                         {r.subject ?? "(sans objet)"}
                       </span>
-                      <span>
+                      <span className="flex min-w-0 items-center gap-1.5">
                         <StatusPill tone={reason.tone}>{reason.label}</StatusPill>
+                        {r.detail && (
+                          <span className="truncate" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
+                            ({r.detail})
+                          </span>
+                        )}
                       </span>
                       <span
                         className="text-right tabular-nums"
