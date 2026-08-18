@@ -1,5 +1,6 @@
 import { requireAgent } from "@/lib/session";
 import { SettingsNav } from "@/components/settings-nav";
+import { getT } from "@/i18n/server";
 
 /**
  * Shell de l'administration (ST-01 → ST-14, design-notes/administration.md) :
@@ -9,12 +10,13 @@ import { SettingsNav } from "@/components/settings-nav";
  */
 export default async function SettingsLayout({ children }: { children: React.ReactNode }) {
   const { agent } = await requireAgent();
+  const t = await getT();
 
   if (agent.role !== "owner" && agent.role !== "admin") {
     return (
       <div className="flex h-full items-center justify-center p-8">
         <p className="text-sm" style={{ color: "var(--ink-2)" }}>
-          Les paramètres sont réservés aux rôles Owner et Admin.
+          {t("app.settings.shell.roleRestricted")}
         </p>
       </div>
     );

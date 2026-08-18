@@ -8,8 +8,10 @@
  * répétés, lus par la server action à l'enregistrement.
  */
 import { useState } from "react";
+import { useT } from "@/i18n/client";
 
 export function ExclusionsField({ initial }: { initial: string[] }) {
+  const t = useT();
   const [chips, setChips] = useState<string[]>(initial);
   const [draft, setDraft] = useState("");
 
@@ -51,7 +53,7 @@ export function ExclusionsField({ initial }: { initial: string[] }) {
           <button
             type="button"
             onClick={() => setChips(chips.filter((x) => x !== c))}
-            aria-label={`Retirer ${c}`}
+            aria-label={t("app.settings.portal.csatExclusionRemove", { name: c })}
             style={{ opacity: 0.45 }}
           >
             ✕
@@ -68,8 +70,8 @@ export function ExclusionsField({ initial }: { initial: string[] }) {
             add();
           }
         }}
-        placeholder="Ajouter un tag ou un formulaire…"
-        aria-label="Ajouter une exclusion"
+        placeholder={t("app.settings.portal.csatExclusionsPlaceholder")}
+        aria-label={t("app.settings.portal.csatExclusionsAdd")}
         className="min-w-0 flex-1 bg-transparent"
         style={{ fontSize: 12.5, color: "var(--ink)", minWidth: 190 }}
       />

@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { requireAgent } from "@/lib/session";
 import { db, teams, users } from "@openhelpdesk/db";
 import { and, asc, eq, ne } from "drizzle-orm";
@@ -19,15 +20,18 @@ import {
   ScimGroupsField,
 } from "./client";
 import { regenerateScimToken, saveSamlConfig, saveScimGroups, type AgentSsoConfig } from "./actions";
+import { getT, type Translate } from "@/i18n/server";
 
 /** Libellés verbatim du design (les valeurs persistées restent inchangées). */
-const IDPS: { value: string; label: string }[] = [
-  { value: "okta", label: "Okta" },
-  { value: "entra", label: "Microsoft Entra ID" },
-  { value: "google", label: "Google Workspace" },
-  { value: "onelogin", label: "OneLogin" },
-  { value: "other", label: "Autre (SAML générique)" },
-];
+function idpOptions(t: Translate): { value: string; label: string }[] {
+  return [
+    { value: "okta", label: "Okta" },
+    { value: "entra", label: "Microsoft Entra ID" },
+    { value: "google", label: "Google Workspace" },
+    { value: "onelogin", label: "OneLogin" },
+    { value: "other", label: t("app.settings.sso.idpOther") },
+  ];
+}
 
 const ATTR_GRID = "minmax(150px,1fr) 34px minmax(180px,1.2fr) 110px";
 const SP_GRID = "170px 1fr 80px";
@@ -92,6 +96,32 @@ function Section({
   );
 }
 
+/**
+ * Phrase du mapping des rôles : deux noms de groupe en mono dans une même
+ * phrase. `t.parts` ne découpe qu'un emplacement, on marque donc les deux
+ * bornes et on redécoupe — l'ordre des mots peut changer d'une langue à l'autre.
+ */
+function RolesHint({ t }: { t: Translate }) {
+  const mark = "\u0000";
+  const chunks = t("app.settings.sso.rolesFromIdpHint", {
+    admins: `${mark}ohd-admins${mark}`,
+    agents: `${mark}ohd-agents${mark}`,
+  }).split(mark);
+  return (
+    <>
+      {chunks.map((chunk, i) =>
+        i % 2 === 1 ? (
+          <span key={i} className="font-mono">
+            {chunk}
+          </span>
+        ) : (
+          <Fragment key={i}>{chunk}</Fragment>
+        ),
+      )}
+    </>
+  );
+}
+
 /** En-tête de table 11 px/700 sur fond --sunk, hauteur 34. */
 function TableHead({
   template,
@@ -136,6 +166,7 @@ export default async function AgentSsoPage({
 }: {
   searchParams: Promise<{ tab?: string; saved?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const ent = entitlementsFor(tenant.plan);
   const { tab, saved } = await searchParams;
@@ -143,8 +174,8 @@ export default async function AgentSsoPage({
 
   const header = (tabs?: { label: string; href: string; active: boolean }[]) => (
     <PageHeader
-      title="SSO des agents"
-      subtitle="Authentification unique SAML 2.0 et provisionnement SCIM pour votre équipe support."
+      title={t("app.settings.sso.agentTitle")}
+      subtitle={t("app.settings.sso.agentSubtitle")}
       tabs={tabs}
     />
   );
@@ -154,8 +185,8 @@ export default async function AgentSsoPage({
       <PageShell maxWidth={1000}>
         {header()}
         <LockedScreen
-          title="Le SSO des agents est réservé au plan Pro"
-          text="Connectez votre fournisseur d'identité SAML 2.0, provisionnez vos agents en SCIM et imposez l'authentification unique à toute l'équipe."
+          title={t("app.settings.sso.agentLockedTitle")}
+          text={t("app.settings.sso.agentLockedText")}
           ghost={<GhostForm />}
         />
       </PageShell>
@@ -188,17 +219,17 @@ export default async function AgentSsoPage({
 
   const host = `https://${tenant.slug}.open-helpdesk.com`;
   const spValues: [string, string][] = [
-    ["URL de réponse (ACS)", `${host}/api/auth/saml/callback`],
-    ["Entity ID / Audience", host],
-    ["URL de métadonnées SP", `${host}/api/auth/saml/metadata`],
-    ["Format de NameID", "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"],
+    [t("app.settings.sso.spAcsUrl"), `${host}/api/auth/saml/callback`],
+    [t("app.settings.sso.spEntityId"), host],
+    [t("app.settings.sso.spMetadataUrl"), `${host}/api/auth/saml/metadata`],
+    [t("app.settings.sso.spNameIdFormat"), "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"],
   ];
   const attrMap: [string, string, string, boolean][] = [
-    ["m_email", "Email", saml.mapping?.email ?? "user.email", true],
-    ["m_firstName", "Prénom", saml.mapping?.firstName ?? "user.firstName", true],
-    ["m_lastName", "Nom", saml.mapping?.lastName ?? "user.lastName", true],
-    ["m_role", "Rôle", saml.mapping?.role ?? "user.groups", false],
-    ["m_team", "Équipe", saml.mapping?.team ?? "user.department", false],
+    ["m_email", t("app.settings.sso.attrEmail"), saml.mapping?.email ?? "user.email", true],
+    ["m_firstName", t("app.settings.sso.attrFirstName"), saml.mapping?.firstName ?? "user.firstName", true],
+    ["m_lastName", t("app.settings.sso.attrLastName"), saml.mapping?.lastName ?? "user.lastName", true],
+    ["m_role", t("app.settings.sso.attrRole"), saml.mapping?.role ?? "user.groups", false],
+    ["m_team", t("app.settings.sso.team"), saml.mapping?.team ?? "user.department", false],
   ];
   const connected = Boolean(saml.enabled && saml.ssoUrl);
   const scimEnabled = scim.enabled === true;
@@ -231,31 +262,30 @@ export default async function AgentSsoPage({
             <label className="st-toggle flex items-start" style={{ gap: 12 }}>
               <input type="checkbox" name="enabled" defaultChecked={saml.enabled === true} />
               <span className="st-knob" aria-hidden />
-              <span className="sr-only">Activer l'authentification unique SAML 2.0</span>
+              <span className="sr-only">{t("app.settings.sso.samlToggleLabel")}</span>
             </label>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center" style={{ gap: 9 }}>
                 <span className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
-                  Authentification unique SAML 2.0
+                  {t("app.settings.sso.samlHeading")}
                 </span>
                 <PlanProBadge />
                 {connected ? (
-                  <StatusPill tone="ok">Connecté</StatusPill>
+                  <StatusPill tone="ok">{t("app.settings.sso.statusConnected")}</StatusPill>
                 ) : (
-                  <StatusPill tone="closed">Inactif</StatusPill>
+                  <StatusPill tone="closed">{t("app.settings.sso.statusInactive")}</StatusPill>
                 )}
               </div>
               <p style={{ fontSize: 12.5, color: "var(--ink-2)", textWrap: "pretty" }}>
-                Vos agents se connectent via votre fournisseur d'identité. Les rôles restent
-                gérés dans Open HelpDesk sauf si le mapping d'attributs est actif.
+                {t("app.settings.sso.samlIntro")}
               </p>
             </div>
           </Panel>
 
           {/* Fournisseur d'identité */}
-          <Section title="Fournisseur d'identité">
+          <Section title={t("app.settings.sso.idpSection")}>
             <div className="flex flex-wrap" style={{ gap: 8 }}>
-              {IDPS.map((idp) => (
+              {idpOptions(t).map((idp) => (
                 <label key={idp.value} className="sso-chip">
                   <input
                     type="radio"
@@ -272,7 +302,7 @@ export default async function AgentSsoPage({
               className="grid"
               style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
             >
-              <Field label="Identifiant de l'émetteur (Entity ID)">
+              <Field label={t("app.settings.sso.issuerId")}>
                 <input
                   name="entityId"
                   defaultValue={saml.entityId ?? ""}
@@ -287,7 +317,7 @@ export default async function AgentSsoPage({
                   }}
                 />
               </Field>
-              <Field label="URL de connexion SSO">
+              <Field label={t("app.settings.sso.ssoUrl")}>
                 <input
                   name="ssoUrl"
                   defaultValue={saml.ssoUrl ?? ""}
@@ -303,8 +333,8 @@ export default async function AgentSsoPage({
                 />
               </Field>
               <Field
-                label="Certificat de signature X.509"
-                hint="Une alerte sera envoyée 30 jours avant l'expiration du certificat."
+                label={t("app.settings.sso.certificate")}
+                hint={t("app.settings.sso.certificateHint")}
                 style={{ gridColumn: "1 / -1" }}
               >
                 <textarea
@@ -331,7 +361,7 @@ export default async function AgentSsoPage({
               <button
                 type="button"
                 disabled
-                title="Disponible prochainement"
+                title={t("app.settings.sso.comingSoon")}
                 className="grid place-items-center border font-semibold disabled:opacity-50"
                 style={{
                   minHeight: 32,
@@ -344,17 +374,16 @@ export default async function AgentSsoPage({
                   whiteSpace: "nowrap",
                 }}
               >
-                Importer les métadonnées XML
+                {t("app.settings.sso.importMetadata")}
               </button>
               <span style={{ fontSize: 12.5, color: "var(--ink-3)", textWrap: "pretty" }}>
-                Ou collez l'URL de métadonnées de votre IdP pour remplir les trois champs
-                automatiquement.
+                {t("app.settings.sso.metadataHint")}
               </span>
             </div>
           </Section>
 
           {/* Valeurs à renseigner côté IdP */}
-          <Section title="À renseigner chez votre fournisseur">
+          <Section title={t("app.settings.sso.spSection")}>
             <div
               className="overflow-hidden border"
               style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
@@ -388,14 +417,19 @@ export default async function AgentSsoPage({
           </Section>
 
           {/* Correspondance des attributs */}
-          <Section title="Correspondance des attributs">
+          <Section title={t("app.settings.sso.attrSection")}>
             <div
               className="overflow-x-auto border"
               style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
             >
               <TableHead
                 template={ATTR_GRID}
-                columns={["Champ Open HelpDesk", null, "Attribut SAML", "Requis"]}
+                columns={[
+                  t("app.settings.sso.colOhdField"),
+                  null,
+                  t("app.settings.sso.colSamlAttribute"),
+                  t("app.settings.sso.required"),
+                ]}
                 minWidth={620}
               />
               {attrMap.map(([name, label, value, required]) => (
@@ -435,7 +469,7 @@ export default async function AgentSsoPage({
                     className="text-right font-semibold"
                     style={{ fontSize: 12, color: required ? "var(--dang)" : "var(--ink-3)" }}
                   >
-                    {required ? "Requis" : "Optionnel"}
+                    {required ? t("app.settings.sso.required") : t("app.settings.sso.optional")}
                   </span>
                 </div>
               ))}
@@ -449,41 +483,39 @@ export default async function AgentSsoPage({
                   defaultChecked={saml.rolesFromIdp === true}
                 />
                 <span className="st-knob" aria-hidden />
-                <span className="sr-only">Piloter les rôles depuis l'IdP</span>
+                <span className="sr-only">{t("app.settings.sso.rolesFromIdp")}</span>
               </label>
               <div className="min-w-0 flex-1">
                 <div className="font-medium" style={{ fontSize: 13.5, color: "var(--ink)" }}>
-                  Piloter les rôles depuis l'IdP
+                  {t("app.settings.sso.rolesFromIdp")}
                 </div>
                 <p style={{ fontSize: 12.5, color: "var(--ink-3)", textWrap: "pretty" }}>
-                  Les rôles deviennent en lecture seule dans Agents &amp; équipes. Le groupe{" "}
-                  <span className="font-mono">ohd-admins</span> reçoit le rôle Admin,{" "}
-                  <span className="font-mono">ohd-agents</span> le rôle Agent.
+                  <RolesHint t={t} />
                 </p>
               </div>
             </Panel>
           </Section>
 
           {/* Application et sessions */}
-          <Section title="Application et sessions">
+          <Section title={t("app.settings.sso.enforcementSection")}>
             <EnforcementRadios initial={saml.enforcement ?? "verified_domains"} />
             <div
               className="grid"
               style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
             >
-              <Field label="Durée de session">
+              <Field label={t("app.settings.sso.sessionDuration")}>
                 <Select
                   name="sessionHours"
                   defaultValue={String(saml.sessionHours ?? 8)}
                   style={CONTROL}
                 >
-                  <option value="4">4 heures</option>
-                  <option value="8">8 heures</option>
-                  <option value="12">12 heures</option>
-                  <option value="24">24 heures</option>
+                  <option value="4">{t("app.settings.sso.sessionHours", { count: 4 })}</option>
+                  <option value="8">{t("app.settings.sso.sessionHours", { count: 8 })}</option>
+                  <option value="12">{t("app.settings.sso.sessionHours", { count: 12 })}</option>
+                  <option value="24">{t("app.settings.sso.sessionHours", { count: 24 })}</option>
                 </Select>
               </Field>
-              <Field label="Compte de secours">
+              <Field label={t("app.settings.sso.backupAccount")}>
                 <input
                   name="backupEmail"
                   type="email"
@@ -498,7 +530,7 @@ export default async function AgentSsoPage({
                   }}
                 />
               </Field>
-              <Field label="Domaines des comptes agents">
+              <Field label={t("app.settings.sso.agentDomains")}>
                 <div
                   className="flex flex-wrap items-center border"
                   style={{
@@ -536,7 +568,7 @@ export default async function AgentSsoPage({
           </Section>
 
           {/* Test de connexion */}
-          <Section title="Test de connexion" gap={11}>
+          <Section title={t("app.settings.sso.testSection")} gap={11}>
             <div
               className="overflow-hidden border"
               style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
@@ -548,7 +580,7 @@ export default async function AgentSsoPage({
                 <button
                   type="button"
                   disabled
-                  title="Disponible prochainement"
+                  title={t("app.settings.sso.comingSoon")}
                   className="grid place-items-center font-semibold text-white disabled:opacity-50"
                   style={{
                     minHeight: 34,
@@ -559,14 +591,13 @@ export default async function AgentSsoPage({
                     whiteSpace: "nowrap",
                   }}
                 >
-                  Lancer un test
+                  {t("app.settings.sso.runTest")}
                 </button>
                 <span
                   className="min-w-0 flex-1"
                   style={{ fontSize: 13, color: "var(--ink-2)", textWrap: "pretty" }}
                 >
-                  Une fenêtre s'ouvrira vers votre IdP. Aucun réglage n'est appliqué tant que le
-                  test n'a pas réussi.
+                  {t("app.settings.sso.testHint")}
                 </span>
               </div>
             </div>
@@ -586,24 +617,23 @@ export default async function AgentSsoPage({
                 defaultChecked={scimEnabled}
               />
               <span className="st-knob" aria-hidden />
-              <span className="sr-only">Activer le provisionnement automatique SCIM 2.0</span>
+              <span className="sr-only">{t("app.settings.sso.scimToggleLabel")}</span>
             </label>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center" style={{ gap: 9 }}>
                 <span className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
-                  Provisionnement automatique SCIM 2.0
+                  {t("app.settings.sso.scimHeading")}
                 </span>
                 <PlanProBadge />
               </div>
               <p style={{ fontSize: 12.5, color: "var(--ink-2)", textWrap: "pretty" }}>
-                Les arrivées, départs et changements d'équipe sont répercutés depuis votre
-                annuaire. Un agent désactivé dans l'IdP libère son siège automatiquement.
+                {t("app.settings.sso.scimIntro")}
               </p>
             </div>
           </Panel>
 
           {/* Point de terminaison */}
-          <Section title="Point de terminaison">
+          <Section title={t("app.settings.sso.endpointSection")}>
             <ScimEndpoint
               url={`${host}/api/scim/v2`}
               hint={scim.tokenHint ?? null}
@@ -612,7 +642,7 @@ export default async function AgentSsoPage({
           </Section>
 
           {/* Correspondance des groupes */}
-          <Section title="Correspondance des groupes">
+          <Section title={t("app.settings.sso.groupsSection")}>
             <ScimGroupsField
               formId="scim-config"
               initial={(scim.groups ?? []).map((g) => ({
@@ -625,19 +655,23 @@ export default async function AgentSsoPage({
           </Section>
 
           {/* Journal de synchronisation */}
-          <Section title="Journal de synchronisation">
+          <Section title={t("app.settings.sso.syncLogSection")}>
             <div
               className="overflow-x-auto border"
               style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
             >
               <TableHead
                 template="150px 120px minmax(200px,1fr) 130px"
-                columns={["Date", "Opération", "Utilisateur", "Résultat"]}
+                columns={[
+                  t("app.settings.sso.colDate"),
+                  t("app.settings.sso.colOperation"),
+                  t("app.settings.sso.colUser"),
+                  t("app.settings.sso.colResult"),
+                ]}
                 minWidth={640}
               />
               <p style={{ padding: "18px 15px", fontSize: 12.5, color: "var(--ink-2)" }}>
-                Aucune synchronisation pour le moment — les créations, mises à jour et
-                désactivations apparaîtront ici.
+                {t("app.settings.sso.syncLogEmpty")}
               </p>
             </div>
           </Section>

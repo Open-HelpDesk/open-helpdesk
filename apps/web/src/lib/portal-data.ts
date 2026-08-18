@@ -19,15 +19,6 @@ import { and, asc, count, desc, eq, ilike, inArray, isNull, ne, or } from "drizz
 import { alias } from "drizzle-orm/pg-core";
 
 /** Libellés client — jamais le vocabulaire interne (PT-05). */
-export const PORTAL_STATUS_LABELS: Record<string, string> = {
-  new: "En cours",
-  open: "En cours",
-  waiting: "En attente de votre réponse",
-  on_hold: "En cours",
-  resolved: "Résolue",
-  closed: "Fermée",
-};
-
 /* ---------- KB (PT-01/02/03) ---------- */
 
 /** Catégories racines avec compteur d'articles (sections incluses). */

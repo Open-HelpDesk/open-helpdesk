@@ -13,6 +13,7 @@ import {
   type MailProvider,
 } from "@openhelpdesk/mail/provider-meta";
 import { Field, Select, TextInput } from "@/components/settings-page";
+import { useT } from "@/i18n/client";
 
 const PROVIDERS: MailProvider[] = ["smtp", "resend", "brevo", "mailjet", "console"];
 
@@ -41,6 +42,7 @@ export function ProviderForm({
   };
   secretHint: string | null;
 }) {
+  const t = useT();
   const [provider, setProvider] = useState<MailProvider>(initial.provider);
   const [host, setHost] = useState(initial.smtpHost);
   const [port, setPort] = useState(String(initial.smtpPort || 587));
@@ -55,8 +57,13 @@ export function ProviderForm({
   }
 
   const meta = PROVIDER_META[provider];
-  const keptHint = (label: string) =>
-    secretHint ? `${label} enregistré : ${secretHint}. Laisser vide pour le conserver.` : undefined;
+  // Un secret déjà enregistré n'est jamais réaffiché : l'indice le rappelle.
+  const keptPasswordHint = secretHint
+    ? t("app.settings.email.secretKeptPassword", { hint: secretHint })
+    : undefined;
+  const keptKeyHint = secretHint
+    ? t("app.settings.email.secretKeptKey", { hint: secretHint })
+    : undefined;
 
   return (
     <div className="flex flex-col gap-4">
@@ -65,7 +72,7 @@ export function ProviderForm({
       {/* Cartes-radio des fournisseurs */}
       <div
         role="radiogroup"
-        aria-label="Fournisseur d'envoi"
+        aria-label={t("app.settings.email.providerTitle")}
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
@@ -145,8 +152,7 @@ export function ProviderForm({
             padding: "10px 13px",
           }}
         >
-          Aucun email ne sera envoyé : les messages sont écrits dans les journaux du
-          serveur. À réserver au développement.
+          {t("app.settings.email.consoleNotice")}
         </p>
       ) : (
         <>
@@ -155,22 +161,25 @@ export function ProviderForm({
             className="grid gap-3"
             style={{ gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))" }}
           >
-            <Field label="Nom d'expéditeur">
+            <Field label={t("app.settings.email.fromNameLabel")}>
               <TextInput name="fromName" defaultValue={initial.fromName} placeholder="Acme Support" />
             </Field>
             <Field
-              label="Adresse d'expédition"
-              hint="Doit appartenir à un domaine authentifié (voir DNS ci-dessous)."
+              label={t("app.settings.email.fromAddressLabel")}
+              hint={t("app.settings.email.fromAddressHint")}
             >
               <TextInput
                 name="fromAddress"
                 type="email"
                 defaultValue={initial.fromAddress}
-                placeholder="support@votre-domaine.fr"
+                placeholder={t("app.settings.email.placeholderEmail")}
                 className="font-mono"
               />
             </Field>
-            <Field label="Répondre à" hint="Vide = adresse d'expédition.">
+            <Field
+              label={t("app.settings.email.replyToLabel")}
+              hint={t("app.settings.email.replyToHint")}
+            >
               <TextInput
                 name="replyTo"
                 type="email"
@@ -184,8 +193,8 @@ export function ProviderForm({
           {provider === "smtp" && (
             <div className="flex flex-col gap-3">
               <Field
-                label="Préréglage"
-                hint="Remplit l'hôte, le port et le chiffrement du relais choisi."
+                label={t("app.settings.email.presetLabel")}
+                hint={t("app.settings.email.presetHint")}
                 style={{ maxWidth: 320 }}
               >
                 <Select defaultValue="custom" onChange={(e) => applyPreset(e.target.value)}>
@@ -200,16 +209,16 @@ export function ProviderForm({
                 className="grid gap-3"
                 style={{ gridTemplateColumns: "minmax(200px,2fr) 100px minmax(170px,1fr)" }}
               >
-                <Field label="Hôte SMTP">
+                <Field label={t("app.settings.email.smtpHostLabel")}>
                   <TextInput
                     name="smtpHost"
                     value={host}
                     onChange={(e) => setHost(e.target.value)}
-                    placeholder="smtp.votre-domaine.fr"
+                    placeholder={t("app.settings.email.placeholderSmtpHost")}
                     className="font-mono"
                   />
                 </Field>
-                <Field label="Port">
+                <Field label={t("app.settings.email.port")}>
                   <TextInput
                     name="smtpPort"
                     value={port}
@@ -218,14 +227,14 @@ export function ProviderForm({
                     className="font-mono tabular-nums"
                   />
                 </Field>
-                <Field label="Chiffrement">
+                <Field label={t("app.settings.email.encryption")}>
                   <Select
                     name="smtpSecure"
                     value={secure ? "true" : "false"}
                     onChange={(e) => setSecure(e.target.value === "true")}
                   >
-                    <option value="false">STARTTLS (587, 25)</option>
-                    <option value="true">TLS implicite (465)</option>
+                    <option value="false">{t("app.settings.email.smtpStarttls")}</option>
+                    <option value="true">{t("app.settings.email.smtpTlsImplicit")}</option>
                   </Select>
                 </Field>
               </div>
@@ -233,15 +242,18 @@ export function ProviderForm({
                 className="grid gap-3"
                 style={{ gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))" }}
               >
-                <Field label="Identifiant" hint="Vide = relais sans authentification.">
+                <Field
+                  label={t("app.settings.email.username")}
+                  hint={t("app.settings.email.smtpUserHint")}
+                >
                   <TextInput name="smtpUser" defaultValue={initial.smtpUser} className="font-mono" />
                 </Field>
-                <Field label="Mot de passe SMTP" hint={keptHint("Mot de passe")}>
+                <Field label={t("app.settings.email.smtpPasswordLabel")} hint={keptPasswordHint}>
                   <TextInput
                     name="secret"
                     type="password"
                     autoComplete="new-password"
-                    placeholder={secretHint ? "•••••••• (inchangé)" : ""}
+                    placeholder={secretHint ? t("app.settings.email.passwordUnchanged") : ""}
                   />
                 </Field>
               </div>
@@ -250,8 +262,8 @@ export function ProviderForm({
 
           {(provider === "resend" || provider === "brevo") && (
             <Field
-              label={meta.secretLabel ?? "Clé d'API"}
-              hint={keptHint("Clé") ?? meta.hint}
+              label={meta.secretLabel ?? t("app.settings.email.apiKeyLabel")}
+              hint={keptKeyHint ?? meta.hint}
               style={{ maxWidth: 460 }}
             >
               <TextInput
@@ -259,7 +271,11 @@ export function ProviderForm({
                 type="password"
                 autoComplete="off"
                 placeholder={
-                  secretHint ? "•••••••• (inchangée)" : provider === "resend" ? "re_…" : "xkeysib-…"
+                  secretHint
+                    ? t("app.settings.email.keyUnchanged")
+                    : provider === "resend"
+                      ? "re_…"
+                      : "xkeysib-…"
                 }
                 className="font-mono"
               />
@@ -271,21 +287,24 @@ export function ProviderForm({
               className="grid gap-3"
               style={{ gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))" }}
             >
-              <Field label="Clé d'API (publique)" hint={keptHint("Clé")}>
+              <Field label={t("app.settings.email.mailjetPublicKeyLabel")} hint={keptKeyHint}>
                 <TextInput
                   name="secret"
                   type="password"
                   autoComplete="off"
-                  placeholder={secretHint ? "•••••••• (inchangée)" : ""}
+                  placeholder={secretHint ? t("app.settings.email.keyUnchanged") : ""}
                   className="font-mono"
                 />
               </Field>
-              <Field label="Clé privée (secret)" hint="Les deux champs vides = clés conservées.">
+              <Field
+                label={t("app.settings.email.mailjetPrivateKeyLabel")}
+                hint={t("app.settings.email.mailjetKeysHint")}
+              >
                 <TextInput
                   name="secret2"
                   type="password"
                   autoComplete="off"
-                  placeholder={secretHint ? "•••••••• (inchangée)" : ""}
+                  placeholder={secretHint ? t("app.settings.email.keyUnchanged") : ""}
                   className="font-mono"
                 />
               </Field>

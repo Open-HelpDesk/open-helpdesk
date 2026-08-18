@@ -6,7 +6,8 @@
  * chips pour les autres fichiers.
  */
 import { useEffect, useState } from "react";
-import { sizeFr } from "@/lib/format";
+import { size } from "@/lib/format";
+import { useT } from "@/i18n/client";
 
 export type AttachmentData = {
   id: string;
@@ -29,6 +30,7 @@ export function MessageAttachments({
   /** Bordure de la carte porteuse — le design reprend la couleur du message. */
   borderColor?: string;
 }) {
+  const t = useT();
   const images = attachments.filter((a) => a.contentType.startsWith("image/"));
   const files = attachments.filter((a) => !a.contentType.startsWith("image/"));
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
@@ -101,7 +103,7 @@ export function MessageAttachments({
                   className="whitespace-nowrap"
                   style={{ fontSize: 10.5, color: "var(--ink-3)" }}
                 >
-                  {sizeFr(a.sizeBytes)}
+                  {size(t, a.sizeBytes)}
                 </span>
               </span>
             </button>
@@ -134,7 +136,7 @@ export function MessageAttachments({
               </svg>
               <span>{a.filename}</span>
               <span style={{ color: "var(--ink-3)", fontSize: 10.5 }}>
-                {sizeFr(a.sizeBytes)}
+                {size(t, a.sizeBytes)}
               </span>
             </a>
           ))}
@@ -177,7 +179,10 @@ export function MessageAttachments({
                 {current.filename}
               </span>
               <span style={{ fontSize: 11.5, opacity: 0.6 }}>
-                {sizeFr(current.sizeBytes)} · reçue de {senderName}
+                {t("app.ticket.attachmentMeta", {
+                  size: size(t, current.sizeBytes),
+                  name: senderName,
+                })}
               </span>
             </div>
             <span className="flex-1" />
@@ -195,7 +200,7 @@ export function MessageAttachments({
                 onClick={() => setZoom((z) => Math.max(60, z - 20))}
                 className="grid place-items-center"
                 style={{ width: 30, height: 26, borderRadius: 5, fontSize: 15 }}
-                title="Réduire"
+                title={t("app.ticket.zoomOut")}
               >
                 −
               </button>
@@ -203,14 +208,14 @@ export function MessageAttachments({
                 className="text-center tabular-nums"
                 style={{ minWidth: 52, fontSize: 12 }}
               >
-                {zoom} %
+                {t("app.ticket.zoomPercent", { value: zoom })}
               </span>
               <button
                 type="button"
                 onClick={() => setZoom((z) => Math.min(160, z + 20))}
                 className="grid place-items-center"
                 style={{ width: 30, height: 26, borderRadius: 5, fontSize: 15 }}
-                title="Agrandir"
+                title={t("app.ticket.zoomIn")}
               >
                 +
               </button>
@@ -220,14 +225,14 @@ export function MessageAttachments({
               className="grid place-items-center whitespace-nowrap"
               style={{ height: 28, padding: "0 11px", border: VIEWER_LINE, borderRadius: 6, fontSize: 12.5 }}
             >
-              Télécharger
+              {t("app.ticket.download")}
             </a>
             <button
               type="button"
               onClick={() => setViewerIndex(null)}
               className="grid place-items-center"
               style={{ width: 28, height: 28, borderRadius: 6, fontSize: 14, opacity: 0.7 }}
-              title="Fermer"
+              title={t("app.ticket.close")}
             >
               ✕
             </button>
@@ -265,7 +270,10 @@ export function MessageAttachments({
             onClick={(e) => e.stopPropagation()}
           >
             <span style={{ fontSize: 11.5, opacity: 0.55 }}>
-              Pièce jointe {viewerIndex + 1} sur {images.length}
+              {t("app.ticket.attachmentPosition", {
+                index: viewerIndex + 1,
+                total: images.length,
+              })}
             </span>
             <span className="flex-1" />
             {images.length > 1 && (
@@ -280,7 +288,7 @@ export function MessageAttachments({
                   className="grid place-items-center whitespace-nowrap disabled:opacity-40"
                   style={{ height: 28, padding: "0 12px", border: VIEWER_LINE, borderRadius: 6, fontSize: 12.5 }}
                 >
-                  ← Précédente
+                  {t("app.ticket.previousAttachment")}
                 </button>
                 <button
                   type="button"
@@ -292,7 +300,7 @@ export function MessageAttachments({
                   className="grid place-items-center whitespace-nowrap disabled:opacity-40"
                   style={{ height: 28, padding: "0 12px", border: VIEWER_LINE, borderRadius: 6, fontSize: 12.5 }}
                 >
-                  Suivante →
+                  {t("app.ticket.nextAttachment")}
                 </button>
               </>
             )}

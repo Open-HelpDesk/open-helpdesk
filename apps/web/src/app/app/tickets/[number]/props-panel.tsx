@@ -6,7 +6,8 @@
  */
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { CHANNEL_LABELS_FR, PRIORITY_COLORS, PRIORITY_LABELS_FR } from "@/lib/format";
+import { CHANNEL_KEYS, PRIORITY_COLORS, PRIORITY_KEYS } from "@/lib/format";
+import { useT } from "@/i18n/client";
 import { updateTicketProps } from "../actions";
 
 const TYPES = ["Question", "Incident", "Tâche", "Autre"];
@@ -34,6 +35,7 @@ export function PropsForm({
   agents: { id: string; name: string }[];
   teams: { id: string; name: string }[];
 }) {
+  const t = useT();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -79,16 +81,16 @@ export function PropsForm({
   return (
     <div className="flex flex-col" style={{ gap: 16, opacity: pending ? 0.6 : 1 }}>
       <section className="flex flex-col" style={{ gap: 8 }}>
-        <p style={groupStyle}>Affectation</p>
+        <p style={groupStyle}>{t("app.ticket.assignmentGroup")}</p>
         <div className="flex flex-col" style={{ gap: 8 }}>
           <div style={rowStyle}>
-            <span style={labelStyle}>Assigné</span>
+            <span style={labelStyle}>{t("app.ticket.assignee")}</span>
             <select
               value={assigneeId ?? ""}
               onChange={(e) => apply("assigneeId", e.target.value)}
               style={selectStyle}
             >
-              <option value="">Non assigné</option>
+              <option value="">{t("app.ticket.unassigned")}</option>
               {agents.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.name}
@@ -97,16 +99,16 @@ export function PropsForm({
             </select>
           </div>
           <div style={rowStyle}>
-            <span style={labelStyle}>Équipe</span>
+            <span style={labelStyle}>{t("app.ticket.team")}</span>
             <select
               value={teamId ?? ""}
               onChange={(e) => apply("teamId", e.target.value)}
               style={selectStyle}
             >
-              <option value="">Aucune équipe</option>
-              {teams.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name}
+              <option value="">{t("app.ticket.noTeam")}</option>
+              {teams.map((team) => (
+                <option key={team.id} value={team.id}>
+                  {team.name}
                 </option>
               ))}
             </select>
@@ -115,10 +117,10 @@ export function PropsForm({
       </section>
 
       <section className="flex flex-col" style={{ gap: 8 }}>
-        <p style={groupStyle}>Classification</p>
+        <p style={groupStyle}>{t("app.ticket.classificationGroup")}</p>
         <div className="flex flex-col" style={{ gap: 8 }}>
           <div style={rowStyle}>
-            <span style={labelStyle}>Priorité</span>
+            <span style={labelStyle}>{t("app.ticket.priority")}</span>
             <div className="flex items-center" style={{ gap: 6 }}>
               <span
                 className="shrink-0 rounded-full"
@@ -133,37 +135,37 @@ export function PropsForm({
                 onChange={(e) => apply("priority", e.target.value)}
                 style={selectStyle}
               >
-                {Object.entries(PRIORITY_LABELS_FR).map(([k, v]) => (
+                {Object.entries(PRIORITY_KEYS).map(([k, v]) => (
                   <option key={k} value={k}>
-                    {v}
+                    {t(v)}
                   </option>
                 ))}
               </select>
             </div>
           </div>
           <div style={rowStyle}>
-            <span style={labelStyle}>Type</span>
+            <span style={labelStyle}>{t("app.ticket.type")}</span>
             <select
               value={type ?? ""}
               onChange={(e) => apply("type", e.target.value)}
               style={selectStyle}
             >
               <option value="">—</option>
-              {TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {t}
+              {TYPES.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
                 </option>
               ))}
             </select>
           </div>
           <div style={rowStyle}>
-            <span style={labelStyle}>Canal</span>
+            <span style={labelStyle}>{t("app.ticket.channel")}</span>
             <span style={{ fontSize: 12.5, fontWeight: 500 }}>
-              {CHANNEL_LABELS_FR[channel] ?? channel}
+              {CHANNEL_KEYS[channel] ? t(CHANNEL_KEYS[channel]) : channel}
             </span>
           </div>
           <div style={{ ...rowStyle, alignItems: "start" }}>
-            <span style={{ ...labelStyle, paddingTop: 3 }}>Tags</span>
+            <span style={{ ...labelStyle, paddingTop: 3 }}>{t("app.ticket.tags")}</span>
             <span className="flex flex-wrap items-center" style={{ gap: 6, paddingTop: 3 }}>
               {tags.length === 0 && (
                 <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>—</span>

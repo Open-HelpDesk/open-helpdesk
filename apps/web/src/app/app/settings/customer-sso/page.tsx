@@ -12,7 +12,6 @@ import {
 } from "@openhelpdesk/db";
 import { and, asc, count, eq, gte } from "drizzle-orm";
 import { entitlementsFor } from "@/lib/entitlements";
-import { relativeFr } from "@/lib/format";
 import {
   LockedScreen,
   PageHeader,
@@ -22,17 +21,21 @@ import {
 } from "@/components/settings-page";
 import { Drawer } from "@/components/settings-overlays";
 import { disableOrgConnection, toggleSsoDelegation } from "./actions";
+import { getT, type Translate } from "@/i18n/server";
 
 const PARK_GRID = "26px minmax(160px,1.2fr) minmax(150px,1fr) 130px 130px 100px 150px";
 const PARK_MIN_WIDTH = 980;
 const DAY = 24 * 3600 * 1000;
 
-const STATUS_LABELS: Record<string, string> = {
-  active: "Active",
-  pending: "À vérifier",
-  error: "Erreur",
-  disabled: "Désactivée",
-};
+/** Libellé d'un statut de connexion — inconnu : la valeur brute, comme avant. */
+function statusLabel(t: Translate, status: string): string {
+  if (status === "active") return t("app.settings.sso.statusActive");
+  if (status === "pending") return t("app.settings.sso.statusPending");
+  if (status === "error") return t("app.settings.sso.statusError");
+  if (status === "disabled") return t("app.settings.sso.statusDisabled");
+  return status;
+}
+
 const STATUS_TONES: Record<string, "ok" | "wait" | "dang" | "closed"> = {
   active: "ok",
   pending: "wait",
@@ -45,12 +48,17 @@ const STATUS_DOTS: Record<string, string> = {
   error: "var(--dang)",
   disabled: "var(--ink-3)",
 };
+/** Marques telles quelles ; seul « Générique » se traduit. */
 const PROVIDER_LABELS: Record<string, string> = {
   entra: "Entra ID",
   google: "Google",
   okta: "Okta",
-  generic: "Générique",
 };
+
+function providerLabel(t: Translate, provider: string): string {
+  if (provider === "generic") return t("app.settings.sso.providerGeneric");
+  return PROVIDER_LABELS[provider] ?? provider;
+}
 
 /** Chip de filtre / bouton de la barre : min-h 30, padding 5/11, radius 6, 12,5 px. */
 const CHIP: React.CSSProperties = {
@@ -61,18 +69,20 @@ const CHIP: React.CSSProperties = {
   whiteSpace: "nowrap",
 };
 
-/** « depuis 4 h », « depuis 12 j ». */
-function sinceFr(date: Date, now: Date = new Date()): string {
-  const diff = now.getTime() - date.getTime();
-  if (diff < 3600_000) return `depuis ${Math.max(1, Math.floor(diff / 60_000))} min`;
-  if (diff < DAY) return `depuis ${Math.floor(diff / 3600_000)} h`;
-  return `depuis ${Math.floor(diff / DAY)} j`;
+/** « depuis 4 h », « depuis 12 j » — les unités viennent du dictionnaire. */
+function since(t: Translate, date: Date, now: Date = new Date()): string {
+  const { unit, n } = t.fmt.elapsed(date, now);
+  if (unit === "minute") return t("app.settings.sso.sinceMinutes", { count: n });
+  if (unit === "hour") return t("app.settings.sso.sinceHours", { count: n });
+  return t("app.settings.sso.sinceDays", { count: n });
 }
 
 /** « dans 11 j ». */
-function inFr(date: Date, now: Date = new Date()): string {
+function until(t: Translate, date: Date, now: Date = new Date()): string {
   const days = Math.max(0, Math.ceil((date.getTime() - now.getTime()) / DAY));
-  return days <= 1 ? "dans moins de 24 h" : `dans ${days} j`;
+  return days <= 1
+    ? t("app.settings.sso.withinDay")
+    : t("app.settings.sso.inDays", { count: days });
 }
 
 /**
@@ -85,6 +95,7 @@ export default async function CustomerSsoPage({
 }: {
   searchParams: Promise<{ filter?: string; q?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const ent = entitlementsFor(tenant.plan);
   const { filter, q } = await searchParams;
@@ -92,8 +103,8 @@ export default async function CustomerSsoPage({
 
   const header = (
     <PageHeader
-      title="SSO des organisations clientes"
-      subtitle="Chaque organisation cliente connecte son propre fournisseur d'identité depuis le portail. Vous supervisez ici l'ensemble du parc."
+      title={t("app.settings.sso.customerTitle")}
+      subtitle={t("app.settings.sso.customerSubtitle")}
     />
   );
 
@@ -102,9 +113,9 @@ export default async function CustomerSsoPage({
       <PageShell maxWidth={1180}>
         {header}
         <LockedScreen
-          title="Le SSO des organisations clientes est réservé au plan Pro"
-          text="Laissez chaque organisation cliente brancher son propre fournisseur d'identité (SAML ou OIDC) et supervisez l'ensemble du parc depuis cet écran."
-          ghost={<GhostPark />}
+          title={t("app.settings.sso.customerLockedTitle")}
+          text={t("app.settings.sso.customerLockedText")}
+          ghost={<GhostPark t={t} />}
         />
       </PageShell>
     );
@@ -164,27 +175,27 @@ export default async function CustomerSsoPage({
   );
   const stats: { label: string; value: number; meta: string; tone: "ok" | "wait" | "dang" }[] = [
     {
-      label: "Connexions actives",
+      label: t("app.settings.sso.statActiveLabel"),
       value: connections.filter((c) => c.status === "active").length,
-      meta: `sur ${orgs.length} organisation${orgs.length > 1 ? "s" : ""}`,
+      meta: t("app.settings.sso.statActiveMeta", { count: orgs.length }),
       tone: "ok",
     },
     {
-      label: "En attente de vérification",
+      label: t("app.settings.sso.statPendingLabel"),
       value: connections.filter((c) => c.status === "pending").length,
-      meta: "domaine non validé depuis plus de 7 jours",
+      meta: t("app.settings.sso.statPendingMeta"),
       tone: "wait",
     },
     {
-      label: "En erreur",
+      label: t("app.settings.sso.statErrorLabel"),
       value: connections.filter((c) => c.status === "error").length,
-      meta: "échecs de connexion sur les dernières 24 h",
+      meta: t("app.settings.sso.statErrorMeta"),
       tone: "dang",
     },
     {
-      label: "Secrets expirant",
+      label: t("app.settings.sso.statExpiringLabel"),
       value: expiring.length,
-      meta: "dans les 30 prochains jours",
+      meta: t("app.settings.sso.statExpiringMeta"),
       tone: "wait",
     },
   ];
@@ -223,12 +234,15 @@ export default async function CustomerSsoPage({
     const org = orgById.get(c.organizationId);
     if (!org) continue;
     const blocked = failuresByOrg.get(org.id) ?? 0;
+    // `lastError` vient du tenant : jamais traduit, seul le repli l'est.
+    const reason = c.lastError ?? t("app.settings.sso.attentionRepeatedFailures");
     attention.push({
       org: org.name,
       issue:
-        (c.lastError ?? "Échecs de connexion répétés") +
-        (blocked > 0 ? ` — ${blocked} tentative${blocked > 1 ? "s" : ""} sur 24 h` : ""),
-      when: sinceFr(c.updatedAt, now),
+        blocked > 0
+          ? t("app.settings.sso.attentionAttempts", { reason, count: blocked })
+          : reason,
+      when: since(t, c.updatedAt, now),
       tone: "dang",
       adminEmail: adminByOrg.get(org.id)?.contactEmail,
     });
@@ -240,8 +254,8 @@ export default async function CustomerSsoPage({
     if (!org) continue;
     attention.push({
       org: org.name,
-      issue: `Domaine ${d.domain} non vérifié — enregistrement TXT absent`,
-      when: sinceFr(d.createdAt, now),
+      issue: t("app.settings.sso.attentionDomainUnverified", { domain: d.domain }),
+      when: since(t, d.createdAt, now),
       tone: "wait",
       adminEmail: adminByOrg.get(org.id)?.contactEmail,
     });
@@ -251,18 +265,18 @@ export default async function CustomerSsoPage({
     if (!org || !c.secretExpiresAt) continue;
     attention.push({
       org: org.name,
-      issue: "Secret client expirant",
-      when: inFr(c.secretExpiresAt, now),
+      issue: t("app.settings.sso.attentionSecretExpiring"),
+      when: until(t, c.secretExpiresAt, now),
       tone: "wait",
       adminEmail: adminByOrg.get(org.id)?.contactEmail,
     });
   }
 
   const filters = [
-    { key: "", label: "Toutes" },
-    { key: "error", label: "En erreur" },
-    { key: "pending", label: "À vérifier" },
-    { key: "none", label: "Sans SSO" },
+    { key: "", label: t("app.settings.sso.filterAll") },
+    { key: "error", label: t("app.settings.sso.statErrorLabel") },
+    { key: "pending", label: t("app.settings.sso.statusPending") },
+    { key: "none", label: t("app.settings.sso.noSso") },
   ];
 
   return (
@@ -292,7 +306,11 @@ export default async function CustomerSsoPage({
                 height: 20,
                 background: tenant.ssoDelegationEnabled ? "var(--acc)" : "var(--line)",
               }}
-              title={tenant.ssoDelegationEnabled ? "Désactiver" : "Activer"}
+              title={
+                tenant.ssoDelegationEnabled
+                  ? t("app.settings.sso.disable")
+                  : t("app.settings.sso.enable")
+              }
             >
               <span
                 className="absolute rounded-full bg-white"
@@ -310,13 +328,12 @@ export default async function CustomerSsoPage({
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center" style={{ gap: 9 }}>
               <span className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
-                Autoriser les organisations à configurer leur propre SSO
+                {t("app.settings.sso.delegationTitle")}
               </span>
               <PlanProBadge />
             </div>
             <p style={{ fontSize: 12.5, color: "var(--ink-2)", textWrap: "pretty" }}>
-              Un contact désigné administrateur configure la connexion depuis le portail. Vous
-              gardez la supervision et pouvez désactiver n'importe quelle connexion.
+              {t("app.settings.sso.delegationText")}
             </p>
           </div>
         </div>
@@ -369,7 +386,7 @@ export default async function CustomerSsoPage({
             <input
               name="q"
               defaultValue={q ?? ""}
-              placeholder="Rechercher une organisation ou un domaine…"
+              placeholder={t("app.settings.sso.searchPlaceholder")}
               className="w-full border"
               style={{
                 ...CHIP,
@@ -405,7 +422,7 @@ export default async function CustomerSsoPage({
           <span className="flex-1" />
           <button
             disabled
-            title="Disponible prochainement"
+            title={t("app.settings.sso.comingSoon")}
             className="grid place-items-center border disabled:opacity-50"
             style={{
               ...CHIP,
@@ -414,7 +431,7 @@ export default async function CustomerSsoPage({
               color: "var(--ink-2)",
             }}
           >
-            Export CSV
+            {t("app.settings.sso.exportCsv")}
           </button>
         </div>
 
@@ -424,10 +441,10 @@ export default async function CustomerSsoPage({
           style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
         >
           <div style={{ minWidth: PARK_MIN_WIDTH }}>
-            <ParkHead />
+            <ParkHead t={t} />
             {parkOrgs.length === 0 && (
               <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-                Aucune organisation n'a encore configuré de connexion
+                {t("app.settings.sso.parkEmpty")}
               </p>
             )}
             {parkOrgs.map((org) => {
@@ -439,7 +456,7 @@ export default async function CustomerSsoPage({
               return (
                 <Drawer
                   key={org.id}
-                  title={`${org.name} — connexion SSO`}
+                  title={t("app.settings.sso.drawerTitle", { name: org.name })}
                   triggerClassName="st-row"
                   triggerStyle={{
                     display: "grid",
@@ -480,16 +497,16 @@ export default async function CustomerSsoPage({
                       </span>
                       <span style={{ color: "var(--ink-2)" }}>
                         {c
-                          ? `${c.protocol.toUpperCase()} · ${PROVIDER_LABELS[c.provider] ?? c.provider}`
+                          ? `${c.protocol.toUpperCase()} · ${providerLabel(t, c.provider)}`
                           : "—"}
                       </span>
                       <span>
                         {c ? (
                           <StatusPill tone={STATUS_TONES[status] ?? "closed"}>
-                            {STATUS_LABELS[status] ?? status}
+                            {statusLabel(t, status)}
                           </StatusPill>
                         ) : (
-                          <StatusPill tone="closed">Sans SSO</StatusPill>
+                          <StatusPill tone="closed">{t("app.settings.sso.noSso")}</StatusPill>
                         )}
                       </span>
                       <span
@@ -505,6 +522,7 @@ export default async function CustomerSsoPage({
                   }
                 >
                   <OrgDetail
+                    t={t}
                     org={org.name}
                     connection={c}
                     domains={orgDomains}
@@ -521,7 +539,7 @@ export default async function CustomerSsoPage({
         {attention.length > 0 && (
           <section className="flex flex-col" style={{ gap: 11 }}>
             <h2 className="font-semibold" style={{ fontSize: 14.5, color: "var(--ink)" }}>
-              Attention requise
+              {t("app.settings.sso.attentionSection")}
             </h2>
             <div
               className="overflow-hidden border"
@@ -563,11 +581,11 @@ export default async function CustomerSsoPage({
                       className="whitespace-nowrap font-semibold"
                       style={{ color: "var(--acc-2)" }}
                     >
-                      Prévenir l'admin
+                      {t("app.settings.sso.notifyAdmin")}
                     </a>
                   ) : (
                     <span className="whitespace-nowrap" style={{ color: "var(--ink-3)" }}>
-                      Aucun admin désigné
+                      {t("app.settings.sso.noAdmin")}
                     </span>
                   )}
                 </div>
@@ -581,7 +599,7 @@ export default async function CustomerSsoPage({
 }
 
 /** En-tête de la table du parc — 10,5 px/700, hauteur 34, collant. */
-function ParkHead() {
+function ParkHead({ t }: { t: Translate }) {
   return (
     <div
       className="sticky top-0 z-[2] grid items-center border-b font-bold"
@@ -597,14 +615,14 @@ function ParkHead() {
       }}
     >
       <span>●</span>
-      <span style={{ paddingRight: 10 }}>Organisation</span>
-      <span style={{ paddingRight: 10 }}>Domaines</span>
-      <span>Protocole</span>
-      <span>Statut</span>
+      <span style={{ paddingRight: 10 }}>{t("app.settings.sso.colOrganization")}</span>
+      <span style={{ paddingRight: 10 }}>{t("app.settings.sso.colDomains")}</span>
+      <span>{t("app.settings.sso.fieldProtocol")}</span>
+      <span>{t("app.settings.sso.fieldStatus")}</span>
       <span className="text-right" style={{ paddingRight: 12 }}>
-        Membres
+        {t("app.settings.sso.colMembers")}
       </span>
-      <span className="text-right">Administrateur</span>
+      <span className="text-right">{t("app.settings.sso.colAdmin")}</span>
     </div>
   );
 }
@@ -655,88 +673,101 @@ function DrawerField({
 
 /** Drawer de détail — lecture seule, seule action : Désactiver la connexion. */
 function OrgDetail({
+  t,
   org,
   connection,
   domains,
   admin,
   failures24h,
 }: {
+  t: Translate;
   org: string;
   connection?: typeof orgSsoConnections.$inferSelect;
   domains: (typeof verifiedDomains.$inferSelect)[];
   admin: { contactName: string | null; contactEmail: string } | null;
   failures24h: number;
 }) {
-  const statusLabel = connection
+  const status = connection
     ? connection.status === "error"
-      ? `Erreur — ${connection.lastError ?? "échecs de connexion répétés"}`
-      : (STATUS_LABELS[connection.status] ?? connection.status)
-    : "Sans SSO";
+      ? t("app.settings.sso.statusErrorDetail", {
+          reason: connection.lastError ?? t("app.settings.sso.statusErrorReason"),
+        })
+      : statusLabel(t, connection.status)
+    : t("app.settings.sso.noSso");
 
   return (
     <div className="flex h-full flex-col" style={{ gap: 14 }}>
       <DrawerField
-        label="Statut"
-        value={statusLabel}
+        label={t("app.settings.sso.fieldStatus")}
+        value={status}
         tall={connection?.status === "error"}
         tone={connection?.status === "error" ? "dang" : undefined}
       />
       <DrawerField
-        label="Protocole"
+        label={t("app.settings.sso.fieldProtocol")}
         value={
           connection
-            ? `${connection.protocol.toUpperCase()} · ${PROVIDER_LABELS[connection.provider] ?? connection.provider}`
+            ? `${connection.protocol.toUpperCase()} · ${providerLabel(t, connection.provider)}`
             : "—"
         }
       />
       <DrawerField
-        label="Domaines couverts"
+        label={t("app.settings.sso.coveredDomains")}
         mono
         value={
           domains.length > 0
             ? domains
-                .map(
-                  (d) =>
-                    `${d.domain} (${d.status === "verified" ? "vérifié" : d.status === "failed" ? "échec" : "en attente"})`,
+                .map((d) =>
+                  t("app.settings.sso.domainWithStatus", {
+                    domain: d.domain,
+                    status:
+                      d.status === "verified"
+                        ? t("app.settings.sso.domainVerified")
+                        : d.status === "failed"
+                          ? t("app.settings.sso.domainFailed")
+                          : t("app.settings.sso.domainPending"),
+                  }),
                 )
                 .join(", ")
             : "—"
         }
       />
       <DrawerField
-        label="Administrateur côté client"
+        label={t("app.settings.sso.customerAdmin")}
         mono
         value={admin?.contactEmail ?? "—"}
         hint={
           admin
-            ? `${admin.contactName ?? admin.contactEmail} — configuré depuis le portail. Seul cet administrateur peut corriger la connexion.`
-            : "Aucun contact n'est administrateur de cette organisation."
+            ? t("app.settings.sso.adminHint", { name: admin.contactName ?? admin.contactEmail })
+            : t("app.settings.sso.noAdminHint")
         }
       />
       <DrawerField
-        label="Échecs sur 24 h"
-        value={`${failures24h} tentative${failures24h > 1 ? "s" : ""}`}
+        label={t("app.settings.sso.failures24h")}
+        value={t("app.settings.sso.attemptCount", { count: failures24h })}
         tone={failures24h > 0 ? "dang" : undefined}
       />
       <DrawerField
-        label="Secret"
+        label={t("app.settings.sso.secret")}
         mono
         value={connection?.secretHint ?? "—"}
         hint={
           connection?.secretExpiresAt
-            ? `Expire le ${connection.secretExpiresAt.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}.`
+            ? t("app.settings.sso.secretExpires", {
+                date: t.fmt.dateLong(connection.secretExpiresAt),
+              })
             : undefined
         }
       />
       <DrawerField
-        label="Dernière connexion réussie"
-        value={connection?.lastSuccessAt ? relativeFr(connection.lastSuccessAt) : "—"}
+        label={t("app.settings.sso.lastSuccess")}
+        value={connection?.lastSuccessAt ? t.fmt.relative(connection.lastSuccessAt) : "—"}
       />
       {connection?.status === "error" && (
         <DrawerField
-          label="Repli pendant la panne"
-          value="Lien par email réactivé automatiquement"
-          hint={`Les contacts de ${org} peuvent continuer à accéder à leurs demandes le temps de la correction.`}
+          label={t("app.settings.sso.fallbackLabel")}
+          value={t("app.settings.sso.fallbackValue")}
+          hint={t("app.settings.sso.fallbackHint", { org: t.fmt.of(org) })}
         />
       )}
       {connection && connection.status !== "disabled" && (
@@ -757,7 +788,7 @@ function OrgDetail({
               background: "var(--panel)",
             }}
           >
-            Désactiver la connexion
+            {t("app.settings.sso.disableConnection")}
           </button>
         </form>
       )}
@@ -766,13 +797,13 @@ function OrgDetail({
 }
 
 /** Table factice floutée derrière le voile de l'état verrouillé. */
-function GhostPark() {
+function GhostPark({ t }: { t: Translate }) {
   return (
     <div
       className="border"
       style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
     >
-      <ParkHead />
+      <ParkHead t={t} />
       {Array.from({ length: 8 }).map((_, i) => (
         <div
           key={i}

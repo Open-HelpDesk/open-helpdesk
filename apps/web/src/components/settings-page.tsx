@@ -1,11 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
+import { useT } from "@/i18n/client";
 
 /**
  * Primitives partagées de l'administration (ST-01 → ST-14) — gabarit commun de
  * design-notes/administration.md : en-tête de page (chip code + titre 20px/600 +
  * sous-titre 13.5px), segmented control, barre de sauvegarde, cartes, toggles,
  * jauges, états vides et verrouillés (plans EE).
+ *
+ * Module client : deux formulaires clients (ST-03) importent déjà Field/Select/
+ * TextInput d'ici, le fichier vit donc dans le graphe navigateur. Les libellés
+ * partagés (Enregistrer, Annuler…) passent par useT() plutôt que getT(), qui y
+ * embarquerait next/headers et les onze dictionnaires.
  */
 
 export type PageTab = { label: string; href: string; active: boolean };
@@ -102,7 +110,7 @@ export function SegTabs({ tabs }: { tabs: PageTab[] }) {
 export function SaveBar({
   saved,
   cancelHref,
-  submitLabel = "Enregistrer",
+  submitLabel,
   surface = "canvas",
 }: {
   saved?: boolean;
@@ -111,6 +119,7 @@ export function SaveBar({
   /** « panel » quand la barre vit DANS une carte (fond blanc), « canvas » en pied de page. */
   surface?: "canvas" | "panel";
 }) {
+  const t = useT();
   return (
     <div
       className="sticky bottom-0 z-10 flex items-center gap-2 border-t"
@@ -122,7 +131,7 @@ export function SaveBar({
       }}
     >
       {saved && (
-        <span style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</span>
+        <span style={{ fontSize: 12.5, color: "var(--ok)" }}>{t("app.settings.shell.saved")}</span>
       )}
       <span className="flex-1" />
       <Link
@@ -130,14 +139,14 @@ export function SaveBar({
         className="inline-flex items-center rounded-md border px-3 font-medium"
         style={{ height: 32, fontSize: 13, borderColor: "var(--line)", background: "var(--panel)", color: "var(--ink)" }}
       >
-        Annuler
+        {t("app.settings.shell.cancel")}
       </Link>
       <button
         type="submit"
         className="inline-flex items-center rounded-md px-3.5 font-semibold text-white"
         style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
       >
-        {submitLabel}
+        {submitLabel ?? t("app.settings.shell.save")}
       </button>
     </div>
   );
@@ -322,7 +331,8 @@ export function Gauge({
   );
 }
 
-export function PlanProBadge({ label = "PLAN PRO" }: { label?: string }) {
+export function PlanProBadge({ label }: { label?: string }) {
+  const t = useT();
   return (
     <span
       className="rounded-full font-bold uppercase"
@@ -334,7 +344,7 @@ export function PlanProBadge({ label = "PLAN PRO" }: { label?: string }) {
         color: "var(--new)",
       }}
     >
-      {label}
+      {label ?? t("app.settings.shell.planPro")}
     </span>
   );
 }
@@ -349,6 +359,7 @@ export function LockedScreen({
   text: string;
   ghost: ReactNode;
 }) {
+  const t = useT();
   return (
     <div className="relative overflow-hidden rounded-[10px]" style={{ minHeight: 380 }}>
       <div aria-hidden style={{ filter: "blur(3px)", pointerEvents: "none", userSelect: "none" }}>
@@ -378,7 +389,7 @@ export function LockedScreen({
             className="mt-4 inline-flex items-center rounded-md px-4 font-semibold text-white"
             style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
           >
-            Passer au plan Pro
+            {t("app.settings.shell.upgradeToPro")}
           </Link>
         </div>
       </div>

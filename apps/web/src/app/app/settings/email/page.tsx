@@ -15,7 +15,6 @@ import {
   getEmailSettings,
   resolveMailConfig,
 } from "@openhelpdesk/mail";
-import { relativeFr } from "@/lib/format";
 import {
   Card,
   Field,
@@ -37,39 +36,80 @@ import {
   testEmailConnection,
   verifyMailbox,
 } from "./actions";
+import { getT, type Translate } from "@/i18n/server";
 
 const ADDRESS_GRID = "minmax(200px,1fr) 90px 110px 130px 110px 170px";
 const DNS_GRID = "96px 76px 170px 1fr 130px";
 const SEND_GRID = "minmax(190px,1fr) minmax(190px,1.4fr) 130px 100px 90px";
 const REJECT_GRID = "minmax(200px,1fr) minmax(180px,1.2fr) 150px 110px";
 
-const KIND_LABELS: Record<string, string> = {
-  provided: "Fournie",
-  forwarding: "Transfert",
-  imap: "IMAP",
+/** Méthode d'une adresse de réception (Fournie / Transfert / IMAP). */
+function kindLabel(kind: string, t: Translate): string {
+  switch (kind) {
+    case "provided":
+      return t("app.settings.email.kindProvided");
+    case "forwarding":
+      return t("app.settings.email.kindForwarding");
+    case "imap":
+      return t("app.settings.email.kindImap");
+    default:
+      return kind;
+  }
+}
+
+/** Nature d'un email dans le journal des envois. */
+function deliveryKindLabel(kind: string, t: Translate): string {
+  switch (kind) {
+    case "ticket_reply":
+      return t("app.settings.email.deliveryTicketReply");
+    case "csat":
+      return t("app.settings.email.deliveryCsat");
+    case "magic_link":
+      return t("app.settings.email.deliveryMagicLink");
+    case "rule":
+      return t("app.settings.email.deliveryRule");
+    case "invitation":
+      return t("app.settings.email.deliveryInvitation");
+    case "test":
+      return t("app.settings.email.deliveryTest");
+    case "other":
+      return t("app.settings.email.deliveryOther");
+    default:
+      return kind;
+  }
+}
+
+const REJECT_TONES: Record<string, "wait" | "dang" | "closed"> = {
+  loop: "wait",
+  bounce: "closed",
+  auto_reply: "wait",
+  blocked_sender: "dang",
+  empty: "closed",
+  spam: "dang",
 };
 
-const KIND_EMAIL_LABELS: Record<string, string> = {
-  ticket_reply: "Réponse ticket",
-  csat: "Enquête CSAT",
-  magic_link: "Lien de connexion",
-  rule: "Automatisation",
-  invitation: "Invitation",
-  test: "Test",
-  other: "Autre",
-};
-
-const REJECT_REASONS: Record<string, { label: string; tone: "wait" | "dang" | "closed" }> = {
-  loop: { label: "Boucle détectée", tone: "wait" },
-  bounce: { label: "Bounce automatique", tone: "closed" },
-  auto_reply: { label: "Réponse automatique", tone: "wait" },
-  blocked_sender: { label: "Expéditeur bloqué", tone: "dang" },
-  empty: { label: "Message vide", tone: "closed" },
-  spam: { label: "Spam", tone: "dang" },
-};
+/** Motif de rejet d'un email entrant. */
+function rejectLabel(reason: string, t: Translate): string {
+  switch (reason) {
+    case "loop":
+      return t("app.settings.email.rejectLoop");
+    case "bounce":
+      return t("app.settings.email.rejectBounce");
+    case "auto_reply":
+      return t("app.settings.email.rejectAutoReply");
+    case "blocked_sender":
+      return t("app.settings.email.rejectBlockedSender");
+    case "empty":
+      return t("app.settings.email.rejectEmpty");
+    case "spam":
+      return t("app.settings.email.rejectSpam");
+    default:
+      return reason;
+  }
+}
 
 /** Chip neutre pour la méthode d'une adresse (Fournie / Transfert / IMAP). */
-function KindChip({ kind }: { kind: string }) {
+function KindChip({ kind, t }: { kind: string; t: Translate }) {
   return (
     <span
       className="inline-flex items-center rounded border px-1.5 font-medium"
@@ -81,34 +121,35 @@ function KindChip({ kind }: { kind: string }) {
         color: "var(--ink-2)",
       }}
     >
-      {KIND_LABELS[kind] ?? kind}
+      {kindLabel(kind, t)}
     </span>
   );
 }
 
 /** Statut d'une adresse de réception, au format pilule du design system. */
-function mailboxStatus(m: typeof mailboxes.$inferSelect) {
-  if (m.kind === "provided") return <StatusPill tone="ok">Vérifiée</StatusPill>;
+function mailboxStatus(m: typeof mailboxes.$inferSelect, t: Translate) {
+  if (m.kind === "provided")
+    return <StatusPill tone="ok">{t("app.settings.email.statusVerified")}</StatusPill>;
   if (m.kind === "forwarding") {
     return m.verified ? (
-      <StatusPill tone="ok">Vérifiée</StatusPill>
+      <StatusPill tone="ok">{t("app.settings.email.statusVerified")}</StatusPill>
     ) : (
-      <span title="Passe en « Vérifiée » au premier email reçu.">
-        <StatusPill tone="wait">En attente</StatusPill>
+      <span title={t("app.settings.email.forwardingPendingTitle")}>
+        <StatusPill tone="wait">{t("app.settings.email.statusPending")}</StatusPill>
       </span>
     );
   }
   if (m.syncError) {
     return (
       <span title={m.syncError}>
-        <StatusPill tone="dang">Erreur</StatusPill>
+        <StatusPill tone="dang">{t("app.settings.email.statusError")}</StatusPill>
       </span>
     );
   }
   return m.verified ? (
-    <StatusPill tone="ok">Connectée</StatusPill>
+    <StatusPill tone="ok">{t("app.settings.email.statusConnected")}</StatusPill>
   ) : (
-    <StatusPill tone="wait">À tester</StatusPill>
+    <StatusPill tone="wait">{t("app.settings.email.statusToTest")}</StatusPill>
   );
 }
 
@@ -130,6 +171,7 @@ export default async function EmailSettingsPage({
 }: {
   searchParams: Promise<{ tab?: string; saved?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { tab, saved } = await searchParams;
   const activeTab = tab === "reception" ? "reception" : "envoi";
@@ -189,25 +231,29 @@ export default async function EmailSettingsPage({
   const webhooks = [
     {
       name: "Brevo — Inbound parsing",
-      hint: "Brevo → Transactionnel → Paramètres → Inbound parsing : collez cette URL.",
+      hint: t("app.settings.email.webhookBrevoHint"),
       path: "brevo",
     },
     {
       name: "Mailjet — Parse API",
-      hint: "Mailjet → Email API → Parse API : créez une route vers cette URL.",
+      hint: t("app.settings.email.webhookMailjetHint"),
       path: "mailjet",
     },
     {
-      name: "Webhook générique (JSON normalisé)",
-      hint: "Pour vos intégrations : POST avec l'en-tête x-ingress-secret.",
+      name: t("app.settings.email.webhookGenericName"),
+      hint: t("app.settings.email.webhookGenericHint"),
       path: "email",
     },
   ];
 
   const tabs = [
-    { label: "Envoi", href: "/app/settings/email", active: activeTab === "envoi" },
     {
-      label: "Réception",
+      label: t("app.settings.email.tabSending"),
+      href: "/app/settings/email",
+      active: activeTab === "envoi",
+    },
+    {
+      label: t("app.settings.email.tabReception"),
       href: "/app/settings/email?tab=reception",
       active: activeTab === "reception",
     },
@@ -221,11 +267,21 @@ export default async function EmailSettingsPage({
         ? { bg: "var(--open-t)", color: "var(--open)" }
         : { bg: "var(--wait-t)", color: "var(--wait)" };
 
+  // Deux phrases enveloppent une valeur en JSX : on découpe autour de l'adresse.
+  const [bannerBefore, bannerAfter] = t.parts(
+    resolved.source === "tenant"
+      ? "app.settings.email.bannerTenant"
+      : "app.settings.email.bannerInstance",
+    "from",
+    { provider: PROVIDER_META[resolved.provider].label },
+  );
+  const [dnsBefore, dnsAfter] = t.parts("app.settings.email.dnsIntro", "domain");
+
   return (
     <PageShell maxWidth={1040}>
       <PageHeader
-        title="Canal email"
-        subtitle="Fournisseur d'envoi, adresses de réception, délivrabilité et journaux."
+        title={t("app.settings.email.title")}
+        subtitle={t("app.settings.email.subtitle")}
         tabs={tabs}
       />
 
@@ -233,12 +289,12 @@ export default async function EmailSettingsPage({
         <>
           {/* Adresses de réception */}
           <Card
-            title="Adresses de réception"
+            title={t("app.settings.email.addressesTitle")}
             style={{ padding: 0 }}
             action={
               <Drawer
-                title="Ajouter une adresse"
-                trigger={<>+ Ajouter une adresse</>}
+                title={t("app.settings.email.addAddress")}
+                trigger={<>{t("app.settings.email.addAddressCta")}</>}
                 triggerClassName="rounded-md px-3 font-semibold text-white"
                 triggerStyle={{ height: 28, fontSize: 12.5, background: "var(--acc)" }}
               >
@@ -255,11 +311,18 @@ export default async function EmailSettingsPage({
               <div style={{ minWidth: 880 }}>
                 <GridHead
                   template={ADDRESS_GRID}
-                  columns={["Adresse", "Méthode", "Statut", "Formulaire", "Équipe", ""]}
+                  columns={[
+                    t("app.settings.email.address"),
+                    t("app.settings.email.method"),
+                    t("app.settings.email.status"),
+                    t("app.settings.email.form"),
+                    t("app.settings.email.team"),
+                    "",
+                  ]}
                 />
                 {boxes.length === 0 && (
                   <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-                    Aucune adresse. L'adresse fournie {providedAddress} sera créée au premier envoi.
+                    {t("app.settings.email.addressesEmpty", { address: providedAddress })}
                   </p>
                 )}
                 {boxes.map((m) => (
@@ -281,16 +344,20 @@ export default async function EmailSettingsPage({
                       </span>
                       {m.kind === "imap" && m.lastSyncAt && (
                         <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-                          relevée {relativeFr(m.lastSyncAt)}
+                          {t("app.settings.email.lastSync", {
+                            time: t.fmt.relative(m.lastSyncAt),
+                          })}
                         </span>
                       )}
                     </span>
                     <span>
-                      <KindChip kind={m.kind} />
+                      <KindChip kind={m.kind} t={t} />
                     </span>
-                    <span>{mailboxStatus(m)}</span>
+                    <span>{mailboxStatus(m, t)}</span>
                     <span className="truncate" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                      {m.formId ? (formNameById.get(m.formId) ?? "—") : "Par défaut"}
+                      {m.formId
+                        ? (formNameById.get(m.formId) ?? "—")
+                        : t("app.settings.email.formDefault")}
                     </span>
                     <span className="truncate" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
                       {m.defaultTeamId ? (teamNameById.get(m.defaultTeamId) ?? "—") : "—"}
@@ -300,15 +367,15 @@ export default async function EmailSettingsPage({
                         <form action={verifyMailbox}>
                           <input type="hidden" name="mailboxId" value={m.id} />
                           <button className="rounded-md border px-2 font-medium" style={SMALL_BTN}>
-                            Tester
+                            {t("app.settings.email.test")}
                           </button>
                         </form>
                       )}
                       {m.kind !== "provided" && (
                         <>
                           <Drawer
-                            title={`Modifier ${m.address}`}
-                            trigger={<>Modifier</>}
+                            title={t("app.settings.email.editAddress", { address: m.address })}
+                            trigger={<>{t("app.settings.email.edit")}</>}
                             triggerClassName="rounded-md border px-2 font-medium"
                             triggerStyle={SMALL_BTN}
                           >
@@ -333,7 +400,7 @@ export default async function EmailSettingsPage({
                           <form action={deleteMailbox}>
                             <input type="hidden" name="mailboxId" value={m.id} />
                             <button
-                              title="Supprimer l'adresse"
+                              title={t("app.settings.email.deleteAddress")}
                               className="rounded-md border px-2 font-medium"
                               style={{ ...SMALL_BTN, borderColor: "var(--dang)", color: "var(--dang)" }}
                             >
@@ -350,10 +417,9 @@ export default async function EmailSettingsPage({
           </Card>
 
           {/* Webhooks de réception fournisseurs */}
-          <Card title="Recevoir via un fournisseur">
+          <Card title={t("app.settings.email.providerReceiveTitle")}>
             <p className="mb-1" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-              Si votre domaine est géré par Brevo ou Mailjet, leur webhook de réception
-              transforme chaque email entrant en ticket — sans transfert ni IMAP.
+              {t("app.settings.email.providerReceiveIntro")}
             </p>
             <div className="flex flex-col">
               {webhooks.map((w, index) => (
@@ -387,7 +453,7 @@ export default async function EmailSettingsPage({
                   </code>
                   <CopyButton
                     text={`${ingressBase}/${w.path}?secret=${ingressSecret}`}
-                    label="Copier l'URL"
+                    label={t("app.settings.email.copyUrl")}
                   />
                 </div>
               ))}
@@ -395,23 +461,25 @@ export default async function EmailSettingsPage({
           </Card>
 
           {/* Emails rejetés */}
-          <Card title="Emails rejetés" style={{ padding: 0 }}>
+          <Card title={t("app.settings.email.rejectedTitle")} style={{ padding: 0 }}>
             <div className="overflow-x-auto">
               <div style={{ minWidth: 700 }}>
                 <GridHead
                   template={REJECT_GRID}
-                  columns={["Expéditeur", "Sujet", "Motif", "Date"]}
+                  columns={[
+                    t("app.settings.email.sender"),
+                    t("app.settings.email.subject"),
+                    t("app.settings.email.reason"),
+                    t("app.settings.email.date"),
+                  ]}
                 />
                 {rejected.length === 0 && (
                   <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-                    Aucun email rejeté sur les 30 derniers jours.
+                    {t("app.settings.email.rejectedEmpty")}
                   </p>
                 )}
                 {rejected.map((r) => {
-                  const reason = REJECT_REASONS[r.reason] ?? {
-                    label: r.reason,
-                    tone: "closed" as const,
-                  };
+                  const tone = REJECT_TONES[r.reason] ?? ("closed" as const);
                   return (
                     <div
                       key={r.id}
@@ -429,10 +497,10 @@ export default async function EmailSettingsPage({
                         {r.fromAddress}
                       </span>
                       <span className="truncate" style={{ fontSize: 12.5, color: "var(--ink)" }}>
-                        {r.subject ?? "(sans objet)"}
+                        {r.subject ?? t("app.settings.email.noSubject")}
                       </span>
                       <span className="flex min-w-0 items-center gap-1.5">
-                        <StatusPill tone={reason.tone}>{reason.label}</StatusPill>
+                        <StatusPill tone={tone}>{rejectLabel(r.reason, t)}</StatusPill>
                         {r.detail && (
                           <span className="truncate" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
                             ({r.detail})
@@ -443,7 +511,7 @@ export default async function EmailSettingsPage({
                         className="text-right tabular-nums"
                         style={{ fontSize: 12, color: "var(--ink-3)" }}
                       >
-                        {relativeFr(r.createdAt)}
+                        {t.fmt.relative(r.createdAt)}
                       </span>
                     </div>
                   );
@@ -460,7 +528,7 @@ export default async function EmailSettingsPage({
                   borderColor: "var(--line-2)",
                 }}
               >
-                Journal conservé 30 jours, puis purgé automatiquement.
+                {t("app.settings.email.rejectedRetention")}
               </p>
             )}
           </Card>
@@ -469,16 +537,16 @@ export default async function EmailSettingsPage({
         <>
           {/* Fournisseur d'envoi */}
           <Card
-            title="Fournisseur d'envoi"
+            title={t("app.settings.email.providerTitle")}
             action={
               settingsRow?.testStatus === "ok" ? (
-                <StatusPill tone="ok">Testé avec succès</StatusPill>
+                <StatusPill tone="ok">{t("app.settings.email.testOk")}</StatusPill>
               ) : settingsRow?.testStatus === "failed" ? (
-                <StatusPill tone="dang">Test en échec</StatusPill>
+                <StatusPill tone="dang">{t("app.settings.email.testFailed")}</StatusPill>
               ) : resolved.provider === "console" ? (
-                <StatusPill tone="wait">Aucun envoi</StatusPill>
+                <StatusPill tone="wait">{t("app.settings.email.testNone")}</StatusPill>
               ) : (
-                <StatusPill tone="closed">Non testé</StatusPill>
+                <StatusPill tone="closed">{t("app.settings.email.testUntested")}</StatusPill>
               )
             }
           >
@@ -497,25 +565,13 @@ export default async function EmailSettingsPage({
                   ●
                 </span>
                 <span>
-                  {resolved.source === "tenant" && (
+                  {resolved.source === "default" ? (
+                    t("app.settings.email.bannerDefault")
+                  ) : (
                     <>
-                      Ce workspace envoie via{" "}
-                      <strong>{PROVIDER_META[resolved.provider].label}</strong> depuis{" "}
-                      <span className="font-mono">{resolved.from}</span>.
-                    </>
-                  )}
-                  {resolved.source === "instance" && (
-                    <>
-                      Aucun fournisseur propre à ce workspace : envoi via la configuration de
-                      l'instance (<strong>{PROVIDER_META[resolved.provider].label}</strong>) depuis{" "}
-                      <span className="font-mono">{resolved.from}</span>.
-                    </>
-                  )}
-                  {resolved.source === "default" && (
-                    <>
-                      Aucun envoi réel : les emails sont écrits dans les journaux du serveur.
-                      Choisissez un fournisseur ci-dessous pour que vos clients reçoivent
-                      vraiment les réponses.
+                      {bannerBefore}
+                      <span className="font-mono">{resolved.from}</span>
+                      {bannerAfter}
                     </>
                   )}
                 </span>
@@ -553,7 +609,7 @@ export default async function EmailSettingsPage({
                       color: "var(--ink)",
                     }}
                   >
-                    Tester la connexion
+                    {t("app.settings.email.testConnection")}
                   </button>
                 </form>
                 <form action={sendEmailTest}>
@@ -561,12 +617,14 @@ export default async function EmailSettingsPage({
                     className="rounded-md px-3.5 font-semibold text-white"
                     style={{ height: 32, fontSize: 12.5, background: "var(--acc)" }}
                   >
-                    Envoyer un email de test
+                    {t("app.settings.email.sendTest")}
                   </button>
                 </form>
                 {settingsRow?.lastTestedAt && (
                   <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                    Dernier test {relativeFr(settingsRow.lastTestedAt)}
+                    {t("app.settings.email.lastTest", {
+                      time: t.fmt.relative(settingsRow.lastTestedAt),
+                    })}
                   </span>
                 )}
               </div>
@@ -584,7 +642,7 @@ export default async function EmailSettingsPage({
                   }}
                 >
                   {settingsRow.testStatus === "ok"
-                    ? "Configuration valide — l'envoi fonctionne pour ce workspace."
+                    ? t("app.settings.email.testOkDetail")
                     : settingsRow.testError}
                 </p>
               )}
@@ -593,21 +651,28 @@ export default async function EmailSettingsPage({
 
           {/* Signature */}
           <form action={saveSending} className="flex flex-col" style={{ gap: 22 }}>
-            <Card title="Signature des réponses">
+            <Card title={t("app.settings.email.signatureTitle")}>
               <div className="flex flex-col gap-4">
-                <Field label="Nom affiché sur l'adresse de réception" hint={providedAddress}>
+                <Field
+                  label={t("app.settings.email.senderNameLabel")}
+                  hint={providedAddress}
+                >
                   <TextInput
                     name="senderName"
                     defaultValue={principal?.senderName ?? ""}
-                    placeholder={`${tenant.name} Support`}
+                    placeholder={t("app.settings.email.senderNamePlaceholder", {
+                      name: tenant.name,
+                    })}
                   />
                 </Field>
-                <Field label="Signature globale">
+                <Field label={t("app.settings.email.signatureLabel")}>
                   <textarea
                     name="signatureHtml"
                     rows={3}
                     defaultValue={principal?.signatureHtml ?? ""}
-                    placeholder={`— L'équipe ${tenant.name} Support`}
+                    placeholder={t("app.settings.email.signaturePlaceholder", {
+                      name: tenant.name,
+                    })}
                     className="rounded-md border px-2.5 py-1.5 text-sm"
                     style={{
                       borderColor: "var(--line)",
@@ -622,24 +687,29 @@ export default async function EmailSettingsPage({
           </form>
 
           {/* DNS */}
-          <Card title="Authentifier votre domaine d'envoi">
+          <Card title={t("app.settings.email.dnsTitle")}>
             {!sendingDomain ? (
               <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-                Renseignez une adresse d'expédition ci-dessus pour obtenir les
-                enregistrements DNS à publier.
+                {t("app.settings.email.dnsNoDomain")}
               </p>
             ) : (
               <>
                 <p className="mb-3" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                  À publier sur la zone DNS de{" "}
-                  <span className="font-mono">{sendingDomain}</span> pour que vos emails ne
-                  partent pas en indésirable.
+                  {dnsBefore}
+                  <span className="font-mono">{sendingDomain}</span>
+                  {dnsAfter}
                 </p>
                 <div className="overflow-x-auto">
                   <div style={{ minWidth: 720 }}>
                     <GridHead
                       template={DNS_GRID}
-                      columns={["Enreg.", "Type", "Hôte", "Valeur", ""]}
+                      columns={[
+                        t("app.settings.email.dnsRecord"),
+                        t("app.settings.email.dnsType"),
+                        t("app.settings.email.dnsHost"),
+                        t("app.settings.email.dnsValue"),
+                        "",
+                      ]}
                     />
                     {dnsRecords.map((r) => (
                       <div
@@ -674,9 +744,11 @@ export default async function EmailSettingsPage({
                         </span>
                         <span className="text-right">
                           {r.fromProvider ? (
-                            <StatusPill tone="wait">Chez le fournisseur</StatusPill>
+                            <StatusPill tone="wait">
+                              {t("app.settings.email.dnsAtProvider")}
+                            </StatusPill>
                           ) : (
-                            <StatusPill tone="closed">À publier</StatusPill>
+                            <StatusPill tone="closed">{t("app.settings.email.dnsToPublish")}</StatusPill>
                           )}
                         </span>
                       </div>
@@ -700,17 +772,23 @@ export default async function EmailSettingsPage({
           </Card>
 
           {/* Journal */}
-          <Card title="Derniers envois">
+          <Card title={t("app.settings.email.deliveriesTitle")}>
             {deliveries.length === 0 ? (
               <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-                Aucun email envoyé depuis ce workspace pour l'instant.
+                {t("app.settings.email.deliveriesEmpty")}
               </p>
             ) : (
               <div className="overflow-x-auto">
                 <div style={{ minWidth: 720 }}>
                   <GridHead
                     template={SEND_GRID}
-                    columns={["Destinataire", "Sujet", "Nature", "Statut", "Date"]}
+                    columns={[
+                      t("app.settings.email.recipient"),
+                      t("app.settings.email.subject"),
+                      t("app.settings.email.deliveryKind"),
+                      t("app.settings.email.status"),
+                      t("app.settings.email.date"),
+                    ]}
                   />
                   {deliveries.map((d) => (
                     <div
@@ -732,22 +810,22 @@ export default async function EmailSettingsPage({
                         {d.subject}
                       </span>
                       <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                        {KIND_EMAIL_LABELS[d.kind] ?? d.kind}
+                        {deliveryKindLabel(d.kind, t)}
                       </span>
                       <span title={d.error ?? undefined}>
                         {d.status === "sent" ? (
-                          <StatusPill tone="ok">Envoyé</StatusPill>
+                          <StatusPill tone="ok">{t("app.settings.email.deliverySent")}</StatusPill>
                         ) : d.status === "failed" ? (
-                          <StatusPill tone="dang">Échec</StatusPill>
+                          <StatusPill tone="dang">{t("app.settings.email.deliveryFailed")}</StatusPill>
                         ) : (
-                          <StatusPill tone="wait">En file</StatusPill>
+                          <StatusPill tone="wait">{t("app.settings.email.deliveryQueued")}</StatusPill>
                         )}
                       </span>
                       <span
                         className="text-right tabular-nums"
                         style={{ fontSize: 12, color: "var(--ink-3)" }}
                       >
-                        {relativeFr(d.createdAt)}
+                        {t.fmt.relative(d.createdAt)}
                       </span>
                     </div>
                   ))}
@@ -756,8 +834,7 @@ export default async function EmailSettingsPage({
             )}
             {deliveries.some((d) => d.status === "failed") && (
               <p className="mt-3" style={{ fontSize: 12, color: "var(--dang)" }}>
-                Les envois en échec sont réessayés automatiquement par le worker (5
-                tentatives, délai croissant). Le motif exact s'affiche au survol du statut.
+                {t("app.settings.email.deliveriesRetryNote")}
               </p>
             )}
           </Card>

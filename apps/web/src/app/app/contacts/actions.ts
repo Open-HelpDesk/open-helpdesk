@@ -11,6 +11,7 @@ import {
 } from "@openhelpdesk/db";
 import { and, count, eq, not } from "drizzle-orm";
 import { requireAgent } from "@/lib/session";
+import { getT } from "@/i18n/server";
 
 /** Bloquer / débloquer un contact (spam) — ses emails entrants seront rejetés. */
 export async function toggleContactBlocked(formData: FormData) {
@@ -122,10 +123,11 @@ export async function deleteContactRgpd(formData: FormData) {
       .delete(contacts)
       .where(and(eq(contacts.tenantId, tenant.id), eq(contacts.id, contactId)));
   } else {
+    const t = await getT();
     await db
       .update(contacts)
       .set({
-        name: "Contact supprimé",
+        name: t("app.contacts.deletedName"),
         email: `rgpd-${contactId}@anonyme.invalid`,
         phone: null,
         blocked: true,

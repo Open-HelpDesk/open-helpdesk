@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { requireAgent } from "@/lib/session";
 import { db, kbArticles, kbCategories, ticketMessages, tickets } from "@openhelpdesk/db";
 import { and, asc, eq } from "drizzle-orm";
-import { relativeFr } from "@/lib/format";
+import { getT } from "@/i18n/server";
 import { deleteArticle, saveArticle } from "../actions";
 import { ArticleEditor } from "./editor";
 import { ARTICLE_TEMPLATES, templateById } from "@/lib/article-templates";
@@ -22,6 +22,7 @@ export default async function KbEditorPage({
   searchParams: Promise<{ cat?: string; modele?: string; depuis?: string }>;
 }) {
   const { tenant } = await requireAgent();
+  const t = await getT();
   const { id } = await params;
   const { cat, modele, depuis } = await searchParams;
   const isNew = id === "new";
@@ -34,20 +35,20 @@ export default async function KbEditorPage({
       <div className="h-full overflow-y-auto" style={{ background: "var(--canvas)" }}>
         <div className="mx-auto flex flex-col" style={{ maxWidth: 780, padding: "48px 28px" }}>
           <h1 className="font-semibold" style={{ fontSize: 20, letterSpacing: "-0.02em" }}>
-            Par où commencer ?
+            {t("app.kb.startTitle")}
           </h1>
           <p className="mt-1" style={{ fontSize: 13.5, color: "var(--ink-2)" }}>
-            Un modèle pose la structure et les intertitres ; tout reste modifiable ensuite.
+            {t("app.kb.startSubtitle")}
           </p>
 
           <div
             className="mt-6 grid gap-3"
             style={{ gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))" }}
           >
-            {ARTICLE_TEMPLATES.map((t) => (
+            {ARTICLE_TEMPLATES.map((gabarit) => (
               <Link
-                key={t.id}
-                href={`/app/kb/new?modele=${t.id}${cat ? `&cat=${cat}` : ""}`}
+                key={gabarit.id}
+                href={`/app/kb/new?modele=${gabarit.id}${cat ? `&cat=${cat}` : ""}`}
                 className="flex flex-col rounded-[10px] border hover:border-[var(--acc)]"
                 style={{ padding: "14px 15px", gap: 8, background: "var(--panel)", borderColor: "var(--line)" }}
               >
@@ -56,13 +57,13 @@ export default async function KbEditorPage({
                   className="grid place-items-center rounded-md font-mono font-bold"
                   style={{ width: 28, height: 28, fontSize: 12.5, background: "var(--acc-t)", color: "var(--acc)" }}
                 >
-                  {t.glyph}
+                  {gabarit.glyph}
                 </span>
                 <span className="font-semibold" style={{ fontSize: 14, color: "var(--ink)" }}>
-                  {t.label}
+                  {gabarit.label}
                 </span>
                 <span style={{ fontSize: 12.5, lineHeight: 1.45, color: "var(--ink-3)", textWrap: "pretty" }}>
-                  {t.hint}
+                  {gabarit.hint}
                 </span>
               </Link>
             ))}
@@ -73,7 +74,7 @@ export default async function KbEditorPage({
             className="mt-4 self-start"
             style={{ fontSize: 13, color: "var(--acc-2)", fontWeight: 500 }}
           >
-            Partir d'une page blanche
+            {t("app.kb.startBlank")}
           </Link>
         </div>
       </div>
@@ -130,6 +131,10 @@ export default async function KbEditorPage({
     : (depuisTicket?.body ?? modeleChoisi?.body ?? "");
   const titleValue = article?.title ?? depuisTicket?.title ?? modeleChoisi?.title ?? "";
 
+  // Phrase qui enveloppe le lien vers la demande source : une seule clé, coupée
+  // autour du paramètre.
+  const [reprisAvant, reprisApres] = t.parts("app.kb.fromTicket", "ticket");
+
   const inputStyle = {
     height: 30,
     width: "100%",
@@ -160,7 +165,7 @@ export default async function KbEditorPage({
             color: "var(--ink-2)",
             fontSize: 13,
           }}
-          title="Retour à la liste"
+          title={t("app.kb.backToList")}
         >
           ←
         </Link>
@@ -173,7 +178,7 @@ export default async function KbEditorPage({
                 : { fontSize: 11.5, background: "var(--closed-t)", color: "var(--closed)" }
             }
           >
-            {article.status === "published" ? "Publié" : "Brouillon"}
+            {article.status === "published" ? t("app.kb.published") : t("app.kb.draft")}
           </span>
         )}
         {hasDraft && (
@@ -186,12 +191,12 @@ export default async function KbEditorPage({
               letterSpacing: "0.04em",
             }}
           >
-            MODIFICATIONS NON PUBLIÉES
+            {t("app.kb.unpublishedChanges")}
           </span>
         )}
         {article && (
           <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-            enregistré {relativeFr(article.updatedAt)}
+            {t("app.kb.savedAt", { time: t.fmt.relative(article.updatedAt) })}
           </span>
         )}
         <span className="flex-1" />
@@ -201,7 +206,7 @@ export default async function KbEditorPage({
             className="rounded-md border px-2.5 text-[12px] font-medium"
             style={{ height: 28, borderColor: "var(--dang)", color: "var(--dang)" }}
           >
-            Supprimer
+            {t("app.kb.delete")}
           </button>
         )}
       </div>
@@ -214,15 +219,17 @@ export default async function KbEditorPage({
               style={{ background: "var(--open-t)", borderColor: "var(--line-2)" }}
             >
               <span style={{ fontSize: 12.5, color: "var(--open)" }}>
-                Brouillon repris de la demande{" "}
+                {reprisAvant}
                 <Link href={`/app/tickets/${depuisTicket.number}`} style={{ fontWeight: 600 }}>
                   #{depuisTicket.number}
                 </Link>
-                {" — relisez-le et retirez toute donnée personnelle avant publication."}
+                {reprisApres}
               </span>
               {depuisTicket.missing.length > 0 && (
                 <span style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                  Manquant : {depuisTicket.missing.join(" et ")}.
+                  {t("app.kb.missingFields", {
+                    items: new Intl.ListFormat(t.locale.tag).format(depuisTicket.missing),
+                  })}
                 </span>
               )}
             </div>
@@ -248,7 +255,7 @@ export default async function KbEditorPage({
                 fontSize: 13,
               }}
             >
-              Brouillon
+              {t("app.kb.draft")}
             </button>
             <button
               type="submit"
@@ -257,32 +264,32 @@ export default async function KbEditorPage({
               className="flex-1 rounded-md font-semibold text-white"
               style={{ height: 32, background: "var(--acc)", fontSize: 13 }}
             >
-              Publier
+              {t("app.kb.publish")}
             </button>
           </div>
 
           <label className="flex flex-col gap-1" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-            Slug
+            {t("app.kb.slug")}
             <input
               name="slug"
               defaultValue={article ? `/${article.slug}` : ""}
-              placeholder="/mon-article"
+              placeholder={t("app.kb.slugPlaceholder")}
               style={{ ...inputStyle, fontFamily: "var(--font-mono)", fontSize: 12 }}
             />
           </label>
 
           <label className="flex flex-col gap-1" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-            Titre SEO
+            {t("app.kb.seoTitle")}
             <input
               name="seoTitle"
               defaultValue={seo.title ?? ""}
-              placeholder="Titre affiché dans les moteurs"
+              placeholder={t("app.kb.seoTitlePlaceholder")}
               style={inputStyle}
             />
           </label>
 
           <label className="flex flex-col gap-1" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-            Catégorie
+            {t("app.kb.category")}
             <select
               name="categoryId"
               defaultValue={article?.categoryId ?? cat ?? ""}
@@ -309,7 +316,7 @@ export default async function KbEditorPage({
               className="mb-2 font-semibold uppercase tracking-wider"
               style={{ fontSize: 11, color: "var(--ink-3)" }}
             >
-              Historique
+              {t("app.kb.history")}
             </p>
             {article ? (
               <ul className="flex flex-col gap-1.5">
@@ -317,17 +324,17 @@ export default async function KbEditorPage({
                   className="flex items-baseline justify-between"
                   style={{ fontSize: 12 }}
                 >
-                  <span className="font-medium">Version actuelle</span>
-                  <span style={{ color: "var(--ink-3)" }}>{relativeFr(article.updatedAt)}</span>
+                  <span className="font-medium">{t("app.kb.currentVersion")}</span>
+                  <span style={{ color: "var(--ink-3)" }}>{t.fmt.relative(article.updatedAt)}</span>
                 </li>
                 {article.publishedAt && (
                   <li
                     className="flex items-baseline justify-between"
                     style={{ fontSize: 12, color: "var(--ink-2)" }}
                   >
-                    <span>Première publication</span>
+                    <span>{t("app.kb.firstPublished")}</span>
                     <span style={{ color: "var(--ink-3)" }}>
-                      {relativeFr(article.publishedAt)}
+                      {t.fmt.relative(article.publishedAt)}
                     </span>
                   </li>
                 )}
@@ -335,13 +342,13 @@ export default async function KbEditorPage({
                   className="flex items-baseline justify-between"
                   style={{ fontSize: 12, color: "var(--ink-2)" }}
                 >
-                  <span>Création</span>
-                  <span style={{ color: "var(--ink-3)" }}>{relativeFr(article.createdAt)}</span>
+                  <span>{t("app.kb.createdAt")}</span>
+                  <span style={{ color: "var(--ink-3)" }}>{t.fmt.relative(article.createdAt)}</span>
                 </li>
               </ul>
             ) : (
               <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                L'historique apparaîtra après le premier enregistrement.
+                {t("app.kb.historyEmpty")}
               </p>
             )}
           </section>

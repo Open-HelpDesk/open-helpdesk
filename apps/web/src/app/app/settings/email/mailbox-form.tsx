@@ -6,6 +6,7 @@
  */
 import { useState } from "react";
 import { Field, Select, TextInput } from "@/components/settings-page";
+import { useT } from "@/i18n/client";
 import { saveMailbox } from "./actions";
 
 type Option = { id: string; name: string };
@@ -33,53 +34,54 @@ export function MailboxForm({
   forms: Option[];
   secretHint: string | null;
 }) {
+  const t = useT();
   const [kind, setKind] = useState<"forwarding" | "imap">(mailbox?.kind ?? "forwarding");
 
   return (
     <form action={saveMailbox} className="flex h-full flex-col gap-4">
       {mailbox && <input type="hidden" name="mailboxId" value={mailbox.id} />}
 
-      <Field label="Adresse">
+      <Field label={t("app.settings.email.address")}>
         <TextInput
           name="address"
           type="email"
           required
           defaultValue={mailbox?.address ?? ""}
-          placeholder="support@votre-domaine.fr"
+          placeholder={t("app.settings.email.placeholderEmail")}
           className="font-mono"
         />
       </Field>
 
-      <Field label="Méthode">
+      <Field label={t("app.settings.email.method")}>
         <Select
           name="kind"
           value={kind}
           onChange={(e) => setKind(e.target.value === "imap" ? "imap" : "forwarding")}
         >
-          <option value="forwarding">Transfert vers l'adresse fournie</option>
-          <option value="imap">Connexion IMAP</option>
+          <option value="forwarding">{t("app.settings.email.methodForwarding")}</option>
+          <option value="imap">{t("app.settings.email.methodImap")}</option>
         </Select>
       </Field>
 
       {kind === "forwarding" ? (
         <Field
-          label="Adresse de transfert"
-          hint="Configurez cette redirection chez votre fournisseur : l'adresse passera en « Vérifiée » au premier email reçu."
+          label={t("app.settings.email.forwardAddressLabel")}
+          hint={t("app.settings.email.forwardAddressHint")}
         >
           <TextInput readOnly value={forwardTarget} className="font-mono" />
         </Field>
       ) : (
         <>
           <div className="grid gap-3" style={{ gridTemplateColumns: "minmax(0,2fr) 90px" }}>
-            <Field label="Hôte IMAP">
+            <Field label={t("app.settings.email.imapHostLabel")}>
               <TextInput
                 name="imapHost"
                 defaultValue={mailbox?.imapHost ?? ""}
-                placeholder="imap.votre-domaine.fr"
+                placeholder={t("app.settings.email.placeholderImapHost")}
                 className="font-mono"
               />
             </Field>
-            <Field label="Port">
+            <Field label={t("app.settings.email.port")}>
               <TextInput
                 name="imapPort"
                 inputMode="numeric"
@@ -88,44 +90,47 @@ export function MailboxForm({
               />
             </Field>
           </div>
-          <Field label="Chiffrement">
+          <Field label={t("app.settings.email.encryption")}>
             <Select name="imapSecure" defaultValue={mailbox?.imapSecure === false ? "false" : "true"}>
-              <option value="true">TLS implicite (993)</option>
-              <option value="false">Sans TLS / STARTTLS (143)</option>
+              <option value="true">{t("app.settings.email.imapTlsImplicit")}</option>
+              <option value="false">{t("app.settings.email.imapNoTls")}</option>
             </Select>
           </Field>
           <div className="grid gap-3" style={{ gridTemplateColumns: "1fr 1fr" }}>
-            <Field label="Identifiant">
+            <Field label={t("app.settings.email.username")}>
               <TextInput
                 name="imapUser"
                 defaultValue={mailbox?.imapUser ?? ""}
-                placeholder="support@votre-domaine.fr"
+                placeholder={t("app.settings.email.placeholderEmail")}
                 className="font-mono"
               />
             </Field>
             <Field
-              label="Mot de passe"
-              hint={secretHint ? `Enregistré : ${secretHint}. Laisser vide pour le conserver.` : undefined}
+              label={t("app.settings.email.passwordLabel")}
+              hint={
+                secretHint
+                  ? t("app.settings.email.secretKept", { hint: secretHint })
+                  : undefined
+              }
             >
               <TextInput
                 name="imapPassword"
                 type="password"
                 autoComplete="new-password"
-                placeholder={secretHint ? "•••••••• (inchangé)" : ""}
+                placeholder={secretHint ? t("app.settings.email.passwordUnchanged") : ""}
               />
             </Field>
           </div>
           <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
-            La boîte est relevée toutes les minutes : les messages non lus deviennent des
-            tickets, puis sont marqués comme lus.
+            {t("app.settings.email.imapNote")}
           </p>
         </>
       )}
 
       <div className="grid gap-3" style={{ gridTemplateColumns: "1fr 1fr" }}>
-        <Field label="Formulaire cible">
+        <Field label={t("app.settings.email.targetFormLabel")}>
           <Select name="formId" defaultValue={mailbox?.formId ?? ""}>
-            <option value="">Formulaire par défaut</option>
+            <option value="">{t("app.settings.email.formDefaultOption")}</option>
             {forms.map((f) => (
               <option key={f.id} value={f.id}>
                 {f.name}
@@ -133,9 +138,9 @@ export function MailboxForm({
             ))}
           </Select>
         </Field>
-        <Field label="Équipe par défaut">
+        <Field label={t("app.settings.email.defaultTeamLabel")}>
           <Select name="defaultTeamId" defaultValue={mailbox?.defaultTeamId ?? ""}>
-            <option value="">Aucune</option>
+            <option value="">{t("app.settings.email.teamNone")}</option>
             {teams.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.name}
@@ -151,7 +156,7 @@ export function MailboxForm({
           className="rounded-md px-3.5 font-semibold text-white"
           style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
         >
-          {mailbox ? "Enregistrer" : "Ajouter"}
+          {mailbox ? t("app.settings.email.save") : t("app.settings.email.add")}
         </button>
       </div>
     </form>

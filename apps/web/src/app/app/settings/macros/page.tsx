@@ -2,7 +2,8 @@ import { requireAgent } from "@/lib/session";
 import { db, macros, teams } from "@openhelpdesk/db";
 import { asc, eq } from "drizzle-orm";
 import { macroActionsSummary } from "@/lib/rule-labels";
-import { STATUS_LABELS_FR } from "@/lib/format";
+import { STATUS_KEYS } from "@/lib/format";
+import { getT, type Translate } from "@/i18n/server";
 import {
   EmptyState,
   Field,
@@ -30,6 +31,7 @@ export default async function MacrosPage({
 }: {
   searchParams: Promise<{ saved?: string; q?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { saved, q } = await searchParams;
   const query = (q ?? "").trim();
@@ -47,7 +49,7 @@ export default async function MacrosPage({
       .orderBy(asc(teams.name)),
   ]);
 
-  const teamNameById = new Map(teamRows.map((t) => [t.id, t.name]));
+  const teamNameById = new Map(teamRows.map((team) => [team.id, team.name]));
   const needle = query.toLocaleLowerCase("fr-FR");
   const visible = needle
     ? rows.filter((m) => m.name.toLocaleLowerCase("fr-FR").includes(needle))
@@ -55,7 +57,7 @@ export default async function MacrosPage({
 
   const byCategory = new Map<string, MacroRow[]>();
   for (const m of visible) {
-    const key = m.category ?? "Sans catégorie";
+    const key = m.category ?? t("app.settings.rules.macroUncategorized");
     byCategory.set(key, [...(byCategory.get(key) ?? []), m]);
   }
   const groups = [...byCategory.entries()].sort(([a], [b]) => {
@@ -68,11 +70,13 @@ export default async function MacrosPage({
   return (
     <PageShell maxWidth={1000}>
       <PageHeader
-        title="Macros"
-        subtitle="Réponses types et actions groupées, disponibles depuis le détail d'un ticket."
+        title={t("app.settings.rules.macrosTitle")}
+        subtitle={t("app.settings.rules.macrosSubtitle")}
       />
 
-      {saved === "1" && <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>}
+      {saved === "1" && (
+        <p style={{ fontSize: 12.5, color: "var(--ok)" }}>{t("app.settings.rules.saved")}</p>
+      )}
 
       <div className="st-rise flex flex-col" style={{ gap: 20 }}>
         {/* Recherche + création */}
@@ -81,31 +85,31 @@ export default async function MacrosPage({
             <TextInput
               name="q"
               defaultValue={query}
-              placeholder="Rechercher une macro…"
-              aria-label="Rechercher une macro"
+              placeholder={t("app.settings.rules.macroSearchPlaceholder")}
+              aria-label={t("app.settings.rules.macroSearchLabel")}
               className="w-full"
               style={{ height: 34, padding: "0 11px", fontSize: 13 }}
             />
           </form>
           <span className="flex-1" />
           <Drawer
-            title="Créer une macro"
-            trigger={<>+ Nouvelle macro</>}
+            title={t("app.settings.rules.macroCreateTitle")}
+            trigger={<>{t("app.settings.rules.macroNew")}</>}
             triggerClassName="inline-flex items-center justify-center rounded-md font-semibold text-white"
             triggerStyle={{ height: 34, padding: "0 14px", fontSize: 13, background: "var(--acc)" }}
           >
-            <MacroForm teams={teamRows} />
+            <MacroForm teams={teamRows} t={t} />
           </Drawer>
         </div>
 
         {rows.length === 0 ? (
           <EmptyState
-            title="Aucune macro"
-            text="Créez des réponses types pour vos demandes récurrentes — accusé de réception, demande de précisions, résolution confirmée…"
+            title={t("app.settings.rules.macroEmptyTitle")}
+            text={t("app.settings.rules.macroEmptyText")}
           />
         ) : groups.length === 0 ? (
           <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-            Aucune macro ne correspond à « {query} ».
+            {t("app.settings.rules.macroNoMatch", { query })}
           </p>
         ) : (
           groups.map(([category, list]) => (
@@ -124,10 +128,10 @@ export default async function MacrosPage({
                   const actions = (m.actions as { type: string; value?: unknown }[]) ?? [];
                   const scope =
                     m.availability === "team" && m.teamId
-                      ? (teamNameById.get(m.teamId) ?? "Équipe")
+                      ? (teamNameById.get(m.teamId) ?? t("app.settings.rules.macroScopeTeam"))
                       : m.availability === "personal"
-                        ? "Personnel"
-                        : "Tous les agents";
+                        ? t("app.settings.rules.macroScopePersonal")
+                        : t("app.settings.rules.macroScopeEveryone");
                   return (
                     <div
                       key={m.id}
@@ -136,12 +140,12 @@ export default async function MacrosPage({
                     >
                       <div className="min-w-0 flex-1">
                         <Drawer
-                          title="Modifier une macro"
+                          title={t("app.settings.rules.macroEditTitle")}
                           trigger={<>{m.name}</>}
                           triggerClassName="block truncate text-left font-semibold"
                           triggerStyle={{ fontSize: 13.5, color: "var(--ink)" }}
                         >
-                          <MacroForm macro={m} teams={teamRows} />
+                          <MacroForm macro={m} teams={teamRows} t={t} />
                         </Drawer>
                         <p className="truncate" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
                           {macroActionsSummary(actions, teamNameById)}
@@ -153,9 +157,9 @@ export default async function MacrosPage({
                       <span
                         className="whitespace-nowrap text-right tabular-nums"
                         style={{ fontSize: 12, color: "var(--ink-3)", width: 110 }}
-                        title="Utilisations sur 30 jours"
+                        title={t("app.settings.rules.macroUsageTitle")}
                       >
-                        — / 30 j
+                        {t("app.settings.rules.macroUsageEmpty")}
                       </span>
                     </div>
                   );
@@ -170,7 +174,15 @@ export default async function MacrosPage({
 }
 
 /** Drawer d'édition 420 px : nom, catégorie, texte inséré, statut appliqué, disponibilité. */
-function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; name: string }[] }) {
+function MacroForm({
+  macro,
+  teams,
+  t,
+}: {
+  macro?: MacroRow;
+  teams: { id: string; name: string }[];
+  t: Translate;
+}) {
   const actions = (macro?.actions as { type: string; value?: unknown }[]) ?? [];
   const insert = actions.find((a) => a.type === "insert_text" || a.type === "insert_note");
   const insertKind = insert?.type === "insert_note" ? "insert_note" : "insert_text";
@@ -184,28 +196,28 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
     <form action={saveMacro} className="flex h-full flex-col" style={{ gap: 14 }}>
       {macro && <input type="hidden" name="macroId" value={macro.id} />}
 
-      <Field label="Nom">
+      <Field label={t("app.settings.rules.macroName")}>
         <TextInput
           name="name"
           required
           defaultValue={macro?.name ?? ""}
-          placeholder="Accusé de réception"
+          placeholder={t("app.settings.rules.ackReceipt")}
           style={control}
         />
       </Field>
 
-      <Field label="Catégorie">
+      <Field label={t("app.settings.rules.macroCategory")}>
         <TextInput
           name="category"
           defaultValue={macro?.category ?? ""}
-          placeholder="Réponses courantes"
+          placeholder={t("app.settings.rules.macroCategoryPlaceholder")}
           style={control}
         />
       </Field>
 
       <div className="flex flex-col gap-1.5">
         <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-          Type d&apos;insertion
+          {t("app.settings.rules.macroInsertKind")}
         </span>
         <div className="flex gap-4" style={{ fontSize: 13.5 }}>
           <label className="flex items-center gap-1.5">
@@ -215,7 +227,7 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
               value="insert_text"
               defaultChecked={insertKind === "insert_text"}
             />
-            Insérer un texte
+            {t("app.settings.rules.macroInsertText")}
           </label>
           <label className="flex items-center gap-1.5">
             <input
@@ -224,14 +236,14 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
               value="insert_note"
               defaultChecked={insertKind === "insert_note"}
             />
-            Note interne
+            {t("app.settings.rules.macroInsertNote")}
           </label>
         </div>
       </div>
 
       <Field
-        label="Texte inséré"
-        hint="Variables : {{contact.name}}, {{ticket.number}}, {{ticket.subject}}."
+        label={t("app.settings.rules.macroText")}
+        hint={t("app.settings.rules.macroTextHint")}
       >
         <textarea
           name="insertText"
@@ -251,26 +263,26 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
         />
       </Field>
 
-      <Field label="Statut appliqué">
+      <Field label={t("app.settings.rules.macroStatus")}>
         <Select name="setStatus" defaultValue={setStatus} style={control}>
-          <option value="">— sans changement —</option>
-          {Object.entries(STATUS_LABELS_FR).map(([k, v]) => (
+          <option value="">{t("app.settings.rules.macroStatusNone")}</option>
+          {Object.entries(STATUS_KEYS).map(([k, v]) => (
             <option key={k} value={k}>
-              {v}
+              {t(v)}
             </option>
           ))}
         </Select>
       </Field>
 
       <Field
-        label="Disponibilité"
-        hint="Restreignez à une équipe pour éviter de surcharger la liste des macros."
+        label={t("app.settings.rules.macroAvailability")}
+        hint={t("app.settings.rules.macroAvailabilityHint")}
       >
         <Select name="availability" defaultValue={availability} style={control}>
-          <option value="everyone">Tous les agents</option>
-          {teams.map((t) => (
-            <option key={t.id} value={`team:${t.id}`}>
-              {t.name}
+          <option value="everyone">{t("app.settings.rules.macroScopeEveryone")}</option>
+          {teams.map((team) => (
+            <option key={team.id} value={`team:${team.id}`}>
+              {team.name}
             </option>
           ))}
         </Select>
@@ -294,7 +306,7 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
               background: "var(--panel)",
             }}
           >
-            Supprimer
+            {t("app.settings.rules.delete")}
           </button>
         )}
         <span className="flex-1" />
@@ -303,7 +315,7 @@ function MacroForm({ macro, teams }: { macro?: MacroRow; teams: { id: string; na
           className="rounded-md font-semibold text-white"
           style={{ height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
         >
-          Enregistrer
+          {t("app.settings.rules.save")}
         </button>
       </div>
     </form>

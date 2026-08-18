@@ -1,4 +1,5 @@
 import { requireAgent } from "@/lib/session";
+import { getT } from "@/i18n/server";
 import { LOCALES } from "@/i18n/locales";
 import { contacts, db, kbArticles, tickets, users } from "@openhelpdesk/db";
 import { and, asc, count, eq, isNull } from "drizzle-orm";
@@ -27,6 +28,7 @@ export default async function GeneralSettingsPage({
 }: {
   searchParams: Promise<{ saved?: string; error?: string }>;
 }) {
+  const t = await getT();
   const { tenant, agent: me } = await requireAgent();
   const { saved, error } = await searchParams;
 
@@ -53,14 +55,13 @@ export default async function GeneralSettingsPage({
   const nTickets = ticketCount?.n ?? 0;
   const nContacts = contactCount?.n ?? 0;
   const nArticles = articleCount?.n ?? 0;
-  const fmtN = (n: number) => n.toLocaleString("fr-FR").replace(/ /g, " ");
   const initial = tenant.name[0]?.toUpperCase() ?? "A";
 
   return (
     <PageShell maxWidth={860}>
       <PageHeader
-        title="Général & branding"
-        subtitle="Identité du workspace, langue, fuseau et numérotation des tickets."
+        title={t("app.settings.workspace.generalTitle")}
+        subtitle={t("app.settings.workspace.generalSubtitle")}
       />
 
       {error === "delete-cloud" && (
@@ -73,14 +74,14 @@ export default async function GeneralSettingsPage({
             color: "var(--dang)",
           }}
         >
-          Suppression refusée — la suppression programmée est disponible en cloud.
+          {t("app.settings.workspace.generalDeleteCloudError")}
         </div>
       )}
 
       <form action={saveGeneral} className="flex flex-col" style={{ gap: 22 }}>
-        <Card title="Identité">
+        <Card title={t("app.settings.workspace.generalIdentity")}>
           <div className="flex flex-col" style={{ gap: 13 }}>
-            <Field label="Nom du workspace">
+            <Field label={t("app.settings.workspace.generalNameLabel")}>
               <TextInput name="name" required defaultValue={tenant.name} style={CONTROL} />
             </Field>
 
@@ -91,7 +92,7 @@ export default async function GeneralSettingsPage({
             >
               <div className="flex flex-col gap-1.5">
                 <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                  Logo
+                  {t("app.settings.workspace.generalLogoLabel")}
                 </span>
                 <div className="flex items-center" style={{ gap: 11 }}>
                   <span
@@ -117,17 +118,17 @@ export default async function GeneralSettingsPage({
                       cursor: "pointer",
                     }}
                   >
-                    Remplacer · recadrer
+                    {t("app.settings.workspace.generalLogoReplace")}
                   </span>
                 </div>
                 <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                  PNG ou SVG, 512 px minimum.
+                  {t("app.settings.workspace.generalLogoHint")}
                 </span>
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                  Favicon
+                  {t("app.settings.workspace.generalFaviconLabel")}
                 </span>
                 <div className="flex items-center" style={{ gap: 11 }}>
                   <span
@@ -155,28 +156,30 @@ export default async function GeneralSettingsPage({
                       cursor: "pointer",
                     }}
                   >
-                    Remplacer
+                    {t("app.settings.workspace.generalFaviconReplace")}
                   </span>
                 </div>
-                <span style={{ fontSize: 12, color: "var(--ink-3)" }}>32 × 32 px, ICO ou PNG.</span>
+                <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
+                  {t("app.settings.workspace.generalFaviconHint")}
+                </span>
               </div>
             </div>
 
             <Field
-              label="Couleur d'accent"
-              hint="Utilisée sur le portail client et dans les emails sortants."
+              label={t("app.settings.workspace.generalAccentLabel")}
+              hint={t("app.settings.workspace.generalAccentHint")}
             >
               <AccentPicker name="accentColor" initial={branding.accentColor ?? "#0B5F46"} />
             </Field>
           </div>
         </Card>
 
-        <Card title="Régionalisation">
+        <Card title={t("app.settings.workspace.generalRegion")}>
           <div
             className="grid"
             style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
           >
-            <Field label="Langue du logiciel">
+            <Field label={t("app.settings.workspace.generalLocaleLabel")}>
               {/* Une langue par tenant : agents et clients lisent la même.
                   Chaque langue s'affiche dans sa propre langue — un menu de
                   langues traduit est illisible pour qui cherche la sienne. */}
@@ -188,7 +191,7 @@ export default async function GeneralSettingsPage({
                 ))}
               </Select>
             </Field>
-            <Field label="Fuseau horaire">
+            <Field label={t("app.settings.workspace.generalTimezoneLabel")}>
               <Select name="timezone" defaultValue={tenant.timezone} style={CONTROL}>
                 <option value="Europe/Paris">Europe/Paris (UTC+2)</option>
                 <option value="Europe/Brussels">Europe/Brussels (UTC+2)</option>
@@ -197,7 +200,7 @@ export default async function GeneralSettingsPage({
                 <option value="UTC">UTC</option>
               </Select>
             </Field>
-            <Field label="Format de numérotation">
+            <Field label={t("app.settings.workspace.generalNumberFormatLabel")}>
               <TextInput
                 name="ticketNumberFormat"
                 defaultValue={tenant.ticketNumberFormat}
@@ -206,7 +209,7 @@ export default async function GeneralSettingsPage({
                 style={CONTROL}
               />
             </Field>
-            <Field label="Premier numéro">
+            <Field label={t("app.settings.workspace.generalFirstNumberLabel")}>
               <TextInput
                 name="firstNumber"
                 type="number"
@@ -223,7 +226,7 @@ export default async function GeneralSettingsPage({
       </form>
 
       {/* Zone de danger — cadre --dang, 2 lignes (panel puis --dang-t) */}
-      <Card title="Zone de danger" danger style={{ padding: 0 }}>
+      <Card title={t("app.settings.workspace.dangerZone")} danger style={{ padding: 0 }}>
         <div
           className="flex flex-wrap items-center"
           style={{
@@ -236,10 +239,10 @@ export default async function GeneralSettingsPage({
         >
           <div className="min-w-0 flex-1">
             <p className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
-              Transférer la propriété
+              {t("app.settings.workspace.transferTitle")}
             </p>
             <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-              Désigner un autre administrateur comme propriétaire.
+              {t("app.settings.workspace.transferHint")}
             </p>
           </div>
           {me.role === "owner" ? (
@@ -268,17 +271,17 @@ export default async function GeneralSettingsPage({
                     color: "var(--ink)",
                   }}
                 >
-                  Transférer
+                  {t("app.settings.workspace.transferAction")}
                 </button>
               </form>
             ) : (
               <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-                Aucun administrateur actif à promouvoir.
+                {t("app.settings.workspace.transferNoAdmin")}
               </span>
             )
           ) : (
             <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-              Réservé au propriétaire du workspace.
+              {t("app.settings.workspace.transferOwnerOnly")}
             </span>
           )}
         </div>
@@ -289,15 +292,15 @@ export default async function GeneralSettingsPage({
         >
           <div className="min-w-0 flex-1">
             <p className="font-semibold" style={{ fontSize: 13.5, color: "var(--dang)" }}>
-              Supprimer le workspace
+              {t("app.settings.workspace.deleteWorkspaceTitle")}
             </p>
             <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-              Suppression définitive après 30 jours de rétention.
+              {t("app.settings.workspace.deleteWorkspaceHint")}
             </p>
           </div>
           <Modal
-            title="Supprimer le workspace"
-            trigger={<>Supprimer</>}
+            title={t("app.settings.workspace.deleteWorkspaceTitle")}
+            trigger={<>{t("app.settings.workspace.delete")}</>}
             triggerClassName="rounded-md border font-semibold"
             triggerStyle={{
               height: 32,
@@ -310,11 +313,16 @@ export default async function GeneralSettingsPage({
           >
             <form action={deleteWorkspace} className="flex flex-col gap-3">
               <p style={{ fontSize: 13.5, color: "var(--ink-2)" }}>
-                Cette action est irréversible. Les {fmtN(nTickets)} tickets, {fmtN(nContacts)}{" "}
-                contacts et {fmtN(nArticles)} articles seront définitivement supprimés après 30
-                jours de rétention.
+                {t("app.settings.workspace.deleteWorkspaceConfirm", {
+                  tickets: nTickets,
+                  contacts: nContacts,
+                  articles: nArticles,
+                })}
               </p>
-              <SlugConfirmField slug={tenant.slug} buttonLabel="Supprimer définitivement" />
+              <SlugConfirmField
+                slug={tenant.slug}
+                buttonLabel={t("app.settings.workspace.deleteWorkspaceButton")}
+              />
             </form>
           </Modal>
         </div>

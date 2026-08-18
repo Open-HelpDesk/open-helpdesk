@@ -6,6 +6,7 @@ import { auditEvents, db, emailSettings, mailboxes, teams, ticketForms } from "@
 import { and, asc, eq, ne } from "drizzle-orm";
 import { decryptSecrets, encryptSecrets, secretHint } from "@openhelpdesk/crypto";
 import { sendTenantEmail, transportFor, verifyImapMailbox } from "@openhelpdesk/mail";
+import { getT } from "@/i18n/server";
 import { requireManager } from "../guard";
 
 /** ST-03 — Ajout d'une adresse de réception (transfert ou IMAP, jamais « fournie »). */
@@ -100,6 +101,7 @@ const PROVIDERS = new Set(["console", "smtp", "resend", "brevo", "mailjet"]);
 /** Enregistre le fournisseur et ses identifiants (secrets chiffrés au repos). */
 export async function saveEmailProvider(formData: FormData) {
   const { tenant, agent } = await requireManager();
+  const t = await getT();
   const provider = String(formData.get("provider") ?? "console");
   if (!PROVIDERS.has(provider)) return;
 
@@ -157,7 +159,7 @@ export async function saveEmailProvider(formData: FormData) {
     tenantId: tenant.id,
     actorType: "user",
     actorId: agent.id,
-    action: `Fournisseur d'envoi email configuré : ${provider}`,
+    action: t("app.settings.email.auditProviderConfigured", { provider }),
     targetType: "email_settings",
   });
 
@@ -168,6 +170,7 @@ export async function saveEmailProvider(formData: FormData) {
 /** Test de connexion : vérifie la configuration enregistrée sans envoyer d'email. */
 export async function testEmailConnection() {
   const { tenant } = await requireManager();
+  const t = await getT();
   const [row] = await db
     .select()
     .from(emailSettings)
@@ -177,14 +180,13 @@ export async function testEmailConnection() {
   if (!row || row.provider === "console") {
     result = {
       ok: false,
-      detail:
-        "Aucun fournisseur configuré pour ce workspace : les emails sont seulement journalisés.",
+      detail: t("app.settings.email.connectionNoProvider"),
     };
   } else {
     const transport = transportFor(row);
     result = transport.verify
       ? await transport.verify()
-      : { ok: true, detail: "Ce transport n'expose pas de test de connexion." };
+      : { ok: true, detail: t("app.settings.email.connectionNoVerify") };
   }
 
   if (row) {
@@ -204,20 +206,18 @@ export async function testEmailConnection() {
 /** Envoi réel d'un email de test à l'agent connecté — apparaît dans le journal. */
 export async function sendEmailTest() {
   const { tenant, agent } = await requireManager();
+  const t = await getT();
 
   const result = await sendTenantEmail({
     tenantId: tenant.id,
     to: agent.email,
     kind: "test",
     immediate: true,
-    subject: `Test d'envoi — ${tenant.name}`,
-    text:
-      `Bonjour ${agent.name},\n\n` +
-      `Cet email confirme que l'envoi fonctionne pour le workspace « ${tenant.name} ».\n\n` +
-      `Si vous le recevez, vos agents peuvent répondre aux tickets par email, et vos ` +
-      `clients recevront les accusés de réception, les liens de connexion au portail et ` +
-      `les enquêtes de satisfaction.\n\n` +
-      `— Open HelpDesk`,
+    subject: t("app.settings.email.testEmailSubject", { name: tenant.name }),
+    text: t("app.settings.email.testEmailBody", {
+      agent: agent.name,
+      workspace: tenant.name,
+    }),
   });
 
   const [row] = await db
@@ -231,7 +231,7 @@ export async function sendEmailTest() {
         testStatus: result.sent ? "ok" : "failed",
         testError: result.sent
           ? null
-          : (result.error ?? "Envoi impossible").slice(0, 1000),
+          : (result.error ?? t("app.settings.email.sendFailed")).slice(0, 1000),
         lastTestedAt: new Date(),
       })
       .where(eq(emailSettings.id, row.id));

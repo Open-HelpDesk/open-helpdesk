@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireAgent } from "@/lib/session";
 import { getContact, listContacts } from "@/lib/directory";
-import { relativeFr } from "@/lib/format";
+import { getT } from "@/i18n/server";
 import { Avatar, StatusChip } from "@/components/ticket-bits";
 import { toggleContactBlocked } from "./actions";
 import { DeleteRgpdButton, MergeContactButton, NewContactButton } from "./contact-drawers";
@@ -49,6 +49,7 @@ export default async function ContactsPage({
 }: {
   searchParams: Promise<{ q?: string; selected?: string; tab?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { q, selected: selectedParam, tab: tabParam } = await searchParams;
   const query = q?.trim() || undefined;
@@ -71,7 +72,7 @@ export default async function ContactsPage({
             <input
               name="q"
               defaultValue={q ?? ""}
-              placeholder="Rechercher un contact…"
+              placeholder={t("app.contacts.searchPlaceholder")}
               className="w-full outline-none"
               style={{
                 height: 30,
@@ -85,7 +86,7 @@ export default async function ContactsPage({
           </form>
           <span className="flex-1" />
           <button type="button" className="grid place-items-center" style={TOOL_BTN}>
-            Importer CSV
+            {t("app.contacts.importCsv")}
           </button>
           <NewContactButton />
         </div>
@@ -97,7 +98,7 @@ export default async function ContactsPage({
               className="text-center"
               style={{ padding: "96px 0", fontSize: 13, color: "var(--ink-3)" }}
             >
-              Aucun contact{query ? ` pour « ${query} »` : ""}.
+              {query ? t("app.contacts.emptyQuery", { query }) : t("app.contacts.empty")}
             </p>
           ) : (
             <div style={{ minWidth: 880 }}>
@@ -113,11 +114,11 @@ export default async function ContactsPage({
                   color: "var(--ink-3)",
                 }}
               >
-                <span>Nom</span>
-                <span>Email</span>
-                <span>Organisation</span>
-                <span className="text-right">Tickets</span>
-                <span className="text-right">Dernier</span>
+                <span>{t("app.contacts.name")}</span>
+                <span>{t("app.contacts.email")}</span>
+                <span>{t("app.contacts.organization")}</span>
+                <span className="text-right">{t("app.contacts.tickets")}</span>
+                <span className="text-right">{t("app.contacts.lastTicket")}</span>
               </div>
               {rows.map((c, i) => {
                 const active = c.id === selectedId;
@@ -151,7 +152,7 @@ export default async function ContactsPage({
                             color: "var(--dang)",
                           }}
                         >
-                          BLOQUÉ
+                          {t("app.contacts.blockedBadge")}
                         </span>
                       )}
                     </span>
@@ -174,7 +175,7 @@ export default async function ContactsPage({
                       className="text-right tabular-nums"
                       style={{ fontSize: 12.5, color: "var(--ink-3)" }}
                     >
-                      {c.lastTicketAt ? relativeFr(new Date(c.lastTicketAt)) : "—"}
+                      {c.lastTicketAt ? t.fmt.relative(new Date(c.lastTicketAt)) : "—"}
                     </span>
                   </Link>
                 );
@@ -219,7 +220,7 @@ export default async function ContactsPage({
                         color: "var(--dang)",
                       }}
                     >
-                      BLOQUÉ
+                      {t("app.contacts.blockedBadge")}
                     </span>
                   )}
                 </p>
@@ -240,7 +241,9 @@ export default async function ContactsPage({
               <form action={toggleContactBlocked}>
                 <input type="hidden" name="contactId" value={detail.contact.id} />
                 <button type="submit" style={PANEL_CHIP}>
-                  {detail.contact.blocked ? "Débloquer" : "Bloquer"}
+                  {detail.contact.blocked
+                    ? t("app.contacts.unblock")
+                    : t("app.contacts.block")}
                 </button>
               </form>
               <DeleteRgpdButton contactId={detail.contact.id} />
@@ -254,9 +257,9 @@ export default async function ContactsPage({
           >
             {(
               [
-                ["tickets", "Tickets"],
-                ["infos", "Infos"],
-                ["activite", "Activité"],
+                ["tickets", t("app.contacts.tickets")],
+                ["infos", t("app.contacts.tabInfos")],
+                ["activite", t("app.contacts.tabActivity")],
               ] as [Tab, string][]
             ).map(([key, label]) => (
               <Link
@@ -279,13 +282,15 @@ export default async function ContactsPage({
           <div className="flex-1" style={{ padding: "14px 16px" }}>
             {tab === "tickets" &&
               (detail.tickets.length === 0 ? (
-                <p style={{ fontSize: 13, color: "var(--ink-3)" }}>Aucun ticket.</p>
+                <p style={{ fontSize: 13, color: "var(--ink-3)" }}>
+                  {t("app.contacts.noTickets")}
+                </p>
               ) : (
                 <ul className="flex flex-col gap-1">
-                  {detail.tickets.map((t) => (
-                    <li key={t.number}>
+                  {detail.tickets.map((ticket) => (
+                    <li key={ticket.number}>
                       <Link
-                        href={`/app/tickets/${t.number}`}
+                        href={`/app/tickets/${ticket.number}`}
                         className="flex items-center gap-2 rounded-md px-2 py-1.5"
                         style={{ fontSize: 12.5 }}
                       >
@@ -297,10 +302,10 @@ export default async function ContactsPage({
                             color: "var(--ink-3)",
                           }}
                         >
-                          #{t.number}
+                          #{ticket.number}
                         </span>
-                        <span className="min-w-0 flex-1 truncate">{t.subject}</span>
-                        <StatusChip status={t.status} />
+                        <span className="min-w-0 flex-1 truncate">{ticket.subject}</span>
+                        <StatusChip status={ticket.status} t={t} />
                       </Link>
                     </li>
                   ))}
@@ -311,23 +316,16 @@ export default async function ContactsPage({
               <div className="flex flex-col" style={{ gap: 10 }}>
                 {[
                   [
-                    "Langue",
+                    t("app.contacts.infoLocale"),
                     detail.contact.locale === "en"
-                      ? "Anglais (en-US)"
-                      : "Français (fr-FR)",
+                      ? t("app.contacts.localeEn")
+                      : t("app.contacts.localeFr"),
                   ],
-                  ["Fuseau", tenant.timezone],
+                  [t("app.contacts.infoTimezone"), tenant.timezone],
+                  [t("app.contacts.infoCreatedAt"), t.fmt.dateLong(detail.contact.createdAt)],
+                  [t("app.contacts.infoPhone"), detail.contact.phone ?? "—"],
                   [
-                    "Créé le",
-                    detail.contact.createdAt.toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    }),
-                  ],
-                  ["Téléphone", detail.contact.phone ?? "—"],
-                  [
-                    "Organisations",
+                    t("app.contacts.infoOrganizations"),
                     detail.orgs.length > 0 ? detail.orgs.map((o) => o.name).join(", ") : "—",
                   ],
                 ].map(([label, value]) => (
@@ -353,35 +351,40 @@ export default async function ContactsPage({
             {tab === "activite" &&
               (detail.tickets.length === 0 ? (
                 <p style={{ fontSize: 13, color: "var(--ink-3)" }}>
-                  Aucune activité récente.
+                  {t("app.contacts.noActivity")}
                 </p>
               ) : (
                 <ul className="flex flex-col gap-2">
-                  {detail.tickets.slice(0, 10).map((t) => (
-                    <li
-                      key={t.number}
-                      className="flex items-baseline gap-2"
-                      style={{ fontSize: 12.5 }}
-                    >
-                      <span
-                        className="shrink-0"
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: 11,
-                          color: "var(--ink-3)",
-                        }}
+                  {detail.tickets.slice(0, 10).map((ticket) => {
+                    const [before, after] = t.parts("app.contacts.activityOn", "ticket", {
+                      subject: ticket.subject,
+                    });
+                    return (
+                      <li
+                        key={ticket.number}
+                        className="flex items-baseline gap-2"
+                        style={{ fontSize: 12.5 }}
                       >
-                        {relativeFr(t.updatedAt)}
-                      </span>
-                      <span className="min-w-0 flex-1 truncate">
-                        Activité sur{" "}
-                        <Link href={`/app/tickets/${t.number}`} className="underline">
-                          #{t.number}
-                        </Link>{" "}
-                        {t.subject}
-                      </span>
-                    </li>
-                  ))}
+                        <span
+                          className="shrink-0"
+                          style={{
+                            fontFamily: "var(--font-mono)",
+                            fontSize: 11,
+                            color: "var(--ink-3)",
+                          }}
+                        >
+                          {t.fmt.relative(ticket.updatedAt)}
+                        </span>
+                        <span className="min-w-0 flex-1 truncate">
+                          {before}
+                          <Link href={`/app/tickets/${ticket.number}`} className="underline">
+                            #{ticket.number}
+                          </Link>
+                          {after}
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
               ))}
           </div>

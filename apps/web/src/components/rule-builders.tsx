@@ -8,6 +8,7 @@
  * pour l'éditeur ST-05 qui doit lire l'état courant (« Tester sur un ticket »).
  */
 import { useState } from "react";
+import { useT } from "@/i18n/client";
 import { X } from "lucide-react";
 import {
   ACTION_LABELS,
@@ -52,6 +53,7 @@ function ConditionRow({
   onChange: (c: Condition) => void;
   onRemove: () => void;
 }) {
+  const t = useT();
   const operators = OPERATORS_BY_FIELD[condition.field] ?? ["is"];
   const options = FIELD_VALUE_OPTIONS[condition.field];
   return (
@@ -148,6 +150,7 @@ export function ConditionsBuilder({
   /** Sans cadre fieldset — utilisé dans les blocs SI/ALORS de l'éditeur ST-05. */
   bare?: boolean;
 }) {
+  const t = useT();
   const [internal, setInternal] = useState<Condition[]>(initial);
   const rows = controlled ?? internal;
   const setRows = (next: Condition[]) => {
@@ -173,7 +176,7 @@ export function ConditionsBuilder({
           className="self-start"
           style={{ fontSize: 12.5, fontWeight: 500, color: "var(--acc-2)" }}
         >
-          + Ajouter une condition
+          {t("app.settingsNav.addCondition")}
         </button>
       </div>
     </>
@@ -213,6 +216,7 @@ export function ActionsBuilder({
   onChange?: (rows: Action[]) => void;
   bare?: boolean;
 }) {
+  const t = useT();
   const [internal, setInternal] = useState<Action[]>(initial);
   const rows = controlled ?? internal;
   const setRows = (next: Action[]) => {
@@ -298,12 +302,12 @@ export function ActionsBuilder({
             )}
             {a.type === "assign_round_robin" && (
               <span className="px-1 py-1.5 text-xs" style={{ color: "var(--ink-3)" }}>
-                Agent actif le moins chargé de l'équipe du ticket.
+                {t("app.settingsNav.roundRobinHint")}
               </span>
             )}
             {a.type === "add_tags" && (
               <input
-                placeholder="tags séparés par des virgules"
+                placeholder={t("app.settingsNav.tagsPlaceholder")}
                 value={Array.isArray(a.value) ? (a.value as string[]).join(", ") : ""}
                 onChange={(e) =>
                   update(i, {
@@ -345,7 +349,7 @@ export function ActionsBuilder({
           className="self-start"
           style={{ fontSize: 12.5, fontWeight: 500, color: "var(--acc-2)" }}
         >
-          + Ajouter une action
+          {t("app.settingsNav.addAction")}
         </button>
       </div>
     </>
@@ -359,7 +363,7 @@ export function ActionsBuilder({
       style={{ borderColor: "var(--line)", background: "var(--panel)" }}
     >
       <legend className="px-1 text-xs font-semibold" style={{ color: "var(--ink-2)" }}>
-        ALORS — actions appliquées dans l'ordre
+        {t("app.settingsNav.thenActions")}
       </legend>
       {body}
     </fieldset>

@@ -2,6 +2,7 @@
 
 /** AG-07 — Tiroirs et confirmations du panneau contact (création, fusion, RGPD). */
 import { useState } from "react";
+import { useT } from "@/i18n/client";
 import { createContact, deleteContactRgpd, mergeContacts } from "./actions";
 
 function Drawer({
@@ -47,6 +48,7 @@ const fieldStyle = {
 } as const;
 
 export function NewContactButton() {
+  const t = useT();
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -62,17 +64,17 @@ export function NewContactButton() {
           fontSize: 12.5,
         }}
       >
-        + Contact
+        {t("app.contacts.newContactButton")}
       </button>
       {open && (
-        <Drawer title="Nouveau contact" onClose={() => setOpen(false)}>
+        <Drawer title={t("app.contacts.newContactTitle")} onClose={() => setOpen(false)}>
           <form action={createContact} className="flex flex-col gap-3">
             <label className="flex flex-col gap-1 text-[12.5px] font-medium">
-              Email *
+              {t("app.contacts.fieldEmail")}
               <input name="email" type="email" required style={fieldStyle} />
             </label>
             <label className="flex flex-col gap-1 text-[12.5px] font-medium">
-              Nom
+              {t("app.contacts.name")}
               <input name="name" style={fieldStyle} />
             </label>
             <button
@@ -80,7 +82,7 @@ export function NewContactButton() {
               className="mt-1 rounded-md px-4 py-2 text-[13px] font-semibold text-white"
               style={{ background: "var(--acc)" }}
             >
-              Créer le contact
+              {t("app.contacts.createSubmit")}
             </button>
           </form>
         </Drawer>
@@ -107,25 +109,28 @@ export function MergeContactButton({
   keepLabel: string;
   candidates: { id: string; label: string }[];
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
+  const [introBefore, introAfter] = t.parts("app.contacts.mergeIntro", "contact");
   return (
     <>
       <button type="button" style={chipStyle} onClick={() => setOpen(true)}>
-        Fusionner deux contacts
+        {t("app.contacts.mergeTitle")}
       </button>
       {open && (
-        <Drawer title="Fusionner deux contacts" onClose={() => setOpen(false)}>
+        <Drawer title={t("app.contacts.mergeTitle")} onClose={() => setOpen(false)}>
           <p className="mb-3 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
-            Les tickets et rattachements du contact source seront réassignés à{" "}
-            <strong>{keepLabel}</strong>, puis la fiche source sera supprimée.
+            {introBefore}
+            <strong>{keepLabel}</strong>
+            {introAfter}
           </p>
           <form action={mergeContacts} className="flex flex-col gap-3">
             <input type="hidden" name="keepId" value={keepId} />
             <label className="flex flex-col gap-1 text-[12.5px] font-medium">
-              Contact source (supprimé après fusion)
+              {t("app.contacts.mergeSourceLabel")}
               <select name="sourceId" required defaultValue="" style={fieldStyle}>
                 <option value="" disabled>
-                  Choisir un contact…
+                  {t("app.contacts.mergeChoosePlaceholder")}
                 </option>
                 {candidates.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -139,7 +144,7 @@ export function MergeContactButton({
               className="mt-1 rounded-md px-4 py-2 text-[13px] font-semibold text-white"
               style={{ background: "var(--acc)" }}
             >
-              Fusionner
+              {t("app.contacts.mergeSubmit")}
             </button>
           </form>
         </Drawer>
@@ -149,6 +154,7 @@ export function MergeContactButton({
 }
 
 export function DeleteRgpdButton({ contactId }: { contactId: string }) {
+  const t = useT();
   const [confirming, setConfirming] = useState(false);
   if (!confirming) {
     return (
@@ -157,7 +163,7 @@ export function DeleteRgpdButton({ contactId }: { contactId: string }) {
         style={{ ...chipStyle, borderColor: "var(--dang)", color: "var(--dang)" }}
         onClick={() => setConfirming(true)}
       >
-        Supprimer (RGPD)
+        {t("app.contacts.deleteRgpd")}
       </button>
     );
   }
@@ -173,10 +179,10 @@ export function DeleteRgpdButton({ contactId }: { contactId: string }) {
           color: "#fff",
         }}
       >
-        Confirmer la suppression
+        {t("app.contacts.deleteConfirm")}
       </button>
       <button type="button" style={chipStyle} onClick={() => setConfirming(false)}>
-        Annuler
+        {t("app.contacts.cancel")}
       </button>
     </form>
   );

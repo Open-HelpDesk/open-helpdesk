@@ -3,7 +3,12 @@
  * Fidèles à la maquette « Espace agent » : tuiles KPI (label 11.5 min-h 30, valeur 24px/600,
  * ligne delta + sparkline 56×20), « Créés vs résolus » en aires + lignes 640×190 (pad 22),
  * barres par canal h7, heatmap 7 × 12 en grille `16px repeat(12,1fr)` gap 3.
+ *
+ * Rendus serveur mais synchrones : la fonction de traduction leur est passée en
+ * prop par la page appelante plutôt que résolue ici avec `await getT()`.
  */
+
+import type { Translate } from "@/i18n/server";
 
 /** Sparkline 56×20 du design : normalisée min→max, polyline 1.6, sans point terminal. */
 export function Sparkline({
@@ -139,10 +144,12 @@ export function AreaLines({
   data,
   labelA,
   labelB,
+  t,
 }: {
   data: { day: string; created: number; resolved: number }[];
   labelA: string;
   labelB: string;
+  t: Translate;
 }) {
   const W = 640;
   const H = 190;
@@ -159,8 +166,6 @@ export function AreaLines({
   const fill = (get: (d: (typeof data)[number]) => number) =>
     `${path(get)} L${x(data.length - 1).toFixed(1)},${H - PAD} L${x(0).toFixed(1)},${H - PAD} Z`;
 
-  const fmtDay = (iso: string) =>
-    new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
   const slot = data.length > 1 ? (W - PAD - 8) / (data.length - 1) : W;
 
   return (
@@ -170,7 +175,7 @@ export function AreaLines({
       height="100%"
       preserveAspectRatio="none"
       role="img"
-      aria-label={`${labelA} et ${labelB} par jour`}
+      aria-label={t("app.reports.chartDailyAria", { labelA, labelB })}
       style={{ display: "block" }}
     >
       {[0, 0.25, 0.5, 0.75, 1].map((f) => (
@@ -206,7 +211,15 @@ export function AreaLines({
       )}
       {data.map((d, i) => (
         <rect key={d.day} x={x(i) - slot / 2} y={0} width={slot} height={H} fill="transparent">
-          <title>{`${fmtDay(d.day)} — ${labelA} : ${d.created} · ${labelB} : ${d.resolved}`}</title>
+          <title>
+            {t("app.reports.chartDailyPoint", {
+              date: t.fmt.dateShort(new Date(d.day)),
+              labelA,
+              created: d.created,
+              labelB,
+              resolved: d.resolved,
+            })}
+          </title>
         </rect>
       ))}
     </svg>
@@ -216,8 +229,10 @@ export function AreaLines({
 /** « Répartition par canal » — barres h7, largeur = part du total, valeur brute à droite. */
 export function ChannelBars({
   items,
+  t,
 }: {
   items: { label: string; value: number; color: string }[];
+  t: Translate;
 }) {
   const total = items.reduce((acc, i) => acc + i.value, 0);
   return (
@@ -229,12 +244,16 @@ export function ChannelBars({
             key={item.label}
             className="flex flex-col"
             style={{ gap: 5 }}
-            title={`${item.label} : ${item.value.toLocaleString("fr-FR")} · ${Math.round(pct)} %`}
+            title={t("app.reports.channelTooltip", {
+              label: item.label,
+              value: item.value,
+              percent: Math.round(pct),
+            })}
           >
             <div className="flex justify-between" style={{ fontSize: 12.5 }}>
               <span>{item.label}</span>
               <span style={{ color: "var(--ink-3)", fontVariantNumeric: "tabular-nums" }}>
-                {item.value.toLocaleString("fr-FR")}
+                {t.fmt.number(item.value)}
               </span>
             </div>
             <div
@@ -256,12 +275,30 @@ export function ChannelBars({
   );
 }
 
-const DAY_LABELS = ["L", "M", "M", "J", "V", "S", "D"];
+/** Initiales des jours, du lundi au dimanche — une clé par jour, la langue décide. */
+const DAY_KEYS = [
+  "app.reports.dayMon",
+  "app.reports.dayTue",
+  "app.reports.dayWed",
+  "app.reports.dayThu",
+  "app.reports.dayFri",
+  "app.reports.daySat",
+  "app.reports.daySun",
+] as const;
 
 /** « Volume par heure et jour » — 7 lignes × 12 heures, grille `16px repeat(12,1fr)` gap 3. */
-export function Heatmap({ grid, hours }: { grid: number[][]; hours: number[] }) {
+export function Heatmap({
+  grid,
+  hours,
+  t,
+}: {
+  grid: number[][];
+  hours: number[];
+  t: Translate;
+}) {
   const max = Math.max(...grid.flat(), 1);
   const cols = "16px repeat(12,1fr)";
+  const dayLabels = DAY_KEYS.map((k) => t(k));
   return (
     <div className="flex flex-col" style={{ gap: 3 }}>
       {grid.map((row, r) => (
@@ -269,11 +306,15 @@ export function Heatmap({ grid, hours }: { grid: number[][]; hours: number[] }) 
           key={r}
           style={{ display: "grid", gridTemplateColumns: cols, gap: 3, alignItems: "center" }}
         >
-          <div style={{ fontSize: 10, color: "var(--ink-3)" }}>{DAY_LABELS[r]}</div>
+          <div style={{ fontSize: 10, color: "var(--ink-3)" }}>{dayLabels[r]}</div>
           {row.map((v, c) => (
             <div
               key={c}
-              title={`${DAY_LABELS[r]} ${hours[c]} h : ${v} ticket${v > 1 ? "s" : ""}`}
+              title={t("app.reports.heatmapCell", {
+                day: dayLabels[r] ?? "",
+                hour: hours[c] ?? 0,
+                count: v,
+              })}
               style={{
                 height: 15,
                 borderRadius: 3,

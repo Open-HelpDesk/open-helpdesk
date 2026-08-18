@@ -11,12 +11,8 @@ import {
   type InboxFilters,
   type ViewKey,
 } from "@/lib/data";
-import {
-  PRIORITY_LABELS_FR,
-  STATUS_LABELS_FR,
-  relativeFr,
-  slaShortFr,
-} from "@/lib/format";
+import { PRIORITY_KEYS, STATUS_KEYS, slaShort } from "@/lib/format";
+import { getT, type Translate } from "@/i18n/server";
 import { InboxTable, type InboxRowData } from "./inbox-table";
 
 /**
@@ -87,12 +83,14 @@ function FilterChip({
   options,
   params,
   paramKey,
+  t,
 }: {
   label: string;
   value: string | undefined;
   options: { value: string; label: string }[];
   params: SearchParams;
   paramKey: "status" | "priority" | "assignee";
+  t: Translate;
 }) {
   const current = options.find((o) => o.value === value);
   return (
@@ -106,8 +104,9 @@ function FilterChip({
           color: current ? "var(--acc)" : "var(--ink-2)",
         }}
       >
-        {label}
-        {current ? ` : ${current.label}` : ""}
+        {current
+          ? t("app.tickets.filterChipValue", { label, value: current.label })
+          : label}
         <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
       </summary>
       <div
@@ -119,7 +118,7 @@ function FilterChip({
           className="px-3 py-1.5 text-[12.5px]"
           style={{ color: "var(--ink-2)" }}
         >
-          Tous
+          {t("app.tickets.filterAll")}
         </Link>
         {options.map((o) => (
           <Link
@@ -145,6 +144,7 @@ export default async function TicketsPage({
   searchParams: Promise<SearchParams>;
 }) {
   const { tenant, agent } = await requireAgent();
+  const t = await getT();
   const params = await searchParams;
 
   const teamViewId = params.tv;
@@ -203,33 +203,33 @@ export default async function TicketsPage({
   }
 
   const now = Date.now();
-  const tableRows: InboxRowData[] = rows.map((t) => {
+  const tableRows: InboxRowData[] = rows.map((row) => {
     const due =
-      !t.firstRepliedAt && t.firstReplyDueAt ? t.firstReplyDueAt : t.resolveDueAt;
+      !row.firstRepliedAt && row.firstReplyDueAt ? row.firstReplyDueAt : row.resolveDueAt;
     const remaining = due ? due.getTime() - now : null;
     const overdue = remaining !== null && remaining < 0;
-    const openStatus = ["new", "open", "waiting", "on_hold"].includes(t.status);
+    const openStatus = ["new", "open", "waiting", "on_hold"].includes(row.status);
     return {
-      id: t.id,
-      number: t.number,
-      subject: t.subject,
-      excerpt: t.excerpt,
-      isNew: t.status === "new",
-      priority: t.priority,
-      contactName: t.requesterName ?? t.requesterEmail,
-      orgName: t.organizationName,
-      status: t.status,
+      id: row.id,
+      number: row.number,
+      subject: row.subject,
+      excerpt: row.excerpt,
+      isNew: row.status === "new",
+      priority: row.priority,
+      contactName: row.requesterName ?? row.requesterEmail,
+      orgName: row.organizationName,
+      status: row.status,
       sla:
         remaining === null || !openStatus
           ? null
           : {
-              text: slaShortFr(remaining),
+              text: slaShort(t, remaining),
               tone: overdue ? "dang" : remaining < 30 * 60_000 ? "wait" : "neutral",
             },
       overdue: overdue && openStatus,
-      assigneeName: t.assigneeName,
-      activity: relativeFr(t.updatedAt),
-      href: `/app/tickets/${t.number}?view=${view}`,
+      assigneeName: row.assigneeName,
+      activity: t.fmt.relative(row.updatedAt),
+      href: `/app/tickets/${row.number}?view=${view}`,
     };
   });
 
@@ -237,16 +237,20 @@ export default async function TicketsPage({
   const from = total === 0 ? 0 : (page - 1) * INBOX_PAGE_SIZE + 1;
   const to = Math.min(page * INBOX_PAGE_SIZE, total);
 
-  const statusOptions = Object.entries(STATUS_LABELS_FR).map(([value, label]) => ({
+  const statusOptions = Object.entries(STATUS_KEYS).map(([value, key]) => ({
     value,
-    label,
+    label: t(key),
   }));
-  const priorityOptions = Object.entries(PRIORITY_LABELS_FR).map(([value, label]) => ({
+  const priorityOptions = Object.entries(PRIORITY_KEYS).map(([value, key]) => ({
     value,
-    label,
+    label: t(key),
   }));
+  const [firstLaunchBefore, firstLaunchAfter] = t.parts(
+    "app.tickets.firstLaunchBody",
+    "address",
+  );
   const assigneeOptions = [
-    { value: "none", label: "Non assigné" },
+    { value: "none", label: t("app.tickets.unassigned") },
     ...agents.map((a) => ({ value: a.id, label: a.name })),
   ];
 
@@ -257,7 +261,9 @@ export default async function TicketsPage({
         className="flex shrink-0 flex-col overflow-auto border-r"
         style={{ width: 240, background: "var(--panel)", borderColor: "var(--line)" }}
       >
-        <div style={{ ...VIEW_GROUP, padding: "14px 14px 8px" }}>Vues</div>
+        <div style={{ ...VIEW_GROUP, padding: "14px 14px 8px" }}>
+          {t("app.tickets.viewsGroup")}
+        </div>
         {DEFAULT_VIEWS.map((v) => {
           const active = !teamViewId && v.key === view;
           return (
@@ -280,7 +286,7 @@ export default async function TicketsPage({
                 className="shrink-0 rounded-full"
                 style={{ width: 6, height: 6, background: `var(--${v.dot})` }}
               />
-              <span className="min-w-0 flex-1 truncate">{v.label}</span>
+              <span className="min-w-0 flex-1 truncate">{t(v.labelKey)}</span>
               <span
                 className="tabular-nums"
                 style={{
@@ -298,7 +304,9 @@ export default async function TicketsPage({
         {teamViews.length > 0 && (
           <>
             <div style={{ height: 1, background: "var(--line)", margin: "10px 14px" }} />
-            <div style={{ ...VIEW_GROUP, padding: "2px 14px 8px" }}>Vues d'équipe</div>
+            <div style={{ ...VIEW_GROUP, padding: "2px 14px 8px" }}>
+              {t("app.tickets.teamViewsGroup")}
+            </div>
             {teamViews.map((v) => {
               const active = v.id === teamViewId;
               return (
@@ -343,7 +351,7 @@ export default async function TicketsPage({
             textAlign: "center",
           }}
         >
-          + Nouvelle vue
+          {t("app.tickets.newView")}
         </button>
       </nav>
 
@@ -355,31 +363,34 @@ export default async function TicketsPage({
           style={{ gap: 6, padding: "9px 14px", borderColor: "var(--line)" }}
         >
           <FilterChip
-            label="Statut"
+            label={t("app.tickets.status")}
             value={params.status}
             options={statusOptions}
             params={params}
             paramKey="status"
+            t={t}
           />
           <FilterChip
-            label="Priorité"
+            label={t("app.tickets.priority")}
             value={params.priority}
             options={priorityOptions}
             params={params}
             paramKey="priority"
+            t={t}
           />
           <FilterChip
-            label="Assigné"
+            label={t("app.tickets.assignee")}
             value={params.assignee}
             options={assigneeOptions}
             params={params}
             paramKey="assignee"
+            t={t}
           />
           <button type="button" className="flex items-center" style={CHIP}>
-            Équipe <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
+            {t("app.tickets.team")} <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
           </button>
           <button type="button" className="flex items-center" style={CHIP}>
-            Tags <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
+            {t("app.tickets.tags")} <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
           </button>
 
           <span className="flex-1" />
@@ -387,14 +398,19 @@ export default async function TicketsPage({
             className="whitespace-nowrap tabular-nums"
             style={{ fontSize: 12, color: "var(--ink-3)" }}
           >
-            {total} ticket{total > 1 ? "s" : ""}
+            {t("app.tickets.count", { count: total })}
           </span>
           <details className="relative">
             <summary
               className="flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden"
               style={CHIP}
             >
-              Trier : {filters.sort === "recent" ? "Activité" : "Priorité"}
+              {t("app.tickets.sortBy", {
+                value:
+                  filters.sort === "recent"
+                    ? t("app.tickets.activity")
+                    : t("app.tickets.priority"),
+              })}
               <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
             </summary>
             <div
@@ -405,13 +421,13 @@ export default async function TicketsPage({
                 href={buildQuery(params, { sort: undefined })}
                 className="px-3 py-1.5 text-[12.5px]"
               >
-                Priorité
+                {t("app.tickets.priority")}
               </Link>
               <Link
                 href={buildQuery(params, { sort: "recent" })}
                 className="px-3 py-1.5 text-[12.5px]"
               >
-                Activité récente
+                {t("app.tickets.sortRecentActivity")}
               </Link>
             </div>
           </details>
@@ -450,9 +466,11 @@ export default async function TicketsPage({
                     <path d="M12 8v4.5M12 16h.01" />
                   </svg>
                 </span>
-                <p style={{ fontSize: 15, fontWeight: 600 }}>Impossible de charger cette vue</p>
+                <p style={{ fontSize: 15, fontWeight: 600 }}>
+                  {t("app.tickets.loadErrorTitle")}
+                </p>
                 <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-                  La connexion au serveur a échoué.
+                  {t("app.tickets.loadErrorBody")}
                 </p>
                 <Link
                   href={buildQuery(params, {})}
@@ -465,7 +483,7 @@ export default async function TicketsPage({
                     fontSize: 13,
                   }}
                 >
-                  Réessayer
+                  {t("app.tickets.retry")}
                 </Link>
               </div>
             </div>
@@ -482,9 +500,11 @@ export default async function TicketsPage({
                   borderRadius: 12,
                 }}
               >
-                <p style={{ fontSize: 16, fontWeight: 600 }}>Connectez votre boîte email</p>
+                <p style={{ fontSize: 16, fontWeight: 600 }}>
+                  {t("app.tickets.firstLaunchTitle")}
+                </p>
                 <p style={{ fontSize: 13, color: "var(--ink-2)", textWrap: "pretty" }}>
-                  Aucun ticket pour l'instant. Transférez vos emails de support vers{" "}
+                  {firstLaunchBefore}
                   <span
                     style={{
                       fontFamily: "var(--font-mono)",
@@ -496,8 +516,8 @@ export default async function TicketsPage({
                     }}
                   >
                     {mailboxAddress}
-                  </span>{" "}
-                  pour commencer.
+                  </span>
+                  {firstLaunchAfter}
                 </p>
                 <Link
                   href="/onboarding?step=2"
@@ -510,7 +530,7 @@ export default async function TicketsPage({
                     fontSize: 13,
                   }}
                 >
-                  Configurer l'email
+                  {t("app.tickets.configureEmail")}
                 </Link>
               </div>
             </div>
@@ -532,9 +552,11 @@ export default async function TicketsPage({
                   <rect x="8" y="16" width="48" height="34" rx="4" />
                   <path d="M8 22l24 15 24-15" stroke="var(--acc-b)" />
                 </svg>
-                <p style={{ fontSize: 15, fontWeight: 600 }}>Aucun ticket dans cette vue</p>
+                <p style={{ fontSize: 15, fontWeight: 600 }}>
+                  {t("app.tickets.emptyTitle")}
+                </p>
                 <p style={{ fontSize: 13, color: "var(--ink-2)", textWrap: "pretty" }}>
-                  Tout est traité. Les nouveaux emails arriveront ici automatiquement.
+                  {t("app.tickets.emptyBody")}
                 </p>
               </div>
             </div>
@@ -547,16 +569,16 @@ export default async function TicketsPage({
                 style={{ padding: "12px 14px", fontSize: 12, color: "var(--ink-3)" }}
               >
                 <span className="tabular-nums">
-                  {from}–{to} sur {total}
+                  {t("app.tickets.pageRange", { from, to, total })}
                 </span>
                 <div className="flex" style={{ gap: 4 }}>
                   {page > 1 ? (
                     <Link href={buildQuery(params, { page: String(page - 1) })} style={PAGER}>
-                      Précédent
+                      {t("app.tickets.previous")}
                     </Link>
                   ) : (
                     <span style={{ ...PAGER, borderColor: "var(--line-2)", opacity: 0.55 }}>
-                      Précédent
+                      {t("app.tickets.previous")}
                     </span>
                   )}
                   {to < total ? (
@@ -564,11 +586,11 @@ export default async function TicketsPage({
                       href={buildQuery(params, { page: String(page + 1) })}
                       style={{ ...PAGER, background: "var(--panel)" }}
                     >
-                      Suivant
+                      {t("app.tickets.next")}
                     </Link>
                   ) : (
                     <span style={{ ...PAGER, borderColor: "var(--line-2)", opacity: 0.55 }}>
-                      Suivant
+                      {t("app.tickets.next")}
                     </span>
                   )}
                 </div>
@@ -590,13 +612,14 @@ export default async function TicketsPage({
           }}
         >
           <span>
-            <kbd style={FOOT_KEY}>j</kbd> <kbd style={FOOT_KEY}>k</kbd> naviguer
+            <kbd style={FOOT_KEY}>j</kbd> <kbd style={FOOT_KEY}>k</kbd>{" "}
+            {t("app.tickets.shortcutNavigate")}
           </span>
           <span>
-            <kbd style={FOOT_KEY}>↵</kbd> ouvrir
+            <kbd style={FOOT_KEY}>↵</kbd> {t("app.tickets.shortcutOpen")}
           </span>
           <span>
-            <kbd style={FOOT_KEY}>x</kbd> sélectionner
+            <kbd style={FOOT_KEY}>x</kbd> {t("app.tickets.shortcutSelect")}
           </span>
           <span className="flex-1" />
           <span className="flex items-center" style={{ gap: 5 }}>
@@ -604,7 +627,7 @@ export default async function TicketsPage({
               className="rounded-full"
               style={{ width: 6, height: 6, background: "var(--ok)" }}
             />
-            Temps réel actif
+            {t("app.tickets.realtimeActive")}
           </span>
         </div>
       </section>

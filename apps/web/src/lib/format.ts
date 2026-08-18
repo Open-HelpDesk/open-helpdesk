@@ -1,41 +1,44 @@
-/** Formats français partagés par les écrans. */
+/**
+ * Formats partagés par les écrans de l'espace agent.
+ *
+ * Les libellés (statut, priorité, canal) et les unités ne sont plus des
+ * constantes françaises mais des CLÉS : le rendu passe par `t()`, qui connaît la
+ * langue du tenant. Les fonctions qui composent une durée reçoivent donc `t`.
+ * Les couleurs et les tokens CSS, eux, ne dépendent pas de la langue et restent
+ * de simples tables.
+ */
+import type { MessageKey } from "@/i18n/dictionaries/fr";
+
+/** Ce dont ces fonctions ont besoin : traduire et mettre en forme un nombre. */
+type Tr = {
+  (key: MessageKey, params?: Record<string, string | number>): string;
+  fmt: { number: (n: number) => string };
+};
 
 const MIN = 60_000;
 const HOUR = 60 * MIN;
 const DAY = 24 * HOUR;
 
-/** « à l'instant », « il y a 5 min », « il y a 3 h », « il y a 2 j », sinon date courte. */
-export function relativeFr(date: Date, now: Date = new Date()): string {
-  const diff = now.getTime() - date.getTime();
-  if (diff < MIN) return "à l'instant";
-  if (diff < HOUR) return `il y a ${Math.floor(diff / MIN)} min`;
-  if (diff < DAY) return `il y a ${Math.floor(diff / HOUR)} h`;
-  if (diff < 7 * DAY) return `il y a ${Math.floor(diff / DAY)} j`;
-  return date.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
-}
-
-/** « 2 h 30 », « 45 min » — durée restante positive. */
-export function durationFr(ms: number): string {
-  if (ms < HOUR) return `${Math.max(1, Math.floor(ms / MIN))} min`;
+/** « 2 h 30 », « 45 min » — durée restante positive, dans la langue du tenant. */
+export function duration(t: Tr, ms: number): string {
+  if (ms < HOUR) return t("app.unit.minutes", { count: Math.max(1, Math.floor(ms / MIN)) });
   const h = Math.floor(ms / HOUR);
   const m = Math.floor((ms % HOUR) / MIN);
-  return m > 0 ? `${h} h ${String(m).padStart(2, "0")}` : `${h} h`;
+  return m > 0
+    ? t("app.unit.hoursMinutes", { hours: h, minutes: String(m).padStart(2, "0") })
+    : t("app.unit.hours", { count: h });
 }
 
 /** « -12 min » si dépassé, « 24 min » sinon — format court des badges SLA (AG-03). */
-export function slaShortFr(remainingMs: number): string {
-  return remainingMs < 0 ? `-${durationFr(-remainingMs)}` : durationFr(remainingMs);
+export function slaShort(t: Tr, remainingMs: number): string {
+  return remainingMs < 0 ? `-${duration(t, -remainingMs)}` : duration(t, remainingMs);
 }
 
-/** « 148 Ko », « 1,2 Mo ». */
-export function sizeFr(bytes: number): string {
-  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} Ko`;
-  return `${(bytes / (1024 * 1024)).toFixed(1).replace(".", ",")} Mo`;
-}
-
-/** Nombre en format français (« 4 128 »). */
-export function nFr(x: number): string {
-  return x.toLocaleString("fr-FR");
+/** « 148 Ko », « 1,2 Mo » — le séparateur décimal vient de la langue. */
+export function size(t: Tr, bytes: number): string {
+  if (bytes < 1024 * 1024)
+    return t("app.unit.kilobytes", { count: Math.max(1, Math.round(bytes / 1024)) });
+  return t("app.unit.megabytes", { value: t.fmt.number(Math.round((bytes / (1024 * 1024)) * 10) / 10) });
 }
 
 export function initialsOf(name: string): string {
@@ -47,13 +50,13 @@ export function initialsOf(name: string): string {
     .join("");
 }
 
-export const STATUS_LABELS_FR: Record<string, string> = {
-  new: "Nouveau",
-  open: "Ouvert",
-  waiting: "En attente",
-  on_hold: "En pause",
-  resolved: "Résolu",
-  closed: "Clos",
+export const STATUS_KEYS: Record<string, MessageKey> = {
+  new: "app.status.new",
+  open: "app.status.open",
+  waiting: "app.status.waiting",
+  on_hold: "app.status.onHold",
+  resolved: "app.status.resolved",
+  closed: "app.status.closed",
 };
 
 /** Statut → clé de token CSS (--new, --open, --wait, --pause, --ok, --closed). */
@@ -66,11 +69,11 @@ export const STATUS_TOKEN: Record<string, string> = {
   closed: "closed",
 };
 
-export const PRIORITY_LABELS_FR: Record<string, string> = {
-  low: "Basse",
-  normal: "Normale",
-  high: "Haute",
-  urgent: "Urgente",
+export const PRIORITY_KEYS: Record<string, MessageKey> = {
+  low: "app.priority.low",
+  normal: "app.priority.normal",
+  high: "app.priority.high",
+  urgent: "app.priority.urgent",
 };
 
 /** Couleurs de priorité — design espace agent (fixes, jamais de fond plein). */
@@ -81,9 +84,9 @@ export const PRIORITY_COLORS: Record<string, string> = {
   urgent: "#C0342B",
 };
 
-export const CHANNEL_LABELS_FR: Record<string, string> = {
-  email: "Email",
-  portal: "Portail",
-  widget: "Widget",
-  api: "API",
+export const CHANNEL_KEYS: Record<string, MessageKey> = {
+  email: "app.channel.email",
+  portal: "app.channel.portal",
+  widget: "app.channel.widget",
+  api: "app.channel.api",
 };

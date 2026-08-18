@@ -5,10 +5,12 @@
  * La valeur est portée par un input caché lu par la server action.
  */
 import { useState } from "react";
+import { useT } from "@/i18n/client";
 
 const SWATCHES = ["#0B5F46", "#1D4ED8", "#6D28D9", "#C0342B", "#B45309"];
 
 export function AccentPicker({ name, initial }: { name: string; initial: string }) {
+  const t = useT();
   const [value, setValue] = useState(initial || "#0B5F46");
   const normalized = value.toUpperCase();
 
@@ -40,7 +42,7 @@ export function AccentPicker({ name, initial }: { name: string; initial: string 
         value={value}
         onChange={(e) => setValue(e.target.value)}
         spellCheck={false}
-        aria-label="Couleur hexadécimale"
+        aria-label={t("app.settingsNav.hexColor")}
         className="font-mono"
         style={{
           width: 92,

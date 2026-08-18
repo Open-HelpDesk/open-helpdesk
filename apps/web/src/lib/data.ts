@@ -24,15 +24,18 @@ import {
   type SQL,
 } from "drizzle-orm";
 
+import type { MessageKey } from "@/i18n/dictionaries/fr";
 /** Vues par défaut de l'inbox (AG-03) — pastille 6×6 colorée par token de statut. */
+/** Vues livrées avec le produit. `key` est stable (URL, filtres) ; le libellé
+ *  est de l'interface, il suit donc la langue du tenant. */
 export const DEFAULT_VIEWS = [
-  { key: "mine", label: "Mes tickets", dot: "open" },
-  { key: "unassigned", label: "Non assignés", dot: "new" },
-  { key: "breaching", label: "Bientôt en retard", dot: "wait" },
-  { key: "resolved", label: "Résolus récemment", dot: "ok" },
-  { key: "urgent", label: "Urgents cette semaine", dot: "dang" },
-  { key: "escalation", label: "Escalades", dot: "pause" },
-] as const;
+  { key: "mine", labelKey: "app.views.mine", dot: "open" },
+  { key: "unassigned", labelKey: "app.views.unassigned", dot: "new" },
+  { key: "breaching", labelKey: "app.views.breaching", dot: "wait" },
+  { key: "resolved", labelKey: "app.views.resolved", dot: "ok" },
+  { key: "urgent", labelKey: "app.views.urgent", dot: "dang" },
+  { key: "escalation", labelKey: "app.views.escalation", dot: "pause" },
+] as const satisfies readonly { key: string; labelKey: MessageKey; dot: string }[];
 export type ViewKey = (typeof DEFAULT_VIEWS)[number]["key"];
 
 const OPEN_STATUSES = ["new", "open", "waiting", "on_hold"] as const;

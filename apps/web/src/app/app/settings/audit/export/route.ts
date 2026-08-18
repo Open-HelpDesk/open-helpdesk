@@ -3,17 +3,19 @@ import { auditEvents, db } from "@openhelpdesk/db";
 import { and, desc, eq, gte } from "drizzle-orm";
 import { apiAgent } from "@/lib/session";
 import { entitlementsFor } from "@/lib/entitlements";
+import { getT } from "@/i18n/server";
 
 /** ST-12 — Export CSV du journal d'audit (plan Pro, Owner/Admin). */
 export async function GET(request: NextRequest) {
+  const t = await getT();
   const current = await apiAgent();
-  if (!current) return new NextResponse("Non autorisé", { status: 401 });
+  if (!current) return new NextResponse(t("app.settings.dev.exportUnauthorized"), { status: 401 });
   const { tenant, agent } = current;
   if (agent.role !== "owner" && agent.role !== "admin") {
-    return new NextResponse("Réservé aux rôles Owner et Admin.", { status: 403 });
+    return new NextResponse(t("app.settings.dev.exportForbidden"), { status: 403 });
   }
   if (!entitlementsFor(tenant.plan).auditLog) {
-    return new NextResponse("L'audit log est réservé au plan Pro.", { status: 403 });
+    return new NextResponse(t("app.settings.dev.exportProOnly"), { status: 403 });
   }
 
   const params = request.nextUrl.searchParams;

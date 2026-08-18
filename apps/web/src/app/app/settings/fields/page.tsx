@@ -3,6 +3,7 @@ import { requireAgent } from "@/lib/session";
 import { db, formFields, ticketFields, ticketForms } from "@openhelpdesk/db";
 import { asc, eq } from "drizzle-orm";
 import { FIELD_TYPE_LABELS } from "@/lib/rule-labels";
+import { getT, type Translate } from "@/i18n/server";
 import {
   Field,
   PageHeader,
@@ -17,10 +18,10 @@ import { addFieldToForm, createForm, deleteField, removeFieldFromForm, saveField
 
 const FIELDS_GRID = "minmax(200px,1.4fr) 170px 110px 110px 120px";
 /** Libellés longs de la table ST-04 (« Liste déroulante ») — la composition utilise « Liste ». */
-const TYPE_LABELS_LONG: Record<string, string> = {
-  ...FIELD_TYPE_LABELS,
-  select: "Liste déroulante",
-};
+function typeLabelLong(type: string, t: Translate): string {
+  if (type === "select") return t("app.settings.rules.typeSelectLong");
+  return FIELD_TYPE_LABELS[type] ?? type;
+}
 
 type FieldRow = typeof ticketFields.$inferSelect;
 
@@ -34,6 +35,7 @@ export default async function FieldsSettingsPage({
 }: {
   searchParams: Promise<{ tab?: string; form?: string; saved?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { tab, form: formParam, saved } = await searchParams;
   const activeTab = tab === "forms" ? "forms" : "fields";
@@ -68,19 +70,29 @@ export default async function FieldsSettingsPage({
   const availableFields = fields.filter((f) => !selectedLinks.some((l) => l.fieldId === f.id));
 
   const tabs = [
-    { label: "Champs", href: "/app/settings/fields", active: activeTab === "fields" },
-    { label: "Formulaires", href: "/app/settings/fields?tab=forms", active: activeTab === "forms" },
+    {
+      label: t("app.settings.rules.fieldsTab"),
+      href: "/app/settings/fields",
+      active: activeTab === "fields",
+    },
+    {
+      label: t("app.settings.rules.formsTab"),
+      href: "/app/settings/fields?tab=forms",
+      active: activeTab === "forms",
+    },
   ];
 
   return (
     <PageShell maxWidth={1100}>
       <PageHeader
-        title="Champs & formulaires"
-        subtitle="Champs personnalisés et composition des formulaires de ticket."
+        title={t("app.settings.rules.fieldsTitle")}
+        subtitle={t("app.settings.rules.fieldsSubtitle")}
         tabs={tabs}
       />
 
-      {saved === "1" && <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>}
+      {saved === "1" && (
+        <p style={{ fontSize: 12.5, color: "var(--ok)" }}>{t("app.settings.rules.saved")}</p>
+      )}
 
       {activeTab === "fields" ? (
         <div className="st-rise flex flex-col" style={{ gap: 14 }}>
@@ -102,15 +114,15 @@ export default async function FieldsSettingsPage({
                 color: "var(--ink-3)",
               }}
             >
-              <span>Champ</span>
-              <span>Type</span>
-              <span>Portail</span>
-              <span>Requis</span>
-              <span className="text-right">Formulaires</span>
+              <span>{t("app.settings.rules.colField")}</span>
+              <span>{t("app.settings.rules.colType")}</span>
+              <span>{t("app.settings.rules.colPortal")}</span>
+              <span>{t("app.settings.rules.required")}</span>
+              <span className="text-right">{t("app.settings.rules.formsTab")}</span>
             </div>
             {fields.length === 0 && (
               <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-                Aucun champ personnalisé. Créez le premier — liste, texte, date…
+                {t("app.settings.rules.fieldsEmpty")}
               </p>
             )}
             {fields.map((f) => (
@@ -128,26 +140,26 @@ export default async function FieldsSettingsPage({
               >
                 <span className="flex min-w-0 items-center" style={{ paddingRight: 10 }}>
                   <Drawer
-                    title="Modifier un champ"
+                    title={t("app.settings.rules.fieldEditTitle")}
                     trigger={<>{f.label}</>}
                     triggerClassName="min-w-0 truncate text-left"
                     triggerStyle={{ fontSize: 13, fontWeight: 500, color: "var(--ink)" }}
                   >
-                    <FieldForm field={f} />
+                    <FieldForm field={f} t={t} />
                   </Drawer>
                 </span>
                 <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                  {TYPE_LABELS_LONG[f.type] ?? f.type}
+                  {typeLabelLong(f.type, t)}
                 </span>
                 <span>
                   {f.portalVisible ? (
-                    <StatusPill tone="ok">Visible</StatusPill>
+                    <StatusPill tone="ok">{t("app.settings.rules.portalVisible")}</StatusPill>
                   ) : (
-                    <StatusPill tone="closed">Masqué</StatusPill>
+                    <StatusPill tone="closed">{t("app.settings.rules.portalHidden")}</StatusPill>
                   )}
                 </span>
                 <span style={{ fontSize: 12.5, color: f.required ? "var(--dang)" : "var(--ink-3)" }}>
-                  {f.required ? "Requis" : "—"}
+                  {f.required ? t("app.settings.rules.required") : "—"}
                 </span>
                 <span className="text-right tabular-nums" style={{ color: "var(--ink-2)" }}>
                   {formCountByField.get(f.id) ?? 0}
@@ -157,8 +169,8 @@ export default async function FieldsSettingsPage({
           </div>
 
           <Drawer
-            title="Créer un champ"
-            trigger={<>+ Créer un champ</>}
+            title={t("app.settings.rules.fieldCreateTitle")}
+            trigger={<>{t("app.settings.rules.fieldCreateButton")}</>}
             triggerClassName="inline-flex items-center justify-center self-start rounded-md border font-semibold"
             triggerStyle={{
               height: 32,
@@ -169,7 +181,7 @@ export default async function FieldsSettingsPage({
               color: "var(--ink-2)",
             }}
           >
-            <FieldForm />
+            <FieldForm t={t} />
           </Drawer>
         </div>
       ) : (
@@ -200,7 +212,7 @@ export default async function FieldsSettingsPage({
               <TextInput
                 name="name"
                 required
-                placeholder="Nom du formulaire"
+                placeholder={t("app.settings.rules.formNamePlaceholder")}
                 style={{ width: 180, height: 32, padding: "0 11px", fontSize: 12.5 }}
               />
               <button
@@ -215,7 +227,7 @@ export default async function FieldsSettingsPage({
                   color: "var(--ink-2)",
                 }}
               >
-                + Créer un formulaire
+                {t("app.settings.rules.formCreateButton")}
               </button>
             </form>
           </div>
@@ -226,7 +238,7 @@ export default async function FieldsSettingsPage({
               style={{ background: "var(--panel)", borderColor: "var(--line)", padding: 15 }}
             >
               <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-                Aucun formulaire. Créez le premier pour composer votre portail.
+                {t("app.settings.rules.formsEmpty")}
               </p>
             </div>
           ) : (
@@ -248,12 +260,12 @@ export default async function FieldsSettingsPage({
                     color: "var(--ink-2)",
                   }}
                 >
-                  Champs disponibles
+                  {t("app.settings.rules.availableFields")}
                 </div>
                 <div className="flex flex-col" style={{ padding: 9, gap: 5 }}>
                   {availableFields.length === 0 && (
                     <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-                      Tous les champs sont déjà dans ce formulaire.
+                      {t("app.settings.rules.allFieldsUsed")}
                     </p>
                   )}
                   {availableFields.map((f) => (
@@ -262,7 +274,7 @@ export default async function FieldsSettingsPage({
                       <input type="hidden" name="fieldId" value={f.id} />
                       <button
                         type="submit"
-                        title="Ajouter au formulaire"
+                        title={t("app.settings.rules.addToForm")}
                         className="flex w-full items-center rounded-[7px] border text-left"
                         style={{
                           padding: "9px 11px",
@@ -302,29 +314,47 @@ export default async function FieldsSettingsPage({
                     color: "var(--acc)",
                   }}
                 >
-                  Formulaire « {selectedForm.name} »
+                  {t("app.settings.rules.formHeading", { name: selectedForm.name })}
                 </div>
                 <div className="flex flex-col" style={{ padding: 9, gap: 5 }}>
-                  <ComposedRow label="Sujet" type="Texte" required />
-                  <ComposedRow label="Description" type="Texte long" required />
+                  <ComposedRow
+                    label={t("app.settings.rules.previewSubject")}
+                    type={t("app.settings.rules.typeText")}
+                    required
+                    t={t}
+                  />
+                  <ComposedRow
+                    label={t("app.settings.rules.previewDescription")}
+                    type={t("app.settings.rules.typeLongText")}
+                    required
+                    t={t}
+                  />
                   {composedFields.map((f) => (
                     <ComposedRow
                       key={f.id}
                       label={f.label}
                       type={FIELD_TYPE_LABELS[f.type] ?? f.type}
                       required={f.required}
+                      t={t}
                       remove={
                         <form action={removeFieldFromForm}>
                           <input type="hidden" name="formId" value={selectedForm.id} />
                           <input type="hidden" name="fieldId" value={f.id} />
-                          <button title="Retirer du formulaire" style={{ fontSize: 11, color: "var(--ink-3)" }}>
+                          <button
+                            title={t("app.settings.rules.removeFromForm")}
+                            style={{ fontSize: 11, color: "var(--ink-3)" }}
+                          >
                             ✕
                           </button>
                         </form>
                       }
                     />
                   ))}
-                  <ComposedRow label="Pièces jointes" type="Fichier" />
+                  <ComposedRow
+                    label={t("app.settings.rules.previewAttachments")}
+                    type={t("app.settings.rules.typeFile")}
+                    t={t}
+                  />
                 </div>
               </div>
 
@@ -343,11 +373,11 @@ export default async function FieldsSettingsPage({
                     color: "var(--ink-3)",
                   }}
                 >
-                  Aperçu portail
+                  {t("app.settings.rules.portalPreview")}
                 </div>
                 <div className="flex flex-col" style={{ padding: 16, gap: 11 }}>
-                  <PreviewField label="Sujet" height={36} />
-                  <PreviewField label="Description" height={72} />
+                  <PreviewField label={t("app.settings.rules.previewSubject")} height={36} />
+                  <PreviewField label={t("app.settings.rules.previewDescription")} height={72} />
                   {composedFields.map((f) => (
                     <PreviewField key={f.id} label={f.label} height={36} />
                   ))}
@@ -355,7 +385,7 @@ export default async function FieldsSettingsPage({
                     className="flex items-center justify-center font-semibold text-white"
                     style={{ height: 40, borderRadius: 8, fontSize: 13.5, background: "var(--acc)" }}
                   >
-                    Envoyer
+                    {t("app.settings.rules.previewSubmit")}
                   </span>
                 </div>
               </div>
@@ -373,11 +403,13 @@ function ComposedRow({
   type,
   required,
   remove,
+  t,
 }: {
   label: string;
   type: string;
   required?: boolean;
   remove?: React.ReactNode;
+  t: Translate;
 }) {
   return (
     <div
@@ -407,7 +439,7 @@ function ComposedRow({
             color: "var(--dang)",
           }}
         >
-          Requis
+          {t("app.settings.rules.required")}
         </span>
       )}
       {remove}
@@ -430,21 +462,21 @@ function PreviewField({ label, height }: { label: string; height: number }) {
 }
 
 /** Drawer création/édition d'un champ (420 px) — types FR, options une par ligne, portail. */
-function FieldForm({ field }: { field?: FieldRow }) {
+function FieldForm({ field, t }: { field?: FieldRow; t: Translate }) {
   const control = { minHeight: 36, padding: "7px 11px", fontSize: 13.5 } as const;
   return (
     <form action={saveField} className="flex h-full flex-col" style={{ gap: 14 }}>
       {field && <input type="hidden" name="fieldId" value={field.id} />}
-      <Field label="Nom du champ">
+      <Field label={t("app.settings.rules.fieldName")}>
         <TextInput
           name="label"
           required
           defaultValue={field?.label ?? ""}
-          placeholder="Numéro de commande"
+          placeholder={t("app.settings.rules.fieldNamePlaceholder")}
           style={control}
         />
       </Field>
-      <Field label="Type">
+      <Field label={t("app.settings.rules.colType")}>
         <Select name="type" defaultValue={field?.type ?? "text"} style={control}>
           {Object.entries(FIELD_TYPE_LABELS).map(([v, l]) => (
             <option key={v} value={v}>
@@ -453,11 +485,11 @@ function FieldForm({ field }: { field?: FieldRow }) {
           ))}
         </Select>
       </Field>
-      <Field label="Options">
+      <Field label={t("app.settings.rules.fieldOptions")}>
         <textarea
           name="options"
           rows={3}
-          placeholder="Une option par ligne"
+          placeholder={t("app.settings.rules.fieldOptionsPlaceholder")}
           defaultValue={((field?.options as string[]) ?? []).join("\n")}
           className="rounded-md border"
           style={{
@@ -472,19 +504,23 @@ function FieldForm({ field }: { field?: FieldRow }) {
         />
       </Field>
       <Field
-        label="Visibilité portail"
-        hint="Les champs masqués restent visibles des agents uniquement."
+        label={t("app.settings.rules.fieldPortalVisibility")}
+        hint={t("app.settings.rules.fieldPortalHint")}
       >
         <Select
           name="portalVisible"
           defaultValue={field?.portalVisible ? "on" : ""}
           style={control}
         >
-          <option value="on">Visible et modifiable</option>
-          <option value="">Masqué</option>
+          <option value="on">{t("app.settings.rules.fieldPortalOn")}</option>
+          <option value="">{t("app.settings.rules.portalHidden")}</option>
         </Select>
       </Field>
-      <Toggle name="required" defaultChecked={field?.required ?? false} label="Requis" />
+      <Toggle
+        name="required"
+        defaultChecked={field?.required ?? false}
+        label={t("app.settings.rules.required")}
+      />
       <div
         className="mt-auto flex items-center gap-2 border-t pt-3"
         style={{ borderColor: "var(--line)" }}
@@ -503,7 +539,7 @@ function FieldForm({ field }: { field?: FieldRow }) {
               background: "var(--panel)",
             }}
           >
-            Supprimer
+            {t("app.settings.rules.delete")}
           </button>
         )}
         <span className="flex-1" />
@@ -512,7 +548,7 @@ function FieldForm({ field }: { field?: FieldRow }) {
           className="rounded-md font-semibold text-white"
           style={{ height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
         >
-          Enregistrer
+          {t("app.settings.rules.save")}
         </button>
       </div>
     </form>

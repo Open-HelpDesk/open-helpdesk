@@ -9,12 +9,12 @@ import {
   type ViewKey,
 } from "@/lib/data";
 import {
-  CHANNEL_LABELS_FR,
+  CHANNEL_KEYS,
   PRIORITY_COLORS,
-  PRIORITY_LABELS_FR,
-  durationFr,
-  relativeFr,
+  PRIORITY_KEYS,
+  duration,
 } from "@/lib/format";
+import { getT, type Translate } from "@/i18n/server";
 import { Avatar, SlaClock, StatusChip } from "@/components/ticket-bits";
 import { TopbarOverride } from "@/components/app-shell";
 import { ChipVisual, CopyLinkChip, MergeChip } from "./header-tools";
@@ -43,31 +43,37 @@ function SlaRow({
   doneAt,
   createdAt,
   now,
+  t,
 }: {
   label: string;
   due: Date | null;
   doneAt: Date | null;
   createdAt: Date;
   now: number;
+  t: Translate;
 }) {
   let text = "—";
   let color = "var(--ink-3)";
   if (due) {
     if (doneAt) {
       if (doneAt.getTime() <= due.getTime()) {
-        text = `Tenue · ${durationFr(Math.max(60_000, doneAt.getTime() - createdAt.getTime()))}`;
+        text = t("app.ticket.slaMet", {
+          duration: duration(t, Math.max(60_000, doneAt.getTime() - createdAt.getTime())),
+        });
         color = "var(--ok)";
       } else {
-        text = `Dépassée · -${durationFr(doneAt.getTime() - due.getTime())}`;
+        text = t("app.ticket.slaMissed", {
+          duration: duration(t, doneAt.getTime() - due.getTime()),
+        });
         color = "var(--dang)";
       }
     } else {
       const remaining = due.getTime() - now;
       if (remaining >= 0) {
-        text = `À tenir · ${durationFr(remaining)}`;
+        text = t("app.ticket.slaPending", { duration: duration(t, remaining) });
         color = remaining < 30 * 60_000 ? "var(--wait)" : "var(--ink-2)";
       } else {
-        text = `Dépassée · -${durationFr(-remaining)}`;
+        text = t("app.ticket.slaMissed", { duration: duration(t, -remaining) });
         color = "var(--dang)";
       }
     }
@@ -96,6 +102,7 @@ export default async function TicketPage({
   params: Promise<{ number: string }>;
   searchParams: Promise<{ view?: string }>;
 }) {
+  const t = await getT();
   const { tenant, agent } = await requireAgent();
   const { number: numberParam } = await params;
   const { view: viewParam } = await searchParams;
@@ -127,8 +134,9 @@ export default async function TicketPage({
   const requesterName = requester.name ?? requester.email;
   const authorName = (authorId: string | null, authorType: string) => {
     if (authorType === "contact") return requesterName;
-    if (authorType === "agent") return agents.find((a) => a.id === authorId)?.name ?? "Agent";
-    return "Système";
+    if (authorType === "agent")
+      return agents.find((a) => a.id === authorId)?.name ?? t("app.ticket.authorAgent");
+    return t("app.ticket.authorSystem");
   };
 
   // Navigation ←/→ dans la vue courante.
@@ -136,7 +144,9 @@ export default async function TicketPage({
   const prevNumber = idx > 0 ? viewNumbers[idx - 1] : null;
   const nextNumber = idx >= 0 && idx < viewNumbers.length - 1 ? viewNumbers[idx + 1] : null;
   const positionLabel =
-    idx >= 0 ? `ticket ${idx + 1} sur ${viewNumbers.length}` : `ticket #${number}`;
+    idx >= 0
+      ? t("app.ticket.position", { index: idx + 1, total: viewNumbers.length })
+      : t("app.ticket.positionUnknown", { number: String(number) });
 
   // Badge SLA de l'en-tête.
   const now = Date.now();
@@ -156,6 +166,11 @@ export default async function TicketPage({
     fontSize: 13,
   } as const;
 
+  const [mergedBefore, mergedAfter] = t.parts("app.ticket.mergedBanner", "target");
+
+  const priorityKey = PRIORITY_KEYS[ticket.priority];
+  const channelKey = CHANNEL_KEYS[ticket.channel];
+
   const customFields = (ticket.customFields ?? {}) as Record<string, unknown>;
   const fieldEntries = data.ticketFields
     .filter((f) => customFields[f.key] !== undefined && customFields[f.key] !== "")
@@ -168,7 +183,7 @@ export default async function TicketPage({
 
   return (
     <div className="flex h-full">
-      <TopbarOverride title="Mes tickets" subtitle={positionLabel} />
+      <TopbarOverride title={t("app.ticket.topbarTitle")} subtitle={positionLabel} />
 
       {/* Colonne conversation */}
       <div className="flex min-w-0 flex-1 flex-col" style={{ background: "var(--bg)" }}>
@@ -180,7 +195,7 @@ export default async function TicketPage({
           <div className="flex items-center" style={{ gap: 10 }}>
             <Link
               href={`/app/tickets?view=${view}`}
-              title="Retour à l'inbox"
+              title={t("app.ticket.backToInbox")}
               className="grid shrink-0 place-items-center"
               style={navBtnStyle}
             >
@@ -206,16 +221,16 @@ export default async function TicketPage({
               {!ticket.mergedIntoId && (
                 <MergeChip ticketId={ticket.id} ticketNumber={ticket.number} />
               )}
-              <ChipVisual label="Lier" />
-              <ChipVisual label="Vers la KB" />
+              <ChipVisual label={t("app.ticket.chipLink")} />
+              <ChipVisual label={t("app.ticket.chipToKb")} />
               <CopyLinkChip />
-              <ChipVisual label="Historique" />
+              <ChipVisual label={t("app.ticket.chipHistory")} />
             </div>
             <div className="flex items-center" style={{ gap: 2, marginLeft: 4 }}>
               {prevNumber ? (
                 <Link
                   href={`/app/tickets/${prevNumber}?view=${view}`}
-                  title="Ticket précédent"
+                  title={t("app.ticket.previousTicket")}
                   className="flex items-center justify-center"
                   style={navBtnStyle}
                 >
@@ -232,7 +247,7 @@ export default async function TicketPage({
               {nextNumber ? (
                 <Link
                   href={`/app/tickets/${nextNumber}?view=${view}`}
-                  title="Ticket suivant"
+                  title={t("app.ticket.nextTicket")}
                   className="flex items-center justify-center"
                   style={navBtnStyle}
                 >
@@ -251,7 +266,7 @@ export default async function TicketPage({
 
           {/* En-tête — rangée 2 */}
           <div className="flex flex-wrap items-center" style={{ gap: 7 }}>
-            <StatusChip status={ticket.status} />
+            <StatusChip status={ticket.status} t={t} />
             <span
               className="inline-flex items-center"
               style={{ gap: 5, fontSize: 12.5, color: "var(--ink-2)" }}
@@ -264,7 +279,7 @@ export default async function TicketPage({
                   background: PRIORITY_COLORS[ticket.priority] ?? "var(--ink-3)",
                 }}
               />
-              {PRIORITY_LABELS_FR[ticket.priority]}
+              {priorityKey ? t(priorityKey) : ticket.priority}
             </span>
             {isOpen && remaining !== null && (
               <span
@@ -295,13 +310,15 @@ export default async function TicketPage({
               >
                 <SlaClock />
                 {remaining < 0
-                  ? `SLA dépassé de ${durationFr(-remaining)}`
-                  : `SLA : ${durationFr(remaining)} restantes`}
+                  ? t("app.ticket.slaOverdueBy", { duration: duration(t, -remaining) })
+                  : t("app.ticket.slaRemaining", { duration: duration(t, remaining) })}
               </span>
             )}
             <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-              {CHANNEL_LABELS_FR[ticket.channel] ?? ticket.channel} · créé{" "}
-              {relativeFr(ticket.createdAt)}
+              {t("app.ticket.channelCreated", {
+                channel: channelKey ? t(channelKey) : ticket.channel,
+                when: t.fmt.relative(ticket.createdAt),
+              })}
             </span>
           </div>
         </header>
@@ -319,15 +336,15 @@ export default async function TicketPage({
               color: "var(--ink-2)",
             }}
           >
-            Ce ticket a été fusionné dans{" "}
+            {mergedBefore}
             {mergedIntoNumber ? (
               <Link href={`/app/tickets/${mergedIntoNumber}`} className="font-semibold underline">
                 #{mergedIntoNumber}
               </Link>
             ) : (
-              "un autre ticket"
-            )}{" "}
-            — lecture seule.
+              t("app.ticket.mergedUnknownTarget")
+            )}
+            {mergedAfter}
           </div>
         )}
 
@@ -346,7 +363,7 @@ export default async function TicketPage({
                 >
                   <span className="h-px flex-1" style={{ background: "var(--line-2)" }} />
                   <span className="text-center">
-                    {m.bodyText} · {relativeFr(m.createdAt)}
+                    {m.bodyText} · {t.fmt.relative(m.createdAt)}
                   </span>
                   <span className="h-px flex-1" style={{ background: "var(--line-2)" }} />
                 </div>
@@ -401,7 +418,7 @@ export default async function TicketPage({
                         color: "var(--wait)",
                       }}
                     >
-                      🔒 Note interne
+                      🔒 {t("app.ticket.internalNote")}
                     </span>
                   )}
                   <span className="flex-1" />
@@ -409,7 +426,7 @@ export default async function TicketPage({
                     className="whitespace-nowrap"
                     style={{ fontSize: 11.5, color: "var(--ink-3)" }}
                   >
-                    {relativeFr(m.createdAt)}
+                    {t.fmt.relative(m.createdAt)}
                   </span>
                 </div>
                 <p
@@ -470,9 +487,9 @@ export default async function TicketPage({
 
         {/* Champs du formulaire */}
         <section className="flex flex-col" style={{ gap: 8 }}>
-          <p style={PANEL_GROUP}>Champs du formulaire</p>
+          <p style={PANEL_GROUP}>{t("app.ticket.formFieldsGroup")}</p>
           {fieldEntries.length === 0 ? (
-            <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>Aucun champ renseigné.</p>
+            <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>{t("app.ticket.noFields")}</p>
           ) : (
             fieldEntries.map((f) => (
               <div
@@ -497,31 +514,33 @@ export default async function TicketPage({
 
         {/* SLA — encadré, rangées séparées par --line-2 */}
         <section className="flex flex-col" style={{ gap: 8 }}>
-          <p style={PANEL_GROUP}>SLA</p>
+          <p style={PANEL_GROUP}>{t("app.ticket.slaGroup")}</p>
           <div
             className="overflow-hidden"
             style={{ border: "1px solid var(--line)", borderRadius: 8 }}
           >
             <SlaRow
-              label="1ʳᵉ réponse"
+              label={t("app.ticket.slaFirstReply")}
               due={ticket.firstReplyDueAt}
               doneAt={ticket.firstRepliedAt}
               createdAt={ticket.createdAt}
               now={now}
+              t={t}
             />
             <SlaRow
-              label="Résolution"
+              label={t("app.ticket.slaResolution")}
               due={ticket.resolveDueAt}
               doneAt={ticket.resolvedAt}
               createdAt={ticket.createdAt}
               now={now}
+              t={t}
             />
           </div>
         </section>
 
         {/* Contact */}
         <section className="flex flex-col" style={{ gap: 8 }}>
-          <p style={PANEL_GROUP}>Contact</p>
+          <p style={PANEL_GROUP}>{t("app.ticket.contactGroup")}</p>
           <div
             className="flex flex-col"
             style={{ border: "1px solid var(--line)", borderRadius: 8, padding: 11, gap: 9 }}
@@ -539,14 +558,13 @@ export default async function TicketPage({
             </div>
             <div style={{ height: 1, background: "var(--line-2)" }} />
             <p style={{ fontSize: 12, color: "var(--ink-2)" }}>
-              {requesterTicketCount} ticket{requesterTicketCount > 1 ? "s" : ""} récent
-              {requesterTicketCount > 1 ? "s" : ""}
+              {t("app.ticket.recentCount", { count: requesterTicketCount })}
               {organization ? ` · ${organization.name}` : ""}
             </p>
-            {recentRequesterTickets.map((t) => (
+            {recentRequesterTickets.map((rt) => (
               <Link
-                key={t.number}
-                href={`/app/tickets/${t.number}`}
+                key={rt.number}
+                href={`/app/tickets/${rt.number}`}
                 className="flex items-center"
                 style={{ gap: 7, fontSize: 12 }}
               >
@@ -557,10 +575,10 @@ export default async function TicketPage({
                     color: "var(--ink-3)",
                   }}
                 >
-                  #{t.number}
+                  #{rt.number}
                 </span>
                 <span className="min-w-0 flex-1 truncate" style={{ color: "var(--ink-2)" }}>
-                  {t.subject}
+                  {rt.subject}
                 </span>
               </Link>
             ))}
@@ -570,7 +588,7 @@ export default async function TicketPage({
         {/* Capitaliser une résolution — le savoir d'un ticket clos se perd sinon. */}
         {!isOpen && (
           <section className="flex flex-col" style={{ gap: 8 }}>
-            <p style={PANEL_GROUP}>Base de connaissances</p>
+            <p style={PANEL_GROUP}>{t("app.ticket.kbGroup")}</p>
             <Link
               href={`/app/kb/new?depuis=${ticket.number}`}
               className="inline-flex items-center justify-center rounded-md border font-medium"
@@ -582,10 +600,10 @@ export default async function TicketPage({
                 color: "var(--ink)",
               }}
             >
-              Transformer en article
+              {t("app.ticket.kbConvert")}
             </Link>
             <p style={{ fontSize: 12, color: "var(--ink-3)", textWrap: "pretty" }}>
-              Reprend la demande et la réponse dans un brouillon à relire.
+              {t("app.ticket.kbConvertHint")}
             </p>
           </section>
         )}

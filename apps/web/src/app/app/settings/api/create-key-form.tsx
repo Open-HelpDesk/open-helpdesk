@@ -8,6 +8,7 @@
  */
 import { useActionState } from "react";
 import { CopyButton } from "@/components/settings-overlays";
+import { useT } from "@/i18n/client";
 import type { NewKeyState } from "./actions";
 
 export function CreateKeyForm({
@@ -15,6 +16,7 @@ export function CreateKeyForm({
 }: {
   action: (prev: NewKeyState, formData: FormData) => Promise<NewKeyState>;
 }) {
+  const t = useT();
   const [state, formAction, pending] = useActionState(action, null);
 
   return (
@@ -32,7 +34,7 @@ export function CreateKeyForm({
         >
           <div className="min-w-0 flex-1">
             <div className="font-semibold" style={{ fontSize: 13, color: "var(--acc)" }}>
-              Nouvelle clé créée — copiez-la maintenant
+              {t("app.settings.dev.newKeyTitle")}
             </div>
             <div className="truncate font-mono" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
               {state.key}
@@ -50,7 +52,7 @@ export function CreateKeyForm({
         <input
           name="name"
           required
-          placeholder="Nom de la clé — ex. Intégration Salesforce"
+          placeholder={t("app.settings.dev.keyNamePlaceholder")}
           className="min-w-0 border"
           style={{
             minWidth: 250,
@@ -77,9 +79,9 @@ export function CreateKeyForm({
             color: "var(--ink)",
           }}
         >
-          <option value="read">Lecture seule</option>
-          <option value="read_write">Lecture + écriture</option>
-          <option value="ticket_create">Création de ticket</option>
+          <option value="read">{t("app.settings.dev.scopeRead")}</option>
+          <option value="read_write">{t("app.settings.dev.scopeReadWrite")}</option>
+          <option value="ticket_create">{t("app.settings.dev.scopeTicketCreate")}</option>
         </select>
         <button
           type="submit"
@@ -95,7 +97,7 @@ export function CreateKeyForm({
             color: "var(--ink-2)",
           }}
         >
-          {pending ? "Création…" : "+ Créer une clé"}
+          {pending ? t("app.settings.dev.creating") : t("app.settings.dev.createKey")}
         </button>
       </form>
     </div>

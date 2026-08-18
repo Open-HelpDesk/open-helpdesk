@@ -18,6 +18,7 @@ import {
   Settings,
   Users,
 } from "lucide-react";
+import { useT } from "@/i18n/client";
 
 export type ShellCounts = {
   inbox: number;
@@ -30,31 +31,33 @@ export type ShellCounts = {
 /* ---------- Rail 64 px ---------- */
 
 const RAIL_ITEMS = [
-  { href: "/app/tickets", icon: Inbox, label: "Inbox", match: "/app/tickets" },
-  { href: null, icon: Search, label: "Recherche (⌘K)", match: null },
-  { href: "/app/contacts", icon: Users, label: "Contacts", match: "/app/contacts" },
+  { href: "/app/tickets", icon: Inbox, labelKey: "app.shell.inbox", match: "/app/tickets" },
+  { href: null, icon: Search, labelKey: "app.shell.search", match: null },
+  { href: "/app/contacts", icon: Users, labelKey: "app.shell.contacts", match: "/app/contacts" },
   {
     href: "/app/organizations",
     icon: Building2,
-    label: "Organisations",
+    labelKey: "app.shell.organizations",
     match: "/app/organizations",
   },
-  { href: "/app/reports", icon: BarChart3, label: "Rapports", match: "/app/reports" },
-  { href: "/app/kb", icon: BookOpen, label: "Base de connaissances", match: "/app/kb" },
+  { href: "/app/reports", icon: BarChart3, labelKey: "app.shell.reports", match: "/app/reports" },
+  { href: "/app/kb", icon: BookOpen, labelKey: "app.shell.knowledgeBase", match: "/app/kb" },
   {
     href: "/app/settings/team",
     icon: Settings,
-    label: "Paramètres",
+    labelKey: "app.shell.settings",
     match: "/app/settings",
   },
 ] as const;
 
 export function RailNav({ inboxBadge }: { inboxBadge: number }) {
   const pathname = usePathname();
+  const t = useT();
 
   return (
     <nav className="flex flex-col items-center gap-1">
-      {RAIL_ITEMS.map(({ href, icon: Icon, label, match }) => {
+      {RAIL_ITEMS.map(({ href, icon: Icon, labelKey, match }) => {
+        const label = t(labelKey);
         const active = match !== null && pathname.startsWith(match);
         const style = {
           width: 40,
@@ -66,7 +69,7 @@ export function RailNav({ inboxBadge }: { inboxBadge: number }) {
         const inner = (
           <>
             <Icon size={19} strokeWidth={1.7} />
-            {label === "Inbox" && inboxBadge > 0 && (
+            {labelKey === "app.shell.inbox" && inboxBadge > 0 && (
               <span
                 className="absolute flex items-center justify-center font-bold text-white"
                 style={{
@@ -89,7 +92,7 @@ export function RailNav({ inboxBadge }: { inboxBadge: number }) {
         );
         return href ? (
           <Link
-            key={label}
+            key={labelKey}
             href={href}
             title={label}
             className="relative flex items-center justify-center"
@@ -99,7 +102,7 @@ export function RailNav({ inboxBadge }: { inboxBadge: number }) {
           </Link>
         ) : (
           <button
-            key={label}
+            key={labelKey}
             type="button"
             title={label}
             className="relative flex items-center justify-center"
@@ -118,6 +121,9 @@ export function RailNav({ inboxBadge }: { inboxBadge: number }) {
 
 type TopbarInfo = { title: string; subtitle: string };
 
+/** Fonction de traduction du contexte client, passée aux fonctions hors composant. */
+type Translate = ReturnType<typeof useT>;
+
 /** Les pages (ex. AG-04) peuvent surcharger le titre du topbar via cet événement. */
 export function TopbarOverride({ title, subtitle }: { title: string; subtitle: string }) {
   useEffect(() => {
@@ -135,48 +141,56 @@ function defaultTopbar(
   pathname: string,
   period: string | null,
   counts: ShellCounts,
+  t: Translate,
 ): TopbarInfo {
   if (pathname.startsWith("/app/tickets/new")) {
-    return { title: "Nouveau ticket", subtitle: "" };
+    return { title: t("app.shell.newTicket"), subtitle: "" };
   }
   if (/^\/app\/tickets\/\d+/.test(pathname)) {
-    return { title: "Mes tickets", subtitle: "" };
+    return { title: t("app.shell.myTickets"), subtitle: "" };
   }
   if (pathname.startsWith("/app/tickets")) {
     return {
-      title: "Mes tickets",
-      subtitle: `${counts.inbox} ticket${counts.inbox > 1 ? "s" : ""} · mis à jour à l'instant`,
+      title: t("app.shell.myTickets"),
+      subtitle: t("app.shell.topbarTickets", { count: counts.inbox }),
     };
   }
   if (pathname.startsWith("/app/contacts")) {
     return {
-      title: "Contacts",
-      subtitle: `${counts.contacts} contact${counts.contacts > 1 ? "s" : ""}`,
+      title: t("app.shell.contacts"),
+      subtitle: t("app.shell.topbarContacts", { count: counts.contacts }),
     };
   }
   if (pathname.startsWith("/app/organizations")) {
     return {
-      title: "Organisations",
-      subtitle: `${counts.organizations} organisation${counts.organizations > 1 ? "s" : ""}`,
+      title: t("app.shell.organizations"),
+      subtitle: t("app.shell.topbarOrganizations", { count: counts.organizations }),
     };
   }
   if (pathname.startsWith("/app/reports")) {
     const days = period === "7" || period === "90" ? period : "30";
-    return { title: "Rapports", subtitle: `${days} derniers jours` };
+    return {
+      title: t("app.shell.reports"),
+      subtitle: t("app.shell.topbarReports", { count: Number(days) }),
+    };
   }
   if (pathname.startsWith("/app/kb")) {
     return {
-      title: "Base de connaissances",
-      subtitle: `${counts.kbArticles} article${counts.kbArticles > 1 ? "s" : ""} · ${counts.kbCategories} catégorie${counts.kbCategories > 1 ? "s" : ""}`,
+      title: t("app.shell.knowledgeBase"),
+      subtitle: t("app.shell.topbarKb", {
+        count: counts.kbArticles,
+        categories: t("app.shell.topbarKbCategories", { count: counts.kbCategories }),
+      }),
     };
   }
   if (pathname.startsWith("/app/settings")) {
-    return { title: "Paramètres", subtitle: "" };
+    return { title: t("app.shell.settings"), subtitle: "" };
   }
   return { title: "", subtitle: "" };
 }
 
 export function TopBar({ counts }: { counts: ShellCounts }) {
+  const t = useT();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [override, setOverride] = useState<TopbarInfo | null>(null);
@@ -194,7 +208,7 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
     setOverride(null);
   }, [pathname]);
 
-  const info = override ?? defaultTopbar(pathname, searchParams.get("p"), counts);
+  const info = override ?? defaultTopbar(pathname, searchParams.get("p"), counts, t);
 
   return (
     <header
@@ -235,7 +249,7 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
           fontSize: 12,
         }}
       >
-        <span className="flex-1 text-left">Rechercher…</span>
+        <span className="flex-1 text-left">{t("app.shell.searchField")}</span>
         <kbd
           style={{
             fontFamily: "var(--font-mono)",
@@ -253,7 +267,7 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
       {/* Cloche */}
       <button
         type="button"
-        title="Notifications"
+        title={t("app.shell.notifications")}
         className="relative flex items-center justify-center rounded-md"
         style={{ width: 30, height: 30, color: "var(--ink-2)" }}
       >
@@ -276,7 +290,7 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
         className="inline-flex items-center rounded-md font-semibold text-white"
         style={{ height: 30, padding: "0 12px", gap: 6, background: "var(--acc)", fontSize: 13 }}
       >
-        <span style={{ fontSize: 15, lineHeight: 1 }}>+</span> Nouveau ticket
+        <span style={{ fontSize: 15, lineHeight: 1 }}>+</span> {t("app.shell.newTicket")}
       </Link>
     </header>
   );

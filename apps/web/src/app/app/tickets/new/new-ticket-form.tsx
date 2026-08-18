@@ -8,7 +8,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Avatar } from "@/components/ticket-bits";
-import { PRIORITY_LABELS_FR } from "@/lib/format";
+import { PRIORITY_KEYS } from "@/lib/format";
+import { useT } from "@/i18n/client";
 import { createTicket } from "../actions";
 
 type ContactHit = {
@@ -51,6 +52,7 @@ export function NewTicketForm({
   tags: string[];
   meId: string;
 }) {
+  const t = useT();
   const [query, setQuery] = useState("");
   const [hits, setHits] = useState<ContactHit[]>([]);
   const [open, setOpen] = useState(false);
@@ -104,15 +106,28 @@ export function NewTicketForm({
     requestAnimationFrame(() => el.focus());
   }
 
+  const mdText = t("app.newTicket.placeholderText");
   const TOOLBAR: { label: string; title: string; run: () => void }[] = [
-    { label: "B", title: "Gras", run: () => insertMd("**", "**", "texte") },
-    { label: "I", title: "Italique", run: () => insertMd("*", "*", "texte") },
-    { label: "U", title: "Souligné", run: () => insertMd("<u>", "</u>", "texte") },
-    { label: "S", title: "Barré", run: () => insertMd("~~", "~~", "texte") },
-    { label: "≔", title: "Liste", run: () => insertMd("\n- ", "", "élément") },
-    { label: "⛓", title: "Lien", run: () => insertMd("[", "](https://)", "texte") },
-    { label: "❝", title: "Citation", run: () => insertMd("\n> ", "", "citation") },
-    { label: "‹›", title: "Code", run: () => insertMd("`", "`", "code") },
+    { label: "B", title: t("app.newTicket.bold"), run: () => insertMd("**", "**", mdText) },
+    { label: "I", title: t("app.newTicket.italic"), run: () => insertMd("*", "*", mdText) },
+    { label: "U", title: t("app.newTicket.underline"), run: () => insertMd("<u>", "</u>", mdText) },
+    { label: "S", title: t("app.newTicket.strike"), run: () => insertMd("~~", "~~", mdText) },
+    {
+      label: "≔",
+      title: t("app.newTicket.list"),
+      run: () => insertMd("\n- ", "", t("app.newTicket.placeholderItem")),
+    },
+    { label: "⛓", title: t("app.newTicket.link"), run: () => insertMd("[", "](https://)", mdText) },
+    {
+      label: "❝",
+      title: t("app.newTicket.quote"),
+      run: () => insertMd("\n> ", "", t("app.newTicket.placeholderQuote")),
+    },
+    {
+      label: "‹›",
+      title: t("app.newTicket.code"),
+      run: () => insertMd("`", "`", t("app.newTicket.placeholderCode")),
+    },
   ];
 
   const emailValue = chosen ? chosen.email : createMode ? query.trim() : "";
@@ -123,7 +138,7 @@ export function NewTicketForm({
         {/* Contact — combobox */}
         <div ref={boxRef} className="relative flex flex-col" style={{ gap: 6 }}>
           <label style={labelStyle}>
-            Contact <Req />
+            {t("app.newTicket.contact")} <Req />
           </label>
           {chosen ? (
             <div
@@ -142,7 +157,7 @@ export function NewTicketForm({
                   setQuery("");
                 }}
                 style={{ color: "var(--ink-3)" }}
-                title="Changer de contact"
+                title={t("app.newTicket.changeContact")}
               >
                 ✕
               </button>
@@ -155,7 +170,7 @@ export function NewTicketForm({
                 setCreateMode(false);
               }}
               onFocus={() => hits.length > 0 && setOpen(true)}
-              placeholder="Rechercher un nom ou un email…"
+              placeholder={t("app.newTicket.contactPlaceholder")}
               style={inputStyle}
               autoComplete="off"
             />
@@ -211,7 +226,7 @@ export function NewTicketForm({
                   color: "var(--acc-2)",
                 }}
               >
-                + Créer le contact « {query.trim()} »
+                {t("app.newTicket.createContact", { name: query.trim() })}
               </button>
             </div>
           )}
@@ -219,7 +234,7 @@ export function NewTicketForm({
             <div className="mt-1 grid grid-cols-2" style={{ gap: 12 }}>
               <label className="flex flex-col" style={{ gap: 6 }}>
                 <span style={labelStyle}>
-                  Email du nouveau contact <Req />
+                  {t("app.newTicket.newContactEmail")} <Req />
                 </span>
                 <input
                   name="email"
@@ -230,7 +245,7 @@ export function NewTicketForm({
                 />
               </label>
               <label className="flex flex-col" style={{ gap: 6 }}>
-                <span style={labelStyle}>Nom</span>
+                <span style={labelStyle}>{t("app.newTicket.newContactName")}</span>
                 <input
                   name="name"
                   defaultValue={query.includes("@") ? "" : query.trim()}
@@ -246,12 +261,12 @@ export function NewTicketForm({
         <div style={{ display: "grid", gridTemplateColumns: "1fr 220px", gap: 12 }}>
           <label className="flex flex-col" style={{ gap: 6 }}>
             <span style={labelStyle}>
-              Sujet <Req />
+              {t("app.newTicket.subject")} <Req />
             </span>
             <input name="subject" required style={inputStyle} />
           </label>
           <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>Formulaire</span>
+            <span style={labelStyle}>{t("app.newTicket.form")}</span>
             <select name="formId" defaultValue={forms[0]?.id ?? ""} style={inputStyle}>
               {forms.length === 0 && <option value="">—</option>}
               {forms.map((f) => (
@@ -265,7 +280,7 @@ export function NewTicketForm({
 
         {/* Description : toolbar + corps dans une seule boîte bordée */}
         <div className="flex flex-col" style={{ gap: 6 }}>
-          <label style={labelStyle}>Description</label>
+          <label style={labelStyle}>{t("app.newTicket.description")}</label>
           <div
             style={{
               border: "1px solid var(--line)",
@@ -279,7 +294,7 @@ export function NewTicketForm({
             >
               {TOOLBAR.map((b) => (
                 <button
-                  key={b.title}
+                  key={b.label}
                   type="button"
                   title={b.title}
                   onClick={b.run}
@@ -322,29 +337,29 @@ export function NewTicketForm({
         {/* 4 selects — repeat(4,1fr) gap 10 */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }}>
           <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>Statut</span>
+            <span style={labelStyle}>{t("app.newTicket.status")}</span>
             <select name="status" defaultValue="new" style={selectStyle}>
-              <option value="new">Nouveau</option>
-              <option value="open">Ouvert</option>
-              <option value="waiting">En attente</option>
-              <option value="on_hold">En pause</option>
+              <option value="new">{t("app.newTicket.statusNew")}</option>
+              <option value="open">{t("app.newTicket.statusOpen")}</option>
+              <option value="waiting">{t("app.newTicket.statusWaiting")}</option>
+              <option value="on_hold">{t("app.newTicket.statusOnHold")}</option>
             </select>
           </label>
           <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>Priorité</span>
+            <span style={labelStyle}>{t("app.newTicket.priority")}</span>
             <select name="priority" defaultValue="normal" style={selectStyle}>
-              {Object.entries(PRIORITY_LABELS_FR).map(([k, v]) => (
+              {Object.entries(PRIORITY_KEYS).map(([k, v]) => (
                 <option key={k} value={k}>
-                  {v}
+                  {t(v)}
                 </option>
               ))}
             </select>
           </label>
           <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>Assigné</span>
+            <span style={labelStyle}>{t("app.newTicket.assignee")}</span>
             <select name="assigneeId" defaultValue="me" style={selectStyle}>
-              <option value="me">Moi</option>
-              <option value="">Non assigné</option>
+              <option value="me">{t("app.newTicket.assigneeMe")}</option>
+              <option value="">{t("app.newTicket.assigneeNone")}</option>
               {agents
                 .filter((a) => a.id !== meId)
                 .map((a) => (
@@ -355,12 +370,12 @@ export function NewTicketForm({
             </select>
           </label>
           <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>Tags</span>
+            <span style={labelStyle}>{t("app.newTicket.tags")}</span>
             <select name="tag" defaultValue="" style={selectStyle}>
-              <option value="">Aucun</option>
-              {tags.map((t) => (
-                <option key={t} value={t}>
-                  {t}
+              <option value="">{t("app.newTicket.tagNone")}</option>
+              {tags.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag}
                 </option>
               ))}
             </select>
@@ -385,7 +400,7 @@ export function NewTicketForm({
             defaultChecked
             style={{ width: 15, height: 15, borderRadius: 4, accentColor: "var(--acc)" }}
           />
-          Envoyer la réponse par email au contact
+          {t("app.newTicket.sendEmail")}
         </label>
       </div>
 
@@ -411,14 +426,14 @@ export function NewTicketForm({
             background: "var(--panel)",
           }}
         >
-          Annuler
+          {t("app.newTicket.cancel")}
         </Link>
         <button
           type="submit"
           className="grid place-items-center font-semibold text-white"
           style={{ height: 34, padding: "0 16px", borderRadius: 6, background: "var(--acc)", fontSize: 13 }}
         >
-          Créer le ticket
+          {t("app.newTicket.submit")}
         </button>
       </div>
     </form>

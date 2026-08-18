@@ -1,8 +1,8 @@
 import { requireAgent } from "@/lib/session";
 import { apiKeys, db, webhookDeliveries, webhooks } from "@openhelpdesk/db";
 import { and, desc, eq } from "drizzle-orm";
-import { relativeFr } from "@/lib/format";
 import { PageHeader, PageShell, StatusPill } from "@/components/settings-page";
+import { getT, type Translate } from "@/i18n/server";
 import { CreateKeyForm } from "./create-key-form";
 import {
   createApiKey,
@@ -19,10 +19,10 @@ const DELIVERY_GRID = "150px 110px 90px 90px 1fr 90px";
 /** Bouton d'action en texte seul (Révoquer, Renvoyer…) — 12 px, sans cadre. */
 const LINK_BTN = (color: string): React.CSSProperties => ({ fontSize: 12, color });
 
-function scopesLabel(scopes: string[]): string {
-  if (scopes.includes("write")) return "Lecture + écriture";
-  if (scopes.includes("ticket:create")) return "Création de ticket";
-  return "Lecture seule";
+function scopesLabel(t: Translate, scopes: string[]): string {
+  if (scopes.includes("write")) return t("app.settings.dev.scopeReadWrite");
+  if (scopes.includes("ticket:create")) return t("app.settings.dev.scopeTicketCreate");
+  return t("app.settings.dev.scopeRead");
 }
 
 /** Réponse lisible d'une livraison — phrase canonique du code HTTP. */
@@ -45,13 +45,13 @@ const HTTP_REASON: Record<number, string> = {
 };
 
 /** « Aujourd'hui 14:02 », « Hier 22:11 », « 14 août 09:03 ». */
-function dayTimeFr(date: Date, now: Date = new Date()): string {
-  const time = date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+function dayTime(t: Translate, date: Date, now: Date = new Date()): string {
+  const time = date.toLocaleTimeString(t.locale.tag, { hour: "2-digit", minute: "2-digit" });
   const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  if (day === today) return `Aujourd'hui ${time}`;
-  if (day === today - 24 * 3600 * 1000) return `Hier ${time}`;
-  return `${date.toLocaleDateString("fr-FR", { day: "numeric", month: "long" })} ${time}`;
+  if (day === today) return t("app.settings.dev.dayToday", { time });
+  if (day === today - 24 * 3600 * 1000) return t("app.settings.dev.dayYesterday", { time });
+  return `${t.fmt.dateShort(date)} ${time}`;
 }
 
 /**
@@ -64,6 +64,7 @@ export default async function ApiSettingsPage({
 }: {
   searchParams: Promise<{ tab?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { tab } = await searchParams;
   const activeTab = tab === "webhooks" ? "webhooks" : "keys";
@@ -95,15 +96,23 @@ export default async function ApiSettingsPage({
   }
 
   const tabs = [
-    { label: "Clés API", href: "/app/settings/api", active: activeTab === "keys" },
-    { label: "Webhooks", href: "/app/settings/api?tab=webhooks", active: activeTab === "webhooks" },
+    {
+      label: t("app.settings.dev.tabKeys"),
+      href: "/app/settings/api",
+      active: activeTab === "keys",
+    },
+    {
+      label: t("app.settings.dev.tabWebhooks"),
+      href: "/app/settings/api?tab=webhooks",
+      active: activeTab === "webhooks",
+    },
   ];
 
   return (
     <PageShell maxWidth={1040}>
       <PageHeader
-        title="API & webhooks"
-        subtitle="Clés d'API scopées et endpoints webhook signés HMAC."
+        title={t("app.settings.dev.title")}
+        subtitle={t("app.settings.dev.subtitle")}
         tabs={tabs}
       />
 
@@ -126,15 +135,15 @@ export default async function ApiSettingsPage({
                   color: "var(--ink-3)",
                 }}
               >
-                <span>Nom</span>
-                <span>Clé</span>
-                <span>Portées</span>
-                <span>Dernier usage</span>
+                <span>{t("app.settings.dev.colName")}</span>
+                <span>{t("app.settings.dev.colKey")}</span>
+                <span>{t("app.settings.dev.colScopes")}</span>
+                <span>{t("app.settings.dev.colLastUsed")}</span>
                 <span className="text-right" />
               </div>
               {keys.length === 0 && (
                 <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-                  Aucune clé API. Créez la première pour vos intégrations.
+                  {t("app.settings.dev.keysEmpty")}
                 </p>
               )}
               {keys.map((k) => {
@@ -163,19 +172,23 @@ export default async function ApiSettingsPage({
                     </span>
                     <span>
                       <StatusPill tone={k.scopes.includes("write") ? "open" : "closed"}>
-                        {scopesLabel(k.scopes)}
+                        {scopesLabel(t, k.scopes)}
                       </StatusPill>
                     </span>
                     <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-                      {k.lastUsedAt ? relativeFr(k.lastUsedAt) : "Jamais"}
+                      {k.lastUsedAt ? t.fmt.relative(k.lastUsedAt) : t("app.settings.dev.never")}
                     </span>
                     <span className="text-right">
                       {revoked ? (
-                        <span style={{ fontSize: 12, color: "var(--ink-3)" }}>Révoquée</span>
+                        <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
+                          {t("app.settings.dev.revoked")}
+                        </span>
                       ) : (
                         <form action={revokeApiKey} className="inline">
                           <input type="hidden" name="keyId" value={k.id} />
-                          <button style={LINK_BTN("var(--dang)")}>Révoquer</button>
+                          <button style={LINK_BTN("var(--dang)")}>
+                            {t("app.settings.dev.revoke")}
+                          </button>
                         </form>
                       )}
                     </span>
@@ -201,8 +214,7 @@ export default async function ApiSettingsPage({
                 color: "var(--ink-2)",
               }}
             >
-              Aucun endpoint webhook. Chaque livraison est signée HMAC-SHA256 avec le secret
-              de l'endpoint.
+              {t("app.settings.dev.webhooksEmpty")}
             </div>
           )}
 
@@ -245,19 +257,21 @@ export default async function ApiSettingsPage({
                     </div>
                   </div>
                   {failed ? (
-                    <StatusPill tone="dang">Désactivé</StatusPill>
+                    <StatusPill tone="dang">{t("app.settings.dev.webhookDisabled")}</StatusPill>
                   ) : (
-                    <StatusPill tone="ok">Actif</StatusPill>
+                    <StatusPill tone="ok">{t("app.settings.dev.webhookActive")}</StatusPill>
                   )}
                   <form action={toggleWebhook} className="inline">
                     <input type="hidden" name="webhookId" value={hook.id} />
                     <button style={LINK_BTN("var(--acc-2)")}>
-                      {hook.active ? "Désactiver" : "Réactiver"}
+                      {hook.active
+                        ? t("app.settings.dev.disable")
+                        : t("app.settings.dev.enable")}
                     </button>
                   </form>
                   <form action={deleteWebhook} className="inline">
                     <input type="hidden" name="webhookId" value={hook.id} />
-                    <button style={LINK_BTN("var(--dang)")}>Supprimer</button>
+                    <button style={LINK_BTN("var(--dang)")}>{t("app.settings.dev.delete")}</button>
                   </form>
                 </div>
 
@@ -272,8 +286,7 @@ export default async function ApiSettingsPage({
                       borderColor: "var(--line-2)",
                     }}
                   >
-                    Désactivé automatiquement après 7 jours d'échecs consécutifs. Corrigez
-                    l'endpoint puis réactivez.
+                    {t("app.settings.dev.autoDisabled")}
                   </div>
                 )}
 
@@ -291,16 +304,16 @@ export default async function ApiSettingsPage({
                         color: "var(--ink-3)",
                       }}
                     >
-                      <span>Date</span>
-                      <span>Événement</span>
-                      <span>Statut</span>
-                      <span>Latence</span>
-                      <span>Réponse</span>
+                      <span>{t("app.settings.dev.colDate")}</span>
+                      <span>{t("app.settings.dev.colEvent")}</span>
+                      <span>{t("app.settings.dev.colStatus")}</span>
+                      <span>{t("app.settings.dev.colLatency")}</span>
+                      <span>{t("app.settings.dev.colResponse")}</span>
                       <span className="text-right" />
                     </div>
                     {rows.length === 0 && (
                       <p style={{ padding: "14px 15px", fontSize: 12.5, color: "var(--ink-2)" }}>
-                        Aucune livraison
+                        {t("app.settings.dev.deliveriesEmpty")}
                       </p>
                     )}
                     {rows.map((d) => {
@@ -318,7 +331,7 @@ export default async function ApiSettingsPage({
                           }}
                         >
                           <span className="tabular-nums" style={{ color: "var(--ink-3)" }}>
-                            {dayTimeFr(d.createdAt)}
+                            {dayTime(t, d.createdAt)}
                           </span>
                           <span className="font-mono" style={{ fontSize: 11.5, color: "var(--ink)" }}>
                             {d.event}
@@ -330,7 +343,9 @@ export default async function ApiSettingsPage({
                             {d.httpStatus ?? "—"}
                           </span>
                           <span className="tabular-nums" style={{ color: "var(--ink-2)" }}>
-                            {d.latencyMs != null ? `${d.latencyMs} ms` : "—"}
+                            {d.latencyMs != null
+                              ? t("app.settings.dev.latencyMs", { ms: d.latencyMs })
+                              : "—"}
                           </span>
                           <span
                             className="truncate"
@@ -338,12 +353,14 @@ export default async function ApiSettingsPage({
                           >
                             {d.httpStatus != null
                               ? (HTTP_REASON[d.httpStatus] ?? `HTTP ${d.httpStatus}`)
-                              : "Timeout / réseau"}
+                              : t("app.settings.dev.noResponse")}
                           </span>
                           <span className="text-right">
                             <form action={resendDelivery} className="inline">
                               <input type="hidden" name="deliveryId" value={d.id} />
-                              <button style={LINK_BTN("var(--acc-2)")}>Renvoyer</button>
+                              <button style={LINK_BTN("var(--acc-2)")}>
+                                {t("app.settings.dev.resend")}
+                              </button>
                             </form>
                           </span>
                         </div>
@@ -364,7 +381,7 @@ export default async function ApiSettingsPage({
             <input
               name="url"
               required
-              placeholder="https://hooks.votre-domaine.fr/ohd/tickets"
+              placeholder={t("app.settings.dev.webhookUrlPlaceholder")}
               className="min-w-0 border font-mono"
               style={{
                 minWidth: 280,
@@ -400,7 +417,7 @@ export default async function ApiSettingsPage({
                 color: "var(--ink-2)",
               }}
             >
-              + Ajouter un endpoint
+              {t("app.settings.dev.addEndpoint")}
             </button>
           </form>
         </div>

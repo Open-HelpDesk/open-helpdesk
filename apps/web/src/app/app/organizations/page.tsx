@@ -2,7 +2,7 @@ import Link from "next/link";
 import { X } from "lucide-react";
 import { requireAgent } from "@/lib/session";
 import { getOrganization, listOrganizations } from "@/lib/directory";
-import { relativeFr } from "@/lib/format";
+import { getT } from "@/i18n/server";
 import { Avatar, StatusChip } from "@/components/ticket-bits";
 import {
   addOrgDomain,
@@ -35,6 +35,7 @@ export default async function OrganizationsPage({
 }: {
   searchParams: Promise<{ q?: string; selected?: string; tab?: string; error?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { q, selected: selectedParam, tab: tabParam, error } = await searchParams;
   const query = q?.trim() || undefined;
@@ -57,7 +58,7 @@ export default async function OrganizationsPage({
             <input
               name="q"
               defaultValue={q ?? ""}
-              placeholder="Rechercher une organisation…"
+              placeholder={t("app.contacts.orgSearchPlaceholder")}
               className="border px-3 text-[13px] outline-none"
               style={{
                 height: 30,
@@ -74,7 +75,9 @@ export default async function OrganizationsPage({
         <div className="min-h-0 flex-1 overflow-auto" style={{ background: "var(--bg)" }}>
           {rows.length === 0 ? (
             <p className="py-24 text-center text-sm" style={{ color: "var(--ink-3)" }}>
-              Aucune organisation{query ? ` pour « ${query} »` : ""}.
+              {query
+                ? t("app.contacts.orgEmptyQuery", { query })
+                : t("app.contacts.orgEmpty")}
             </p>
           ) : (
             <div style={{ minWidth: 680 }}>
@@ -89,10 +92,10 @@ export default async function OrganizationsPage({
                   color: "var(--ink-3)",
                 }}
               >
-                <span className="pl-4">Organisation</span>
-                <span>Domaines</span>
-                <span className="text-right">Contacts</span>
-                <span className="pr-4 text-right">Tickets ouverts</span>
+                <span className="pl-4">{t("app.contacts.organization")}</span>
+                <span>{t("app.contacts.orgColumnDomains")}</span>
+                <span className="text-right">{t("app.contacts.contacts")}</span>
+                <span className="pr-4 text-right">{t("app.contacts.orgColumnOpenTickets")}</span>
               </div>
               {rows.map((o) => {
                 const active = o.id === selectedId;
@@ -191,9 +194,8 @@ export default async function OrganizationsPage({
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[14px] font-semibold">{detail.org.name}</p>
                 <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                  {detail.members.length} contact{detail.members.length > 1 ? "s" : ""} ·{" "}
-                  {openCount} ticket{openCount > 1 ? "s" : ""} ouvert
-                  {openCount > 1 ? "s" : ""}
+                  {t("app.contacts.orgMemberCount", { count: detail.members.length })} ·{" "}
+                  {t("app.contacts.orgOpenTicketCount", { count: openCount })}
                 </p>
               </div>
             </div>
@@ -203,7 +205,7 @@ export default async function OrganizationsPage({
               className="mb-1.5 mt-4 font-semibold uppercase tracking-wider"
               style={{ fontSize: 11, color: "var(--ink-3)" }}
             >
-              Domaines de rattachement
+              {t("app.contacts.orgDomainsTitle")}
             </p>
             <div className="flex flex-wrap items-center gap-1.5">
               {detail.org.emailDomains.map((d) => (
@@ -220,7 +222,11 @@ export default async function OrganizationsPage({
                     }}
                   >
                     {d}
-                    <button type="submit" title={`Retirer ${d}`} style={{ color: "var(--ink-3)" }}>
+                    <button
+                      type="submit"
+                      title={t("app.contacts.orgRemoveDomain", { domain: d })}
+                      style={{ color: "var(--ink-3)" }}
+                    >
                       <X size={11} />
                     </button>
                   </span>
@@ -230,7 +236,7 @@ export default async function OrganizationsPage({
                 <input type="hidden" name="organizationId" value={detail.org.id} />
                 <input
                   name="domain"
-                  placeholder="+ ajouter"
+                  placeholder={t("app.contacts.orgAddDomain")}
                   className="border px-1.5 py-0.5 outline-none"
                   style={{
                     width: 92,
@@ -245,7 +251,7 @@ export default async function OrganizationsPage({
             </div>
             {error === "invalid-domain" && (
               <p className="mt-1.5" style={{ fontSize: 11.5, color: "var(--dang)" }}>
-                Domaine invalide, grand public, ou déjà rattaché à une autre organisation.
+                {t("app.contacts.orgInvalidDomain")}
               </p>
             )}
 
@@ -266,7 +272,7 @@ export default async function OrganizationsPage({
                   height: 20,
                   background: detail.org.sharedTickets ? "var(--acc)" : "var(--line)",
                 }}
-                title="Basculer"
+                title={t("app.contacts.orgToggle")}
               >
                 <span
                   className="absolute top-0.5 rounded-full bg-white transition-all"
@@ -274,9 +280,11 @@ export default async function OrganizationsPage({
                 />
               </button>
               <span>
-                <span className="block text-[12.5px] font-medium">Partage des demandes</span>
+                <span className="block text-[12.5px] font-medium">
+                  {t("app.contacts.orgSharedTickets")}
+                </span>
                 <span className="block" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-                  Les contacts peuvent voir les tickets de leur organisation sur le portail.
+                  {t("app.contacts.orgSharedTicketsHint")}
                 </span>
               </span>
             </form>
@@ -286,9 +294,9 @@ export default async function OrganizationsPage({
           <div className="flex gap-1 border-b px-3 pt-2" style={{ borderColor: "var(--line)" }}>
             {(
               [
-                ["contacts", "Contacts"],
-                ["tickets", "Tickets"],
-                ["notes", "Notes"],
+                ["contacts", t("app.contacts.contacts")],
+                ["tickets", t("app.contacts.tickets")],
+                ["notes", t("app.contacts.orgTabNotes")],
               ] as [Tab, string][]
             ).map(([key, label]) => (
               <Link
@@ -309,7 +317,9 @@ export default async function OrganizationsPage({
           <div className="flex-1 p-4">
             {tab === "contacts" &&
               (detail.members.length === 0 ? (
-                <p style={{ fontSize: 13, color: "var(--ink-3)" }}>Aucun contact rattaché.</p>
+                <p style={{ fontSize: 13, color: "var(--ink-3)" }}>
+                  {t("app.contacts.orgNoMembers")}
+                </p>
               ) : (
                 <ul className="flex flex-col gap-1">
                   {detail.members.map((m) => (
@@ -337,13 +347,15 @@ export default async function OrganizationsPage({
 
             {tab === "tickets" &&
               (detail.tickets.length === 0 ? (
-                <p style={{ fontSize: 13, color: "var(--ink-3)" }}>Aucun ticket.</p>
+                <p style={{ fontSize: 13, color: "var(--ink-3)" }}>
+                  {t("app.contacts.noTickets")}
+                </p>
               ) : (
                 <ul className="flex flex-col gap-1">
-                  {detail.tickets.map((t) => (
-                    <li key={t.number}>
+                  {detail.tickets.map((ticket) => (
+                    <li key={ticket.number}>
                       <Link
-                        href={`/app/tickets/${t.number}`}
+                        href={`/app/tickets/${ticket.number}`}
                         className="flex items-center gap-2 rounded-md px-2 py-1.5"
                         style={{ fontSize: 12.5 }}
                       >
@@ -355,15 +367,15 @@ export default async function OrganizationsPage({
                             color: "var(--ink-3)",
                           }}
                         >
-                          #{t.number}
+                          #{ticket.number}
                         </span>
-                        <span className="min-w-0 flex-1 truncate">{t.subject}</span>
-                        <StatusChip status={t.status} />
+                        <span className="min-w-0 flex-1 truncate">{ticket.subject}</span>
+                        <StatusChip status={ticket.status} t={t} />
                         <span
                           className="hidden whitespace-nowrap tabular-nums xl:inline"
                           style={{ fontSize: 11, color: "var(--ink-3)" }}
                         >
-                          {relativeFr(t.updatedAt)}
+                          {t.fmt.relative(ticket.updatedAt)}
                         </span>
                       </Link>
                     </li>
@@ -378,7 +390,7 @@ export default async function OrganizationsPage({
                   name="notes"
                   rows={8}
                   defaultValue={detail.org.notes ?? ""}
-                  placeholder="Notes internes sur cette organisation…"
+                  placeholder={t("app.contacts.orgNotesPlaceholder")}
                   className="w-full resize-y rounded-md border p-2.5 text-[13px] outline-none"
                   style={{ borderColor: "var(--line)", background: "var(--bg)" }}
                 />
@@ -387,7 +399,7 @@ export default async function OrganizationsPage({
                   className="self-end rounded-md px-3 py-1.5 text-[12.5px] font-semibold text-white"
                   style={{ background: "var(--acc)" }}
                 >
-                  Enregistrer les notes
+                  {t("app.contacts.orgSaveNotes")}
                 </button>
               </form>
             )}

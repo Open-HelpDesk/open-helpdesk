@@ -8,6 +8,7 @@
  */
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { useT } from "@/i18n/client";
 import { reorderSlaPolicies } from "./actions";
 
 export type PolicyRow = {
@@ -25,6 +26,7 @@ export function PolicyRows({
   policies: PolicyRow[];
   selectedId: string;
 }) {
+  const t = useT();
   const router = useRouter();
   const [order, setOrder] = useState(policies);
   const [dragId, setDragId] = useState<string | null>(null);
@@ -88,7 +90,7 @@ export function PolicyRows({
           >
             <span
               style={{ color: "var(--ink-3)", fontSize: 12, cursor: "grab" }}
-              title="Glisser pour réordonner"
+              title={t("app.settings.sla.dragToReorder")}
             >
               ⠿
             </span>
@@ -129,7 +131,7 @@ export function PolicyRows({
                   whiteSpace: "nowrap",
                 }}
               >
-                PAR DÉFAUT
+                {t("app.settings.sla.defaultBadge")}
               </span>
             )}
           </div>

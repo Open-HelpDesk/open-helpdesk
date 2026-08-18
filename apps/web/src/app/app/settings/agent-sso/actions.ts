@@ -7,6 +7,7 @@ import { db, tenants } from "@openhelpdesk/db";
 import { eq } from "drizzle-orm";
 import { entitlementsFor } from "@/lib/entitlements";
 import { requireManager } from "../guard";
+import { getT } from "@/i18n/server";
 
 export type AgentSsoConfig = {
   saml?: {
@@ -32,7 +33,8 @@ export type AgentSsoConfig = {
 async function requirePro() {
   const current = await requireManager();
   if (!entitlementsFor(current.tenant.plan).agentSso) {
-    throw new Error("Le SSO des agents est réservé au plan Pro.");
+    const t = await getT();
+    throw new Error(t("app.settings.sso.agentProOnly"));
   }
   return current;
 }

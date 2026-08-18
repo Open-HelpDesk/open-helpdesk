@@ -2,6 +2,7 @@
 
 /** AG-04 — Chips d'en-tête interactifs : Fusionner (modal réel) et Copier le lien. */
 import { useState } from "react";
+import { useT } from "@/i18n/client";
 import { mergeTicket } from "../actions";
 
 /** Chip d'en-tête du design : h28, padding 0 9px, 12px, fond panel, bordure line. */
@@ -25,6 +26,7 @@ export function ChipVisual({ label }: { label: string }) {
 }
 
 export function CopyLinkChip() {
+  const t = useT();
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -40,18 +42,19 @@ export function CopyLinkChip() {
         }
       }}
     >
-      {copied ? "Lien copié ✓" : "Copier le lien"}
+      {copied ? t("app.ticket.linkCopied") : t("app.ticket.copyLink")}
     </button>
   );
 }
 
 export function MergeChip({ ticketId, ticketNumber }: { ticketId: string; ticketNumber: number }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <button type="button" style={chipStyle} onClick={() => setOpen(true)}>
-        Fusionner
+        {t("app.ticket.merge")}
       </button>
 
       {open && (
@@ -71,7 +74,9 @@ export function MergeChip({ ticketId, ticketNumber }: { ticketId: string; ticket
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-1 flex items-center justify-between">
-              <p className="text-sm font-semibold">Fusionner le ticket #{ticketNumber}</p>
+              <p className="text-sm font-semibold">
+                {t("app.ticket.mergeTitle", { number: String(ticketNumber) })}
+              </p>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -81,15 +86,14 @@ export function MergeChip({ ticketId, ticketNumber }: { ticketId: string; ticket
               </button>
             </div>
             <p className="mb-4 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
-              Ce ticket sera clos et rattaché au ticket cible — cette action est
-              irréversible. La conversation reste consultable en lecture seule.
+              {t("app.ticket.mergeHelp")}
             </p>
             <form action={mergeTicket} className="flex items-center gap-2">
               <input type="hidden" name="ticketId" value={ticketId} />
               <input
                 name="targetNumber"
                 required
-                placeholder="N° du ticket cible, ex. 4790"
+                placeholder={t("app.ticket.mergeTargetPlaceholder")}
                 className="min-w-0 flex-1 border px-3 outline-none"
                 style={{
                   height: 34,
@@ -105,7 +109,7 @@ export function MergeChip({ ticketId, ticketNumber }: { ticketId: string; ticket
                 className="shrink-0 rounded-md px-3 text-[13px] font-semibold text-white"
                 style={{ height: 34, background: "var(--acc)" }}
               >
-                Fusionner
+                {t("app.ticket.merge")}
               </button>
             </form>
           </div>

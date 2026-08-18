@@ -8,7 +8,8 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Avatar, SlaClock, StatusChip } from "@/components/ticket-bits";
-import { PRIORITY_COLORS, PRIORITY_LABELS_FR, STATUS_LABELS_FR } from "@/lib/format";
+import { PRIORITY_COLORS, PRIORITY_KEYS, STATUS_KEYS } from "@/lib/format";
+import { useT } from "@/i18n/client";
 import { bulkUpdateTickets, type BulkOp } from "./actions";
 
 export type InboxRowData = {
@@ -44,6 +45,7 @@ export function InboxTable({
   rows: InboxRowData[];
   agents: { id: string; name: string }[];
 }) {
+  const t = useT();
   const router = useRouter();
   const [cursor, setCursor] = useState(0);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -144,27 +146,28 @@ export function InboxTable({
               onChange={toggleAll}
               className="block"
               style={{ width: 14, height: 14, accentColor: "var(--acc)" }}
-              aria-label="Tout sélectionner"
+              aria-label={t("app.tickets.selectAll")}
             />
           </span>
           <span />
-          <span>Sujet</span>
-          <span>Contact</span>
-          <span>Statut</span>
-          <span>SLA</span>
-          <span>Assigné</span>
-          <span className="text-right">Activité</span>
+          <span>{t("app.tickets.colSubject")}</span>
+          <span>{t("app.tickets.colContact")}</span>
+          <span>{t("app.tickets.status")}</span>
+          <span>{t("app.tickets.colSla")}</span>
+          <span>{t("app.tickets.assignee")}</span>
+          <span className="text-right">{t("app.tickets.activity")}</span>
         </div>
 
-        {rows.map((t, i) => {
-          const isSelected = selected.has(t.id);
+        {rows.map((row, i) => {
+          const isSelected = selected.has(row.id);
+          const priorityKey = PRIORITY_KEYS[row.priority];
           return (
             <div
-              key={t.id}
+              key={row.id}
               ref={(el) => {
                 rowRefs.current[i] = el;
               }}
-              onClick={() => router.push(t.href)}
+              onClick={() => router.push(row.href)}
               className="grid cursor-pointer items-center border-b"
               style={{
                 gridTemplateColumns: GRID,
@@ -173,7 +176,7 @@ export function InboxTable({
                 borderColor: "var(--line-2)",
                 background: isSelected
                   ? "var(--acc-t)"
-                  : t.overdue
+                  : row.overdue
                     ? "var(--dang-t)"
                     : "var(--bg)",
                 boxShadow: i === cursor ? "inset 2px 0 0 var(--acc)" : undefined,
@@ -183,10 +186,12 @@ export function InboxTable({
                 <input
                   type="checkbox"
                   checked={isSelected}
-                  onChange={() => toggle(t.id)}
+                  onChange={() => toggle(row.id)}
                   className="block"
                   style={{ width: 14, height: 14, accentColor: "var(--acc)" }}
-                  aria-label={`Sélectionner #${t.number}`}
+                  aria-label={t("app.tickets.selectTicket", {
+                    number: String(row.number),
+                  })}
                 />
               </span>
               <span>
@@ -195,9 +200,9 @@ export function InboxTable({
                   style={{
                     width: 7,
                     height: 7,
-                    background: PRIORITY_COLORS[t.priority] ?? "var(--ink-3)",
+                    background: PRIORITY_COLORS[row.priority] ?? "var(--ink-3)",
                   }}
-                  title={PRIORITY_LABELS_FR[t.priority]}
+                  title={priorityKey ? t(priorityKey) : undefined}
                 />
               </span>
               <span
@@ -213,18 +218,18 @@ export function InboxTable({
                       color: "var(--ink-3)",
                     }}
                   >
-                    #{t.number}
+                    #{row.number}
                   </span>
                   <span
                     className="truncate"
-                    style={{ fontSize: 13, fontWeight: t.isNew ? 600 : 500 }}
+                    style={{ fontSize: 13, fontWeight: row.isNew ? 600 : 500 }}
                   >
-                    {t.subject}
+                    {row.subject}
                   </span>
                 </span>
-                {t.excerpt && (
+                {row.excerpt && (
                   <span className="truncate" style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                    {t.excerpt}
+                    {row.excerpt}
                   </span>
                 )}
               </span>
@@ -233,19 +238,19 @@ export function InboxTable({
                 style={{ gap: 1, paddingRight: 12 }}
               >
                 <span className="truncate" style={{ fontSize: 12.5 }}>
-                  {t.contactName}
+                  {row.contactName}
                 </span>
-                {t.orgName && (
+                {row.orgName && (
                   <span className="truncate" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-                    {t.orgName}
+                    {row.orgName}
                   </span>
                 )}
               </span>
               <span>
-                <StatusChip status={t.status} />
+                <StatusChip status={row.status} t={t} />
               </span>
               <span>
-                {t.sla && (
+                {row.sla && (
                   <span
                     className="inline-flex items-center whitespace-nowrap tabular-nums"
                     style={{
@@ -255,25 +260,25 @@ export function InboxTable({
                       fontSize: 11.5,
                       fontWeight: 600,
                       background:
-                        t.sla.tone === "neutral" ? "transparent" : `var(--${t.sla.tone}-t)`,
+                        row.sla.tone === "neutral" ? "transparent" : `var(--${row.sla.tone}-t)`,
                       color:
-                        t.sla.tone === "neutral" ? "var(--ink-3)" : `var(--${t.sla.tone})`,
+                        row.sla.tone === "neutral" ? "var(--ink-3)" : `var(--${row.sla.tone})`,
                       border: `1px solid ${
-                        t.sla.tone === "neutral" ? "var(--line)" : `var(--${t.sla.tone})`
+                        row.sla.tone === "neutral" ? "var(--line)" : `var(--${row.sla.tone})`
                       }`,
                     }}
                   >
                     <SlaClock />
-                    {t.sla.text}
+                    {row.sla.text}
                   </span>
                 )}
               </span>
               <span className="flex min-w-0 items-center" style={{ gap: 6 }}>
-                {t.assigneeName ? (
+                {row.assigneeName ? (
                   <>
-                    <Avatar name={t.assigneeName} size={20} tone={i} />
+                    <Avatar name={row.assigneeName} size={20} tone={i} />
                     <span className="truncate" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                      {t.assigneeName}
+                      {row.assigneeName}
                     </span>
                   </>
                 ) : (
@@ -298,7 +303,7 @@ export function InboxTable({
                 className="whitespace-nowrap text-right tabular-nums"
                 style={{ fontSize: 12, color: "var(--ink-3)" }}
               >
-                {t.activity}
+                {row.activity}
               </span>
             </div>
           );
@@ -324,19 +329,19 @@ export function InboxTable({
             className="whitespace-nowrap"
             style={{ fontSize: 12.5, fontWeight: 600, padding: "0 6px" }}
           >
-            {selected.size} sélectionné{selected.size > 1 ? "s" : ""}
+            {t("app.tickets.selectedCount", { count: selected.size })}
           </span>
           {bulkDivider}
           <select
             defaultValue=""
             onChange={(e) => e.target.value && runBulk("assign", e.target.value)}
             style={bulkSelectStyle}
-            aria-label="Assigner"
+            aria-label={t("app.tickets.assign")}
           >
             <option value="" disabled>
-              Assigner
+              {t("app.tickets.assign")}
             </option>
-            <option value="">Non assigné</option>
+            <option value="">{t("app.tickets.unassigned")}</option>
             {agents.map((a) => (
               <option key={a.id} value={a.id} style={{ color: "var(--ink)" }}>
                 {a.name}
@@ -347,14 +352,14 @@ export function InboxTable({
             defaultValue=""
             onChange={(e) => e.target.value && runBulk("status", e.target.value)}
             style={bulkSelectStyle}
-            aria-label="Statut"
+            aria-label={t("app.tickets.status")}
           >
             <option value="" disabled>
-              Statut
+              {t("app.tickets.status")}
             </option>
-            {Object.entries(STATUS_LABELS_FR).map(([k, v]) => (
+            {Object.entries(STATUS_KEYS).map(([k, v]) => (
               <option key={k} value={k} style={{ color: "var(--ink)" }}>
-                {v}
+                {t(v)}
               </option>
             ))}
           </select>
@@ -362,14 +367,14 @@ export function InboxTable({
             defaultValue=""
             onChange={(e) => e.target.value && runBulk("priority", e.target.value)}
             style={bulkSelectStyle}
-            aria-label="Priorité"
+            aria-label={t("app.tickets.priority")}
           >
             <option value="" disabled>
-              Priorité
+              {t("app.tickets.priority")}
             </option>
-            {Object.entries(PRIORITY_LABELS_FR).map(([k, v]) => (
+            {Object.entries(PRIORITY_KEYS).map(([k, v]) => (
               <option key={k} value={k} style={{ color: "var(--ink)" }}>
-                {v}
+                {t(v)}
               </option>
             ))}
           </select>
@@ -383,7 +388,7 @@ export function InboxTable({
             <input
               value={tagValue}
               onChange={(e) => setTagValue(e.target.value)}
-              placeholder="Taguer…"
+              placeholder={t("app.tickets.tagPlaceholder")}
               className="outline-none placeholder:opacity-60"
               style={{ ...bulkSelectStyle, width: 92 }}
             />
@@ -399,13 +404,13 @@ export function InboxTable({
               color: "#fff",
             }}
           >
-            Supprimer
+            {t("app.tickets.delete")}
           </button>
           {bulkDivider}
           <button
             type="button"
             onClick={() => setSelected(new Set())}
-            title="Annuler la sélection"
+            title={t("app.tickets.cancelSelection")}
             style={{ padding: "5px 8px", borderRadius: 6, fontSize: 12.5, opacity: 0.65 }}
           >
             ✕

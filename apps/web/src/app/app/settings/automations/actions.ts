@@ -6,6 +6,7 @@ import { automationRules, db, tickets } from "@openhelpdesk/db";
 import { and, asc, desc, eq, isNull, not } from "drizzle-orm";
 import { evaluateConditions, type Condition, type RuleEvent } from "@openhelpdesk/rules";
 import { ruleSummary } from "@/lib/rule-labels";
+import { getT } from "@/i18n/server";
 import { requireManager } from "../guard";
 
 const VALID_FIELDS = new Set([
@@ -116,6 +117,7 @@ export async function deleteRule(formData: FormData) {
 
 export async function duplicateRule(formData: FormData) {
   const { tenant } = await requireManager();
+  const t = await getT();
   const ruleId = String(formData.get("ruleId"));
   const [rule] = await db
     .select()
@@ -125,7 +127,7 @@ export async function duplicateRule(formData: FormData) {
   await db.insert(automationRules).values({
     tenantId: tenant.id,
     kind: rule.kind,
-    name: `${rule.name} (copie)`,
+    name: t("app.settings.rules.ruleCopySuffix", { name: rule.name }),
     position: rule.position + 1,
     active: false,
     conditionsAll: rule.conditionsAll,
@@ -176,6 +178,7 @@ export async function testRule(payload: {
   actions: unknown;
 }): Promise<{ ok: boolean; text: string }> {
   const { tenant } = await requireManager();
+  const t = await getT();
   const conditionsAll = sanitizeConditions(payload.conditionsAll) as Condition[];
   const conditionsAny = sanitizeConditions(payload.conditionsAny) as Condition[];
   const actions = sanitizeActions(payload.actions);
@@ -188,7 +191,7 @@ export async function testRule(payload: {
     .limit(1);
 
   if (!ticket) {
-    return { ok: false, text: "Aucun ticket dans le workspace — créez un ticket pour tester." };
+    return { ok: false, text: t("app.settings.rules.testNoTicket") };
   }
 
   // L'événement simulé suit la condition « Événement » si elle est posée.
@@ -199,9 +202,9 @@ export async function testRule(payload: {
   const label = `#${ticket.number}`;
 
   if (!matches) {
-    return { ok: false, text: `${label} → la règle ne s'appliquerait pas (conditions non remplies).` };
+    return { ok: false, text: t("app.settings.rules.testNoMatch", { ticket: label }) };
   }
 
   const summary = ruleSummary([], [], actions as never[]).replace(/^Si toujours → /, "");
-  return { ok: true, text: `${label} → la règle s'appliquerait : ${summary}` };
+  return { ok: true, text: t("app.settings.rules.testMatch", { ticket: label, summary }) };
 }

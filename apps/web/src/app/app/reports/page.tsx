@@ -3,7 +3,8 @@ import { asc, eq } from "drizzle-orm";
 import { db, teams } from "@openhelpdesk/db";
 import { requireAgent } from "@/lib/session";
 import { getReportData } from "@/lib/reports";
-import { durationFr, nFr } from "@/lib/format";
+import { duration } from "@/lib/format";
+import { getT, type Translate } from "@/i18n/server";
 import { Avatar } from "@/components/ticket-bits";
 import {
   AreaLines,
@@ -21,17 +22,13 @@ import {
  * rangée `1fr 1fr` (heatmap + performance agent), encart pointillé « PLAN PRO ».
  */
 
-const PERIODS = [
-  { days: 7, label: "7 j" },
-  { days: 30, label: "30 j" },
-  { days: 90, label: "90 j" },
-] as const;
+const PERIODS = [{ days: 7 }, { days: 30 }, { days: 90 }] as const;
 
-const CHANNELS: Record<string, { label: string; color: string }> = {
-  email: { label: "Email", color: "var(--acc-2)" },
-  portal: { label: "Portail", color: "var(--open)" },
-  widget: { label: "Widget", color: "var(--new)" },
-  api: { label: "API", color: "var(--pause)" },
+const CHANNEL_COLORS: Record<string, string> = {
+  email: "var(--acc-2)",
+  portal: "var(--open)",
+  widget: "var(--new)",
+  api: "var(--pause)",
 };
 
 const CARD: React.CSSProperties = {
@@ -45,27 +42,41 @@ const AGENT_COLS = "1fr 70px 90px 70px";
 const fmtFr = (x: number, digits = 1) =>
   x.toLocaleString("fr-FR", { maximumFractionDigits: digits });
 
-function pctDelta(cur: number | null, prev: number | null, goodWhen: "up" | "down" | "none"): KpiDelta | null {
+function pctDelta(
+  t: Translate,
+  cur: number | null,
+  prev: number | null,
+  goodWhen: "up" | "down" | "none",
+): KpiDelta | null {
   if (cur === null || prev === null || prev === 0) return null;
   const pct = ((cur - prev) / prev) * 100;
-  const text = `${pct >= 0 ? "+" : "−"}${fmtFr(Math.abs(pct))} %`;
+  const text = t("app.reports.percentValue", {
+    value: `${pct >= 0 ? "+" : "−"}${fmtFr(Math.abs(pct))}`,
+  });
   const tone =
     goodWhen === "none" ? "neutral" : (goodWhen === "up" ? pct >= 0 : pct <= 0) ? "good" : "bad";
   return { text, tone };
 }
 
-function durationDelta(curSec: number | null, prevSec: number | null): KpiDelta | null {
+function durationDelta(
+  t: Translate,
+  curSec: number | null,
+  prevSec: number | null,
+): KpiDelta | null {
   if (curSec === null || prevSec === null) return null;
   const diff = curSec - prevSec;
-  if (Math.abs(diff) < 30) return { text: "stable", tone: "neutral" };
-  const text = `${diff >= 0 ? "+" : "−"}${durationFr(Math.abs(diff) * 1000)}`;
+  if (Math.abs(diff) < 30) return { text: t("app.reports.deltaStable"), tone: "neutral" };
+  const text = `${diff >= 0 ? "+" : "−"}${duration(t, Math.abs(diff) * 1000)}`;
   return { text, tone: diff <= 0 ? "good" : "bad" };
 }
 
-function pointsDelta(cur: number | null, prev: number | null, unit: string): KpiDelta | null {
+function pointsDelta(t: Translate, cur: number | null, prev: number | null): KpiDelta | null {
   if (cur === null || prev === null) return null;
   const diff = cur - prev;
-  const text = `${diff >= 0 ? "+" : "−"}${fmtFr(Math.abs(diff))} ${unit}`;
+  const text = t("app.reports.deltaPoints", {
+    count: Math.abs(diff),
+    value: `${diff >= 0 ? "+" : "−"}${fmtFr(Math.abs(diff))}`,
+  });
   return { text, tone: diff >= 0 ? "good" : "bad" };
 }
 
@@ -74,6 +85,7 @@ export default async function ReportsPage({
 }: {
   searchParams: Promise<{ p?: string; team?: string; compare?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { p, team: teamParam, compare } = await searchParams;
   const days = PERIODS.find((x) => String(x.days) === p)?.days ?? 30;
@@ -84,8 +96,8 @@ export default async function ReportsPage({
     .from(teams)
     .where(eq(teams.tenantId, tenant.id))
     .orderBy(asc(teams.name));
-  const teamId = teamRows.find((t) => t.id === teamParam)?.id;
-  const currentTeam = teamRows.find((t) => t.id === teamId);
+  const teamId = teamRows.find((row) => row.id === teamParam)?.id;
+  const currentTeam = teamRows.find((row) => row.id === teamId);
 
   const data = await getReportData(tenant.id, days, teamId);
   const { current, previous } = data;
@@ -106,42 +118,55 @@ export default async function ReportsPage({
 
   const exportUrl = `/api/agent-reports/export?p=${days}${teamId ? `&team=${teamId}` : ""}`;
 
+  const channelLabels: Record<string, string> = {
+    email: t("app.reports.channelEmail"),
+    portal: t("app.reports.channelPortal"),
+    widget: t("app.reports.channelWidget"),
+    api: t("app.reports.channelApi"),
+  };
+
   const kpis: { label: string; value: string; delta: KpiDelta | null; spark?: number[] }[] = [
     {
-      label: "Tickets créés",
-      value: nFr(current.created),
-      delta: pctDelta(current.created, previous.created, "none"),
+      label: t("app.reports.kpiCreated"),
+      value: t.fmt.number(current.created),
+      delta: pctDelta(t, current.created, previous.created, "none"),
       spark: data.daily.map((d) => d.created),
     },
     {
-      label: "Tickets résolus",
-      value: nFr(current.resolved),
-      delta: pctDelta(current.resolved, previous.resolved, "up"),
+      label: t("app.reports.kpiResolved"),
+      value: t.fmt.number(current.resolved),
+      delta: pctDelta(t, current.resolved, previous.resolved, "up"),
       spark: data.daily.map((d) => d.resolved),
     },
     {
-      label: "1ʳᵉ réponse médiane",
+      label: t("app.reports.kpiMedianFirstReply"),
       value:
         current.medianFirstReplySec !== null
-          ? durationFr(current.medianFirstReplySec * 1000)
+          ? duration(t, current.medianFirstReplySec * 1000)
           : "—",
-      delta: durationDelta(current.medianFirstReplySec, previous.medianFirstReplySec),
+      delta: durationDelta(t, current.medianFirstReplySec, previous.medianFirstReplySec),
     },
     {
-      label: "Résolution médiane",
+      label: t("app.reports.kpiMedianResolve"),
       value:
-        current.medianResolveSec !== null ? durationFr(current.medianResolveSec * 1000) : "—",
-      delta: durationDelta(current.medianResolveSec, previous.medianResolveSec),
+        current.medianResolveSec !== null ? duration(t, current.medianResolveSec * 1000) : "—",
+      delta: durationDelta(t, current.medianResolveSec, previous.medianResolveSec),
     },
     {
-      label: "Conformité SLA",
-      value: current.slaCompliancePct !== null ? `${fmtFr(current.slaCompliancePct)} %` : "—",
-      delta: pointsDelta(current.slaCompliancePct, previous.slaCompliancePct, "pt"),
+      label: t("app.reports.kpiSlaCompliance"),
+      value:
+        current.slaCompliancePct !== null
+          ? t("app.reports.percentValue", { value: fmtFr(current.slaCompliancePct) })
+          : "—",
+      delta: pointsDelta(t, current.slaCompliancePct, previous.slaCompliancePct),
     },
     {
       label: "CSAT",
-      value: data.csatCurrent !== null ? `${data.csatCurrent} %` : "—",
-      delta: pointsDelta(data.csatCurrent, data.csatPrevious, "pts"),
+      value:
+        data.csatCurrent !== null
+          ? t("app.reports.percentValue", { value: data.csatCurrent })
+          : "—",
+      delta: pointsDelta(t, data.csatCurrent, data.csatPrevious),
     },
   ];
 
@@ -162,7 +187,7 @@ export default async function ReportsPage({
           className="flex"
           style={{ padding: 2, gap: 2, background: "var(--sunk)", borderRadius: 7 }}
         >
-          {PERIODS.map(({ days: d, label }) => (
+          {PERIODS.map(({ days: d }) => (
             <Link
               key={d}
               href={buildUrl({ p: String(d) })}
@@ -175,7 +200,7 @@ export default async function ReportsPage({
                 color: d === days ? "var(--ink)" : "var(--ink-2)",
               }}
             >
-              {label}
+              {t("app.reports.periodDays", { count: d })}
             </Link>
           ))}
           <span
@@ -187,7 +212,7 @@ export default async function ReportsPage({
               color: "var(--ink-3)",
             }}
           >
-            Personnalisé
+            {t("app.reports.customPeriod")}
           </span>
         </div>
 
@@ -205,7 +230,9 @@ export default async function ReportsPage({
               color: "var(--ink-2)",
             }}
           >
-            Équipe : {currentTeam?.name ?? "toutes"}
+            {t("app.reports.teamFilter", {
+              team: currentTeam?.name ?? t("app.reports.allTeams"),
+            })}
             <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
           </summary>
           <div
@@ -213,16 +240,16 @@ export default async function ReportsPage({
             style={{ background: "var(--panel)", borderColor: "var(--line)" }}
           >
             <Link href={buildUrl({ team: undefined })} className="px-3 py-1.5 text-[12.5px]">
-              toutes
+              {t("app.reports.allTeams")}
             </Link>
-            {teamRows.map((t) => (
+            {teamRows.map((row) => (
               <Link
-                key={t.id}
-                href={buildUrl({ team: t.id })}
+                key={row.id}
+                href={buildUrl({ team: row.id })}
                 className="px-3 py-1.5 text-[12.5px]"
-                style={t.id === teamId ? { color: "var(--acc)", fontWeight: 600 } : undefined}
+                style={row.id === teamId ? { color: "var(--acc)", fontWeight: 600 } : undefined}
               >
-                {t.name}
+                {row.name}
               </Link>
             ))}
           </div>
@@ -248,7 +275,7 @@ export default async function ReportsPage({
           >
             {showCompare ? "✓" : ""}
           </span>
-          Comparer à la période précédente
+          {t("app.reports.compare")}
         </Link>
 
         <span className="flex-1" />
@@ -264,7 +291,7 @@ export default async function ReportsPage({
             color: "var(--ink-2)",
           }}
         >
-          Export CSV
+          {t("app.reports.exportCsv")}
         </a>
       </div>
 
@@ -280,7 +307,7 @@ export default async function ReportsPage({
             color: "var(--wait)",
           }}
         >
-          Moins de 7 jours de données — les tendances s'affineront avec l'usage.
+          {t("app.reports.shortSpanNotice")}
         </p>
       )}
 
@@ -308,29 +335,35 @@ export default async function ReportsPage({
         <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 14 }}>
           <section className="flex min-w-0 flex-col" style={{ ...CARD, padding: 15, gap: 12 }}>
             <div className="flex items-baseline" style={{ gap: 10 }}>
-              <div style={CARD_TITLE}>Créés vs résolus</div>
+              <div style={CARD_TITLE}>{t("app.reports.createdVsResolved")}</div>
               <ChartLegend
                 items={[
-                  { label: "Créés", color: "var(--open)" },
-                  { label: "Résolus", color: "var(--acc-2)" },
+                  { label: t("app.reports.seriesCreated"), color: "var(--open)" },
+                  { label: t("app.reports.seriesResolved"), color: "var(--acc-2)" },
                 ]}
               />
             </div>
             <div style={{ height: 190 }}>
-              <AreaLines data={data.daily} labelA="Créés" labelB="Résolus" />
+              <AreaLines
+                data={data.daily}
+                labelA={t("app.reports.seriesCreated")}
+                labelB={t("app.reports.seriesResolved")}
+                t={t}
+              />
             </div>
           </section>
 
           <section className="flex min-w-0 flex-col" style={{ ...CARD, padding: 15, gap: 12 }}>
-            <div style={CARD_TITLE}>Répartition par canal</div>
+            <div style={CARD_TITLE}>{t("app.reports.channelBreakdown")}</div>
             {data.channels.length === 0 ? (
-              <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>Aucun ticket sur la période.</p>
+              <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>{t("app.reports.noTickets")}</p>
             ) : (
               <ChannelBars
+                t={t}
                 items={data.channels.map((c) => ({
-                  label: CHANNELS[c.channel]?.label ?? c.channel,
+                  label: channelLabels[c.channel] ?? c.channel,
                   value: c.count,
-                  color: CHANNELS[c.channel]?.color ?? "var(--closed)",
+                  color: CHANNEL_COLORS[c.channel] ?? "var(--closed)",
                 }))}
               />
             )}
@@ -340,18 +373,18 @@ export default async function ReportsPage({
         {/* Rangée 3 : heatmap · performance par agent */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
           <section className="flex min-w-0 flex-col" style={{ ...CARD, padding: 15, gap: 12 }}>
-            <div style={CARD_TITLE}>Volume par heure et jour</div>
-            <Heatmap grid={data.heatmap} hours={data.heatmapHours} />
+            <div style={CARD_TITLE}>{t("app.reports.hourDayVolume")}</div>
+            <Heatmap grid={data.heatmap} hours={data.heatmapHours} t={t} />
           </section>
 
           <section
             className="flex min-w-0 flex-col"
             style={{ ...CARD, padding: "15px 0 5px", gap: 10 }}
           >
-            <div style={{ ...CARD_TITLE, padding: "0 15px" }}>Performance par agent</div>
+            <div style={{ ...CARD_TITLE, padding: "0 15px" }}>{t("app.reports.agentPerformance")}</div>
             {data.agents.length === 0 ? (
               <p style={{ padding: "0 15px", fontSize: 12.5, color: "var(--ink-3)" }}>
-                Aucune activité agent sur la période.
+                {t("app.reports.noAgentActivity")}
               </p>
             ) : (
               <div>
@@ -368,9 +401,9 @@ export default async function ReportsPage({
                     borderBottom: "1px solid var(--line)",
                   }}
                 >
-                  <div>Agent</div>
-                  <div style={{ textAlign: "right" }}>Résolus</div>
-                  <div style={{ textAlign: "right" }}>1ʳᵉ réponse</div>
+                  <div>{t("app.reports.columnAgent")}</div>
+                  <div style={{ textAlign: "right" }}>{t("app.reports.seriesResolved")}</div>
+                  <div style={{ textAlign: "right" }}>{t("app.reports.columnFirstReply")}</div>
                   <div style={{ textAlign: "right" }}>CSAT</div>
                 </div>
                 {data.agents.map((a, i) => (
@@ -391,11 +424,11 @@ export default async function ReportsPage({
                       <span className="truncate">{a.name}</span>
                     </div>
                     <div style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
-                      {nFr(a.resolved)}
+                      {t.fmt.number(a.resolved)}
                     </div>
                     <div style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
                       {a.medianFirstReplySec !== null
-                        ? durationFr(a.medianFirstReplySec * 1000)
+                        ? duration(t, a.medianFirstReplySec * 1000)
                         : "—"}
                     </div>
                     <div
@@ -413,7 +446,9 @@ export default async function ReportsPage({
                                 : "var(--wait)",
                       }}
                     >
-                      {a.csatPct !== null ? `${a.csatPct} %` : "—"}
+                      {a.csatPct !== null
+                        ? t("app.reports.percentValue", { value: a.csatPct })
+                        : "—"}
                     </div>
                   </div>
                 ))}
@@ -446,7 +481,7 @@ export default async function ReportsPage({
             <rect x="4" y="10" width="16" height="10" rx="2" />
             <path d="M8 10V7a4 4 0 0 1 8 0v3" />
           </svg>
-          <div style={{ fontSize: 13, color: "var(--ink-2)" }}>Rapports personnalisés</div>
+          <div style={{ fontSize: 13, color: "var(--ink-2)" }}>{t("app.reports.customReports")}</div>
           <span
             style={{
               padding: "1px 8px",
@@ -458,11 +493,11 @@ export default async function ReportsPage({
               letterSpacing: ".04em",
             }}
           >
-            PLAN PRO
+            {t("app.reports.proPlanBadge")}
           </span>
           <span className="flex-1" />
           <Link href="/app/settings/billing" style={{ fontSize: 12.5 }}>
-            Découvrir
+            {t("app.reports.discover")}
           </Link>
         </div>
       </div>

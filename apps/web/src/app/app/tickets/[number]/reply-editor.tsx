@@ -7,7 +7,8 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { Paperclip } from "lucide-react";
-import { STATUS_LABELS_FR } from "@/lib/format";
+import { STATUS_KEYS } from "@/lib/format";
+import { useT } from "@/i18n/client";
 import { sendReply } from "../actions";
 
 export type MacroOption = {
@@ -22,17 +23,6 @@ export type MacroOption = {
 
 const SEND_STATUSES = ["resolved", "waiting", "open", ""] as const;
 
-function sendLabel(status: string): string {
-  if (!status) return "Envoyer";
-  return `Envoyer & ${STATUS_LABELS_FR[status] ?? status}`;
-}
-
-const VARIABLES = [
-  { key: "{{contact.prenom}}", label: "Prénom du contact" },
-  { key: "{{contact.name}}", label: "Nom du contact" },
-  { key: "{{ticket.number}}", label: "Numéro du ticket" },
-];
-
 export function ReplyEditor({
   ticketId,
   ticketNumber,
@@ -44,6 +34,7 @@ export function ReplyEditor({
   contactName: string;
   macros: MacroOption[];
 }) {
+  const t = useT();
   const [body, setBody] = useState("");
   const [kind, setKind] = useState<"public_reply" | "internal_note">("public_reply");
   const [nextStatus, setNextStatus] = useState("resolved");
@@ -55,6 +46,18 @@ export function ReplyEditor({
   const [, forceTick] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const draftKey = `ohd-draft-${ticketId}`;
+
+  function sendLabel(status: string): string {
+    if (!status) return t("app.ticket.send");
+    const key = STATUS_KEYS[status];
+    return t("app.ticket.sendAndStatus", { status: key ? t(key) : status });
+  }
+
+  const VARIABLES = [
+    { key: "{{contact.prenom}}", label: t("app.ticket.varContactFirstName") },
+    { key: "{{contact.name}}", label: t("app.ticket.varContactName") },
+    { key: "{{ticket.number}}", label: t("app.ticket.varTicketNumber") },
+  ];
 
   // Brouillon : restauration au montage.
   useEffect(() => {
@@ -76,7 +79,7 @@ export function ReplyEditor({
   // Brouillon : enregistrement debouncé + horloge du libellé.
   useEffect(() => {
     if (!body) return;
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       const at = Date.now();
       try {
         localStorage.setItem(draftKey, JSON.stringify({ body, at }));
@@ -85,20 +88,20 @@ export function ReplyEditor({
         /* stockage plein */
       }
     }, 800);
-    return () => clearTimeout(t);
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [body]);
 
   useEffect(() => {
-    const t = setInterval(() => forceTick((x) => x + 1), 5000);
-    return () => clearInterval(t);
+    const timer = setInterval(() => forceTick((x) => x + 1), 5000);
+    return () => clearInterval(timer);
   }, []);
 
   function draftLabel(): string | null {
     if (!draftSavedAt || !body) return null;
     const sec = Math.max(1, Math.round((Date.now() - draftSavedAt) / 1000));
-    if (sec < 60) return `Brouillon enregistré il y a ${sec} s`;
-    return `Brouillon enregistré il y a ${Math.floor(sec / 60)} min`;
+    if (sec < 60) return t("app.ticket.draftSavedSeconds", { count: sec });
+    return t("app.ticket.draftSavedMinutes", { count: Math.floor(sec / 60) });
   }
 
   /** Insère du markdown autour de la sélection du textarea. */
@@ -171,15 +174,28 @@ export function ReplyEditor({
       borderBottom: "none",
     }) as const;
 
+  const mdText = t("app.ticket.mdPlaceholderText");
   const TOOLBAR: { label: string; title: string; run: () => void }[] = [
-    { label: "B", title: "Gras", run: () => insertMd("**", "**", "texte") },
-    { label: "I", title: "Italique", run: () => insertMd("*", "*", "texte") },
-    { label: "U", title: "Souligné", run: () => insertMd("<u>", "</u>", "texte") },
-    { label: "S", title: "Barré", run: () => insertMd("~~", "~~", "texte") },
-    { label: "≔", title: "Liste", run: () => insertMd("\n- ", "", "élément") },
-    { label: "⛓", title: "Lien", run: () => insertMd("[", "](https://)", "texte") },
-    { label: "❝", title: "Citation", run: () => insertMd("\n> ", "", "citation") },
-    { label: "‹›", title: "Code", run: () => insertMd("`", "`", "code") },
+    { label: "B", title: t("app.ticket.mdBold"), run: () => insertMd("**", "**", mdText) },
+    { label: "I", title: t("app.ticket.mdItalic"), run: () => insertMd("*", "*", mdText) },
+    { label: "U", title: t("app.ticket.mdUnderline"), run: () => insertMd("<u>", "</u>", mdText) },
+    { label: "S", title: t("app.ticket.mdStrike"), run: () => insertMd("~~", "~~", mdText) },
+    {
+      label: "≔",
+      title: t("app.ticket.mdList"),
+      run: () => insertMd("\n- ", "", t("app.ticket.mdPlaceholderItem")),
+    },
+    { label: "⛓", title: t("app.ticket.mdLink"), run: () => insertMd("[", "](https://)", mdText) },
+    {
+      label: "❝",
+      title: t("app.ticket.mdQuote"),
+      run: () => insertMd("\n> ", "", t("app.ticket.mdPlaceholderQuote")),
+    },
+    {
+      label: "‹›",
+      title: t("app.ticket.mdCode"),
+      run: () => insertMd("`", "`", t("app.ticket.mdPlaceholderCode")),
+    },
   ];
 
   return (
@@ -203,7 +219,7 @@ export function ReplyEditor({
       {/* Onglets + brouillon */}
       <div className="flex" style={{ gap: 2, padding: "8px 18px 0" }}>
         <button type="button" onClick={() => setKind("public_reply")} style={tabStyle(!isNote, false)}>
-          Réponse
+          {t("app.ticket.tabReply")}
         </button>
         <button
           type="button"
@@ -223,7 +239,7 @@ export function ReplyEditor({
             <rect x="4" y="10" width="16" height="10" rx="2" />
             <path d="M8 10V7a4 4 0 0 1 8 0v3" />
           </svg>
-          Note interne
+          {t("app.ticket.internalNote")}
         </button>
         <span className="flex-1" />
         {draftLabel() && (
@@ -278,7 +294,7 @@ export function ReplyEditor({
             className="flex items-center"
             style={toolChip}
           >
-            / Macros
+            {t("app.ticket.macrosButton")}
           </button>
           {macroMenu && (
             <div
@@ -287,7 +303,7 @@ export function ReplyEditor({
             >
               {macros.length === 0 && (
                 <span className="px-3 py-2 text-[12px]" style={{ color: "var(--ink-3)" }}>
-                  Aucune macro disponible.
+                  {t("app.ticket.noMacros")}
                 </span>
               )}
               {macros.map((m) => (
@@ -312,11 +328,11 @@ export function ReplyEditor({
           href="/app/kb"
           target="_blank"
           rel="noreferrer"
-          title="Ouvrir la base de connaissances pour copier un lien d'article"
+          title={t("app.ticket.kbArticleTitle")}
           className="flex items-center"
           style={toolChip}
         >
-          Article KB
+          {t("app.ticket.kbArticle")}
         </a>
 
         {/* Variables */}
@@ -367,7 +383,9 @@ export function ReplyEditor({
         value={body}
         onChange={(e) => setBody(e.target.value)}
         placeholder={
-          isNote ? "Note visible uniquement par les agents…" : `Répondre à ${contactName}…`
+          isNote
+            ? t("app.ticket.notePlaceholder")
+            : t("app.ticket.replyPlaceholder", { name: contactName })
         }
         className="w-full resize-y border-0 outline-none"
         style={{
@@ -387,7 +405,7 @@ export function ReplyEditor({
         <label
           className="inline-flex cursor-pointer items-center gap-1.5"
           style={{ fontSize: 12, color: "var(--ink-2)" }}
-          title="Joindre des fichiers (10 Mo max par fichier)"
+          title={t("app.ticket.attachTitle")}
         >
           <Paperclip size={15} strokeWidth={1.8} />
           <input name="files" type="file" multiple className="max-w-44 text-[11px]" />
@@ -400,7 +418,7 @@ export function ReplyEditor({
             className="grid place-items-center font-semibold text-white"
             style={{ height: 32, padding: "0 14px", borderRadius: 6, background: sendBg, fontSize: 13 }}
           >
-            Ajouter la note
+            {t("app.ticket.addNote")}
           </button>
         ) : (
           <div className="relative">
@@ -415,7 +433,7 @@ export function ReplyEditor({
               <span style={{ width: 1, background: "rgba(255,255,255,.28)" }} />
               <button
                 type="button"
-                aria-label="Choisir le statut après envoi"
+                aria-label={t("app.ticket.chooseStatus")}
                 onClick={() => {
                   setStatusMenu((v) => !v);
                   setMacroMenu(false);
@@ -446,7 +464,7 @@ export function ReplyEditor({
                       color: s === nextStatus ? "var(--acc)" : "var(--ink)",
                     }}
                   >
-                    {s ? sendLabel(s) : "Envoyer sans changement de statut"}
+                    {s ? sendLabel(s) : t("app.ticket.sendNoStatusChange")}
                   </button>
                 ))}
               </div>

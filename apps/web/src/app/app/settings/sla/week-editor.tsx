@@ -6,15 +6,17 @@
  * « Fermé » quand le jour est décoché. Une seule soumission pour toute la semaine.
  */
 import { useState } from "react";
+import { useT } from "@/i18n/client";
+import type { MessageKey } from "@/i18n/dictionaries/fr";
 
-const DAYS: [string, string][] = [
-  ["mon", "Lundi"],
-  ["tue", "Mardi"],
-  ["wed", "Mercredi"],
-  ["thu", "Jeudi"],
-  ["fri", "Vendredi"],
-  ["sat", "Samedi"],
-  ["sun", "Dimanche"],
+const DAYS: [string, MessageKey][] = [
+  ["mon", "app.settings.sla.dayMon"],
+  ["tue", "app.settings.sla.dayTue"],
+  ["wed", "app.settings.sla.dayWed"],
+  ["thu", "app.settings.sla.dayThu"],
+  ["fri", "app.settings.sla.dayFri"],
+  ["sat", "app.settings.sla.daySat"],
+  ["sun", "app.settings.sla.daySun"],
 ];
 
 type Range = [string, string];
@@ -32,6 +34,7 @@ const timeStyle = {
 } as const;
 
 export function WeekEditor({ initial }: { initial: WeekValue }) {
+  const t = useT();
   const [week, setWeek] = useState<WeekValue>(() => {
     const value: WeekValue = {};
     for (const [key] of DAYS) value[key] = initial[key] ? [...initial[key]!] : [];
@@ -73,9 +76,10 @@ export function WeekEditor({ initial }: { initial: WeekValue }) {
           overflow: "hidden",
         }}
       >
-        {DAYS.map(([key, label], dayIndex) => {
+        {DAYS.map(([key, labelKey], dayIndex) => {
           const ranges = week[key]!;
           const open = ranges.length > 0;
+          const label = t(labelKey);
           return (
             <div
               key={key}
@@ -101,7 +105,11 @@ export function WeekEditor({ initial }: { initial: WeekValue }) {
                 type="button"
                 role="switch"
                 aria-checked={open}
-                aria-label={`${label} — ${open ? "ouvert" : "fermé"}`}
+                aria-label={
+                  open
+                    ? t("app.settings.sla.dayAriaOpen", { day: label })
+                    : t("app.settings.sla.dayAriaClosed", { day: label })
+                }
                 onClick={() => toggleDay(key)}
                 style={{
                   width: 34,
@@ -153,7 +161,7 @@ export function WeekEditor({ initial }: { initial: WeekValue }) {
                           <button
                             type="button"
                             onClick={() => removeRange(key, index)}
-                            title="Retirer la plage"
+                            title={t("app.settings.sla.removeRange")}
                             style={{ color: "var(--ink-3)", fontSize: 12, opacity: 0.55 }}
                           >
                             ✕
@@ -166,11 +174,13 @@ export function WeekEditor({ initial }: { initial: WeekValue }) {
                       onClick={() => addRange(key)}
                       style={{ fontSize: 12.5, color: "var(--acc-2)", cursor: "pointer" }}
                     >
-                      + plage
+                      {t("app.settings.sla.addRange")}
                     </button>
                   </>
                 ) : (
-                  <span style={{ fontSize: 13, color: "var(--ink-3)" }}>Fermé</span>
+                  <span style={{ fontSize: 13, color: "var(--ink-3)" }}>
+                    {t("app.settings.sla.closed")}
+                  </span>
                 )}
               </div>
             </div>

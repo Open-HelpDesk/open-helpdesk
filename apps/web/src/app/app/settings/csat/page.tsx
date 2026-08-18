@@ -7,6 +7,7 @@ import {
   Select,
   Toggle,
 } from "@/components/settings-page";
+import { getT } from "@/i18n/server";
 import { ExclusionsField } from "./exclusions-field";
 import { saveCsatConfig } from "./actions";
 
@@ -35,19 +36,19 @@ export default async function CsatPage({
 }: {
   searchParams: Promise<{ saved?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { saved } = await searchParams;
   const config = (tenant.csatConfig ?? {}) as CsatConfig;
-  const question =
-    config.question ?? "Comment évaluez-vous la réponse apportée à votre demande ?";
+  const question = config.question ?? t("app.settings.portal.csatQuestionDefault");
   const branding = (tenant.branding ?? {}) as { accentColor?: string };
   const accent = branding.accentColor ?? "#0B5F46";
 
   return (
     <PageShell maxWidth={900}>
       <PageHeader
-        title="Satisfaction (CSAT)"
-        subtitle="Enquête envoyée après résolution, et son rendu côté client."
+        title={t("app.settings.portal.csatTitle")}
+        subtitle={t("app.settings.portal.csatSubtitle")}
       />
 
       <form action={saveCsatConfig} className="flex flex-col" style={{ gap: 22 }}>
@@ -69,8 +70,8 @@ export default async function CsatPage({
               <Toggle
                 name="enabled"
                 defaultChecked={config.enabled === true}
-                label="Envoyer une enquête de satisfaction"
-                hint="Un seul envoi par ticket, même en cas de réouverture."
+                label={t("app.settings.portal.csatEnabledLabel")}
+                hint={t("app.settings.portal.csatEnabledHint")}
               />
             </div>
 
@@ -78,24 +79,24 @@ export default async function CsatPage({
               className="grid"
               style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
             >
-              <Field label="Moment d'envoi">
+              <Field label={t("app.settings.portal.csatDelayLabel")}>
                 <Select name="delayHours" defaultValue={String(config.delayHours ?? 2)} style={CONTROL}>
-                  <option value="0">Immédiatement à la résolution</option>
-                  <option value="1">1 heure après la résolution</option>
-                  <option value="2">2 heures après la résolution</option>
-                  <option value="24">24 heures après la résolution</option>
+                  <option value="0">{t("app.settings.portal.csatDelayImmediate")}</option>
+                  <option value="1">{t("app.settings.portal.csatDelayHours", { count: 1 })}</option>
+                  <option value="2">{t("app.settings.portal.csatDelayHours", { count: 2 })}</option>
+                  <option value="24">{t("app.settings.portal.csatDelayHours", { count: 24 })}</option>
                 </Select>
               </Field>
-              <Field label="Rappel si sans réponse">
+              <Field label={t("app.settings.portal.csatReminderLabel")}>
                 <Select name="reminderDays" defaultValue={String(config.reminderDays ?? 0)} style={CONTROL}>
-                  <option value="0">Aucun</option>
-                  <option value="3">Après 3 jours sans réponse</option>
-                  <option value="7">Après 7 jours sans réponse</option>
+                  <option value="0">{t("app.settings.portal.csatReminderNone")}</option>
+                  <option value="3">{t("app.settings.portal.csatReminderDays", { count: 3 })}</option>
+                  <option value="7">{t("app.settings.portal.csatReminderDays", { count: 7 })}</option>
                 </Select>
               </Field>
             </div>
 
-            <Field label="Question posée">
+            <Field label={t("app.settings.portal.csatQuestionLabel")}>
               <input
                 name="question"
                 defaultValue={question}
@@ -112,7 +113,7 @@ export default async function CsatPage({
 
             <div className="flex flex-col" style={{ gap: 6 }}>
               <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                Exclusions
+                {t("app.settings.portal.csatExclusionsLabel")}
               </span>
               <ExclusionsField initial={config.exclusions ?? []} />
             </div>
@@ -133,7 +134,7 @@ export default async function CsatPage({
                 color: "var(--ink-3)",
               }}
             >
-              Aperçu de l'email
+              {t("app.settings.portal.csatPreviewTitle")}
             </div>
             <div
               className="flex flex-col items-center text-center"
@@ -149,7 +150,7 @@ export default async function CsatPage({
                 {question}
               </p>
               <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-                Ticket #4821 — Impossible d'exporter les factures en PDF
+                {t("app.settings.portal.csatPreviewTicket")}
               </p>
               <div className="flex w-full" style={{ gap: 10 }}>
                 <span
@@ -162,7 +163,7 @@ export default async function CsatPage({
                     fontSize: 12.5,
                   }}
                 >
-                  😊<span>Satisfait</span>
+                  😊<span>{t("app.settings.portal.csatSatisfied")}</span>
                 </span>
                 <span
                   className="flex flex-1 flex-col items-center justify-center border font-semibold"
@@ -174,7 +175,7 @@ export default async function CsatPage({
                     fontSize: 12.5,
                   }}
                 >
-                  😕<span>Insatisfait</span>
+                  😕<span>{t("app.settings.portal.csatDissatisfied")}</span>
                 </span>
               </div>
               <span
@@ -189,9 +190,11 @@ export default async function CsatPage({
                   color: "var(--ink-3)",
                 }}
               >
-                Un commentaire ? (facultatif)
+                {t("app.settings.portal.csatCommentPlaceholder")}
               </span>
-              <p style={{ fontSize: 11.5, color: "var(--ink-3)" }}>Propulsé par Open HelpDesk</p>
+              <p style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
+                {t("app.settings.portal.csatPoweredBy")}
+              </p>
             </div>
           </div>
         </div>

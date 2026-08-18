@@ -2,7 +2,7 @@ import Link from "next/link";
 import { requireAgent } from "@/lib/session";
 import { db, kbArticles, kbCategories, users } from "@openhelpdesk/db";
 import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
-import { nFr, relativeFr } from "@/lib/format";
+import { getT } from "@/i18n/server";
 import { createCategory } from "./actions";
 
 /**
@@ -19,6 +19,7 @@ export default async function KbPage({
   searchParams: Promise<{ cat?: string }>;
 }) {
   const { tenant } = await requireAgent();
+  const t = await getT();
   const { cat } = await searchParams;
 
   const [allCategories, countRows] = await Promise.all([
@@ -96,17 +97,16 @@ export default async function KbPage({
     return (
       <div className="flex h-full items-center justify-center p-8">
         <div className="flex max-w-md flex-col items-center gap-3 text-center">
-          <p className="text-[15px] font-semibold">Votre base de connaissances est vide</p>
+          <p className="text-[15px] font-semibold">{t("app.kb.emptyTitle")}</p>
           <p className="text-[13px]" style={{ color: "var(--ink-3)" }}>
-            Créez une première catégorie, ou importez vos articles existants depuis un
-            export Zendesk ou Notion.
+            {t("app.kb.emptyBody")}
           </p>
           <div className="mt-2 flex items-center gap-2">
             <form action={createCategory} className="flex items-center gap-2">
               <input
                 name="name"
                 required
-                placeholder="Nom de la catégorie…"
+                placeholder={t("app.kb.categoryNamePlaceholder")}
                 className="border px-3 text-[13px] outline-none"
                 style={{
                   height: 32,
@@ -120,7 +120,7 @@ export default async function KbPage({
                 className="rounded-md px-3 text-[13px] font-semibold text-white"
                 style={{ height: 32, background: "var(--acc)" }}
               >
-                Créer une catégorie
+                {t("app.kb.createCategory")}
               </button>
             </form>
             <button
@@ -128,7 +128,7 @@ export default async function KbPage({
               className="rounded-md border px-3 text-[13px] font-medium"
               style={{ height: 32, borderColor: "var(--line)", color: "var(--ink-2)" }}
             >
-              Importer
+              {t("app.kb.import")}
             </button>
           </div>
         </div>
@@ -147,7 +147,7 @@ export default async function KbPage({
           className="mb-2 px-2 font-semibold uppercase tracking-wider"
           style={{ fontSize: 11, color: "var(--ink-3)" }}
         >
-          Catégories
+          {t("app.kb.categories")}
         </p>
         <ul className="flex flex-col gap-0.5">
           {parents.map((c) => {
@@ -215,7 +215,7 @@ export default async function KbPage({
           <input
             name="name"
             required
-            placeholder="Nouvelle catégorie…"
+            placeholder={t("app.kb.newCategoryPlaceholder")}
             className="border px-2 py-1.5 text-[12.5px] outline-none"
             style={{ borderRadius: 6, borderColor: "var(--line)", background: "var(--bg)" }}
           />
@@ -224,7 +224,7 @@ export default async function KbPage({
             className="rounded-md border border-dashed px-2 py-1.5 text-left text-[13px]"
             style={{ borderColor: "var(--line)", color: "var(--ink-3)" }}
           >
-            + Catégorie
+            {t("app.kb.addCategory")}
           </button>
         </form>
       </nav>
@@ -237,7 +237,7 @@ export default async function KbPage({
         >
           <h2 className="text-[14px] font-semibold">{selected?.name}</h2>
           <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-            / {selectedCount} article{selectedCount > 1 ? "s" : ""}
+            {t("app.kb.articleCount", { count: selectedCount })}
           </span>
           <span className="flex-1" />
           {selected && (
@@ -246,7 +246,7 @@ export default async function KbPage({
               className="inline-flex items-center rounded-md px-3 font-semibold text-white"
               style={{ height: 30, background: "var(--acc)", fontSize: 13 }}
             >
-              + Article
+              {t("app.kb.newArticle")}
             </Link>
           )}
         </div>
@@ -254,7 +254,7 @@ export default async function KbPage({
         <div className="min-h-0 flex-1 overflow-auto" style={{ background: "var(--bg)" }}>
           {articles.length === 0 ? (
             <p className="py-20 text-center text-sm" style={{ color: "var(--ink-3)" }}>
-              Aucun article dans cette catégorie.
+              {t("app.kb.noArticles")}
             </p>
           ) : (
             <div style={{ minWidth: 760 }}>
@@ -269,12 +269,12 @@ export default async function KbPage({
                   color: "var(--ink-3)",
                 }}
               >
-                <span className="pl-4">Titre</span>
-                <span>Statut</span>
-                <span>Auteur</span>
-                <span className="text-right">Vues</span>
-                <span className="text-right">Utile</span>
-                <span className="pr-4 text-right">Mise à jour</span>
+                <span className="pl-4">{t("app.kb.colTitle")}</span>
+                <span>{t("app.kb.colStatus")}</span>
+                <span>{t("app.kb.colAuthor")}</span>
+                <span className="text-right">{t("app.kb.colViews")}</span>
+                <span className="text-right">{t("app.kb.colHelpful")}</span>
+                <span className="pr-4 text-right">{t("app.kb.colUpdated")}</span>
               </div>
               {articles.map((a) => (
                 <Link
@@ -299,7 +299,7 @@ export default async function KbPage({
                           letterSpacing: "0.03em",
                         }}
                       >
-                        BROUILLON EN COURS
+                        {t("app.kb.draftBadge")}
                       </span>
                     )}
                   </span>
@@ -316,7 +316,7 @@ export default async function KbPage({
                             }
                       }
                     >
-                      {a.status === "published" ? "Publié" : "Brouillon"}
+                      {a.status === "published" ? t("app.kb.published") : t("app.kb.draft")}
                     </span>
                   </span>
                   <span className="truncate pr-2" style={{ fontSize: 12.5 }}>
@@ -326,7 +326,7 @@ export default async function KbPage({
                     className="text-right tabular-nums"
                     style={{ fontSize: 12.5, color: "var(--ink-2)" }}
                   >
-                    {nFr(a.viewCount)}
+                    {t.fmt.number(a.viewCount)}
                   </span>
                   <span
                     className="text-right font-semibold tabular-nums"
@@ -335,13 +335,13 @@ export default async function KbPage({
                       color: a.votesUp > 0 ? "var(--ok)" : "var(--ink-3)",
                     }}
                   >
-                    {a.votesUp > 0 ? `+${nFr(a.votesUp)}` : "—"}
+                    {a.votesUp > 0 ? `+${t.fmt.number(a.votesUp)}` : "—"}
                   </span>
                   <span
                     className="pr-4 text-right tabular-nums"
                     style={{ fontSize: 11.5, color: "var(--ink-3)" }}
                   >
-                    {relativeFr(a.updatedAt)}
+                    {t.fmt.relative(a.updatedAt)}
                   </span>
                 </Link>
               ))}

@@ -18,11 +18,14 @@ import Image from "@tiptap/extension-image";
 import { CodeBlock } from "@tiptap/extension-code-block";
 import { docToMarkup, markupToHtml, type EditorNode } from "@/lib/article-convert";
 import { plainText } from "@/lib/article-format";
+import { useT } from "@/i18n/client";
+import type { MessageKey } from "@/i18n/dictionaries/fr";
 
 type Action = {
   cle: string;
   libelle: string;
-  titre: string;
+  /** Clé de l'infobulle : la table est construite hors du composant. */
+  titre: MessageKey;
   actif: (e: Editor) => boolean;
   lancer: (e: Editor) => void;
   style?: React.CSSProperties;
@@ -32,7 +35,7 @@ const ACTIONS: Action[] = [
   {
     cle: "h2",
     libelle: "T",
-    titre: "Titre de section",
+    titre: "app.kb.toolHeading",
     actif: (e) => e.isActive("heading", { level: 2 }),
     lancer: (e) => e.chain().focus().toggleHeading({ level: 2 }).run(),
     style: { fontWeight: 700 },
@@ -40,7 +43,7 @@ const ACTIONS: Action[] = [
   {
     cle: "h3",
     libelle: "t",
-    titre: "Sous-titre",
+    titre: "app.kb.toolSubheading",
     actif: (e) => e.isActive("heading", { level: 3 }),
     lancer: (e) => e.chain().focus().toggleHeading({ level: 3 }).run(),
     style: { fontWeight: 600, fontSize: 11.5 },
@@ -48,7 +51,7 @@ const ACTIONS: Action[] = [
   {
     cle: "gras",
     libelle: "B",
-    titre: "Gras (⌘B)",
+    titre: "app.kb.toolBold",
     actif: (e) => e.isActive("bold"),
     lancer: (e) => e.chain().focus().toggleBold().run(),
     style: { fontWeight: 700 },
@@ -56,7 +59,7 @@ const ACTIONS: Action[] = [
   {
     cle: "italique",
     libelle: "I",
-    titre: "Italique (⌘I)",
+    titre: "app.kb.toolItalic",
     actif: (e) => e.isActive("italic"),
     lancer: (e) => e.chain().focus().toggleItalic().run(),
     style: { fontStyle: "italic" },
@@ -64,14 +67,14 @@ const ACTIONS: Action[] = [
   {
     cle: "puces",
     libelle: "•",
-    titre: "Liste à puces",
+    titre: "app.kb.toolBulletList",
     actif: (e) => e.isActive("bulletList"),
     lancer: (e) => e.chain().focus().toggleBulletList().run(),
   },
   {
     cle: "etapes",
     libelle: "1.",
-    titre: "Étapes numérotées",
+    titre: "app.kb.toolOrderedList",
     actif: (e) => e.isActive("orderedList"),
     lancer: (e) => e.chain().focus().toggleOrderedList().run(),
     style: { fontSize: 11 },
@@ -79,14 +82,14 @@ const ACTIONS: Action[] = [
   {
     cle: "encadre",
     libelle: "❝",
-    titre: "Encadré (mise en garde)",
+    titre: "app.kb.toolQuote",
     actif: (e) => e.isActive("blockquote"),
     lancer: (e) => e.chain().focus().toggleBlockquote().run(),
   },
   {
     cle: "code",
     libelle: "‹›",
-    titre: "Code en ligne",
+    titre: "app.kb.toolInlineCode",
     actif: (e) => e.isActive("code"),
     lancer: (e) => e.chain().focus().toggleCode().run(),
     style: { fontSize: 11 },
@@ -94,7 +97,7 @@ const ACTIONS: Action[] = [
   {
     cle: "bloc",
     libelle: "▤",
-    titre: "Bloc de code",
+    titre: "app.kb.toolCodeBlock",
     actif: (e) => e.isActive("codeBlock"),
     lancer: (e) => e.chain().focus().toggleCodeBlock().run(),
   },
@@ -126,6 +129,7 @@ export function ArticleEditor({
   defaultTitle: string;
   defaultBody: string;
 }) {
+  const t = useT();
   const [markup, setMarkup] = useState(defaultBody);
   const [depot, setDepot] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
@@ -152,7 +156,7 @@ export function ArticleEditor({
     editorProps: {
       attributes: {
         class: "kb-prose",
-        "aria-label": "Corps de l'article",
+        "aria-label": t("app.kb.bodyLabel"),
       },
     },
     onUpdate: ({ editor: e }) => setMarkup(docToMarkup(e.getJSON() as EditorNode)),
@@ -173,7 +177,7 @@ export function ArticleEditor({
           const reponse = await fetch("/api/kb/images", { method: "POST", body: corps });
           const donnees = (await reponse.json()) as { url?: string; detail?: string };
           if (!reponse.ok || !donnees.url) {
-            setErreur(donnees.detail ?? "Image refusée.");
+            setErreur(donnees.detail ?? t("app.kb.imageRejected"));
             continue;
           }
           // Après le bloc courant : une image déposée dans une étape de liste
@@ -185,11 +189,11 @@ export function ArticleEditor({
             .insertContentAt(apresBloc, { type: "image", attrs: { src: donnees.url, alt: image.name } })
             .run();
         } catch {
-          setErreur("Le dépôt a échoué. Réessayez.");
+          setErreur(t("app.kb.uploadFailed"));
         }
       }
     },
-    [editor],
+    [editor, t],
   );
 
   const mots = plainText(markup).split(/\s+/).filter(Boolean).length;
@@ -222,7 +226,7 @@ export function ArticleEditor({
           name="title"
           required
           defaultValue={defaultTitle}
-          placeholder="Titre de l'article"
+          placeholder={t("app.kb.articleTitlePlaceholder")}
           className="w-full border-0 outline-none"
           style={{ fontSize: 26, fontWeight: 600, background: "transparent", color: "var(--ink)" }}
         />
@@ -238,8 +242,8 @@ export function ArticleEditor({
                 <button
                   key={action.cle}
                   type="button"
-                  title={action.titre}
-                  aria-label={action.titre}
+                  title={t(action.titre)}
+                  aria-label={t(action.titre)}
                   aria-pressed={actif}
                   onClick={() => action.lancer(editor)}
                   className="flex items-center justify-center hover:bg-[var(--sunk)]"
@@ -260,12 +264,12 @@ export function ArticleEditor({
 
           <button
             type="button"
-            title="Insérer un lien (⌘K)"
-            aria-label="Insérer un lien"
+            title={t("app.kb.insertLinkShortcut")}
+            aria-label={t("app.kb.insertLink")}
             onClick={() => {
               if (!editor) return;
               const actuel = String(editor.getAttributes("link").href ?? "");
-              const url = window.prompt("Adresse du lien", actuel || "https://");
+              const url = window.prompt(t("app.kb.linkPrompt"), actuel || "https://");
               if (url === null) return;
               if (!url.trim()) {
                 editor.chain().focus().unsetLink().run();
@@ -288,8 +292,8 @@ export function ArticleEditor({
 
           <button
             type="button"
-            title="Insérer une image"
-            aria-label="Insérer une image"
+            title={t("app.kb.insertImage")}
+            aria-label={t("app.kb.insertImage")}
             onClick={() => fichier.current?.click()}
             className="flex items-center justify-center hover:bg-[var(--sunk)]"
             style={{ width: 26, height: 24, borderRadius: 5, fontSize: 11, color: "var(--ink-2)" }}
@@ -310,7 +314,7 @@ export function ArticleEditor({
 
           <span className="flex-1" />
           <span className="tabular-nums" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-            {mots} mot{mots > 1 ? "s" : ""} · {minutes} min de lecture
+            {t("app.kb.readingStats", { count: mots, minutes })}
           </span>
         </div>
 
@@ -333,12 +337,12 @@ export function ArticleEditor({
           {pretPourRendu ? (
             <EditorContent editor={editor} />
           ) : (
-            <p style={{ fontSize: 14.5, color: "var(--ink-3)" }}>Chargement de l'éditeur…</p>
+            <p style={{ fontSize: 14.5, color: "var(--ink-3)" }}>{t("app.kb.loadingEditor")}</p>
           )}
         </div>
 
         <p className="mt-4" style={{ fontSize: 12, color: "var(--ink-3)" }}>
-          Glissez une image dans la page pour l'insérer.
+          {t("app.kb.dropImageHint")}
         </p>
       </div>
     </div>

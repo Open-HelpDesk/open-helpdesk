@@ -14,6 +14,7 @@ import { and, arrayContains, eq, inArray, sql } from "drizzle-orm";
 import { sendTicketReplyEmail } from "@openhelpdesk/mail";
 import { maybeSendCsat, onAgentReplySla, onTicketCreated, runTriggers } from "@openhelpdesk/rules";
 import { requireAgent } from "@/lib/session";
+import { getT } from "@/i18n/server";
 import { nextTicketNumber } from "@/lib/data";
 import { saveUploadedFiles } from "@/lib/storage";
 
@@ -241,6 +242,7 @@ export async function bulkUpdateTickets(input: {
 /** Fusionner ce ticket dans un ticket cible : mergedIntoId + messages système + redirection. */
 export async function mergeTicket(formData: FormData) {
   const { tenant, agent } = await requireAgent();
+  const t = await getT();
   const ticketId = String(formData.get("ticketId"));
   const targetNumber = Number(String(formData.get("targetNumber") ?? "").replace(/^#/, ""));
   if (!Number.isInteger(targetNumber) || targetNumber <= 0) return;
@@ -268,14 +270,20 @@ export async function mergeTicket(formData: FormData) {
       ticketId: source.id,
       kind: "system_event" as const,
       authorType: "system" as const,
-      bodyText: `Ticket fusionné dans #${target.number} par ${agent.name}`,
+      bodyText: t("app.tickets.mergedIntoMessage", {
+        number: String(target.number),
+        agent: agent.name,
+      }),
     },
     {
       tenantId: tenant.id,
       ticketId: target.id,
       kind: "system_event" as const,
       authorType: "system" as const,
-      bodyText: `Le ticket #${source.number} a été fusionné dans ce ticket par ${agent.name}`,
+      bodyText: t("app.tickets.mergedFromMessage", {
+        number: String(source.number),
+        agent: agent.name,
+      }),
     },
   ]);
 

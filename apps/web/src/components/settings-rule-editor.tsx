@@ -3,13 +3,14 @@
 /**
  * ST-05 — Corps interactif de l'éditeur de règle, au gabarit du design :
  * bloc SI (bordure/en-tête --open) avec UN seul groupe de conditions et un segmented
- * control « Correspond à toutes / au moins une », bloc ALORS (bordure --acc-b), et
+ * control « {t("app.settingsNav.matches")} toutes / au moins une », bloc ALORS (bordure --acc-b), et
  * zone pointillée dont le résultat s'affiche sur la même ligne que le bouton.
  *
  * Le mode de correspondance choisit la colonne soumise : « toutes » → conditionsAll,
  * « au moins une » → conditionsAny (l'autre est envoyée vide).
  */
 import { useState, useTransition } from "react";
+import { useT } from "@/i18n/client";
 import {
   ActionsBuilder,
   ConditionsBuilder,
@@ -50,6 +51,7 @@ export function RuleEditorBody({
   const [rows, setRows] = useState<Condition[]>(startsAny ? initialAny : initialAll);
   const [actions, setActions] = useState<Action[]>(initialActions);
   const [result, setResult] = useState<RuleTestResult | null>(null);
+  const t = useT();
   const [pending, startTransition] = useTransition();
 
   const submittedName = mode === "all" ? "conditionsAll" : "conditionsAny";
@@ -124,7 +126,7 @@ export function RuleEditorBody({
             ALORS
           </span>
           <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-            actions appliquées dans l'ordre
+            {t("app.settingsNav.actionsInOrder")}
           </span>
         </div>
         <div style={{ padding: 13, background: "var(--panel)" }}>
@@ -183,7 +185,7 @@ export function RuleEditorBody({
             </span>
           ) : (
             <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-              Simulation sur le ticket le plus récent — aucune modification appliquée.
+              {t("app.settingsNav.simulationHint")}
             </span>
           )}
         </div>

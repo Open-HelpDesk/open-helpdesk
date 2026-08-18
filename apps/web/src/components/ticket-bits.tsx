@@ -1,15 +1,26 @@
 import {
   PRIORITY_COLORS,
-  PRIORITY_LABELS_FR,
-  STATUS_LABELS_FR,
+  PRIORITY_KEYS,
+  STATUS_KEYS,
   STATUS_TOKEN,
-  durationFr,
+  duration,
   initialsOf,
 } from "@/lib/format";
+import type { Translate } from "@/i18n/server";
+import type { MessageParams } from "@/i18n/dictionary";
+import type { MessageKey } from "@/i18n/dictionaries/fr";
+
+/**
+ * Traduire suffit à ces pastilles. Le type est volontairement plus étroit que
+ * `Translate` : elles sont rendues aussi bien depuis un composant serveur que
+ * depuis la table cliente de l'inbox, dont le `t` n'embarque pas le dictionnaire.
+ */
+type Tr = (key: MessageKey, params?: MessageParams) => string;
 
 /** Pilule statut — design espace agent : padding 2px 8px, radius 20, 11.5px/600. */
-export function StatusChip({ status }: { status: string }) {
+export function StatusChip({ status, t }: { status: string; t: Tr }) {
   const key = STATUS_TOKEN[status] ?? "closed";
+  const labelKey = STATUS_KEYS[status];
   return (
     <span
       className="inline-block whitespace-nowrap"
@@ -22,7 +33,7 @@ export function StatusChip({ status }: { status: string }) {
         color: `var(--${key})`,
       }}
     >
-      {STATUS_LABELS_FR[status] ?? status}
+      {labelKey ? t(labelKey) : status}
     </span>
   );
 }
@@ -30,21 +41,25 @@ export function StatusChip({ status }: { status: string }) {
 /** Priorité — pastille 7×7 colorée + libellé optionnel, jamais de fond plein (specs/02). */
 export function PriorityDot({
   priority,
+  t,
   withLabel = false,
   size = 7,
 }: {
   priority: string;
+  t: Tr;
   withLabel?: boolean;
   size?: number;
 }) {
   const color = PRIORITY_COLORS[priority] ?? "var(--ink-3)";
+  const labelKey = PRIORITY_KEYS[priority];
+  const label = labelKey ? t(labelKey) : undefined;
   return (
-    <span className="inline-flex items-center gap-1.5" title={PRIORITY_LABELS_FR[priority]}>
+    <span className="inline-flex items-center gap-1.5" title={label}>
       <span
         className="inline-block rounded-full"
         style={{ width: size, height: size, background: color }}
       />
-      {withLabel && <span style={{ fontSize: 12.5 }}>{PRIORITY_LABELS_FR[priority]}</span>}
+      {withLabel && <span style={{ fontSize: 12.5 }}>{label}</span>}
     </span>
   );
 }
@@ -58,10 +73,12 @@ export function SlaBadge({
   firstRepliedAt,
   firstReplyDueAt,
   resolveDueAt,
+  t,
 }: {
   firstRepliedAt: Date | null;
   firstReplyDueAt: Date | null;
   resolveDueAt: Date | null;
+  t: Translate;
 }) {
   const due = !firstRepliedAt && firstReplyDueAt ? firstReplyDueAt : resolveDueAt;
   if (!due) return null;
@@ -86,7 +103,7 @@ export function SlaBadge({
       }}
     >
       <SlaClock />
-      {overdue ? "SLA dépassé" : durationFr(remaining)}
+      {overdue ? t("app.shell.slaOverdue") : duration(t, remaining)}
     </span>
   );
 }

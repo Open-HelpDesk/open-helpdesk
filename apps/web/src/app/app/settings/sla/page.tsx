@@ -10,12 +10,13 @@ import {
   type BusinessCalendar,
 } from "@openhelpdesk/rules";
 import { formatDurationFr, ruleSummary } from "@/lib/rule-labels";
-import { PRIORITY_COLORS, PRIORITY_LABELS_FR } from "@/lib/format";
+import { PRIORITY_COLORS, PRIORITY_KEYS } from "@/lib/format";
 import { PageHeader, PageShell, SaveBar } from "@/components/settings-page";
 import { Drawer } from "@/components/settings-overlays";
 import { ConditionsBuilder } from "@/components/rule-builders";
 import { PolicyRows } from "./policy-rows";
 import { WeekEditor } from "./week-editor";
+import { getT } from "@/i18n/server";
 import {
   addHoliday,
   createCalendar,
@@ -37,13 +38,16 @@ type Targets = Record<
   { firstReplyMin?: number; nextReplyMin?: number; resolveMin?: number }
 > & { reminderMin?: number };
 
-const REMINDERS: [number, string][] = [
-  [0, "Aucun"],
-  [15, "15 minutes"],
-  [30, "30 minutes"],
-  [60, "1 heure"],
-  [120, "2 heures"],
-];
+/**
+ * Rend une phrase traduite dont plusieurs segments sont mis en valeur : la phrase
+ * reste une seule clé, les segments à passer en gras y sont encadrés d'astérisques
+ * (le traducteur les déplace avec les mots, l'ordre change d'une langue à l'autre).
+ */
+function emphasize(sentence: string) {
+  return sentence
+    .split("*")
+    .map((part, index) => (index % 2 === 1 ? <strong key={index}>{part}</strong> : part));
+}
 
 /** Champ de cible : même boîte que le design (h32, bordée, tabular-nums). */
 function TargetInput({ name, value }: { name: string; value?: number }) {
@@ -107,6 +111,7 @@ export default async function SlaPage({
 }: {
   searchParams: Promise<{ tab?: string; cal?: string; policy?: string; saved?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { tab, cal, policy: policyParam, saved } = await searchParams;
   const activeTab = tab === "hours" ? "hours" : "policies";
@@ -129,12 +134,24 @@ export default async function SlaPage({
   const selectedCalendar = calendars.find((c) => c.id === cal) ?? calendars[0];
 
   const tabs = [
-    { label: "Politiques SLA", href: "/app/settings/sla", active: activeTab === "policies" },
     {
-      label: "Horaires ouvrés",
+      label: t("app.settings.sla.tabPolicies"),
+      href: "/app/settings/sla",
+      active: activeTab === "policies",
+    },
+    {
+      label: t("app.settings.sla.tabHours"),
       href: "/app/settings/sla?tab=hours",
       active: activeTab === "hours",
     },
+  ];
+
+  const reminders: [number, string][] = [
+    [0, t("app.settings.sla.reminderNone")],
+    [15, t("app.settings.sla.reminderMinutes", { count: 15 })],
+    [30, t("app.settings.sla.reminderMinutes", { count: 30 })],
+    [60, t("app.settings.sla.reminderHours", { count: 1 })],
+    [120, t("app.settings.sla.reminderHours", { count: 2 })],
   ];
 
   /* ---------- Exemple calculé : vendredi 17 h de la semaine en cours ---------- */
@@ -182,28 +199,28 @@ export default async function SlaPage({
       className="inline-flex items-center rounded-md px-3.5 font-semibold text-white"
       style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
     >
-      Nouvelle politique
+      {t("app.settings.sla.newPolicy")}
     </span>
   );
 
   return (
     <PageShell maxWidth={1000}>
       <PageHeader
-        title="SLA & horaires ouvrés"
-        subtitle="Cibles de réponse et de résolution, calendriers de travail et escalades."
+        title={t("app.settings.sla.title")}
+        subtitle={t("app.settings.sla.subtitle")}
         tabs={tabs}
         actions={
           activeTab === "policies" ? (
-            <Drawer trigger={newPolicyTrigger} title="Nouvelle politique SLA">
+            <Drawer trigger={newPolicyTrigger} title={t("app.settings.sla.newPolicyTitle")}>
               <form action={createSlaPolicy} className="flex flex-col gap-4">
                 <label className="flex flex-col gap-1.5">
                   <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                    Nom de la politique
+                    {t("app.settings.sla.policyName")}
                   </span>
                   <input
                     name="name"
                     required
-                    placeholder="Clients Premium"
+                    placeholder={t("app.settings.sla.policyNamePlaceholder")}
                     style={{
                       height: 36,
                       padding: "0 11px",
@@ -217,15 +234,15 @@ export default async function SlaPage({
                 </label>
                 <ConditionsBuilder
                   name="conditions"
-                  label="S'APPLIQUE SI — toutes ces conditions (vide = tous les tickets)"
+                  label={t("app.settings.sla.conditionsLabelNew")}
                   initial={[]}
                 />
                 <label className="flex flex-col gap-1.5">
                   <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                    Calendrier appliqué
+                    {t("app.settings.sla.calendarApplied")}
                   </span>
                   <SelectBox name="businessHoursId">
-                    <option value="">24/7 — sans calendrier</option>
+                    <option value="">{t("app.settings.sla.calendarNone")}</option>
                     {calendars.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -238,7 +255,7 @@ export default async function SlaPage({
                   className="self-start rounded-md px-3.5 font-semibold text-white"
                   style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
                 >
-                  Créer la politique
+                  {t("app.settings.sla.createPolicy")}
                 </button>
               </form>
             </Drawer>
@@ -261,8 +278,7 @@ export default async function SlaPage({
               color: "var(--open)",
             }}
           >
-            La première politique dont les conditions correspondent s'applique. Faites
-            glisser pour réordonner.
+            {t("app.settings.sla.orderHint")}
           </div>
 
           <PolicyRows
@@ -271,12 +287,12 @@ export default async function SlaPage({
               id: p.id,
               name: p.name,
               conditions: p.isDefault
-                ? "Tous les tickets restants"
+                ? t("app.settings.sla.allRemainingTickets")
                 : ((p.conditions as never[]) ?? []).length > 0
                   ? ruleSummary((p.conditions as never[]) ?? [], [], [])
                       .replace(/^Si /, "")
                       .replace(" → aucune action", "")
-                  : "Tous les tickets",
+                  : t("app.settings.sla.allTickets"),
               calendar: p.businessHoursId
                 ? (calendarById.get(p.businessHoursId)?.name ?? "—")
                 : "24/7",
@@ -290,7 +306,7 @@ export default async function SlaPage({
                   propre <form> : il reste hors du formulaire des cibles. */}
               <div className="flex flex-wrap items-center gap-2">
                 <div style={{ fontSize: 14.5, fontWeight: 600 }}>
-                  Cibles — «&nbsp;{selected.name}&nbsp;»
+                  {t("app.settings.sla.targetsFor", { name: selected.name })}
                 </div>
                 <span className="flex-1" />
                 <Drawer
@@ -305,10 +321,10 @@ export default async function SlaPage({
                         color: "var(--ink)",
                       }}
                     >
-                      Modifier le nom et les conditions
+                      {t("app.settings.sla.editNameConditions")}
                     </span>
                   }
-                  title={`Politique « ${selected.name} »`}
+                  title={t("app.settings.sla.policyDrawerTitle", { name: selected.name })}
                 >
                   <form action={savePolicyMeta} className="flex flex-col gap-4">
                     <input type="hidden" name="policyId" value={selected.id} />
@@ -317,7 +333,7 @@ export default async function SlaPage({
                         className="font-semibold"
                         style={{ fontSize: 12.5, color: "var(--ink-2)" }}
                       >
-                        Nom
+                        {t("app.settings.sla.name")}
                       </span>
                       <input
                         name="name"
@@ -336,13 +352,12 @@ export default async function SlaPage({
                     </label>
                     {selected.isDefault ? (
                       <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                        La politique par défaut s'applique à tous les tickets restants : ses
-                        conditions ne sont pas modifiables, et elle ne peut pas être supprimée.
+                        {t("app.settings.sla.defaultPolicyNote")}
                       </p>
                     ) : (
                       <ConditionsBuilder
                         name="conditions"
-                        label="S'APPLIQUE SI — toutes ces conditions"
+                        label={t("app.settings.sla.conditionsLabel")}
                         initial={(selected.conditions as never[]) ?? []}
                       />
                     )}
@@ -351,7 +366,7 @@ export default async function SlaPage({
                       className="self-start rounded-md px-3.5 font-semibold text-white"
                       style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
                     >
-                      Enregistrer
+                      {t("app.settings.sla.save")}
                     </button>
                   </form>
                   {!selected.isDefault && (
@@ -367,7 +382,7 @@ export default async function SlaPage({
                           background: "var(--panel)",
                         }}
                       >
-                        Supprimer cette politique
+                        {t("app.settings.sla.deletePolicy")}
                       </button>
                     </form>
                   )}
@@ -400,10 +415,10 @@ export default async function SlaPage({
                       color: "var(--ink-3)",
                     }}
                   >
-                    <div>Priorité</div>
-                    <div>1ʳᵉ réponse</div>
-                    <div>Réponses suivantes</div>
-                    <div>Résolution</div>
+                    <div>{t("app.settings.sla.colPriority")}</div>
+                    <div>{t("app.settings.sla.colFirstReply")}</div>
+                    <div>{t("app.settings.sla.colNextReplies")}</div>
+                    <div>{t("app.settings.sla.colResolve")}</div>
                   </div>
                   {PRIORITY_ORDER.map((prio, index) => {
                     const targets = ((selected.targets ?? {}) as Targets)[prio];
@@ -433,7 +448,7 @@ export default async function SlaPage({
                               background: PRIORITY_COLORS[prio],
                             }}
                           />
-                          {PRIORITY_LABELS_FR[prio]}
+                          {t(PRIORITY_KEYS[prio]!)}
                         </div>
                         <TargetInput name={`t_${prio}_firstReplyMin`} value={targets?.firstReplyMin} />
                         <TargetInput name={`t_${prio}_nextReplyMin`} value={targets?.nextReplyMin} />
@@ -443,8 +458,7 @@ export default async function SlaPage({
                   })}
                 </div>
                 <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                  Saisie libre : «&nbsp;15 min&nbsp;», «&nbsp;4 h&nbsp;», «&nbsp;2 j&nbsp;».
-                  Laisser vide retire l'échéance.
+                  {t("app.settings.sla.durationHint")}
                 </p>
 
                 <div
@@ -459,13 +473,13 @@ export default async function SlaPage({
                       className="font-semibold"
                       style={{ fontSize: 12.5, color: "var(--ink-2)" }}
                     >
-                      Calendrier appliqué
+                      {t("app.settings.sla.calendarApplied")}
                     </span>
                     <SelectBox
                       name="businessHoursId"
                       defaultValue={selected.businessHoursId ?? ""}
                     >
-                      <option value="">24/7 — sans calendrier</option>
+                      <option value="">{t("app.settings.sla.calendarNone")}</option>
                       {calendars.map((c) => (
                         <option key={c.id} value={c.id}>
                           {c.name}
@@ -478,13 +492,13 @@ export default async function SlaPage({
                       className="font-semibold"
                       style={{ fontSize: 12.5, color: "var(--ink-2)" }}
                     >
-                      Rappel avant échéance
+                      {t("app.settings.sla.reminderLabel")}
                     </span>
                     <SelectBox
                       name="reminderMin"
                       defaultValue={String(((selected.targets ?? {}) as Targets).reminderMin ?? 30)}
                     >
-                      {REMINDERS.map(([value, label]) => (
+                      {reminders.map(([value, label]) => (
                         <option key={value} value={value}>
                           {label}
                         </option>
@@ -514,22 +528,24 @@ export default async function SlaPage({
                       color: "var(--acc)",
                     }}
                   >
-                    Exemple calculé
+                    {t("app.settings.sla.exampleTitle")}
                   </div>
                   {example ? (
                     <div style={{ fontSize: 13.5, lineHeight: 1.6, textWrap: "pretty" }}>
-                      Un ticket <strong>Urgent</strong> créé <strong>vendredi 17 h</strong> devra
-                      recevoir une première réponse <strong>{example.first}</strong> et être résolu{" "}
-                      <strong>{example.resolve}</strong>.
+                      {emphasize(
+                        t("app.settings.sla.exampleSentence", {
+                          first: example.first,
+                          resolve: example.resolve,
+                        }),
+                      )}
                     </div>
                   ) : (
                     <div style={{ fontSize: 13.5, lineHeight: 1.6 }}>
-                      Renseignez les cibles de la priorité Urgente pour voir l'exemple calculé.
+                      {t("app.settings.sla.exampleEmpty")}
                     </div>
                   )}
                   <div style={{ fontSize: 12.5, color: "var(--ink-2)", textWrap: "pretty" }}>
-                    Le décompte est suspendu hors plage horaire et pendant les statuts En
-                    attente et En pause.
+                    {t("app.settings.sla.exampleNote")}
                   </div>
                 </div>
 
@@ -574,20 +590,20 @@ export default async function SlaPage({
                     color: "var(--ink-3)",
                   }}
                 >
-                  + Calendrier
+                  {t("app.settings.sla.addCalendar")}
                 </span>
               }
-              title="Nouveau calendrier"
+              title={t("app.settings.sla.newCalendarTitle")}
             >
               <form action={createCalendar} className="flex flex-col gap-4">
                 <label className="flex flex-col gap-1.5">
                   <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                    Nom du calendrier
+                    {t("app.settings.sla.calendarName")}
                   </span>
                   <input
                     name="name"
                     required
-                    placeholder="Support Benelux"
+                    placeholder={t("app.settings.sla.calendarNamePlaceholder")}
                     style={{
                       height: 36,
                       padding: "0 11px",
@@ -601,7 +617,7 @@ export default async function SlaPage({
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                    Fuseau horaire
+                    {t("app.settings.sla.timezone")}
                   </span>
                   <input
                     name="timezone"
@@ -622,7 +638,7 @@ export default async function SlaPage({
                   className="self-start rounded-md px-3.5 font-semibold text-white"
                   style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
                 >
-                  Créer
+                  {t("app.settings.sla.create")}
                 </button>
               </form>
             </Drawer>
@@ -630,7 +646,7 @@ export default async function SlaPage({
 
           {!selectedCalendar ? (
             <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-              Aucun calendrier. Sans calendrier, les SLA sont calculés en 24/7.
+              {t("app.settings.sla.noCalendar")}
             </p>
           ) : (
             <>
@@ -642,7 +658,7 @@ export default async function SlaPage({
                       className="font-semibold"
                       style={{ fontSize: 12.5, color: "var(--ink-2)" }}
                     >
-                      Nom du calendrier
+                      {t("app.settings.sla.calendarName")}
                     </span>
                     <input
                       name="name"
@@ -663,7 +679,7 @@ export default async function SlaPage({
                       className="font-semibold"
                       style={{ fontSize: 12.5, color: "var(--ink-2)" }}
                     >
-                      Fuseau horaire
+                      {t("app.settings.sla.timezone")}
                     </span>
                     <input
                       name="timezone"
@@ -694,7 +710,9 @@ export default async function SlaPage({
 
               {/* Jours fériés */}
               <div className="flex flex-col gap-2.5">
-                <div style={{ fontSize: 14.5, fontWeight: 600 }}>Jours fériés</div>
+                <div style={{ fontSize: 14.5, fontWeight: 600 }}>
+                  {t("app.settings.sla.holidays")}
+                </div>
                 <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
                   {((selectedCalendar.holidays as { date: string; label: string }[]) ?? []).map(
                     (h) => (
@@ -713,7 +731,7 @@ export default async function SlaPage({
                       >
                         {h.label}
                         <span className="tabular-nums" style={{ color: "var(--ink-3)" }}>
-                          {new Date(`${h.date}T00:00:00`).toLocaleDateString("fr-FR", {
+                          {new Date(`${h.date}T00:00:00`).toLocaleDateString(t.locale.tag, {
                             day: "numeric",
                             month: "short",
                           })}
@@ -721,7 +739,10 @@ export default async function SlaPage({
                         <form action={removeHoliday} className="inline-flex">
                           <input type="hidden" name="calendarId" value={selectedCalendar.id} />
                           <input type="hidden" name="date" value={h.date} />
-                          <button title="Retirer" style={{ cursor: "pointer", opacity: 0.45 }}>
+                          <button
+                            title={t("app.settings.sla.removeHoliday")}
+                            style={{ cursor: "pointer", opacity: 0.45 }}
+                          >
                             ✕
                           </button>
                         </form>
@@ -740,10 +761,10 @@ export default async function SlaPage({
                           color: "var(--ink-3)",
                         }}
                       >
-                        + ajouter
+                        {t("app.settings.sla.addHoliday")}
                       </span>
                     }
-                    title="Ajouter un jour férié"
+                    title={t("app.settings.sla.addHolidayTitle")}
                   >
                     <form action={addHoliday} className="flex flex-col gap-4">
                       <input type="hidden" name="calendarId" value={selectedCalendar.id} />
@@ -752,7 +773,7 @@ export default async function SlaPage({
                           className="font-semibold"
                           style={{ fontSize: 12.5, color: "var(--ink-2)" }}
                         >
-                          Date
+                          {t("app.settings.sla.holidayDate")}
                         </span>
                         <input
                           type="date"
@@ -774,12 +795,12 @@ export default async function SlaPage({
                           className="font-semibold"
                           style={{ fontSize: 12.5, color: "var(--ink-2)" }}
                         >
-                          Libellé
+                          {t("app.settings.sla.holidayLabel")}
                         </span>
                         <input
                           name="label"
                           required
-                          placeholder="Fête nationale"
+                          placeholder={t("app.settings.sla.holidayLabelPlaceholder")}
                           style={{
                             height: 36,
                             padding: "0 11px",
@@ -796,7 +817,7 @@ export default async function SlaPage({
                         className="self-start rounded-md px-3.5 font-semibold text-white"
                         style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
                       >
-                        Ajouter
+                        {t("app.settings.sla.add")}
                       </button>
                     </form>
                   </Drawer>
@@ -815,7 +836,7 @@ export default async function SlaPage({
                     background: "var(--panel)",
                   }}
                 >
-                  Supprimer ce calendrier
+                  {t("app.settings.sla.deleteCalendar")}
                 </button>
               </form>
             </>

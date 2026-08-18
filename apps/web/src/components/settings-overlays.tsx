@@ -6,6 +6,7 @@
  * côté serveur et peut contenir des formulaires branchés sur des server actions —
  * le drawer se referme à la soumission.
  */
+import { useT } from "@/i18n/client";
 import {
   useEffect,
   useRef,
@@ -216,7 +217,8 @@ export function SlugConfirmField({
   );
 }
 
-export function CopyButton({ text, label = "Copier" }: { text: string; label?: string }) {
+export function CopyButton({ text, label }: { text: string; label?: string }) {
+  const t = useT();
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   return (
@@ -236,7 +238,7 @@ export function CopyButton({ text, label = "Copier" }: { text: string; label?: s
         color: copied ? "var(--ok)" : "var(--ink)",
       }}
     >
-      {copied ? "✓ Copié" : label}
+      {copied ? `✓ ${t("app.settingsNav.copied")}` : (label ?? t("app.settingsNav.copy"))}
     </button>
   );
 }

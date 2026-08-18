@@ -4,20 +4,23 @@ import { and, asc, desc, eq, gte } from "drizzle-orm";
 import { entitlementsFor } from "@/lib/entitlements";
 import { LockedScreen, PageHeader, PageShell } from "@/components/settings-page";
 import { AutoSubmitSelect } from "@/components/settings-overlays";
+import { getT, type Translate } from "@/i18n/server";
 
 const AUDIT_GRID = "160px 170px minmax(220px,1fr) 200px 120px";
-const COLUMNS = ["Date", "Acteur", "Action", "Cible", "IP"];
 
 /** Actions destructives — affichées en --dang (l'action est stockée en français). */
 const DESTRUCTIVE =
   /supprim|révoqu|revoqu|désactiv|desactiv|purg|delete|remove|revoke|disable/i;
 
-const ACTOR_TYPES: Record<string, string> = {
-  system: "Système",
-  api: "API",
-  user: "Utilisateur",
-  contact: "Contact",
-};
+function actorTypeLabel(t: Translate, actorType: string): string {
+  const labels: Record<string, string> = {
+    system: t("app.settings.dev.actorSystem"),
+    api: t("app.settings.dev.actorApi"),
+    user: t("app.settings.dev.actorUser"),
+    contact: t("app.settings.dev.actorContact"),
+  };
+  return labels[actorType] ?? actorType;
+}
 
 /** Chip de filtre / bouton du bandeau : h30, bordure --line, radius 6, 12.5 px. */
 const CHIP: React.CSSProperties = {
@@ -31,17 +34,24 @@ const CHIP: React.CSSProperties = {
 };
 
 /** « Aujourd'hui 14:02 », « Hier 17:48 », « 14 août 10:24 ». */
-function dayTimeFr(date: Date, now: Date = new Date()): string {
-  const time = date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+function dayTime(t: Translate, date: Date, now: Date = new Date()): string {
+  const time = date.toLocaleTimeString(t.locale.tag, { hour: "2-digit", minute: "2-digit" });
   const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  if (day === today) return `Aujourd'hui ${time}`;
-  if (day === today - 24 * 3600 * 1000) return `Hier ${time}`;
-  return `${date.toLocaleDateString("fr-FR", { day: "numeric", month: "long" })} ${time}`;
+  if (day === today) return t("app.settings.dev.dayToday", { time });
+  if (day === today - 24 * 3600 * 1000) return t("app.settings.dev.dayYesterday", { time });
+  return `${t.fmt.dateShort(date)} ${time}`;
 }
 
 /** En-tête de table 11 px/700 sur fond --sunk, hauteur 34. */
-function TableHead() {
+function TableHead({ t }: { t: Translate }) {
+  const columns = [
+    t("app.settings.dev.colDate"),
+    t("app.settings.dev.colActor"),
+    t("app.settings.dev.colAction"),
+    t("app.settings.dev.colTarget"),
+    t("app.settings.dev.colIp"),
+  ];
   return (
     <div
       className="grid items-center border-b font-bold"
@@ -55,7 +65,7 @@ function TableHead() {
         color: "var(--ink-3)",
       }}
     >
-      {COLUMNS.map((c) => (
+      {columns.map((c) => (
         <span key={c}>{c}</span>
       ))}
     </div>
@@ -72,14 +82,15 @@ export default async function AuditPage({
 }: {
   searchParams: Promise<{ actor?: string; action?: string; days?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const ent = entitlementsFor(tenant.plan);
   const { actor, action, days } = await searchParams;
 
   const header = (
     <PageHeader
-      title="Audit log"
-      subtitle="Journal complet des actions d'administration. Rétention 2 ans."
+      title={t("app.settings.dev.auditTitle")}
+      subtitle={t("app.settings.dev.auditSubtitle")}
     />
   );
 
@@ -88,9 +99,9 @@ export default async function AuditPage({
       <PageShell maxWidth={1040}>
         {header}
         <LockedScreen
-          title="L'audit log est réservé au plan Pro"
-          text="Conservez la trace de chaque action d'administration pendant 2 ans, avec diff avant/après et export CSV."
-          ghost={<GhostTable />}
+          title={t("app.settings.dev.auditLockedTitle")}
+          text={t("app.settings.dev.auditLockedText")}
+          ghost={<GhostTable t={t} />}
         />
       </PageShell>
     );
@@ -134,7 +145,7 @@ export default async function AuditPage({
             name="actor"
             defaultValue={actor ?? ""}
             options={[
-              { value: "", label: "Acteur : tous" },
+              { value: "", label: t("app.settings.dev.filterActorAll") },
               ...agents.map((a) => ({ value: a.id, label: a.name })),
             ]}
             style={CHIP}
@@ -143,7 +154,7 @@ export default async function AuditPage({
             name="action"
             defaultValue={action ?? ""}
             options={[
-              { value: "", label: "Action : toutes" },
+              { value: "", label: t("app.settings.dev.filterActionAll") },
               ...actionRows.map((a) => ({ value: a.action, label: a.action })),
             ]}
             style={{ ...CHIP, maxWidth: 260 }}
@@ -152,9 +163,9 @@ export default async function AuditPage({
             name="days"
             defaultValue={String(daysN)}
             options={[
-              { value: "7", label: "7 derniers jours" },
-              { value: "30", label: "30 derniers jours" },
-              { value: "90", label: "90 derniers jours" },
+              { value: "7", label: t("app.settings.dev.filterLastDays", { count: 7 }) },
+              { value: "30", label: t("app.settings.dev.filterLastDays", { count: 30 }) },
+              { value: "90", label: t("app.settings.dev.filterLastDays", { count: 90 }) },
             ]}
             style={CHIP}
           />
@@ -164,7 +175,7 @@ export default async function AuditPage({
             className="grid place-items-center border"
             style={CHIP}
           >
-            Export CSV
+            {t("app.settings.dev.exportCsv")}
           </a>
         </form>
 
@@ -173,10 +184,10 @@ export default async function AuditPage({
           style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
         >
           <div style={{ minWidth: 880 }}>
-            <TableHead />
+            <TableHead t={t} />
             {rows.length === 0 && (
               <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-                Aucun événement sur la période — les actions d'administration apparaîtront ici.
+                {t("app.settings.dev.auditEmpty")}
               </p>
             )}
             {rows.map((e) => {
@@ -194,12 +205,11 @@ export default async function AuditPage({
                   }}
                 >
                   <span className="tabular-nums" style={{ color: "var(--ink-3)" }}>
-                    {dayTimeFr(e.createdAt)}
+                    {dayTime(t, e.createdAt)}
                   </span>
                   <span className="truncate" style={{ paddingRight: 10, color: "var(--ink)" }}>
                     {(e.actorId ? agentNameById.get(e.actorId) : undefined) ??
-                      ACTOR_TYPES[e.actorType] ??
-                      e.actorType}
+                      actorTypeLabel(t, e.actorType)}
                   </span>
                   <span
                     className="truncate font-medium"
@@ -229,11 +239,15 @@ export default async function AuditPage({
 }
 
 /** Filtres + table factices floutés derrière le voile de l'état verrouillé. */
-function GhostTable() {
+function GhostTable({ t }: { t: Translate }) {
   return (
     <div className="flex flex-col" style={{ gap: 14 }}>
       <div className="flex items-center" style={{ gap: 7 }}>
-        {["Acteur : tous", "Action : toutes", "30 derniers jours"].map((f) => (
+        {[
+          t("app.settings.dev.filterActorAll"),
+          t("app.settings.dev.filterActionAll"),
+          t("app.settings.dev.filterLastDays", { count: 30 }),
+        ].map((f) => (
           <span key={f} className="flex items-center border" style={{ ...CHIP, gap: 6 }}>
             {f}
             <span style={{ opacity: 0.45, fontSize: 9 }}>▾</span>
@@ -241,14 +255,14 @@ function GhostTable() {
         ))}
         <span className="flex-1" />
         <span className="grid place-items-center border" style={CHIP}>
-          Export CSV
+          {t("app.settings.dev.exportCsv")}
         </span>
       </div>
       <div
         className="border"
         style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
       >
-        <TableHead />
+        <TableHead t={t} />
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}

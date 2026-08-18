@@ -8,7 +8,8 @@
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { STATUS_LABELS_FR, STATUS_TOKEN, nFr } from "@/lib/format";
+import { STATUS_KEYS, STATUS_TOKEN } from "@/lib/format";
+import { useT } from "@/i18n/client";
 
 type Results = {
   tickets: { number: number; subject: string; status: string }[];
@@ -31,6 +32,7 @@ type Item = {
 const EMPTY: Results = { tickets: [], contacts: [], organizations: [], articles: [] };
 
 export function CommandPalette() {
+  const t = useT();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -75,7 +77,7 @@ export function CommandPalette() {
       return;
     }
     const controller = new AbortController();
-    const t = setTimeout(async () => {
+    const timer = setTimeout(async () => {
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(q.trim())}`, {
           signal: controller.signal,
@@ -89,28 +91,36 @@ export function CommandPalette() {
       }
     }, 180);
     return () => {
-      clearTimeout(t);
+      clearTimeout(timer);
       controller.abort();
     };
   }, [q, open]);
 
+  const statusLabel = (status: string) => {
+    const key = STATUS_KEYS[status];
+    return key ? t(key) : status;
+  };
+
   const items: Item[] = [
-    ...results.tickets.map((t) => ({
-      key: `t-${t.number}`,
-      href: `/app/tickets/${t.number}`,
-      group: "Tickets",
-      label: t.subject,
-      meta: `#${t.number} · ${STATUS_LABELS_FR[t.status] ?? t.status}`,
+    ...results.tickets.map((ticket) => ({
+      key: `t-${ticket.number}`,
+      href: `/app/tickets/${ticket.number}`,
+      group: t("app.shell.paletteGroupTickets"),
+      label: ticket.subject,
+      meta: `#${ticket.number} · ${statusLabel(ticket.status)}`,
       tag: "TK",
-      tagBg: `var(--${STATUS_TOKEN[t.status] ?? "closed"}-t)`,
-      tagColor: `var(--${STATUS_TOKEN[t.status] ?? "closed"})`,
+      tagBg: `var(--${STATUS_TOKEN[ticket.status] ?? "closed"}-t)`,
+      tagColor: `var(--${STATUS_TOKEN[ticket.status] ?? "closed"})`,
     })),
     ...results.articles.map((a) => ({
       key: `a-${a.id}`,
       href: `/app/kb/${a.id}`,
-      group: "Articles",
+      group: t("app.shell.paletteGroupArticles"),
       label: a.title,
-      meta: a.status === "draft" ? "Brouillon" : `${nFr(a.viewCount)} vues`,
+      meta:
+        a.status === "draft"
+          ? t("app.shell.paletteArticleDraft")
+          : t("app.shell.paletteArticleViews", { count: a.viewCount }),
       tag: "KB",
       tagBg: "var(--acc-t)",
       tagColor: "var(--acc)",
@@ -118,7 +128,7 @@ export function CommandPalette() {
     ...results.contacts.map((c) => ({
       key: `c-${c.id}`,
       href: `/app/contacts?selected=${c.id}`,
-      group: "Contacts",
+      group: t("app.shell.contacts"),
       label: c.name ?? c.email,
       meta: c.organizationName ?? c.email,
       tag: "CT",
@@ -128,7 +138,7 @@ export function CommandPalette() {
     ...results.organizations.map((o) => ({
       key: `o-${o.id}`,
       href: `/app/organizations?selected=${o.id}`,
-      group: "Organisations",
+      group: t("app.shell.organizations"),
       label: o.name,
       tag: "OR",
       tagBg: "var(--open-t)",
@@ -137,8 +147,8 @@ export function CommandPalette() {
     {
       key: "action-new",
       href: "/app/tickets/new",
-      group: "Actions",
-      label: "Nouveau ticket",
+      group: t("app.shell.paletteGroupActions"),
+      label: t("app.shell.newTicket"),
       meta: "N",
       tag: "⌘",
       tagBg: "var(--sunk)",
@@ -147,9 +157,9 @@ export function CommandPalette() {
     {
       key: "action-billing",
       href: "/app/settings/billing",
-      group: "Actions",
-      label: "Aller aux paramètres de facturation",
-      meta: "G puis B",
+      group: t("app.shell.paletteGroupActions"),
+      label: t("app.shell.paletteGoBilling"),
+      meta: t("app.shell.paletteGoBillingShortcut"),
       tag: "⌘",
       tagBg: "var(--sunk)",
       tagColor: "var(--ink-2)",
@@ -216,7 +226,7 @@ export function CommandPalette() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={onInputKey}
-            placeholder="Rechercher tickets, contacts, articles…"
+            placeholder={t("app.shell.palettePlaceholder")}
             className="min-w-0 flex-1 outline-none"
             style={{ fontSize: 15, background: "transparent", color: "var(--ink)" }}
           />
@@ -238,12 +248,12 @@ export function CommandPalette() {
         <div className="overflow-y-auto" style={{ maxHeight: 400, padding: 6 }}>
           {q.trim().length < 2 && (
             <p className="px-3 py-4 text-center text-[13px]" style={{ color: "var(--ink-3)" }}>
-              Tapez au moins deux caractères…
+              {t("app.shell.paletteMinChars")}
             </p>
           )}
           {q.trim().length >= 2 && items.length === ACTION_COUNT && (
             <p className="px-3 py-4 text-center text-[13px]" style={{ color: "var(--ink-3)" }}>
-              Aucun résultat pour « {q} »
+              {t("app.shell.paletteNoResults", { query: q })}
             </p>
           )}
           {items.map((item, i) => {
@@ -324,12 +334,13 @@ export function CommandPalette() {
           }}
         >
           <span>
-            Filtres : <span style={{ fontFamily: "var(--font-mono)" }}>from:</span>{" "}
+            {t("app.shell.paletteFilters")}{" "}
+            <span style={{ fontFamily: "var(--font-mono)" }}>from:</span>{" "}
             <span style={{ fontFamily: "var(--font-mono)" }}>status:</span>{" "}
             <span style={{ fontFamily: "var(--font-mono)" }}>#tag</span>
           </span>
           <span className="flex-1" />
-          <span>↑↓ naviguer · ↵ ouvrir</span>
+          <span>{t("app.shell.paletteHint")}</span>
         </div>
       </div>
     </div>
@@ -337,10 +348,11 @@ export function CommandPalette() {
 }
 
 export function SearchButton({ children }: { children: React.ReactNode }) {
+  const t = useT();
   return (
     <button
       type="button"
-      title="Recherche (⌘K)"
+      title={t("app.shell.search")}
       className="rounded-lg p-2.5"
       style={{ color: "var(--ink)" }}
       onClick={() => window.dispatchEvent(new Event("ohd:open-search"))}

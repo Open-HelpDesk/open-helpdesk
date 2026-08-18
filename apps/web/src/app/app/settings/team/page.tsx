@@ -2,7 +2,8 @@ import Link from "next/link";
 import { requireAgent } from "@/lib/session";
 import { businessHours, db, teamMembers, teams, users } from "@openhelpdesk/db";
 import { asc, eq, sql } from "drizzle-orm";
-import { initialsOf, relativeFr } from "@/lib/format";
+import { initialsOf } from "@/lib/format";
+import { getT, type Translate } from "@/i18n/server";
 import { Avatar } from "@/components/ticket-bits";
 import { entitlementsFor, seatQuota } from "@/lib/entitlements";
 import {
@@ -24,13 +25,6 @@ import {
   updateTeam,
 } from "./actions";
 
-const ROLE_LABELS: Record<string, string> = {
-  owner: "Owner",
-  admin: "Admin",
-  agent: "Agent",
-  viewer: "Viewer",
-};
-
 const AGENT_GRID = "minmax(190px,1.4fr) 150px 180px 130px 110px 80px";
 /** Rotation de teintes des avatars (open, new, acc, wait, pause) — index de ligne. */
 const AV_TONES = [
@@ -51,7 +45,14 @@ export default async function TeamPage({
 }: {
   searchParams: Promise<{ tab?: string; saved?: string }>;
 }) {
+  const t = await getT();
   const { tenant, agent: me } = await requireAgent();
+  const ROLE_LABELS: Record<string, string> = {
+    owner: t("app.settings.workspace.roleOwner"),
+    admin: t("app.settings.workspace.roleAdmin"),
+    agent: t("app.settings.workspace.roleAgent"),
+    viewer: t("app.settings.workspace.roleViewer"),
+  };
   const { tab, saved } = await searchParams;
   const activeTab = tab === "teams" ? "teams" : "agents";
 
@@ -79,7 +80,7 @@ export default async function TeamPage({
 
   const teamsByUser = new Map<string, string[]>();
   const usersByTeam = new Map<string, string[]>();
-  const teamNameById = new Map(teamRows.map((t) => [t.id, t.name]));
+  const teamNameById = new Map(teamRows.map((team) => [team.id, team.name]));
   for (const m of memberRows) {
     teamsByUser.set(m.userId, [
       ...(teamsByUser.get(m.userId) ?? []),
@@ -92,19 +93,29 @@ export default async function TeamPage({
   const activeAgents = agents.filter((a) => a.status !== "disabled");
 
   const tabs = [
-    { label: "Agents", href: "/app/settings/team", active: activeTab === "agents" },
-    { label: "Équipes", href: "/app/settings/team?tab=teams", active: activeTab === "teams" },
+    {
+      label: t("app.settings.workspace.tabAgents"),
+      href: "/app/settings/team",
+      active: activeTab === "agents",
+    },
+    {
+      label: t("app.settings.workspace.tabTeams"),
+      href: "/app/settings/team?tab=teams",
+      active: activeTab === "teams",
+    },
   ];
 
   return (
     <PageShell maxWidth={1100}>
       <PageHeader
-        title="Agents, équipes & rôles"
-        subtitle="Gérez les accès, les rôles et la répartition des agents en équipes."
+        title={t("app.settings.workspace.teamTitle")}
+        subtitle={t("app.settings.workspace.teamSubtitle")}
         tabs={tabs}
       />
 
-      {saved === "1" && <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>}
+      {saved === "1" && (
+        <p style={{ fontSize: 12.5, color: "var(--ok)" }}>{t("app.settings.workspace.saved")}</p>
+      )}
 
       {activeTab === "agents" ? (
         <div className="st-rise flex flex-col" style={{ gap: 16 }}>
@@ -121,13 +132,13 @@ export default async function TeamPage({
             <div className="min-w-0 flex-1">
               <p className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
                 {seatFull
-                  ? `${seats} / ${quota} sièges utilisés — limite atteinte`
-                  : `${seats} / ${quota} sièges utilisés`}
+                  ? t("app.settings.workspace.seatsUsedFull", { count: seats, quota })
+                  : t("app.settings.workspace.seatsUsed", { count: seats, quota })}
               </p>
               <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
                 {seatFull
-                  ? "Ajoutez des sièges pour inviter de nouveaux agents."
-                  : "Les rôles Viewer sont gratuits et illimités."}
+                  ? t("app.settings.workspace.seatsAddHint")
+                  : t("app.settings.workspace.seatsFreeHint")}
               </p>
             </div>
             <span
@@ -155,7 +166,9 @@ export default async function TeamPage({
                 color: seatFull ? "#fff" : "var(--ink-2)",
               }}
             >
-              {seatFull ? "Ajouter des sièges" : "Gérer"}
+              {seatFull
+                ? t("app.settings.workspace.seatsAddAction")
+                : t("app.settings.workspace.seatsManage")}
             </Link>
           </div>
 
@@ -179,11 +192,11 @@ export default async function TeamPage({
                 color: "var(--ink-3)",
               }}
             >
-              <span>Agent</span>
-              <span>Rôle</span>
-              <span>Équipes</span>
-              <span>Dernier accès</span>
-              <span>Statut</span>
+              <span>{t("app.settings.workspace.roleAgent")}</span>
+              <span>{t("app.settings.workspace.colRole")}</span>
+              <span>{t("app.settings.workspace.tabTeams")}</span>
+              <span>{t("app.settings.workspace.colLastSeen")}</span>
+              <span>{t("app.settings.workspace.colStatus")}</span>
               <span className="text-right" />
             </div>
             {agents.map((a, i) => {
@@ -212,7 +225,10 @@ export default async function TeamPage({
                       <span className="block truncate" style={{ color: "var(--ink)" }}>
                         {a.name}
                         {isSelf && (
-                          <span style={{ color: "var(--ink-3)" }}> (vous)</span>
+                          <span style={{ color: "var(--ink-3)" }}>
+                            {" "}
+                            {t("app.settings.workspace.selfSuffix")}
+                          </span>
                         )}
                       </span>
                       <span
@@ -231,10 +247,12 @@ export default async function TeamPage({
                           name="role"
                           defaultValue={a.role}
                           options={[
-                            ...(me.role === "owner" ? [{ value: "owner", label: "Owner" }] : []),
-                            { value: "admin", label: "Admin" },
-                            { value: "agent", label: "Agent" },
-                            { value: "viewer", label: "Viewer" },
+                            ...(me.role === "owner"
+                              ? [{ value: "owner", label: t("app.settings.workspace.roleOwner") }]
+                              : []),
+                            { value: "admin", label: t("app.settings.workspace.roleAdmin") },
+                            { value: "agent", label: t("app.settings.workspace.roleAgent") },
+                            { value: "viewer", label: t("app.settings.workspace.roleViewer") },
                           ]}
                           style={{ width: "100%", height: 28, padding: "0 9px", borderRadius: 6 }}
                         />
@@ -252,15 +270,19 @@ export default async function TeamPage({
                     {teamNames.length > 0 ? teamNames.join(", ") : "—"}
                   </span>
                   <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-                    {a.lastSeenAt ? relativeFr(a.lastSeenAt) : "—"}
+                    {a.lastSeenAt ? t.fmt.relative(a.lastSeenAt) : "—"}
                   </span>
                   <span>
                     {a.status === "active" ? (
-                      <StatusPill tone="ok">Actif</StatusPill>
+                      <StatusPill tone="ok">{t("app.settings.workspace.statusActive")}</StatusPill>
                     ) : a.status === "invited" ? (
-                      <StatusPill tone="wait">Invité</StatusPill>
+                      <StatusPill tone="wait">
+                        {t("app.settings.workspace.statusInvited")}
+                      </StatusPill>
                     ) : (
-                      <StatusPill tone="closed">Désactivé</StatusPill>
+                      <StatusPill tone="closed">
+                        {t("app.settings.workspace.statusDisabled")}
+                      </StatusPill>
                     )}
                   </span>
                   <span className="text-right">
@@ -268,7 +290,9 @@ export default async function TeamPage({
                       (a.status === "invited" ? (
                         <form action={resendInvite} className="inline">
                           <input type="hidden" name="userId" value={a.id} />
-                          <button style={{ fontSize: 12, color: "var(--acc-2)" }}>Renvoyer</button>
+                          <button style={{ fontSize: 12, color: "var(--acc-2)" }}>
+                            {t("app.settings.workspace.resend")}
+                          </button>
                         </form>
                       ) : (
                         <form action={toggleAgentActive} className="inline">
@@ -280,7 +304,9 @@ export default async function TeamPage({
                                 a.status === "disabled" ? "var(--acc-2)" : "var(--ink-3)",
                             }}
                           >
-                            {a.status === "disabled" ? "Réactiver" : "Désactiver"}
+                            {a.status === "disabled"
+                              ? t("app.settings.workspace.reactivate")
+                              : t("app.settings.workspace.deactivate")}
                           </button>
                         </form>
                       ))}
@@ -295,7 +321,7 @@ export default async function TeamPage({
             <TextInput
               name="emails"
               required
-              placeholder="email@entreprise.fr, autre@entreprise.fr"
+              placeholder={t("app.settings.workspace.invitePlaceholder")}
               className="min-w-0 flex-1"
               style={{ minWidth: 240, minHeight: 36, padding: "7px 11px", fontSize: 13.5 }}
             />
@@ -304,21 +330,21 @@ export default async function TeamPage({
               defaultValue="agent"
               style={{ width: 140, minHeight: 36, padding: "7px 11px", fontSize: 13.5 }}
             >
-              <option value="admin">Admin</option>
-              <option value="agent">Agent</option>
-              <option value="viewer">Viewer</option>
+              <option value="admin">{t("app.settings.workspace.roleAdmin")}</option>
+              <option value="agent">{t("app.settings.workspace.roleAgent")}</option>
+              <option value="viewer">{t("app.settings.workspace.roleViewer")}</option>
             </Select>
             <button
               type="submit"
               className="rounded-md font-semibold text-white"
               style={{ height: 36, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
             >
-              Inviter
+              {t("app.settings.workspace.inviteAction")}
             </button>
           </form>
 
           <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
-            Désactiver un agent repasse ses tickets ouverts en non-assignés.
+            {t("app.settings.workspace.deactivateHint")}
           </p>
         </div>
       ) : (
@@ -333,21 +359,21 @@ export default async function TeamPage({
                 style={{ background: "var(--panel)", borderColor: "var(--line)", padding: 15 }}
               >
                 <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-                  Aucune équipe. Créez la première pour répartir les tickets.
+                  {t("app.settings.workspace.teamsEmpty")}
                 </p>
               </div>
             )}
-            {teamRows.map((t) => {
-              const memberIds = usersByTeam.get(t.id) ?? [];
+            {teamRows.map((team) => {
+              const memberIds = usersByTeam.get(team.id) ?? [];
               const members = memberIds
                 .map((id) => agentById.get(id))
                 .filter((a): a is NonNullable<typeof a> => Boolean(a));
-              const calName = t.businessHoursId
-                ? (calendarNameById.get(t.businessHoursId) ?? "—")
-                : "Astreinte 24/7";
+              const calName = team.businessHoursId
+                ? (calendarNameById.get(team.businessHoursId) ?? "—")
+                : t("app.settings.workspace.onCall");
               return (
                 <div
-                  key={t.id}
+                  key={team.id}
                   className="overflow-hidden rounded-[10px] border"
                   style={{ background: "var(--panel)", borderColor: "var(--line)" }}
                 >
@@ -359,11 +385,11 @@ export default async function TeamPage({
                       className="min-w-0 flex-1 truncate font-semibold"
                       style={{ fontSize: 14.5, color: "var(--ink)" }}
                     >
-                      {t.name}
+                      {team.name}
                     </p>
                     <Drawer
-                      title="Modifier une équipe"
-                      trigger={<>Modifier</>}
+                      title={t("app.settings.workspace.teamEditTitle")}
+                      trigger={<>{t("app.settings.workspace.teamEditAction")}</>}
                       triggerClassName="inline-flex items-center justify-center rounded-md border font-semibold"
                       triggerStyle={{
                         height: 28,
@@ -375,10 +401,11 @@ export default async function TeamPage({
                       }}
                     >
                       <TeamForm
+                        t={t}
                         action={updateTeam}
-                        teamId={t.id}
-                        name={t.name}
-                        businessHoursId={t.businessHoursId}
+                        teamId={team.id}
+                        name={team.name}
+                        businessHoursId={team.businessHoursId}
                         calendars={calendars}
                         agents={activeAgents}
                         memberIds={memberIds}
@@ -391,7 +418,9 @@ export default async function TeamPage({
                   >
                     <div className="flex">
                       {members.length === 0 && (
-                        <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>Aucun membre.</span>
+                        <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+                          {t("app.settings.workspace.teamNoMembers")}
+                        </span>
                       )}
                       {members.map((m, j) => {
                         const [bg, ink] = AV_TONES[j % AV_TONES.length]!;
@@ -417,7 +446,10 @@ export default async function TeamPage({
                       })}
                     </div>
                     <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-                      {members.length} membre{members.length > 1 ? "s" : ""} · {calName}
+                      {t("app.settings.workspace.teamMembersLine", {
+                        count: members.length,
+                        calendar: calName,
+                      })}
                     </p>
                   </div>
                 </div>
@@ -426,8 +458,8 @@ export default async function TeamPage({
           </div>
 
           <Drawer
-            title="Modifier une équipe"
-            trigger={<>+ Créer une équipe</>}
+            title={t("app.settings.workspace.teamEditTitle")}
+            trigger={<>{t("app.settings.workspace.teamCreate")}</>}
             triggerClassName="inline-flex items-center justify-center self-start rounded-md border font-semibold"
             triggerStyle={{
               height: 32,
@@ -439,6 +471,7 @@ export default async function TeamPage({
             }}
           >
             <TeamForm
+              t={t}
               action={createTeam}
               calendars={calendars}
               agents={activeAgents}
@@ -454,6 +487,7 @@ export default async function TeamPage({
 /** Formulaire d'équipe (drawer 420 px) — création et édition partagent le même corps. */
 function TeamForm({
   action,
+  t,
   teamId,
   name,
   businessHoursId,
@@ -462,6 +496,7 @@ function TeamForm({
   memberIds,
 }: {
   action: (formData: FormData) => Promise<void>;
+  t: Translate;
   teamId?: string;
   name?: string;
   businessHoursId?: string | null;
@@ -472,18 +507,18 @@ function TeamForm({
   return (
     <form action={action} className="flex h-full flex-col" style={{ gap: 14 }}>
       {teamId && <input type="hidden" name="teamId" value={teamId} />}
-      <Field label="Nom de l'équipe">
+      <Field label={t("app.settings.workspace.teamNameLabel")}>
         <TextInput
           name="name"
           required
           defaultValue={name ?? ""}
-          placeholder="Support N1"
+          placeholder={t("app.settings.workspace.teamNamePlaceholder")}
           style={{ minHeight: 36, padding: "7px 11px", fontSize: 13.5 }}
         />
       </Field>
       <div className="flex flex-col gap-1.5">
         <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-          Membres
+          {t("app.settings.workspace.teamMembersLabel")}
         </span>
         <div
           className="flex max-h-64 flex-col gap-1 overflow-y-auto rounded-md border"
@@ -503,13 +538,16 @@ function TeamForm({
           ))}
         </div>
       </div>
-      <Field label="Horaires ouvrés" hint="Les calendriers se gèrent dans SLA & horaires ouvrés.">
+      <Field
+        label={t("app.settings.workspace.teamHoursLabel")}
+        hint={t("app.settings.workspace.teamHoursHint")}
+      >
         <Select
           name="businessHoursId"
           defaultValue={businessHoursId ?? ""}
           style={{ minHeight: 36, padding: "7px 11px", fontSize: 13.5 }}
         >
-          <option value="">Astreinte 24/7</option>
+          <option value="">{t("app.settings.workspace.onCall")}</option>
           {calendars.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -535,7 +573,7 @@ function TeamForm({
               background: "var(--panel)",
             }}
           >
-            Supprimer
+            {t("app.settings.workspace.delete")}
           </button>
         )}
         <span className="flex-1" />
@@ -544,7 +582,7 @@ function TeamForm({
           className="rounded-md font-semibold text-white"
           style={{ height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
         >
-          Enregistrer
+          {t("app.settings.workspace.save")}
         </button>
       </div>
     </form>

@@ -3,22 +3,40 @@ import { requireAgent } from "@/lib/session";
 import { automationRules, automationRuns, db, teams, tickets } from "@openhelpdesk/db";
 import { and, asc, count, desc, eq, gt } from "drizzle-orm";
 import { ruleSummary } from "@/lib/rule-labels";
-import { relativeFr } from "@/lib/format";
+import { getT, type Translate } from "@/i18n/server";
 import { PageHeader, PageShell } from "@/components/settings-page";
 import { Drawer } from "@/components/settings-overlays";
 import { deleteRule, duplicateRule, moveRule, toggleRule } from "./actions";
 
 /** Modèles de l'état vide — verbatim design (ST-05). */
-const TEMPLATES: { key: string; name: string; description: string }[] = [
-  { key: "ack", name: "Accusé de réception", description: "Répond automatiquement à chaque nouveau ticket." },
-  { key: "escalade", name: "Escalade urgente", description: "Assigne les tickets Urgents à l'équipe Escalade." },
-  { key: "relance", name: "Relance client à 48 h", description: "Relance les tickets En attente sans réponse depuis 2 jours." },
-  { key: "cloture", name: "Clôture automatique à J+4", description: "Passe les tickets Résolus en Clos après 4 jours." },
-];
+function templates(t: Translate): { key: string; name: string; description: string }[] {
+  return [
+    {
+      key: "ack",
+      name: t("app.settings.rules.ackReceipt"),
+      description: t("app.settings.rules.templateAckDesc"),
+    },
+    {
+      key: "escalade",
+      name: t("app.settings.rules.templateEscalationName"),
+      description: t("app.settings.rules.templateEscalationDesc"),
+    },
+    {
+      key: "relance",
+      name: t("app.settings.rules.templateFollowUpName"),
+      description: t("app.settings.rules.templateFollowUpDesc"),
+    },
+    {
+      key: "cloture",
+      name: t("app.settings.rules.templateCloseName"),
+      description: t("app.settings.rules.templateCloseDesc"),
+    },
+  ];
+}
 
 /** « 0 exécution / 7 j » · « 312 exécutions / 7 j » (verbatim design). */
-function runsLabel(n: number): string {
-  return `${n} exécution${n > 1 ? "s" : ""} / 7 j`;
+function runsLabel(n: number, t: Translate): string {
+  return t("app.settings.rules.runsPerWeek", { count: n });
 }
 
 /**
@@ -31,6 +49,7 @@ export default async function AutomationsPage({
 }: {
   searchParams: Promise<{ saved?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { saved } = await searchParams;
 
@@ -47,7 +66,7 @@ export default async function AutomationsPage({
     .select({ id: teams.id, name: teams.name })
     .from(teams)
     .where(eq(teams.tenantId, tenant.id));
-  const teamNames = new Map(teamRows.map((t) => [t.id, t.name]));
+  const teamNames = new Map(teamRows.map((team) => [team.id, team.name]));
 
   const since = new Date(Date.now() - 7 * 24 * 3600 * 1000);
   const runCounts = await db
@@ -78,19 +97,25 @@ export default async function AutomationsPage({
   }
 
   const tabs = [
-    { label: "Déclencheurs", href: "/app/settings/automations", active: true },
-    { label: "Éditeur", href: "/app/settings/automations/new", active: false },
+    { label: t("app.settings.rules.triggersTab"), href: "/app/settings/automations", active: true },
+    {
+      label: t("app.settings.rules.editorTab"),
+      href: "/app/settings/automations/new",
+      active: false,
+    },
   ];
 
   return (
     <PageShell maxWidth={1000}>
       <PageHeader
-        title="Automatisations"
-        subtitle="Règles « quand X alors Y ». L'ordre d'exécution compte."
+        title={t("app.settings.rules.automationsTitle")}
+        subtitle={t("app.settings.rules.automationsSubtitle")}
         tabs={tabs}
       />
 
-      {saved === "1" && <p style={{ fontSize: 12.5, color: "var(--ok)" }}>✓ Enregistré</p>}
+      {saved === "1" && (
+        <p style={{ fontSize: 12.5, color: "var(--ok)" }}>{t("app.settings.rules.saved")}</p>
+      )}
 
       <div className="st-rise flex flex-col" style={{ gap: 14 }}>
         {rules.length === 0 ? (
@@ -99,19 +124,19 @@ export default async function AutomationsPage({
             style={{ padding: "40px 24px", gap: 15, borderColor: "var(--line)" }}
           >
             <p className="font-semibold" style={{ fontSize: 16, color: "var(--ink)" }}>
-              Aucune automatisation
+              {t("app.settings.rules.rulesEmptyTitle")}
             </p>
             <p style={{ fontSize: 13.5, color: "var(--ink-2)", maxWidth: 420 }}>
-              Partez d&apos;un modèle éprouvé, puis adaptez-le à votre organisation.
+              {t("app.settings.rules.rulesEmptyText")}
             </p>
             <div
               className="grid w-full text-left"
               style={{ gridTemplateColumns: "1fr 1fr", gap: 9, maxWidth: 540, marginTop: 4 }}
             >
-              {TEMPLATES.map((t) => (
+              {templates(t).map((tpl) => (
                 <Link
-                  key={t.key}
-                  href={`/app/settings/automations/new?template=${t.key}`}
+                  key={tpl.key}
+                  href={`/app/settings/automations/new?template=${tpl.key}`}
                   className="rounded-[9px] border"
                   style={{
                     padding: "13px 15px",
@@ -120,10 +145,10 @@ export default async function AutomationsPage({
                   }}
                 >
                   <span className="block font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
-                    {t.name}
+                    {tpl.name}
                   </span>
                   <span className="block" style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
-                    {t.description}
+                    {tpl.description}
                   </span>
                 </Link>
               ))}
@@ -162,7 +187,7 @@ export default async function AutomationsPage({
                       disabled={index === 0}
                       className="block leading-none disabled:opacity-30"
                       style={{ color: "var(--ink-3)", fontSize: 9 }}
-                      title="Monter"
+                      title={t("app.settings.rules.moveUp")}
                     >
                       ▲
                     </button>
@@ -174,7 +199,7 @@ export default async function AutomationsPage({
                       disabled={index === rules.length - 1}
                       className="block leading-none disabled:opacity-30"
                       style={{ color: "var(--ink-3)", fontSize: 9 }}
-                      title="Descendre"
+                      title={t("app.settings.rules.moveDown")}
                     >
                       ▼
                     </button>
@@ -203,7 +228,7 @@ export default async function AutomationsPage({
                   className="whitespace-nowrap tabular-nums"
                   style={{ fontSize: 12, color: "var(--ink-3)" }}
                 >
-                  {runsLabel(runs7d.get(rule.id) ?? 0)}
+                  {runsLabel(runs7d.get(rule.id) ?? 0, t)}
                 </span>
 
                 <form action={toggleRule}>
@@ -219,7 +244,11 @@ export default async function AutomationsPage({
                       flex: "none",
                       background: rule.active ? "var(--acc)" : "var(--line)",
                     }}
-                    title={rule.active ? "Désactiver" : "Activer"}
+                    title={
+                      rule.active
+                        ? t("app.settings.rules.ruleDisable")
+                        : t("app.settings.rules.ruleEnable")
+                    }
                   >
                     <span
                       className="absolute rounded-full bg-white transition-all"
@@ -235,21 +264,25 @@ export default async function AutomationsPage({
                 </form>
 
                 <Drawer
-                  title="Journal d'exécution"
-                  trigger={<>Journal</>}
+                  title={t("app.settings.rules.journalTitle")}
+                  trigger={<>{t("app.settings.rules.journalTrigger")}</>}
                   triggerClassName="whitespace-nowrap"
                   triggerStyle={{ fontSize: 12, color: "var(--acc-2)" }}
                 >
-                  <RuleJournal rows={journals.get(rule.id) ?? []} />
+                  <RuleJournal rows={journals.get(rule.id) ?? []} t={t} />
                 </Drawer>
 
                 <form action={duplicateRule}>
                   <input type="hidden" name="ruleId" value={rule.id} />
-                  <button style={{ fontSize: 12, color: "var(--ink-3)" }}>Dupliquer</button>
+                  <button style={{ fontSize: 12, color: "var(--ink-3)" }}>
+                    {t("app.settings.rules.duplicate")}
+                  </button>
                 </form>
                 <form action={deleteRule}>
                   <input type="hidden" name="ruleId" value={rule.id} />
-                  <button style={{ fontSize: 12, color: "var(--dang)" }}>Supprimer</button>
+                  <button style={{ fontSize: 12, color: "var(--dang)" }}>
+                    {t("app.settings.rules.delete")}
+                  </button>
                 </form>
               </div>
             ))}
@@ -261,7 +294,7 @@ export default async function AutomationsPage({
           className="inline-flex items-center justify-center self-start rounded-md font-semibold text-white"
           style={{ height: 32, padding: "0 13px", fontSize: 13, background: "var(--acc)" }}
         >
-          + Nouvelle règle
+          {t("app.settings.rules.ruleNew")}
         </Link>
       </div>
     </PageShell>
@@ -270,13 +303,15 @@ export default async function AutomationsPage({
 
 function RuleJournal({
   rows,
+  t,
 }: {
   rows: { createdAt: Date; ticketNumber: number | null; actionsApplied: unknown }[];
+  t: Translate;
 }) {
   if (rows.length === 0) {
     return (
       <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-        Aucune exécution enregistrée pour cette règle.
+        {t("app.settings.rules.journalEmpty")}
       </p>
     );
   }
@@ -285,7 +320,7 @@ function RuleJournal({
       {rows.map((r, i) => (
         <li key={i} className="flex flex-col" style={{ gap: 6 }}>
           <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-            {relativeFr(r.createdAt)}
+            {t.fmt.relative(r.createdAt)}
           </span>
           <span
             className="flex items-start rounded-md border"
@@ -304,8 +339,8 @@ function RuleJournal({
               ? (r.actionsApplied as { type?: string }[])
                   .map((a) => a?.type ?? "")
                   .filter(Boolean)
-                  .join(", ") || "aucune action"
-              : "aucune action"}
+                  .join(", ") || t("app.settings.rules.journalNoAction")
+              : t("app.settings.rules.journalNoAction")}
           </span>
         </li>
       ))}

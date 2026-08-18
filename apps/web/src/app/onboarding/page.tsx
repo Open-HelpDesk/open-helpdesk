@@ -45,7 +45,7 @@ export default async function OnboardingPage({
   ];
 
   return (
-    <div className="flex min-h-screen" lang="fr">
+    <div className="flex min-h-screen">
       {/* Colonne gauche — stepper 320 px */}
       <aside
         className="hidden w-[320px] shrink-0 flex-col border-r p-8 md:flex"

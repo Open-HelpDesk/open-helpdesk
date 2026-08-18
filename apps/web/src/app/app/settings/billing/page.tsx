@@ -1,7 +1,7 @@
 import { requireAgent } from "@/lib/session";
 import { attachments, db, tickets, users } from "@openhelpdesk/db";
 import { and, count, eq, gte, isNull, ne, sum } from "drizzle-orm";
-import { nFr } from "@/lib/format";
+import { getT, type Translate } from "@/i18n/server";
 import {
   PLAN_LABELS,
   STORAGE_QUOTA_BYTES,
@@ -19,9 +19,10 @@ const SEAT_PRICE: Record<string, number> = { free: 0, standard: 12, pro: 39 };
 /** Volume mensuel de référence de la jauge « illimité » (indicatif, aucun plafond). */
 const TICKETS_SCALE = 10_000;
 
-function gbFr(bytes: number): string {
-  const gb = bytes / (1024 * 1024 * 1024);
-  return `${gb.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} Go`;
+/** Volume en gigaoctets, arrondi au dixieme. */
+function gbLabel(t: Translate, bytes: number): string {
+  const gb = Math.round((bytes / (1024 * 1024 * 1024)) * 10) / 10;
+  return t("app.settings.workspace.gigabytes", { value: gb });
 }
 
 /** Ligne de consommation : libellé + valeur + jauge 7 px (orange au-delà de 85 %). */
@@ -61,6 +62,7 @@ function QuotaRow({ label, value, pct }: { label: string; value: string; pct: nu
  * factures (état vide — la facturation vit sur l'offre cloud).
  */
 export default async function BillingPage() {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const planId = planIdOf(tenant.plan);
   const ent = entitlementsFor(tenant.plan);
@@ -102,14 +104,14 @@ export default async function BillingPage() {
   const monthly = seatPrice * quota;
   const seatLine =
     seatPrice > 0
-      ? `par mois · ${quota} sièges à ${seatPrice} €`
-      : `par mois · ${quota} sièges inclus`;
+      ? t("app.settings.workspace.seatPricing", { count: quota, price: seatPrice })
+      : t("app.settings.workspace.seatsIncluded", { count: quota });
 
   return (
     <PageShell maxWidth={1040}>
       <PageHeader
-        title="Abonnement & facturation"
-        subtitle="Plan, sièges, quotas, moyen de paiement et historique des factures."
+        title={t("app.settings.workspace.billingTitle")}
+        subtitle={t("app.settings.workspace.billingSubtitle")}
       />
 
       <div className="st-rise flex flex-col" style={{ gap: 20 }}>
@@ -144,7 +146,7 @@ export default async function BillingPage() {
                   color: "var(--acc)",
                 }}
               >
-                AUTO-HÉBERGÉ
+                {t("app.settings.workspace.selfHosted")}
               </span>
             </div>
             <div className="flex flex-wrap items-baseline" style={{ gap: 6 }}>
@@ -152,17 +154,17 @@ export default async function BillingPage() {
                 className="whitespace-nowrap font-bold tabular-nums"
                 style={{ fontSize: 30, letterSpacing: "-0.03em", color: "var(--ink)" }}
               >
-                {nFr(monthly)} €
+                {t("app.settings.workspace.priceMonthly", { amount: monthly })}
               </span>
               <span style={{ fontSize: 13, color: "var(--ink-2)" }}>{seatLine}</span>
             </div>
             <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-              Aucune échéance sur cette instance — la facturation est gérée sur l'offre cloud.
+              {t("app.settings.workspace.billingNoDue")}
             </p>
             <div className="flex" style={{ gap: 8, marginTop: 2 }}>
               <button
                 disabled
-                title="Disponible sur l'offre cloud"
+                title={t("app.settings.workspace.cloudOnly")}
                 className="grid place-items-center font-semibold text-white disabled:opacity-50"
                 style={{
                   height: 34,
@@ -173,11 +175,11 @@ export default async function BillingPage() {
                   whiteSpace: "nowrap",
                 }}
               >
-                Changer de plan
+                {t("app.settings.workspace.changePlan")}
               </button>
               <button
                 disabled
-                title="Disponible sur l'offre cloud"
+                title={t("app.settings.workspace.cloudOnly")}
                 className="grid place-items-center border font-semibold disabled:opacity-50"
                 style={{
                   height: 34,
@@ -190,7 +192,7 @@ export default async function BillingPage() {
                   whiteSpace: "nowrap",
                 }}
               >
-                Gérer les sièges
+                {t("app.settings.workspace.manageSeats")}
               </button>
             </div>
           </div>
@@ -207,21 +209,21 @@ export default async function BillingPage() {
             }}
           >
             <p className="font-semibold" style={{ fontSize: 14, color: "var(--ink)" }}>
-              Consommation du mois
+              {t("app.settings.workspace.usageTitle")}
             </p>
             <QuotaRow
-              label="Sièges"
+              label={t("app.settings.workspace.quotaSeats")}
               value={`${seats} / ${quota}`}
               pct={quota > 0 ? (seats / quota) * 100 : 0}
             />
             <QuotaRow
-              label="Tickets ce mois"
-              value={`${nFr(monthTickets)} / illimité`}
+              label={t("app.settings.workspace.quotaTickets")}
+              value={t("app.settings.workspace.quotaTicketsValue", { tickets: monthTickets })}
               pct={(monthTickets / TICKETS_SCALE) * 100}
             />
             <QuotaRow
-              label="Stockage"
-              value={`${gbFr(storageBytes)} / ${gbFr(STORAGE_QUOTA_BYTES)}`}
+              label={t("app.settings.workspace.quotaStorage")}
+              value={`${gbLabel(t, storageBytes)} / ${gbLabel(t, STORAGE_QUOTA_BYTES)}`}
               pct={(storageBytes / STORAGE_QUOTA_BYTES) * 100}
             />
           </div>
@@ -230,7 +232,7 @@ export default async function BillingPage() {
         {/* Historique des factures */}
         <div className="flex flex-col" style={{ gap: 11 }}>
           <p className="font-semibold" style={{ fontSize: 14.5, color: "var(--ink)" }}>
-            Historique des factures
+            {t("app.settings.workspace.invoicesTitle")}
           </p>
           <div
             className="overflow-x-auto border"
@@ -249,14 +251,14 @@ export default async function BillingPage() {
                   color: "var(--ink-3)",
                 }}
               >
-                <span>Numéro</span>
-                <span>Période</span>
-                <span className="text-right">Montant</span>
-                <span className="text-right">Statut</span>
+                <span>{t("app.settings.workspace.colNumber")}</span>
+                <span>{t("app.settings.workspace.colPeriod")}</span>
+                <span className="text-right">{t("app.settings.workspace.colAmount")}</span>
+                <span className="text-right">{t("app.settings.workspace.colStatus")}</span>
                 <span className="text-right" />
               </div>
               <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-                Aucune facture — les factures apparaîtront ici sur l'offre cloud.
+                {t("app.settings.workspace.invoicesEmpty")}
               </p>
             </div>
           </div>

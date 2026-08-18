@@ -9,6 +9,7 @@ import {
   Select,
   Toggle,
 } from "@/components/settings-page";
+import { getT } from "@/i18n/server";
 import { savePortalConfig } from "./actions";
 
 type PortalConfig = {
@@ -79,6 +80,7 @@ export default async function PortalSettingsPage({
 }: {
   searchParams: Promise<{ tab?: string; saved?: string }>;
 }) {
+  const t = await getT();
   const { tenant } = await requireAgent();
   const { tab, saved } = await searchParams;
   const activeTab = tab === "widget" ? "widget" : "portal";
@@ -88,23 +90,31 @@ export default async function PortalSettingsPage({
   const branding = (tenant.branding ?? {}) as { accentColor?: string };
   const accent = branding.accentColor ?? "#0B5F46";
   const widgetColor = widget.color ?? accent;
-  const widgetTitle = widget.title ?? "Besoin d'aide ?";
+  const widgetTitle = widget.title ?? t("app.settings.portal.widgetTitleDefault");
   const ent = entitlementsFor(tenant.plan);
   const isPro = ent.multiBrand;
   const portalHost = `${tenant.slug}.open-helpdesk.com`;
   const snippet = `<script src="https://${portalHost}/widget.js" async></script>`;
-  const welcome = config.welcomeText || "Comment pouvons-nous vous aider ?";
+  const welcome = config.welcomeText || t("app.settings.portal.welcomeDefault");
 
   const tabs = [
-    { label: "Portail", href: "/app/settings/portal", active: activeTab === "portal" },
-    { label: "Widget", href: "/app/settings/portal?tab=widget", active: activeTab === "widget" },
+    {
+      label: t("app.settings.portal.tabPortal"),
+      href: "/app/settings/portal",
+      active: activeTab === "portal",
+    },
+    {
+      label: t("app.settings.portal.tabWidget"),
+      href: "/app/settings/portal?tab=widget",
+      active: activeTab === "widget",
+    },
   ];
 
   return (
     <PageShell maxWidth={1100}>
       <PageHeader
-        title="Portail client & widget"
-        subtitle="Visibilité de la base de connaissances, authentification des contacts et widget embarquable."
+        title={t("app.settings.portal.title")}
+        subtitle={t("app.settings.portal.subtitle")}
         tabs={tabs}
       />
 
@@ -120,16 +130,16 @@ export default async function PortalSettingsPage({
                 <Toggle
                   name="portalEnabled"
                   defaultChecked={config.portalEnabled !== false}
-                  label="Portail client activé"
-                  hint={`Accessible sur ${portalHost}/help`}
+                  label={t("app.settings.portal.enabledLabel")}
+                  hint={t("app.settings.portal.enabledHint", { host: portalHost })}
                 />
               </TogglePanel>
               <TogglePanel>
                 <Toggle
                   name="kbPublished"
                   defaultChecked={config.kbPublished !== false}
-                  label="Base de connaissances publiée"
-                  hint="Les articles publiés sont visibles sans connexion."
+                  label={t("app.settings.portal.kbPublishedLabel")}
+                  hint={t("app.settings.portal.kbPublishedHint")}
                 />
               </TogglePanel>
               <TogglePanel>
@@ -137,8 +147,8 @@ export default async function PortalSettingsPage({
                   name="hidePoweredBy"
                   defaultChecked={isPro && config.hidePoweredBy === true}
                   disabled={!isPro}
-                  label="Masquer « Propulsé par Open HelpDesk »"
-                  hint="Disponible à partir du plan Pro."
+                  label={t("app.settings.portal.hidePoweredByLabel")}
+                  hint={t("app.settings.portal.hidePoweredByHint")}
                 />
               </TogglePanel>
 
@@ -146,35 +156,39 @@ export default async function PortalSettingsPage({
                 className="grid"
                 style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
               >
-                <Field label="Visibilité de la base de connaissances">
+                <Field label={t("app.settings.portal.kbVisibilityLabel")}>
                   <Select
                     name="kbVisibility"
                     defaultValue={config.kbVisibility ?? "public"}
                     style={CONTROL}
                   >
-                    <option value="public">Publique</option>
-                    <option value="authenticated">Sur connexion</option>
+                    <option value="public">{t("app.settings.portal.kbVisibilityPublic")}</option>
+                    <option value="authenticated">
+                      {t("app.settings.portal.kbVisibilityAuthenticated")}
+                    </option>
                   </Select>
                 </Field>
-                <Field label="Authentification des contacts">
+                <Field label={t("app.settings.portal.contactAuthLabel")}>
                   <Select
                     name="contactAuth"
                     defaultValue={config.contactAuth ?? "magic_link"}
                     style={CONTROL}
                   >
-                    <option value="magic_link">Lien magique par email</option>
-                    <option value="sso">SSO d'organisation</option>
+                    <option value="magic_link">
+                      {t("app.settings.portal.contactAuthMagicLink")}
+                    </option>
+                    <option value="sso">{t("app.settings.portal.contactAuthSso")}</option>
                   </Select>
                 </Field>
               </div>
 
-              <Field label="Texte d'accueil">
+              <Field label={t("app.settings.portal.welcomeLabel")}>
                 <textarea
                   name="welcomeText"
                   rows={2}
                   maxLength={200}
                   defaultValue={config.welcomeText ?? ""}
-                  placeholder="Comment pouvons-nous vous aider ?"
+                  placeholder={t("app.settings.portal.welcomeDefault")}
                   className="border"
                   style={{
                     minHeight: 60,
@@ -192,7 +206,7 @@ export default async function PortalSettingsPage({
               <div className="flex flex-col" style={{ gap: 9 }}>
                 <div className="flex items-center" style={{ gap: 9 }}>
                   <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                    Domaine personnalisé
+                    {t("app.settings.portal.customDomain")}
                   </span>
                   <PlanProBadge />
                 </div>
@@ -227,7 +241,7 @@ export default async function PortalSettingsPage({
                         className="inline-block rounded-full"
                         style={{ width: 7, height: 7, background: "var(--ok)" }}
                       />
-                      Vérifié
+                      {t("app.settings.portal.domainVerified")}
                     </span>
                   </div>
                   <div
@@ -244,14 +258,14 @@ export default async function PortalSettingsPage({
                       className="inline-block rounded-full"
                       style={{ width: 7, height: 7, background: "var(--ok)" }}
                     />
-                    Certificat TLS émis · renouvellement automatique le 12 octobre 2026
+                    {t("app.settings.portal.tlsIssued")}
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Aperçu du portail */}
-            <PreviewPanel label="Aperçu du portail">
+            <PreviewPanel label={t("app.settings.portal.previewPortal")}>
               <div
                 className="flex flex-col items-center"
                 style={{ padding: "22px 18px", gap: 13 }}
@@ -311,8 +325,8 @@ export default async function PortalSettingsPage({
                 <Toggle
                   name="widgetEnabled"
                   defaultChecked={widget.enabled !== false}
-                  label="Widget embarquable activé"
-                  hint="Le bouton d'aide s'affiche sur votre site avec le snippet ci-contre."
+                  label={t("app.settings.portal.widgetEnabledLabel")}
+                  hint={t("app.settings.portal.widgetEnabledHint")}
                 />
               </TogglePanel>
 
@@ -320,10 +334,10 @@ export default async function PortalSettingsPage({
                 className="grid"
                 style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
               >
-                <Field label="Titre du bouton">
+                <Field label={t("app.settings.portal.widgetTitleLabel")}>
                   <input
                     name="widgetTitle"
-                    defaultValue={widget.title ?? "Besoin d'aide ?"}
+                    defaultValue={widget.title ?? t("app.settings.portal.widgetTitleDefault")}
                     maxLength={60}
                     className="border"
                     style={{
@@ -334,19 +348,22 @@ export default async function PortalSettingsPage({
                     }}
                   />
                 </Field>
-                <Field label="Position sur la page">
+                <Field label={t("app.settings.portal.widgetPositionLabel")}>
                   <Select
                     name="widgetPosition"
                     defaultValue={widget.position ?? "right"}
                     style={CONTROL}
                   >
-                    <option value="right">En bas à droite</option>
-                    <option value="left">En bas à gauche</option>
+                    <option value="right">{t("app.settings.portal.widgetPositionRight")}</option>
+                    <option value="left">{t("app.settings.portal.widgetPositionLeft")}</option>
                   </Select>
                 </Field>
               </div>
 
-              <Field label="Couleur du widget" hint="Reprend l'accent du workspace par défaut.">
+              <Field
+                label={t("app.settings.portal.widgetColorLabel")}
+                hint={t("app.settings.portal.widgetColorHint")}
+              >
                 <div
                   className="flex items-center border"
                   style={{
@@ -360,7 +377,7 @@ export default async function PortalSettingsPage({
                     type="color"
                     name="widgetColor"
                     defaultValue={widgetColor}
-                    aria-label="Couleur du widget"
+                    aria-label={t("app.settings.portal.widgetColorLabel")}
                     style={{ width: 30, height: 20, border: 0, background: "transparent", padding: 0 }}
                   />
                   <span className="font-mono" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
@@ -371,7 +388,7 @@ export default async function PortalSettingsPage({
             </div>
 
             {/* Aperçu du widget */}
-            <PreviewPanel label="Aperçu du widget">
+            <PreviewPanel label={t("app.settings.portal.previewWidget")}>
               <div className="flex flex-col" style={{ padding: 18, gap: 14 }}>
                 <div
                   className="relative overflow-hidden border"
@@ -428,7 +445,7 @@ export default async function PortalSettingsPage({
                 </div>
                 <div className="flex flex-col" style={{ gap: 6 }}>
                   <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                    Snippet à coller avant &lt;/body&gt;
+                    {t("app.settings.portal.snippetLabel")}
                   </span>
                   <code
                     className="border font-mono"

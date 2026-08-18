@@ -6,6 +6,7 @@
  * (jeton affiché une seule fois) et correspondance des groupes éditable.
  */
 import { useActionState, useRef, useState } from "react";
+import { useT } from "@/i18n/client";
 import type { ScimTokenState } from "./actions";
 
 const inputStyle = {
@@ -24,7 +25,8 @@ const CELL: React.CSSProperties = {
 };
 
 /** « Copier » en texte accent (12,5 px/600) — pas de cadre, comme le design. */
-export function CopyLink({ text, label = "Copier" }: { text: string; label?: string }) {
+export function CopyLink({ text, label }: { text: string; label?: string }) {
+  const t = useT();
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   return (
@@ -39,43 +41,43 @@ export function CopyLink({ text, label = "Copier" }: { text: string; label?: str
       className="whitespace-nowrap font-semibold"
       style={{ fontSize: 12.5, color: copied ? "var(--ok)" : "var(--acc-2)" }}
     >
-      {copied ? "✓ Copié" : label}
+      {copied ? t("app.settings.sso.copied") : (label ?? t("app.settings.sso.copy"))}
     </button>
   );
 }
-
-const ENFORCEMENTS: {
-  value: "optional" | "verified_domains" | "all";
-  title: string;
-  desc: string;
-}[] = [
-  {
-    value: "optional",
-    title: "Optionnel",
-    desc: "Les agents choisissent entre SSO et mot de passe. Recommandé pendant le déploiement.",
-  },
-  {
-    value: "verified_domains",
-    title: "Imposé aux domaines vérifiés",
-    desc: "Tout agent d'un domaine vérifié doit passer par le SSO. Les invités externes gardent le mot de passe.",
-  },
-  {
-    value: "all",
-    title: "Imposé à tous",
-    desc: "Le formulaire email et mot de passe disparaît de l'écran de connexion, sauf pour le compte de secours.",
-  },
-];
 
 export function EnforcementRadios({
   initial,
 }: {
   initial: "optional" | "verified_domains" | "all";
 }) {
+  const t = useT();
   const [value, setValue] = useState(initial);
+  const enforcements: {
+    value: "optional" | "verified_domains" | "all";
+    title: string;
+    desc: string;
+  }[] = [
+    {
+      value: "optional",
+      title: t("app.settings.sso.optional"),
+      desc: t("app.settings.sso.enforcementOptionalDesc"),
+    },
+    {
+      value: "verified_domains",
+      title: t("app.settings.sso.enforcementDomainsTitle"),
+      desc: t("app.settings.sso.enforcementDomainsDesc"),
+    },
+    {
+      value: "all",
+      title: t("app.settings.sso.enforcementAllTitle"),
+      desc: t("app.settings.sso.enforcementAllDesc"),
+    },
+  ];
   return (
     <div className="flex flex-col" style={{ gap: 9 }}>
       <div className="flex flex-col" style={{ gap: 9 }}>
-        {ENFORCEMENTS.map((o) => {
+        {enforcements.map((o) => {
           const on = value === o.value;
           return (
             <label
@@ -142,9 +144,7 @@ export function EnforcementRadios({
             textWrap: "pretty",
           }}
         >
-          Avant d'imposer le SSO, vérifiez que votre propre compte s'y connecte : un mapping
-          incorrect vous exclurait du workspace. Un compte de secours reste toujours autorisé
-          par mot de passe.
+          {t("app.settings.sso.enforcementAllWarning")}
         </p>
       )}
     </div>
@@ -164,6 +164,7 @@ export function ScimEndpoint({
   hint: string | null;
   action: (prev: ScimTokenState, formData: FormData) => Promise<ScimTokenState>;
 }) {
+  const t = useT();
   const [state, formAction, pending] = useActionState(action, null);
   const token = state ? state.token : hint;
 
@@ -182,7 +183,7 @@ export function ScimEndpoint({
         }}
       >
         <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-          URL de base SCIM
+          {t("app.settings.sso.scimBaseUrl")}
         </span>
         <span className="min-w-0 truncate font-mono" style={{ fontSize: 12.5, color: "var(--ink)" }}>
           {url}
@@ -201,13 +202,13 @@ export function ScimEndpoint({
         }}
       >
         <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-          Jeton porteur
+          {t("app.settings.sso.scimToken")}
         </span>
         <span
           className="min-w-0 truncate font-mono"
           style={{ fontSize: 12.5, color: state ? "var(--ink)" : "var(--ink-3)" }}
         >
-          {token ?? "Aucun jeton généré"}
+          {token ?? t("app.settings.sso.scimNoToken")}
         </span>
         <span className="flex items-center justify-end" style={{ gap: 10 }}>
           {state && <CopyLink text={state.token} />}
@@ -218,7 +219,11 @@ export function ScimEndpoint({
               className="whitespace-nowrap font-semibold disabled:opacity-50"
               style={{ fontSize: 12.5, color: "var(--acc-2)" }}
             >
-              {pending ? "…" : token ? "Régénérer" : "Générer"}
+              {pending
+                ? "…"
+                : token
+                  ? t("app.settings.sso.scimRegenerate")
+                  : t("app.settings.sso.scimGenerate")}
             </button>
           </form>
         </span>
@@ -232,8 +237,7 @@ export function ScimEndpoint({
           textWrap: "pretty",
         }}
       >
-        Le jeton n'est affiché qu'une seule fois. Le régénérer interrompt la synchronisation
-        jusqu'à sa mise à jour chez l'IdP.
+        {t("app.settings.sso.scimTokenWarning")}
       </div>
     </div>
   );
@@ -253,6 +257,7 @@ export function ScimGroupsField({
   /** Formulaire d'accueil (attribut `form=`) — la barre de sauvegarde vit ailleurs. */
   formId?: string;
 }) {
+  const t = useT();
   const [rows, setRows] = useState<GroupRow[]>(
     initial.length > 0 ? initial : [{ group: "", team: "", role: "agent" }],
   );
@@ -280,11 +285,11 @@ export function ScimGroupsField({
             color: "var(--ink-3)",
           }}
         >
-          <span>Groupe IdP</span>
+          <span>{t("app.settings.sso.colIdpGroup")}</span>
           <span />
-          <span>Équipe</span>
-          <span>Rôle attribué</span>
-          <span className="text-right">Membres</span>
+          <span>{t("app.settings.sso.team")}</span>
+          <span>{t("app.settings.sso.colAssignedRole")}</span>
+          <span className="text-right">{t("app.settings.sso.colMembers")}</span>
         </div>
         {rows.map((r, i) => (
           <div
@@ -334,15 +339,15 @@ export function ScimGroupsField({
               className="min-w-0 border"
               style={CELL}
             >
-              <option value="admin">Admin</option>
-              <option value="agent">Agent</option>
-              <option value="viewer">Viewer</option>
+              <option value="admin">{t("app.settings.sso.roleAdmin")}</option>
+              <option value="agent">{t("app.settings.sso.roleAgent")}</option>
+              <option value="viewer">{t("app.settings.sso.roleViewer")}</option>
             </select>
             <span className="flex items-center justify-end" style={{ gap: 10 }}>
               <button
                 type="button"
                 onClick={() => setRows(rows.filter((_, j) => j !== i))}
-                aria-label="Retirer la correspondance"
+                aria-label={t("app.settings.sso.removeMapping")}
                 style={{ fontSize: 12, color: "var(--ink-3)" }}
               >
                 ✕
@@ -357,7 +362,7 @@ export function ScimGroupsField({
         className="self-start font-medium"
         style={{ fontSize: 12.5, color: "var(--acc-2)" }}
       >
-        + Ajouter une correspondance
+        {t("app.settings.sso.addMapping")}
       </button>
     </div>
   );
