@@ -3,7 +3,8 @@ import { entitlementsFor } from "@/lib/entitlements";
 import { getPortalContact, getPortalTenant } from "@/lib/portal-auth";
 import { getOrgAdminOrg } from "@/lib/portal-data";
 import { portalSignOut } from "../actions";
-import { initialsFr, shortNameFr } from "../portal-format";
+import { getT } from "@/i18n/server";
+import { initials, shortName } from "@/i18n/format";
 
 /**
  * Chrome du portail client (maquette PT) : header 66 px (logo 32, marque en serif
@@ -12,14 +13,17 @@ import { initialsFr, shortNameFr } from "../portal-format";
  * /help/login et /help/auth vivent hors de ce groupe — sans chrome (PT-07).
  */
 export default async function PortalChromeLayout({ children }: { children: React.ReactNode }) {
+  const t = await getT();
   const tenant = await getPortalTenant();
   const session = await getPortalContact();
   const adminOrg = session ? await getOrgAdminOrg(session.tenant.id, session.contact.id) : null;
-  const name = tenant?.name ?? "Centre d'aide";
+  const name = tenant?.name ?? t("chrome.defaultName");
   // « Masquer Propulsé par Open HelpDesk » : réglage ST-09, réservé au plan Pro.
   const hidePoweredBy =
     (tenant?.portalConfig as { hidePoweredBy?: boolean } | null)?.hidePoweredBy === true &&
     entitlementsFor(tenant?.plan ?? "").multiBrand;
+
+  const [poweredBefore, poweredAfter] = t.parts("chrome.poweredBy", "product");
 
   return (
     <div className="flex min-h-screen flex-col" style={{ background: "var(--bg)" }}>
@@ -45,10 +49,10 @@ export default async function PortalChromeLayout({ children }: { children: React
           <span className="flex-1" />
           <div className="flex items-center gap-[22px] max-sm:hidden">
             <Link href="/help/requests/new" className="pt-navlink text-[14.5px] font-medium">
-              Soumettre une demande
+              {t("chrome.submitRequest")}
             </Link>
             <Link href="/help/requests" className="pt-navlink text-[14.5px] font-medium">
-              Mes demandes
+              {t("chrome.myRequests")}
             </Link>
           </div>
           {session ? (
@@ -56,13 +60,13 @@ export default async function PortalChromeLayout({ children }: { children: React
               <summary
                 className="pt-pill flex items-center gap-[9px] rounded-full py-1 pl-[13px] pr-[5px]">
                 <span className="text-sm font-medium" style={{ color: "var(--ink-2)" }}>
-                  {shortNameFr(session.contact.name, session.contact.email)}
+                  {shortName(session.contact.name, session.contact.email)}
                 </span>
                 <span
                   className="grid h-[26px] w-[26px] place-items-center rounded-full text-[10px] font-bold"
                   style={{ background: "var(--open-t)", color: "var(--open)" }}
                 >
-                  {initialsFr(session.contact.name ?? session.contact.email)}
+                  {initials(session.contact.name ?? session.contact.email)}
                 </span>
               </summary>
               <div
@@ -85,7 +89,7 @@ export default async function PortalChromeLayout({ children }: { children: React
                     className="pt-menu-item px-2.5 py-2 text-[14.5px] hover:no-underline"
                     style={{ color: "var(--ink)" }}
                   >
-                    Mon organisation
+                    {t("chrome.myOrganization")}
                   </Link>
                 )}
                 <form action={portalSignOut}>
@@ -94,7 +98,7 @@ export default async function PortalChromeLayout({ children }: { children: React
                     className="pt-menu-item w-full px-2.5 py-2 text-left text-[14.5px]"
                     style={{ color: "var(--ink)" }}
                   >
-                    Se déconnecter
+                    {t("chrome.signOut")}
                   </button>
                 </form>
               </div>
@@ -105,7 +109,7 @@ export default async function PortalChromeLayout({ children }: { children: React
               className="pt-pill flex items-center gap-[9px] rounded-full py-1 pl-[13px] pr-[5px] hover:no-underline"
             >
               <span className="text-sm font-medium" style={{ color: "var(--ink-2)" }}>
-                Se connecter
+                {t("chrome.signIn")}
               </span>
               <span
                 className="grid h-[26px] w-[26px] place-items-center rounded-full"
@@ -127,14 +131,14 @@ export default async function PortalChromeLayout({ children }: { children: React
             className="grid h-[46px] flex-1 place-items-center rounded-[10px] border text-sm font-medium hover:no-underline"
             style={{ borderColor: "var(--line)", color: "var(--ink)" }}
           >
-            Soumettre
+            {t("chrome.submitShort")}
           </Link>
           <Link
             href="/help/requests"
             className="grid h-[46px] flex-1 place-items-center rounded-[10px] border text-sm font-medium hover:no-underline"
             style={{ borderColor: "var(--line)", color: "var(--ink)" }}
           >
-            Mes demandes
+            {t("chrome.myRequests")}
           </Link>
         </div>
       </header>
@@ -149,16 +153,17 @@ export default async function PortalChromeLayout({ children }: { children: React
           className="flex flex-wrap items-center gap-4 px-9 py-6 text-[13px] max-sm:px-[18px]"
           style={{ color: "var(--ink-3)" }}
         >
-          <span>
-            © {new Date().getFullYear()} {name}
-          </span>
+          <span>{t("chrome.copyright", { year: new Date().getFullYear(), name })}</span>
           <span className="flex-1" />
           {!hidePoweredBy && (
+            /* Le nom du produit est un lien : la phrase est découpée autour de
+               son emplacement pour que chaque langue garde son ordre de mots. */
             <span>
-              Propulsé par{" "}
+              {poweredBefore}
               <a href="https://open-helpdesk.com" className="pt-link">
                 Open HelpDesk
               </a>
+              {poweredAfter}
             </span>
           )}
         </div>

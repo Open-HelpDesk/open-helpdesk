@@ -24,6 +24,9 @@ import {
 } from "@/lib/portal-auth";
 import { saveUploadedFiles } from "@/lib/storage";
 
+import { getT } from "@/i18n/server";
+import type { MessageKey } from "@/i18n/dictionaries/fr";
+
 const BASE_DOMAIN = process.env.BASE_DOMAIN ?? "localhost:3000";
 const PROTOCOL = BASE_DOMAIN.includes("localhost") ? "http" : "https";
 
@@ -96,13 +99,24 @@ export async function portalSignOut() {
   redirect("/help");
 }
 
-/** Types de demande de la maquette PT-04 — stockés dans tickets.type. */
-const REQUEST_TYPES = ["Support technique", "Question facturation", "Demande d'évolution"];
+/**
+ * Types de demande de PT-04. Le formulaire poste une clé stable ; `tickets.type`
+ * reçoit le libellé dans la langue du tenant.
+ *
+ * C'est un champ libre, que les agents éditent aussi à la main et que le seed
+ * remplit avec « Incident » : y écrire la clé afficherait « technical » dans
+ * l'espace agent. Le libellé y est donc du contenu, au même titre que le sujet.
+ */
+const REQUEST_TYPE_KEYS: Record<string, MessageKey> = {
+  technical: "newRequest.typeTechnical",
+  billing: "newRequest.typeBilling",
+  feature: "newRequest.typeFeature",
+};
 /** « Urgence » client → priorité interne. */
 const URGENCY_TO_PRIORITY: Record<string, "low" | "normal" | "high"> = {
-  Basse: "low",
-  Normale: "normal",
-  Haute: "high",
+  low: "low",
+  normal: "normal",
+  high: "high",
 };
 
 /** PT-04 — soumission d'une demande. */
@@ -116,8 +130,9 @@ export async function submitRequest(formData: FormData) {
   const subject = String(formData.get("subject") ?? "").trim();
   const body = String(formData.get("body") ?? "").trim();
   if (!email || !subject || !body) return;
-  const typeRaw = String(formData.get("type") ?? "").trim();
-  const type = REQUEST_TYPES.includes(typeRaw) ? typeRaw : null;
+  const t = await getT();
+  const typeKey = REQUEST_TYPE_KEYS[String(formData.get("type") ?? "").trim()];
+  const type = typeKey ? t(typeKey) : null;
   const moduleValue = String(formData.get("module") ?? "").trim();
   const priority = URGENCY_TO_PRIORITY[String(formData.get("urgency") ?? "")] ?? "normal";
 

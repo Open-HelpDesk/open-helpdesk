@@ -2,6 +2,7 @@
 
 /** PT-08 — « Copier » (presse-papiers) avec retour visuel bref. */
 import { useState } from "react";
+import { useT } from "@/i18n/client";
 
 export function CopyButton({
   text,
@@ -14,6 +15,7 @@ export function CopyButton({
   className?: string;
   style?: React.CSSProperties;
 }) {
+  const t = useT();
   const [copied, setCopied] = useState(false);
 
   return (
@@ -31,7 +33,7 @@ export function CopyButton({
         }
       }}
     >
-      {copied ? "Copié !" : label}
+      {copied ? t("sso.copied") : label}
     </button>
   );
 }

@@ -1,4 +1,5 @@
 import { requireAgent } from "@/lib/session";
+import { LOCALES } from "@/i18n/locales";
 import { contacts, db, kbArticles, tickets, users } from "@openhelpdesk/db";
 import { and, asc, count, eq, isNull } from "drizzle-orm";
 import {
@@ -175,10 +176,16 @@ export default async function GeneralSettingsPage({
             className="grid"
             style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
           >
-            <Field label="Langue par défaut">
+            <Field label="Langue du logiciel">
+              {/* Une langue par tenant : agents et clients lisent la même.
+                  Chaque langue s'affiche dans sa propre langue — un menu de
+                  langues traduit est illisible pour qui cherche la sienne. */}
               <Select name="locale" defaultValue={tenant.locale} style={CONTROL}>
-                <option value="fr">Français (fr-FR)</option>
-                <option value="en">English (en-US)</option>
+                {LOCALES.map((l) => (
+                  <option key={l.code} value={l.code}>
+                    {l.nativeName} ({l.tag})
+                  </option>
+                ))}
               </Select>
             </Field>
             <Field label="Fuseau horaire">

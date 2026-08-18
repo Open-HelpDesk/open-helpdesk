@@ -1,0 +1,227 @@
+import type { Dictionary } from "./fr";
+
+export const en: Dictionary = {
+  "chrome.defaultName": "Help centre",
+  "chrome.submitRequest": "Submit a request",
+  "chrome.submitShort": "Submit",
+  "chrome.myRequests": "My requests",
+  "chrome.signIn": "Sign in",
+  "chrome.myOrganization": "My organisation",
+  "chrome.signOut": "Sign out",
+  "chrome.poweredBy": "Powered by {product}",
+  "chrome.copyright": "© {year} {name}",
+
+  "home.eyebrow": "Help centre",
+  "home.title": "How can we help?",
+  "home.subtitle":
+    "Browse the guides, or contact our team Monday to Friday, 9 am to 6 pm.",
+  "home.categories": "Categories",
+  "home.popular": "Most viewed",
+  "home.views": { one: "{count} view", other: "{count} views" },
+  "home.ctaTitle": "Can't find what you're looking for?",
+  "home.ctaBody": "Our team replies in 34 minutes on average during business hours.",
+
+  "search.placeholder": "Search the help centre…",
+  "search.emptyTitle": "No results for “{query}”",
+  "search.emptyBody": "Try broader terms, or describe your situation to our team.",
+  "search.breadcrumb": "Search",
+  "search.resultsTitle": "Results for “{query}”",
+
+  "breadcrumb.help": "Help",
+  "category.otherCategories": "Other categories",
+  "category.otherArticles": "Other articles",
+  "category.articleCount": { one: "{count} article", other: "{count} articles" },
+
+  "article.meta": {
+    one: "Updated {date} · {count} min read",
+    other: "Updated {date} · {count} min read",
+  },
+  "article.related": "Related articles",
+  "article.onThisPage": "On this page",
+  "vote.question": "Was this article helpful?",
+  "vote.yes": "Yes",
+  "vote.no": "No",
+  "vote.thanks": "Thanks for your feedback.",
+  "vote.sorry":
+    "Sorry this article didn't answer your question. Would you like to talk to our team?",
+  "vote.prefill": "Create a pre-filled request",
+  "vote.prefillSubject": "About the article “{title}”",
+
+  "newRequest.title": "Submit a request",
+  "newRequest.subtitle": "Describe your situation. We reply within 4 business hours.",
+  "newRequest.type": "Request type",
+  "newRequest.typeTechnical": "Technical support",
+  "newRequest.typeTechnicalDesc": "Something isn't working",
+  "newRequest.typeBilling": "Billing question",
+  "newRequest.typeBillingDesc": "Invoices, payments, subscription",
+  "newRequest.typeFeature": "Feature request",
+  "newRequest.typeFeatureDesc": "Suggest an improvement",
+  "newRequest.email": "Your email",
+  "newRequest.subject": "Subject",
+  "newRequest.module": "Related module",
+  "newRequest.urgency": "Urgency",
+  "newRequest.urgencyLow": "Low",
+  "newRequest.urgencyNormal": "Normal",
+  "newRequest.urgencyHigh": "High",
+  "newRequest.description": "Description",
+  "newRequest.send": "Send request",
+  "deflection.title": "These articles may answer your question",
+  "dropzone.title": "Drop your files here",
+  "dropzone.hint": "PNG, JPG, PDF — 10 MB maximum",
+  "dropzone.selected": { one: "{count} file selected", other: "{count} files selected" },
+  "attach.label": "Attach a file",
+
+  "submitted.title": "Request received",
+  "submitted.reference":
+    "Your request reference is {ref}. You'll receive every reply by email.",
+  "submitted.referenceUnknown":
+    "Your request has been received. You'll receive every reply by email.",
+  "submitted.verify":
+    "We've sent a verification link to {email} so you can follow your request.",
+  "submitted.verifyNoEmail":
+    "We've sent you a verification link so you can follow your request.",
+  "submitted.track": "Track my request",
+  "submitted.backToHelp": "Back to help",
+
+  "requests.title": "My requests",
+  "requests.new": "New request",
+  "requests.tabOpen": "Open",
+  "requests.tabSolved": "Solved",
+  "requests.tabAll": "All",
+  "requests.tabOrg": "My organisation's requests",
+  "requests.emptyTitle": "No requests",
+  "requests.emptyBody":
+    "Your support requests will appear here, with their status and the full history.",
+  "requests.awaitingReply": "Awaiting your reply",
+
+  "status.open": "In progress",
+  "status.waiting": "Waiting for you",
+  "status.resolved": "Solved",
+  "status.closed": "Closed",
+
+  "activity.resolved": "Solved {when}",
+  "activity.closed": "Closed {when}",
+  "activity.waiting": "Waiting for your reply {since}",
+  "activity.agentReplied": "{name} replied {when}",
+  "activity.youReplied": "You replied {when}",
+  "activity.created": "Created {when}",
+
+  "since.minutes": { one: "for {count} min", other: "for {count} min" },
+  "since.hours": { one: "for {count} hr", other: "for {count} hrs" },
+  "since.days": { one: "since yesterday", other: "for {count} days" },
+  "since.date": "since {date}",
+
+  "request.you": "You",
+  "request.team": "The team",
+  "request.agentAuthor": "{name} — {tenant}",
+  "reply.placeholder": "Write a reply…",
+  "reply.send": "Send",
+  "csat.question": "How would you rate this reply?",
+  "csat.satisfied": "Satisfied",
+  "csat.unsatisfied": "Not satisfied",
+  "csat.comment": "Anything to add? (optional)",
+  "csat.send": "Send comment",
+  "meta.status": "Status",
+  "meta.created": "Created",
+  "meta.reference": "Reference",
+  "request.markSolved": "Mark as solved",
+  "request.reopen": "Reopen request",
+
+  "login.title": "Track your requests",
+  "login.magicIntro":
+    "Enter your email and we'll send you a sign-in link. No password to remember.",
+  "login.email": "Email",
+  "login.sendLink": "Send me the link",
+  "login.sentTitle": "Check your inbox",
+  "login.sentBody": "We've sent a sign-in link to {email}. It expires in 15 minutes.",
+  "login.sentBodyNoEmail": "We've sent you a sign-in link. It expires in 15 minutes.",
+  "login.otherAddress": "Use another address",
+  "login.expired": "This link has expired or is invalid. Request a new one.",
+  "login.footer":
+    "No requests yet? Your account is created automatically with your first one.",
+
+  "org.intro": {
+    one: "You are an administrator of this organisation. What you set here applies to the person at {org} who uses {tenant} support.",
+    other:
+      "You are an administrator of this organisation. What you set here applies to the {count} people at {org} who use {tenant} support.",
+  },
+  "org.tabSso": "SSO login",
+  "org.tabDomains": "Domains",
+  "org.tabMembers": "Members",
+
+  "sso.enterpriseLogin": "Corporate account login",
+  "sso.enterpriseLoginDesc":
+    "Your members enter their work email and are redirected to your identity provider. No password to create.",
+  "sso.active": "Active",
+  "sso.inactive": "Inactive",
+  "sso.provider": "Your identity provider",
+  "sso.providerEntra": "Microsoft Entra ID",
+  "sso.providerGoogle": "Google Workspace",
+  "sso.providerOkta": "Okta",
+  "sso.providerGeneric": "Other provider",
+  "sso.protoOidc3": "OpenID Connect — 3 fields",
+  "sso.protoOktaBoth": "OpenID Connect or SAML 2.0",
+  "sso.protoSamlXml": "SAML 2.0 — XML metadata",
+  "sso.settings": "Connection settings",
+  "sso.clientId": "Client ID",
+  "sso.clientSecret": "Client secret",
+  "sso.clientSecretHint":
+    "Entered once. We'll warn you 30 days before it expires.",
+  "sso.idpTenant": "Tenant ID",
+  "sso.metadataUrl": "Metadata URL",
+  "sso.metadataUrlHint":
+    "We read the issuer, the sign-in URL and the certificate from this file.",
+  "sso.certificate": "Signing certificate",
+  "sso.certificateLoaded": "Loaded from metadata",
+  "sso.certificateLoadedPending": "Loaded from metadata — read on the first connection test",
+  "sso.copyToProvider": "Copy into your provider",
+  "sso.redirectUri": "Redirect URI",
+  "sso.scopes": "Requested scopes",
+  "sso.acsUrl": "Reply URL (ACS)",
+  "sso.entityId": "Entity ID",
+  "sso.copy": "Copy",
+  "sso.copied": "Copied!",
+  "sso.strict": "Require SSO for my members",
+  "sso.strictDesc":
+    "The email link is disabled for @{domain} addresses. Your own administrator access stays guaranteed.",
+  "sso.strictDescNoDomain":
+    "The email link is disabled for addresses on your verified domains. Your own administrator access stays guaranteed.",
+  "sso.strictWarning":
+    "If your provider becomes unavailable, your members will no longer be able to reach their requests. We always keep your administrator access by email link.",
+  "sso.jit": "Create accounts on first sign-in",
+  "sso.jitDesc":
+    "An unknown member signing in through your provider is attached to {org} automatically.",
+  "sso.test": "Test the connection",
+  "sso.testIdle":
+    "A window will open to your provider. Nothing is enabled until the test succeeds.",
+
+  "domains.intro":
+    "A domain must be verified before it can carry an SSO connection. This check guarantees nobody else can claim your members' accounts.",
+  "domains.verified": "Verified",
+  "domains.pending": "To verify",
+  "domains.memberCount": { one: "{count} member", other: "{count} members" },
+  "domains.txtInstructions":
+    "Add this TXT record to the DNS zone for {domain}, then run the check.",
+  "domains.verifyNow": "Verify now",
+  "domains.copyRecord": "Copy the record",
+  "domains.add": "+ Add a domain",
+  "domains.addSubmit": "Add",
+  "domains.notFound": "Record not found at the last check ({when}).",
+  "domains.errorInvalid": "Invalid domain format — expected something like company.com.",
+  "domains.errorPublic": "Consumer email domains cannot be verified.",
+  "domains.errorExists": "This domain is already declared on this workspace.",
+
+  "members.shareTitle": "Requests visible to the whole organisation",
+  "members.shareDesc":
+    "Every member sees their colleagues' requests, not only their own.",
+  "members.colMember": "Member",
+  "members.colRole": "Role",
+  "members.colAuth": "Sign-in",
+  "members.colRequests": "Requests",
+  "members.roleAdmin": "Administrator",
+  "members.roleMember": "Member",
+  "members.roleGuest": "Guest",
+  "members.authEmailLink": "Email link",
+  "members.note":
+    "Members appear automatically on their first sign-in or their first request. You can appoint a second administrator so you aren't the only point of contact.",
+};

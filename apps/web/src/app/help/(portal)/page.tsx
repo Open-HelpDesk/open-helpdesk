@@ -1,20 +1,22 @@
 import Link from "next/link";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { listPublishedCategories, popularArticles } from "@/lib/portal-data";
-import { numberFr, pluralFr } from "../portal-format";
+import { getT } from "@/i18n/server";
 import { PortalSearchBar } from "./search-bar";
 
 /** PT-01 — Accueil : hero dégradé, recherche typeahead, catégories, top articles, carte CTA. */
 export default async function HelpHome() {
+  const t = await getT();
   const tenant = await getPortalTenant();
   if (!tenant) return null;
   const [categories, popular] = await Promise.all([
     listPublishedCategories(tenant.id),
     popularArticles(tenant.id, 5),
   ]);
+  // Le texte d'accueil réglé dans ST-09 prime sur la traduction : c'est la voix
+  // du tenant, il l'a écrit dans sa langue.
   const welcome =
-    (tenant.portalConfig as { welcomeText?: string } | null)?.welcomeText ||
-    "Comment pouvons-nous vous aider ?";
+    (tenant.portalConfig as { welcomeText?: string } | null)?.welcomeText || t("home.title");
 
   return (
     <div className="pt-rise-hero">
@@ -31,7 +33,7 @@ export default async function HelpHome() {
             className="text-[11.5px] font-semibold uppercase tracking-[0.16em]"
             style={{ color: "var(--acc)" }}
           >
-            Centre d'aide
+            {t("home.eyebrow")}
           </p>
           <div className="flex flex-col gap-[13px] text-center">
             <h1
@@ -44,7 +46,7 @@ export default async function HelpHome() {
               className="mx-auto max-w-[50ch] text-[16.5px]"
               style={{ color: "var(--ink-2)", textWrap: "pretty" }}
             >
-              Parcourez les guides, ou contactez notre équipe du lundi au vendredi, de 9 h à 18 h.
+              {t("home.subtitle")}
             </p>
           </div>
           <PortalSearchBar />
@@ -57,7 +59,7 @@ export default async function HelpHome() {
           <h2
             className="pt-eyebrow"
           >
-            Catégories
+            {t("home.categories")}
           </h2>
           <div className="grid grid-cols-3 gap-3.5 max-md:grid-cols-2 max-sm:grid-cols-1">
             {categories.map((c) => (
@@ -91,7 +93,7 @@ export default async function HelpHome() {
                     className="h-1 w-1 rounded-full"
                     style={{ background: "var(--acc-b)" }}
                   />
-                  {pluralFr(c.articleCount, "article")}
+                  {t("category.articleCount", { count: c.articleCount })}
                 </span>
               </Link>
             ))}
@@ -103,7 +105,7 @@ export default async function HelpHome() {
             <h2
               className="pt-eyebrow"
             >
-              Les plus consultés
+              {t("home.popular")}
             </h2>
             <div
               className="overflow-hidden rounded-2xl border"
@@ -131,7 +133,7 @@ export default async function HelpHome() {
                     className="whitespace-nowrap text-[12.5px] tabular-nums"
                     style={{ color: "var(--ink-3)" }}
                   >
-                    {numberFr(a.viewCount)} vues
+                    {t("home.views", { count: a.viewCount })}
                   </span>
                 </Link>
               ))}
@@ -149,17 +151,17 @@ export default async function HelpHome() {
               className="pt-title text-[22px] leading-[1.2] tracking-[-0.01em]"
               style={{ textWrap: "balance" }}
             >
-              Vous ne trouvez pas ce que vous cherchez ?
+              {t("home.ctaTitle")}
             </p>
             <p className="text-[14.5px] leading-[1.6] opacity-[.78]" style={{ textWrap: "pretty" }}>
-              Notre équipe répond en moyenne en 34 minutes pendant les heures ouvrées.
+              {t("home.ctaBody")}
             </p>
             <Link
               href="/help/requests/new"
               className="mt-1.5 grid h-[46px] place-items-center rounded-[10px] bg-white text-[15px] font-semibold hover:no-underline"
               style={{ color: "var(--cta-a)" }}
             >
-              Soumettre une demande
+              {t("chrome.submitRequest")}
             </Link>
           </aside>
         </div>

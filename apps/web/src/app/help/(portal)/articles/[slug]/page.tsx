@@ -4,13 +4,15 @@ import { db, kbArticles } from "@openhelpdesk/db";
 import { and, eq, sql } from "drizzle-orm";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { getPublishedArticle } from "@/lib/portal-data";
-import { dateLongFr, readingMinutesFr } from "../../../portal-format";
+import { readingMinutes } from "@/i18n/format";
+import { getT } from "@/i18n/server";
 import { ArticleBody } from "@/components/article-body";
 import { parseArticle } from "@/lib/article-format";
 import { VoteBlock } from "./vote-block";
 
 /** PT-03 — Article : rendu riche 66ch, méta, vote, articles liés, TOC « Sur cette page ». */
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const t = await getT();
   const tenant = await getPortalTenant();
   const { slug } = await params;
   if (!tenant) notFound();
@@ -37,7 +39,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             style={{ color: "var(--ink-3)" }}
           >
             <Link href="/help" style={{ color: "inherit" }}>
-              Aide
+              {t("breadcrumb.help")}
             </Link>
             {root && (
               <>
@@ -59,8 +61,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               {article.title}
             </h1>
             <p className="text-[13px] tracking-[0.01em]" style={{ color: "var(--ink-3)" }}>
-              Mis à jour le {dateLongFr(article.updatedAt)} · {readingMinutesFr(body)} min de
-              lecture
+              {t("article.meta", {
+                date: t.fmt.dateLong(article.updatedAt),
+                count: readingMinutes(body),
+              })}
             </p>
           </header>
 
@@ -73,7 +77,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               <h2
                 className="pt-eyebrow"
               >
-                Articles liés
+                {t("article.related")}
               </h2>
               {related.map((r) => (
                 <Link
@@ -96,7 +100,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <p
               className="pb-2.5 pt-eyebrow"
             >
-              Sur cette page
+              {t("article.onThisPage")}
             </p>
             {toc.map((h, i) => (
               <a

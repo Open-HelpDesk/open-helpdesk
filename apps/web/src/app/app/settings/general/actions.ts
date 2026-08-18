@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { db, tenants, users } from "@openhelpdesk/db";
 import { and, eq } from "drizzle-orm";
 import { requireManager } from "../guard";
+import { DEFAULT_LOCALE, isLocaleCode } from "@/i18n/locales";
 
 /** ST-01 — Identité + régionalisation : tenants.name, branding jsonb, locale, timezone, format. */
 export async function saveGeneral(formData: FormData) {
@@ -32,7 +33,7 @@ export async function saveGeneral(formData: FormData) {
     .set({
       name: name || tenant.name,
       branding,
-      locale: ["fr", "en"].includes(locale) ? locale : "fr",
+      locale: isLocaleCode(locale) ? locale : DEFAULT_LOCALE,
       timezone: timezone.slice(0, 60) || "Europe/Paris",
       ticketNumberFormat: format.slice(0, 40),
       updatedAt: new Date(),

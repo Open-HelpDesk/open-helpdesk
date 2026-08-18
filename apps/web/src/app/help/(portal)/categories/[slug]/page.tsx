@@ -2,13 +2,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { getCategoryWithSections } from "@/lib/portal-data";
-import { excerptFr, pluralFr } from "../../../portal-format";
+import { excerpt } from "../../../portal-format";
+import { getT, type Translate } from "@/i18n/server";
 
 type ArticleItem = { title: string; slug: string; bodyHtml: string | null };
 
 /** Item d'accordéon : titre 15/500 acc-2 + extrait 14 ink-2 (maquette PT-02). */
 function ArticleRow({ article }: { article: ArticleItem }) {
-  const excerpt = excerptFr(article.bodyHtml);
+  const summary = excerpt(article.bodyHtml);
   return (
     <Link
       href={`/help/articles/${article.slug}`}
@@ -18,12 +19,12 @@ function ArticleRow({ article }: { article: ArticleItem }) {
       <span className="text-[15px] font-medium" style={{ color: "var(--acc-2)" }}>
         {article.title}
       </span>
-      {excerpt && (
+      {summary && (
         <span
           className="text-sm leading-[1.5]"
           style={{ color: "var(--ink-2)", textWrap: "pretty" }}
         >
-          {excerpt}
+          {summary}
         </span>
       )}
     </Link>
@@ -35,10 +36,12 @@ function SectionAccordion({
   name,
   articles,
   defaultOpen,
+  t,
 }: {
   name: string;
   articles: ArticleItem[];
   defaultOpen: boolean;
+  t: Translate;
 }) {
   return (
     <details
@@ -53,7 +56,7 @@ function SectionAccordion({
         </span>
         <span className="flex-1 text-[16.5px] font-semibold tracking-[-0.01em]">{name}</span>
         <span className="whitespace-nowrap text-[12.5px]" style={{ color: "var(--ink-3)" }}>
-          {pluralFr(articles.length, "article")}
+          {t("category.articleCount", { count: articles.length })}
         </span>
       </summary>
       <div className="border-t" style={{ borderColor: "var(--line-2)" }}>
@@ -67,6 +70,7 @@ function SectionAccordion({
 
 /** PT-02 — Catégorie : fil d'Ariane, accordéons par section, sidebar « Autres catégories ». */
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const t = await getT();
   const tenant = await getPortalTenant();
   const { slug } = await params;
   if (!tenant) notFound();
@@ -81,7 +85,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <div className="flex min-w-0 flex-col gap-[26px]">
           <nav className="flex items-center gap-[9px] text-[13px]" style={{ color: "var(--ink-3)" }}>
             <Link href="/help" style={{ color: "inherit" }}>
-              Aide
+              {t("breadcrumb.help")}
             </Link>
             <span>/</span>
             <span style={{ color: "var(--ink-2)" }}>{category.name}</span>
@@ -118,13 +122,14 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           ) : (
             <div className="flex flex-col gap-[11px]">
               {withArticles.map((s, i) => (
-                <SectionAccordion key={s.id} name={s.name} articles={s.articles} defaultOpen={i === 0} />
+                <SectionAccordion key={s.id} name={s.name} articles={s.articles} defaultOpen={i === 0} t={t} />
               ))}
               {directArticles.length > 0 && (
                 <SectionAccordion
-                  name="Autres articles"
+                  name={t("category.otherArticles")}
                   articles={directArticles}
                   defaultOpen={withArticles.length === 0}
+                  t={t}
                 />
               )}
             </div>
@@ -135,7 +140,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           <p
             className="pb-[9px] pt-eyebrow"
           >
-            Autres catégories
+            {t("category.otherCategories")}
           </p>
           {allCategories.map((c) => {
             const active = c.id === category.id;

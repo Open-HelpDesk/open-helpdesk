@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { searchArticles } from "@/lib/portal-data";
+import { getT } from "@/i18n/server";
 
 /** Résultats de recherche du centre d'aide (PT-01) — état vide verbatim de la maquette. */
 export default async function HelpSearchPage({
@@ -8,6 +9,7 @@ export default async function HelpSearchPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
+  const t = await getT();
   const tenant = await getPortalTenant();
   const { q = "" } = await searchParams;
   const results = tenant && q.trim().length >= 2 ? await searchArticles(tenant.id, q.trim(), 12) : [];
@@ -16,20 +18,20 @@ export default async function HelpSearchPage({
     return (
       <div className="pt-rise flex flex-col items-center gap-[15px] px-9 py-[72px] text-center max-sm:px-[18px]">
         <p className="pt-title text-[26px] tracking-[-0.015em]">
-          Aucun résultat pour «&nbsp;{q.trim()}&nbsp;»
+          {t("search.emptyTitle", { query: q.trim() })}
         </p>
         <p
           className="max-w-[44ch] text-base"
           style={{ color: "var(--ink-2)", textWrap: "pretty" }}
         >
-          Essayez des termes plus généraux, ou décrivez votre situation à notre équipe.
+          {t("search.emptyBody")}
         </p>
         <Link
           href="/help/requests/new"
           className="mt-1.5 grid h-12 place-items-center rounded-[10px] px-6 text-[15px] font-semibold text-white hover:no-underline"
           style={{ background: "var(--cta-a)", boxShadow: "var(--sh-2)" }}
         >
-          Soumettre une demande
+          {t("chrome.submitRequest")}
         </Link>
       </div>
     );
@@ -40,13 +42,13 @@ export default async function HelpSearchPage({
       <div className="mx-auto flex max-w-[700px] flex-col gap-6">
         <nav className="flex items-center gap-[9px] text-[13px]" style={{ color: "var(--ink-3)" }}>
           <Link href="/help" style={{ color: "inherit" }}>
-            Aide
+            {t("breadcrumb.help")}
           </Link>
           <span>/</span>
-          <span style={{ color: "var(--ink-2)" }}>Recherche</span>
+          <span style={{ color: "var(--ink-2)" }}>{t("search.breadcrumb")}</span>
         </nav>
         <h1 className="pt-title text-4xl leading-[1.1] tracking-[-0.02em] max-sm:text-[27px]">
-          Résultats pour «&nbsp;{q.trim()}&nbsp;»
+          {t("search.resultsTitle", { query: q.trim() })}
         </h1>
         <div
           className="overflow-hidden rounded-2xl border"

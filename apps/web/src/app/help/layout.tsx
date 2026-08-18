@@ -1,9 +1,12 @@
 import { getPortalTenant } from "@/lib/portal-auth";
+import { I18nProvider } from "@/i18n/client";
+import { getT } from "@/i18n/server";
 import "./portal.css";
 
 /**
  * Shell minimal du portail client (PT) : palette maquette via .surface-portal,
- * accent du TENANT substitué à l'accent produit (tenant.branding.accentColor).
+ * accent du TENANT substitué à l'accent produit (tenant.branding.accentColor),
+ * et dictionnaire de la langue du tenant posé pour les composants clients.
  * Le chrome (header/footer) vit dans (portal)/layout.tsx — /help/login et
  * /help/auth restent sans chrome (PT-07).
  */
@@ -14,6 +17,7 @@ const DEFAULT_ACCENT = "#0b5f46";
 
 export default async function HelpLayout({ children }: { children: React.ReactNode }) {
   const tenant = await getPortalTenant();
+  const t = await getT();
   const accent = (tenant?.branding as { accentColor?: string } | null)?.accentColor;
   const custom = accent && accent.toLowerCase() !== DEFAULT_ACCENT;
 
@@ -37,7 +41,9 @@ export default async function HelpLayout({ children }: { children: React.ReactNo
           : {}),
       }}
     >
-      {children}
+      <I18nProvider locale={t.locale} dict={t.dict}>
+        {children}
+      </I18nProvider>
     </div>
   );
 }

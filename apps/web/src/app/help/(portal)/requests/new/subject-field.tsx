@@ -5,10 +5,12 @@
  * dans l'encart teinté de la maquette (« Ces articles répondent peut-être à votre question »).
  */
 import { useEffect, useState } from "react";
+import { useT } from "@/i18n/client";
 
 type Suggestion = { title: string; slug: string };
 
 export function SubjectWithDeflection({ defaultSubject = "" }: { defaultSubject?: string }) {
+  const t = useT();
   const [subject, setSubject] = useState(defaultSubject);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
@@ -37,7 +39,7 @@ export function SubjectWithDeflection({ defaultSubject = "" }: { defaultSubject?
   return (
     <div className="flex flex-col gap-[9px]">
       <label htmlFor="pt-subject" className="pt-label">
-        Sujet
+        {t("newRequest.subject")}
       </label>
       <input
         id="pt-subject"
@@ -56,7 +58,7 @@ export function SubjectWithDeflection({ defaultSubject = "" }: { defaultSubject?
             className="text-[13px] font-semibold tracking-[0.02em]"
             style={{ color: "var(--acc)" }}
           >
-            Ces articles répondent peut-être à votre question
+            {t("deflection.title")}
           </p>
           {suggestions.map((s) => (
             <a

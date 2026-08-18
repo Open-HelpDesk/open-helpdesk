@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { requestMagicLink } from "../actions";
+import { getT } from "@/i18n/server";
 
 /**
  * PT-07 — Connexion portail : une seule saisie, l'email — lien magique par défaut,
@@ -12,9 +13,10 @@ export default async function PortalLoginPage({
 }: {
   searchParams: Promise<{ sent?: string; error?: string; e?: string }>;
 }) {
+  const t = await getT();
   const tenant = await getPortalTenant();
   const { sent, error, e } = await searchParams;
-  const name = tenant?.name ?? "Centre d'aide";
+  const name = tenant?.name ?? t("chrome.defaultName");
 
   return (
     <div
@@ -29,7 +31,7 @@ export default async function PortalLoginPage({
           >
             {name[0]?.toUpperCase() ?? "?"}
           </div>
-          <h1 className="pt-title text-2xl tracking-[-0.015em]">Suivre vos demandes</h1>
+          <h1 className="pt-title text-2xl tracking-[-0.015em]">{t("login.title")}</h1>
         </div>
 
         <div
@@ -48,20 +50,19 @@ export default async function PortalLoginPage({
               >
                 ✉
               </div>
-              <p className="pt-title text-xl">Consultez votre boîte de réception</p>
+              <p className="pt-title text-xl">{t("login.sentTitle")}</p>
               <p
                 className="text-[15px] leading-[1.6]"
                 style={{ color: "var(--ink-2)", textWrap: "pretty" }}
               >
-                Nous avons envoyé un lien de connexion{e ? ` à ${e}` : ""}. Il expire dans
-                15 minutes.
+                {e ? t("login.sentBody", { email: e }) : t("login.sentBodyNoEmail")}
               </p>
               <Link
                 href="/help/login"
                 className="text-sm font-medium"
                 style={{ color: "var(--acc-2)" }}
               >
-                Utiliser une autre adresse
+                {t("login.otherAddress")}
               </Link>
             </div>
           ) : (
@@ -70,15 +71,14 @@ export default async function PortalLoginPage({
                 className="text-[15px] leading-[1.6]"
                 style={{ color: "var(--ink-2)", textWrap: "pretty" }}
               >
-                Saisissez votre email : nous vous enverrons un lien de connexion. Aucun mot de
-                passe à retenir.
+                {t("login.magicIntro")}
               </p>
               {error === "expired" && (
                 <p
                   className="rounded-[11px] px-3.5 py-2.5 text-sm"
                   style={{ background: "var(--dang-t)", color: "var(--dang)" }}
                 >
-                  Ce lien est expiré ou invalide. Demandez-en un nouveau.
+                  {t("login.expired")}
                 </p>
               )}
               <form action={requestMagicLink} className="flex flex-col gap-4">
@@ -88,7 +88,7 @@ export default async function PortalLoginPage({
                     className="text-[13.5px] font-semibold"
                     style={{ color: "var(--ink-2)" }}
                   >
-                    Email
+                    {t("login.email")}
                   </label>
                   <input
                     id="pt-login-email"
@@ -103,7 +103,7 @@ export default async function PortalLoginPage({
                   className="grid h-12 place-items-center rounded-[11px] text-[15px] font-semibold text-white"
                   style={{ background: "var(--cta-a)" }}
                 >
-                  Recevoir le lien
+                  {t("login.sendLink")}
                 </button>
               </form>
             </>
@@ -111,7 +111,7 @@ export default async function PortalLoginPage({
         </div>
 
         <p className="text-center text-[13.5px]" style={{ color: "var(--ink-3)" }}>
-          Pas encore de demande ? Votre compte est créé automatiquement au premier envoi.
+          {t("login.footer")}
         </p>
       </div>
     </div>

@@ -8,8 +8,10 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { voteArticle } from "../../../actions";
+import { useT } from "@/i18n/client";
 
 export function VoteBlock({ slug, title }: { slug: string; title: string }) {
+  const t = useT();
   const [vote, setVote] = useState<"up" | "down" | null>(null);
   const [, startTransition] = useTransition();
 
@@ -22,7 +24,8 @@ export function VoteBlock({ slug, title }: { slug: string; title: string }) {
     startTransition(() => voteArticle(data));
   }
 
-  const prefill = `/help/requests/new?subject=${encodeURIComponent(`Au sujet de l'article « ${title} »`)}`;
+  const subject = t("vote.prefillSubject", { title });
+  const prefill = `/help/requests/new?subject=${encodeURIComponent(subject)}`;
 
   // La maquette n'encadre plus le bloc : un filet horizontal le sépare du corps,
   // et la question tient sur la même ligne que les deux boutons en pilule.
@@ -33,7 +36,7 @@ export function VoteBlock({ slug, title }: { slug: string; title: string }) {
     >
       <div className="flex flex-wrap items-center gap-4">
         <p className="text-[16.5px] font-semibold tracking-[-0.01em]">
-          Cet article vous a-t-il aidé ?
+          {t("vote.question")}
         </p>
         <span className="flex-1" />
         <div className="flex gap-[9px]">
@@ -47,7 +50,7 @@ export function VoteBlock({ slug, title }: { slug: string; title: string }) {
                 : { borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }
             }
           >
-            👍 Oui
+            👍 {t("vote.yes")}
           </button>
           <button
             type="button"
@@ -59,7 +62,7 @@ export function VoteBlock({ slug, title }: { slug: string; title: string }) {
                 : { borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }
             }
           >
-            👎 Non
+            👎 {t("vote.no")}
           </button>
         </div>
       </div>
@@ -69,21 +72,20 @@ export function VoteBlock({ slug, title }: { slug: string; title: string }) {
           style={{ background: "var(--wait-t)", borderColor: "var(--wait-t)" }}
         >
           <p className="text-[15px]" style={{ color: "var(--ink)", textWrap: "pretty" }}>
-            Désolé que cet article n'ait pas répondu à votre question. Voulez-vous en parler à
-            notre équipe ?
+            {t("vote.sorry")}
           </p>
           <Link
             href={prefill}
             className="grid h-11 w-fit place-items-center rounded-[10px] px-[18px] text-[14.5px] font-semibold text-white hover:no-underline"
             style={{ background: "var(--cta-a)" }}
           >
-            Créer une demande pré-remplie
+            {t("vote.prefill")}
           </Link>
         </div>
       )}
       {vote === "up" && (
         <p className="text-[14.5px] font-medium" style={{ color: "var(--ok)" }}>
-          Merci pour votre retour.
+          {t("vote.thanks")}
         </p>
       )}
     </div>

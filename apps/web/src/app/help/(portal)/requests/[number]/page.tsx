@@ -2,14 +2,10 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { csatSignature } from "@openhelpdesk/rules";
 import { getPortalContact } from "@/lib/portal-auth";
-import { PORTAL_STATUS_LABELS, getContactRequest } from "@/lib/portal-data";
-import {
-  dateLongFr,
-  displayNameFr,
-  firstNameFr,
-  initialsFr,
-  messageTimeFr,
-} from "../../../portal-format";
+import { getContactRequest } from "@/lib/portal-data";
+import { statusKey } from "../../../portal-format";
+import { displayName, firstName, initials } from "@/i18n/format";
+import { getT } from "@/i18n/server";
 import { replyToRequest, toggleRequestResolved } from "../../../actions";
 import { AttachButton } from "../attach";
 
@@ -25,6 +21,7 @@ function statusInk(status: string): string {
  * zone de réponse, bloc CSAT si résolue, sidebar méta + résoudre/rouvrir.
  */
 export default async function RequestPage({ params }: { params: Promise<{ number: string }> }) {
+  const t = await getT();
   const session = await getPortalContact();
   if (!session) redirect("/help/login");
   const { number: numberParam } = await params;
@@ -45,7 +42,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
         <div className="flex min-w-0 flex-col gap-6">
           <nav className="flex items-center gap-[9px] text-[13px]" style={{ color: "var(--ink-3)" }}>
             <Link href="/help/requests" style={{ color: "inherit" }}>
-              Mes demandes
+              {t("chrome.myRequests")}
             </Link>
             <span>/</span>
             <span className="font-mono" style={{ color: "var(--ink-2)" }}>
@@ -69,13 +66,16 @@ export default async function RequestPage({ params }: { params: Promise<{ number
               const agentName = isAgent && m.authorId ? agentsById.get(m.authorId) : null;
               const isMe = m.authorType === "contact" && m.authorId === session.contact.id;
               const author = isAgent
-                ? `${agentName ? firstNameFr(agentName) : "L'équipe"} — ${session.tenant.name}`
+                ? t("request.agentAuthor", {
+                    name: agentName ? firstName(agentName) : t("request.team"),
+                    tenant: session.tenant.name,
+                  })
                 : isMe
-                  ? "Vous"
-                  : displayNameFr(requester?.name ?? null, requester?.email ?? "");
-              const initials = isAgent
-                ? initialsFr(agentName ?? session.tenant.name)
-                : initialsFr(
+                  ? t("request.you")
+                  : displayName(requester?.name ?? null, requester?.email ?? "");
+              const avatar = isAgent
+                ? initials(agentName ?? session.tenant.name)
+                : initials(
                     (isMe ? session.contact.name ?? session.contact.email : null) ??
                       requester?.name ??
                       requester?.email ??
@@ -95,7 +95,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
                           : { background: "var(--open-t)", color: "var(--open)" }),
                       }}
                     >
-                      {initials}
+                      {avatar}
                     </span>
                     <span aria-hidden className="pt-thread-rail w-px flex-1" />
                   </div>
@@ -114,7 +114,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
                         className="text-[12.5px] tabular-nums"
                         style={{ color: "var(--ink-3)" }}
                       >
-                        {messageTimeFr(m.createdAt)}
+                        {t.fmt.messageTime(m.createdAt)}
                       </span>
                     </div>
                     <div
@@ -153,23 +153,21 @@ export default async function RequestPage({ params }: { params: Promise<{ number
               className="flex flex-col gap-3.5 rounded-2xl border p-[22px]"
               style={{ background: "var(--acc-t)", borderColor: "var(--acc-b)" }}
             >
-              <p className="pt-title text-xl tracking-[-0.01em]">
-                Comment évaluez-vous cette réponse ?
-              </p>
+              <p className="pt-title text-xl tracking-[-0.01em]">{t("csat.question")}</p>
               <div className="flex flex-wrap gap-2.5">
                 <a
                   href={`/api/csat?t=${ticket.id}&s=good&sig=${csatSignature(ticket.id, "good")}`}
                   className="flex h-[46px] items-center gap-2 rounded-full border px-[22px] text-[15px] font-semibold hover:no-underline"
                   style={{ borderColor: "var(--ok)", background: "var(--panel)", color: "var(--ok)" }}
                 >
-                  😊 Satisfait
+                  😊 {t("csat.satisfied")}
                 </a>
                 <a
                   href={`/api/csat?t=${ticket.id}&s=bad&sig=${csatSignature(ticket.id, "bad")}`}
                   className="flex h-[46px] items-center gap-2 rounded-full border px-[22px] text-[15px] font-medium hover:no-underline"
                   style={{ borderColor: "var(--line)", background: "var(--panel)", color: "var(--ink)" }}
                 >
-                  😕 Insatisfait
+                  😕 {t("csat.unsatisfied")}
                 </a>
               </div>
               <form method="post" action="/api/csat" className="flex flex-col gap-2">
@@ -178,7 +176,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
                 <input type="hidden" name="sig" value={csatSignature(ticket.id, "good")} />
                 <textarea
                   name="comment"
-                  placeholder="Un commentaire à ajouter ? (facultatif)"
+                  placeholder={t("csat.comment")}
                   className="min-h-[76px] w-full resize-y rounded-[11px] border p-3.5 text-[15px] outline-none"
                   style={{
                     borderColor: "var(--line)",
@@ -191,7 +189,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
                   className="grid h-10 w-fit place-items-center rounded-[10px] border px-4 text-sm font-medium"
                   style={{ borderColor: "var(--line)", background: "var(--panel)", color: "var(--ink)" }}
                 >
-                  Envoyer le commentaire
+                  {t("csat.send")}
                 </button>
               </form>
             </div>
@@ -212,7 +210,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
                 <textarea
                   name="body"
                   required
-                  placeholder="Écrire une réponse…"
+                  placeholder={t("reply.placeholder")}
                   className="min-h-[112px] w-full resize-y bg-transparent p-4 text-[15.5px] outline-none"
                   style={{ color: "var(--ink)" }}
                 />
@@ -227,7 +225,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
                     className="grid h-[42px] place-items-center rounded-[10px] px-[22px] text-[14.5px] font-semibold text-white"
                     style={{ background: "var(--cta-a)" }}
                   >
-                    Envoyer
+                    {t("reply.send")}
                   </button>
                 </div>
               </div>
@@ -249,20 +247,20 @@ export default async function RequestPage({ params }: { params: Promise<{ number
               className="flex items-center justify-between gap-3 border-b px-4 py-3.5 text-sm"
               style={{ borderColor: "var(--line-2)" }}
             >
-              <span style={{ color: "var(--ink-3)" }}>Statut</span>
+              <span style={{ color: "var(--ink-3)" }}>{t("meta.status")}</span>
               <span className="text-right font-semibold" style={{ color: statusInk(ticket.status) }}>
-                {PORTAL_STATUS_LABELS[ticket.status]}
+                {t(statusKey(ticket.status))}
               </span>
             </div>
             <div
               className="flex items-center justify-between gap-3 border-b px-4 py-3.5 text-sm"
               style={{ borderColor: "var(--line-2)" }}
             >
-              <span style={{ color: "var(--ink-3)" }}>Créée le</span>
-              <span className="text-right font-semibold">{dateLongFr(ticket.createdAt)}</span>
+              <span style={{ color: "var(--ink-3)" }}>{t("meta.created")}</span>
+              <span className="text-right font-semibold">{t.fmt.dateLong(ticket.createdAt)}</span>
             </div>
             <div className="flex items-center justify-between gap-3 px-4 py-3.5 text-sm">
-              <span style={{ color: "var(--ink-3)" }}>Référence</span>
+              <span style={{ color: "var(--ink-3)" }}>{t("meta.reference")}</span>
               <span className="text-right font-mono font-semibold">#{ticket.number}</span>
             </div>
           </div>
@@ -273,7 +271,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
                 type="submit"
                 className="pt-outline grid h-[46px] w-full place-items-center rounded-[10px] text-[14.5px] font-medium"
               >
-                {ticket.status === "resolved" ? "Rouvrir la demande" : "Marquer comme résolue"}
+                {ticket.status === "resolved" ? t("request.reopen") : t("request.markSolved")}
               </button>
             </form>
           )}

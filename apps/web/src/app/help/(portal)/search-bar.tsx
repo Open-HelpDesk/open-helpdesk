@@ -7,10 +7,12 @@
  */
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useT } from "@/i18n/client";
 
 type Suggestion = { title: string; slug: string; category: string | null };
 
 export function PortalSearchBar() {
+  const t = useT();
   const [q, setQ] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[] | null>(null);
   const [open, setOpen] = useState(false);
@@ -83,7 +85,7 @@ export function PortalSearchBar() {
               setOpen(true);
             }}
             onFocus={() => setOpen(true)}
-            placeholder="Rechercher dans l'aide…"
+            placeholder={t("search.placeholder")}
             autoComplete="off"
             className="w-full min-w-0 flex-1 bg-transparent text-[16.5px] outline-none"
             style={{ color: "var(--ink)" }}
@@ -139,20 +141,20 @@ export function PortalSearchBar() {
             /* Même bloc que /help/search (maquette « sans résultat ») : titre serif, bouton h48. */
             <div className="flex flex-col items-center gap-[15px] px-6 py-9 text-center">
               <p className="pt-title text-[26px] tracking-[-0.015em]" style={{ color: "var(--ink)" }}>
-                Aucun résultat pour «&nbsp;{q.trim()}&nbsp;»
+                {t("search.emptyTitle", { query: q.trim() })}
               </p>
               <p
                 className="max-w-[44ch] text-base"
                 style={{ color: "var(--ink-2)", textWrap: "pretty" }}
               >
-                Essayez des termes plus généraux, ou décrivez votre situation à notre équipe.
+                {t("search.emptyBody")}
               </p>
               <Link
                 href="/help/requests/new"
                 className="mt-1.5 grid h-12 place-items-center rounded-[10px] px-6 text-[15px] font-semibold text-white hover:no-underline"
                 style={{ background: "var(--cta-a)", boxShadow: "var(--sh-2)" }}
               >
-                Soumettre une demande
+                {t("chrome.submitRequest")}
               </Link>
             </div>
           )}

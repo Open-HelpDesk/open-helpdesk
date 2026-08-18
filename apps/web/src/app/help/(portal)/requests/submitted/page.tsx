@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getT } from "@/i18n/server";
 
 /**
  * PT-04 (confirmation) — visiteur non connecté : ✓, référence mono, bandeau
@@ -9,7 +10,10 @@ export default async function SubmittedPage({
 }: {
   searchParams: Promise<{ n?: string; e?: string }>;
 }) {
+  const t = await getT();
   const { n, e } = await searchParams;
+
+  const [refBefore, refAfter] = t.parts("submitted.reference", "ref");
 
   return (
     <div className="pt-rise px-9 pb-[60px] pt-12 max-sm:px-[18px] max-sm:py-[30px]">
@@ -20,30 +24,30 @@ export default async function SubmittedPage({
         >
           ✓
         </div>
-        <h1 className="pt-title text-[30px] tracking-[-0.02em]">Demande enregistrée</h1>
+        <h1 className="pt-title text-[30px] tracking-[-0.02em]">{t("submitted.title")}</h1>
         <p
           className="max-w-[46ch] text-[16.5px] leading-[1.6]"
           style={{ color: "var(--ink-2)", textWrap: "pretty" }}
         >
+          {/* La référence est en gras : la phrase est découpée autour d'elle
+              plutôt que recomposée, sinon l'ordre des mots serait figé. */}
           {n ? (
             <>
-              Votre demande porte la référence{" "}
+              {refBefore}
               <span className="font-mono font-semibold" style={{ color: "var(--ink)" }}>
                 #{n}
               </span>
-              .{" "}
+              {refAfter}
             </>
           ) : (
-            <>Votre demande a bien été enregistrée. </>
+            t("submitted.referenceUnknown")
           )}
-          Vous recevrez chaque réponse par email.
         </p>
         <div
           className="max-w-[48ch] rounded-[14px] px-[19px] py-4 text-[14.5px] leading-[1.6]"
           style={{ background: "var(--wait-t)", color: "var(--wait)", textWrap: "pretty" }}
         >
-          Nous vous avons envoyé un lien de vérification{e ? ` à ${e}` : ""} pour accéder au suivi
-          de votre demande.
+          {e ? t("submitted.verify", { email: e }) : t("submitted.verifyNoEmail")}
         </div>
         <div className="mt-1 flex flex-wrap justify-center gap-2.5">
           {n && (
@@ -52,7 +56,7 @@ export default async function SubmittedPage({
               className="grid h-12 place-items-center rounded-[10px] px-[22px] text-[15px] font-semibold text-white hover:no-underline"
               style={{ background: "var(--cta-a)", boxShadow: "var(--sh-2)" }}
             >
-              Suivre ma demande
+              {t("submitted.track")}
             </Link>
           )}
           <Link
@@ -60,7 +64,7 @@ export default async function SubmittedPage({
             className="grid h-12 place-items-center rounded-[10px] border px-[22px] text-[15px] hover:no-underline"
             style={{ borderColor: "var(--line)", color: "var(--ink)" }}
           >
-            Retour à l'aide
+            {t("submitted.backToHelp")}
           </Link>
         </div>
       </div>

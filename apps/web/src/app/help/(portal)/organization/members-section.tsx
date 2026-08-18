@@ -1,5 +1,6 @@
 import type { OrgMemberRow } from "@/lib/portal-data";
-import { displayNameFr, initialsFr, numberFr } from "../../portal-format";
+import { displayName, initials } from "@/i18n/format";
+import { getT } from "@/i18n/server";
 import { toggleOrgSharing } from "./actions";
 
 const AVATARS = [
@@ -11,7 +12,7 @@ const AVATARS = [
 const GRID = "minmax(190px,1.3fr) 150px 130px 110px";
 
 /** PT-08 · onglet Collaborateurs — partage des demandes + table réelle. */
-export function MembersSection({
+export async function MembersSection({
   members,
   orgDomains,
   sharedTickets,
@@ -24,6 +25,7 @@ export function MembersSection({
   ssoActive: boolean;
   ssoProviderLabel: string | null;
 }) {
+  const t = await getT();
   const domainSet = new Set(orgDomains.map((d) => d.toLowerCase()));
   const inOrgDomain = (email: string) => domainSet.has(email.split("@")[1]?.toLowerCase() ?? "");
 
@@ -43,16 +45,16 @@ export function MembersSection({
             type="submit"
             className="pt-switch mt-px"
             data-on={sharedTickets ? "true" : "false"}
-            aria-label="Demandes visibles par toute l'organisation"
+            aria-label={t("members.shareTitle")}
           />
         </form>
         <div className="min-w-0 flex-1">
-          <p className="text-[14.5px] font-semibold">Demandes visibles par toute l'organisation</p>
+          <p className="text-[14.5px] font-semibold">{t("members.shareTitle")}</p>
           <p
             className="text-[13.5px] leading-[1.55]"
             style={{ color: "var(--ink-3)", textWrap: "pretty" }}
           >
-            Chaque collaborateur voit les demandes de ses collègues, pas seulement les siennes.
+            {t("members.shareDesc")}
           </p>
         </div>
       </div>
@@ -75,19 +77,19 @@ export function MembersSection({
             color: "var(--ink-3)",
           }}
         >
-          <div>Collaborateur</div>
-          <div>Rôle</div>
-          <div>Connexion</div>
-          <div className="text-right">Demandes</div>
+          <div>{t("members.colMember")}</div>
+          <div>{t("members.colRole")}</div>
+          <div>{t("members.colAuth")}</div>
+          <div className="text-right">{t("members.colRequests")}</div>
         </div>
         {members.map((m, i) => {
           const role = m.isAdmin
-            ? "Administrateur"
+            ? t("members.roleAdmin")
             : inOrgDomain(m.email)
-              ? "Collaborateur"
-              : "Invité";
+              ? t("members.roleMember")
+              : t("members.roleGuest");
           const viaSso = Boolean(ssoActive && ssoProviderLabel && inOrgDomain(m.email));
-          const connection = viaSso ? ssoProviderLabel! : "Lien email";
+          const connection = viaSso ? ssoProviderLabel! : t("members.authEmailLink");
           return (
             <div
               key={m.id}
@@ -99,10 +101,10 @@ export function MembersSection({
                   className="grid h-[30px] w-[30px] flex-none place-items-center rounded-full text-[10.5px] font-bold"
                   style={AVATARS[i % AVATARS.length]}
                 >
-                  {initialsFr(m.name ?? m.email)}
+                  {initials(m.name ?? m.email)}
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate font-medium">{displayNameFr(m.name, m.email)}</span>
+                  <span className="block truncate font-medium">{displayName(m.name, m.email)}</span>
                   <span className="block truncate text-[12.5px]" style={{ color: "var(--ink-3)" }}>
                     {m.email}
                   </span>
@@ -125,7 +127,7 @@ export function MembersSection({
                 {connection}
               </div>
               <div className="text-right tabular-nums" style={{ color: "var(--ink-2)" }}>
-                {numberFr(m.requestCount)}
+                {t.fmt.number(m.requestCount)}
               </div>
             </div>
           );
@@ -136,9 +138,7 @@ export function MembersSection({
         className="max-w-[70ch] text-[13.5px] leading-[1.6]"
         style={{ color: "var(--ink-3)", textWrap: "pretty" }}
       >
-        Les collaborateurs apparaissent automatiquement à leur première connexion ou à leur
-        première demande. Vous pouvez désigner un second administrateur pour ne pas rester seul
-        point de contact.
+        {t("members.note")}
       </p>
     </div>
   );

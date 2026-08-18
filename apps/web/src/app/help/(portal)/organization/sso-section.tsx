@@ -1,16 +1,18 @@
 import Link from "next/link";
 import { saveSsoConnection, toggleSsoEnabled } from "./actions";
 import { CopyButton } from "./copy-button";
+import { getT, type Translate } from "@/i18n/server";
+import type { MessageKey } from "@/i18n/dictionaries/fr";
 
 const BASE_DOMAIN = process.env.BASE_DOMAIN ?? "localhost:3000";
 const PROTOCOL = BASE_DOMAIN.includes("localhost") ? "http" : "https";
 
 export const SSO_PROVIDERS = [
-  { key: "entra", name: "Microsoft Entra ID", proto: "OpenID Connect — 3 champs" },
-  { key: "google", name: "Google Workspace", proto: "OpenID Connect — 3 champs" },
-  { key: "okta", name: "Okta", proto: "OpenID Connect ou SAML 2.0" },
-  { key: "generic", name: "Autre fournisseur", proto: "SAML 2.0 — métadonnées XML" },
-] as const;
+  { key: "entra", name: "sso.providerEntra", proto: "sso.protoOidc3" },
+  { key: "google", name: "sso.providerGoogle", proto: "sso.protoOidc3" },
+  { key: "okta", name: "sso.providerOkta", proto: "sso.protoOktaBoth" },
+  { key: "generic", name: "sso.providerGeneric", proto: "sso.protoSamlXml" },
+] as const satisfies readonly { key: string; name: MessageKey; proto: MessageKey }[];
 export type SsoProviderKey = (typeof SSO_PROVIDERS)[number]["key"];
 
 type Connection = {
@@ -76,7 +78,7 @@ function Field({
  * PT-08 · onglet Connexion SSO — UI fidèle à la maquette, persistance minimale
  * dans orgSsoConnections (statut "pending"). Le flux OIDC réel arrive au Lot 5b.
  */
-export function SsoSection({
+export async function SsoSection({
   tenantSlug,
   orgId,
   orgName,
@@ -91,6 +93,7 @@ export function SsoSection({
   conn: Connection;
   provider: SsoProviderKey;
 }) {
+  const t = await getT();
   const config = decodeConfig(conn);
   const isSaml = provider === "generic";
   const enabled = Boolean(conn && conn.status !== "disabled");
@@ -98,12 +101,12 @@ export function SsoSection({
   const base = `${PROTOCOL}://${tenantSlug}.${BASE_DOMAIN}`;
   const spValues: [string, string][] = isSaml
     ? [
-        ["URL de réponse (ACS)", `${base}/help/auth/saml/${orgId}`],
-        ["Entity ID", `${base}/help/org/${orgId}`],
+        [t("sso.acsUrl"), `${base}/help/auth/saml/${orgId}`],
+        [t("sso.entityId"), `${base}/help/org/${orgId}`],
       ]
     : [
-        ["URI de redirection", `${base}/help/auth/oidc/${orgId}`],
-        ["Portées demandées", "openid profile email"],
+        [t("sso.redirectUri"), `${base}/help/auth/oidc/${orgId}`],
+        [t("sso.scopes"), "openid profile email"],
       ];
   const secretPlaceholder = conn?.secretHint
     ? `••••••••••••••••••••••••••${conn.secretHint}`
@@ -133,7 +136,7 @@ export function SsoSection({
         <div className="flex min-w-0 flex-1 flex-col gap-[3px]">
           <div className="flex flex-wrap items-center gap-2.5">
             <p className="text-[16.5px] font-semibold tracking-[-0.01em]">
-              Connexion par compte d'entreprise
+              {t("sso.enterpriseLogin")}
             </p>
             <span
               className="rounded-full px-2.5 py-[3px] text-xs font-semibold"
@@ -143,22 +146,21 @@ export function SsoSection({
                   : { background: "var(--closed-t)", color: "var(--closed)" }
               }
             >
-              {active ? "Active" : "Inactive"}
+              {active ? t("sso.active") : t("sso.inactive")}
             </span>
           </div>
           <p
             className="text-[14.5px] leading-[1.6]"
             style={{ color: "var(--ink-2)", textWrap: "pretty" }}
           >
-            Vos collaborateurs saisissent leur email professionnel et sont redirigés vers votre
-            fournisseur d'identité. Aucun mot de passe à créer.
+            {t("sso.enterpriseLoginDesc")}
           </p>
         </div>
       </div>
 
       {/* Fournisseur d'identité */}
       <div className="flex flex-col gap-3.5">
-        <p className="pt-eyebrow">Votre fournisseur d'identité</p>
+        <p className="pt-eyebrow">{t("sso.provider")}</p>
         <div className="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
           {SSO_PROVIDERS.map((p) => {
             const selected = p.key === provider;
@@ -178,10 +180,10 @@ export function SsoSection({
                   className="text-[15px] font-semibold"
                   style={{ color: selected ? "var(--acc)" : "var(--ink)" }}
                 >
-                  {p.name}
+                  {t(p.name)}
                 </span>
                 <span className="text-[13px]" style={{ color: "var(--ink-3)" }}>
-                  {p.proto}
+                  {t(p.proto)}
                 </span>
               </Link>
             );
@@ -195,7 +197,7 @@ export function SsoSection({
         {/* Paramètres de connexion */}
         <div className="flex flex-col gap-3.5">
           <div className="flex flex-wrap items-center gap-2.5">
-            <p className="pt-eyebrow">Paramètres de connexion</p>
+            <p className="pt-eyebrow">{t("sso.settings")}</p>
             <span
               className="rounded-full px-[9px] py-0.5 font-mono text-[11.5px]"
               style={{ background: "var(--sunk)", color: "var(--ink-3)" }}
@@ -206,15 +208,15 @@ export function SsoSection({
           {isSaml ? (
             <>
               <Field
-                label="URL de métadonnées"
+                label={t("sso.metadataUrl")}
                 name="metadataUrl"
                 defaultValue={config.metadataUrl ?? ""}
                 placeholder="https://idp.entreprise.fr/saml/metadata"
-                hint="Nous lisons l'émetteur, l'URL de connexion et le certificat depuis ce fichier."
+                hint={t("sso.metadataUrlHint")}
               />
               <div className="flex flex-col gap-1.5">
                 <p className="text-[13.5px] font-semibold" style={{ color: "var(--ink-2)" }}>
-                  Certificat de signature
+                  {t("sso.certificate")}
                 </p>
                 <div
                   className="flex min-h-[50px] items-center rounded-[11px] border px-[15px] text-[14.5px]"
@@ -224,23 +226,24 @@ export function SsoSection({
                     color: "var(--ink-2)",
                   }}
                 >
-                  Chargé depuis les métadonnées
-                  {config.metadataUrl ? " — lu au premier test de connexion" : ""}
+                  {config.metadataUrl
+                    ? t("sso.certificateLoadedPending")
+                    : t("sso.certificateLoaded")}
                 </div>
               </div>
             </>
           ) : (
             <>
-              <Field label="Identifiant client" name="clientId" defaultValue={config.clientId ?? ""} />
+              <Field label={t("sso.clientId")} name="clientId" defaultValue={config.clientId ?? ""} />
               <Field
-                label="Secret client"
+                label={t("sso.clientSecret")}
                 name="clientSecret"
                 type="password"
                 placeholder={secretPlaceholder}
-                hint="Saisi une seule fois. Nous vous préviendrons 30 jours avant son expiration."
+                hint={t("sso.clientSecretHint")}
               />
               <Field
-                label="Identifiant de locataire"
+                label={t("sso.idpTenant")}
                 name="idpTenant"
                 defaultValue={config.idpTenant ?? ""}
               />
@@ -250,7 +253,7 @@ export function SsoSection({
 
         {/* À copier dans votre fournisseur */}
         <div className="flex flex-col gap-3">
-          <p className="pt-eyebrow">À copier dans votre fournisseur</p>
+          <p className="pt-eyebrow">{t("sso.copyToProvider")}</p>
           <div
             className="overflow-hidden rounded-[14px] border"
             style={{
@@ -276,7 +279,7 @@ export function SsoSection({
                 </span>
                 <CopyButton
                   text={v}
-                  label="Copier"
+                  label={t("sso.copy")}
                   className="text-right text-[13.5px] font-semibold max-sm:text-left"
                   style={{ color: "var(--acc-2)" }}
                 />
@@ -298,16 +301,14 @@ export function SsoSection({
             <input type="checkbox" name="strict" defaultChecked={conn?.strictMode ?? false} />
             <span className="pt-switch mt-px" />
             <span className="min-w-0 flex-1">
-              <span className="block text-[14.5px] font-medium">
-                Imposer le SSO à mes collaborateurs
-              </span>
+              <span className="block text-[14.5px] font-medium">{t("sso.strict")}</span>
               <span
                 className="block text-[13.5px] leading-[1.55]"
                 style={{ color: "var(--ink-3)", textWrap: "pretty" }}
               >
-                Le lien par email est désactivé pour les adresses{" "}
-                {strictDomain ? `en @${strictDomain}` : "de vos domaines vérifiés"}. Votre propre
-                accès administrateur reste garanti.
+                {strictDomain
+                  ? t("sso.strictDesc", { domain: strictDomain })
+                  : t("sso.strictDescNoDomain")}
               </span>
             </span>
           </label>
@@ -320,8 +321,7 @@ export function SsoSection({
               textWrap: "pretty",
             }}
           >
-            Si votre fournisseur devient indisponible, vos collaborateurs ne pourront plus accéder
-            à leurs demandes. Nous conservons toujours votre accès administrateur par lien email.
+            {t("sso.strictWarning")}
           </div>
           <label
             className="pt-switch-label relative flex items-start gap-3.5 rounded-[14px] border px-[18px] py-4"
@@ -334,15 +334,12 @@ export function SsoSection({
             <input type="checkbox" name="jit" defaultChecked={conn?.jitEnabled ?? true} />
             <span className="pt-switch mt-px" />
             <span className="min-w-0 flex-1">
-              <span className="block text-[14.5px] font-medium">
-                Créer les comptes à la première connexion
-              </span>
+              <span className="block text-[14.5px] font-medium">{t("sso.jit")}</span>
               <span
                 className="block text-[13.5px] leading-[1.55]"
                 style={{ color: "var(--ink-3)", textWrap: "pretty" }}
               >
-                Un collaborateur inconnu qui se connecte via votre fournisseur est rattaché
-                automatiquement à {orgName}.
+                {t("sso.jitDesc", { org: orgName })}
               </span>
             </span>
           </label>
@@ -358,14 +355,13 @@ export function SsoSection({
             className="grid min-h-[46px] place-items-center whitespace-nowrap rounded-[10px] px-[22px] py-[11px] text-[15px] font-semibold text-white"
             style={{ background: "var(--cta-a)", boxShadow: "var(--sh-1)" }}
           >
-            Tester la connexion
+            {t("sso.test")}
           </button>
           <p
             className="min-w-[200px] flex-1 text-[14.5px] font-[450] leading-[1.6]"
             style={{ color: "var(--ink-2)", textWrap: "pretty" }}
           >
-            Une fenêtre s'ouvrira vers votre fournisseur. Rien n'est activé tant que le test n'a
-            pas abouti.
+            {t("sso.testIdle")}
           </p>
         </div>
       </form>

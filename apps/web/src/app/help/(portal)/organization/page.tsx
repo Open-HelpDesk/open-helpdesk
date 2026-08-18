@@ -7,15 +7,16 @@ import {
   listOrgDomains,
   listOrgMembers,
 } from "@/lib/portal-data";
-import { deFr, initialsFr, numberFr } from "../../portal-format";
+import { initials } from "@/i18n/format";
+import { getT } from "@/i18n/server";
 import { DomainsSection } from "./domains-section";
 import { MembersSection } from "./members-section";
 import { SSO_PROVIDERS, SsoSection, type SsoProviderKey } from "./sso-section";
 
 const TABS = [
-  ["sso", "Connexion SSO"],
-  ["domains", "Domaines"],
-  ["members", "Collaborateurs"],
+  ["sso", "org.tabSso"],
+  ["domains", "org.tabDomains"],
+  ["members", "org.tabMembers"],
 ] as const;
 
 /**
@@ -28,6 +29,7 @@ export default async function OrganizationPage({
 }: {
   searchParams: Promise<{ tab?: string; provider?: string; error?: string; domain?: string }>;
 }) {
+  const t = await getT();
   const session = await getPortalContact();
   if (!session) redirect("/help/login");
   const org = await getOrgAdminOrg(session.tenant.id, session.contact.id);
@@ -45,7 +47,8 @@ export default async function OrganizationPage({
   const provider: SsoProviderKey = SSO_PROVIDERS.some((p) => p.key === providerParam)
     ? (providerParam as SsoProviderKey)
     : ((conn?.provider as SsoProviderKey | undefined) ?? "entra");
-  const providerName = SSO_PROVIDERS.find((p) => p.key === conn?.provider)?.name ?? null;
+  const providerKey = SSO_PROVIDERS.find((p) => p.key === conn?.provider)?.name;
+  const providerName = providerKey ? t(providerKey) : null;
   const verifiedDomainNames = domains.filter((d) => d.status === "verified").map((d) => d.domain);
   const allOrgDomains = [...new Set([...verifiedDomainNames, ...org.emailDomains])];
 
@@ -62,7 +65,7 @@ export default async function OrganizationPage({
               color: "var(--acc)",
             }}
           >
-            {initialsFr(org.name)}
+            {initials(org.name)}
           </span>
           <div className="flex min-w-[200px] flex-1 flex-col gap-1.5">
             <h1 className="pt-title text-[29px] leading-[1.1] tracking-[-0.02em]">{org.name}</h1>
@@ -70,17 +73,22 @@ export default async function OrganizationPage({
               className="max-w-[64ch] text-[14.5px] leading-[1.6]"
               style={{ color: "var(--ink-2)", textWrap: "pretty" }}
             >
-              Vous êtes administrateur de cette organisation. Ce que vous réglez ici s'applique{" "}
-              {members.length === 1 ? "à la personne" : `aux ${numberFr(members.length)} personnes`}{" "}
-              de {org.name} qui {members.length === 1 ? "utilise" : "utilisent"} le support{" "}
-              {deFr(session.tenant.name)}.
+              {/* Toute la phrase est traduite, y compris son accord au pluriel :
+                  la composer par morceaux figerait la grammaire française.
+                  `t.fmt.of` porte l'élision (« le support d'Acme »), que seules
+                  certaines langues appliquent. */}
+              {t("org.intro", {
+                count: members.length,
+                org: org.name,
+                tenant: t.fmt.of(session.tenant.name),
+              })}
             </p>
           </div>
         </header>
 
         {/* Onglets */}
         <nav className="flex flex-wrap gap-0.5 border-b" style={{ borderColor: "var(--line)" }}>
-          {TABS.map(([key, label]) => {
+          {TABS.map(([key, labelKey]) => {
             const active = tab === key;
             return (
               <Link
@@ -92,7 +100,7 @@ export default async function OrganizationPage({
                   borderColor: active ? "var(--acc)" : "transparent",
                 }}
               >
-                {label}
+                {t(labelKey)}
               </Link>
             );
           })}

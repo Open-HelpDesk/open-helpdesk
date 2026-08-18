@@ -5,15 +5,22 @@
  * bouton « 📎 Joindre un fichier », avec retour visuel des fichiers choisis.
  */
 import { useRef, useState } from "react";
+import { useT } from "@/i18n/client";
 
-function fileLabel(files: File[]): string {
-  if (files.length === 0) return "";
-  if (files.length === 1) return files[0]!.name;
-  return `${files.length} fichiers sélectionnés`;
+/** Un seul fichier : son nom, plus parlant qu'un décompte. Sinon, le décompte. */
+function useFileLabel() {
+  const t = useT();
+  return (files: File[]): string => {
+    if (files.length === 0) return "";
+    if (files.length === 1) return files[0]!.name;
+    return t("dropzone.selected", { count: files.length });
+  };
 }
 
 /** Dropzone dashed (PT-04) : « Déposez vos fichiers ici » + input file caché. */
 export function DropZone() {
+  const t = useT();
+  const fileLabel = useFileLabel();
   const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -42,9 +49,9 @@ export function DropZone() {
         <path d="M12 16V4m0 0L8 8m4-4l4 4" />
         <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
       </svg>
-      <span className="text-[14.5px] font-medium">Déposez vos fichiers ici</span>
+      <span className="text-[14.5px] font-medium">{t("dropzone.title")}</span>
       <span className="text-[13px]" style={{ color: "var(--ink-3)" }}>
-        PNG, JPG, PDF — 10 Mo maximum
+        {t("dropzone.hint")}
       </span>
       {files.length > 0 && (
         <span className="text-[13px] font-medium" style={{ color: "var(--acc-2)" }}>
@@ -65,11 +72,13 @@ export function DropZone() {
 
 /** Bouton discret « 📎 Joindre un fichier » de la barre de réponse (PT-06). */
 export function AttachButton() {
+  const t = useT();
+  const fileLabel = useFileLabel();
   const [files, setFiles] = useState<File[]>([]);
 
   return (
     <label className="cursor-pointer text-sm" style={{ color: "var(--ink-2)" }}>
-      📎 {files.length > 0 ? fileLabel(files) : "Joindre un fichier"}
+      📎 {files.length > 0 ? fileLabel(files) : t("attach.label")}
       <input
         type="file"
         name="files"

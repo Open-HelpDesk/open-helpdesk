@@ -1,6 +1,7 @@
 import { DOMAIN_VERIFICATION_TXT_PREFIX } from "@openhelpdesk/config";
 import type { OrgMemberRow } from "@/lib/portal-data";
-import { pluralFr, relativeLongFr } from "../../portal-format";
+import { getT } from "@/i18n/server";
+import type { MessageKey } from "@/i18n/dictionaries/fr";
 import { addOrgDomain, verifyOrgDomain } from "./actions";
 import { CopyButton } from "./copy-button";
 
@@ -13,14 +14,14 @@ type DomainRow = {
   lastCheckedAt: Date | null;
 };
 
-const ADD_ERRORS: Record<string, string> = {
-  invalid: "Format de domaine invalide — exemple attendu : entreprise.fr.",
-  public: "Les domaines d'email grand public ne peuvent pas être vérifiés.",
-  exists: "Ce domaine est déjà déclaré sur cet espace.",
+const ADD_ERRORS: Record<string, MessageKey> = {
+  invalid: "domains.errorInvalid",
+  public: "domains.errorPublic",
+  exists: "domains.errorExists",
 };
 
 /** PT-08 · onglet Domaines — vérification DNS TXT fonctionnelle. */
-export function DomainsSection({
+export async function DomainsSection({
   domains,
   members,
   error,
@@ -31,6 +32,7 @@ export function DomainsSection({
   error?: string;
   domainValue?: string;
 }) {
+  const t = await getT();
   const countFor = (domain: string) =>
     members.filter((m) => m.email.toLowerCase().endsWith(`@${domain}`)).length;
 
@@ -40,14 +42,14 @@ export function DomainsSection({
         className="max-w-[66ch] text-[14.5px] leading-[1.65]"
         style={{ color: "var(--ink-2)", textWrap: "pretty" }}
       >
-        Un domaine doit être vérifié avant de pouvoir porter une connexion SSO. Cette vérification
-        garantit que personne d'autre ne peut revendiquer les comptes de vos collaborateurs.
+        {t("domains.intro")}
       </p>
 
       <div className="flex flex-col gap-3">
         {domains.map((d) => {
           const verified = d.status === "verified";
           const record = `${DOMAIN_VERIFICATION_TXT_PREFIX}${d.verificationToken}`;
+          const [txtBefore, txtAfter] = t.parts("domains.txtInstructions", "domain");
           return (
             <div
               key={d.id}
@@ -77,10 +79,10 @@ export function DomainsSection({
                       : { background: "var(--wait-t)", color: "var(--wait)" }
                   }
                 >
-                  {verified ? "Vérifié" : "À vérifier"}
+                  {verified ? t("domains.verified") : t("domains.pending")}
                 </span>
                 <span className="whitespace-nowrap text-[13px]" style={{ color: "var(--ink-3)" }}>
-                  {pluralFr(countFor(d.domain), "collaborateur")}
+                  {t("domains.memberCount", { count: countFor(d.domain) })}
                 </span>
               </div>
               {!verified && (
@@ -92,8 +94,11 @@ export function DomainsSection({
                     className="text-[13.5px] leading-[1.55]"
                     style={{ color: "var(--ink-2)", textWrap: "pretty" }}
                   >
-                    Ajoutez cet enregistrement TXT à la zone DNS de{" "}
-                    <span className="font-mono">{d.domain}</span>, puis lancez la vérification.
+                    {/* Le domaine est en chasse fixe : la phrase est découpée
+                        autour de lui pour ne pas figer l'ordre des mots. */}
+                    {txtBefore}
+                    <span className="font-mono">{d.domain}</span>
+                    {txtAfter}
                   </p>
                   <div
                     className="break-all rounded-[11px] border px-4 py-3.5 font-mono text-[13px]"
@@ -107,8 +112,7 @@ export function DomainsSection({
                   </div>
                   {d.failCount > 0 && d.lastCheckedAt && (
                     <p className="text-[13px]" style={{ color: "var(--dang)" }}>
-                      Enregistrement introuvable lors de la dernière vérification (
-                      {relativeLongFr(d.lastCheckedAt)}).
+                      {t("domains.notFound", { when: t.fmt.relative(d.lastCheckedAt) })}
                     </p>
                   )}
                   <div className="flex flex-wrap gap-2.5">
@@ -119,12 +123,12 @@ export function DomainsSection({
                         className="grid min-h-[42px] place-items-center whitespace-nowrap rounded-[9px] px-[18px] py-2.5 text-sm font-semibold text-white"
                         style={{ background: "var(--cta-a)" }}
                       >
-                        Vérifier maintenant
+                        {t("domains.verifyNow")}
                       </button>
                     </form>
                     <CopyButton
                       text={record}
-                      label="Copier l'enregistrement"
+                      label={t("domains.copyRecord")}
                       className="grid min-h-[42px] place-items-center whitespace-nowrap rounded-[9px] border px-[18px] py-2.5 text-sm"
                       style={{
                         borderColor: "var(--line)",
@@ -148,12 +152,12 @@ export function DomainsSection({
             className="rounded-[14px] px-[18px] py-4 text-center text-sm"
             style={{ color: "var(--ink-3)" }}
           >
-            + Ajouter un domaine
+            {t("domains.add")}
           </summary>
           <form action={addOrgDomain} className="flex flex-col gap-2.5 px-4 pb-4">
             {error && ADD_ERRORS[error] && (
               <p className="text-[13.5px]" style={{ color: "var(--dang)" }}>
-                {ADD_ERRORS[error]}
+                {t(ADD_ERRORS[error]!)}
               </p>
             )}
             <div className="flex flex-wrap gap-[9px]">
@@ -169,7 +173,7 @@ export function DomainsSection({
                 className="grid h-[42px] place-items-center rounded-[9px] px-[18px] text-sm font-semibold text-white"
                 style={{ background: "var(--cta-a)" }}
               >
-                Ajouter
+                {t("domains.addSubmit")}
               </button>
             </div>
           </form>

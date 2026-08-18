@@ -3,14 +3,21 @@ import { getModuleOptions } from "@/lib/portal-data";
 import { submitRequest } from "../../../actions";
 import { DropZone } from "../attach";
 import { SubjectWithDeflection } from "./subject-field";
+import { getT } from "@/i18n/server";
 
+/* Le libellé traduit est ce que voit le client ; la valeur envoyée au serveur
+   reste la clé, pour qu'un ticket créé en suédois soit lisible côté agent. */
 const REQUEST_TYPES = [
-  ["Support technique", "Un dysfonctionnement à signaler"],
-  ["Question facturation", "Factures, paiements, abonnement"],
-  ["Demande d'évolution", "Suggérer une amélioration"],
+  ["technical", "newRequest.typeTechnical", "newRequest.typeTechnicalDesc"],
+  ["billing", "newRequest.typeBilling", "newRequest.typeBillingDesc"],
+  ["feature", "newRequest.typeFeature", "newRequest.typeFeatureDesc"],
 ] as const;
 
-const URGENCIES = ["Basse", "Normale", "Haute"] as const;
+const URGENCIES = [
+  ["low", "newRequest.urgencyLow"],
+  ["normal", "newRequest.urgencyNormal"],
+  ["high", "newRequest.urgencyHigh"],
+] as const;
 
 /**
  * PT-04 — Soumettre une demande : type de demande (cartes), email (lecture seule si
@@ -22,6 +29,7 @@ export default async function NewRequestPage({
 }: {
   searchParams: Promise<{ subject?: string }>;
 }) {
+  const t = await getT();
   const tenant = await getPortalTenant();
   const session = await getPortalContact();
   const { subject } = await searchParams;
@@ -32,30 +40,30 @@ export default async function NewRequestPage({
       <div className="mx-auto flex max-w-[700px] flex-col gap-[26px]">
         <header className="flex flex-col gap-2.5">
           <h1 className="pt-title text-4xl leading-[1.1] tracking-[-0.02em] max-sm:text-[27px]">
-            Soumettre une demande
+            {t("newRequest.title")}
           </h1>
           <p
             className="text-[16.5px] leading-[1.6]"
             style={{ color: "var(--ink-2)", textWrap: "pretty" }}
           >
-            Décrivez votre situation. Nous répondons sous 4 heures ouvrées.
+            {t("newRequest.subtitle")}
           </p>
         </header>
 
         <form action={submitRequest} className="flex flex-col gap-5">
           {/* Type de demande */}
           <fieldset className="flex flex-col gap-[9px]">
-            <legend className="pt-label pb-[9px]">Type de demande</legend>
+            <legend className="pt-label pb-[9px]">{t("newRequest.type")}</legend>
             <div className="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
-              {REQUEST_TYPES.map(([name, desc], i) => (
+              {REQUEST_TYPES.map(([value, nameKey, descKey], i) => (
                 <label
-                  key={name}
+                  key={value}
                   className="pt-choice relative flex flex-col gap-1 rounded-xl px-4 py-[15px]"
                 >
-                  <input type="radio" name="type" value={name} defaultChecked={i === 0} />
-                  <span className="pt-choice-name text-[15px] font-semibold">{name}</span>
+                  <input type="radio" name="type" value={value} defaultChecked={i === 0} />
+                  <span className="pt-choice-name text-[15px] font-semibold">{t(nameKey)}</span>
                   <span className="text-[13.5px] leading-[1.45]" style={{ color: "var(--ink-3)" }}>
-                    {desc}
+                    {t(descKey)}
                   </span>
                 </label>
               ))}
@@ -65,7 +73,7 @@ export default async function NewRequestPage({
           {/* Email */}
           <div className="flex flex-col gap-[9px]">
             <label htmlFor="pt-email" className="pt-label">
-              Votre email
+              {t("newRequest.email")}
             </label>
             {session ? (
               <div
@@ -99,7 +107,7 @@ export default async function NewRequestPage({
             {modules.length > 0 && (
               <div className="flex flex-col gap-[9px]">
                 <label htmlFor="pt-module" className="pt-label">
-                  Module concerné
+                  {t("newRequest.module")}
                 </label>
                 <div className="relative">
                   <select
@@ -121,18 +129,18 @@ export default async function NewRequestPage({
             )}
             <div className="flex flex-col gap-[9px]">
               <label htmlFor="pt-urgency" className="pt-label">
-                Urgence
+                {t("newRequest.urgency")}
               </label>
               <div className="relative">
                 <select
                   id="pt-urgency"
                   name="urgency"
-                  defaultValue="Normale"
+                  defaultValue="normal"
                   className="pt-input h-[50px] w-full appearance-none px-[15px] text-[15.5px]"
                 >
-                  {URGENCIES.map((u) => (
-                    <option key={u} value={u}>
-                      {u}
+                  {URGENCIES.map(([value, key]) => (
+                    <option key={value} value={value}>
+                      {t(key)}
                     </option>
                   ))}
                 </select>
@@ -146,7 +154,7 @@ export default async function NewRequestPage({
           {/* Description */}
           <div className="flex flex-col gap-[9px]">
             <label htmlFor="pt-body" className="pt-label">
-              Description
+              {t("newRequest.description")}
             </label>
             <textarea
               id="pt-body"
@@ -164,7 +172,7 @@ export default async function NewRequestPage({
             className="grid h-[52px] w-full place-items-center rounded-[11px] text-base font-semibold text-white"
             style={{ background: "var(--cta-a)", boxShadow: "var(--sh-2)" }}
           >
-            Envoyer la demande
+            {t("newRequest.send")}
           </button>
         </form>
       </div>
