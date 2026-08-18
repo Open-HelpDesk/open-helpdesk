@@ -165,7 +165,7 @@ export async function DomainsSection({
                 name="domain"
                 required
                 defaultValue={domainValue ?? ""}
-                placeholder="entreprise.fr"
+                placeholder="example.com"
                 className="pt-input h-[42px] min-w-[220px] flex-1 px-3.5 font-mono text-sm"
               />
               <button

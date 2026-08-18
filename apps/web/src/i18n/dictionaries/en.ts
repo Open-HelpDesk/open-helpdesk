@@ -224,4 +224,23 @@ export const en: Dictionary = {
   "members.authEmailLink": "Email link",
   "members.note":
     "Members appear automatically on their first sign-in or their first request. You can appoint a second administrator so you aren't the only point of contact.",
+
+  "widget.defaultTitle": "Need help?",
+  "widget.close": "Close",
+  "widget.messageLabel": "Your message",
+  "widget.messagePlaceholder": "Write your message…",
+  "widget.attach": "Attach a file — 10 MB maximum",
+  "widget.sentBody": "You'll receive every reply by email.",
+  "widget.another": "Send another request",
+  "csatPage.title": "Your feedback",
+  "csatPage.invalidTitle": "Invalid link",
+  "csatPage.invalidBody": "This survey link is not valid or has expired.",
+  "csatPage.notFoundTitle": "Request not found",
+  "csatPage.notFoundBody": "This request no longer exists.",
+  "csatPage.thanks": "Thanks for your feedback",
+  "csatPage.recorded": "Your rating for request {ref} has been recorded.",
+  "csatPage.recordedBad": "Your rating for request {ref} has been recorded — we're sorry the reply didn't help.",
+  "csatPage.commentPlaceholder": "Any comment? (optional)",
+  "csatPage.doneTitle": "Thank you!",
+  "csatPage.doneBody": "Your comment has been passed on to the team.",
 };

@@ -234,4 +234,23 @@ export const fi: Dictionary = {
   "members.authEmailLink": "Sähköpostilinkki",
   "members.note":
     "Työntekijät ilmestyvät automaattisesti ensimmäisellä kirjautumisellaan tai ensimmäisellä pyynnöllään. Voit nimetä toisen järjestelmänvalvojan, jotta et jää ainoaksi yhteyshenkilöksi.",
+
+  "widget.defaultTitle": "Tarvitsetko apua?",
+  "widget.close": "Sulje",
+  "widget.messageLabel": "Viestisi",
+  "widget.messagePlaceholder": "Kirjoita viestisi…",
+  "widget.attach": "Liitä tiedosto — enintään 10 Mt",
+  "widget.sentBody": "Saat jokaisen vastauksen sähköpostitse.",
+  "widget.another": "Lähetä uusi pyyntö",
+  "csatPage.title": "Palautteesi",
+  "csatPage.invalidTitle": "Virheellinen linkki",
+  "csatPage.invalidBody": "Tämä kyselylinkki ei kelpaa tai on vanhentunut.",
+  "csatPage.notFoundTitle": "Pyyntöä ei löydy",
+  "csatPage.notFoundBody": "Tätä pyyntöä ei ole enää olemassa.",
+  "csatPage.thanks": "Kiitos palautteestasi",
+  "csatPage.recorded": "Arviosi pyynnöstä {ref} on tallennettu.",
+  "csatPage.recordedBad": "Arviosi pyynnöstä {ref} on tallennettu — pahoittelemme, ettei vastaus auttanut.",
+  "csatPage.commentPlaceholder": "Haluatko lisätä kommentin? (vapaaehtoinen)",
+  "csatPage.doneTitle": "Kiitos!",
+  "csatPage.doneBody": "Kommenttisi on välitetty tiimille.",
 };

@@ -235,4 +235,23 @@ export const da: Dictionary = {
   "members.authEmailLink": "E-maillink",
   "members.note":
     "Medarbejdere dukker automatisk op ved deres første login eller deres første henvendelse. Du kan udpege en anden administrator, så du ikke er eneste kontaktpunkt.",
+
+  "widget.defaultTitle": "Brug for hjælp?",
+  "widget.close": "Luk",
+  "widget.messageLabel": "Din besked",
+  "widget.messagePlaceholder": "Skriv din besked…",
+  "widget.attach": "Vedhæft en fil — højst 10 MB",
+  "widget.sentBody": "Du modtager hvert svar via e-mail.",
+  "widget.another": "Send en ny henvendelse",
+  "csatPage.title": "Din tilbagemelding",
+  "csatPage.invalidTitle": "Ugyldigt link",
+  "csatPage.invalidBody": "Dette undersøgelseslink er ugyldigt eller udløbet.",
+  "csatPage.notFoundTitle": "Henvendelsen blev ikke fundet",
+  "csatPage.notFoundBody": "Denne henvendelse findes ikke længere.",
+  "csatPage.thanks": "Tak for din tilbagemelding",
+  "csatPage.recorded": "Din vurdering af henvendelse {ref} er registreret.",
+  "csatPage.recordedBad": "Din vurdering af henvendelse {ref} er registreret — vi beklager, at svaret ikke hjalp.",
+  "csatPage.commentPlaceholder": "Vil du tilføje en kommentar? (valgfrit)",
+  "csatPage.doneTitle": "Tak!",
+  "csatPage.doneBody": "Din kommentar er sendt videre til teamet.",
 };

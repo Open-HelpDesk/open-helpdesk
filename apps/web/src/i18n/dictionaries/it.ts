@@ -237,4 +237,23 @@ export const it: Dictionary = {
   "members.authEmailLink": "Link email",
   "members.note":
     "I collaboratori compaiono automaticamente al primo accesso o alla prima richiesta. Puoi nominare un secondo amministratore per non restare l'unico punto di contatto.",
+
+  "widget.defaultTitle": "Hai bisogno di aiuto?",
+  "widget.close": "Chiudi",
+  "widget.messageLabel": "Il tuo messaggio",
+  "widget.messagePlaceholder": "Scrivi il tuo messaggio…",
+  "widget.attach": "Allega un file — massimo 10 MB",
+  "widget.sentBody": "Riceverai ogni risposta via email.",
+  "widget.another": "Invia un'altra richiesta",
+  "csatPage.title": "Il tuo riscontro",
+  "csatPage.invalidTitle": "Link non valido",
+  "csatPage.invalidBody": "Questo link del sondaggio non è valido o è scaduto.",
+  "csatPage.notFoundTitle": "Richiesta non trovata",
+  "csatPage.notFoundBody": "Questa richiesta non esiste più.",
+  "csatPage.thanks": "Grazie per il tuo riscontro",
+  "csatPage.recorded": "La tua valutazione sulla richiesta {ref} è stata registrata.",
+  "csatPage.recordedBad": "La tua valutazione sulla richiesta {ref} è stata registrata — ci dispiace che la risposta non sia stata utile.",
+  "csatPage.commentPlaceholder": "Vuoi aggiungere un commento? (facoltativo)",
+  "csatPage.doneTitle": "Grazie!",
+  "csatPage.doneBody": "Il tuo commento è stato trasmesso al team.",
 };

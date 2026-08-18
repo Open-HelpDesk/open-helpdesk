@@ -5,8 +5,10 @@
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { getPortalTenant } from "@/lib/portal-auth";
+import { getT } from "@/i18n/server";
 
 export async function GET(request: NextRequest) {
+  const t = await getT();
   const tenant = await getPortalTenant();
   if (!tenant) return new NextResponse("// tenant introuvable", { status: 404 });
 
@@ -24,7 +26,7 @@ export async function GET(request: NextRequest) {
     ((tenant.branding as { accentColor?: string } | null)?.accentColor ?? "#0B5F46");
   const position = widget.position === "left" ? "left" : "right";
   // JSON.stringify échappe pour le contexte JS ; on retire seulement <> par défense.
-  const title = (widget.title ?? "Besoin d'aide ?").replace(/[<>]/g, "");
+  const title = (widget.title ?? t("widget.defaultTitle")).replace(/[<>]/g, "");
   const origin = `${request.nextUrl.protocol}//${request.headers.get("host")}`;
 
   // Pastille flottante + panneau 12 px d'angle, ombre 0 8px 24px — aperçu ST-09.
@@ -54,7 +56,7 @@ export async function GET(request: NextRequest) {
       "border:1px solid rgba(0,0,0,.10);border-radius:12px;background:#fff;" +
       "box-shadow:0 8px 24px rgba(0,0,0,.14)";
     document.body.appendChild(frame);
-    btn.textContent = "✕ Fermer";
+    btn.textContent = ${JSON.stringify(`✕ ${t("widget.close")}`)};
     btn.setAttribute("aria-expanded", "true");
   });
   document.body.appendChild(btn);

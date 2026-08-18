@@ -7,12 +7,20 @@ import { NextResponse, type NextRequest } from "next/server";
 import { csatResponses, db, tickets } from "@openhelpdesk/db";
 import { and, eq } from "drizzle-orm";
 import { verifyCsatSignature } from "@openhelpdesk/rules";
+import { getT, type Translate } from "@/i18n/server";
 
-function page(body: string): NextResponse {
+/** Échappe le texte traduit : il finit dans du HTML assemblé à la main. */
+function esc(text: string): string {
+  return text.replace(/[&<>"]/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!,
+  );
+}
+
+function page(t: Translate, body: string): NextResponse {
   return new NextResponse(
-    `<!doctype html><html lang="fr"><head><meta charset="utf-8">
+    `<!doctype html><html lang="${t.locale.code}" dir="${t.locale.dir}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Votre avis</title>
+<title>${esc(t("csatPage.title"))}</title>
 <style>
   body{font-family:Inter,system-ui,sans-serif;background:#f6f8f7;color:#11211c;
        display:flex;justify-content:center;padding:48px 16px;margin:0}
@@ -45,39 +53,53 @@ async function recordScore(ticketId: string, score: "good" | "bad") {
 }
 
 export async function GET(request: NextRequest) {
+  const tr = await getT();
   const params = request.nextUrl.searchParams;
   const t = params.get("t") ?? "";
   const s = params.get("s") === "bad" ? "bad" : "good";
   const sig = params.get("sig") ?? "";
   if (!t || !verifyCsatSignature(t, s, sig)) {
-    return page(`<h1>Lien invalide</h1><p>Ce lien d'enquête n'est pas valide ou a expiré.</p>`);
+    return page(
+      tr,
+      `<h1>${esc(tr("csatPage.invalidTitle"))}</h1><p>${esc(tr("csatPage.invalidBody"))}</p>`,
+    );
   }
   const ticket = await recordScore(t, s);
-  if (!ticket) return page(`<h1>Demande introuvable</h1><p>Cette demande n'existe plus.</p>`);
+  if (!ticket)
+    return page(
+      tr,
+      `<h1>${esc(tr("csatPage.notFoundTitle"))}</h1><p>${esc(tr("csatPage.notFoundBody"))}</p>`,
+    );
 
+  const ref = `#${ticket.number}`;
   return page(
-    `<h1>Merci pour votre retour${s === "good" ? " 👍" : ""}</h1>
-     <p>Votre avis sur la demande #${ticket.number} a bien été enregistré${
-       s === "bad" ? " — nous sommes désolés que la réponse n'ait pas convenu" : ""
-     }.</p>
+    tr,
+    `<h1>${esc(tr("csatPage.thanks"))}${s === "good" ? " 👍" : ""}</h1>
+     <p>${esc(
+       s === "bad" ? tr("csatPage.recordedBad", { ref }) : tr("csatPage.recorded", { ref }),
+     )}</p>
      <form method="post" action="/api/csat">
        <input type="hidden" name="t" value="${t}">
        <input type="hidden" name="s" value="${s}">
        <input type="hidden" name="sig" value="${sig}">
-       <textarea name="comment" placeholder="Un commentaire ? (optionnel)"></textarea>
-       <button type="submit">Envoyer le commentaire</button>
+       <textarea name="comment" placeholder="${esc(tr("csatPage.commentPlaceholder"))}"></textarea>
+       <button type="submit">${esc(tr("csat.send"))}</button>
      </form>`,
   );
 }
 
 export async function POST(request: NextRequest) {
+  const tr = await getT();
   const form = await request.formData();
   const t = String(form.get("t") ?? "");
   const s = form.get("s") === "bad" ? "bad" : "good";
   const sig = String(form.get("sig") ?? "");
   const comment = String(form.get("comment") ?? "").trim().slice(0, 2000);
   if (!t || !verifyCsatSignature(t, s, sig)) {
-    return page(`<h1>Lien invalide</h1><p>Ce lien d'enquête n'est pas valide.</p>`);
+    return page(
+      tr,
+      `<h1>${esc(tr("csatPage.invalidTitle"))}</h1><p>${esc(tr("csatPage.invalidBody"))}</p>`,
+    );
   }
   const [ticket] = await db.select().from(tickets).where(eq(tickets.id, t));
   if (ticket && comment) {
@@ -86,5 +108,8 @@ export async function POST(request: NextRequest) {
       .set({ comment })
       .where(and(eq(csatResponses.tenantId, ticket.tenantId), eq(csatResponses.ticketId, ticket.id)));
   }
-  return page(`<h1>Merci !</h1><p>Votre commentaire a bien été transmis à l'équipe.</p>`);
+  return page(
+    tr,
+    `<h1>${esc(tr("csatPage.doneTitle"))}</h1><p>${esc(tr("csatPage.doneBody"))}</p>`,
+  );
 }

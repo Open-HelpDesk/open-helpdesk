@@ -59,7 +59,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    // `lang` dit la vérité surface par surface. Le <html> racine porte la langue
+    // du tenant, juste pour le portail, le widget et la page CSAT — les surfaces
+    // vues par le client. L'espace agent et l'administration sont encore écrits
+    // en français : l'annoncer autrement ferait souligner chaque mot par le
+    // correcteur du navigateur et déclencherait la barre de traduction de Chrome.
+    // Cette ligne disparaît le jour où ces écrans sont traduits.
+    <div className="flex h-screen overflow-hidden" lang="fr">
       {/* Rail 64 px */}
       <aside
         className="flex w-16 shrink-0 flex-col items-center border-r"

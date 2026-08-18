@@ -153,7 +153,7 @@ export default async function PortalChromeLayout({ children }: { children: React
           className="flex flex-wrap items-center gap-4 px-9 py-6 text-[13px] max-sm:px-[18px]"
           style={{ color: "var(--ink-3)" }}
         >
-          <span>{t("chrome.copyright", { year: new Date().getFullYear(), name })}</span>
+          <span>{t("chrome.copyright", { year: String(new Date().getFullYear()), name })}</span>
           <span className="flex-1" />
           {!hidePoweredBy && (
             /* Le nom du produit est un lien : la phrase est découpée autour de

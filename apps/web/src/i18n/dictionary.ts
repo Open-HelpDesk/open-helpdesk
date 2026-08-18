@@ -18,13 +18,29 @@ export type Message = string | ({ other: string } & Partial<Record<PluralCategor
 
 export type MessageParams = Record<string, string | number>;
 
-/** Remplace {nom} par sa valeur. Un paramètre absent laisse l'accolade visible,
- *  ce qui saute aux yeux en relecture au lieu de produire un trou silencieux. */
-function interpolate(template: string, params?: MessageParams): string {
+/**
+ * Remplace {nom} par sa valeur. Un paramètre absent laisse l'accolade visible,
+ * ce qui saute aux yeux en relecture au lieu de produire un trou silencieux.
+ *
+ * Un paramètre NUMÉRIQUE est mis en forme dans la langue courante : « 4 128 »
+ * en français, « 4,128 » en anglais, « 4.128 » en allemand. Sans cela, un
+ * `String(n)` rendait « 4128 » partout et faisait perdre le séparateur de
+ * milliers que les anciens helpers `numberFr` posaient.
+ *
+ * Un nombre qui ne doit PAS être groupé — une année, un numéro de version —
+ * se passe donc en chaîne : `{ year: String(2026) }`.
+ */
+function interpolate(
+  template: string,
+  params?: MessageParams,
+  formatNumber?: (n: number) => string,
+): string {
   if (!params) return template;
-  return template.replace(/\{(\w+)\}/g, (whole, key: string) =>
-    key in params ? String(params[key]) : whole,
-  );
+  return template.replace(/\{(\w+)\}/g, (whole, key: string) => {
+    if (!(key in params)) return whole;
+    const value = params[key];
+    return typeof value === "number" && formatNumber ? formatNumber(value) : String(value);
+  });
 }
 
 export function selectMessage(
@@ -39,8 +55,9 @@ export function renderMessage(
   message: Message,
   params: MessageParams | undefined,
   category: PluralCategory | undefined,
+  formatNumber?: (n: number) => string,
 ): string {
-  return interpolate(selectMessage(message, category), params);
+  return interpolate(selectMessage(message, category), params, formatNumber);
 }
 
 /**

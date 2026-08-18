@@ -234,4 +234,23 @@ export const sv: Dictionary = {
   "members.authEmailLink": "E-postlänk",
   "members.note":
     "Medarbetare dyker upp automatiskt vid sin första inloggning eller sitt första ärende. Du kan utse en andra administratör så att du inte förblir enda kontaktpunkt.",
+
+  "widget.defaultTitle": "Behöver du hjälp?",
+  "widget.close": "Stäng",
+  "widget.messageLabel": "Ditt meddelande",
+  "widget.messagePlaceholder": "Skriv ditt meddelande…",
+  "widget.attach": "Bifoga en fil — högst 10 MB",
+  "widget.sentBody": "Du får varje svar via e-post.",
+  "widget.another": "Skicka en till förfrågan",
+  "csatPage.title": "Din återkoppling",
+  "csatPage.invalidTitle": "Ogiltig länk",
+  "csatPage.invalidBody": "Den här enkätlänken är ogiltig eller har gått ut.",
+  "csatPage.notFoundTitle": "Ärendet hittades inte",
+  "csatPage.notFoundBody": "Det här ärendet finns inte längre.",
+  "csatPage.thanks": "Tack för din återkoppling",
+  "csatPage.recorded": "Ditt omdöme om ärende {ref} har registrerats.",
+  "csatPage.recordedBad": "Ditt omdöme om ärende {ref} har registrerats — vi beklagar att svaret inte hjälpte.",
+  "csatPage.commentPlaceholder": "Vill du lägga till något? (frivilligt)",
+  "csatPage.doneTitle": "Tack!",
+  "csatPage.doneBody": "Din kommentar har vidarebefordrats till teamet.",
 };

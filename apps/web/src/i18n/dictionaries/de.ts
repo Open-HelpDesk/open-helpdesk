@@ -236,4 +236,23 @@ export const de: Dictionary = {
   "members.authEmailLink": "E-Mail-Link",
   "members.note":
     "Mitarbeitende erscheinen automatisch bei ihrer ersten Anmeldung oder ihrer ersten Anfrage. Sie können eine zweite Person als Administrator benennen, um nicht alleiniger Ansprechpartner zu bleiben.",
+
+  "widget.defaultTitle": "Brauchen Sie Hilfe?",
+  "widget.close": "Schließen",
+  "widget.messageLabel": "Ihre Nachricht",
+  "widget.messagePlaceholder": "Schreiben Sie Ihre Nachricht…",
+  "widget.attach": "Datei anhängen — maximal 10 MB",
+  "widget.sentBody": "Jede Antwort erhalten Sie per E-Mail.",
+  "widget.another": "Weitere Anfrage senden",
+  "csatPage.title": "Ihre Rückmeldung",
+  "csatPage.invalidTitle": "Ungültiger Link",
+  "csatPage.invalidBody": "Dieser Umfragelink ist ungültig oder abgelaufen.",
+  "csatPage.notFoundTitle": "Anfrage nicht gefunden",
+  "csatPage.notFoundBody": "Diese Anfrage existiert nicht mehr.",
+  "csatPage.thanks": "Danke für Ihre Rückmeldung",
+  "csatPage.recorded": "Ihre Bewertung zur Anfrage {ref} wurde gespeichert.",
+  "csatPage.recordedBad": "Ihre Bewertung zur Anfrage {ref} wurde gespeichert — es tut uns leid, dass die Antwort nicht weitergeholfen hat.",
+  "csatPage.commentPlaceholder": "Möchten Sie etwas ergänzen? (optional)",
+  "csatPage.doneTitle": "Vielen Dank!",
+  "csatPage.doneBody": "Ihr Kommentar wurde an das Team weitergeleitet.",
 };

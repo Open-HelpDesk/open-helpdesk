@@ -234,4 +234,23 @@ export const nb: Dictionary = {
   "members.authEmailLink": "E-postlenke",
   "members.note":
     "Medarbeidere dukker automatisk opp ved sin første innlogging eller sin første henvendelse. Du kan utpeke en annen administrator, slik at du ikke blir eneste kontaktpunkt.",
+
+  "widget.defaultTitle": "Trenger du hjelp?",
+  "widget.close": "Lukk",
+  "widget.messageLabel": "Meldingen din",
+  "widget.messagePlaceholder": "Skriv meldingen din…",
+  "widget.attach": "Legg ved en fil — maks. 10 MB",
+  "widget.sentBody": "Du får hvert svar på e-post.",
+  "widget.another": "Send en ny henvendelse",
+  "csatPage.title": "Tilbakemeldingen din",
+  "csatPage.invalidTitle": "Ugyldig lenke",
+  "csatPage.invalidBody": "Denne undersøkelseslenken er ugyldig eller utløpt.",
+  "csatPage.notFoundTitle": "Fant ikke henvendelsen",
+  "csatPage.notFoundBody": "Denne henvendelsen finnes ikke lenger.",
+  "csatPage.thanks": "Takk for tilbakemeldingen",
+  "csatPage.recorded": "Vurderingen din av henvendelse {ref} er registrert.",
+  "csatPage.recordedBad": "Vurderingen din av henvendelse {ref} er registrert — vi beklager at svaret ikke hjalp.",
+  "csatPage.commentPlaceholder": "Vil du legge til en kommentar? (valgfritt)",
+  "csatPage.doneTitle": "Takk!",
+  "csatPage.doneBody": "Kommentaren din er sendt videre til teamet.",
 };

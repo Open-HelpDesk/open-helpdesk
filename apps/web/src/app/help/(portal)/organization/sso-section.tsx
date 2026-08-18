@@ -130,7 +130,7 @@ export async function SsoSection({
             className="pt-switch mt-0.5"
             data-on={enabled ? "true" : "false"}
             disabled={!conn}
-            aria-label="Connexion par compte d'entreprise"
+            aria-label={t("sso.enterpriseLogin")}
           />
         </form>
         <div className="flex min-w-0 flex-1 flex-col gap-[3px]">
@@ -211,7 +211,7 @@ export async function SsoSection({
                 label={t("sso.metadataUrl")}
                 name="metadataUrl"
                 defaultValue={config.metadataUrl ?? ""}
-                placeholder="https://idp.entreprise.fr/saml/metadata"
+                placeholder="https://idp.example.com/saml/metadata"
                 hint={t("sso.metadataUrlHint")}
               />
               <div className="flex flex-col gap-1.5">

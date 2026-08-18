@@ -38,7 +38,7 @@ export function useT() {
       if (message === undefined) return key;
       const count = params?.count;
       const category = typeof count === "number" ? fmt.plural(count) : undefined;
-      return renderMessage(message, params, category);
+      return renderMessage(message, params, category, (n) => fmt.number(n));
     };
     const parts = (key: MessageKey, slot: string, params?: MessageParams) =>
       splitAround((p) => t(key, p), slot, params);

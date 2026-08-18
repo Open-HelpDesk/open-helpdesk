@@ -39,11 +39,11 @@ export const fr = {
 
   /* ---------- Recherche ---------- */
   "search.placeholder": "Rechercher dans l'aide…",
-  "search.emptyTitle": "Aucun résultat pour « {query} »",
+  "search.emptyTitle": "Aucun résultat pour « {query} »",
   "search.emptyBody":
     "Essayez des termes plus généraux, ou décrivez votre situation à notre équipe.",
   "search.breadcrumb": "Recherche",
-  "search.resultsTitle": "Résultats pour « {query} »",
+  "search.resultsTitle": "Résultats pour « {query} »",
 
   /* ---------- PT-02 Catégorie ---------- */
   "breadcrumb.help": "Aide",
@@ -65,7 +65,7 @@ export const fr = {
   "vote.sorry":
     "Désolé que cet article n'ait pas répondu à votre question. Voulez-vous en parler à notre équipe ?",
   "vote.prefill": "Créer une demande pré-remplie",
-  "vote.prefillSubject": "Au sujet de l'article « {title} »",
+  "vote.prefillSubject": "Au sujet de l'article « {title} »",
 
   /* ---------- PT-04 Soumettre ---------- */
   "newRequest.title": "Soumettre une demande",
@@ -264,6 +264,26 @@ export const fr = {
   "members.authEmailLink": "Lien email",
   "members.note":
     "Les collaborateurs apparaissent automatiquement à leur première connexion ou à leur première demande. Vous pouvez désigner un second administrateur pour ne pas rester seul point de contact.",
+
+  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  "widget.defaultTitle": "Besoin d'aide ?",
+  "widget.close": "Fermer",
+  "widget.messageLabel": "Votre message",
+  "widget.messagePlaceholder": "Écrivez votre message…",
+  "widget.attach": "Joindre un fichier — 10 Mo maximum",
+  "widget.sentBody": "Vous recevrez chaque réponse par email.",
+  "widget.another": "Envoyer une autre demande",
+  "csatPage.title": "Votre avis",
+  "csatPage.invalidTitle": "Lien invalide",
+  "csatPage.invalidBody": "Ce lien d'enquête n'est pas valide ou a expiré.",
+  "csatPage.notFoundTitle": "Demande introuvable",
+  "csatPage.notFoundBody": "Cette demande n'existe plus.",
+  "csatPage.thanks": "Merci pour votre retour",
+  "csatPage.recorded": "Votre avis sur la demande {ref} a bien été enregistré.",
+  "csatPage.recordedBad": "Votre avis sur la demande {ref} a bien été enregistré — nous sommes désolés que la réponse n'ait pas convenu.",
+  "csatPage.commentPlaceholder": "Un commentaire ? (optionnel)",
+  "csatPage.doneTitle": "Merci !",
+  "csatPage.doneBody": "Votre commentaire a bien été transmis à l'équipe.",
 } as const satisfies Record<string, Message>;
 
 /** L'ensemble des clés du produit — les autres langues sont typées dessus. */

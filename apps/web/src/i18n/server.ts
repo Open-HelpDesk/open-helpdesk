@@ -65,7 +65,7 @@ export function buildTranslate(locale: LocaleDefinition): Translate {
     if (message === undefined) return key;
     const count = params?.count;
     const category = typeof count === "number" ? fmt.plural(count) : undefined;
-    return renderMessage(message, params, category);
+    return renderMessage(message, params, category, (n) => fmt.number(n));
   }) as Translate;
 
   t.locale = locale;

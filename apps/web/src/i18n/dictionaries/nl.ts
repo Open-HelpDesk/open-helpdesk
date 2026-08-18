@@ -236,4 +236,23 @@ export const nl: Dictionary = {
   "members.authEmailLink": "E-maillink",
   "members.note":
     "Medewerkers verschijnen automatisch bij hun eerste aanmelding of hun eerste verzoek. U kunt een tweede beheerder aanwijzen om niet het enige aanspreekpunt te blijven.",
+
+  "widget.defaultTitle": "Hulp nodig?",
+  "widget.close": "Sluiten",
+  "widget.messageLabel": "Uw bericht",
+  "widget.messagePlaceholder": "Schrijf uw bericht…",
+  "widget.attach": "Een bestand bijvoegen — maximaal 10 MB",
+  "widget.sentBody": "U ontvangt elk antwoord per e-mail.",
+  "widget.another": "Nog een verzoek versturen",
+  "csatPage.title": "Uw feedback",
+  "csatPage.invalidTitle": "Ongeldige link",
+  "csatPage.invalidBody": "Deze enquêtelink is ongeldig of verlopen.",
+  "csatPage.notFoundTitle": "Verzoek niet gevonden",
+  "csatPage.notFoundBody": "Dit verzoek bestaat niet meer.",
+  "csatPage.thanks": "Bedankt voor uw feedback",
+  "csatPage.recorded": "Uw beoordeling van verzoek {ref} is vastgelegd.",
+  "csatPage.recordedBad": "Uw beoordeling van verzoek {ref} is vastgelegd — het spijt ons dat het antwoord niet hielp.",
+  "csatPage.commentPlaceholder": "Wilt u iets toevoegen? (optioneel)",
+  "csatPage.doneTitle": "Bedankt!",
+  "csatPage.doneBody": "Uw opmerking is doorgegeven aan het team.",
 };

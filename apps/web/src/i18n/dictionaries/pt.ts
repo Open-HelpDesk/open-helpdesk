@@ -237,4 +237,23 @@ export const pt: Dictionary = {
   "members.authEmailLink": "Ligação por e-mail",
   "members.note":
     "Os colaboradores aparecem automaticamente no primeiro início de sessão ou no primeiro pedido. Pode designar um segundo administrador para não ficar como único ponto de contacto.",
+
+  "widget.defaultTitle": "Precisa de ajuda?",
+  "widget.close": "Fechar",
+  "widget.messageLabel": "A sua mensagem",
+  "widget.messagePlaceholder": "Escreva a sua mensagem…",
+  "widget.attach": "Anexar um ficheiro — 10 MB no máximo",
+  "widget.sentBody": "Receberá cada resposta por e-mail.",
+  "widget.another": "Enviar outro pedido",
+  "csatPage.title": "A sua opinião",
+  "csatPage.invalidTitle": "Ligação inválida",
+  "csatPage.invalidBody": "Esta ligação do inquérito não é válida ou expirou.",
+  "csatPage.notFoundTitle": "Pedido não encontrado",
+  "csatPage.notFoundBody": "Este pedido já não existe.",
+  "csatPage.thanks": "Obrigado pela sua opinião",
+  "csatPage.recorded": "A sua avaliação do pedido {ref} foi registada.",
+  "csatPage.recordedBad": "A sua avaliação do pedido {ref} foi registada — lamentamos que a resposta não tenha ajudado.",
+  "csatPage.commentPlaceholder": "Quer acrescentar um comentário? (facultativo)",
+  "csatPage.doneTitle": "Obrigado!",
+  "csatPage.doneBody": "O seu comentário foi transmitido à equipa.",
 };
