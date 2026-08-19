@@ -18,3 +18,22 @@ export async function getTenantFromHeaders() {
   const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug));
   return tenant ?? null;
 }
+
+/**
+ * Origine réelle d'une requête, reconstruite depuis l'en-tête `Host`.
+ *
+ * `request.url` d'un route handler ne porte pas toujours le sous-domaine du
+ * tenant. Une redirection construite dessus perd le workspace et tombe en 404 :
+ * c'est ce qui faisait échouer l'atterrissage du lien magique et la confirmation
+ * du widget. `Host` est la source que le middleware emploie déjà pour résoudre
+ * le tenant — les redirections s'y adossent aussi.
+ */
+export function requestOrigin(request: {
+  headers: { get: (name: string) => string | null };
+  nextUrl: { host: string; protocol: string };
+}): string {
+  const host = request.headers.get("host") ?? request.nextUrl.host;
+  const proto =
+    request.headers.get("x-forwarded-proto") ?? request.nextUrl.protocol.replace(":", "");
+  return `${proto}://${host}`;
+}

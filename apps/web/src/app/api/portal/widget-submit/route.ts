@@ -17,6 +17,7 @@ import { and, arrayContains, eq } from "drizzle-orm";
 import { onTicketCreated } from "@openhelpdesk/rules";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { saveUploadedFiles } from "@/lib/storage";
+import { requestOrigin } from "@/lib/tenant";
 
 export async function POST(request: NextRequest) {
   const tenant = await getPortalTenant();
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
     .where(and(eq(contacts.tenantId, tenant.id), eq(contacts.email, email)));
   if (contact?.blocked) {
     // Même réponse que le succès — pas d'oracle.
-    return NextResponse.redirect(new URL("/widget?sent=1", request.url), 303);
+    return NextResponse.redirect(new URL("/widget?sent=1", requestOrigin(request)), 303);
   }
   const domain = email.split("@")[1] ?? "";
   const [org] = domain
@@ -90,5 +91,5 @@ export async function POST(request: NextRequest) {
   }
 
   await onTicketCreated(tenant.id, ticket!.id);
-  return NextResponse.redirect(new URL("/widget?sent=1", request.url), 303);
+  return NextResponse.redirect(new URL("/widget?sent=1", requestOrigin(request)), 303);
 }
