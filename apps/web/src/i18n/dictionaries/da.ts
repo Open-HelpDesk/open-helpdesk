@@ -1335,4 +1335,11 @@ export const da: Dictionary = {
   "app.views.resolved": "Løst for nylig",
   "app.views.urgent": "Akutte denne uge",
   "app.views.escalation": "Eskaleringer",
+
+  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  "app.kb.renameCategory": "Omdøb",
+  "app.kb.renameSave": "Gem",
+  "app.kb.deleteCategory": "Slet kategorien",
+  "app.kb.managersOnly": "Kun Owner og Admin kan redigere vidensbasen.",
+  "app.kb.categoryNotEmpty": { one: "Kategorien indeholder stadig {count} element. Flyt det, før du sletter kategorien.", other: "Kategorien indeholder stadig {count} elementer. Flyt dem, før du sletter kategorien." },
 };

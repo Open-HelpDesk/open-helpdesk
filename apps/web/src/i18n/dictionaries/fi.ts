@@ -1334,4 +1334,11 @@ export const fi: Dictionary = {
   "app.views.resolved": "Äskettäin ratkaistut",
   "app.views.urgent": "Kiireelliset tällä viikolla",
   "app.views.escalation": "Eskalaatiot",
+
+  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  "app.kb.renameCategory": "Nimeä uudelleen",
+  "app.kb.renameSave": "Tallenna",
+  "app.kb.deleteCategory": "Poista luokka",
+  "app.kb.managersOnly": "Vain Owner ja Admin voivat muokata tietopankkia.",
+  "app.kb.categoryNotEmpty": { one: "Luokassa on vielä {count} kohde. Siirrä se ennen luokan poistamista.", other: "Luokassa on vielä {count} kohdetta. Siirrä ne ennen luokan poistamista." },
 };

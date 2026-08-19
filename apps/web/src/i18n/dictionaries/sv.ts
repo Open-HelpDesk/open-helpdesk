@@ -1334,4 +1334,11 @@ export const sv: Dictionary = {
   "app.views.resolved": "Nyligen lösta",
   "app.views.urgent": "Brådskande denna vecka",
   "app.views.escalation": "Eskaleringar",
+
+  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  "app.kb.renameCategory": "Byt namn",
+  "app.kb.renameSave": "Spara",
+  "app.kb.deleteCategory": "Ta bort kategorin",
+  "app.kb.managersOnly": "Endast Owner och Admin kan redigera kunskapsbasen.",
+  "app.kb.categoryNotEmpty": { one: "Kategorin innehåller fortfarande {count} objekt. Flytta det innan du tar bort kategorin.", other: "Kategorin innehåller fortfarande {count} objekt. Flytta dem innan du tar bort kategorin." },
 };

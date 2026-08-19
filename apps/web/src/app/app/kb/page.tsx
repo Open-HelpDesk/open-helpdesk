@@ -1,14 +1,18 @@
 import Link from "next/link";
-import { requireAgent } from "@/lib/session";
+import { isManager, requireAgent } from "@/lib/session";
 import { db, kbArticles, kbCategories, users } from "@openhelpdesk/db";
 import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
 import { getT } from "@/i18n/server";
-import { createCategory } from "./actions";
+import { createCategory, deleteCategory, renameCategory } from "./actions";
 
 /**
  * AG-10 — Base de connaissances (design espace-agent) : arbre 250 px avec catégories
  * parent/enfants (carets, compteurs réels), liste « {catégorie} / N articles » et table
  * grid `minmax(240px,1fr) 110px 140px 80px 80px 110px`.
+ *
+ * Lecture ouverte à toute l'équipe — un agent cite les articles dans ses réponses.
+ * Écriture (créer, renommer, supprimer) réservée à Owner et Admin : les commandes
+ * n'apparaissent pas pour les autres, et les server actions refont le contrôle.
  */
 
 const GRID = "minmax(240px,1fr) 110px 140px 80px 80px 110px";
@@ -16,11 +20,12 @@ const GRID = "minmax(240px,1fr) 110px 140px 80px 80px 110px";
 export default async function KbPage({
   searchParams,
 }: {
-  searchParams: Promise<{ cat?: string }>;
+  searchParams: Promise<{ cat?: string; erreur?: string; n?: string }>;
 }) {
-  const { tenant } = await requireAgent();
+  const { tenant, agent } = await requireAgent();
   const t = await getT();
-  const { cat } = await searchParams;
+  const { cat, erreur, n } = await searchParams;
+  const canManage = isManager(agent.role);
 
   const [allCategories, countRows] = await Promise.all([
     db
@@ -60,6 +65,7 @@ export default async function KbPage({
       ? await db
           .select({
             id: kbArticles.id,
+            slug: kbArticles.slug,
             title: kbArticles.title,
             status: kbArticles.status,
             draftBodyHtml: kbArticles.draftBodyHtml,
@@ -101,6 +107,12 @@ export default async function KbPage({
           <p className="text-[13px]" style={{ color: "var(--ink-3)" }}>
             {t("app.kb.emptyBody")}
           </p>
+          {!canManage && (
+            <p className="text-[13px]" style={{ color: "var(--ink-3)" }}>
+              {t("app.kb.managersOnly")}
+            </p>
+          )}
+          {canManage && (
           <div className="mt-2 flex items-center gap-2">
             <form action={createCategory} className="flex items-center gap-2">
               <input
@@ -131,6 +143,7 @@ export default async function KbPage({
               {t("app.kb.import")}
             </button>
           </div>
+          )}
         </div>
       </div>
     );
@@ -211,6 +224,7 @@ export default async function KbPage({
             );
           })}
         </ul>
+        {canManage && (
         <form action={createCategory} className="mt-3 flex flex-col gap-1.5">
           <input
             name="name"
@@ -227,6 +241,7 @@ export default async function KbPage({
             {t("app.kb.addCategory")}
           </button>
         </form>
+        )}
       </nav>
 
       {/* Liste des articles */}
@@ -240,16 +255,68 @@ export default async function KbPage({
             {t("app.kb.articleCount", { count: selectedCount })}
           </span>
           <span className="flex-1" />
-          {selected && (
-            <Link
-              href={`/app/kb/new?cat=${selected.id}`}
-              className="inline-flex items-center rounded-md px-3 font-semibold text-white"
-              style={{ height: 30, background: "var(--acc)", fontSize: 13 }}
-            >
-              {t("app.kb.newArticle")}
-            </Link>
+          {canManage && selected && (
+            <>
+              {/* Renommer : le champ s'ouvre au clic, sans quitter la page. */}
+              <details className="relative">
+                <summary
+                  className="inline-flex cursor-pointer items-center rounded-md border px-3 font-medium"
+                  style={{ height: 30, borderColor: "var(--line)", color: "var(--ink-2)", fontSize: 13 }}
+                >
+                  {t("app.kb.renameCategory")}
+                </summary>
+                <form
+                  action={renameCategory}
+                  className="absolute right-0 z-20 mt-1 flex items-center gap-1.5 rounded-md border p-2 shadow-[0_8px_24px_rgba(0,0,0,.12)]"
+                  style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+                >
+                  <input type="hidden" name="categoryId" value={selected.id} />
+                  <input
+                    name="name"
+                    required
+                    defaultValue={selected.name}
+                    className="border px-2 text-[13px] outline-none"
+                    style={{ height: 30, width: 200, borderRadius: 6, borderColor: "var(--line)", background: "var(--bg)" }}
+                  />
+                  <button
+                    type="submit"
+                    className="rounded-md px-3 text-[13px] font-semibold text-white"
+                    style={{ height: 30, background: "var(--acc)" }}
+                  >
+                    {t("app.kb.renameSave")}
+                  </button>
+                </form>
+              </details>
+              <form action={deleteCategory}>
+                <input type="hidden" name="categoryId" value={selected.id} />
+                <button
+                  type="submit"
+                  className="inline-flex items-center rounded-md border px-3 font-medium"
+                  style={{ height: 30, borderColor: "var(--dang)", color: "var(--dang)", fontSize: 13 }}
+                >
+                  {t("app.kb.deleteCategory")}
+                </button>
+              </form>
+              <Link
+                href={`/app/kb/new?cat=${selected.id}`}
+                className="inline-flex items-center rounded-md px-3 font-semibold text-white"
+                style={{ height: 30, background: "var(--acc)", fontSize: 13 }}
+              >
+                {t("app.kb.newArticle")}
+              </Link>
+            </>
           )}
         </div>
+
+        {/* Une catégorie non vide ne se supprime pas : on dit ce qui bloque. */}
+        {erreur === "categorie-non-vide" && (
+          <p
+            className="shrink-0 border-b px-4 py-2 text-[13px]"
+            style={{ background: "var(--dang-t)", borderColor: "var(--line)", color: "var(--dang)" }}
+          >
+            {t("app.kb.categoryNotEmpty", { count: Number(n) || 1 })}
+          </p>
+        )}
 
         <div className="min-h-0 flex-1 overflow-auto" style={{ background: "var(--bg)" }}>
           {articles.length === 0 ? (
@@ -276,10 +343,21 @@ export default async function KbPage({
                 <span className="text-right">{t("app.kb.colHelpful")}</span>
                 <span className="pr-4 text-right">{t("app.kb.colUpdated")}</span>
               </div>
+              {/* Où mène une ligne dépend du rôle : l'éditeur pour qui peut
+                  écrire, l'article publié sur le portail pour les autres. Un
+                  brouillon n'est lisible nulle part ailleurs : sa ligne ne
+                  cliquera pas, plutôt que de renvoyer sur une redirection. */}
               {articles.map((a) => (
                 <Link
                   key={a.id}
-                  href={`/app/kb/${a.id}`}
+                  href={
+                    canManage
+                      ? `/app/kb/${a.id}`
+                      : a.status === "published"
+                        ? `/help/articles/${a.slug}`
+                        : `/app/kb?cat=${selected?.id ?? ""}`
+                  }
+                  target={!canManage && a.status === "published" ? "_blank" : undefined}
                   className="grid items-center border-b"
                   style={{
                     gridTemplateColumns: GRID,

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { count, eq } from "drizzle-orm";
 import { db, mailboxes, tickets, users } from "@openhelpdesk/db";
-import { requireAgent } from "@/lib/session";
+import { redirect } from "next/navigation";
+import { isManager, requireAgent } from "@/lib/session";
 import { CopyButton, IdentityForm, TeamInviteForm } from "./onboarding-client";
 
 /**
@@ -22,7 +23,10 @@ export default async function OnboardingPage({
 }: {
   searchParams: Promise<{ step?: string }>;
 }) {
-  const { tenant } = await requireAgent();
+  const { tenant, agent } = await requireAgent();
+  // L'écran de configuration initiale n'est pas un écran de travail : un agent
+  // n'a rien à y faire, et ses formulaires portent des pouvoirs d'administration.
+  if (!isManager(agent.role)) redirect("/app/tickets");
   const { step: stepParam } = await searchParams;
   const step = Math.min(4, Math.max(1, Number(stepParam) || 1));
 

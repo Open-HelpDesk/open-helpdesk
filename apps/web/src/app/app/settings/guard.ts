@@ -1,12 +1,8 @@
-import { requireAgent, type CurrentAgent } from "@/lib/session";
-import { getT } from "@/i18n/server";
-
-/** Garde des server actions de l'administration : Owner/Admin uniquement. */
-export async function requireManager(): Promise<CurrentAgent> {
-  const current = await requireAgent();
-  if (current.agent.role !== "owner" && current.agent.role !== "admin") {
-    const t = await getT();
-    throw new Error(t("app.settings.shell.managerOnly"));
-  }
-  return current;
-}
+/**
+ * Garde des server actions de l'administration.
+ *
+ * La définition vit dans lib/session : la même frontière de rôle sert aussi à
+ * l'écriture dans la base de connaissances, qui n'a rien à voir avec les
+ * réglages. Ce module la réexporte pour ne pas casser les imports existants.
+ */
+export { requireManager } from "@/lib/session";

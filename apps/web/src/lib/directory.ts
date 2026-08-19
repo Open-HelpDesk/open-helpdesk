@@ -169,7 +169,7 @@ export type SearchResults = {
 };
 
 /** ILIKE pour cette tranche ; bascule vers Postgres FTS avec la recherche avancée. */
-export async function searchAll(tenantId: string, q: string): Promise<SearchResults> {
+export async function searchAll(tenantId: string, q: string, includeDrafts = false): Promise<SearchResults> {
   const like = `%${q}%`;
   const asNumber = Number(q.replace(/^#/, ""));
 
@@ -205,12 +205,22 @@ export async function searchAll(tenantId: string, q: string): Promise<SearchResu
     db
       .select({
         id: kbArticles.id,
+        slug: kbArticles.slug,
         title: kbArticles.title,
         status: kbArticles.status,
         viewCount: kbArticles.viewCount,
       })
       .from(kbArticles)
-      .where(and(eq(kbArticles.tenantId, tenantId), ilike(kbArticles.title, like)))
+      .where(
+        and(
+          eq(kbArticles.tenantId, tenantId),
+          ilike(kbArticles.title, like),
+          // Un brouillon n'existe que pour qui peut l'ouvrir. Le laisser remonter
+          // divulguerait à toute l'équipe le titre et l'audience d'un contenu non
+          // publié, sans qu'aucun écran ne permette de le lire.
+          ...(includeDrafts ? [] : [eq(kbArticles.status, "published")]),
+        ),
+      )
       .orderBy(desc(kbArticles.viewCount))
       .limit(4),
   ]);
@@ -246,6 +256,12 @@ export async function searchAll(tenantId: string, q: string): Promise<SearchResu
     tickets: ticketRows,
     contacts: contactsWithOrg,
     organizations: orgRows,
-    articles: articleRows,
+    // La destination est calculée ici : la palette ⌘K est un composant client,
+    // elle ne connaît pas le rôle. Un gestionnaire va à l'éditeur, les autres à
+    // l'article publié sur le portail — le seul endroit où ils peuvent le lire.
+    articles: articleRows.map((a) => ({
+      ...a,
+      href: includeDrafts ? `/app/kb/${a.id}` : `/help/articles/${a.slug}`,
+    })),
   };
 }

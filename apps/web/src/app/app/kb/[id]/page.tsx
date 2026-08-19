@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { requireAgent } from "@/lib/session";
+import { notFound, redirect } from "next/navigation";
+import { isManager, requireAgent } from "@/lib/session";
 import { db, kbArticles, kbCategories, ticketMessages, tickets } from "@openhelpdesk/db";
 import { and, asc, eq } from "drizzle-orm";
 import { getT } from "@/i18n/server";
@@ -21,7 +21,10 @@ export default async function KbEditorPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ cat?: string; modele?: string; depuis?: string }>;
 }) {
-  const { tenant } = await requireAgent();
+  const { tenant, agent } = await requireAgent();
+  // Cet écran EST l'éditeur : il n'a pas de version consultable. Un rôle qui n'a
+  // pas le droit d'écrire est renvoyé vers la liste, qu'il peut lire.
+  if (!isManager(agent.role)) redirect("/app/kb");
   const t = await getT();
   const { id } = await params;
   const { cat, modele, depuis } = await searchParams;

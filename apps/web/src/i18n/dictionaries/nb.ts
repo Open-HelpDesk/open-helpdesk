@@ -1334,4 +1334,11 @@ export const nb: Dictionary = {
   "app.views.resolved": "Nylig løst",
   "app.views.urgent": "Haster denne uken",
   "app.views.escalation": "Eskaleringer",
+
+  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  "app.kb.renameCategory": "Gi nytt navn",
+  "app.kb.renameSave": "Lagre",
+  "app.kb.deleteCategory": "Slett kategorien",
+  "app.kb.managersOnly": "Bare Owner og Admin kan redigere kunnskapsbasen.",
+  "app.kb.categoryNotEmpty": { one: "Kategorien inneholder fortsatt {count} element. Flytt det før du sletter kategorien.", other: "Kategorien inneholder fortsatt {count} elementer. Flytt dem før du sletter kategorien." },
 };

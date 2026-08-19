@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireAgent } from "@/lib/session";
+import { isManager, requireAgent } from "@/lib/session";
 import {
   DEFAULT_VIEWS,
   getTicketByNumber,
@@ -585,8 +585,10 @@ export default async function TicketPage({
           </div>
         </section>
 
-        {/* Capitaliser une résolution — le savoir d'un ticket clos se perd sinon. */}
-        {!isOpen && (
+        {/* Capitaliser une résolution — le savoir d'un ticket clos se perd sinon.
+            Réservé aux rôles qui peuvent écrire dans la base : le lien mène à
+            l'éditeur, qui les refuserait de toute façon. */}
+        {!isOpen && isManager(agent.role) && (
           <section className="flex flex-col" style={{ gap: 8 }}>
             <p style={PANEL_GROUP}>{t("app.ticket.kbGroup")}</p>
             <Link

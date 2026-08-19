@@ -49,3 +49,30 @@ export async function apiAgent(): Promise<CurrentAgent | null> {
   const res = await resolveAgent();
   return res.status === "ok" ? res.value : null;
 }
+
+/**
+ * Le rôle porte-t-il la gestion de l'espace de travail ?
+ *
+ * Owner et Admin, pas Agent ni Viewer. Le propriétaire est au-dessus de
+ * l'administrateur : l'exclure de ce que peut faire un administrateur n'aurait
+ * pas de sens. C'est la frontière qu'emploient déjà les écrans de réglages et,
+ * depuis ce changement, l'écriture dans la base de connaissances.
+ */
+export function isManager(role: string): boolean {
+  return role === "owner" || role === "admin";
+}
+
+/**
+ * Garde des server actions de gestion. Elle LÈVE plutôt que de rediriger : une
+ * action appelée par un rôle qui n'y a pas droit est une tentative, pas une
+ * navigation, et doit échouer bruyamment.
+ */
+export async function requireManager(): Promise<CurrentAgent> {
+  const current = await requireAgent();
+  if (!isManager(current.agent.role)) {
+    const { getT } = await import("@/i18n/server");
+    const t = await getT();
+    throw new Error(t("app.settings.shell.managerOnly"));
+  }
+  return current;
+}

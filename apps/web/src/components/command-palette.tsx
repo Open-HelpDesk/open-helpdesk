@@ -15,7 +15,7 @@ type Results = {
   tickets: { number: number; subject: string; status: string }[];
   contacts: { id: string; name: string | null; email: string; organizationName?: string | null }[];
   organizations: { id: string; name: string }[];
-  articles: { id: string; title: string; status: string; viewCount: number }[];
+  articles: { id: string; title: string; status: string; viewCount: number; href: string }[];
 };
 
 type Item = {
@@ -114,7 +114,8 @@ export function CommandPalette() {
     })),
     ...results.articles.map((a) => ({
       key: `a-${a.id}`,
-      href: `/app/kb/${a.id}`,
+      // Fournie par le serveur : lui seul sait si l'utilisateur peut éditer.
+      href: a.href,
       group: t("app.shell.paletteGroupArticles"),
       label: a.title,
       meta:

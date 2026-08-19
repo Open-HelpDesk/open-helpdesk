@@ -1395,6 +1395,13 @@ export const fr = {
   "app.views.resolved": "Résolus récemment",
   "app.views.urgent": "Urgents cette semaine",
   "app.views.escalation": "Escalades",
+
+  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  "app.kb.renameCategory": "Renommer",
+  "app.kb.renameSave": "Enregistrer",
+  "app.kb.deleteCategory": "Supprimer la catégorie",
+  "app.kb.managersOnly": "Seuls les rôles Owner et Admin peuvent modifier la base de connaissances.",
+  "app.kb.categoryNotEmpty": { one: "Cette catégorie contient encore {count} élément. Déplacez-le avant de la supprimer.", other: "Cette catégorie contient encore {count} éléments. Déplacez-les avant de la supprimer." },
 } as const satisfies Record<string, Message>;
 
 /** L'ensemble des clés du produit — les autres langues sont typées dessus. */

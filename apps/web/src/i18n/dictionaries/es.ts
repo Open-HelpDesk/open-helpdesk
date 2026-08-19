@@ -1337,4 +1337,11 @@ export const es: Dictionary = {
   "app.views.resolved": "Resueltas recientemente",
   "app.views.urgent": "Urgentes esta semana",
   "app.views.escalation": "Escalados",
+
+  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  "app.kb.renameCategory": "Renombrar",
+  "app.kb.renameSave": "Guardar",
+  "app.kb.deleteCategory": "Eliminar la categoría",
+  "app.kb.managersOnly": "Solo Owner y Admin pueden modificar la base de conocimiento.",
+  "app.kb.categoryNotEmpty": { one: "Esta categoría todavía contiene {count} elemento. Muévelo antes de eliminarla.", other: "Esta categoría todavía contiene {count} elementos. Muévelos antes de eliminarla." },
 };

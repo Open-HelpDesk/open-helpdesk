@@ -1336,4 +1336,11 @@ export const nl: Dictionary = {
   "app.views.resolved": "Onlangs opgelost",
   "app.views.urgent": "Urgent deze week",
   "app.views.escalation": "Escalaties",
+
+  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  "app.kb.renameCategory": "Naam wijzigen",
+  "app.kb.renameSave": "Opslaan",
+  "app.kb.deleteCategory": "Categorie verwijderen",
+  "app.kb.managersOnly": "Alleen Owner en Admin kunnen de kennisbank bewerken.",
+  "app.kb.categoryNotEmpty": { one: "Deze categorie bevat nog {count} item. Verplaats het voordat u de categorie verwijdert.", other: "Deze categorie bevat nog {count} items. Verplaats ze voordat u de categorie verwijdert." },
 };
