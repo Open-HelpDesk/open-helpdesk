@@ -1,0 +1,165 @@
+import { expect, test, type BrowserContext, type Page } from "@playwright/test";
+import { AGENTS, setTenantLocale, signInAgent } from "./helpers";
+
+/**
+ * La langue du logiciel (ST-01).
+ *
+ * Un tenant porte UNE langue : elle vaut pour ses agents comme pour ses
+ * clients, il n'y a ni préférence individuelle ni préfixe d'URL. Changer ce
+ * réglage doit donc retraduire les deux espaces d'un coup — le portail et
+ * l'inbox — et rien d'autre : ce que le tenant a écrit lui-même (titres
+ * d'articles, sujets de demandes) reste tel quel.
+ *
+ * L'allemand sert de langue témoin parce qu'il éloigne assez le vocabulaire
+ * pour qu'une chaîne oubliée saute aux yeux, et parce que son séparateur de
+ * milliers est le point : « 4.182 » là où le français écrit « 4 182 ».
+ */
+
+/**
+ * L'article le plus consulté du jeu de démonstration. Son titre est du contenu
+ * de tenant — il ne doit jamais changer avec la langue — et son compteur de
+ * vues est le seul nombre à quatre chiffres visible sans se connecter.
+ */
+const ARTICLE = {
+  slug: "comment-telecharger-vos-factures",
+  title: "Comment télécharger vos factures",
+} as const;
+
+test.describe("Langue du logiciel", () => {
+  /**
+   * Une seule session pour tout le fichier.
+   *
+   * L'authentification est limitée en fréquence (Better Auth refuse la
+   * quatrième tentative dans la même fenêtre de dix secondes), et le formulaire
+   * de connexion annonce alors « Identifiants incorrects. ». Se reconnecter à
+   * chaque test ferait donc échouer les suivants sur un message trompeur, sans
+   * aucun rapport avec la langue. On se connecte une fois, on garde la page.
+   */
+  let context: BrowserContext;
+  let page: Page;
+
+  test.beforeAll(async ({ browser }) => {
+    test.setTimeout(90_000);
+    context = await browser.newContext();
+    page = await context.newPage();
+    // Le quota de connexions est commun à toute l'instance : une autre spec en
+    // cours peut l'avoir épuisé. On réessaie jusqu'à ce que le produit accepte,
+    // plutôt que d'échouer sur une contention qui ne dit rien du produit.
+    await expect(async () => {
+      await signInAgent(page, AGENTS.owner);
+    }).toPass({ timeout: 60_000 });
+  });
+
+  test.afterAll(async () => {
+    await context.close();
+  });
+
+  test.afterEach(async () => {
+    // Le tenant est partagé par toutes les specs et ne porte qu'une langue :
+    // quoi qu'il soit arrivé au-dessus, il repart en français.
+    await switchLocale("fr");
+  });
+
+  /**
+   * Bascule la langue du tenant et attend que l'enregistrement soit ACQUITTÉ.
+   *
+   * `setTenantLocale` rend la main dès que le `<select>` porte la valeur
+   * choisie, c'est-à-dire avant que l'action serveur ait répondu. Naviguer
+   * aussitôt après fait annuler la navigation par la redirection
+   * d'enregistrement qui arrive derrière : on se retrouve sur l'écran de
+   * réglages, dans l'ANCIENNE langue, et le test échoue pour une raison qui
+   * n'est pas la sienne. `?saved=1` est l'accusé de réception du produit — on
+   * l'attend avant d'aller voir ailleurs.
+   */
+  async function switchLocale(code: string): Promise<void> {
+    await setTenantLocale(page, code);
+    await expect(page).toHaveURL(/saved=1/);
+  }
+
+  /** La ligne de cet article dans le palmarès de l'accueil du portail. */
+  function popularRow() {
+    return page.locator(`a[href="/help/articles/${ARTICLE.slug}"]`).first();
+  }
+
+  test("en allemand, le portail client s'affiche en allemand", async () => {
+    await switchLocale("de");
+    await page.goto("/help");
+
+    // `lang` sort de la même source que les traductions : s'il reste au
+    // français, c'est la mise en page racine qui n'a pas relu le tenant.
+    await expect(page.locator("html")).toHaveAttribute("lang", "de");
+
+    // Le titre d'accueil traduit — le tenant n'a pas de texte d'accueil
+    // personnalisé, qui primerait sur la traduction (ST-09).
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Wie können wir Ihnen helfen?",
+    );
+
+    // Le chrome du portail est rendu par une autre mise en page que la page :
+    // c'est le genre d'endroit qui reste en français quand le reste a basculé.
+    await expect(page.getByRole("link", { name: "Anfrage stellen" }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: "Meine Anfragen" }).first()).toBeVisible();
+  });
+
+  test("en allemand, les nombres portent le séparateur de milliers allemand", async () => {
+    await switchLocale("de");
+    await page.goto("/help");
+
+    // Traduire ne suffit pas : un nombre interpolé dans une phrase doit passer
+    // par le formateur de la langue. Sans cela il ressort brut — « 4182 » — et
+    // le défaut reste invisible tant qu'on ne relit que du texte.
+    // Le compteur n'est pas figé (chaque lecture d'article l'incrémente) : c'est
+    // la FORME qui est vérifiée, pas la valeur.
+    await expect(popularRow().locator("span.tabular-nums")).toHaveText(
+      /^\d{1,3}\.\d{3} Aufrufe$/,
+    );
+  });
+
+  test("en allemand, l'espace agent et ses statuts s'affichent en allemand", async () => {
+    await switchLocale("de");
+    await page.goto("/app/tickets");
+
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Meine Tickets");
+
+    // Les statuts vivent dans une table de correspondance à part, pas dans les
+    // écrans : c'est exactement le vocabulaire qui reste en français quand tout
+    // le reste est traduit. On les lit dans le filtre « Statut », seul endroit
+    // où les libellés sont rendus quelles que soient les données de l'inbox.
+    const statusFilter = page.locator('details:has(a[href="/app/tickets?status=open"])');
+    await statusFilter.locator("summary").click();
+    await expect(statusFilter.getByRole("link", { name: "Offen", exact: true })).toBeVisible();
+    await expect(statusFilter.getByRole("link", { name: "Neu", exact: true })).toBeVisible();
+    await expect(statusFilter.getByRole("link", { name: "Wartend", exact: true })).toBeVisible();
+  });
+
+  test("le contenu du tenant n'est pas traduit avec l'interface", async () => {
+    // Le titre d'article appartient au tenant : il est écrit dans SA langue et
+    // aucun changement de réglage ne doit y toucher. Un dictionnaire qui
+    // déborderait sur les données se verrait ici, et nulle part ailleurs.
+    const title = popularRow().locator("span.flex-1");
+
+    await switchLocale("fr");
+    await page.goto("/help");
+    await expect(title).toHaveText(ARTICLE.title);
+
+    await switchLocale("de");
+    await page.goto("/help");
+    await expect(title).toHaveText(ARTICLE.title);
+  });
+
+  test("revenir au français rétablit l'interface française", async () => {
+    // Un aller simple ne prouve rien : c'est le retour qui montre que la langue
+    // est relue à chaque rendu, et non figée au premier passage par un cache.
+    await switchLocale("de");
+    await switchLocale("fr");
+
+    await page.goto("/help");
+    await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Comment pouvons-nous vous aider ?",
+    );
+
+    await page.goto("/app/tickets");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Mes tickets");
+  });
+});

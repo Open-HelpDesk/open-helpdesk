@@ -25,7 +25,7 @@ importers:
         version: link:../../packages/ui
       next:
         specifier: ^15.5.0
-        version: 15.5.23(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 15.5.23(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
         specifier: ^19.1.0
         version: 19.2.8
@@ -86,7 +86,7 @@ importers:
         version: 3.30.1
       better-auth:
         specifier: ^1.3.0
-        version: 1.6.29(drizzle-kit@0.31.10)(drizzle-orm@0.44.7(kysely@0.29.5)(postgres@3.4.9))(next@15.5.23(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.6.29(drizzle-kit@0.31.10)(drizzle-orm@0.44.7(kysely@0.29.5)(postgres@3.4.9))(next@15.5.23(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       drizzle-orm:
         specifier: ^0.44.0
         version: 0.44.7(kysely@0.29.5)(postgres@3.4.9)
@@ -95,7 +95,7 @@ importers:
         version: 0.475.0(react@19.2.8)
       next:
         specifier: ^15.5.0
-        version: 15.5.23(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 15.5.23(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
         specifier: ^19.1.0
         version: 19.2.8
@@ -169,7 +169,7 @@ importers:
         version: link:../../packages/ui
       next:
         specifier: ^15.5.0
-        version: 15.5.23(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 15.5.23(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
         specifier: ^19.1.0
         version: 19.2.8
@@ -197,7 +197,7 @@ importers:
         version: link:../db
       better-auth:
         specifier: ^1.3.0
-        version: 1.6.29(drizzle-kit@0.31.10)(drizzle-orm@0.44.7(kysely@0.29.5)(postgres@3.4.9))(next@15.5.23(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.6.29(drizzle-kit@0.31.10)(drizzle-orm@0.44.7(kysely@0.29.5)(postgres@3.4.9))(next@15.5.23(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@types/node':
         specifier: ^22.0.0
@@ -307,6 +307,15 @@ importers:
       tsx:
         specifier: ^4.19.0
         version: 4.23.12
+      typescript:
+        specifier: ^5.8.0
+        version: 5.9.3
+
+  packages/smoke:
+    devDependencies:
+      '@playwright/test':
+        specifier: ^1.62.1
+        version: 1.62.1
       typescript:
         specifier: ^5.8.0
         version: 5.9.3
@@ -1196,6 +1205,11 @@ packages:
   '@pinojs/redact@0.4.0':
     resolution: {integrity: sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==}
 
+  '@playwright/test@1.62.1':
+    resolution: {integrity: sha512-DTcUc8qii+cpHvtOwggMtBRMjKZHXYWdw8syRYu2vtzuq4Wxphqq4NfCs5Zt44L6mA8rfDfj+PHnxFc/FeK6mQ==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   '@selderee/plugin-htmlparser2@0.12.0':
     resolution: {integrity: sha512-oELmoyA6ML9jDRMV3kgcMQFKxUfBU0yFVn6yTctVaLT5ygXnxH52I3TZEgV9EhXJC68/uFvE5Daj1/25c0Xa/A==}
     peerDependencies:
@@ -1802,6 +1816,11 @@ packages:
     resolution: {integrity: sha512-DjlFSM5Pk9cGcL0q5QXl66eGzx0N6szNgaswwc5ZphlBohjTVJSnGgI+rJVOgOi65qUoQnDZN4nDqi33udtydQ==}
     engines: {node: '>=6.0.0'}
 
+  fsevents@2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -2036,6 +2055,16 @@ packages:
 
   pino@10.3.1:
     resolution: {integrity: sha512-r34yH/GlQpKZbU1BvFFqOjhISRo1MNx1tWYsYvmj6KIRHSPMT2+yHOEb1SG6NMvRoHRF0a07kCOox/9yakl1vg==}
+    hasBin: true
+
+  playwright-core@1.62.1:
+    resolution: {integrity: sha512-wPYSwEBJY9GHraISXqyqtx0na0LpO3XEX7jNDhntbex7tzUS7kLnZsOlFruFJB4Hi/rhDMjXGqHewDZ68nYZVw==}
+    engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.62.1:
+    resolution: {integrity: sha512-0M+L3LAD8/nm554LOla9Ayx0j0tmFZ0FBcoQ7F1VuVHpM/XpiC8RcDzBQB8W5+hA8L22THxELzeF+2WcUzvcLg==}
+    engines: {node: '>=20'}
     hasBin: true
 
   postcss@8.4.31:
@@ -2897,6 +2926,10 @@ snapshots:
 
   '@pinojs/redact@0.4.0': {}
 
+  '@playwright/test@1.62.1':
+    dependencies:
+      playwright: 1.62.1
+
   '@selderee/plugin-htmlparser2@0.12.0(selderee@0.12.0)':
     dependencies:
       domelementtype: 2.3.0
@@ -3237,7 +3270,7 @@ snapshots:
 
   atomic-sleep@1.0.0: {}
 
-  better-auth@1.6.29(drizzle-kit@0.31.10)(drizzle-orm@0.44.7(kysely@0.29.5)(postgres@3.4.9))(next@15.5.23(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  better-auth@1.6.29(drizzle-kit@0.31.10)(drizzle-orm@0.44.7(kysely@0.29.5)(postgres@3.4.9))(next@15.5.23(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@better-auth/core': 1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.9)(kysely@0.29.5)(nanostores@1.5.0)
       '@better-auth/drizzle-adapter': 1.6.29(@better-auth/core@1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.9)(kysely@0.29.5)(nanostores@1.5.0))(@better-auth/utils@0.4.2)(drizzle-orm@0.44.7(kysely@0.29.5)(postgres@3.4.9))
@@ -3259,7 +3292,7 @@ snapshots:
     optionalDependencies:
       drizzle-kit: 0.31.10
       drizzle-orm: 0.44.7(kysely@0.29.5)(postgres@3.4.9)
-      next: 15.5.23(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      next: 15.5.23(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
     transitivePeerDependencies:
@@ -3440,6 +3473,9 @@ snapshots:
 
   fast-equals@5.4.1: {}
 
+  fsevents@2.3.2:
+    optional: true
+
   fsevents@2.3.3:
     optional: true
 
@@ -3618,7 +3654,7 @@ snapshots:
 
   nanostores@1.5.0: {}
 
-  next@15.5.23(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  next@15.5.23(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@next/env': 15.5.23
       '@swc/helpers': 0.5.15
@@ -3636,6 +3672,7 @@ snapshots:
       '@next/swc-linux-x64-musl': 15.5.23
       '@next/swc-win32-arm64-msvc': 15.5.23
       '@next/swc-win32-x64-msvc': 15.5.23
+      '@playwright/test': 1.62.1
       sharp: 0.34.5
     transitivePeerDependencies:
       - '@babel/core'
@@ -3684,6 +3721,14 @@ snapshots:
       safe-stable-stringify: 2.5.0
       sonic-boom: 4.2.1
       thread-stream: 4.2.0
+
+  playwright-core@1.62.1: {}
+
+  playwright@1.62.1:
+    dependencies:
+      playwright-core: 1.62.1
+    optionalDependencies:
+      fsevents: 2.3.2
 
   postcss@8.4.31:
     dependencies:

@@ -1,0 +1,15 @@
+{
+  "name": "@openhelpdesk/smoke",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "smoke": "playwright test",
+    "smoke:ui": "playwright test --ui",
+    "smoke:report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "typescript": "^5.8.0"
+  }
+}
