@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getPortalTenant } from "@/lib/portal-auth";
+import { getPortalContact, getPortalTenant } from "@/lib/portal-auth";
+import { canReadKb } from "@/lib/portal-config";
 import { listPublishedCategories, popularArticles } from "@/lib/portal-data";
 import { getT } from "@/i18n/server";
 import { PortalSearchBar } from "./search-bar";
@@ -9,10 +10,12 @@ export default async function HelpHome() {
   const t = await getT();
   const tenant = await getPortalTenant();
   if (!tenant) return null;
-  const [categories, popular] = await Promise.all([
-    listPublishedCategories(tenant.id),
-    popularArticles(tenant.id, 5),
-  ]);
+  // Base coupée ou réservée : l'accueil garde son hero et sa carte de contact,
+  // mais cesse d'annoncer des catégories que les pages refuseraient d'ouvrir.
+  const showKb = await canReadKb(Boolean(await getPortalContact()));
+  const [categories, popular] = showKb
+    ? await Promise.all([listPublishedCategories(tenant.id), popularArticles(tenant.id, 5)])
+    : [[], []];
   // Le texte d'accueil réglé dans ST-09 prime sur la traduction : c'est la voix
   // du tenant, il l'a écrit dans sa langue.
   const welcome =
@@ -49,12 +52,13 @@ export default async function HelpHome() {
               {t("home.subtitle")}
             </p>
           </div>
-          <PortalSearchBar />
+          {showKb && <PortalSearchBar />}
         </div>
       </div>
 
       {/* Contenu */}
       <div className="mx-auto flex w-full max-w-[1060px] flex-col gap-[46px] px-9 pb-14 pt-12 max-sm:px-[18px] max-sm:py-[30px]">
+        {showKb && (
         <section className="flex flex-col gap-4">
           <h2
             className="pt-eyebrow"
@@ -99,8 +103,10 @@ export default async function HelpHome() {
             ))}
           </div>
         </section>
+        )}
 
         <div className="grid grid-cols-[1.5fr_1fr] gap-[26px] max-md:grid-cols-1">
+          {showKb && (
           <section className="flex min-w-0 flex-col gap-4">
             <h2
               className="pt-eyebrow"
@@ -139,6 +145,7 @@ export default async function HelpHome() {
               ))}
             </div>
           </section>
+          )}
 
           <aside
             className="flex flex-col gap-3 self-start rounded-[18px] p-[26px] text-white"

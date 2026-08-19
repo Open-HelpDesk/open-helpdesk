@@ -1,4 +1,6 @@
 import { getPortalTenant } from "@/lib/portal-auth";
+import { notFound } from "next/navigation";
+import { getPortalSettings } from "@/lib/portal-config";
 import { getT } from "@/i18n/server";
 // Le widget vit hors du groupe /help : il charge lui-même les styles .pt-* du portail.
 import "../help/portal.css";
@@ -21,6 +23,9 @@ export default async function WidgetPage({
   searchParams: Promise<{ sent?: string }>;
 }) {
   const t = await getT();
+  const settings = await getPortalSettings();
+  // Le widget dépend du portail : il soumet des demandes au même endroit.
+  if (!settings.portalEnabled || !settings.widget.enabled) notFound();
   const tenant = await getPortalTenant();
   const { sent } = await searchParams;
   if (!tenant) return null;

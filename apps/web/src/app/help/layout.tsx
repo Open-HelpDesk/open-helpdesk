@@ -1,4 +1,6 @@
+import { notFound } from "next/navigation";
 import { getPortalTenant } from "@/lib/portal-auth";
+import { getPortalSettings } from "@/lib/portal-config";
 import { I18nProvider } from "@/i18n/client";
 import { getT } from "@/i18n/server";
 import "./portal.css";
@@ -17,6 +19,10 @@ const DEFAULT_ACCENT = "#0b5f46";
 
 export default async function HelpLayout({ children }: { children: React.ReactNode }) {
   const tenant = await getPortalTenant();
+  // ST-09 : « Portail client activé ». Coupé, /help n'existe plus — connexion et
+  // suivi de demandes compris. Le réglage était enregistré sans être lu.
+  const { portalEnabled } = await getPortalSettings();
+  if (!portalEnabled) notFound();
   const t = await getT();
   const accent = (tenant?.branding as { accentColor?: string } | null)?.accentColor;
   const custom = accent && accent.toLowerCase() !== DEFAULT_ACCENT;

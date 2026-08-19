@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPortalTenant } from "@/lib/portal-auth";
+import { getPortalContact, getPortalTenant } from "@/lib/portal-auth";
+import { canReadKb } from "@/lib/portal-config";
 import { getCategoryWithSections } from "@/lib/portal-data";
 import { excerpt } from "../../../portal-format";
 import { getT, type Translate } from "@/i18n/server";
@@ -71,6 +72,8 @@ function SectionAccordion({
 /** PT-02 — Catégorie : fil d'Ariane, accordéons par section, sidebar « Autres catégories ». */
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const t = await getT();
+  // ST-09 : base non publiée, ou réservée aux personnes connectées.
+  if (!(await canReadKb(Boolean(await getPortalContact())))) notFound();
   const tenant = await getPortalTenant();
   const { slug } = await params;
   if (!tenant) notFound();

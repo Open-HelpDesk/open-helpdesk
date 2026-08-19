@@ -18,8 +18,13 @@ import { onTicketCreated } from "@openhelpdesk/rules";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { saveUploadedFiles } from "@/lib/storage";
 import { requestOrigin } from "@/lib/tenant";
+import { getPortalSettings } from "@/lib/portal-config";
 
 export async function POST(request: NextRequest) {
+  const settings = await getPortalSettings();
+  if (!settings.portalEnabled || !settings.widget.enabled) {
+    return new NextResponse("Not found", { status: 404 });
+  }
   const tenant = await getPortalTenant();
   if (!tenant) return NextResponse.json({ error: "tenant_not_found" }, { status: 404 });
 

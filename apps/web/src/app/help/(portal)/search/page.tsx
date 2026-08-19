@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { getPortalTenant } from "@/lib/portal-auth";
+import { notFound } from "next/navigation";
+import { getPortalContact, getPortalTenant } from "@/lib/portal-auth";
+import { canReadKb } from "@/lib/portal-config";
 import { searchArticles } from "@/lib/portal-data";
 import { getT } from "@/i18n/server";
 
@@ -10,6 +12,8 @@ export default async function HelpSearchPage({
   searchParams: Promise<{ q?: string }>;
 }) {
   const t = await getT();
+  // ST-09 : base non publiée, ou réservée aux personnes connectées.
+  if (!(await canReadKb(Boolean(await getPortalContact())))) notFound();
   const tenant = await getPortalTenant();
   const { q = "" } = await searchParams;
   const results = tenant && q.trim().length >= 2 ? await searchArticles(tenant.id, q.trim(), 12) : [];

@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db, kbArticles } from "@openhelpdesk/db";
 import { and, eq, sql } from "drizzle-orm";
-import { getPortalTenant } from "@/lib/portal-auth";
+import { getPortalContact, getPortalTenant } from "@/lib/portal-auth";
+import { canReadKb } from "@/lib/portal-config";
 import { getPublishedArticle } from "@/lib/portal-data";
 import { readingMinutes } from "@/i18n/format";
 import { getT } from "@/i18n/server";
@@ -13,6 +14,8 @@ import { VoteBlock } from "./vote-block";
 /** PT-03 — Article : rendu riche 66ch, méta, vote, articles liés, TOC « Sur cette page ». */
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const t = await getT();
+  // ST-09 : base non publiée, ou réservée aux personnes connectées.
+  if (!(await canReadKb(Boolean(await getPortalContact())))) notFound();
   const tenant = await getPortalTenant();
   const { slug } = await params;
   if (!tenant) notFound();

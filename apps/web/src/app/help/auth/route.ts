@@ -9,9 +9,15 @@ import {
   verifyPortalToken,
 } from "@/lib/portal-auth";
 import { requestOrigin } from "@/lib/tenant";
+import { getPortalSettings } from "@/lib/portal-config";
 
 export async function GET(request: NextRequest) {
   const base = requestOrigin(request);
+  // Portail coupé : un lien magique encore en circulation ne doit pas rouvrir
+  // une session sur un portail éteint.
+  if (!(await getPortalSettings()).portalEnabled) {
+    return new NextResponse("Not found", { status: 404 });
+  }
   const tenant = await getPortalTenant();
   const token = request.nextUrl.searchParams.get("token") ?? "";
   const to = request.nextUrl.searchParams.get("to") ?? "/help/requests";
