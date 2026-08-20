@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { useT } from "@/i18n/client";
 
 export function LoginForm({ initialError }: { initialError?: string }) {
+  const t = useT();
   const router = useRouter();
   const [error, setError] = useState<string | null>(
-    initialError === "not-a-member"
-      ? "Cette identité n'est pas membre de ce workspace."
-      : null,
+    initialError === "not-a-member" ? t("app.login.notAMember") : null,
   );
   const [badCredentials, setBadCredentials] = useState(false);
   const [pending, setPending] = useState(false);
@@ -25,8 +25,13 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       password: String(form.get("password")),
     });
     if (error) {
-      setError("Identifiants incorrects.");
-      setBadCredentials(true);
+      // Un refus de quota n'est pas un mauvais mot de passe. Better Auth plafonne
+      // /sign-in à quelques appels par dizaine de secondes ; les confondre
+      // reprochait à un agent légitime une faute qu'il n'avait pas commise, et
+      // l'invitait à corriger un mot de passe correct au lieu de patienter.
+      const rateLimited = error.status === 429;
+      setError(rateLimited ? t("app.login.rateLimited") : t("app.login.badCredentials"));
+      setBadCredentials(!rateLimited);
       setPending(false);
       return;
     }
@@ -41,9 +46,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       provider,
       callbackURL: "/app/tickets",
     });
-    if (error) {
-      setError("Ce fournisseur n'est pas configuré sur cette instance.");
-    }
+    if (error) setError(t("app.login.providerMissing"));
   }
 
   const inputStyle = {
@@ -55,28 +58,29 @@ export function LoginForm({ initialError }: { initialError?: string }) {
   } as const;
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3">
+    // `method="post"` alors que la soumission est interceptée en JavaScript : c'est
+    // le filet pour la fenêtre d'avant l'hydratation. Sans lui, un formulaire sans
+    // méthode part en GET, et l'email comme le mot de passe se retrouvent en
+    // paramètres d'URL — donc dans la barre d'adresse, l'historique et les
+    // journaux d'accès du serveur.
+    <form onSubmit={onSubmit} method="post" className="flex flex-col gap-3">
       <label className="flex flex-col gap-1 text-[13px] font-medium">
-        Email
+        {t("app.login.email")}
         <input
           name="email"
           type="email"
           required
           autoComplete="email"
-          placeholder="vous@entreprise.fr"
+          placeholder={t("app.login.emailPlaceholder")}
           className="border px-3 text-sm font-normal outline-none focus:ring-2"
           style={inputStyle}
         />
       </label>
       <label className="flex flex-col gap-1 text-[13px] font-medium">
         <span className="flex items-baseline justify-between">
-          Mot de passe
-          <a
-            href="#"
-            className="font-normal"
-            style={{ color: "var(--acc-2)", fontSize: 12 }}
-          >
-            Mot de passe oublié ?
+          {t("app.login.password")}
+          <a href="#" className="font-normal" style={{ color: "var(--acc-2)", fontSize: 12 }}>
+            {t("app.login.forgot")}
           </a>
         </span>
         <input
@@ -108,7 +112,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
         className="mt-1 rounded-md text-sm font-semibold text-white disabled:opacity-60"
         style={{ height: 38, background: "var(--acc)" }}
       >
-        {pending ? "Connexion…" : "Se connecter"}
+        {pending ? t("app.login.pending") : t("app.login.submit")}
       </button>
 
       <div
@@ -116,7 +120,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
         style={{ color: "var(--ink-3)" }}
       >
         <span className="h-px flex-1" style={{ background: "var(--line)" }} />
-        OU
+        {t("app.login.or")}
         <span className="h-px flex-1" style={{ background: "var(--line)" }} />
       </div>
 
@@ -126,7 +130,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
         className="rounded-md border text-[13px] font-medium"
         style={{ height: 36, borderColor: "var(--line)", background: "var(--bg)" }}
       >
-        Continuer avec Google
+        {t("app.login.google")}
       </button>
       <button
         type="button"
@@ -134,7 +138,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
         className="rounded-md border text-[13px] font-medium"
         style={{ height: 36, borderColor: "var(--line)", background: "var(--bg)" }}
       >
-        Continuer avec Microsoft
+        {t("app.login.microsoft")}
       </button>
     </form>
   );

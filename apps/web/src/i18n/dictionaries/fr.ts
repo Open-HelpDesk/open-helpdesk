@@ -1402,6 +1402,21 @@ export const fr = {
   "app.kb.deleteCategory": "Supprimer la catégorie",
   "app.kb.managersOnly": "Seuls les rôles Owner et Admin peuvent modifier la base de connaissances.",
   "app.kb.categoryNotEmpty": { one: "Cette catégorie contient encore {count} élément. Déplacez-le avant de la supprimer.", other: "Cette catégorie contient encore {count} éléments. Déplacez-les avant de la supprimer." },
+
+  /* --- AG-01 Connexion agent --- */
+  "app.login.email": "Email",
+  "app.login.emailPlaceholder": "vous@entreprise.fr",
+  "app.login.password": "Mot de passe",
+  "app.login.forgot": "Mot de passe oublié ?",
+  "app.login.submit": "Se connecter",
+  "app.login.pending": "Connexion…",
+  "app.login.or": "OU",
+  "app.login.google": "Continuer avec Google",
+  "app.login.microsoft": "Continuer avec Microsoft",
+  "app.login.badCredentials": "Identifiants incorrects.",
+  "app.login.rateLimited": "Trop de tentatives de connexion. Patientez quelques secondes avant de réessayer.",
+  "app.login.notAMember": "Cette identité n'est pas membre de ce workspace.",
+  "app.login.providerMissing": "Ce fournisseur n'est pas configuré sur cette instance.",
 } as const satisfies Record<string, Message>;
 
 /** L'ensemble des clés du produit — les autres langues sont typées dessus. */

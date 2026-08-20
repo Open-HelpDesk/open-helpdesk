@@ -1343,4 +1343,19 @@ export const de: Dictionary = {
   "app.kb.deleteCategory": "Kategorie löschen",
   "app.kb.managersOnly": "Nur Owner und Admin können die Wissensdatenbank bearbeiten.",
   "app.kb.categoryNotEmpty": { one: "Diese Kategorie enthält noch {count} Element. Verschieben Sie es, bevor Sie die Kategorie löschen.", other: "Diese Kategorie enthält noch {count} Elemente. Verschieben Sie sie, bevor Sie die Kategorie löschen." },
+
+  /* --- AG-01 Connexion agent --- */
+  "app.login.email": "E-Mail",
+  "app.login.emailPlaceholder": "sie@firma.de",
+  "app.login.password": "Passwort",
+  "app.login.forgot": "Passwort vergessen?",
+  "app.login.submit": "Anmelden",
+  "app.login.pending": "Anmeldung…",
+  "app.login.or": "ODER",
+  "app.login.google": "Mit Google fortfahren",
+  "app.login.microsoft": "Mit Microsoft fortfahren",
+  "app.login.badCredentials": "Ungültige Anmeldedaten.",
+  "app.login.rateLimited": "Zu viele Anmeldeversuche. Warten Sie einige Sekunden, bevor Sie es erneut versuchen.",
+  "app.login.notAMember": "Diese Identität ist kein Mitglied dieses Workspace.",
+  "app.login.providerMissing": "Dieser Anbieter ist auf dieser Instanz nicht konfiguriert.",
 };

@@ -1331,4 +1331,19 @@ export const en: Dictionary = {
   "app.kb.deleteCategory": "Delete category",
   "app.kb.managersOnly": "Only Owner and Admin can edit the knowledge base.",
   "app.kb.categoryNotEmpty": { one: "This category still holds {count} item. Move it before deleting the category.", other: "This category still holds {count} items. Move them before deleting the category." },
+
+  /* --- AG-01 Connexion agent --- */
+  "app.login.email": "Email",
+  "app.login.emailPlaceholder": "you@company.com",
+  "app.login.password": "Password",
+  "app.login.forgot": "Forgot your password?",
+  "app.login.submit": "Sign in",
+  "app.login.pending": "Signing in…",
+  "app.login.or": "OR",
+  "app.login.google": "Continue with Google",
+  "app.login.microsoft": "Continue with Microsoft",
+  "app.login.badCredentials": "Incorrect credentials.",
+  "app.login.rateLimited": "Too many sign-in attempts. Wait a few seconds before trying again.",
+  "app.login.notAMember": "This identity is not a member of this workspace.",
+  "app.login.providerMissing": "This provider is not configured on this instance.",
 };

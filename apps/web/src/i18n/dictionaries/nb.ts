@@ -1341,4 +1341,19 @@ export const nb: Dictionary = {
   "app.kb.deleteCategory": "Slett kategorien",
   "app.kb.managersOnly": "Bare Owner og Admin kan redigere kunnskapsbasen.",
   "app.kb.categoryNotEmpty": { one: "Kategorien inneholder fortsatt {count} element. Flytt det før du sletter kategorien.", other: "Kategorien inneholder fortsatt {count} elementer. Flytt dem før du sletter kategorien." },
+
+  /* --- AG-01 Connexion agent --- */
+  "app.login.email": "E-post",
+  "app.login.emailPlaceholder": "du@bedrift.no",
+  "app.login.password": "Passord",
+  "app.login.forgot": "Glemt passordet?",
+  "app.login.submit": "Logg inn",
+  "app.login.pending": "Logger inn…",
+  "app.login.or": "ELLER",
+  "app.login.google": "Fortsett med Google",
+  "app.login.microsoft": "Fortsett med Microsoft",
+  "app.login.badCredentials": "Feil innloggingsinformasjon.",
+  "app.login.rateLimited": "For mange innloggingsforsøk. Vent noen sekunder før du prøver igjen.",
+  "app.login.notAMember": "Denne identiteten er ikke medlem av dette arbeidsområdet.",
+  "app.login.providerMissing": "Denne leverandøren er ikke konfigurert på denne instansen.",
 };

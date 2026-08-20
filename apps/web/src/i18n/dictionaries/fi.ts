@@ -1341,4 +1341,19 @@ export const fi: Dictionary = {
   "app.kb.deleteCategory": "Poista luokka",
   "app.kb.managersOnly": "Vain Owner ja Admin voivat muokata tietopankkia.",
   "app.kb.categoryNotEmpty": { one: "Luokassa on vielä {count} kohde. Siirrä se ennen luokan poistamista.", other: "Luokassa on vielä {count} kohdetta. Siirrä ne ennen luokan poistamista." },
+
+  /* --- AG-01 Connexion agent --- */
+  "app.login.email": "Sähköposti",
+  "app.login.emailPlaceholder": "sina@yritys.fi",
+  "app.login.password": "Salasana",
+  "app.login.forgot": "Unohtuiko salasana?",
+  "app.login.submit": "Kirjaudu sisään",
+  "app.login.pending": "Kirjaudutaan…",
+  "app.login.or": "TAI",
+  "app.login.google": "Jatka Googlella",
+  "app.login.microsoft": "Jatka Microsoftilla",
+  "app.login.badCredentials": "Virheelliset kirjautumistiedot.",
+  "app.login.rateLimited": "Liian monta kirjautumisyritystä. Odota hetki ennen uutta yritystä.",
+  "app.login.notAMember": "Tämä henkilöllisyys ei kuulu tähän työtilaan.",
+  "app.login.providerMissing": "Tätä tarjoajaa ei ole määritetty tässä instanssissa.",
 };

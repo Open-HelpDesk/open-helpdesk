@@ -2,6 +2,8 @@ import { db, tenants } from "@openhelpdesk/db";
 import { eq } from "drizzle-orm";
 import { getTenantSlug } from "@/lib/tenant";
 import { LoginForm } from "./login-form";
+import { I18nProvider } from "@/i18n/client";
+import { getT } from "@/i18n/server";
 
 /**
  * AG-01 — Connexion (design espace-agent) : logo A 40×40 + nom du workspace au-dessus,
@@ -14,6 +16,7 @@ export default async function LoginPage({
 }: {
   searchParams: Promise<{ error?: string }>;
 }) {
+  const t = await getT();
   const { error } = await searchParams;
   const slug = await getTenantSlug();
   const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug));
@@ -51,7 +54,11 @@ export default async function LoginPage({
             padding: 24,
           }}
         >
+          {/* Le fournisseur est posé ici : /login n'est sous aucun shell qui le
+            porte, et le formulaire est un composant client. */}
+        <I18nProvider locale={t.locale} dict={t.dict}>
           <LoginForm initialError={error} />
+        </I18nProvider>
         </div>
 
         <p className="mt-4 text-center" style={{ color: "var(--ink-3)", fontSize: 12 }}>

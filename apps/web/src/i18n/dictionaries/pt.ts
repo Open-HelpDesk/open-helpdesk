@@ -1344,4 +1344,19 @@ export const pt: Dictionary = {
   "app.kb.deleteCategory": "Eliminar a categoria",
   "app.kb.managersOnly": "Apenas Owner e Admin podem editar a base de conhecimento.",
   "app.kb.categoryNotEmpty": { one: "Esta categoria ainda contém {count} elemento. Mova-o antes de a eliminar.", other: "Esta categoria ainda contém {count} elementos. Mova-os antes de a eliminar." },
+
+  /* --- AG-01 Connexion agent --- */
+  "app.login.email": "E-mail",
+  "app.login.emailPlaceholder": "voce@empresa.pt",
+  "app.login.password": "Palavra-passe",
+  "app.login.forgot": "Esqueceu-se da palavra-passe?",
+  "app.login.submit": "Iniciar sessão",
+  "app.login.pending": "A iniciar sessão…",
+  "app.login.or": "OU",
+  "app.login.google": "Continuar com Google",
+  "app.login.microsoft": "Continuar com Microsoft",
+  "app.login.badCredentials": "Credenciais incorretas.",
+  "app.login.rateLimited": "Demasiadas tentativas de início de sessão. Aguarde alguns segundos antes de tentar novamente.",
+  "app.login.notAMember": "Esta identidade não é membro deste espaço de trabalho.",
+  "app.login.providerMissing": "Este fornecedor não está configurado nesta instância.",
 };

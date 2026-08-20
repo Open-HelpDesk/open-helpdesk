@@ -36,7 +36,14 @@ export default async function KbPage({
     db
       .select({ categoryId: kbArticles.categoryId, n: count() })
       .from(kbArticles)
-      .where(eq(kbArticles.tenantId, tenant.id))
+      // Même filtre que la liste : un compteur qui annonce trois articles quand
+      // deux s'affichent révèle par la soustraction ce qu'on vient de cacher.
+      .where(
+        and(
+          eq(kbArticles.tenantId, tenant.id),
+          ...(canManage ? [] : [eq(kbArticles.status, "published")]),
+        ),
+      )
       .groupBy(kbArticles.categoryId),
   ]);
 
@@ -76,8 +83,16 @@ export default async function KbPage({
           })
           .from(kbArticles)
           .leftJoin(users, eq(kbArticles.authorId, users.id))
+          // La recherche partagée (lib/directory) cache déjà les brouillons aux
+          // non-gestionnaires, au motif qu'un titre non publié est déjà une
+          // information à protéger. Cette liste les montrait encore, badge
+          // « Brouillon » compris : les deux écrans disaient le contraire.
           .where(
-            and(eq(kbArticles.tenantId, tenant.id), inArray(kbArticles.categoryId, catIds)),
+            and(
+              eq(kbArticles.tenantId, tenant.id),
+              inArray(kbArticles.categoryId, catIds),
+              ...(canManage ? [] : [eq(kbArticles.status, "published")]),
+            ),
           )
           .orderBy(desc(kbArticles.updatedAt))
       : [];

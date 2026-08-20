@@ -194,17 +194,23 @@ test.describe("Portail public", () => {
     await expect(bouton).toHaveAttribute("href", "/help/requests/new");
   });
 
-  test("le pied de page du portail annonce « Propulsé par Open HelpDesk »", async ({ page }) => {
+  test("le pied de page du portail porte le copyright du tenant", async ({ page }) => {
     await page.goto("/help");
     const pied = page.locator("footer");
 
-    // La phrase est découpée autour du nom du produit pour que chaque langue
-    // garde son ordre de mots : on vérifie qu'elle se recolle, pas seulement
-    // que le lien existe.
-    await expect(pied).toContainText("Propulsé par Open HelpDesk");
-    await expect(pied.getByRole("link", { name: "Open HelpDesk" })).toHaveAttribute(
-      "href",
-      "https://open-helpdesk.com",
-    );
+    // Le copyright est toujours là, quel que soit le réglage.
+    await expect(pied).toContainText(new RegExp(`© ${new Date().getFullYear()}`));
+
+    // « Propulsé par Open HelpDesk » dépend de ST-09 (« Masquer Propulsé par »,
+    // réservé au plan Pro) : un smoke test ne doit pas présumer d'un réglage
+    // qu'il ne pilote pas. On vérifie donc seulement la cohérence — si la
+    // mention est là, la phrase est recollée autour de son lien, ce qui est le
+    // vrai risque (elle est découpée pour garder l'ordre des mots de chaque
+    // langue). Le fait de la masquer est couvert par settings-toggles.
+    const mention = pied.getByRole("link", { name: "Open HelpDesk" });
+    if ((await mention.count()) > 0) {
+      await expect(pied).toContainText("Propulsé par Open HelpDesk");
+      await expect(mention).toHaveAttribute("href", "https://open-helpdesk.com");
+    }
   });
 });

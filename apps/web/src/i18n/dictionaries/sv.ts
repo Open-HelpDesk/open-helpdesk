@@ -1341,4 +1341,19 @@ export const sv: Dictionary = {
   "app.kb.deleteCategory": "Ta bort kategorin",
   "app.kb.managersOnly": "Endast Owner och Admin kan redigera kunskapsbasen.",
   "app.kb.categoryNotEmpty": { one: "Kategorin innehåller fortfarande {count} objekt. Flytta det innan du tar bort kategorin.", other: "Kategorin innehåller fortfarande {count} objekt. Flytta dem innan du tar bort kategorin." },
+
+  /* --- AG-01 Connexion agent --- */
+  "app.login.email": "E-post",
+  "app.login.emailPlaceholder": "du@foretag.se",
+  "app.login.password": "Lösenord",
+  "app.login.forgot": "Glömt lösenordet?",
+  "app.login.submit": "Logga in",
+  "app.login.pending": "Loggar in…",
+  "app.login.or": "ELLER",
+  "app.login.google": "Fortsätt med Google",
+  "app.login.microsoft": "Fortsätt med Microsoft",
+  "app.login.badCredentials": "Felaktiga inloggningsuppgifter.",
+  "app.login.rateLimited": "För många inloggningsförsök. Vänta några sekunder innan du försöker igen.",
+  "app.login.notAMember": "Den här identiteten är inte medlem i den här arbetsytan.",
+  "app.login.providerMissing": "Den här leverantören är inte konfigurerad på den här instansen.",
 };

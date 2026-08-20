@@ -167,22 +167,12 @@ test.describe("Base de connaissances : écriture réservée aux gestionnaires", 
    * Les deux écrans ne posent pas la même frontière, et c'est le seul point où
    * ce fichier a trouvé le produit en désaccord avec lui-même : /api/search
    * retient les brouillons parce qu'« un titre non publié est déjà une
-   * information », tandis que la liste /app/kb les sert à tout le monde, badge
-   * « Brouillon » compris, en se contentant de rendre la ligne non cliquable.
-   * Les deux tests qui suivent tiennent les deux bouts : le vert épingle le
-   * comportement actuel, le fixme dit ce qu'il faudrait obtenir.
+   * information ». La liste /app/kb les servait encore à tout le monde, badge
+   * « Brouillon » compris, en se contentant de rendre la ligne non cliquable :
+   * les deux écrans se contredisaient. La liste et ses compteurs filtrent
+   * désormais comme la recherche, et ce test l'épingle.
    */
-  test("un agent voit aujourd'hui les brouillons dans la liste des articles", async () => {
-    await agentPage.goto("/app/kb");
-    await agentPage
-      .locator('a[href^="/app/kb?cat="]')
-      .filter({ hasText: "Facturation" })
-      .click();
-    await expect(agentPage.getByText("Comment télécharger vos factures")).toBeVisible();
-    await expect(agentPage.getByText("Brouillon", { exact: true }).first()).toBeVisible();
-  });
-
-  test.fixme("un agent ne voit aucun brouillon dans la liste des articles", async () => {
+  test("un agent ne voit aucun brouillon dans la liste des articles", async () => {
     await agentPage.goto("/app/kb");
     await agentPage
       .locator('a[href^="/app/kb?cat="]')

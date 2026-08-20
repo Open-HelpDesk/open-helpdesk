@@ -1342,4 +1342,19 @@ export const da: Dictionary = {
   "app.kb.deleteCategory": "Slet kategorien",
   "app.kb.managersOnly": "Kun Owner og Admin kan redigere vidensbasen.",
   "app.kb.categoryNotEmpty": { one: "Kategorien indeholder stadig {count} element. Flyt det, før du sletter kategorien.", other: "Kategorien indeholder stadig {count} elementer. Flyt dem, før du sletter kategorien." },
+
+  /* --- AG-01 Connexion agent --- */
+  "app.login.email": "E-mail",
+  "app.login.emailPlaceholder": "dig@virksomhed.dk",
+  "app.login.password": "Adgangskode",
+  "app.login.forgot": "Glemt adgangskoden?",
+  "app.login.submit": "Log ind",
+  "app.login.pending": "Logger ind…",
+  "app.login.or": "ELLER",
+  "app.login.google": "Fortsæt med Google",
+  "app.login.microsoft": "Fortsæt med Microsoft",
+  "app.login.badCredentials": "Forkerte loginoplysninger.",
+  "app.login.rateLimited": "For mange loginforsøg. Vent nogle sekunder, før du prøver igen.",
+  "app.login.notAMember": "Denne identitet er ikke medlem af dette arbejdsområde.",
+  "app.login.providerMissing": "Denne udbyder er ikke konfigureret på denne instans.",
 };

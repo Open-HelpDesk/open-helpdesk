@@ -1343,4 +1343,19 @@ export const nl: Dictionary = {
   "app.kb.deleteCategory": "Categorie verwijderen",
   "app.kb.managersOnly": "Alleen Owner en Admin kunnen de kennisbank bewerken.",
   "app.kb.categoryNotEmpty": { one: "Deze categorie bevat nog {count} item. Verplaats het voordat u de categorie verwijdert.", other: "Deze categorie bevat nog {count} items. Verplaats ze voordat u de categorie verwijdert." },
+
+  /* --- AG-01 Connexion agent --- */
+  "app.login.email": "E-mail",
+  "app.login.emailPlaceholder": "u@bedrijf.nl",
+  "app.login.password": "Wachtwoord",
+  "app.login.forgot": "Wachtwoord vergeten?",
+  "app.login.submit": "Inloggen",
+  "app.login.pending": "Inloggen…",
+  "app.login.or": "OF",
+  "app.login.google": "Doorgaan met Google",
+  "app.login.microsoft": "Doorgaan met Microsoft",
+  "app.login.badCredentials": "Onjuiste inloggegevens.",
+  "app.login.rateLimited": "Te veel inlogpogingen. Wacht enkele seconden voordat u het opnieuw probeert.",
+  "app.login.notAMember": "Deze identiteit is geen lid van deze werkruimte.",
+  "app.login.providerMissing": "Deze provider is niet geconfigureerd op deze instantie.",
 };

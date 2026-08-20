@@ -182,11 +182,15 @@ export default async function TicketPage({
     }));
 
   return (
-    <div className="flex h-full">
+    // En dessous de xl, les deux colonnes s'empilent au lieu de se juxtaposer :
+    // le panneau de propriétés était simplement absent du DOM, et l'agent
+    // perdait assigné, équipe, priorité, type, SLA et fiche contact sans aucun
+    // moyen de les atteindre — pas même un repli.
+    <div className="flex h-full max-xl:flex-col max-xl:overflow-y-auto">
       <TopbarOverride title={t("app.ticket.topbarTitle")} subtitle={positionLabel} />
 
       {/* Colonne conversation */}
-      <div className="flex min-w-0 flex-1 flex-col" style={{ background: "var(--bg)" }}>
+      <div className="flex min-w-0 flex-1 flex-col max-xl:min-h-0" style={{ background: "var(--bg)" }}>
         {/* En-tête — 2 rangées, padding 12/18, gap 9 */}
         <header
           className="flex shrink-0 flex-col border-b"
@@ -463,9 +467,10 @@ export default async function TicketPage({
 
       {/* Panneau propriétés — 320 px */}
       <aside
-        className="hidden shrink-0 flex-col overflow-y-auto border-l xl:flex"
+        // La largeur passe par les classes et non par le style inline : un
+        // `width` inline l'emporterait sur la règle responsive.
+        className="flex w-full shrink-0 flex-col overflow-y-auto border-l border-t xl:w-80 xl:border-t-0 max-xl:border-l-0"
         style={{
-          width: 320,
           padding: "14px 16px",
           gap: 16,
           background: "var(--panel)",

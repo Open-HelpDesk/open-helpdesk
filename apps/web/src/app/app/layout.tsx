@@ -8,7 +8,7 @@ import {
   organizations,
   tickets,
 } from "@openhelpdesk/db";
-import { requireAgent } from "@/lib/session";
+import { isManager, requireAgent } from "@/lib/session";
 import { Avatar } from "@/components/ticket-bits";
 import { CommandPalette } from "@/components/command-palette";
 import { RailNav, TopBar, type ShellCounts } from "@/components/app-shell";
@@ -45,7 +45,18 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         .select({ n: count() })
         .from(organizations)
         .where(eq(organizations.tenantId, tenant.id)),
-      db.select({ n: count() }).from(kbArticles).where(eq(kbArticles.tenantId, tenant.id)),
+      // Le sous-titre « N articles » du topbar suit la même règle que la liste :
+      // un non-gestionnaire ne compte que le publié, sinon l'écart trahit les
+      // brouillons qu'on lui cache par ailleurs.
+      db
+        .select({ n: count() })
+        .from(kbArticles)
+        .where(
+          and(
+            eq(kbArticles.tenantId, tenant.id),
+            ...(isManager(agent.role) ? [] : [eq(kbArticles.status, "published")]),
+          ),
+        ),
       db
         .select({ n: count() })
         .from(kbCategories)
