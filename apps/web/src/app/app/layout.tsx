@@ -24,7 +24,7 @@ import { getT } from "@/i18n/server";
  */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { tenant, agent } = await requireAgent();
-  const branding = (tenant.branding ?? {}) as { accentColor?: string };
+  const branding = (tenant.branding ?? {}) as { accentColor?: string; logoUrl?: string };
 
   const [[myOpen], [contactCount], [orgCount], [articleCount], [categoryCount]] =
     await Promise.all([
@@ -81,19 +81,33 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           className="flex w-16 shrink-0 flex-col items-center border-r"
           style={{ padding: "10px 0", background: "var(--panel)", borderColor: "var(--line)" }}
         >
-          <div
-            className="mb-2 flex items-center justify-center font-bold text-white"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              fontSize: 14,
-              background: branding.accentColor || "var(--acc)",
-            }}
-            title={tenant.name}
-          >
-            {tenant.name[0]?.toUpperCase()}
-          </div>
+          {/* Le logo du tenant (ST-01) prend la place du carré à l'initiale,
+              ici comme dans l'entête du portail. */}
+          {branding.logoUrl ? (
+            /* eslint-disable-next-line @next/next/no-img-element -- un SVG ou un
+               ICO déposé par le tenant ne passe pas par l'optimiseur d'images. */
+            <img
+              src={branding.logoUrl}
+              alt={tenant.name}
+              title={tenant.name}
+              className="mb-2 object-contain"
+              style={{ width: 32, height: 32, borderRadius: 8, background: "var(--sunk)" }}
+            />
+          ) : (
+            <div
+              className="mb-2 flex items-center justify-center font-bold text-white"
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                fontSize: 14,
+                background: branding.accentColor || "var(--acc)",
+              }}
+              title={tenant.name}
+            >
+              {tenant.name[0]?.toUpperCase()}
+            </div>
+          )}
 
           <RailNav inboxBadge={counts.inbox} />
 

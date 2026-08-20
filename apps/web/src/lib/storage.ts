@@ -1,10 +1,12 @@
 /**
- * Stockage S3-compatible des pièces jointes (MinIO en local, specs/01 § 3).
+ * Stockage S3-compatible (MinIO en local, specs/01 § 3) : pièces jointes,
+ * images d'articles, logo et favicon du workspace.
  * Limite 10 Mo par fichier (specs PT-04). Clés : {tenantId}/{messageId}/{uuid}-{nom}.
  */
 import { randomUUID } from "node:crypto";
 import {
   CreateBucketCommand,
+  DeleteObjectCommand,
   GetObjectCommand,
   HeadBucketCommand,
   PutObjectCommand,
@@ -122,5 +124,80 @@ export async function getKbImageBody(relativeKey: string) {
     return result.Body;
   } catch {
     return null;
+  }
+}
+
+/* ---------- Logo et favicon du workspace (ST-01) ---------- */
+
+const BRAND_PREFIX = "brand";
+
+/**
+ * Un logo tient en quelques dizaines de kilo-octets et un favicon en quelques
+ * centaines d'octets : deux mégaoctets sont déjà larges, et une limite basse
+ * évite qu'une photo déposée par erreur devienne l'en-tête du portail.
+ */
+export const MAX_BRAND_BYTES = 2 * 1024 * 1024;
+
+export type BrandAssetKind = "logo" | "favicon";
+
+/**
+ * Range un logo ou un favicon et renvoie son URL de lecture.
+ *
+ * Ces objets ne passent pas par le préfixe des images d'articles, parce qu'ils
+ * n'ont pas la même règle de visibilité : le logo du portail doit se charger
+ * même quand la base de connaissances n'est pas publiée, et le favicon même
+ * dans l'espace agent, qui n'a rien à voir avec la base.
+ *
+ * Le nom du fichier déposé est conservé après l'UUID : c'est lui qui porte
+ * l'extension, dont la route de lecture déduit le type MIME.
+ */
+export async function saveBrandAsset(
+  tenantId: string,
+  kind: BrandAssetKind,
+  file: File,
+): Promise<string> {
+  await ensureBucket();
+  const filename = sanitizeFilename(file.name);
+  const relative = `${tenantId}/${kind}-${randomUUID()}-${filename}`;
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: `${BRAND_PREFIX}/${relative}`,
+      Body: Buffer.from(await file.arrayBuffer()),
+      ContentType: file.type || "application/octet-stream",
+    }),
+  );
+  return `/api/brand/${relative}`;
+}
+
+export async function getBrandAssetBody(relativeKey: string) {
+  await ensureBucket();
+  try {
+    const result = await s3.send(
+      new GetObjectCommand({ Bucket: BUCKET, Key: `${BRAND_PREFIX}/${relativeKey}` }),
+    );
+    return result.Body;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Supprime l'objet derrière une URL `/api/brand/…`.
+ *
+ * Appelée quand on retire un logo : sans elle, chaque remplacement laisserait
+ * un objet orphelin dans le bucket, que plus aucune URL ne désigne. L'échec est
+ * avalé — un objet resté en trop ne doit pas empêcher le réglage d'être retiré.
+ */
+export async function deleteBrandAsset(url: string): Promise<void> {
+  const relative = url.startsWith("/api/brand/") ? url.slice("/api/brand/".length) : null;
+  if (!relative) return;
+  try {
+    await ensureBucket();
+    await s3.send(
+      new DeleteObjectCommand({ Bucket: BUCKET, Key: `${BRAND_PREFIX}/${relative}` }),
+    );
+  } catch {
+    /* orphelin toléré : le réglage compte plus que le ménage */
   }
 }

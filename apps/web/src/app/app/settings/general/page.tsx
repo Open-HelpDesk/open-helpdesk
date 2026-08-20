@@ -14,6 +14,7 @@ import {
 } from "@/components/settings-page";
 import { Modal, SlugConfirmField } from "@/components/settings-overlays";
 import { AccentPicker } from "@/components/settings-accent";
+import { BrandAssetField } from "@/components/settings-brand";
 import { deleteWorkspace, saveGeneral, transferOwnership } from "./actions";
 
 /** Champ de saisie du design : min-height 36, padding 7/11, 13.5px. */
@@ -89,6 +90,8 @@ export default async function GeneralSettingsPage({
   const branding = (tenant.branding ?? {}) as {
     accentColor?: string;
     firstTicketNumber?: number;
+    logoUrl?: string;
+    faviconUrl?: string;
   };
   const nTickets = ticketCount?.n ?? 0;
   const nContacts = contactCount?.n ?? 0;
@@ -102,7 +105,15 @@ export default async function GeneralSettingsPage({
         subtitle={t("app.settings.workspace.generalSubtitle")}
       />
 
-      {error === "delete-cloud" && (
+      {/* Un dépôt refusé le dit. Le format et le poids sont vérifiés côté
+          serveur, et l'enregistrement est interrompu AVANT d'écrire : rien
+          d'autre n'a été enregistré non plus, et le message ne mentirait pas
+          en laissant croire le contraire. */}
+      {(error === "delete-cloud" ||
+        error === "logo-format" ||
+        error === "favicon-format" ||
+        error === "logo-size" ||
+        error === "favicon-size") && (
         <div
           className="rounded-md border px-3 py-2"
           style={{
@@ -112,7 +123,11 @@ export default async function GeneralSettingsPage({
             color: "var(--dang)",
           }}
         >
-          {t("app.settings.workspace.generalDeleteCloudError")}
+          {error === "delete-cloud"
+            ? t("app.settings.workspace.generalDeleteCloudError")
+            : error.endsWith("-size")
+              ? t("app.settings.workspace.generalAssetSizeError")
+              : t("app.settings.workspace.generalAssetFormatError")}
         </div>
       )}
 
@@ -128,79 +143,28 @@ export default async function GeneralSettingsPage({
               className="grid"
               style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
             >
-              <div className="flex flex-col gap-1.5">
-                <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                  {t("app.settings.workspace.generalLogoLabel")}
-                </span>
-                <div className="flex items-center" style={{ gap: 11 }}>
-                  <span
-                    className="flex items-center justify-center font-bold text-white"
-                    style={{
-                      width: 46,
-                      height: 46,
-                      flex: "none",
-                      borderRadius: 10,
-                      fontSize: 19,
-                      background: branding.accentColor ?? "var(--acc)",
-                    }}
-                  >
-                    {initial}
-                  </span>
-                  <span
-                    className="flex flex-1 items-center justify-center rounded-lg border border-dashed"
-                    style={{
-                      height: 46,
-                      borderColor: "var(--line)",
-                      fontSize: 12.5,
-                      color: "var(--ink-3)",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {t("app.settings.workspace.generalLogoReplace")}
-                  </span>
-                </div>
-                <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                  {t("app.settings.workspace.generalLogoHint")}
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                  {t("app.settings.workspace.generalFaviconLabel")}
-                </span>
-                <div className="flex items-center" style={{ gap: 11 }}>
-                  <span
-                    className="flex items-center justify-center border"
-                    style={{
-                      width: 46,
-                      height: 46,
-                      flex: "none",
-                      borderRadius: 10,
-                      fontSize: 15,
-                      borderColor: "var(--line)",
-                      background: "var(--sunk)",
-                      color: "var(--ink)",
-                    }}
-                  >
-                    {initial}
-                  </span>
-                  <span
-                    className="flex flex-1 items-center justify-center rounded-lg border border-dashed"
-                    style={{
-                      height: 46,
-                      borderColor: "var(--line)",
-                      fontSize: 12.5,
-                      color: "var(--ink-3)",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {t("app.settings.workspace.generalFaviconReplace")}
-                  </span>
-                </div>
-                <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                  {t("app.settings.workspace.generalFaviconHint")}
-                </span>
-              </div>
+              <BrandAssetField
+                name="logo"
+                current={branding.logoUrl ?? null}
+                initial={initial}
+                background={branding.accentColor ?? "var(--acc)"}
+                accept="image/png,image/svg+xml,image/jpeg,image/webp"
+                label={t("app.settings.workspace.generalLogoLabel")}
+                replaceLabel={t("app.settings.workspace.generalLogoReplace")}
+                removeLabel={t("app.settings.workspace.generalLogoRemove")}
+                hint={t("app.settings.workspace.generalLogoHint")}
+              />
+              <BrandAssetField
+                name="favicon"
+                current={branding.faviconUrl ?? null}
+                initial={initial}
+                background="var(--sunk)"
+                accept="image/png,image/svg+xml,image/x-icon,.ico"
+                label={t("app.settings.workspace.generalFaviconLabel")}
+                replaceLabel={t("app.settings.workspace.generalFaviconReplace")}
+                removeLabel={t("app.settings.workspace.generalFaviconRemove")}
+                hint={t("app.settings.workspace.generalFaviconHint")}
+              />
             </div>
 
             <Field

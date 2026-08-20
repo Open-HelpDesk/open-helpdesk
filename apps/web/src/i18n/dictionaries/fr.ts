@@ -1080,11 +1080,21 @@ export const fr = {
   "app.settings.workspace.generalIdentity": "Identité",
   "app.settings.workspace.generalNameLabel": "Nom du workspace",
   "app.settings.workspace.generalLogoLabel": "Logo",
-  "app.settings.workspace.generalLogoReplace": "Remplacer · recadrer",
+  "app.settings.workspace.generalLogoReplace": "Remplacer",
   "app.settings.workspace.generalLogoHint": "PNG ou SVG, 512 px minimum.",
   "app.settings.workspace.generalFaviconLabel": "Favicon",
   "app.settings.workspace.generalFaviconReplace": "Remplacer",
   "app.settings.workspace.generalFaviconHint": "32 × 32 px, ICO ou PNG.",
+  /* Dépôt du logo et du favicon. « Retirer » n'est pas paramétré par le nom du
+     champ : « Retirer le {label} » demanderait l'accusatif du mot inséré dans
+     la moitié des langues du produit, et le libellé arrive au nominatif. */
+  "app.settings.workspace.generalLogoRemove": "Retirer le logo",
+  "app.settings.workspace.generalFaviconRemove": "Retirer le favicon",
+  "app.settings.workspace.generalAssetPending": "Sera appliqué à l'enregistrement.",
+  "app.settings.workspace.generalAssetRemoved": "Sera retiré à l'enregistrement.",
+  "app.settings.workspace.generalAssetFormatError":
+    "Format refusé. Logo : PNG, SVG, JPEG ou WebP. Favicon : PNG, SVG ou ICO.",
+  "app.settings.workspace.generalAssetSizeError": "Fichier trop lourd : 2 Mo maximum.",
   "app.settings.workspace.generalAccentLabel": "Couleur d'accent",
   "app.settings.workspace.generalAccentHint": "Utilisée sur le portail client et dans les emails sortants.",
   "app.settings.workspace.generalRegion": "Régionalisation",

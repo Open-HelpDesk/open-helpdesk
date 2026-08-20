@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { headers } from "next/headers";
 
 /** Slug du tenant courant, posé par le middleware. */
@@ -10,14 +11,21 @@ export async function getTenantSlug(): Promise<string> {
   return slug;
 }
 
-/** Tenant courant (résolu depuis le domaine) — pour les routes publiques. */
-export async function getTenantFromHeaders() {
+/**
+ * Tenant courant (résolu depuis le domaine) — pour les routes publiques.
+ *
+ * Mémoïsé par requête : la mise en page racine en a besoin deux fois, pour la
+ * langue et pour le favicon, et le portail y ajoute son accent et son logo.
+ * Sans `cache`, une seule page du portail déclenchait quatre fois la même
+ * requête SQL.
+ */
+export const getTenantFromHeaders = cache(async () => {
   const { db, tenants } = await import("@openhelpdesk/db");
   const { eq } = await import("drizzle-orm");
   const slug = await getTenantSlug();
   const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug));
   return tenant ?? null;
-}
+});
 
 /**
  * Origine réelle d'une requête, reconstruite depuis l'en-tête `Host`.

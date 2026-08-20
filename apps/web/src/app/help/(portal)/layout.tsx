@@ -18,6 +18,7 @@ export default async function PortalChromeLayout({ children }: { children: React
   const session = await getPortalContact();
   const adminOrg = session ? await getOrgAdminOrg(session.tenant.id, session.contact.id) : null;
   const name = tenant?.name ?? t("chrome.defaultName");
+  const logo = (tenant?.branding as { logoUrl?: string } | null)?.logoUrl ?? null;
   // « Masquer Propulsé par Open HelpDesk » : réglage ST-09, réservé au plan Pro.
   const hidePoweredBy =
     (tenant?.portalConfig as { hidePoweredBy?: boolean } | null)?.hidePoweredBy === true &&
@@ -33,12 +34,27 @@ export default async function PortalChromeLayout({ children }: { children: React
       >
         <div className="flex h-[66px] items-center gap-4 px-9 max-sm:px-[18px]">
           <Link href="/help" className="flex items-center gap-[11px] hover:no-underline">
-            <span
-              className="pt-title grid h-8 w-8 place-items-center rounded-[9px] text-base text-white"
-              style={{ background: "var(--cta-a)", boxShadow: "var(--sh-1)" }}
-            >
-              {name[0]?.toUpperCase() ?? "?"}
-            </span>
+            {/* Le logo du tenant (ST-01) remplace le carré à l'initiale. Il
+                n'est pas passé à l'optimiseur d'images de Next : un SVG ou un
+                ICO déposé par le tenant n'y survivrait pas, et le fichier est
+                déjà servi avec un cache définitif — son URL porte un UUID qui
+                change à chaque remplacement. */}
+            {logo ? (
+              /* eslint-disable-next-line @next/next/no-img-element -- voir ci-dessus */
+              <img
+                src={logo}
+                alt={name}
+                className="h-8 w-8 rounded-[9px] object-contain"
+                style={{ background: "var(--sunk)" }}
+              />
+            ) : (
+              <span
+                className="pt-title grid h-8 w-8 place-items-center rounded-[9px] text-base text-white"
+                style={{ background: "var(--cta-a)", boxShadow: "var(--sh-1)" }}
+              >
+                {name[0]?.toUpperCase() ?? "?"}
+              </span>
+            )}
             <span
               className="pt-title text-[19px] tracking-[-0.01em]"
               style={{ color: "var(--ink)" }}
