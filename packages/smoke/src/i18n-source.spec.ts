@@ -127,3 +127,62 @@ test.describe("Jeux de vocabulaire", () => {
     });
   }
 });
+
+/**
+ * Verbes d'action que la traduction ne doit pas confondre.
+ *
+ * Chaque paire ci-dessous porte deux libellés qui sont DISTINCTS en français et
+ * dont la confusion a une conséquence : cliquer sur l'un en croyant l'autre.
+ * Le cas qui a motivé ce test s'est produit sur quatre des quatorze dernières
+ * langues livrées — bulgare, estonien, lituanien, slovène — où le mot naturel
+ * de la révocation est aussi celui de l'annulation. Le lien rouge qui invalide
+ * définitivement une clé d'API portait alors le même mot que le bouton Annuler
+ * du formulaire juste en dessous.
+ *
+ * On ne compare que des libellés courts et nus, et seulement des paires qui se
+ * rencontrent SUR LE MÊME ÉCRAN. Deux verbes identiques sur deux écrans qui ne
+ * se croisent jamais ne trompent personne : beaucoup de langues n'ont qu'un mot
+ * pour « supprimer » et « retirer », et c'est légitime — exiger la distinction
+ * ferait échouer le finnois, le néerlandais et le polonais sur une différence
+ * que le français fait sans que le produit en dépende.
+ */
+const PAIRES: [string, string, string][] = [
+  // Le défaut observé : le lien rouge de révocation et le bouton Annuler du
+  // formulaire cohabitent sur l'écran API & webhooks, `cancel` du shell étant
+  // rendu sur tous les écrans de réglages.
+  ["révoquer une clé", "app.settings.dev.revoke", "app.settings.shell.cancel"],
+  ["révoquer plutôt que supprimer", "app.settings.dev.revoke", "app.settings.dev.delete"],
+  ["révoquer plutôt que désactiver", "app.settings.dev.revoke", "app.settings.dev.disable"],
+  // Une règle d'automatisation se désactive ou se supprime depuis la même ligne.
+  ["supprimer plutôt que désactiver", "app.settings.rules.delete", "app.settings.rules.ruleDisable"],
+  // Zone de danger du workspace : désactiver un agent n'est pas supprimer.
+  ["supprimer plutôt que désactiver", "app.settings.workspace.delete", "app.settings.workspace.deactivate"],
+];
+
+test.describe("Verbes d'action", () => {
+  test("les paires sont bien distinctes en français", () => {
+    // Sans ce garde-fou, une paire dont une clé aurait disparu de fr.ts
+    // passerait au vert dans toutes les langues sans rien vérifier.
+    const fr = simpleEntries("fr");
+    for (const [nom, a, b] of PAIRES) {
+      expect(fr.get(a), `${nom} : ${a} absente de fr.ts`).toBeTruthy();
+      expect(fr.get(b), `${nom} : ${b} absente de fr.ts`).toBeTruthy();
+      expect(fr.get(a), `${nom} : la paire est déjà confondue en français`).not.toBe(fr.get(b));
+    }
+  });
+
+  for (const code of CODES) {
+    test(`${code} : aucune paire d'actions confondue`, () => {
+      const d = simpleEntries(code);
+      // Comparaison insensible à la casse et à la ponctuation : « Odobrať: » et
+      // « Odobrať » sont le même mot pour l'utilisateur qui lit le bouton.
+      const nu = (v: string | undefined) =>
+        (v ?? "").toLocaleLowerCase().replace(/[\s:.…—-]+$/u, "").trim();
+      const confusions = PAIRES.filter(([, a, b]) => {
+        const va = nu(d.get(a));
+        return va !== "" && va === nu(d.get(b));
+      }).map(([nom, a, b]) => `${nom} : « ${d.get(a)} » ← ${a} = ${b}`);
+      expect(confusions).toEqual([]);
+    });
+  }
+});

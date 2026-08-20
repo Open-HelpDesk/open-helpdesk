@@ -1294,6 +1294,14 @@ export const fr = {
   "app.settings.dev.colLastUsed": "Dernier usage",
   "app.settings.dev.keysEmpty": "Aucune clé API. Créez la première pour vos intégrations.",
   "app.settings.dev.never": "Jamais",
+  /* Piège de traduction, rencontré sur quatre langues des quatorze dernières
+     livrées (bulgare, estonien, lituanien, slovène) : le mot naturel de la
+     révocation y est aussi celui de l'annulation. Le lien rouge qui invalide
+     définitivement une clé d'API se lisait donc « Annuler », à côté du bouton
+     Annuler du formulaire — et l'état « Révoquée » se lisait « annulée », donc
+     réversible, après qu'on a coupé une clé fuitée. Toute nouvelle langue doit
+     vérifier que ces deux valeurs ne se confondent pas avec celles de
+     `app.settings.shell.cancel` et de ses semblables. */
   "app.settings.dev.revoked": "Révoquée",
   "app.settings.dev.revoke": "Révoquer",
   "app.settings.dev.scopeRead": "Lecture seule",

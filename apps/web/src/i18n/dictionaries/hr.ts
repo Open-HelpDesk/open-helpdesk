@@ -1239,7 +1239,7 @@ export const hr: Dictionary = {
   "app.settings.portal.csatPoweredBy": "Pokreće Open HelpDesk",
   "app.settings.portal.csatExclusionsPlaceholder": "Dodaj oznaku ili obrazac…",
   "app.settings.portal.csatExclusionsAdd": "Dodaj isključenje",
-  "app.settings.portal.csatExclusionRemove": "Ukloni organizaciju {name}",
+  "app.settings.portal.csatExclusionRemove": "Ukloni {name}",
 
   /* --- settings.workspace --- */
   "app.settings.workspace.generalTitle": "Općenito i brendiranje",

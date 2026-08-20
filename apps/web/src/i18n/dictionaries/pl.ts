@@ -1312,7 +1312,7 @@ export const pl: Dictionary = {
   "app.settings.portal.csatPoweredBy": "Obsługiwane przez Open HelpDesk",
   "app.settings.portal.csatExclusionsPlaceholder": "Dodaj tag lub formularz…",
   "app.settings.portal.csatExclusionsAdd": "Dodaj wyjątek",
-  "app.settings.portal.csatExclusionRemove": "Usuń organizację {name}",
+  "app.settings.portal.csatExclusionRemove": "Usuń wyjątek {name}",
 
   /* --- settings.workspace --- */
   "app.settings.workspace.generalTitle": "Ogólne i marka",

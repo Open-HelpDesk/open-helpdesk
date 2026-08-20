@@ -1301,7 +1301,7 @@ export const sl: Dictionary = {
   "app.settings.portal.csatPoweredBy": "Omogoča Open HelpDesk",
   "app.settings.portal.csatExclusionsPlaceholder": "Dodaj oznako ali obrazec…",
   "app.settings.portal.csatExclusionsAdd": "Dodaj izjemo",
-  "app.settings.portal.csatExclusionRemove": "Odstrani organizacijo {name}",
+  "app.settings.portal.csatExclusionRemove": "Odstrani izjemo {name}",
 
   /* --- settings.workspace --- */
   "app.settings.workspace.generalTitle": "Splošno in blagovna znamka",
@@ -1572,7 +1572,7 @@ export const sl: Dictionary = {
   "app.settings.dev.keysEmpty": "Ni ključev API. Ustvarite prvega za svoje integracije.",
   "app.settings.dev.never": "Nikoli",
   "app.settings.dev.revoked": "Preklican",
-  "app.settings.dev.revoke": "Prekliči",
+  "app.settings.dev.revoke": "Prekliči ključ",
   "app.settings.dev.scopeRead": "Samo branje",
   "app.settings.dev.scopeReadWrite": "Branje in pisanje",
   "app.settings.dev.scopeTicketCreate": "Ustvarjanje zahtevkov",
