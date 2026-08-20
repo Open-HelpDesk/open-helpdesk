@@ -321,14 +321,25 @@ export default async function GeneralSettingsPage({
           >
             <form action={deleteWorkspace} className="flex flex-col gap-3">
               <p style={{ fontSize: 13.5, color: "var(--ink-2)" }}>
-                {t("app.settings.workspace.deleteWorkspaceConfirm", {
-                  tickets: nTickets,
-                  contacts: nContacts,
-                  articles: nArticles,
-                })}
+                {t("app.settings.workspace.deleteWorkspaceConfirm")}
+              </p>
+              {/* Les trois effectifs sont sortis de la phrase : elle en comptait
+                  trois, indépendants, là où une clé ne porte qu'une dimension de
+                  pluriel — à un ticket, elle écrivait « Les 1 tickets ». Chacun
+                  décline maintenant son nom, et rien ne les relie qu'un
+                  séparateur typographique, qui n'a de cas dans aucune langue. */}
+              <p className="font-semibold" style={{ fontSize: 13.5, color: "var(--dang)" }}>
+                {[
+                  t("app.settings.workspace.generalDeleteTicketCount", { count: nTickets }),
+                  t("app.settings.workspace.generalDeleteContactCount", { count: nContacts }),
+                  t("app.settings.workspace.generalDeleteArticleCount", { count: nArticles }),
+                ].join(" · ")}
               </p>
               <SlugConfirmField
                 slug={tenant.slug}
+                prompt={t("app.settings.workspace.generalDeleteSlugPrompt", {
+                  slug: tenant.slug,
+                })}
                 buttonLabel={t("app.settings.workspace.deleteWorkspaceButton")}
               />
             </form>

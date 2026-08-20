@@ -182,9 +182,12 @@ export function Modal({
  */
 export function SlugConfirmField({
   slug,
+  prompt,
   buttonLabel,
 }: {
   slug: string;
+  /** « Saisissez « acme » pour confirmer » — déjà traduit et interpolé. */
+  prompt: string;
   buttonLabel: string;
 }) {
   const [value, setValue] = useState("");
@@ -193,7 +196,7 @@ export function SlugConfirmField({
     <div className="flex flex-col gap-2">
       <label className="flex flex-col gap-1.5">
         <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-          Saisissez « {slug} » pour confirmer
+          {prompt}
         </span>
         <input
           name="confirmation"

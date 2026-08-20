@@ -1084,7 +1084,20 @@ export const fi: Dictionary = {
   "app.settings.workspace.deleteWorkspaceTitle": "Poista työtila",
   "app.settings.workspace.deleteWorkspaceHint": "Lopullinen poisto 30 päivän säilytysajan jälkeen.",
   "app.settings.workspace.delete": "Poista",
-  "app.settings.workspace.deleteWorkspaceConfirm": "Tätä toimintoa ei voi perua. {tickets} pyyntöä, {contacts} yhteyshenkilöä ja {articles} artikkelia poistetaan lopullisesti 30 päivän säilytysajan jälkeen.",
+  "app.settings.workspace.deleteWorkspaceConfirm": "Tätä toimintoa ei voi perua. Työtilan koko sisältö poistetaan lopullisesti 30 päivän säilytysajan jälkeen.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} pyyntö",
+    other: "{count} pyyntöä",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} yhteyshenkilö",
+    other: "{count} yhteyshenkilöä",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} artikkeli",
+    other: "{count} artikkelia",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Vahvista kirjoittamalla ”{slug}”",
   "app.settings.workspace.deleteWorkspaceButton": "Poista lopullisesti",
   "app.settings.workspace.teamTitle": "Agentit, tiimit ja roolit",
   "app.settings.workspace.teamSubtitle": "Hallitse käyttöoikeuksia, rooleja ja agenttien jakautumista tiimeihin.",

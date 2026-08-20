@@ -1297,7 +1297,23 @@ export const lv: Dictionary = {
     "Galīgā dzēšana pēc 30 dienu glabāšanas perioda.",
   "app.settings.workspace.delete": "Dzēst",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Šī darbība ir neatgriezeniska. {tickets} pieteikumi, {contacts} kontaktpersonas un {articles} raksti tiks neatgriezeniski dzēsti pēc 30 dienu glabāšanas perioda.",
+    "Šī darbība ir neatgriezeniska. Viss darbvietas saturs tiks neatgriezeniski dzēsts pēc 30 dienu glabāšanas perioda.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    zero: "{count} pieteikumu",
+    one: "{count} pieteikums",
+    other: "{count} pieteikumi",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    zero: "{count} kontaktpersonu",
+    one: "{count} kontaktpersona",
+    other: "{count} kontaktpersonas",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    zero: "{count} rakstu",
+    one: "{count} raksts",
+    other: "{count} raksti",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Ievadiet „{slug}“, lai apstiprinātu",
   "app.settings.workspace.deleteWorkspaceButton": "Dzēst neatgriezeniski",
   "app.settings.workspace.teamTitle": "Aģenti, komandas un lomas",
   "app.settings.workspace.teamSubtitle":

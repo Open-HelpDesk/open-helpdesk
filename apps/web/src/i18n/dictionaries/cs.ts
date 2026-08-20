@@ -1340,7 +1340,26 @@ export const cs: Dictionary = {
   "app.settings.workspace.deleteWorkspaceHint": "Trvale smazáno po 30 dnech uchování.",
   "app.settings.workspace.delete": "Smazat",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Tuto akci nelze vzít zpět. Všech {tickets} tiketů, {contacts} kontaktů a {articles} článků bude po 30 dnech uchování trvale smazáno.",
+    "Tuto akci nelze vzít zpět. Veškerý obsah pracovního prostoru bude po 30 dnech uchování trvale smazán.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} tiket",
+    few: "{count} tikety",
+    many: "{count} tiketu",
+    other: "{count} tiketů",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} kontakt",
+    few: "{count} kontakty",
+    many: "{count} kontaktu",
+    other: "{count} kontaktů",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} článek",
+    few: "{count} články",
+    many: "{count} článku",
+    other: "{count} článků",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Zadejte „{slug}“ pro potvrzení",
   "app.settings.workspace.deleteWorkspaceButton": "Trvale smazat",
   "app.settings.workspace.teamTitle": "Agenti, týmy a role",
   "app.settings.workspace.teamSubtitle": "Spravujte přístupy, role a rozdělení agentů do týmů.",

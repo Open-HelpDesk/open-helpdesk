@@ -1084,7 +1084,20 @@ export const sv: Dictionary = {
   "app.settings.workspace.deleteWorkspaceTitle": "Ta bort arbetsytan",
   "app.settings.workspace.deleteWorkspaceHint": "Slutgiltig borttagning efter 30 dagars karens.",
   "app.settings.workspace.delete": "Ta bort",
-  "app.settings.workspace.deleteWorkspaceConfirm": "Åtgärden går inte att ångra. {tickets} ärenden, {contacts} kontakter och {articles} artiklar tas bort permanent efter 30 dagars karens.",
+  "app.settings.workspace.deleteWorkspaceConfirm": "Åtgärden går inte att ångra. Allt innehåll i arbetsytan tas bort permanent efter 30 dagars karens.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} ärende",
+    other: "{count} ärenden",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} kontakt",
+    other: "{count} kontakter",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} artikel",
+    other: "{count} artiklar",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Skriv ”{slug}” för att bekräfta",
   "app.settings.workspace.deleteWorkspaceButton": "Ta bort permanent",
   "app.settings.workspace.teamTitle": "Agenter, team och roller",
   "app.settings.workspace.teamSubtitle": "Hantera behörigheter, roller och fördelningen av agenter i team.",

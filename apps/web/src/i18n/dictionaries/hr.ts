@@ -1280,7 +1280,23 @@ export const hr: Dictionary = {
   "app.settings.workspace.deleteWorkspaceHint": "Trajno brisanje nakon 30 dana zadržavanja.",
   "app.settings.workspace.delete": "Izbriši",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Ova radnja je nepovratna. {tickets} tiketa, {contacts} kontakata i {articles} članaka bit će trajno izbrisano nakon 30 dana zadržavanja.",
+    "Ova radnja je nepovratna. Sav sadržaj radnog prostora bit će trajno izbrisan nakon 30 dana zadržavanja.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} tiket",
+    few: "{count} tiketa",
+    other: "{count} tiketa",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} kontakt",
+    few: "{count} kontakta",
+    other: "{count} kontakata",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} članak",
+    few: "{count} članka",
+    other: "{count} članaka",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Unesite „{slug}“ za potvrdu",
   "app.settings.workspace.deleteWorkspaceButton": "Izbriši trajno",
   "app.settings.workspace.teamTitle": "Agenti, timovi i uloge",
   "app.settings.workspace.teamSubtitle":

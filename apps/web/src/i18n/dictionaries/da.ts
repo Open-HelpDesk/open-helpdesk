@@ -1085,7 +1085,20 @@ export const da: Dictionary = {
   "app.settings.workspace.deleteWorkspaceTitle": "Slet arbejdsområdet",
   "app.settings.workspace.deleteWorkspaceHint": "Endelig sletning efter 30 dages opbevaring.",
   "app.settings.workspace.delete": "Slet",
-  "app.settings.workspace.deleteWorkspaceConfirm": "Handlingen kan ikke fortrydes. De {tickets} sager, {contacts} kontakter og {articles} artikler bliver slettet endeligt efter 30 dages opbevaring.",
+  "app.settings.workspace.deleteWorkspaceConfirm": "Handlingen kan ikke fortrydes. Alt indhold i arbejdsområdet bliver slettet endeligt efter 30 dages opbevaring.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} sag",
+    other: "{count} sager",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} kontakt",
+    other: "{count} kontakter",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} artikel",
+    other: "{count} artikler",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Skriv »{slug}« for at bekræfte",
   "app.settings.workspace.deleteWorkspaceButton": "Slet endeligt",
   "app.settings.workspace.teamTitle": "Agenter, teams og roller",
   "app.settings.workspace.teamSubtitle": "Administrér adgange, roller og fordelingen af agenter på teams.",

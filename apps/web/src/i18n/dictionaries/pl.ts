@@ -1354,7 +1354,26 @@ export const pl: Dictionary = {
   "app.settings.workspace.deleteWorkspaceHint": "Trwałe usunięcie po 30 dniach przechowywania.",
   "app.settings.workspace.delete": "Usuń",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Tego działania nie można cofnąć. {tickets} zgłoszeń, {contacts} kontaktów i {articles} artykułów zostanie trwale usuniętych po 30 dniach przechowywania.",
+    "Tego działania nie można cofnąć. Cała zawartość obszaru roboczego zostanie trwale usunięta po 30 dniach przechowywania.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} zgłoszenie",
+    few: "{count} zgłoszenia",
+    many: "{count} zgłoszeń",
+    other: "{count} zgłoszenia",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} kontakt",
+    few: "{count} kontakty",
+    many: "{count} kontaktów",
+    other: "{count} kontaktu",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} artykuł",
+    few: "{count} artykuły",
+    many: "{count} artykułów",
+    other: "{count} artykułu",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Wpisz „{slug}”, aby potwierdzić",
   "app.settings.workspace.deleteWorkspaceButton": "Usuń trwale",
   "app.settings.workspace.teamTitle": "Agenci, zespoły i role",
   "app.settings.workspace.teamSubtitle":

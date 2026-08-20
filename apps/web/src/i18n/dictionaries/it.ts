@@ -1087,7 +1087,20 @@ export const it: Dictionary = {
   "app.settings.workspace.deleteWorkspaceTitle": "Elimina il workspace",
   "app.settings.workspace.deleteWorkspaceHint": "Eliminazione definitiva dopo 30 giorni di conservazione.",
   "app.settings.workspace.delete": "Elimina",
-  "app.settings.workspace.deleteWorkspaceConfirm": "Questa azione è irreversibile. Le {tickets} richieste, i {contacts} contatti e i {articles} articoli verranno eliminati definitivamente dopo 30 giorni di conservazione.",
+  "app.settings.workspace.deleteWorkspaceConfirm": "Questa azione è irreversibile. Tutto il contenuto del workspace verrà eliminato definitivamente dopo 30 giorni di conservazione.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} richiesta",
+    other: "{count} richieste",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} contatto",
+    other: "{count} contatti",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} articolo",
+    other: "{count} articoli",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Digita «{slug}» per confermare",
   "app.settings.workspace.deleteWorkspaceButton": "Elimina definitivamente",
   "app.settings.workspace.teamTitle": "Agenti, team e ruoli",
   "app.settings.workspace.teamSubtitle": "Gestisci gli accessi, i ruoli e la distribuzione degli agenti nei team.",

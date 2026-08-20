@@ -1,6 +1,6 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import { AGENTS, setTenantLocale, signInAgent } from "./helpers";
-import { pluralEntries } from "./dict-source";
+import { pluralEntries, simpleEntries } from "./dict-source";
 
 /**
  * La langue du logiciel (ST-01).
@@ -170,6 +170,56 @@ test.describe("Langue du logiciel", () => {
     // L'égalité stricte couvre les deux moitiés d'un coup : la bonne forme, et
     // le nombre passé par le formateur polonais (espace insécable étroite).
     expect(rendu).toBe(attendu);
+  });
+
+  test("les effectifs du modal de suppression déclinent chacun leur nom", async () => {
+    // L'avertissement le plus grave du produit comptait TROIS effectifs
+    // indépendants dans une phrase, là où une clé ne porte qu'une dimension de
+    // pluriel : les trois noms étaient figés au pluriel et, à un seul ticket, la
+    // phrase écrivait « Les 1 tickets » — dans toutes les langues. Les trois
+    // groupes nominaux sont sortis dans des clés comptées à part.
+    //
+    // Le polonais est le témoin : quatre formes, et aucun entier n'y sélectionne
+    // `other`. Une phrase figée s'y verrait immédiatement.
+    await switchLocale("pl");
+    await page.goto("/app/settings/general");
+
+    // Ouvrir le modal de la zone de danger. Le libellé du déclencheur est lu
+    // dans le dictionnaire plutôt que codé en polonais : « Usuń » sert aussi
+    // aux boutons de retrait du logo et du favicon du même écran, et un
+    // `has-text` en attraperait un autre. On ne touche à rien dans le modal —
+    // le bouton de suppression reste verrouillé par la saisie du slug.
+    const declencheur = simpleEntries("pl").get("app.settings.workspace.delete")!;
+    await page.getByRole("button", { name: declencheur, exact: true }).click();
+    const modal = page.locator('[role="dialog"]');
+    await expect(modal).toBeVisible();
+
+    // La phrase ne porte plus aucun paramètre.
+    const phrase = modal.locator("p").first();
+    await expect(phrase).not.toContainText("{");
+
+    // La ligne des effectifs : trois groupes nominaux séparés par « · ».
+    const ligne = modal.locator("p").nth(1);
+    const texte = (await ligne.innerText()).trim();
+    const groupes = texte.split("·").map((g) => g.trim());
+    expect(groupes, `« ${texte} » devrait porter trois effectifs`).toHaveLength(3);
+
+    const regles = new Intl.PluralRules("pl-PL");
+    const nf = new Intl.NumberFormat("pl-PL");
+    for (const [i, cle] of [
+      "app.settings.workspace.generalDeleteTicketCount",
+      "app.settings.workspace.generalDeleteContactCount",
+      "app.settings.workspace.generalDeleteArticleCount",
+    ].entries()) {
+      const n = Number(groupes[i]!.replace(/[^0-9]/g, ""));
+      const categorie = regles.select(n);
+      expect(categorie, "le polonais ne sélectionne jamais `other` sur un entier").not.toBe(
+        "other",
+      );
+      const formes = pluralEntries("pl").get(cle);
+      expect(formes, `${cle} devrait porter des formes de pluriel en pl.ts`).toBeTruthy();
+      expect(groupes[i]).toBe(formes![categorie]!.replace("{count}", nf.format(n)));
+    }
   });
 
   test("le contenu du tenant n'est pas traduit avec l'interface", async () => {

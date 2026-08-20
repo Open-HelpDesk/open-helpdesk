@@ -1184,7 +1184,20 @@ export const bg: Dictionary = {
     "Окончателно изтриване след 30 дни на съхранение.",
   "app.settings.workspace.delete": "Изтриване",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Това действие е необратимо. {tickets} тикета, {contacts} контакта и {articles} статии ще бъдат изтрити окончателно след 30 дни на съхранение.",
+    "Това действие е необратимо. Цялото съдържание на работното пространство ще бъде изтрито окончателно след 30 дни на съхранение.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} тикет",
+    other: "{count} тикета",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} контакт",
+    other: "{count} контакта",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} статия",
+    other: "{count} статии",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "За потвърждаване въведете „{slug}“",
   "app.settings.workspace.deleteWorkspaceButton": "Окончателно изтриване",
   "app.settings.workspace.teamTitle": "Агенти, екипи и роли",
   "app.settings.workspace.teamSubtitle":

@@ -1343,7 +1343,26 @@ export const sl: Dictionary = {
   "app.settings.workspace.deleteWorkspaceHint": "Dokončno izbrisano po 30 dneh hrambe.",
   "app.settings.workspace.delete": "Izbriši",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Tega dejanja ni mogoče razveljaviti. Zahtevki ({tickets}), stiki ({contacts}) in članki ({articles}) bodo po 30 dneh hrambe dokončno izbrisani.",
+    "Tega dejanja ni mogoče razveljaviti. Vsa vsebina delovnega prostora bo po 30 dneh hrambe dokončno izbrisana.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} zahtevek",
+    two: "{count} zahtevka",
+    few: "{count} zahtevki",
+    other: "{count} zahtevkov",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} stik",
+    two: "{count} stika",
+    few: "{count} stiki",
+    other: "{count} stikov",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} članek",
+    two: "{count} članka",
+    few: "{count} članki",
+    other: "{count} člankov",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Za potrditev vnesite »{slug}«",
   "app.settings.workspace.deleteWorkspaceButton": "Dokončno izbriši",
   "app.settings.workspace.teamTitle": "Agenti, ekipe in vloge",
   "app.settings.workspace.teamSubtitle":

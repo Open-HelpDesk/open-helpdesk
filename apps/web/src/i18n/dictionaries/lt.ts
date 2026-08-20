@@ -1352,7 +1352,26 @@ export const lt: Dictionary = {
   "app.settings.workspace.deleteWorkspaceHint": "Galutinai ištrinama po 30 dienų saugojimo.",
   "app.settings.workspace.delete": "Ištrinti",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Šio veiksmo atšaukti nebus galima. {tickets} užklausos, {contacts} kontaktai ir {articles} straipsniai bus galutinai ištrinti po 30 dienų saugojimo.",
+    "Šio veiksmo atšaukti nebus galima. Visas darbo erdvės turinys bus galutinai ištrintas po 30 dienų saugojimo.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} užklausa",
+    few: "{count} užklausos",
+    many: "{count} užklausos",
+    other: "{count} užklausų",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} kontaktas",
+    few: "{count} kontaktai",
+    many: "{count} kontakto",
+    other: "{count} kontaktų",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} straipsnis",
+    few: "{count} straipsniai",
+    many: "{count} straipsnio",
+    other: "{count} straipsnių",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Įveskite „{slug}“, kad patvirtintumėte",
   "app.settings.workspace.deleteWorkspaceButton": "Ištrinti galutinai",
   "app.settings.workspace.teamTitle": "Agentai, komandos ir vaidmenys",
   "app.settings.workspace.teamSubtitle":

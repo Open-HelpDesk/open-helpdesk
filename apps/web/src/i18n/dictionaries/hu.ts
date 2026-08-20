@@ -1198,7 +1198,21 @@ export const hu: Dictionary = {
   "app.settings.workspace.deleteWorkspaceHint": "Végleges törlés 30 nap megőrzési idő után.",
   "app.settings.workspace.delete": "Törlés",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Ez a művelet nem vonható vissza. A {tickets} jegy, {contacts} kapcsolattartó és {articles} cikk 30 nap megőrzési idő után véglegesen törlődik.",
+    "Ez a művelet nem vonható vissza. A munkaterület teljes tartalma 30 nap megőrzési idő után véglegesen törlődik.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} jegy",
+    other: "{count} jegy",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} kapcsolattartó",
+    other: "{count} kapcsolattartó",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} cikk",
+    other: "{count} cikk",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt":
+    "A megerősítéshez írja be a következőt: „{slug}”",
   "app.settings.workspace.deleteWorkspaceButton": "Végleges törlés",
   "app.settings.workspace.teamTitle": "Ügyintézők, csapatok és szerepkörök",
   "app.settings.workspace.teamSubtitle":

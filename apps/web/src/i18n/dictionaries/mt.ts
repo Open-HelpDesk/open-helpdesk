@@ -1394,7 +1394,29 @@ export const mt: Dictionary = {
   "app.settings.workspace.deleteWorkspaceHint": "Tħassir definittiv wara 30 jum ta' żamma.",
   "app.settings.workspace.delete": "Ħassar",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Din l-azzjoni ma tistax titreġġa' lura. {tickets} tickets, {contacts} kuntatti u {articles} artikli jitħassru definittivament wara 30 jum ta' żamma.",
+    "Din l-azzjoni ma tistax titreġġa' lura. Il-kontenut kollu tal-ispazju tax-xogħol jitħassar definittivament wara 30 jum ta' żamma.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} ticket",
+    two: "{count} tickets",
+    few: "{count} tickets",
+    many: "{count} ticket",
+    other: "{count} ticket",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} kuntatt",
+    two: "{count} kuntatti",
+    few: "{count} kuntatti",
+    many: "{count} kuntatt",
+    other: "{count} kuntatt",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} artiklu",
+    two: "{count} artikli",
+    few: "{count} artikli",
+    many: "{count} artiklu",
+    other: "{count} artiklu",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Ikteb “{slug}” biex tikkonferma",
   "app.settings.workspace.deleteWorkspaceButton": "Ħassar definittivament",
   "app.settings.workspace.teamTitle": "Aġenti, timijiet u rwoli",
   "app.settings.workspace.teamSubtitle":

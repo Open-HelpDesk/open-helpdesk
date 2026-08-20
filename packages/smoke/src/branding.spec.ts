@@ -24,6 +24,16 @@ const TEXTE = Buffer.from("ceci n'est pas une image", "utf8");
 
 const CHAMP = { logo: 'input[name="logo"]', favicon: 'input[name="favicon"]' } as const;
 
+/** L'accent du design system, celui du tenant de démonstration. */
+const ACCENT_DEFAUT = "#0B5F46";
+/** Un accent qu'on ne peut pas confondre avec une couleur codée en dur. */
+const ACCENT_TEST = "#1D4ED8";
+
+/** Le champ hexadécimal du sélecteur d'accent (le seul champ visible du groupe). */
+function champAccent(page: Page) {
+  return page.locator('div:has(> input[name="accentColor"]) > input:not([type="hidden"])');
+}
+
 /**
  * Le bouton « ✕ » d'un champ de marque.
  *
@@ -57,9 +67,14 @@ async function enregistrer(page: Page) {
   await page.locator('form:has(select[name="locale"]) button[type=submit]').last().click();
 }
 
-/** Retire logo et favicon s'il en reste, pour rendre le tenant comme on l'a pris. */
+/** Rend le tenant comme on l'a pris : ni logo, ni favicon, accent d'origine. */
 async function remettreAZero(page: Page) {
   await ouvrirReglages(page);
+  let accentARemettre = false;
+  if ((await champAccent(page).inputValue()) !== ACCENT_DEFAUT) {
+    await champAccent(page).fill(ACCENT_DEFAUT);
+    accentARemettre = true;
+  }
   let n = 0;
   for (const name of ["logo", "favicon"] as const) {
     const bouton = croix(page, name);
@@ -68,7 +83,7 @@ async function remettreAZero(page: Page) {
       n++;
     }
   }
-  if (n > 0) {
+  if (n > 0 || accentARemettre) {
     await enregistrer(page);
     await expect(page).toHaveURL(/saved=1/, { timeout: 15_000 });
   }
@@ -209,6 +224,52 @@ test.describe("Logo et favicon du workspace", () => {
     // porterait alors sur une autre route que celle qu'on veut éprouver.)
     await expectRefus(page, "/api/brand/pas-un-uuid/logo-x.png");
     await expectRefus(page, "/api/brand/00000000-0000-0000-0000-000000000000/sansprefixe.png");
+  });
+  test("la page publique de satisfaction porte la marque du tenant", async ({ page }) => {
+    await ouvrirReglages(page);
+    await page
+      .locator(CHAMP.logo)
+      .setInputFiles({ name: "logo.png", mimeType: "image/png", buffer: PNG });
+    await page
+      .locator(CHAMP.favicon)
+      .setInputFiles({ name: "favicon.png", mimeType: "image/png", buffer: PNG });
+    // Un accent qui n'est pas celui du design system : sans cela, l'assertion
+    // sur la couleur passerait aussi bien avec la valeur restée codée en dur.
+    await champAccent(page).fill(ACCENT_TEST);
+    await enregistrer(page);
+    await expect(page).toHaveURL(/saved=1/, { timeout: 15_000 });
+
+    // /api/csat est un document HTML autonome, assemblé à la main, hors de toute
+    // mise en page : il ne bénéficie de rien et doit donc tout déclarer
+    // lui-même. On l'appelle SANS signature valide — la page d'erreur passe par
+    // le même gabarit, ce qui évite d'avoir à fabriquer un HMAC.
+    const res = await page.request.get("/api/csat");
+    expect(res.status()).toBe(200);
+    const html = await res.text();
+
+    expect(html, "le favicon du tenant doit être déclaré").toMatch(
+      /<link rel="icon" href="\/api\/brand\/[0-9a-f-]{36}\/favicon-/,
+    );
+    expect(html, "le logo du tenant doit être affiché").toMatch(
+      /<img src="\/api\/brand\/[0-9a-f-]{36}\/logo-/,
+    );
+    // L'accent du tenant remplace le vert du design system dans la feuille de
+    // style : la page codait sa couleur en dur.
+    expect(html.toLowerCase()).toContain(`background:${ACCENT_TEST.toLowerCase()};color:#fff`);
+    expect(html.toLowerCase()).not.toContain(ACCENT_DEFAUT.toLowerCase());
+  });
+
+  test("une identité de marque hors forme est ignorée, pas interpolée", async ({ page }) => {
+    // La couleur part dans du CSS et les URL dans des attributs, tous deux
+    // assemblés à la main. Les valeurs sont validées à l'enregistrement, mais
+    // une valeur arrivée par un autre chemin ne doit pas pouvoir fermer une
+    // déclaration. Sans logo ni favicon posés, la page doit simplement ne rien
+    // déclarer — jamais un attribut vide ou une balise ouverte.
+    const html = await (await page.request.get("/api/csat")).text();
+    expect(html).not.toContain('<link rel="icon" href="">');
+    expect(html).not.toContain('<img src=""');
+    // Et l'accent reste une couleur hexadécimale, quoi qu'il arrive.
+    expect(html).toMatch(/background:#[0-9a-fA-F]{6};color:#fff;border:0/);
   });
 });
 

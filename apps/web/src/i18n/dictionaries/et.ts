@@ -1186,7 +1186,20 @@ export const et: Dictionary = {
     "Lõplik kustutamine pärast 30-päevast säilitusaega.",
   "app.settings.workspace.delete": "Kustuta",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Seda toimingut ei saa tagasi võtta. {tickets} piletit, {contacts} kontakti ja {articles} artiklit kustutatakse lõplikult pärast 30-päevast säilitusaega.",
+    "Seda toimingut ei saa tagasi võtta. Kogu tööruumi sisu kustutatakse lõplikult pärast 30-päevast säilitusaega.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} pilet",
+    other: "{count} piletit",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} kontakt",
+    other: "{count} kontakti",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} artikkel",
+    other: "{count} artiklit",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Kinnitamiseks sisestage „{slug}“",
   "app.settings.workspace.deleteWorkspaceButton": "Kustuta lõplikult",
   "app.settings.workspace.teamTitle": "Agendid, tiimid ja rollid",
   "app.settings.workspace.teamSubtitle":

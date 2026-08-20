@@ -1086,7 +1086,20 @@ export const nl: Dictionary = {
   "app.settings.workspace.deleteWorkspaceTitle": "Werkruimte verwijderen",
   "app.settings.workspace.deleteWorkspaceHint": "Definitieve verwijdering na 30 dagen bewaartermijn.",
   "app.settings.workspace.delete": "Verwijderen",
-  "app.settings.workspace.deleteWorkspaceConfirm": "Deze actie is onomkeerbaar. De {tickets} tickets, {contacts} contacten en {articles} artikelen worden na 30 dagen bewaartermijn definitief verwijderd.",
+  "app.settings.workspace.deleteWorkspaceConfirm": "Deze actie is onomkeerbaar. Alle inhoud van de werkruimte wordt na 30 dagen bewaartermijn definitief verwijderd.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} ticket",
+    other: "{count} tickets",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} contact",
+    other: "{count} contacten",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} artikel",
+    other: "{count} artikelen",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Typ ‘{slug}’ om te bevestigen",
   "app.settings.workspace.deleteWorkspaceButton": "Definitief verwijderen",
   "app.settings.workspace.teamTitle": "Agents, teams & rollen",
   "app.settings.workspace.teamSubtitle": "Beheer de toegang, de rollen en de verdeling van de agents over de teams.",

@@ -1400,7 +1400,30 @@ export const ga: Dictionary = {
   "app.settings.workspace.deleteWorkspaceHint": "Scriosta go buan tar éis 30 lá coinneála.",
   "app.settings.workspace.delete": "Scrios",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Ní féidir an gníomh seo a chur ar ceal. Scriosfar na {tickets} ticéad, {contacts} teagmhálaí agus {articles} alt go buan tar éis 30 lá coinneála.",
+    "Ní féidir an gníomh seo a chur ar ceal. Scriosfar ábhar iomlán an spáis oibre go buan tar éis 30 lá coinneála.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} ticéad",
+    two: "{count} thicéad",
+    few: "{count} thicéad",
+    many: "{count} dticéad",
+    other: "{count} ticéad",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} teagmhálaí",
+    two: "{count} theagmhálaí",
+    few: "{count} theagmhálaí",
+    many: "{count} dteagmhálaí",
+    other: "{count} teagmhálaí",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} alt",
+    two: "{count} alt",
+    few: "{count} alt",
+    many: "{count} n-alt",
+    other: "{count} alt",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt":
+    "Cuir isteach “{slug}” chun an scriosadh a dheimhniú",
   "app.settings.workspace.deleteWorkspaceButton": "Scrios go buan",
   "app.settings.workspace.teamTitle": "Gníomhairí, foirne & róil",
   "app.settings.workspace.teamSubtitle":

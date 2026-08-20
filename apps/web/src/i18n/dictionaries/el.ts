@@ -1215,7 +1215,20 @@ export const el: Dictionary = {
     "Οριστική διαγραφή μετά από 30 ημέρες διατήρησης.",
   "app.settings.workspace.delete": "Διαγραφή",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Η ενέργεια αυτή δεν αναστρέφεται. Τα {tickets} τικέτ, οι {contacts} επαφές και τα {articles} άρθρα θα διαγραφούν οριστικά μετά από 30 ημέρες διατήρησης.",
+    "Η ενέργεια αυτή δεν αναστρέφεται. Όλο το περιεχόμενο του χώρου εργασίας θα διαγραφεί οριστικά μετά από 30 ημέρες διατήρησης.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} τικέτ",
+    other: "{count} τικέτ",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} επαφή",
+    other: "{count} επαφές",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} άρθρο",
+    other: "{count} άρθρα",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Πληκτρολογήστε «{slug}» για επιβεβαίωση",
   "app.settings.workspace.deleteWorkspaceButton": "Οριστική διαγραφή",
   "app.settings.workspace.teamTitle": "Χειριστές, ομάδες και ρόλοι",
   "app.settings.workspace.teamSubtitle":

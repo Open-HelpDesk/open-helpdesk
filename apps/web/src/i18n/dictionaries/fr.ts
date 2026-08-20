@@ -1111,17 +1111,21 @@ export const fr = {
   "app.settings.workspace.deleteWorkspaceTitle": "Supprimer le workspace",
   "app.settings.workspace.deleteWorkspaceHint": "Suppression définitive après 30 jours de rétention.",
   "app.settings.workspace.delete": "Supprimer",
-  /* Limite connue, signalée par les traducteurs lituanien et maltais et vraie
-     dès le français : cette phrase compte TROIS effectifs indépendants, et une
-     clé ne porte qu'une dimension de pluriel — celle de {count}. À un ticket,
-     elle écrit « Les 1 tickets ». La correction demanderait de sortir les trois
-     groupes nominaux dans des clés comptées à part (elles existent déjà :
-     app.tickets.count, app.contacts.orgMemberCount, category.articleCount) et
-     de ne garder ici que la phrase porteuse — donc de la retraduire dans les 25
-     langues, en réintroduisant la question du cas du groupe inséré dans celles
-     qui déclinent. Non fait : c'est un dialogue verrouillé par la saisie du slug
-     du workspace, et l'écart ne se voit qu'à un effectif de exactement 1. */
-  "app.settings.workspace.deleteWorkspaceConfirm": "Cette action est irréversible. Les {tickets} tickets, {contacts} contacts et {articles} articles seront définitivement supprimés après 30 jours de rétention.",
+  /* La phrase ne porte plus les effectifs. Elle en comptait trois, indépendants,
+     alors qu'une clé ne porte qu'une dimension de pluriel — celle de {count} :
+     à un ticket, elle écrivait « Les 1 tickets », et dans toutes les langues,
+     leurs noms étant figés au pluriel. Les trois groupes nominaux sont désormais
+     des clés comptées à part, rendues côte à côte sous la phrase. Chacune décline
+     son nom correctement, et aucune grammaire ne les relie — seul un séparateur
+     typographique, qui n'a de cas dans aucune langue. */
+  "app.settings.workspace.deleteWorkspaceConfirm":
+    "Cette action est irréversible. Tout le contenu du workspace sera définitivement supprimé après 30 jours de rétention.",
+  "app.settings.workspace.generalDeleteTicketCount": { one: "{count} ticket", other: "{count} tickets" },
+  "app.settings.workspace.generalDeleteContactCount": { one: "{count} contact", other: "{count} contacts" },
+  "app.settings.workspace.generalDeleteArticleCount": { one: "{count} article", other: "{count} articles" },
+  /* Le slug est encadré de guillemets : il arrive au nominatif brut et une
+     langue à cas ne peut pas le fléchir. */
+  "app.settings.workspace.generalDeleteSlugPrompt": "Saisissez « {slug} » pour confirmer",
   "app.settings.workspace.deleteWorkspaceButton": "Supprimer définitivement",
   "app.settings.workspace.teamTitle": "Agents, équipes & rôles",
   "app.settings.workspace.teamSubtitle": "Gérez les accès, les rôles et la répartition des agents en équipes.",

@@ -1086,7 +1086,20 @@ export const de: Dictionary = {
   "app.settings.workspace.deleteWorkspaceTitle": "Workspace löschen",
   "app.settings.workspace.deleteWorkspaceHint": "Endgültige Löschung nach 30 Tagen Aufbewahrung.",
   "app.settings.workspace.delete": "Löschen",
-  "app.settings.workspace.deleteWorkspaceConfirm": "Dieser Schritt ist nicht umkehrbar. Die {tickets} Tickets, {contacts} Kontakte und {articles} Artikel werden nach 30 Tagen Aufbewahrung endgültig gelöscht.",
+  "app.settings.workspace.deleteWorkspaceConfirm": "Dieser Schritt ist nicht umkehrbar. Der gesamte Inhalt des Workspace wird nach 30 Tagen Aufbewahrung endgültig gelöscht.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} Ticket",
+    other: "{count} Tickets",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} Kontakt",
+    other: "{count} Kontakte",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} Artikel",
+    other: "{count} Artikel",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Geben Sie zur Bestätigung „{slug}“ ein",
   "app.settings.workspace.deleteWorkspaceButton": "Endgültig löschen",
   "app.settings.workspace.teamTitle": "Agenten, Teams & Rollen",
   "app.settings.workspace.teamSubtitle": "Verwalten Sie Zugänge, Rollen und die Aufteilung der Agenten auf Teams.",

@@ -1305,7 +1305,23 @@ export const ro: Dictionary = {
     "Ștergere definitivă după 30 de zile de retenție.",
   "app.settings.workspace.delete": "Ștergeți",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Această acțiune este ireversibilă. Cele {tickets} tichete, {contacts} contacte și {articles} articole vor fi șterse definitiv după 30 de zile de retenție.",
+    "Această acțiune este ireversibilă. Tot conținutul spațiului de lucru va fi șters definitiv după 30 de zile de retenție.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} tichet",
+    few: "{count} tichete",
+    other: "{count} de tichete",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} contact",
+    few: "{count} contacte",
+    other: "{count} de contacte",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} articol",
+    few: "{count} articole",
+    other: "{count} de articole",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Tastați „{slug}” pentru a confirma",
   "app.settings.workspace.deleteWorkspaceButton": "Ștergeți definitiv",
   "app.settings.workspace.teamTitle": "Agenți, echipe și roluri",
   "app.settings.workspace.teamSubtitle":

@@ -1347,7 +1347,26 @@ export const sk: Dictionary = {
   "app.settings.workspace.deleteWorkspaceHint": "Trvalé odstránenie po 30 dňoch uchovávania.",
   "app.settings.workspace.delete": "Odstrániť",
   "app.settings.workspace.deleteWorkspaceConfirm":
-    "Túto akciu nie je možné vrátiť. Tikety ({tickets}), kontakty ({contacts}) a články ({articles}) sa po 30 dňoch uchovávania trvalo odstránia.",
+    "Túto akciu nie je možné vrátiť. Všetok obsah pracovného priestoru sa po 30 dňoch uchovávania trvalo odstráni.",
+  "app.settings.workspace.generalDeleteTicketCount": {
+    one: "{count} tiket",
+    few: "{count} tikety",
+    many: "{count} tiketu",
+    other: "{count} tiketov",
+  },
+  "app.settings.workspace.generalDeleteContactCount": {
+    one: "{count} kontakt",
+    few: "{count} kontakty",
+    many: "{count} kontaktu",
+    other: "{count} kontaktov",
+  },
+  "app.settings.workspace.generalDeleteArticleCount": {
+    one: "{count} článok",
+    few: "{count} články",
+    many: "{count} článku",
+    other: "{count} článkov",
+  },
+  "app.settings.workspace.generalDeleteSlugPrompt": "Zadajte „{slug}“ na potvrdenie",
   "app.settings.workspace.deleteWorkspaceButton": "Trvalo odstrániť",
   "app.settings.workspace.teamTitle": "Agenti, tímy a roly",
   "app.settings.workspace.teamSubtitle":
