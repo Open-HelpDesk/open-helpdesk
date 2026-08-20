@@ -1,5 +1,6 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import { AGENTS, setTenantLocale, signInAgent } from "./helpers";
+import { pluralEntries } from "./dict-source";
 
 /**
  * La langue du logiciel (ST-01).
@@ -13,6 +14,11 @@ import { AGENTS, setTenantLocale, signInAgent } from "./helpers";
  * L'allemand sert de langue témoin parce qu'il éloigne assez le vocabulaire
  * pour qu'une chaîne oubliée saute aux yeux, et parce que son séparateur de
  * milliers est le point : « 4.182 » là où le français écrit « 4 182 ».
+ *
+ * Le polonais sert de second témoin, pour une raison différente : il compte
+ * quatre formes de pluriel là où le français et l'allemand en ont deux. Une
+ * langue à deux formes ne peut pas révéler une sélection de pluriel cassée —
+ * `other` y est juste presque partout. En polonais, non.
  */
 
 /**
@@ -130,6 +136,40 @@ test.describe("Langue du logiciel", () => {
     await expect(statusFilter.getByRole("link", { name: "Offen", exact: true })).toBeVisible();
     await expect(statusFilter.getByRole("link", { name: "Neu", exact: true })).toBeVisible();
     await expect(statusFilter.getByRole("link", { name: "Wartend", exact: true })).toBeVisible();
+  });
+
+  test("en polonais, la forme de pluriel est celle que la langue sélectionne", async () => {
+    // Le vrai test de la couche de pluriels. Le polonais a quatre formes, et
+    // aucun nombre ENTIER n'y sélectionne `other` : le compteur de vues de
+    // l'accueil exerce donc forcément `one`, `few` ou `many`. Un rendu qui
+    // retomberait sur le repli — dictionnaire incomplet, ou sélection faite en
+    // « n > 1 » plutôt que par `Intl.PluralRules` — se voit ici, alors qu'il
+    // passe inaperçu dans les deux tests allemands ci-dessus.
+    await switchLocale("pl");
+    await page.goto("/help");
+    await expect(page.locator("html")).toHaveAttribute("lang", "pl");
+
+    const compteur = popularRow().locator("span.tabular-nums");
+    const rendu = (await compteur.innerText()).trim();
+
+    // Le nombre affiché n'est pas figé : chaque lecture d'article l'incrémente.
+    // On lit donc celui que la page vient d'afficher, et on en déduit la forme
+    // attendue — le test suit le produit au lieu de parier sur une valeur.
+    const n = Number(rendu.replace(/\D/g, ""));
+    expect(n).toBeGreaterThan(0);
+
+    const categorie = new Intl.PluralRules("pl-PL").select(n);
+    expect(categorie, "le polonais ne sélectionne jamais `other` sur un entier").not.toBe("other");
+
+    const formes = pluralEntries("pl").get("home.views");
+    expect(formes, "home.views devrait porter des formes de pluriel en pl.ts").toBeTruthy();
+    const attendu = formes![categorie]!.replace(
+      "{count}",
+      new Intl.NumberFormat("pl-PL").format(n),
+    );
+    // L'égalité stricte couvre les deux moitiés d'un coup : la bonne forme, et
+    // le nombre passé par le formateur polonais (espace insécable étroite).
+    expect(rendu).toBe(attendu);
   });
 
   test("le contenu du tenant n'est pas traduit avec l'interface", async () => {

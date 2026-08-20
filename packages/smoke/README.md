@@ -13,6 +13,8 @@ compilation :
 | Une redirection qui perd le sous-domaine du tenant | Le lien magique ouvre bien une session |
 | Une garde de rôle qui n'existe que dans l'interface | Un agent est refusé par l'URL directe et par l'API |
 | Une traduction manquante ou un format perdu | L'allemand s'affiche, et « 4.182 » garde son séparateur |
+| Une forme de pluriel absente d'une langue qui en compte quatre | Le polonais choisit `few` ou `many` quand il le doit |
+| Deux statuts traduits par le même mot | Aucun libellé en double dans un jeu, sur 24 langues |
 
 ## Avant de lancer
 
@@ -54,7 +56,42 @@ binaire à télécharger.
 | `agent-workflow` | Connexion, inbox, vues, ticket, priorité, palette ⌘K, déconnexion |
 | `kb-permissions` | Agent en lecture seule vs Admin en écriture, sur les écrans **et** l'API |
 | `settings-toggles` | Les interrupteurs ST-09 coupent le portail et la base |
-| `i18n` | Bascule allemand/français, séparateurs de milliers, contenu du tenant non traduit |
+| `i18n` | Bascule allemand/polonais/français, séparateurs de milliers, sélection de pluriel, contenu du tenant non traduit |
+| `i18n-source` | Tables de pluriel et jeux de vocabulaire des 24 dictionnaires — **sans navigateur** |
+
+## Les contrôles statiques
+
+`i18n-source` est la seule vérification du dossier qui ne lance pas de
+navigateur : elle lit les 24 dictionnaires comme du texte. Deux familles de
+défauts y sont couvertes.
+
+**Les tables de pluriel.** Elle compare les formes fournies à celles que
+`Intl.PluralRules` peut sélectionner dans la langue.
+
+Elle existe parce que le typage ne peut pas la remplacer. `Message` n'exige
+qu'une forme `other` — toutes les autres sont optionnelles, puisque aucune langue
+n'utilise le même jeu. Un dictionnaire polonais amputé de sa forme `many`
+compile donc sans un mot, et affiche une phrase fausse dès qu'un compteur passe
+à 5.
+
+Deux catégories sont volontairement hors périmètre, et le test le dit dans son
+code : le `many` du tchèque, du slovaque et du lituanien, qui ne concerne que les
+nombres décimaux — aucun `{count}` du produit n'en reçoit ; et le `many` du
+français, de l'espagnol, de l'italien et du portugais, qui se déclenche au
+million exact.
+
+**Les jeux de vocabulaire** — statuts, priorités, urgences, canaux. Ces libellés
+vivent dans des tables de correspondance, à l'écart des écrans qui les affichent,
+et le risque propre à un jeu est la collision : deux statuts traduits par le même
+mot donnent un filtre où deux entrées sont identiques, sans que rien ne plante.
+Le français ne peut pas révéler ce défaut, puisque c'est lui la source.
+
+Le contrôle statique ne prouve pas pour autant que le produit *choisit* la bonne
+forme : c'est le rôle du test polonais d'`i18n`, qui lit le nombre affiché par
+l'accueil du portail, en déduit la catégorie avec `Intl.PluralRules` et exige la
+phrase correspondante. Le polonais est choisi parce qu'aucun nombre entier n'y
+sélectionne `other` : une sélection cassée ne peut pas s'y cacher derrière le
+repli.
 
 ## Règles de rédaction
 
@@ -78,6 +115,6 @@ d'ajouter un test :
 - Better Auth plafonne la connexion à trois tentatives par dizaine de secondes et
   par IP. `signInAgent` réessaie, ce qui suffit — mais deux exécutions
   simultanées de la suite se gêneront.
-- `kb-permissions` porte un `test.fixme` : un agent voit aujourd'hui le titre des
-  brouillons dans la liste `/app/kb`, alors que la recherche les lui cache. Le
-  test documente le comportement actuel et porte l'attente correcte à côté.
+- `i18n` et `settings-toggles` basculent des réglages du tenant partagé. Ils les
+  remettent en `afterEach`, mais une exécution interrompue en plein milieu peut
+  laisser le workspace dans une autre langue ou son portail coupé.

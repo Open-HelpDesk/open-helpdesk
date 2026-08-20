@@ -4,16 +4,30 @@ import { renderMessage, splitAround, type Message, type MessageParams } from "./
 import { LocaleFormat } from "./format";
 import { DEFAULT_LOCALE, resolveLocale, type LocaleDefinition } from "./locales";
 import { fr, type Dictionary, type MessageKey } from "./dictionaries/fr";
-import { en } from "./dictionaries/en";
-import { de } from "./dictionaries/de";
-import { it } from "./dictionaries/it";
-import { es } from "./dictionaries/es";
-import { pt } from "./dictionaries/pt";
-import { nl } from "./dictionaries/nl";
-import { sv } from "./dictionaries/sv";
-import { fi } from "./dictionaries/fi";
+import { bg } from "./dictionaries/bg";
+import { cs } from "./dictionaries/cs";
 import { da } from "./dictionaries/da";
+import { de } from "./dictionaries/de";
+import { el } from "./dictionaries/el";
+import { en } from "./dictionaries/en";
+import { es } from "./dictionaries/es";
+import { et } from "./dictionaries/et";
+import { fi } from "./dictionaries/fi";
+import { ga } from "./dictionaries/ga";
+import { hr } from "./dictionaries/hr";
+import { hu } from "./dictionaries/hu";
+import { it } from "./dictionaries/it";
+import { lt } from "./dictionaries/lt";
+import { lv } from "./dictionaries/lv";
+import { mt } from "./dictionaries/mt";
 import { nb } from "./dictionaries/nb";
+import { nl } from "./dictionaries/nl";
+import { pl } from "./dictionaries/pl";
+import { pt } from "./dictionaries/pt";
+import { ro } from "./dictionaries/ro";
+import { sk } from "./dictionaries/sk";
+import { sl } from "./dictionaries/sl";
+import { sv } from "./dictionaries/sv";
 
 /**
  * Résolution de la langue côté serveur.
@@ -24,7 +38,12 @@ import { nb } from "./dictionaries/nb";
  * dix composants ne fait qu'une requête SQL.
  */
 
-const DICTIONARIES: Record<string, Dictionary> = { fr, en, de, it, es, pt, nl, sv, fi, da, nb };
+const DICTIONARIES: Record<string, Dictionary> = {
+  bg, cs, da, de, el, en, es, et,
+  fi, fr, ga, hr, hu, it, lt, lv,
+  mt, nb, nl, pl, pt, ro, sk, sl,
+  sv,
+};
 
 export type Translate = {
   (key: MessageKey, params?: MessageParams): string;

@@ -74,9 +74,18 @@ export class LocaleFormat {
    * Nom propre précédé de sa préposition de génitif quand celle-ci dépend de la
    * phonétique du mot suivant. Le français élide (« le support d'Acme », « le
    * support de Nordfil ») : aucune donnée CLDR ne couvre ce cas, il doit être
-   * traité par langue. Les autres langues du produit placent une préposition
-   * invariable, que leur dictionnaire porte lui-même ; elles reçoivent donc le
-   * nom tel quel.
+   * traité par langue.
+   *
+   * Toutes les autres langues reçoivent le nom TEL QUEL, et c'est un contrat que
+   * leurs dictionnaires respectent chacun à leur façon : préposition invariable
+   * (« ó {org}» en irlandais), nom commun inséré devant pour que le nom propre
+   * reste au nominatif (« Kontakty organizace {org} » en tchèque, « του
+   * οργανισμού {org} » en grec), article à double forme (« A(z) {org} » en
+   * hongrois), ou phrase retournée pour éviter le cas entièrement (letton).
+   *
+   * Ce qu'aucune langue ne peut faire, c'est décliner le nom : le produit
+   * insère « Acme » brut, sans savoir en fabriquer le génitif. Une traduction
+   * qui l'exigerait produirait une phrase fautive à chaque affichage.
    */
   of(name: string): string {
     if (this.locale.code !== "fr") return name;

@@ -20,6 +20,44 @@ import { deleteWorkspace, saveGeneral, transferOwnership } from "./actions";
 const CONTROL = { minHeight: 36, padding: "7px 11px", fontSize: 13.5 } as const;
 
 /**
+ * Fuseaux proposés : un par heure légale de l'Union, plus les voisins utiles.
+ *
+ * La liste suit le registre des langues — un tenant qui règle son logiciel en
+ * bulgare doit pouvoir dire qu'il vit à l'heure de Sofia, sans quoi tous ses
+ * horodatages et ses horaires ouvrés sont décalés de deux heures. Les
+ * identifiants IANA ne se traduisent pas : ce sont des clés, et c'est sous ce
+ * nom qu'on les retrouve partout ailleurs.
+ */
+const TIMEZONES = [
+  "Europe/Lisbon", "Europe/Dublin", "Europe/London",
+  "Europe/Madrid", "Europe/Paris", "Europe/Brussels", "Europe/Amsterdam",
+  "Europe/Luxembourg", "Europe/Berlin", "Europe/Copenhagen", "Europe/Oslo",
+  "Europe/Stockholm", "Europe/Vienna", "Europe/Prague", "Europe/Bratislava",
+  "Europe/Budapest", "Europe/Ljubljana", "Europe/Zagreb", "Europe/Warsaw",
+  "Europe/Rome", "Europe/Malta", "Europe/Athens", "Europe/Bucharest",
+  "Europe/Sofia", "Europe/Helsinki", "Europe/Tallinn", "Europe/Riga",
+  "Europe/Vilnius", "Europe/Nicosia",
+  "America/Montreal", "UTC",
+] as const;
+
+/**
+ * Décalage du fuseau à cet instant — « UTC+2 ».
+ *
+ * Il est calculé, pas écrit : l'heure d'été le décale de soixante minutes deux
+ * fois par an, et une étiquette figée est donc fausse la moitié de l'année.
+ */
+function utcOffset(timeZone: string): string {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone,
+    timeZoneName: "shortOffset",
+  }).formatToParts(new Date());
+  // `shortOffset` dit « GMT+2 » ; l'écran disait « UTC+2 » et c'est le terme
+  // que le produit emploie partout ailleurs.
+  const brut = parts.find((p) => p.type === "timeZoneName")?.value ?? "UTC";
+  return brut.replace("GMT", "UTC");
+}
+
+/**
  * ST-01 — Général & branding (860 px) : identité du workspace, régionalisation,
  * zone de danger (transfert de propriété, suppression avec confirmation par slug).
  */
@@ -192,12 +230,18 @@ export default async function GeneralSettingsPage({
               </Select>
             </Field>
             <Field label={t("app.settings.workspace.generalTimezoneLabel")}>
+              {/* Le fuseau du tenant est ajouté s'il sort de la liste : sans
+                  cela le menu afficherait la première option et le premier
+                  enregistrement déplacerait le workspace à son insu. */}
               <Select name="timezone" defaultValue={tenant.timezone} style={CONTROL}>
-                <option value="Europe/Paris">Europe/Paris (UTC+2)</option>
-                <option value="Europe/Brussels">Europe/Brussels (UTC+2)</option>
-                <option value="Europe/London">Europe/London (UTC+1)</option>
-                <option value="America/Montreal">America/Montreal (UTC−4)</option>
-                <option value="UTC">UTC</option>
+                {(TIMEZONES.includes(tenant.timezone as (typeof TIMEZONES)[number])
+                  ? TIMEZONES
+                  : [tenant.timezone, ...TIMEZONES]
+                ).map((tz) => (
+                  <option key={tz} value={tz}>
+                    {tz === "UTC" ? "UTC" : `${tz} (${utcOffset(tz)})`}
+                  </option>
+                ))}
               </Select>
             </Field>
             <Field label={t("app.settings.workspace.generalNumberFormatLabel")}>
