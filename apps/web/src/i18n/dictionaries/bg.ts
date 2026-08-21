@@ -1191,7 +1191,7 @@ export const bg: Dictionary = {
   "app.settings.workspace.transferOwnerOnly": "Само за собственика на работното пространство.",
   "app.settings.workspace.deleteWorkspaceTitle": "Изтриване на работното пространство",
   "app.settings.workspace.deleteWorkspaceHint":
-    "Окончателно изтриване след 30 дни на съхранение.",
+    "Окончателно изтриване след 60 дни на съхранение.",
   "app.settings.workspace.delete": "Изтриване",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Това действие е необратимо. Цялото съдържание на работното пространство ще бъде изтрито окончателно след 30 дни на съхранение.",

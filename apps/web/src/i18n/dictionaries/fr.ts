@@ -1119,7 +1119,7 @@ export const fr = {
   "app.settings.workspace.transferNoAdmin": "Aucun administrateur actif à promouvoir.",
   "app.settings.workspace.transferOwnerOnly": "Réservé au propriétaire du workspace.",
   "app.settings.workspace.deleteWorkspaceTitle": "Supprimer le workspace",
-  "app.settings.workspace.deleteWorkspaceHint": "Suppression définitive après 30 jours de rétention.",
+  "app.settings.workspace.deleteWorkspaceHint": "Suppression définitive après 60 jours de rétention.",
   "app.settings.workspace.delete": "Supprimer",
   /* La phrase ne porte plus les effectifs. Elle en comptait trois, indépendants,
      alors qu'une clé ne porte qu'une dimension de pluriel — celle de {count} :

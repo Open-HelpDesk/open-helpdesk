@@ -1,3 +1,4 @@
+import { providedMailboxAddress } from "@openhelpdesk/config";
 import { requireAgent } from "@/lib/session";
 import {
   db,
@@ -212,8 +213,7 @@ export default async function EmailSettingsPage({
   const teamNameById = new Map(teamRows.map((t) => [t.id, t.name]));
   const formNameById = new Map(forms.map((f) => [f.id, f.name]));
   const providedAddress =
-    boxes.find((m) => m.kind === "provided")?.address ??
-    `support@${tenant.slug}.open-helpdesk.com`;
+    boxes.find((m) => m.kind === "provided")?.address ?? providedMailboxAddress(tenant.slug);
   const principal = boxes.find((m) => m.kind === "provided") ?? boxes[0];
 
   const sendingDomain = domainOf(settingsRow?.fromAddress ?? resolved.from);

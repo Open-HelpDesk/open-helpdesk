@@ -1359,7 +1359,7 @@ export const lt: Dictionary = {
     "Nėra aktyvaus administratoriaus, kurį būtų galima paskirti.",
   "app.settings.workspace.transferOwnerOnly": "Skirta tik darbo erdvės savininkui.",
   "app.settings.workspace.deleteWorkspaceTitle": "Ištrinti darbo erdvę",
-  "app.settings.workspace.deleteWorkspaceHint": "Galutinai ištrinama po 30 dienų saugojimo.",
+  "app.settings.workspace.deleteWorkspaceHint": "Galutinai ištrinama po 60 dienų saugojimo.",
   "app.settings.workspace.delete": "Ištrinti",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Šio veiksmo atšaukti nebus galima. Visas darbo erdvės turinys bus galutinai ištrintas po 30 dienų saugojimo.",

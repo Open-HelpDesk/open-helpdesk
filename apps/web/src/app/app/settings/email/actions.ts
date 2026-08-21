@@ -1,5 +1,6 @@
 "use server";
 
+import { providedMailboxAddress } from "@openhelpdesk/config";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auditEvents, db, emailSettings, mailboxes, teams, ticketForms } from "@openhelpdesk/db";
@@ -76,7 +77,7 @@ export async function saveSending(formData: FormData) {
   } else {
     await db.insert(mailboxes).values({
       tenantId: tenant.id,
-      address: `support@${tenant.slug}.open-helpdesk.com`,
+      address: providedMailboxAddress(tenant.slug),
       kind: "provided",
       verified: true,
       senderName,

@@ -1193,7 +1193,7 @@ export const et: Dictionary = {
   "app.settings.workspace.transferOwnerOnly": "Ainult tööruumi omanikule.",
   "app.settings.workspace.deleteWorkspaceTitle": "Kustuta tööruum",
   "app.settings.workspace.deleteWorkspaceHint":
-    "Lõplik kustutamine pärast 30-päevast säilitusaega.",
+    "Lõplik kustutamine pärast 60-päevast säilitusaega.",
   "app.settings.workspace.delete": "Kustuta",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Seda toimingut ei saa tagasi võtta. Kogu tööruumi sisu kustutatakse lõplikult pärast 30-päevast säilitusaega.",

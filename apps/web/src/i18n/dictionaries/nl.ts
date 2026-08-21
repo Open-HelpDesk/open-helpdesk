@@ -1094,7 +1094,7 @@ export const nl: Dictionary = {
   "app.settings.workspace.transferNoAdmin": "Geen actieve beheerder om te promoveren.",
   "app.settings.workspace.transferOwnerOnly": "Alleen voor de eigenaar van de werkruimte.",
   "app.settings.workspace.deleteWorkspaceTitle": "Werkruimte verwijderen",
-  "app.settings.workspace.deleteWorkspaceHint": "Definitieve verwijdering na 30 dagen bewaartermijn.",
+  "app.settings.workspace.deleteWorkspaceHint": "Definitieve verwijdering na 60 dagen bewaartermijn.",
   "app.settings.workspace.delete": "Verwijderen",
   "app.settings.workspace.deleteWorkspaceConfirm": "Deze actie is onomkeerbaar. Alle inhoud van de werkruimte wordt na 30 dagen bewaartermijn definitief verwijderd.",
   "app.settings.workspace.generalDeleteTicketCount": {

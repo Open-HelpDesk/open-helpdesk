@@ -1093,7 +1093,7 @@ export const da: Dictionary = {
   "app.settings.workspace.transferNoAdmin": "Ingen aktiv administrator at forfremme.",
   "app.settings.workspace.transferOwnerOnly": "Forbeholdt arbejdsområdets ejer.",
   "app.settings.workspace.deleteWorkspaceTitle": "Slet arbejdsområdet",
-  "app.settings.workspace.deleteWorkspaceHint": "Endelig sletning efter 30 dages opbevaring.",
+  "app.settings.workspace.deleteWorkspaceHint": "Endelig sletning efter 60 dages opbevaring.",
   "app.settings.workspace.delete": "Slet",
   "app.settings.workspace.deleteWorkspaceConfirm": "Handlingen kan ikke fortrydes. Alt indhold i arbejdsområdet bliver slettet endeligt efter 30 dages opbevaring.",
   "app.settings.workspace.generalDeleteTicketCount": {

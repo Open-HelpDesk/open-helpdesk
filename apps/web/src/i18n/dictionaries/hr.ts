@@ -1287,7 +1287,7 @@ export const hr: Dictionary = {
   "app.settings.workspace.transferNoAdmin": "Nema aktivnog administratora za promociju.",
   "app.settings.workspace.transferOwnerOnly": "Samo za vlasnika radnog prostora.",
   "app.settings.workspace.deleteWorkspaceTitle": "Izbriši radni prostor",
-  "app.settings.workspace.deleteWorkspaceHint": "Trajno brisanje nakon 30 dana zadržavanja.",
+  "app.settings.workspace.deleteWorkspaceHint": "Trajno brisanje nakon 60 dana zadržavanja.",
   "app.settings.workspace.delete": "Izbriši",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Ova radnja je nepovratna. Sav sadržaj radnog prostora bit će trajno izbrisan nakon 30 dana zadržavanja.",

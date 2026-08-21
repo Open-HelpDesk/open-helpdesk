@@ -1095,7 +1095,7 @@ export const de: Dictionary = {
   "app.settings.workspace.transferNoAdmin": "Kein aktiver Administrator, der befördert werden kann.",
   "app.settings.workspace.transferOwnerOnly": "Nur für den Eigentümer des Workspace.",
   "app.settings.workspace.deleteWorkspaceTitle": "Workspace löschen",
-  "app.settings.workspace.deleteWorkspaceHint": "Endgültige Löschung nach 30 Tagen Aufbewahrung.",
+  "app.settings.workspace.deleteWorkspaceHint": "Endgültige Löschung nach 60 Tagen Aufbewahrung.",
   "app.settings.workspace.delete": "Löschen",
   "app.settings.workspace.deleteWorkspaceConfirm": "Dieser Schritt ist nicht umkehrbar. Der gesamte Inhalt des Workspace wird nach 30 Tagen Aufbewahrung endgültig gelöscht.",
   "app.settings.workspace.generalDeleteTicketCount": {

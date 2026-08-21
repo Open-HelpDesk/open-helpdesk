@@ -93,7 +93,7 @@ export default async function PortalSettingsPage({
   const widgetTitle = widget.title ?? t("app.settings.portal.widgetTitleDefault");
   const ent = entitlementsFor(tenant);
   const isPro = ent.multiBrand;
-  const portalHost = `${tenant.slug}.open-helpdesk.com`;
+  const portalHost = `${tenant.slug}.${(process.env.BASE_DOMAIN ?? "open-helpdesk.local").toLowerCase()}`;
   const snippet = `<script src="https://${portalHost}/widget.js" async></script>`;
   const welcome = config.welcomeText || t("app.settings.portal.welcomeDefault");
 

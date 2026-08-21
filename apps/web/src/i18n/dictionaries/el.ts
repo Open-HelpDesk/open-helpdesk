@@ -1223,7 +1223,7 @@ export const el: Dictionary = {
     "Διαθέσιμο μόνο στον ιδιοκτήτη του χώρου εργασίας.",
   "app.settings.workspace.deleteWorkspaceTitle": "Διαγραφή του χώρου εργασίας",
   "app.settings.workspace.deleteWorkspaceHint":
-    "Οριστική διαγραφή μετά από 30 ημέρες διατήρησης.",
+    "Οριστική διαγραφή μετά από 60 ημέρες διατήρησης.",
   "app.settings.workspace.delete": "Διαγραφή",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Η ενέργεια αυτή δεν αναστρέφεται. Όλο το περιεχόμενο του χώρου εργασίας θα διαγραφεί οριστικά μετά από 30 ημέρες διατήρησης.",

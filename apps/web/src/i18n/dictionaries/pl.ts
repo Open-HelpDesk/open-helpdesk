@@ -1361,7 +1361,7 @@ export const pl: Dictionary = {
   "app.settings.workspace.transferOwnerOnly":
     "Dostępne tylko dla właściciela obszaru roboczego.",
   "app.settings.workspace.deleteWorkspaceTitle": "Usuń obszar roboczy",
-  "app.settings.workspace.deleteWorkspaceHint": "Trwałe usunięcie po 30 dniach przechowywania.",
+  "app.settings.workspace.deleteWorkspaceHint": "Trwałe usunięcie po 60 dniach przechowywania.",
   "app.settings.workspace.delete": "Usuń",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Tego działania nie można cofnąć. Cała zawartość obszaru roboczego zostanie trwale usunięta po 30 dniach przechowywania.",

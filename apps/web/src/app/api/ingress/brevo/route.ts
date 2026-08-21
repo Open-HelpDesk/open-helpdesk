@@ -4,15 +4,13 @@
  * Brevo ne signe pas ses webhooks entrants : le secret dans l'URL fait autorité.
  * Toujours 200 sur un payload compris : un 5xx serait rejoué en boucle.
  */
+import { ingressAuthorized } from "@/lib/ingress-auth";
 import { NextResponse, type NextRequest } from "next/server";
 import { ingestEmail, parseBrevoInbound } from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated } from "@openhelpdesk/rules";
 
 export async function POST(request: NextRequest) {
-  const secret = process.env.MAIL_INGRESS_SECRET ?? "dev-ingress-secret";
-  const provided =
-    request.nextUrl.searchParams.get("secret") ?? request.headers.get("x-ingress-secret");
-  if (provided !== secret) {
+  if (!ingressAuthorized(request)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

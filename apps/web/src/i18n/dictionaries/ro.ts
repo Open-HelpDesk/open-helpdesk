@@ -1312,7 +1312,7 @@ export const ro: Dictionary = {
   "app.settings.workspace.transferOwnerOnly": "Rezervat proprietarului spațiului de lucru.",
   "app.settings.workspace.deleteWorkspaceTitle": "Ștergeți spațiul de lucru",
   "app.settings.workspace.deleteWorkspaceHint":
-    "Ștergere definitivă după 30 de zile de retenție.",
+    "Ștergere definitivă după 60 de zile de retenție.",
   "app.settings.workspace.delete": "Ștergeți",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Această acțiune este ireversibilă. Tot conținutul spațiului de lucru va fi șters definitiv după 30 de zile de retenție.",

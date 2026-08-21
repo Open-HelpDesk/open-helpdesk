@@ -1,3 +1,4 @@
+import { providedMailboxAddress } from "@openhelpdesk/config";
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { and, asc, count, eq, ne } from "drizzle-orm";
@@ -199,7 +200,7 @@ export default async function TicketsPage({
         .select({ address: mailboxes.address })
         .from(mailboxes)
         .where(eq(mailboxes.tenantId, tenant.id));
-      mailboxAddress = mailbox?.address ?? `support@${tenant.slug}.open-helpdesk.email`;
+      mailboxAddress = mailbox?.address ?? providedMailboxAddress(tenant.slug);
     }
   }
 

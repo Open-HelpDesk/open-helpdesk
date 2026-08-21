@@ -1354,7 +1354,7 @@ export const sk: Dictionary = {
     "Žiadny aktívny správca, ktorého by bolo možné povýšiť.",
   "app.settings.workspace.transferOwnerOnly": "Vyhradené pre vlastníka pracovného priestoru.",
   "app.settings.workspace.deleteWorkspaceTitle": "Odstrániť pracovný priestor",
-  "app.settings.workspace.deleteWorkspaceHint": "Trvalé odstránenie po 30 dňoch uchovávania.",
+  "app.settings.workspace.deleteWorkspaceHint": "Trvalé odstránenie po 60 dňoch uchovávania.",
   "app.settings.workspace.delete": "Odstrániť",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Túto akciu nie je možné vrátiť. Všetok obsah pracovného priestoru sa po 30 dňoch uchovávania trvalo odstráni.",

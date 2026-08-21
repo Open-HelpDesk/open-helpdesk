@@ -1092,7 +1092,7 @@ export const sv: Dictionary = {
   "app.settings.workspace.transferNoAdmin": "Ingen aktiv administratör att befordra.",
   "app.settings.workspace.transferOwnerOnly": "Förbehållet arbetsytans ägare.",
   "app.settings.workspace.deleteWorkspaceTitle": "Ta bort arbetsytan",
-  "app.settings.workspace.deleteWorkspaceHint": "Slutgiltig borttagning efter 30 dagars karens.",
+  "app.settings.workspace.deleteWorkspaceHint": "Slutgiltig borttagning efter 60 dagars karens.",
   "app.settings.workspace.delete": "Ta bort",
   "app.settings.workspace.deleteWorkspaceConfirm": "Åtgärden går inte att ångra. Allt innehåll i arbetsytan tas bort permanent efter 30 dagars karens.",
   "app.settings.workspace.generalDeleteTicketCount": {

@@ -1082,7 +1082,7 @@ export const en: Dictionary = {
   "app.settings.workspace.transferNoAdmin": "No active administrator to promote.",
   "app.settings.workspace.transferOwnerOnly": "Restricted to the workspace owner.",
   "app.settings.workspace.deleteWorkspaceTitle": "Delete the workspace",
-  "app.settings.workspace.deleteWorkspaceHint": "Permanently deleted after 30 days of retention.",
+  "app.settings.workspace.deleteWorkspaceHint": "Permanently deleted after 60 days of retention.",
   "app.settings.workspace.delete": "Delete",
   "app.settings.workspace.deleteWorkspaceConfirm": "This action cannot be undone. All workspace content will be permanently deleted after 30 days of retention.",
   "app.settings.workspace.generalDeleteTicketCount": {

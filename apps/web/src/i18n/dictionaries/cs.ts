@@ -1347,7 +1347,7 @@ export const cs: Dictionary = {
     "Žádný aktivní administrátor, kterého by bylo možné povýšit.",
   "app.settings.workspace.transferOwnerOnly": "Vyhrazeno vlastníkovi pracovního prostoru.",
   "app.settings.workspace.deleteWorkspaceTitle": "Smazat pracovní prostor",
-  "app.settings.workspace.deleteWorkspaceHint": "Trvale smazáno po 30 dnech uchování.",
+  "app.settings.workspace.deleteWorkspaceHint": "Trvale smazáno po 60 dnech uchování.",
   "app.settings.workspace.delete": "Smazat",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Tuto akci nelze vzít zpět. Veškerý obsah pracovního prostoru bude po 30 dnech uchování trvale smazán.",

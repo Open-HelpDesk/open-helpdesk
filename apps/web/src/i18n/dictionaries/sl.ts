@@ -1350,7 +1350,7 @@ export const sl: Dictionary = {
     "Ni aktivnega skrbnika, ki bi ga bilo mogoče povišati.",
   "app.settings.workspace.transferOwnerOnly": "Na voljo samo lastniku delovnega prostora.",
   "app.settings.workspace.deleteWorkspaceTitle": "Izbriši delovni prostor",
-  "app.settings.workspace.deleteWorkspaceHint": "Dokončno izbrisano po 30 dneh hrambe.",
+  "app.settings.workspace.deleteWorkspaceHint": "Dokončno izbrisano po 60 dneh hrambe.",
   "app.settings.workspace.delete": "Izbriši",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Tega dejanja ni mogoče razveljaviti. Vsa vsebina delovnega prostora bo po 30 dneh hrambe dokončno izbrisana.",

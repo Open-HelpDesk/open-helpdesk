@@ -1402,7 +1402,7 @@ export const mt: Dictionary = {
   "app.settings.workspace.transferOwnerOnly":
     "Riżervat għall-proprjetarju tal-ispazju tax-xogħol.",
   "app.settings.workspace.deleteWorkspaceTitle": "Ħassar l-ispazju tax-xogħol",
-  "app.settings.workspace.deleteWorkspaceHint": "Tħassir definittiv wara 30 jum ta' żamma.",
+  "app.settings.workspace.deleteWorkspaceHint": "Tħassir definittiv wara 60 jum ta' żamma.",
   "app.settings.workspace.delete": "Ħassar",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Din l-azzjoni ma tistax titreġġa' lura. Il-kontenut kollu tal-ispazju tax-xogħol jitħassar definittivament wara 30 jum ta' żamma.",

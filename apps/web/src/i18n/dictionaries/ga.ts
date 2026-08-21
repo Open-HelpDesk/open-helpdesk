@@ -1407,7 +1407,7 @@ export const ga: Dictionary = {
   "app.settings.workspace.transferNoAdmin": "Níl aon riarthóir gníomhach le hardú.",
   "app.settings.workspace.transferOwnerOnly": "Teoranta d'úinéir an spáis oibre.",
   "app.settings.workspace.deleteWorkspaceTitle": "Scrios an spás oibre",
-  "app.settings.workspace.deleteWorkspaceHint": "Scriosta go buan tar éis 30 lá coinneála.",
+  "app.settings.workspace.deleteWorkspaceHint": "Scriosta go buan tar éis 60 lá coinneála.",
   "app.settings.workspace.delete": "Scrios",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Ní féidir an gníomh seo a chur ar ceal. Scriosfar ábhar iomlán an spáis oibre go buan tar éis 30 lá coinneála.",

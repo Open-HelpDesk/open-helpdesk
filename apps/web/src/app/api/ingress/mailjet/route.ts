@@ -3,15 +3,13 @@
  * URL à configurer chez Mailjet : https://{slug}.{domaine}/api/ingress/mailjet?secret=…
  * Mailjet ne signe pas la Parse API : le secret dans l'URL fait autorité.
  */
+import { ingressAuthorized } from "@/lib/ingress-auth";
 import { NextResponse, type NextRequest } from "next/server";
 import { ingestEmail, parseMailjetInbound } from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated } from "@openhelpdesk/rules";
 
 export async function POST(request: NextRequest) {
-  const secret = process.env.MAIL_INGRESS_SECRET ?? "dev-ingress-secret";
-  const provided =
-    request.nextUrl.searchParams.get("secret") ?? request.headers.get("x-ingress-secret");
-  if (provided !== secret) {
+  if (!ingressAuthorized(request)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

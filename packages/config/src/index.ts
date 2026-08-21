@@ -31,11 +31,24 @@ export const SLA_PAUSED_STATUSES: readonly TicketStatus[] = ["waiting", "on_hold
 
 /** Sous-domaines système interdits au signup (specs § 4). */
 export const RESERVED_SUBDOMAINS = [
-  "www",
-  "console",
-  "api",
-  "status",
-  "docs",
+  // Système (specs/01 § 4)
+  "www", "console", "api", "status", "docs",
+  // Produit et routage
+  "app", "help", "portal", "kb", "admin", "dashboard", "my", "go", "get", "widget",
+  // Auth et facturation
+  "auth", "login", "signup", "sso", "billing", "pay", "checkout", "account",
+  // Email et délivrabilité
+  "mail", "smtp", "imap", "mx", "email", "mta", "bounce", "bounces",
+  "postmaster", "abuse", "noreply", "no-reply", "newsletter", "ingress",
+  "webhook", "webhooks",
+  // Infra et outillage
+  "cdn", "assets", "static", "files", "s3", "backup", "monitor", "metrics",
+  "grafana", "sentry", "ns1", "ns2", "ftp", "vpn", "git", "registry", "ci",
+  // Environnements
+  "staging", "stg", "dev", "test", "demo", "sandbox", "preview", "internal",
+  // Vitrine et communication
+  "blog", "pricing", "legal", "security", "about", "contact", "careers",
+  "community", "forum", "press", "partners", "shop", "store",
 ] as const;
 
 /** Nombre de jours avant clôture automatique d'un ticket résolu (parcours clé n°2). */
@@ -153,6 +166,19 @@ export const PUBLIC_EMAIL_DOMAINS = [
   "gmx.com",
   "gmx.fr",
 ] as const;
+
+/**
+ * Domaine des adresses email fournies — support@{slug}.MANAGED_MAIL_DOMAIN.
+ * Repli sain en auto-hébergé : le BASE_DOMAIN de l'instance, sans port.
+ */
+export function managedMailDomain(): string {
+  const raw = process.env.MANAGED_MAIL_DOMAIN ?? process.env.BASE_DOMAIN ?? "open-helpdesk.local";
+  return raw.split(":")[0] ?? raw;
+}
+
+export function providedMailboxAddress(slug: string): string {
+  return `support@${slug}.${managedMailDomain()}`;
+}
 
 /** Préfixe de l'enregistrement TXT de vérification de domaine. */
 export const DOMAIN_VERIFICATION_TXT_PREFIX = "ohd-verify=";

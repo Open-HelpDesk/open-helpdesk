@@ -3,15 +3,13 @@
  * Les adaptateurs de format fournisseur (Resend, SES) normaliseront vers ce contrat.
  * Protégé par en-tête x-ingress-secret (MAIL_INGRESS_SECRET).
  */
+import { ingressAuthorized } from "@/lib/ingress-auth";
 import { NextResponse, type NextRequest } from "next/server";
 import { ingestEmail, type InboundEmail } from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated } from "@openhelpdesk/rules";
 
 export async function POST(request: NextRequest) {
-  const secret = process.env.MAIL_INGRESS_SECRET ?? "dev-ingress-secret";
-  const provided =
-    request.nextUrl.searchParams.get("secret") ?? request.headers.get("x-ingress-secret");
-  if (provided !== secret) {
+  if (!ingressAuthorized(request)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

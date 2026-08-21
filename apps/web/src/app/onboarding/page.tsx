@@ -1,3 +1,4 @@
+import { providedMailboxAddress } from "@openhelpdesk/config";
 import Link from "next/link";
 import { count, eq } from "drizzle-orm";
 import { db, mailboxes, tickets, users } from "@openhelpdesk/db";
@@ -43,7 +44,7 @@ export default async function OnboardingPage({
     db.select({ n: count() }).from(tickets).where(eq(tickets.tenantId, tenant.id)),
   ]);
   const mailbox = mailboxRows.find((m) => m.kind === "provided") ?? mailboxRows[0];
-  const mailboxAddress = mailbox?.address ?? `support@${tenant.slug}.open-helpdesk.email`;
+  const mailboxAddress = mailbox?.address ?? providedMailboxAddress(tenant.slug);
 
   const checklist: { label: MessageKey; done: boolean }[] = [
     { label: "app.onboarding.checklistIdentity", done: Boolean(branding.accentColor) },

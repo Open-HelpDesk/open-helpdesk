@@ -1304,7 +1304,7 @@ export const lv: Dictionary = {
   "app.settings.workspace.transferOwnerOnly": "Pieejams tikai darbvietas īpašniekam.",
   "app.settings.workspace.deleteWorkspaceTitle": "Dzēst darbvietu",
   "app.settings.workspace.deleteWorkspaceHint":
-    "Galīgā dzēšana pēc 30 dienu glabāšanas perioda.",
+    "Galīgā dzēšana pēc 60 dienu glabāšanas perioda.",
   "app.settings.workspace.delete": "Dzēst",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Šī darbība ir neatgriezeniska. Viss darbvietas saturs tiks neatgriezeniski dzēsts pēc 30 dienu glabāšanas perioda.",

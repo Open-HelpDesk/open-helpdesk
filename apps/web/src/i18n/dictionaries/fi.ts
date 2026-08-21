@@ -1092,7 +1092,7 @@ export const fi: Dictionary = {
   "app.settings.workspace.transferNoAdmin": "Ei aktiivista ylläpitäjää, jolle omistajuus voitaisiin siirtää.",
   "app.settings.workspace.transferOwnerOnly": "Vain työtilan omistajalle.",
   "app.settings.workspace.deleteWorkspaceTitle": "Poista työtila",
-  "app.settings.workspace.deleteWorkspaceHint": "Lopullinen poisto 30 päivän säilytysajan jälkeen.",
+  "app.settings.workspace.deleteWorkspaceHint": "Lopullinen poisto 60 päivän säilytysajan jälkeen.",
   "app.settings.workspace.delete": "Poista",
   "app.settings.workspace.deleteWorkspaceConfirm": "Tätä toimintoa ei voi perua. Työtilan koko sisältö poistetaan lopullisesti 30 päivän säilytysajan jälkeen.",
   "app.settings.workspace.generalDeleteTicketCount": {

@@ -1205,7 +1205,7 @@ export const hu: Dictionary = {
   "app.settings.workspace.transferNoAdmin": "Nincs előléptethető aktív adminisztrátor.",
   "app.settings.workspace.transferOwnerOnly": "Csak a munkaterület tulajdonosa számára.",
   "app.settings.workspace.deleteWorkspaceTitle": "A munkaterület törlése",
-  "app.settings.workspace.deleteWorkspaceHint": "Végleges törlés 30 nap megőrzési idő után.",
+  "app.settings.workspace.deleteWorkspaceHint": "Végleges törlés 60 nap megőrzési idő után.",
   "app.settings.workspace.delete": "Törlés",
   "app.settings.workspace.deleteWorkspaceConfirm":
     "Ez a művelet nem vonható vissza. A munkaterület teljes tartalma 30 nap megőrzési idő után véglegesen törlődik.",
