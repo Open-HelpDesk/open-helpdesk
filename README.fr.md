@@ -28,7 +28,6 @@ l'installation » (Paramètres → Général) dit ce qu'il reste à configurer.
 ```
 apps/
   web/       Produit : espace agent + admin tenant + portail client (Next.js)
-  www/       Site vitrine + signup (Next.js)
   worker/    Jobs BullMQ : SLA, envoi et ingestion email, automatisations
 packages/
   config/    Constantes partagées (statuts, plans, sous-domaines réservés…)
@@ -51,7 +50,7 @@ pnpm db:generate && pnpm db:migrate
 pnpm --filter @openhelpdesk/db db:rls
 pnpm db:seed                    # workspace de démo « Acme Support »
 pnpm db:seed:auth               # comptes agents de démo
-pnpm dev                        # web :3000 · www :3002 · worker
+pnpm dev                        # web :3000 · worker
 ```
 
 Les emails de développement sont capturés par **Mailpit** : http://localhost:8026.
