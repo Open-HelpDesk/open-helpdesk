@@ -1527,6 +1527,101 @@ export const sl: Dictionary = {
   "app.settings.rules.typeLongText": "Dolgo besedilo",
   "app.settings.rules.typeFile": "Datoteka",
   "app.settings.rules.typeSelectLong": "Spustni seznam",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) : les tables et
+     les phrases assemblées de lib/rule-labels.ts. Statuts, priorités et canaux
+     n'y sont pas — ils viennent de app.status.* / app.priority.* /
+     app.channel.*, plus bas dans ce fichier. --- */
+
+  /* Types de champs personnalisés (ST-04) ; « Besedilo » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Seznam",
+  "app.settings.rules.typeMultiSelect": "Večkratna izbira",
+  "app.settings.rules.typeDate": "Datum",
+  "app.settings.rules.typeNumber": "Število",
+  "app.settings.rules.typeCheckbox": "Potrditveno polje",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Dogodek",
+  "app.settings.rules.condFieldStatus": "Stanje",
+  "app.settings.rules.condFieldPriority": "Prioriteta",
+  "app.settings.rules.condFieldChannel": "Kanal",
+  "app.settings.rules.condFieldType": "Vrsta",
+  "app.settings.rules.condFieldSubject": "Zadeva",
+  "app.settings.rules.condFieldTags": "Oznake",
+  "app.settings.rules.condFieldAssignee": "Dodeljeno",
+  "app.settings.rules.condFieldTeam": "Ekipa",
+  "app.settings.rules.condFieldOrganization": "Organizacija",
+  "app.settings.rules.condFieldHoursCreated": "Ure od ustvarjanja",
+  "app.settings.rules.condFieldHoursUpdated": "Ure od posodobitve",
+
+  /* Opérateurs. « Vide » et « non vide » passent par un groupe prépositionnel,
+     invariable : le slovène accorderait son adjectif au genre du champ, et
+     « Organizacija je prazno » serait faux. « vsebujejo » est au pluriel, seul
+     « Oznake » porte cet opérateur (OPERATORS_BY_FIELD). */
+  "app.settings.rules.opIs": "je",
+  "app.settings.rules.opIsNot": "ni",
+  "app.settings.rules.opContains": "vsebuje",
+  "app.settings.rules.opIncludes": "vsebujejo",
+  "app.settings.rules.opEmpty": "brez vrednosti",
+  "app.settings.rules.opNotEmpty": "z vrednostjo",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Zahtevek ustvarjen",
+  "app.settings.rules.eventTicketUpdated": "Zahtevek posodobljen",
+  "app.settings.rules.eventMessageCreated": "Sporočilo prejeto",
+
+  /* Actions, telles que le menu du builder les nomme — impératif, comme le
+     reste des commandes de ce fichier. */
+  "app.settings.rules.actSetStatus": "Nastavi stanje",
+  "app.settings.rules.actSetPriority": "Nastavi prioriteto",
+  "app.settings.rules.actAssignUser": "Dodeli agentu",
+  "app.settings.rules.actAssignTeam": "Dodeli ekipi",
+  "app.settings.rules.actAssignRoundRobin": "Dodeli naslednjemu agentu (round-robin)",
+  "app.settings.rules.actAddTags": "Dodaj oznake",
+  "app.settings.rules.actEmailContact": "Pošlji e-pošto stiku",
+
+  /* Résumé d'une règle, en une ligne de liste : le slovène garde l'ordre
+     « če … → … », et les bribes s'enchaînent sans majuscule ni point. */
+  "app.settings.rules.summaryPattern": "Če {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "in",
+  "app.settings.rules.summaryAlways": "vedno",
+  /* « pogoj » passe au génitif après « od » : génitif singulier « pogoja »,
+     génitif duel et pluriel « pogojev ». */
+  "app.settings.rules.summaryAnyOf": {
+    one: "vsaj eden od {count} pogoja",
+    two: "vsaj eden od {count} pogojev",
+    few: "vsaj eden od {count} pogojev",
+    other: "vsaj eden od {count} pogojev",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "ni dodeljeno",
+  "app.settings.rules.summaryAssigned": "je dodeljeno",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. */
+  "app.settings.rules.summarySince": "že {duration}",
+  "app.settings.rules.summarySetStatus": "nastavi stanje na {value}",
+  "app.settings.rules.summarySetPriority": "prioriteta {value}",
+  /* {team} vaut un nom d'équipe, ou summaryAnyTeam quand il est inconnu :
+     « brez imena » complète « dodeli ekipi … » sans le répéter. */
+  "app.settings.rules.summaryAssignTeam": "dodeli ekipi {team}",
+  "app.settings.rules.summaryAnyTeam": "brez imena",
+  "app.settings.rules.summaryAssignUser": "dodeli agentu",
+  "app.settings.rules.summaryRoundRobin": "dodeli naslednjemu agentu",
+  "app.settings.rules.summaryAddTags": "dodaj oznake {tags}",
+  "app.settings.rules.summaryEmailContact": "pošlji e-pošto stiku",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Stanje → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioriteta → {value}",
+  "app.settings.rules.macroSummaryTeam": "Ekipa → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "brez imena",
+  "app.settings.rules.macroSummaryAssign": "Dodeli →",
+  "app.settings.rules.macroSummaryTag": "Oznake {tags}",
+  "app.settings.rules.macroSummaryNone": "Brez dejanja",
+
   "app.settings.rules.fieldName": "Ime polja",
   "app.settings.rules.fieldNamePlaceholder": "Številka naročila",
   "app.settings.rules.fieldOptions": "Možnosti",
@@ -1746,4 +1841,146 @@ export const sl: Dictionary = {
     "Preveč poskusov prijave. Počakajte nekaj sekund, preden poskusite znova.",
   "app.login.notAMember": "Ta identiteta ni član tega delovnega prostora.",
   "app.login.providerMissing": "Ta ponudnik na tej instanci ni nastavljen.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Tout cet écran était en français dans le code : le premier écran qu'un
+     nouveau workspace rencontre, et le seul qui n'avait aucune traduction.
+     Quatre libellés viennent d'ailleurs et ne sont pas repris ici : le titre du
+     portail dans son propre aperçu (home.title), le nom du workspace et la
+     couleur d'accent (les mêmes contrôles qu'en ST-01), et les rôles du produit
+     Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Nastavitev",
+  "app.onboarding.asideFooter": "Vse te možnosti lahko pozneje spremenite v nastavitvah.",
+  "app.onboarding.stepCounter": "Korak {step} od {total}",
+  "app.onboarding.continue": "Naprej",
+  "app.onboarding.skip": "Preskoči ta korak",
+
+  "app.onboarding.stepIdentity": "Identiteta",
+  "app.onboarding.stepIdentityHint": "Ime, logotip, barva",
+  "app.onboarding.stepEmail": "E-pošta",
+  "app.onboarding.stepEmailHint": "Naslov za prejemanje",
+  "app.onboarding.stepTeam": "Ekipa",
+  "app.onboarding.stepTeamHint": "Povabite agente",
+  "app.onboarding.stepTest": "Preizkus",
+  "app.onboarding.stepTestHint": "Prvi zahtevek",
+
+  "app.onboarding.identityTitle": "Identiteta vašega delovnega prostora",
+  "app.onboarding.identityBody":
+    "To se bo prikazalo na vašem portalu za stranke in v e-poštnih sporočilih, ki jih prejmejo vaše stranke.",
+  "app.onboarding.logoDrop": "Spustite datoteko PNG ali SVG",
+  "app.onboarding.previewSearch": "Iskanje članka…",
+  "app.onboarding.previewCaption": "Predogled vašega portala za stranke",
+
+  "app.onboarding.emailTitle": "Prejemajte svojo e-pošto",
+  "app.onboarding.emailBody":
+    "Vse zahteve, prejete na ta naslov, samodejno postanejo zahtevki.",
+  "app.onboarding.or": "ALI",
+  "app.onboarding.copy": "Kopiraj",
+  "app.onboarding.copied": "Kopirano ✓",
+  "app.onboarding.ownAddressTitle": "Povežite svoj lastni naslov",
+  "app.onboarding.ownAddressBody":
+    "Obstoječi naslov ({example}) preusmerite na zgoraj navedeni naslov. Podrobna navodila najdete v nastavitvah.",
+  "app.onboarding.forwardLabel": "Naslov za preusmeritev",
+  "app.onboarding.forwardPlaceholder": "podpora@vase-podjetje.si",
+
+  "app.onboarding.teamTitle": "Povabite svojo ekipo",
+  "app.onboarding.teamBody":
+    "Agente povabite zdaj ali delite povezavo za povabilo. Licence Viewer so brezplačne.",
+  "app.onboarding.invitePlaceholder": "sodelavec@podjetje.si",
+  "app.onboarding.addRow": "+ Dodaj vrstico",
+  "app.onboarding.sendInvites": "Pošlji povabila",
+
+  "app.onboarding.testTitle": "Pošljite prvi zahtevek",
+  "app.onboarding.testBody":
+    "Preverite celotno pot, preden storitev odprete svojim strankam.",
+  "app.onboarding.readyTitle": "Vaš delovni prostor je pripravljen",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Pošljite e-pošto na {address} in ustvarite preizkusni zahtevek.",
+  "app.onboarding.openInbox": "Odpri Prejeto",
+
+  "app.onboarding.checklistIdentity": "Identiteta je določena",
+  "app.onboarding.checklistEmail": "E-poštni naslov je nastavljen",
+  "app.onboarding.checklistTeam": "Ekipa je povabljena",
+  "app.onboarding.checklistTicket": "Prvi zahtevek je prejet",
+  "app.onboarding.checklistSla": "Pravilnik SLA je preverjen",
+
+
+/* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
+     « vsi / vsaj eden » : elle est découpée autour de {mode}. */
+  "app.settings.rules.matchIf": "ČE",
+  /* Un gabarit par mode, et le slovène s'en sert : le nombre du verbe et du
+     nom suit le sélecteur. « vsi » gouverne un pluriel — « Izpolnjeni morajo
+     biti vsi pogoji » — et « vsaj eden » un singulier suivi du génitif
+     pluriel — « Izpolnjen mora biti vsaj eden od pogojev ». Les deux formes du
+     sélecteur restent des pronoms autonomes, ce que les deux boutons de la
+     bascule exigent : « vsaj en » serait la forme adjectivale, tronquée hors
+     de son nom. */
+  "app.settings.rules.matchAllPattern": "Izpolnjeni morajo biti {mode} pogoji",
+  "app.settings.rules.matchAnyPattern": "Izpolnjen mora biti {mode} od pogojev",
+  "app.settings.rules.matchAll": "vsi",
+  "app.settings.rules.matchAny": "vsaj eden",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Paket Free",
+  "app.settings.workspace.planStandard": "Paket Standard",
+  "app.settings.workspace.planPro": "Paket Pro",
+
+  /* Types de ticket (AG-05). Attention : la VALEUR enregistrée en base reste la
+     chaîne française — c'est ainsi que le produit la stocke. Seul l'affichage
+     est traduit, les tickets déjà créés continuent de correspondre. */
+  "app.ticket.typeQuestion": "Vprašanje",
+  "app.ticket.typeIncident": "Incident",
+  "app.ticket.typeTask": "Naloga",
+  "app.ticket.typeOther": "Drugo",
+
+  /* AG-09 — export CSV des rapports. Un fichier téléchargé est du texte lu par
+     une personne : ses entêtes se traduisent comme le reste de l'écran. « s »
+     est le symbole slovène de la seconde. */
+  "app.reports.csvIndicator": "Kazalnik",
+  "app.reports.csvCurrentPeriod": "Trenutno obdobje",
+  "app.reports.csvPreviousPeriod": "Prejšnje obdobje",
+  "app.reports.csvCreated": "Ustvarjeni zahtevki",
+  "app.reports.csvResolved": "Rešeni zahtevki",
+  "app.reports.csvMedianFirstReply": "Mediana 1. odgovora (s)",
+  "app.reports.csvMedianResolve": "Mediana časa do rešitve (s)",
+  "app.reports.csvSlaCompliance": "Skladnost s SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Dan",
+  "app.reports.csvCreatedShort": "Ustvarjeni",
+  "app.reports.csvResolvedShort": "Rešeni",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Nov članek",
+  "app.kb.fromTicketSymptomHeading": "Simptom",
+  "app.kb.fromTicketSymptomPlaceholder": "[Opišite, kaj stranka opaža.]",
+  "app.kb.fromTicketSolutionHeading": "Rešitev",
+  "app.kb.fromTicketSolutionPlaceholder": "[Opišite postopek, ki odpravi težavo.]",
+  "app.kb.fromTicketMissingRequest": "prvotna zahteva stranke",
+  "app.kb.fromTicketMissingAnswer": "odgovor agenta",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Postopek po korakih",
+  "app.kb.tplProcedureHint": "Zaporedje številčenih korakov s pričakovanim rezultatom.",
+  "app.kb.tplProcedureTitle": "Kako [izvesti dejanje]",
+  "app.kb.tplProcedureBody": "Ta članek pojasnjuje, kako [izvesti dejanje]. Računajte približno [trajanje].\n\n## Preden začnete\n\n- [Potrebna pravica ali vloga]\n- [Podatek, ki ga je dobro imeti pri roki]\n\n## Koraki\n\n1. Odprite [ustrezni zaslon].\n2. Kliknite **[gumb]**.\n3. Izpolnite [polje] in potrdite.\n\n> Če se pojavi [poseben primer], [kaj storiti v tem primeru].\n\n## Rezultat\n\n[Kaj mora oseba videti, ko je opravilo uspešno končano.]\n",
+  "app.kb.tplIncidentLabel": "Reševanje incidenta",
+  "app.kb.tplIncidentHint": "Simptom, vzrok, rešitev in začasna premostitev.",
+  "app.kb.tplIncidentTitle": "[Opaženi simptom]",
+  "app.kb.tplIncidentBody": "## Simptom\n\n[Kaj oseba opaža, z natančnim sporočilom o napaki, če ta obstaja.]\n\n## Vzrok\n\n[Zakaj se to dogaja.]\n\n## Rešitev\n\n1. [Prvi popravni ukrep]\n2. [Drugi popravni ukrep]\n\n## Začasna premostitev\n\n> [Kaj lahko oseba stori takoj, če rešitev zahteva poseg\n> vaše ekipe.]\n\n## Če težava ostane\n\nOddajte zahtevo in navedite [podatke, koristne za diagnostiko].\n",
+  "app.kb.tplFaqLabel": "Pogosto vprašanje",
+  "app.kb.tplFaqHint": "Kratek in neposreden odgovor, nato pojasnila.",
+  "app.kb.tplFaqTitle": "[Vprašanje, tako kot ga postavljajo stranke]",
+  "app.kb.tplFaqBody": "**Kratek odgovor:** [odgovor v enem stavku].\n\n## Podrobneje\n\n[Kontekst in koristne podrobnosti.]\n\n## Posebni primeri\n\n- **[Situacija A]** — [kaj se spremeni].\n- **[Situacija B]** — [kaj se spremeni].\n\n## Več o tem\n\n[Napotitev na soroden članek ali povezan postopek.]\n",
+  "app.kb.tplReleaseLabel": "Opombe k izdaji",
+  "app.kb.tplReleaseHint": "Novosti, izboljšave in popravki ene izdaje.",
+  "app.kb.tplReleaseTitle": "Novosti v izdaji [datum ali različica]",
+  "app.kb.tplReleaseBody": "## Novosti\n\n- **[Ime funkcionalnosti]** — [kaj omogoča uporabniku].\n\n## Izboljšave\n\n- [Kaj je zdaj preprostejše ali hitrejše.]\n\n## Popravki\n\n- [Odpravljena težava, opisana tako, kot jo je doživela stranka.]\n\n> Te spremembe so v vašem delovnem prostoru že aktivne, z vaše strani ni\n> potrebno nič.\n",
 };

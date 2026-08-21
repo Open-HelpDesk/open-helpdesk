@@ -75,7 +75,7 @@ export function PolicyRows({
             onDrop={() => onDrop(p.id)}
             onDragEnd={() => setDragId(null)}
             onClick={() => router.push(`/app/settings/sla?policy=${p.id}`)}
-            className="st-row"
+            className="ohd-hover"
             style={{
               display: "flex",
               alignItems: "center",

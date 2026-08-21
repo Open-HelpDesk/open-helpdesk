@@ -1475,6 +1475,100 @@ export const lv: Dictionary = {
   "app.settings.rules.typeLongText": "Garš teksts",
   "app.settings.rules.typeFile": "Fails",
   "app.settings.rules.typeSelectLong": "Nolaižamais saraksts",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Il vivait dans lib/rule-labels.ts, en français, tables et phrases
+     comprises. Les statuts, priorités et canaux ne sont PAS repris ici : ils
+     viennent des tables partagées de lib/format.ts, celles de l'inbox et de ses
+     filtres. */
+
+  /* Types de champs personnalisés (ST-04) ; « Teksts » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Saraksts",
+  "app.settings.rules.typeMultiSelect": "Vairākizvēle",
+  "app.settings.rules.typeDate": "Datums",
+  "app.settings.rules.typeNumber": "Skaitlis",
+  "app.settings.rules.typeCheckbox": "Izvēles rūtiņa",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Notikums",
+  "app.settings.rules.condFieldStatus": "Statuss",
+  "app.settings.rules.condFieldPriority": "Prioritāte",
+  "app.settings.rules.condFieldChannel": "Kanāls",
+  "app.settings.rules.condFieldType": "Veids",
+  "app.settings.rules.condFieldSubject": "Tēma",
+  "app.settings.rules.condFieldTags": "Birkas",
+  "app.settings.rules.condFieldAssignee": "Atbildīgais",
+  "app.settings.rules.condFieldTeam": "Komanda",
+  "app.settings.rules.condFieldOrganization": "Organizācija",
+  "app.settings.rules.condFieldHoursCreated": "Stundas kopš izveides",
+  "app.settings.rules.condFieldHoursUpdated": "Stundas kopš atjaunināšanas",
+
+  /* Opérateurs. Les deux derniers restent des symboles : le letton n'a pas de
+     mot plus court, et le signe tient dans une ligne de liste. */
+  "app.settings.rules.opIs": "ir",
+  "app.settings.rules.opIsNot": "nav",
+  "app.settings.rules.opContains": "satur",
+  "app.settings.rules.opIncludes": "ietver",
+  "app.settings.rules.opEmpty": "ir tukšs",
+  "app.settings.rules.opNotEmpty": "nav tukšs",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. « Saņemts ziņojums » reprend les mots de
+     ruleHintTrigger, qui énumère déjà les trois événements. */
+  "app.settings.rules.eventTicketCreated": "Pieteikums izveidots",
+  "app.settings.rules.eventTicketUpdated": "Pieteikums atjaunināts",
+  "app.settings.rules.eventMessageCreated": "Saņemts ziņojums",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Iestatīt statusu",
+  "app.settings.rules.actSetPriority": "Iestatīt prioritāti",
+  "app.settings.rules.actAssignUser": "Piešķirt aģentam",
+  "app.settings.rules.actAssignTeam": "Piešķirt komandai",
+  "app.settings.rules.actAssignRoundRobin": "Piešķirt nākamajam aģentam (round-robin)",
+  "app.settings.rules.actAddTags": "Pievienot birkas",
+  "app.settings.rules.actEmailContact": "Nosūtīt e-pastu kontaktpersonai",
+
+  /* Résumé d'une règle, en une ligne de liste. Le letton garde l'ordre
+     « ja … → … » de automationsSubtitle ; les bribes s'insèrent sans majuscule
+     ni point final. */
+  "app.settings.rules.summaryPattern": "Ja {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "un",
+  "app.settings.rules.summaryAlways": "vienmēr",
+  /* « viens no {count} … » : le letton met le nom au datif pluriel après « no »,
+     mais au génitif singulier dès que le nombre finit par 1 (21 nosacījuma). */
+  "app.settings.rules.summaryAnyOf": {
+    zero: "vismaz viens no {count} nosacījumiem",
+    one: "vismaz viens no {count} nosacījuma",
+    other: "vismaz viens no {count} nosacījumiem",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "bez atbildīgā",
+  "app.settings.rules.summaryAssigned": "ar atbildīgo",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : voir
+     formatDurationTokens, ils ne se traduisent pas. La bribe se colle à la
+     condition qui précède, elle doit donc se lire en suite de phrase. */
+  "app.settings.rules.summarySince": "jau {duration}",
+  "app.settings.rules.summarySetStatus": "iestatīt statusu {value}",
+  "app.settings.rules.summarySetPriority": "iestatīt prioritāti {value}",
+  "app.settings.rules.summaryAssignTeam": "piešķirt komandai {team}",
+  /* Repli quand l'équipe n'est plus connue : « une équipe » redoublerait le mot
+     « komandai » déjà porté par le gabarit. */
+  "app.settings.rules.summaryAnyTeam": "(nenorādīta)",
+  "app.settings.rules.summaryAssignUser": "piešķirt aģentam",
+  "app.settings.rules.summaryRoundRobin": "piešķirt nākamajam aģentam",
+  "app.settings.rules.summaryAddTags": "pievienot {tags}",
+  "app.settings.rules.summaryEmailContact": "nosūtīt e-pastu kontaktpersonai",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Statuss → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioritāte → {value}",
+  "app.settings.rules.macroSummaryTeam": "Komanda → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "(nenorādīta)",
+  "app.settings.rules.macroSummaryAssign": "Piešķirt →",
+  "app.settings.rules.macroSummaryTag": "Birkas {tags}",
+  "app.settings.rules.macroSummaryNone": "Nav darbību",
   "app.settings.rules.fieldName": "Lauka nosaukums",
   "app.settings.rules.fieldNamePlaceholder": "Pasūtījuma numurs",
   "app.settings.rules.fieldOptions": "Opcijas",
@@ -1692,4 +1786,143 @@ export const lv: Dictionary = {
     "Pārāk daudz pieteikšanās mēģinājumu. Pagaidiet dažas sekundes, pirms mēģināt vēlreiz.",
   "app.login.notAMember": "Šī identitāte nav šīs darbvietas dalībnieks.",
   "app.login.providerMissing": "Šis nodrošinātājs šajā instancē nav konfigurēts.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Tout cet écran était en français dans le code : le premier écran qu'un
+     nouveau workspace rencontre. Quatre libellés viennent d'ailleurs et ne sont
+     pas repris ici : le titre du portail dans son propre aperçu (home.title),
+     le nom du workspace et la couleur d'accent (les mêmes contrôles qu'en
+     ST-01), et les rôles Owner / Admin / Agent / Viewer. */
+
+  "app.onboarding.asideTitle": "Iestatīšana",
+  "app.onboarding.asideFooter":
+    "Visus šos iestatījumus vēlāk varēsiet mainīt sadaļā Iestatījumi.",
+  "app.onboarding.stepCounter": "{step}. solis no {total}",
+  "app.onboarding.continue": "Turpināt",
+  "app.onboarding.skip": "Izlaist šo soli",
+
+  "app.onboarding.stepIdentity": "Identitāte",
+  "app.onboarding.stepIdentityHint": "Nosaukums, logotips, krāsa",
+  "app.onboarding.stepEmail": "E-pasts",
+  "app.onboarding.stepEmailHint": "Saņemšanas adrese",
+  "app.onboarding.stepTeam": "Komanda",
+  "app.onboarding.stepTeamHint": "Uzaicināt aģentus",
+  "app.onboarding.stepTest": "Pārbaude",
+  "app.onboarding.stepTestHint": "Pirmais pieteikums",
+
+  "app.onboarding.identityTitle": "Jūsu darbvietas identitāte",
+  "app.onboarding.identityBody":
+    "Šie elementi būs redzami jūsu klientu portālā un klientiem sūtītajos e-pastos.",
+  "app.onboarding.logoDrop": "Ievelciet PNG vai SVG failu",
+  "app.onboarding.previewSearch": "Meklēt rakstu…",
+  "app.onboarding.previewCaption": "Jūsu klientu portāla priekšskatījums",
+
+  "app.onboarding.emailTitle": "Saņemiet savus e-pastus",
+  "app.onboarding.emailBody":
+    "Visi uz šo adresi saņemtie pieprasījumi automātiski kļūst par pieteikumiem.",
+  "app.onboarding.or": "VAI",
+  "app.onboarding.copy": "Kopēt",
+  "app.onboarding.copied": "Nokopēts ✓",
+  "app.onboarding.ownAddressTitle": "Pievienot savu adresi",
+  "app.onboarding.ownAddressBody":
+    "Pārsūtiet savu esošo adresi ({example}) uz iepriekš norādīto adresi. Detalizēta konfigurācija — iestatījumos.",
+  "app.onboarding.forwardLabel": "Pārsūtāmā adrese",
+  "app.onboarding.forwardPlaceholder": "atbalsts@jusu-domens.lv",
+
+  "app.onboarding.teamTitle": "Uzaiciniet savu komandu",
+  "app.onboarding.teamBody":
+    "Uzaiciniet savus aģentus tagad vai kopīgojiet uzaicinājuma saiti. Viewer licences ir bez maksas.",
+  "app.onboarding.invitePlaceholder": "kolegis@uznemums.lv",
+  "app.onboarding.addRow": "+ Pievienot rindu",
+  "app.onboarding.sendInvites": "Nosūtīt uzaicinājumus",
+
+  "app.onboarding.testTitle": "Nosūtiet pirmo pieteikumu",
+  "app.onboarding.testBody":
+    "Pārbaudiet visu ķēdi, pirms atverat pakalpojumu saviem klientiem.",
+  "app.onboarding.readyTitle": "Jūsu darbvieta ir gatava",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Nosūtiet e-pastu uz {address}, lai izveidotu pārbaudes pieteikumu.",
+  "app.onboarding.openInbox": "Atvērt iesūtni",
+
+  "app.onboarding.checklistIdentity": "Identitāte definēta",
+  "app.onboarding.checklistEmail": "E-pasta adrese konfigurēta",
+  "app.onboarding.checklistTeam": "Komanda uzaicināta",
+  "app.onboarding.checklistTicket": "Pirmais pieteikums saņemts",
+  "app.onboarding.checklistSla": "SLA politika pārbaudīta",
+
+
+/* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur :
+     elle est découpée autour de {mode}. Le letton demande le datif après
+     « atbilst », et « vismaz viens » y passe au singulier — le nom voyage donc
+     avec le sélecteur, sans quoi l'accord serait faux dans l'une des deux
+     positions. */
+  "app.settings.rules.matchIf": "JA",
+  "app.settings.rules.matchAllPattern": "Atbilst {mode}",
+  "app.settings.rules.matchAnyPattern": "Atbilst {mode}",
+  "app.settings.rules.matchAll": "visiem nosacījumiem",
+  "app.settings.rules.matchAny": "vismaz vienam nosacījumam",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Free plāns",
+  "app.settings.workspace.planStandard": "Standard plāns",
+  "app.settings.workspace.planPro": "Pro plāns",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Jautājums",
+  "app.ticket.typeIncident": "Incidents",
+  "app.ticket.typeTask": "Uzdevums",
+  "app.ticket.typeOther": "Cits",
+
+  /* AG-09 — export CSV des rapports. Un fichier téléchargé est du texte lu par
+     une personne : ses entêtes se traduisent comme le reste de l'écran. « s »
+     est l'abréviation lettonne de la seconde, celle que porte déjà
+     draftSavedSeconds. */
+  "app.reports.csvIndicator": "Rādītājs",
+  "app.reports.csvCurrentPeriod": "Pašreizējais periods",
+  "app.reports.csvPreviousPeriod": "Iepriekšējais periods",
+  "app.reports.csvCreated": "Izveidotie pieteikumi",
+  "app.reports.csvResolved": "Atrisinātie pieteikumi",
+  "app.reports.csvMedianFirstReply": "Pirmās atbildes mediāna (s)",
+  "app.reports.csvMedianResolve": "Atrisināšanas mediāna (s)",
+  "app.reports.csvSlaCompliance": "SLA izpilde (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Diena",
+  "app.reports.csvCreatedShort": "Izveidotie",
+  "app.reports.csvResolvedShort": "Atrisinātie",
+  "app.reports.csvAgent": "Aģents",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Jauns raksts",
+  "app.kb.fromTicketSymptomHeading": "Simptoms",
+  "app.kb.fromTicketSymptomPlaceholder": "[Aprakstiet, ko klients novēro.]",
+  "app.kb.fromTicketSolutionHeading": "Risinājums",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Aprakstiet darbības, kas atrisina problēmu.]",
+  "app.kb.fromTicketMissingRequest": "klienta sākotnējais pieprasījums",
+  "app.kb.fromTicketMissingAnswer": "aģenta atbilde",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Procedūra soli pa solim",
+  "app.kb.tplProcedureHint": "Numurētu soļu virkne ar gaidāmo rezultātu.",
+  "app.kb.tplProcedureTitle": "Kā [veikt darbību]",
+  "app.kb.tplProcedureBody": "Šis raksts skaidro, kā [veikt darbību]. Rēķinieties ar apmēram [ilgums].\n\n## Pirms sākat\n\n- [Nepieciešamā atļauja vai loma]\n- [Informācija, kurai jābūt pa rokai]\n\n## Soļi\n\n1. Atveriet [attiecīgo ekrānu].\n2. Noklikšķiniet uz **[pogas]**.\n3. Aizpildiet [lauku] un apstipriniet.\n\n> Ja rodas [īpašais gadījums], [kā rīkoties].\n\n## Rezultāts\n\n[Kas personai jāredz, kad darbība ir izdevusies.]\n",
+  "app.kb.tplIncidentLabel": "Incidenta risināšana",
+  "app.kb.tplIncidentHint": "Simptoms, cēlonis, risinājums un pagaidu risinājums.",
+  "app.kb.tplIncidentTitle": "[Novērotais simptoms]",
+  "app.kb.tplIncidentBody": "## Simptoms\n\n[Ko persona novēro, norādot precīzu kļūdas paziņojumu, ja tāds ir.]\n\n## Cēlonis\n\n[Kāpēc tas notiek.]\n\n## Risinājums\n\n1. [Pirmā koriģējošā darbība]\n2. [Otrā koriģējošā darbība]\n\n## Pagaidu risinājums\n\n> [Ko persona var izdarīt uzreiz, ja risinājumam nepieciešama jūsu\n> komandas iesaistīšanās.]\n\n## Ja problēma nepazūd\n\nIesniedziet pieprasījumu, norādot [diagnostikai noderīgo informāciju].\n",
+  "app.kb.tplFaqLabel": "Bieži uzdots jautājums",
+  "app.kb.tplFaqHint": "Īsa un tieša atbilde, pēc tam precizējumi.",
+  "app.kb.tplFaqTitle": "[Jautājums tādā formulējumā, kā to uzdod klienti]",
+  "app.kb.tplFaqBody": "**Īsā atbilde:** [atbilde vienā teikumā].\n\n## Sīkāk\n\n[Noderīgais konteksts un nianses.]\n\n## Īpašie gadījumi\n\n- **[A situācija]** — [kas mainās].\n- **[B situācija]** — [kas mainās].\n\n## Papildu informācija\n\n[Norāde uz blakus rakstu vai saistīto darbību.]\n",
+  "app.kb.tplReleaseLabel": "Laidiena piezīmes",
+  "app.kb.tplReleaseHint": "Viena laidiena jaunumi, uzlabojumi un labojumi.",
+  "app.kb.tplReleaseTitle": "Jaunumi laidienā [datums vai versija]",
+  "app.kb.tplReleaseBody": "## Jaunumi\n\n- **[Funkcijas nosaukums]** — [ko tā ļauj darīt lietotājam].\n\n## Uzlabojumi\n\n- [Kas kļūst vienkāršāks vai ātrāks.]\n\n## Labojumi\n\n- [Novērstā problēma, formulēta tā, kā to izjuta klients.]\n\n> Šīs izmaiņas jūsu darbvietā jau ir aktīvas, no jūsu puses nekas nav\n> jādara.\n",
 };

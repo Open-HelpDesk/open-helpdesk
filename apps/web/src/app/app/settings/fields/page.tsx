@@ -2,7 +2,7 @@ import Link from "next/link";
 import { requireAgent } from "@/lib/session";
 import { db, formFields, ticketFields, ticketForms } from "@openhelpdesk/db";
 import { asc, eq } from "drizzle-orm";
-import { FIELD_TYPE_LABELS } from "@/lib/rule-labels";
+import { FIELD_TYPE_KEYS } from "@/lib/rule-labels";
 import { getT, type Translate } from "@/i18n/server";
 import {
   Field,
@@ -20,7 +20,13 @@ const FIELDS_GRID = "minmax(200px,1.4fr) 170px 110px 110px 120px";
 /** Libellés longs de la table ST-04 (« Liste déroulante ») — la composition utilise « Liste ». */
 function typeLabelLong(type: string, t: Translate): string {
   if (type === "select") return t("app.settings.rules.typeSelectLong");
-  return FIELD_TYPE_LABELS[type] ?? type;
+  return typeLabel(type, t);
+}
+
+/** Libellé court d'un type de champ, ou le type brut s'il est inconnu. */
+function typeLabel(type: string, t: Translate): string {
+  const cle = FIELD_TYPE_KEYS[type];
+  return cle ? t(cle) : type;
 }
 
 type FieldRow = typeof ticketFields.$inferSelect;
@@ -128,7 +134,7 @@ export default async function FieldsSettingsPage({
             {fields.map((f) => (
               <div
                 key={f.id}
-                className="st-row grid items-center border-b"
+                className="ohd-hover grid items-center border-b"
                 style={{
                   gridTemplateColumns: FIELDS_GRID,
                   minWidth: 760,
@@ -194,7 +200,7 @@ export default async function FieldsSettingsPage({
                 <Link
                   key={f.id}
                   href={`/app/settings/fields?tab=forms&form=${f.id}`}
-                  className="rounded-full border font-medium"
+                  className="ohd-hover-edge-ink rounded-full border font-medium"
                   style={{
                     fontSize: 12.5,
                     padding: "4px 12px",
@@ -217,7 +223,7 @@ export default async function FieldsSettingsPage({
               />
               <button
                 type="submit"
-                className="rounded-md border font-semibold"
+                className="ohd-hover-edge-ink rounded-md border font-semibold"
                 style={{
                   height: 32,
                   padding: "0 13px",
@@ -275,7 +281,7 @@ export default async function FieldsSettingsPage({
                       <button
                         type="submit"
                         title={t("app.settings.rules.addToForm")}
-                        className="flex w-full items-center rounded-[7px] border text-left"
+                        className="ohd-hover-edge-ink flex w-full items-center rounded-[7px] border text-left"
                         style={{
                           padding: "9px 11px",
                           gap: 9,
@@ -291,7 +297,7 @@ export default async function FieldsSettingsPage({
                         </span>
                         <span className="min-w-0 flex-1 truncate">{f.label}</span>
                         <span style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-                          {FIELD_TYPE_LABELS[f.type] ?? f.type}
+                          {typeLabel(f.type, t)}
                         </span>
                       </button>
                     </form>
@@ -333,7 +339,7 @@ export default async function FieldsSettingsPage({
                     <ComposedRow
                       key={f.id}
                       label={f.label}
-                      type={FIELD_TYPE_LABELS[f.type] ?? f.type}
+                      type={typeLabel(f.type, t)}
                       required={f.required}
                       t={t}
                       remove={
@@ -478,9 +484,9 @@ function FieldForm({ field, t }: { field?: FieldRow; t: Translate }) {
       </Field>
       <Field label={t("app.settings.rules.colType")}>
         <Select name="type" defaultValue={field?.type ?? "text"} style={control}>
-          {Object.entries(FIELD_TYPE_LABELS).map(([v, l]) => (
+          {Object.entries(FIELD_TYPE_KEYS).map(([v, cle]) => (
             <option key={v} value={v}>
-              {l}
+              {t(cle)}
             </option>
           ))}
         </Select>
@@ -529,7 +535,7 @@ function FieldForm({ field, t }: { field?: FieldRow; t: Translate }) {
           <button
             type="submit"
             formAction={deleteField}
-            className="rounded-md border font-medium"
+            className="ohd-hover-edge-ink rounded-md border font-medium"
             style={{
               height: 34,
               padding: "0 14px",

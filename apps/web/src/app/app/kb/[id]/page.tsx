@@ -52,7 +52,7 @@ export default async function KbEditorPage({
               <Link
                 key={gabarit.id}
                 href={`/app/kb/new?modele=${gabarit.id}${cat ? `&cat=${cat}` : ""}`}
-                className="flex flex-col rounded-[10px] border hover:border-[var(--acc)]"
+                className="ohd-hover-edge-fill flex flex-col rounded-[10px] border"
                 style={{ padding: "14px 15px", gap: 8, background: "var(--panel)", borderColor: "var(--line)" }}
               >
                 <span
@@ -63,10 +63,10 @@ export default async function KbEditorPage({
                   {gabarit.glyph}
                 </span>
                 <span className="font-semibold" style={{ fontSize: 14, color: "var(--ink)" }}>
-                  {gabarit.label}
+                  {t(gabarit.labelKey)}
                 </span>
                 <span style={{ fontSize: 12.5, lineHeight: 1.45, color: "var(--ink-3)", textWrap: "pretty" }}>
-                  {gabarit.hint}
+                  {t(gabarit.hintKey)}
                 </span>
               </Link>
             ))}
@@ -123,7 +123,7 @@ export default async function KbEditorPage({
         .from(ticketMessages)
         .where(eq(ticketMessages.ticketId, source.id))
         .orderBy(asc(ticketMessages.createdAt));
-      const brouillon = articleFromTicket(source.subject, fil);
+      const brouillon = articleFromTicket(t, source.subject, fil);
       depuisTicket = { number: source.number, ...brouillon };
     }
   }
@@ -131,8 +131,8 @@ export default async function KbEditorPage({
   const modeleChoisi = isNew ? templateById(modele) : undefined;
   const bodyValue = article
     ? (article.draftBodyHtml ?? article.bodyHtml ?? "")
-    : (depuisTicket?.body ?? modeleChoisi?.body ?? "");
-  const titleValue = article?.title ?? depuisTicket?.title ?? modeleChoisi?.title ?? "";
+    : (depuisTicket?.body ?? (modeleChoisi ? t(modeleChoisi.bodyKey) : ""));
+  const titleValue = article?.title ?? depuisTicket?.title ?? (modeleChoisi ? t(modeleChoisi.titleKey) : "");
 
   // Phrase qui enveloppe le lien vers la demande source : une seule clé, coupée
   // autour du paramètre.
@@ -250,7 +250,7 @@ export default async function KbEditorPage({
               type="submit"
               name="intent"
               value="draft"
-              className="flex-1 rounded-md border font-medium"
+              className="ohd-hover-edge-ink flex-1 rounded-md border font-medium"
               style={{
                 height: 32,
                 borderColor: "var(--line)",

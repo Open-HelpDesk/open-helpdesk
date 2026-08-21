@@ -111,31 +111,8 @@ export function WeekEditor({ initial }: { initial: WeekValue }) {
                     : t("app.settings.sla.dayAriaClosed", { day: label })
                 }
                 onClick={() => toggleDay(key)}
-                style={{
-                  width: 34,
-                  height: 20,
-                  borderRadius: 11,
-                  background: open ? "var(--acc)" : "var(--line)",
-                  position: "relative",
-                  cursor: "pointer",
-                  border: 0,
-                  padding: 0,
-                }}
-              >
-                <span
-                  style={{
-                    position: "absolute",
-                    top: 2,
-                    left: open ? 16 : 2,
-                    width: 16,
-                    height: 16,
-                    borderRadius: "50%",
-                    background: "#fff",
-                    boxShadow: "0 1px 3px rgba(0,0,0,.25)",
-                    transition: "left .15s",
-                  }}
-                />
-              </button>
+                className="ohd-switch"
+              />
               <div style={{ display: "flex", gap: 9, alignItems: "center", flexWrap: "wrap" }}>
                 {open ? (
                   <>

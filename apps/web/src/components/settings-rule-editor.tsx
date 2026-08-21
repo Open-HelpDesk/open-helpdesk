@@ -20,9 +20,10 @@ import {
 
 export type RuleTestResult = { ok: boolean; text: string };
 
+/** Les deux modes du sélecteur ; le libellé est une clé. */
 const MATCH_MODES = [
-  { key: "all" as const, label: "toutes" },
-  { key: "any" as const, label: "au moins une" },
+  { key: "all" as const, label: "app.settings.rules.matchAll" as const },
+  { key: "any" as const, label: "app.settings.rules.matchAny" as const },
 ];
 
 export function RuleEditorBody({
@@ -52,6 +53,15 @@ export function RuleEditorBody({
   const [actions, setActions] = useState<Action[]>(initialActions);
   const [result, setResult] = useState<RuleTestResult | null>(null);
   const t = useT();
+  // Le cadre de la phrase suit le mode : « … toutes LES conditions » contre
+  // « … au moins une DES conditions ». Un cadre unique était fautif dans la
+  // moitié des cas, en français comme en allemand.
+  const [matchAvant, matchApres] = t.parts(
+    mode === "all"
+      ? "app.settings.rules.matchAllPattern"
+      : "app.settings.rules.matchAnyPattern",
+    "mode",
+  );
   const [pending, startTransition] = useTransition();
 
   const submittedName = mode === "all" ? "conditionsAll" : "conditionsAny";
@@ -73,9 +83,12 @@ export function RuleEditorBody({
           }}
         >
           <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", color: "var(--open)" }}>
-            SI
+            {t("app.settings.rules.matchIf")}
           </span>
-          <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>Correspond à</span>
+          {/* La phrase entoure le sélecteur : elle est découpée autour de
+              {mode} pour que chaque langue place ses mots comme elle veut —
+              l'allemand met son verbe à la fin. */}
+          <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>{matchAvant}</span>
           <span
             className="inline-flex items-center"
             style={{ background: "var(--panel)", borderRadius: 7, padding: 2 }}
@@ -94,11 +107,11 @@ export function RuleEditorBody({
                   background: mode === m.key ? "var(--sunk)" : "transparent",
                 }}
               >
-                {m.label}
+                {t(m.label)}
               </button>
             ))}
           </span>
-          <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>les conditions</span>
+          <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>{matchApres}</span>
         </div>
         <div style={{ padding: 13, background: "var(--panel)" }}>
           <input type="hidden" name={emptyName} value="[]" />

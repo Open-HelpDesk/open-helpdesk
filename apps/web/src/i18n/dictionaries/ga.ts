@@ -1597,6 +1597,98 @@ export const ga: Dictionary = {
   "app.settings.rules.typeLongText": "Téacs fada",
   "app.settings.rules.typeFile": "Comhad",
   "app.settings.rules.typeSelectLong": "Liosta anuas",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
+     tables partagées app.status.* / app.priority.* / app.channel.*. */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Liosta",
+  "app.settings.rules.typeMultiSelect": "Ilroghnú",
+  "app.settings.rules.typeDate": "Dáta",
+  "app.settings.rules.typeNumber": "Uimhir",
+  "app.settings.rules.typeCheckbox": "Ticbhosca",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Imeacht",
+  "app.settings.rules.condFieldStatus": "Stádas",
+  "app.settings.rules.condFieldPriority": "Tosaíocht",
+  "app.settings.rules.condFieldChannel": "Cainéal",
+  "app.settings.rules.condFieldType": "Cineál",
+  "app.settings.rules.condFieldSubject": "Ábhar",
+  "app.settings.rules.condFieldTags": "Clibeanna",
+  "app.settings.rules.condFieldAssignee": "Sannaí",
+  "app.settings.rules.condFieldTeam": "Foireann",
+  "app.settings.rules.condFieldOrganization": "Eagraíocht",
+  "app.settings.rules.condFieldHoursCreated": "Uaireanta ó chruthú",
+  "app.settings.rules.condFieldHoursUpdated": "Uaireanta ó nuashonrú",
+
+  /* Opérateurs. Ils se lisent après le nom du champ — « Ábhar ina bhfuil … » —
+     et ≥ / ≤ restent des symboles en irlandais. */
+  "app.settings.rules.opIs": "cothrom le",
+  "app.settings.rules.opIsNot": "neamhionann le",
+  "app.settings.rules.opContains": "ina bhfuil",
+  "app.settings.rules.opIncludes": "a chuimsíonn",
+  "app.settings.rules.opEmpty": "folamh",
+  "app.settings.rules.opNotEmpty": "nach bhfuil folamh",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Ticéad cruthaithe",
+  "app.settings.rules.eventTicketUpdated": "Ticéad nuashonraithe",
+  "app.settings.rules.eventMessageCreated": "Teachtaireacht faighte",
+
+  /* Actions, telles que le menu du builder les nomme : à l'impératif, comme
+     « + Cuir gníomh leis » au-dessus. */
+  "app.settings.rules.actSetStatus": "Socraigh an stádas",
+  "app.settings.rules.actSetPriority": "Socraigh an tosaíocht",
+  "app.settings.rules.actAssignUser": "Sann do ghníomhaire",
+  "app.settings.rules.actAssignTeam": "Sann do fhoireann",
+  "app.settings.rules.actAssignRoundRobin": "Sann don chéad ghníomhaire eile (round-robin)",
+  "app.settings.rules.actAddTags": "Cuir clibeanna leis",
+  "app.settings.rules.actEmailContact": "Seol ríomhphost chuig an teagmhálaí",
+
+  /* Résumé d'une règle, en une ligne de liste. « Má » exige un verbe derrière
+     lui, et {conditions} arrive sous forme nominale : le gabarit irlandais
+     ouvre donc sur « I gcás » (« dans le cas de »). Les bribes sont des noms
+     verbaux, sans majuscule ni point, pour s'enchaîner. */
+  "app.settings.rules.summaryPattern": "I gcás {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "agus",
+  "app.settings.rules.summaryAlways": "i gcónaí",
+  "app.settings.rules.summaryAnyOf": {
+    one: "ceann amháin ar a laghad as {count} coinníoll",
+    two: "ceann amháin ar a laghad as {count} choinníoll",
+    few: "ceann amháin ar a laghad as {count} choinníoll",
+    many: "ceann amháin ar a laghad as {count} gcoinníoll",
+    other: "ceann amháin ar a laghad as {count} coinníoll",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "neamhshannta",
+  "app.settings.rules.summaryAssigned": "sannta",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. « le » est la préposition de durée déjà employée ailleurs
+     dans ce fichier (« le 2 lá »). */
+  "app.settings.rules.summarySince": "le {duration}",
+  "app.settings.rules.summarySetStatus": "aistriú go {value}",
+  "app.settings.rules.summarySetPriority": "tosaíocht {value}",
+  "app.settings.rules.summaryAssignTeam": "sannadh do {team}",
+  "app.settings.rules.summaryAnyTeam": "foireann",
+  "app.settings.rules.summaryAssignUser": "sannadh do ghníomhaire",
+  "app.settings.rules.summaryRoundRobin": "sannadh don chéad ghníomhaire eile",
+  "app.settings.rules.summaryAddTags": "{tags} a chur leis",
+  "app.settings.rules.summaryEmailContact": "ríomhphost a sheoladh chuig an teagmhálaí",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Stádas → {value}",
+  "app.settings.rules.macroSummaryPriority": "Tosaíocht → {value}",
+  "app.settings.rules.macroSummaryTeam": "Foireann → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "foireann",
+  "app.settings.rules.macroSummaryAssign": "Sannadh →",
+  "app.settings.rules.macroSummaryTag": "Clib {tags}",
+  "app.settings.rules.macroSummaryNone": "Gan gníomh",
+
   "app.settings.rules.fieldName": "Ainm an réimse",
   "app.settings.rules.fieldNamePlaceholder": "Uimhir an ordaithe",
   "app.settings.rules.fieldOptions": "Roghanna",
@@ -1824,4 +1916,136 @@ export const ga: Dictionary = {
     "An iomarca iarrachtaí logála isteach. Fan cúpla soicind sula mbainfidh tú triail eile as.",
   "app.login.notAMember": "Ní ball den spás oibre seo an aitheantas seo.",
   "app.login.providerMissing": "Níl an soláthraí seo cumraithe ar an ásc seo.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Le titre du portail dans son propre aperçu (home.title), le nom du
+     workspace et la couleur d'accent viennent d'ailleurs ; les rôles Owner /
+     Admin / Agent / Viewer ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Cumraíocht",
+  "app.onboarding.asideFooter":
+    "Beidh tú in ann na roghanna seo go léir a athrú níos déanaí sna socruithe.",
+  "app.onboarding.stepCounter": "Céim {step} as {total}",
+  "app.onboarding.continue": "Lean ar aghaidh",
+  "app.onboarding.skip": "Léim thar an gcéim seo",
+
+  "app.onboarding.stepIdentity": "Aitheantas",
+  "app.onboarding.stepIdentityHint": "Ainm, lógó, dath",
+  "app.onboarding.stepEmail": "Ríomhphost",
+  "app.onboarding.stepEmailHint": "Seoladh glactha",
+  "app.onboarding.stepTeam": "Foireann",
+  "app.onboarding.stepTeamHint": "Tabhair cuireadh do ghníomhairí",
+  "app.onboarding.stepTest": "Tástáil",
+  "app.onboarding.stepTestHint": "An chéad thicéad",
+
+  "app.onboarding.identityTitle": "Aitheantas do spáis oibre",
+  "app.onboarding.identityBody":
+    "Beidh na míreanna seo le feiceáil ar thairseach do chustaiméirí agus sna ríomhphoist a sheoltar chucu.",
+  "app.onboarding.logoDrop": "Scaoil comhad PNG nó SVG anseo",
+  "app.onboarding.previewSearch": "Cuardaigh alt…",
+  "app.onboarding.previewCaption": "Réamhamharc ar thairseach do chustaiméirí",
+
+  "app.onboarding.emailTitle": "Faigh do ríomhphoist",
+  "app.onboarding.emailBody":
+    "Déantar ticéad go huathoibríoch de gach iarratas a fhaightear ag an seoladh seo.",
+  "app.onboarding.or": "NÓ",
+  "app.onboarding.copy": "Cóipeáil",
+  "app.onboarding.copied": "Cóipeáilte ✓",
+  "app.onboarding.ownAddressTitle": "Ceangail mo sheoladh féin",
+  "app.onboarding.ownAddressBody":
+    "Cuir do sheoladh reatha ({example}) ar aghaidh chuig an seoladh atá tugtha thuas. Cumraíocht mhionsonraithe sna socruithe.",
+  "app.onboarding.forwardLabel": "An seoladh a chuirfear ar aghaidh",
+  "app.onboarding.forwardPlaceholder": "tacaiocht@do-fhearann.ie",
+
+  "app.onboarding.teamTitle": "Tabhair cuireadh do d'fhoireann",
+  "app.onboarding.teamBody":
+    "Tabhair cuireadh do do ghníomhairí anois, nó roinn an nasc cuiridh. Tá suíocháin Viewer saor in aisce.",
+  "app.onboarding.invitePlaceholder": "comhghleacai@comhlacht.ie",
+  "app.onboarding.addRow": "+ Cuir líne leis",
+  "app.onboarding.sendInvites": "Seol na cuirí",
+
+  "app.onboarding.testTitle": "Seol an chéad thicéad",
+  "app.onboarding.testBody":
+    "Seiceáil an slabhra iomlán sula osclóidh tú an tseirbhís do do chustaiméirí.",
+  "app.onboarding.readyTitle": "Tá do spás oibre réidh",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Seol ríomhphost chuig {address} chun ticéad tástála a chruthú.",
+  "app.onboarding.openInbox": "Oscail an bosca isteach",
+
+  "app.onboarding.checklistIdentity": "Aitheantas socraithe",
+  "app.onboarding.checklistEmail": "Seoladh ríomhphoist cumraithe",
+  "app.onboarding.checklistTeam": "Cuireadh tugtha don fhoireann",
+  "app.onboarding.checklistTicket": "An chéad thicéad faighte",
+  "app.onboarding.checklistSla": "Beartas SLA seiceáilte",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
+     « gach ceann / ceann amháin ar a laghad » : l'irlandais est VSO, le verbe
+     passe donc AVANT {mode} et le reste de la phrase le suit. */
+  "app.settings.rules.matchIf": "MÁ",
+  "app.settings.rules.matchAllPattern": "Meaitseálann {mode} de na coinníollacha",
+  "app.settings.rules.matchAnyPattern": "Meaitseálann {mode} de na coinníollacha",
+  "app.settings.rules.matchAll": "gach ceann",
+  "app.settings.rules.matchAny": "ceann amháin ar a laghad",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Plean Free",
+  "app.settings.workspace.planStandard": "Plean Standard",
+  "app.settings.workspace.planPro": "Plean Pro",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Ceist",
+  "app.ticket.typeIncident": "Teagmhas",
+  "app.ticket.typeTask": "Tasc",
+  "app.ticket.typeOther": "Eile",
+
+  /* AG-09 — export CSV des rapports. L'irlandais abrège la seconde par le
+     symbole SI « s », comme « min » et « h » de app.unit.* dans ce fichier. */
+  "app.reports.csvIndicator": "Táscaire",
+  "app.reports.csvCurrentPeriod": "An tréimhse reatha",
+  "app.reports.csvPreviousPeriod": "An tréimhse roimhe",
+  "app.reports.csvCreated": "Ticéid cruthaithe",
+  "app.reports.csvResolved": "Ticéid réitithe",
+  "app.reports.csvMedianFirstReply": "Airmheán an chéad fhreagra (s)",
+  "app.reports.csvMedianResolve": "Airmheán an réitigh (s)",
+  "app.reports.csvSlaCompliance": "Comhlíonadh SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Lá",
+  "app.reports.csvCreatedShort": "Cruthaithe",
+  "app.reports.csvResolvedShort": "Réitithe",
+  "app.reports.csvAgent": "Gníomhaire",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Alt nua",
+  "app.kb.fromTicketSymptomHeading": "Siomptóm",
+  "app.kb.fromTicketSymptomPlaceholder": "[Déan cur síos ar an rud a fheiceann an custaiméir.]",
+  "app.kb.fromTicketSolutionHeading": "Réiteach",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Déan cur síos ar na céimeanna a réitíonn an fhadhb.]",
+  "app.kb.fromTicketMissingRequest": "iarratas bunaidh an chustaiméara",
+  "app.kb.fromTicketMissingAnswer": "freagra an ghníomhaire",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Nós imeachta céim ar chéim",
+  "app.kb.tplProcedureHint": "Sraith céimeanna uimhrithe, agus an toradh a bhfuil súil leis.",
+  "app.kb.tplProcedureTitle": "Conas [an gníomh a dhéanamh]",
+  "app.kb.tplProcedureBody": "Míníonn an alt seo conas [an gníomh a dhéanamh]. Tógfaidh sé thart ar [fad ama].\n\n## Sula dtosaíonn tú\n\n- [An ceart nó an ról atá riachtanach]\n- [An t-eolas ba cheart a bheith ar láimh]\n\n## Céimeanna\n\n1. Oscail [an scáileán cuí].\n2. Cliceáil ar **[an cnaipe]**.\n3. Líon isteach [an réimse], agus deimhnigh ansin.\n\n> Má tharlaíonn [an cás faoi leith], [an rud ba cheart a dhéanamh].\n\n## Toradh\n\n[An rud ba cheart don duine a fheiceáil nuair a bheidh an oibríocht déanta.]\n",
+  "app.kb.tplIncidentLabel": "Réiteach teagmhais",
+  "app.kb.tplIncidentHint": "Siomptóm, cúis, réiteach agus seachaint shealadach.",
+  "app.kb.tplIncidentTitle": "[An siomptóm a tugadh faoi deara]",
+  "app.kb.tplIncidentBody": "## Siomptóm\n\n[An rud a fheiceann an duine, le téacs cruinn na hearráide má tá ceann ann.]\n\n## Cúis\n\n[Cén fáth a dtarlaíonn sé seo.]\n\n## Réiteach\n\n1. [An chéad ghníomh ceartaitheach]\n2. [An dara gníomh ceartaitheach]\n\n## Seachaint go dtí sin\n\n> [An rud is féidir leis an duine a dhéanamh láithreach má tá idirghabháil ó do\n> fhoireann de dhíth ar an réiteach.]\n\n## Má leanann an fhadhb\n\nOscail iarratas agus luaigh [an t-eolas atá úsáideach don diagnóis].\n",
+  "app.kb.tplFaqLabel": "Ceist choitianta",
+  "app.kb.tplFaqHint": "Freagra gearr díreach, agus na sonraí ina dhiaidh.",
+  "app.kb.tplFaqTitle": "[An cheist, mar a chuireann na custaiméirí í]",
+  "app.kb.tplFaqBody": "**Freagra gearr:** [an freagra in aon abairt].\n\n## Go mionsonraithe\n\n[An comhthéacs agus na miondifríochtaí is fiú a bheith ar eolas.]\n\n## Cásanna faoi leith\n\n- **[Cás A]** — [an rud a athraíonn].\n- **[Cás B]** — [an rud a athraíonn].\n\n## Tuilleadh eolais\n\n[Tagairt don alt gaolmhar nó don phróiseas a bhaineann leis.]\n",
+  "app.kb.tplReleaseLabel": "Nóta eisiúna",
+  "app.kb.tplReleaseHint": "Gnéithe nua, feabhsuithe agus ceartúcháin na heisiúna.",
+  "app.kb.tplReleaseTitle": "Cad atá nua i [dáta nó leagan]",
+  "app.kb.tplReleaseBody": "## Gnéithe nua\n\n- **[Ainm na gné]** — [an rud a cheadaíonn sí don úsáideoir].\n\n## Feabhsuithe\n\n- [An rud a éiríonn níos simplí nó níos tapúla.]\n\n## Ceartúcháin\n\n- [An fhadhb a ceartaíodh, mar a bhraith an custaiméir í.]\n\n> Tá na hathruithe seo i bhfeidhm ar do spás oibre cheana féin, ní gá aon rud a\n> dhéanamh ó do thaobh.\n",
 };

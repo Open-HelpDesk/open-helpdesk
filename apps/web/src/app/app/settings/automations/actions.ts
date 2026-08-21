@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { automationRules, db, tickets } from "@openhelpdesk/db";
 import { and, asc, desc, eq, isNull, not } from "drizzle-orm";
 import { evaluateConditions, type Condition, type RuleEvent } from "@openhelpdesk/rules";
-import { ruleSummary } from "@/lib/rule-labels";
+import { actionsSummary } from "@/lib/rule-labels";
 import { getT } from "@/i18n/server";
 import { requireManager } from "../guard";
 
@@ -205,6 +205,6 @@ export async function testRule(payload: {
     return { ok: false, text: t("app.settings.rules.testNoMatch", { ticket: label }) };
   }
 
-  const summary = ruleSummary([], [], actions as never[]).replace(/^Si toujours → /, "");
+  const summary = actionsSummary(t, actions as never[]);
   return { ok: true, text: t("app.settings.rules.testMatch", { ticket: label, summary }) };
 }

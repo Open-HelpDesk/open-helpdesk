@@ -1530,6 +1530,101 @@ export const sk: Dictionary = {
   "app.settings.rules.typeLongText": "Dlhý text",
   "app.settings.rules.typeFile": "Súbor",
   "app.settings.rules.typeSelectLong": "Rozbaľovací zoznam",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
+     tables partagées, celles de l'inbox et de ses filtres. */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Zoznam",
+  "app.settings.rules.typeMultiSelect": "Viacnásobný výber",
+  "app.settings.rules.typeDate": "Dátum",
+  "app.settings.rules.typeNumber": "Číslo",
+  "app.settings.rules.typeCheckbox": "Zaškrtávacie pole",
+
+  /* Champs sur lesquels une condition peut porter. « Assigné » reprend
+     « Riešiteľ », le libellé de la colonne de l'inbox et du panneau de ticket. */
+  "app.settings.rules.condFieldEvent": "Udalosť",
+  "app.settings.rules.condFieldStatus": "Stav",
+  "app.settings.rules.condFieldPriority": "Priorita",
+  "app.settings.rules.condFieldChannel": "Kanál",
+  "app.settings.rules.condFieldType": "Typ",
+  "app.settings.rules.condFieldSubject": "Predmet",
+  "app.settings.rules.condFieldTags": "Značky",
+  "app.settings.rules.condFieldAssignee": "Riešiteľ",
+  "app.settings.rules.condFieldTeam": "Tím",
+  "app.settings.rules.condFieldOrganization": "Organizácia",
+  "app.settings.rules.condFieldHoursCreated": "Hodiny od vytvorenia",
+  "app.settings.rules.condFieldHoursUpdated": "Hodiny od aktualizácie",
+
+  /* Opérateurs. « est vide » / « n'est pas vide » deviennent « bez hodnoty » /
+     « s hodnotou » : un adjectif slovaque s'accorderait avec le champ
+     (« Predmet je prázdny », « Značky sú prázdne »), et le résumé compose ces
+     deux opérateurs avec les douze champs sans connaître leur genre. */
+  "app.settings.rules.opIs": "je",
+  "app.settings.rules.opIsNot": "nie je",
+  "app.settings.rules.opContains": "obsahuje",
+  "app.settings.rules.opIncludes": "zahŕňa",
+  "app.settings.rules.opEmpty": "bez hodnoty",
+  "app.settings.rules.opNotEmpty": "s hodnotou",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Tiket vytvorený",
+  "app.settings.rules.eventTicketUpdated": "Tiket aktualizovaný",
+  "app.settings.rules.eventMessageCreated": "Správa prijatá",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Nastaviť stav",
+  "app.settings.rules.actSetPriority": "Nastaviť prioritu",
+  "app.settings.rules.actAssignUser": "Prideliť agentovi",
+  "app.settings.rules.actAssignTeam": "Prideliť tímu",
+  "app.settings.rules.actAssignRoundRobin": "Prideliť ďalšiemu agentovi (round-robin)",
+  "app.settings.rules.actAddTags": "Pridať značky",
+  "app.settings.rules.actEmailContact": "Odoslať e-mail kontaktu",
+
+  /* Résumé d'une règle, en une ligne de liste. « Keď … → … » reprend le
+     « keď X, tak Y » du sous-titre des automatisations, déjà traduit. Les bribes
+     restent en minuscules et sans point : elles s'enchaînent. */
+  "app.settings.rules.summaryPattern": "Keď {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "a",
+  "app.settings.rules.summaryAlways": "vždy",
+  /* Après la préposition « z », le nom passe au génitif : pluriel à partir de
+     deux (« z 2 podmienok »), singulier pour un et pour les décimaux. */
+  "app.settings.rules.summaryAnyOf": {
+    one: "aspoň jedna z {count} podmienky",
+    few: "aspoň jedna z {count} podmienok",
+    many: "aspoň jedna z {count} podmienky",
+    other: "aspoň jedna z {count} podmienok",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "nepriradené",
+  "app.settings.rules.summaryAssigned": "priradené",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : voir
+     formatDurationTokens, ils ne se traduisent pas. */
+  "app.settings.rules.summarySince": "už {duration}",
+  "app.settings.rules.summarySetStatus": "nastaviť stav na {value}",
+  "app.settings.rules.summarySetPriority": "priorita {value}",
+  /* Le nom d'équipe reste au nominatif après « tímu » (apposition) ; sans nom,
+     {team} reçoit summaryAnyTeam. */
+  "app.settings.rules.summaryAssignTeam": "prideliť tímu {team}",
+  "app.settings.rules.summaryAnyTeam": "bez určenia",
+  "app.settings.rules.summaryAssignUser": "prideliť agentovi",
+  "app.settings.rules.summaryRoundRobin": "prideliť ďalšiemu agentovi",
+  "app.settings.rules.summaryAddTags": "pridať značky {tags}",
+  "app.settings.rules.summaryEmailContact": "odoslať e-mail kontaktu",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Stav → {value}",
+  "app.settings.rules.macroSummaryPriority": "Priorita → {value}",
+  "app.settings.rules.macroSummaryTeam": "Tím → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "bez určenia",
+  "app.settings.rules.macroSummaryAssign": "Prideliť →",
+  "app.settings.rules.macroSummaryTag": "Značky {tags}",
+  "app.settings.rules.macroSummaryNone": "Žiadna akcia",
+
   "app.settings.rules.fieldName": "Názov poľa",
   "app.settings.rules.fieldNamePlaceholder": "Číslo objednávky",
   "app.settings.rules.fieldOptions": "Možnosti",
@@ -1749,4 +1844,134 @@ export const sk: Dictionary = {
     "Príliš mnoho pokusov o prihlásenie. Pred ďalším pokusom počkajte niekoľko sekúnd.",
   "app.login.notAMember": "Táto identita nie je členom tohto pracovného priestoru.",
   "app.login.providerMissing": "Tento poskytovateľ nie je na tejto inštancii nastavený.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Le nom du workspace, la couleur d'accent, le titre du portail dans son
+     propre aperçu et les rôles Owner / Admin / Agent / Viewer viennent
+     d'ailleurs : ils ne sont pas repris ici. */
+
+  "app.onboarding.asideTitle": "Nastavenie",
+  "app.onboarding.asideFooter": "Všetky tieto možnosti môžete neskôr zmeniť v nastaveniach.",
+  "app.onboarding.stepCounter": "Krok {step} z {total}",
+  "app.onboarding.continue": "Pokračovať",
+  "app.onboarding.skip": "Preskočiť tento krok",
+
+  "app.onboarding.stepIdentity": "Identita",
+  "app.onboarding.stepIdentityHint": "Názov, logo, farba",
+  "app.onboarding.stepEmail": "E-mail",
+  "app.onboarding.stepEmailHint": "Adresa na prijímanie",
+  "app.onboarding.stepTeam": "Tím",
+  "app.onboarding.stepTeamHint": "Pozvať agentov",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "Prvý tiket",
+
+  "app.onboarding.identityTitle": "Identita vášho pracovného priestoru",
+  "app.onboarding.identityBody":
+    "Tieto prvky sa zobrazia na vašom klientskom portáli a v e-mailoch odosielaných vašim klientom.",
+  "app.onboarding.logoDrop": "Presuňte sem súbor PNG alebo SVG",
+  "app.onboarding.previewSearch": "Hľadať článok…",
+  "app.onboarding.previewCaption": "Náhľad vášho klientskeho portálu",
+
+  "app.onboarding.emailTitle": "Prijímanie vašich e-mailov",
+  "app.onboarding.emailBody":
+    "Všetky požiadavky prijaté na túto adresu sa automaticky stanú tiketmi.",
+  "app.onboarding.or": "ALEBO",
+  "app.onboarding.copy": "Kopírovať",
+  "app.onboarding.copied": "Skopírované ✓",
+  "app.onboarding.ownAddressTitle": "Pripojiť vlastnú adresu",
+  "app.onboarding.ownAddressBody":
+    "Presmerujte svoju existujúcu adresu ({example}) na adresu uvedenú vyššie. Podrobné nastavenie nájdete v nastaveniach.",
+  "app.onboarding.forwardLabel": "Adresa na presmerovanie",
+  "app.onboarding.forwardPlaceholder": "podpora@vasa-domena.sk",
+
+  "app.onboarding.teamTitle": "Pozvite svoj tím",
+  "app.onboarding.teamBody":
+    "Pozvite svojich agentov teraz alebo zdieľajte pozývací odkaz. Licencie Viewer sú bezplatné.",
+  "app.onboarding.invitePlaceholder": "kolega@firma.sk",
+  "app.onboarding.addRow": "+ Pridať riadok",
+  "app.onboarding.sendInvites": "Odoslať pozvánky",
+
+  "app.onboarding.testTitle": "Odošlite prvý tiket",
+  "app.onboarding.testBody": "Skôr než službu otvoríte klientom, overte celý priebeh.",
+  "app.onboarding.readyTitle": "Váš pracovný priestor je pripravený",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Pošlite e-mail na {address} a vytvorte tak testovací tiket.",
+  "app.onboarding.openInbox": "Otvoriť Doručené",
+
+  "app.onboarding.checklistIdentity": "Identita nastavená",
+  "app.onboarding.checklistEmail": "E-mailová adresa nastavená",
+  "app.onboarding.checklistTeam": "Tím pozvaný",
+  "app.onboarding.checklistTicket": "Prvý tiket prijatý",
+  "app.onboarding.checklistSla": "Politika SLA overená",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase est découpée autour de
+     {mode} ; en slovaque, aucun nom ne peut s'accorder à la fois avec « všetky »
+     (pluriel) et « aspoň jedna » (singulier), le sélecteur passe donc après les
+     deux-points, où les deux choix se lisent tels quels. */
+  "app.settings.rules.matchIf": "KEĎ",
+  "app.settings.rules.matchAllPattern": "Podmienky, ktoré musia platiť: {mode}",
+  "app.settings.rules.matchAnyPattern": "Podmienky, ktoré musia platiť: {mode}",
+  "app.settings.rules.matchAll": "všetky",
+  "app.settings.rules.matchAny": "aspoň jedna",
+
+  /* ST-11 — noms des offres ; « Free », « Standard » et « Pro » ne se
+     traduisent pas. */
+  "app.settings.workspace.planFree": "Plán Free",
+  "app.settings.workspace.planStandard": "Plán Standard",
+  "app.settings.workspace.planPro": "Plán Pro",
+
+  /* Types de ticket (AG-05) : la VALEUR enregistrée en base reste la chaîne
+     française, seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Otázka",
+  "app.ticket.typeIncident": "Incident",
+  "app.ticket.typeTask": "Úloha",
+  "app.ticket.typeOther": "Iné",
+
+  /* AG-09 — export CSV des rapports. « s » est aussi l'abréviation slovaque de
+     la seconde ; les intitulés reprennent ceux des KPI de l'écran. */
+  "app.reports.csvIndicator": "Ukazovateľ",
+  "app.reports.csvCurrentPeriod": "Aktuálne obdobie",
+  "app.reports.csvPreviousPeriod": "Predchádzajúce obdobie",
+  "app.reports.csvCreated": "Vytvorené tikety",
+  "app.reports.csvResolved": "Vyriešené tikety",
+  "app.reports.csvMedianFirstReply": "Medián prvej odpovede (s)",
+  "app.reports.csvMedianResolve": "Medián vyriešenia (s)",
+  "app.reports.csvSlaCompliance": "Dodržiavanie SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Deň",
+  "app.reports.csvCreatedShort": "Vytvorené",
+  "app.reports.csvResolvedShort": "Vyriešené",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Nový článok",
+  "app.kb.fromTicketSymptomHeading": "Príznak",
+  "app.kb.fromTicketSymptomPlaceholder": "[Opíšte, čo klient vidí.]",
+  "app.kb.fromTicketSolutionHeading": "Riešenie",
+  "app.kb.fromTicketSolutionPlaceholder": "[Opíšte postup, ktorý problém vyrieši.]",
+  "app.kb.fromTicketMissingRequest": "pôvodná požiadavka klienta",
+  "app.kb.fromTicketMissingAnswer": "odpoveď agenta",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Postup krok za krokom",
+  "app.kb.tplProcedureHint": "Sled číslovaných krokov s očakávaným výsledkom.",
+  "app.kb.tplProcedureTitle": "Ako [vykonať akciu]",
+  "app.kb.tplProcedureBody": "Tento článok vysvetľuje, ako [vykonať akciu]. Zaberie to približne [trvanie].\n\n## Skôr než začnete\n\n- [Potrebné právo alebo rola]\n- [Informácia, ktorú treba mať pri ruke]\n\n## Kroky\n\n1. Otvorte [príslušnú obrazovku].\n2. Kliknite na **[tlačidlo]**.\n3. Vyplňte [pole] a potvrďte.\n\n> Ak nastane [osobitný prípad], [ako postupovať].\n\n## Výsledok\n\n[Čo má daná osoba vidieť po úspešnom dokončení.]\n",
+  "app.kb.tplIncidentLabel": "Riešenie incidentu",
+  "app.kb.tplIncidentHint": "Príznak, príčina, riešenie a dočasné náhradné riešenie.",
+  "app.kb.tplIncidentTitle": "[Zistený príznak]",
+  "app.kb.tplIncidentBody": "## Príznak\n\n[Čo daná osoba vidí, vrátane presného chybového hlásenia, ak sa nejaké zobrazí.]\n\n## Príčina\n\n[Prečo k tomu dochádza.]\n\n## Riešenie\n\n1. [Prvý krok na nápravu]\n2. [Druhý krok na nápravu]\n\n## Dočasné náhradné riešenie\n\n> [Čo môže daná osoba urobiť hneď, ak riešenie vyžaduje zásah\n> vášho tímu.]\n\n## Ak problém pretrváva\n\nVytvorte požiadavku a uveďte [informácie potrebné na diagnostiku].\n",
+  "app.kb.tplFaqLabel": "Častá otázka",
+  "app.kb.tplFaqHint": "Krátka a priama odpoveď, potom podrobnosti.",
+  "app.kb.tplFaqTitle": "[Otázka tak, ako ju kladú klienti]",
+  "app.kb.tplFaqBody": "**Krátka odpoveď:** [odpoveď v jednej vete].\n\n## Podrobne\n\n[Kontext a užitočné súvislosti.]\n\n## Osobitné prípady\n\n- **[Situácia A]** — [čo sa mení].\n- **[Situácia B]** — [čo sa mení].\n\n## Ďalšie informácie\n\n[Odkaz na súvisiaci článok alebo príslušný postup.]\n",
+  "app.kb.tplReleaseLabel": "Poznámka k vydaniu",
+  "app.kb.tplReleaseHint": "Novinky, vylepšenia a opravy jedného vydania.",
+  "app.kb.tplReleaseTitle": "Novinky vo vydaní [dátum alebo verzia]",
+  "app.kb.tplReleaseBody": "## Novinky\n\n- **[Názov funkcie]** — [čo umožňuje z pohľadu používateľa].\n\n## Vylepšenia\n\n- [Čo sa zjednoduší alebo zrýchli.]\n\n## Opravy\n\n- [Opravený problém, opísaný tak, ako ho zažíval klient.]\n\n> Tieto zmeny sú už aktívne vo vašom pracovnom priestore, z vašej strany nie je\n> potrebná žiadna akcia.\n",
 };

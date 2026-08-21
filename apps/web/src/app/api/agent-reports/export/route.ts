@@ -2,6 +2,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { apiAgent } from "@/lib/session";
 import { getReportData } from "@/lib/reports";
+import { getT } from "@/i18n/server";
 
 function csvCell(value: string | number | null): string {
   if (value === null) return "";
@@ -10,6 +11,7 @@ function csvCell(value: string | number | null): string {
 }
 
 export async function GET(request: NextRequest) {
+  const t = await getT();
   const current = await apiAgent();
   if (!current) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
@@ -20,16 +22,24 @@ export async function GET(request: NextRequest) {
   const data = await getReportData(current.tenant.id, days, team);
 
   const lines: string[] = [];
-  lines.push("Indicateur;Période courante;Période précédente");
   lines.push(
-    ["Tickets créés", data.current.created, data.previous.created].map(csvCell).join(";"),
+    [
+      t("app.reports.csvIndicator"),
+      t("app.reports.csvCurrentPeriod"),
+      t("app.reports.csvPreviousPeriod"),
+    ]
+      .map(csvCell)
+      .join(";"),
   );
   lines.push(
-    ["Tickets résolus", data.current.resolved, data.previous.resolved].map(csvCell).join(";"),
+    [t("app.reports.csvCreated"), data.current.created, data.previous.created].map(csvCell).join(";"),
+  );
+  lines.push(
+    [t("app.reports.csvResolved"), data.current.resolved, data.previous.resolved].map(csvCell).join(";"),
   );
   lines.push(
     [
-      "1ʳᵉ réponse médiane (s)",
+      t("app.reports.csvMedianFirstReply"),
       data.current.medianFirstReplySec,
       data.previous.medianFirstReplySec,
     ]
@@ -37,23 +47,36 @@ export async function GET(request: NextRequest) {
       .join(";"),
   );
   lines.push(
-    ["Résolution médiane (s)", data.current.medianResolveSec, data.previous.medianResolveSec]
+    [t("app.reports.csvMedianResolve"), data.current.medianResolveSec, data.previous.medianResolveSec]
       .map(csvCell)
       .join(";"),
   );
   lines.push(
-    ["Conformité SLA (%)", data.current.slaCompliancePct, data.previous.slaCompliancePct]
+    [t("app.reports.csvSlaCompliance"), data.current.slaCompliancePct, data.previous.slaCompliancePct]
       .map(csvCell)
       .join(";"),
   );
-  lines.push(["CSAT (%)", data.csatCurrent, data.csatPrevious].map(csvCell).join(";"));
+  lines.push([t("app.reports.csvCsat"), data.csatCurrent, data.csatPrevious].map(csvCell).join(";"));
   lines.push("");
-  lines.push("Jour;Créés;Résolus");
+  lines.push(
+    [t("app.reports.csvDay"), t("app.reports.csvCreatedShort"), t("app.reports.csvResolvedShort")]
+      .map(csvCell)
+      .join(";"),
+  );
   for (const d of data.daily) {
     lines.push([d.day, d.created, d.resolved].map(csvCell).join(";"));
   }
   lines.push("");
-  lines.push("Agent;Résolus;1ʳᵉ réponse médiane (s);CSAT (%)");
+  lines.push(
+    [
+      t("app.reports.csvAgent"),
+      t("app.reports.csvResolvedShort"),
+      t("app.reports.csvMedianFirstReply"),
+      t("app.reports.csvCsat"),
+    ]
+      .map(csvCell)
+      .join(";"),
+  );
   for (const a of data.agents) {
     lines.push([a.name, a.resolved, a.medianFirstReplySec, a.csatPct].map(csvCell).join(";"));
   }

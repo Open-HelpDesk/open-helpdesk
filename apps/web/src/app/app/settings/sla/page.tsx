@@ -9,7 +9,7 @@ import {
   zonedTimeToInstant,
   type BusinessCalendar,
 } from "@openhelpdesk/rules";
-import { formatDurationFr, ruleSummary } from "@/lib/rule-labels";
+import { conditionsSummary, formatDurationTokens } from "@/lib/rule-labels";
 import { PRIORITY_COLORS, PRIORITY_KEYS } from "@/lib/format";
 import { PageHeader, PageShell, SaveBar } from "@/components/settings-page";
 import { Drawer } from "@/components/settings-overlays";
@@ -54,7 +54,7 @@ function TargetInput({ name, value }: { name: string; value?: number }) {
   return (
     <input
       name={name}
-      defaultValue={formatDurationFr(value)}
+      defaultValue={formatDurationTokens(value)}
       placeholder="—"
       className="tabular-nums"
       style={{
@@ -289,9 +289,7 @@ export default async function SlaPage({
               conditions: p.isDefault
                 ? t("app.settings.sla.allRemainingTickets")
                 : ((p.conditions as never[]) ?? []).length > 0
-                  ? ruleSummary((p.conditions as never[]) ?? [], [], [])
-                      .replace(/^Si /, "")
-                      .replace(" → aucune action", "")
+                  ? conditionsSummary(t, (p.conditions as never[]) ?? [], [])
                   : t("app.settings.sla.allTickets"),
               calendar: p.businessHoursId
                 ? (calendarById.get(p.businessHoursId)?.name ?? "—")
@@ -373,7 +371,7 @@ export default async function SlaPage({
                     <form action={deleteSlaPolicy} className="mt-2">
                       <input type="hidden" name="policyId" value={selected.id} />
                       <button
-                        className="rounded-md border px-3 font-medium"
+                        className="ohd-hover-edge-ink rounded-md border px-3 font-medium"
                         style={{
                           height: 32,
                           fontSize: 12.5,
@@ -562,6 +560,7 @@ export default async function SlaPage({
               const active = selectedCalendar?.id === c.id;
               return (
                 <Link
+                  className="ohd-hover-edge-ink"
                   key={c.id}
                   href={`/app/settings/sla?tab=hours&cal=${c.id}`}
                   style={{
@@ -827,7 +826,7 @@ export default async function SlaPage({
               <form action={deleteCalendar} className="mt-2">
                 <input type="hidden" name="calendarId" value={selectedCalendar.id} />
                 <button
-                  className="rounded-md border px-3 font-medium"
+                  className="ohd-hover-edge-ink rounded-md border px-3 font-medium"
                   style={{
                     height: 30,
                     fontSize: 12.5,

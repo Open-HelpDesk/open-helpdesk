@@ -18,7 +18,13 @@ import { deleteMacro, saveMacro } from "./actions";
 
 type MacroRow = typeof macros.$inferSelect;
 
-/** Ordre des catégories du design ; les autres suivent, alphabétiquement. */
+/**
+ * Ordre des catégories du design ; les autres suivent, alphabétiquement.
+ *
+ * Ces trois valeurs ne sont PAS des libellés à traduire : ce sont les noms de
+ * catégorie que le tenant a saisis, comparés tels quels. Les traduire ferait
+ * échouer la correspondance et renverrait tout le monde au tri alphabétique.
+ */
 const CATEGORY_ORDER = ["Réponses courantes", "Escalade", "Facturation"];
 
 /**
@@ -64,7 +70,9 @@ export default async function MacrosPage({
     const ia = CATEGORY_ORDER.indexOf(a);
     const ib = CATEGORY_ORDER.indexOf(b);
     if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
-    return a.localeCompare(b, "fr-FR");
+    // Le tri suit la langue du workspace : la collation française ne classe
+    // correctement ni le cyrillique, ni les diacritiques du tchèque.
+    return a.localeCompare(b, t.locale.tag);
   });
 
   return (
@@ -135,7 +143,7 @@ export default async function MacrosPage({
                   return (
                     <div
                       key={m.id}
-                      className="st-row flex items-center border-b"
+                      className="ohd-hover flex items-center border-b"
                       style={{ padding: "12px 15px", gap: 13, borderColor: "var(--line-2)" }}
                     >
                       <div className="min-w-0 flex-1">
@@ -148,7 +156,7 @@ export default async function MacrosPage({
                           <MacroForm macro={m} teams={teamRows} t={t} />
                         </Drawer>
                         <p className="truncate" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                          {macroActionsSummary(actions, teamNameById)}
+                          {macroActionsSummary(t, actions, teamNameById)}
                         </p>
                       </div>
                       <StatusPill tone={m.availability === "team" ? "open" : "closed"}>
@@ -296,7 +304,7 @@ function MacroForm({
           <button
             type="submit"
             formAction={deleteMacro}
-            className="rounded-md border font-medium"
+            className="ohd-hover-edge-ink rounded-md border font-medium"
             style={{
               height: 34,
               padding: "0 14px",

@@ -1589,6 +1589,97 @@ export const mt: Dictionary = {
   "app.settings.rules.typeLongText": "Test twil",
   "app.settings.rules.typeFile": "Fajl",
   "app.settings.rules.typeSelectLong": "Lista li tinżel",
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Il vivait dans lib/rule-labels.ts, en français : l'écran des automatisations
+     restait français quelle que soit la langue du workspace. Les statuts,
+     priorités et canaux ne sont PAS repris ici — ils viennent des tables
+     partagées de lib/format.ts, celles de l'inbox et de ses filtres. */
+
+  /* Types de champs personnalisés (ST-04) ; « Test » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Lista",
+  "app.settings.rules.typeMultiSelect": "Għażla multipla",
+  "app.settings.rules.typeDate": "Data",
+  "app.settings.rules.typeNumber": "Numru",
+  "app.settings.rules.typeCheckbox": "Kaxxa tal-immarkar",
+
+  /* Champs sur lesquels une condition peut porter ; ils s'accordent avec les
+     tables app.status.*, app.priority.* et app.channel.*. */
+  "app.settings.rules.condFieldEvent": "Avveniment",
+  "app.settings.rules.condFieldStatus": "Status",
+  "app.settings.rules.condFieldPriority": "Prijorità",
+  "app.settings.rules.condFieldChannel": "Kanal",
+  "app.settings.rules.condFieldType": "Tip",
+  "app.settings.rules.condFieldSubject": "Suġġett",
+  "app.settings.rules.condFieldTags": "Tags",
+  "app.settings.rules.condFieldAssignee": "Assenjat",
+  "app.settings.rules.condFieldTeam": "Tim",
+  "app.settings.rules.condFieldOrganization": "Organizzazzjoni",
+  "app.settings.rules.condFieldHoursCreated": "Sigħat mill-ħolqien",
+  "app.settings.rules.condFieldHoursUpdated": "Sigħat mill-aġġornament",
+
+  /* Opérateurs ; les deux derniers restent des symboles. Le maltais accorde au
+     masculin, comme le reste du dictionnaire (« vojt », « mhux assenjat »). */
+  "app.settings.rules.opIs": "huwa",
+  "app.settings.rules.opIsNot": "mhuwiex",
+  "app.settings.rules.opContains": "fih",
+  "app.settings.rules.opIncludes": "jinkludi",
+  "app.settings.rules.opEmpty": "huwa vojt",
+  "app.settings.rules.opNotEmpty": "mhuwiex vojt",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Ticket maħluq",
+  "app.settings.rules.eventTicketUpdated": "Ticket aġġornat",
+  "app.settings.rules.eventMessageCreated": "Messaġġ irċevut",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Issettja l-istatus",
+  "app.settings.rules.actSetPriority": "Issettja l-prijorità",
+  "app.settings.rules.actAssignUser": "Assenja lil aġent",
+  "app.settings.rules.actAssignTeam": "Assenja lil tim",
+  "app.settings.rules.actAssignRoundRobin": "Assenja lill-aġent li jmiss (round-robin)",
+  "app.settings.rules.actAddTags": "Żid tags",
+  "app.settings.rules.actEmailContact": "Ibgħat email lill-kuntatt",
+
+  /* Résumé d'une règle, en une ligne de liste : les bribes s'enchaînent dans le
+     gabarit, sans majuscule initiale ni point final. Le maltais garde l'ordre
+     « jekk … → … » du français. */
+  "app.settings.rules.summaryPattern": "Jekk {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "u",
+  "app.settings.rules.summaryAlways": "dejjem",
+  "app.settings.rules.summaryAnyOf": {
+    one: "mill-inqas waħda minn {count} kundizzjoni",
+    two: "mill-inqas waħda minn {count} kundizzjonijiet",
+    few: "mill-inqas waħda minn {count} kundizzjonijiet",
+    many: "mill-inqas waħda minn {count} kundizzjoni",
+    other: "mill-inqas waħda minn {count} kundizzjoni",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "mhux assenjat",
+  "app.settings.rules.summaryAssigned": "assenjat",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. « ilu » est le tour maltais de l'ancienneté. */
+  "app.settings.rules.summarySince": "ilu {duration}",
+  "app.settings.rules.summarySetStatus": "ibdel għal {value}",
+  "app.settings.rules.summarySetPriority": "prijorità {value}",
+  "app.settings.rules.summaryAssignTeam": "assenja lil {team}",
+  "app.settings.rules.summaryAnyTeam": "tim",
+  "app.settings.rules.summaryAssignUser": "assenja lil aġent",
+  "app.settings.rules.summaryRoundRobin": "assenja lill-aġent li jmiss",
+  "app.settings.rules.summaryAddTags": "żid {tags}",
+  "app.settings.rules.summaryEmailContact": "ibgħat email lill-kuntatt",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Status → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prijorità → {value}",
+  "app.settings.rules.macroSummaryTeam": "Tim → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "tim",
+  "app.settings.rules.macroSummaryAssign": "Assenja →",
+  "app.settings.rules.macroSummaryTag": "Tag {tags}",
+  "app.settings.rules.macroSummaryNone": "L-ebda azzjoni",
+
   "app.settings.rules.fieldName": "Isem tal-kamp",
   "app.settings.rules.fieldNamePlaceholder": "Numru tal-ordni",
   "app.settings.rules.fieldOptions": "Opzjonijiet",
@@ -1816,4 +1907,136 @@ export const mt: Dictionary = {
     "Wisq tentattivi ta' dħul. Stenna ftit sekondi qabel terġa' tipprova.",
   "app.login.notAMember": "Din l-identità mhijiex membru ta' dan l-ispazju tax-xogħol.",
   "app.login.providerMissing": "Dan il-fornitur mhux ikkonfigurat fuq din l-istanza.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Tout cet écran était en français dans le code. Quatre libellés viennent
+     d'ailleurs : le titre du portail dans son propre aperçu (home.title), le nom
+     du workspace et la couleur d'accent (les mêmes contrôles qu'en ST-01), et
+     les rôles Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Konfigurazzjoni",
+  "app.onboarding.asideFooter":
+    "Tista' tibdel dawn l-għażliet kollha aktar tard fl-Impostazzjonijiet.",
+  "app.onboarding.stepCounter": "Pass {step} minn {total}",
+  "app.onboarding.continue": "Kompli",
+  "app.onboarding.skip": "Aqbeż dan il-pass",
+
+  "app.onboarding.stepIdentity": "Identità",
+  "app.onboarding.stepIdentityHint": "Isem, logo, kulur",
+  "app.onboarding.stepEmail": "Email",
+  "app.onboarding.stepEmailHint": "Indirizz tal-irċevuta",
+  "app.onboarding.stepTeam": "Tim",
+  "app.onboarding.stepTeamHint": "Stieden l-aġenti",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "L-ewwel ticket",
+
+  "app.onboarding.identityTitle": "Identità tal-ispazju tax-xogħol tiegħek",
+  "app.onboarding.identityBody":
+    "Dawn jidhru fuq il-portal tal-klijent tiegħek u fl-emails mibgħuta lill-klijenti tiegħek.",
+  "app.onboarding.logoDrop": "Waqqa' fajl PNG jew SVG",
+  "app.onboarding.previewSearch": "Fittex artiklu…",
+  "app.onboarding.previewCaption": "Previżjoni tal-portal tal-klijent tiegħek",
+
+  "app.onboarding.emailTitle": "Irċievi l-emails tiegħek",
+  "app.onboarding.emailBody":
+    "Kull talba li tasal f'dan l-indirizz issir ticket awtomatikament.",
+  "app.onboarding.or": "JEW",
+  "app.onboarding.copy": "Ikkopja",
+  "app.onboarding.copied": "Ikkupjat ✓",
+  "app.onboarding.ownAddressTitle": "Qabbad l-indirizz tiegħi stess",
+  "app.onboarding.ownAddressBody":
+    "Ittrasferixxi l-indirizz eżistenti tiegħek ({example}) lejn l-indirizz fornut hawn fuq. Konfigurazzjoni dettaljata fl-impostazzjonijiet.",
+  "app.onboarding.forwardLabel": "Indirizz tat-trasferiment",
+  "app.onboarding.forwardPlaceholder": "support@dominju-tieghek.com.mt",
+
+  "app.onboarding.teamTitle": "Stieden it-tim tiegħek",
+  "app.onboarding.teamBody":
+    "Stieden l-aġenti tiegħek issa, jew aqsam il-link tal-istedina. Il-postijiet Viewer huma bla ħlas.",
+  "app.onboarding.invitePlaceholder": "kollega@kumpanija.com.mt",
+  "app.onboarding.addRow": "+ Żid linja",
+  "app.onboarding.sendInvites": "Ibgħat l-istediniet",
+
+  "app.onboarding.testTitle": "Ibgħat l-ewwel ticket",
+  "app.onboarding.testBody":
+    "Ivverifika l-katina sħiħa qabel tiftaħ is-servizz lill-klijenti tiegħek.",
+  "app.onboarding.readyTitle": "L-ispazju tax-xogħol tiegħek huwa lest",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Ibgħat email lil {address} biex toħloq ticket ta' test.",
+  "app.onboarding.openInbox": "Iftaħ l-inbox",
+
+  "app.onboarding.checklistIdentity": "Identità definita",
+  "app.onboarding.checklistEmail": "Indirizz email ikkonfigurat",
+  "app.onboarding.checklistTeam": "Tim mistieden",
+  "app.onboarding.checklistTicket": "L-ewwel ticket irċevut",
+  "app.onboarding.checklistSla": "Politika SLA verifikata",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase est découpée autour de
+     {mode} : le maltais met son quantificateur après le verbe, et referme la
+     phrase sur « mill-kundizzjonijiet ». */
+  "app.settings.rules.matchIf": "JEKK",
+  "app.settings.rules.matchAllPattern": "Trid taqbel {mode} mill-kundizzjonijiet",
+  "app.settings.rules.matchAnyPattern": "Trid taqbel {mode} mill-kundizzjonijiet",
+  "app.settings.rules.matchAll": "kull waħda",
+  "app.settings.rules.matchAny": "mill-inqas waħda",
+
+  /* ST-11 — noms des offres ; « Free », « Standard » et « Pro » ne se
+     traduisent pas. */
+  "app.settings.workspace.planFree": "Pjan Free",
+  "app.settings.workspace.planStandard": "Pjan Standard",
+  "app.settings.workspace.planPro": "Pjan Pro",
+
+  /* Types de ticket (AG-05) : la valeur en base reste française, seul
+     l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Mistoqsija",
+  "app.ticket.typeIncident": "Inċident",
+  "app.ticket.typeTask": "Kompitu",
+  "app.ticket.typeOther": "Oħra",
+
+  /* AG-09 — entêtes de l'export CSV des rapports ; « s » devient « sek ». */
+  "app.reports.csvIndicator": "Indikatur",
+  "app.reports.csvCurrentPeriod": "Perjodu attwali",
+  "app.reports.csvPreviousPeriod": "Perjodu preċedenti",
+  "app.reports.csvCreated": "Tickets maħluqa",
+  "app.reports.csvResolved": "Tickets solvuti",
+  "app.reports.csvMedianFirstReply": "Medjan tal-1 tweġiba (sek)",
+  "app.reports.csvMedianResolve": "Medjan tar-riżoluzzjoni (sek)",
+  "app.reports.csvSlaCompliance": "Konformità mal-SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Jum",
+  "app.reports.csvCreatedShort": "Maħluqa",
+  "app.reports.csvResolvedShort": "Solvuti",
+  "app.reports.csvAgent": "Aġent",
+
+  /* AG-10 — conversion d'une demande résolue en article ; les « ## » restent. */
+  "app.kb.fromTicketDefaultTitle": "Artiklu ġdid",
+  "app.kb.fromTicketSymptomHeading": "Sintomu",
+  "app.kb.fromTicketSymptomPlaceholder": "[Iddeskrivi dak li jara l-klijent.]",
+  "app.kb.fromTicketSolutionHeading": "Soluzzjoni",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Iddeskrivi l-passi li jsolvu l-problema.]",
+  "app.kb.fromTicketMissingRequest": "it-talba oriġinali tal-klijent",
+  "app.kb.fromTicketMissingAnswer": "it-tweġiba tal-aġent",
+
+  /* Modèles de départ d'un article (AG-10) : markdown, le texte entre crochets
+     est à remplacer par l'auteur. */
+  "app.kb.tplProcedureLabel": "Proċedura pass pass",
+  "app.kb.tplProcedureHint": "Sekwenza ta' passi nnumerati, bir-riżultat mistenni.",
+  "app.kb.tplProcedureTitle": "Kif [tagħmel l-azzjoni]",
+  "app.kb.tplProcedureBody": "Dan l-artiklu jispjega kif [tagħmel l-azzjoni]. Ħu madwar [tul ta' żmien].\n\n## Qabel tibda\n\n- [Permess jew rwol meħtieġ]\n- [Informazzjoni li għandek bżonn f'idejk]\n\n## Passi\n\n1. Iftaħ [l-iskrin ikkonċernat].\n2. Agħfas **[il-buttuna]**.\n3. Imla [l-kamp], u mbagħad ikkonferma.\n\n> Jekk tinqala' [is-sitwazzjoni partikolari], [x'għandek tagħmel].\n\n## Riżultat\n\n[Dak li l-persuna għandha tara meta l-operazzjoni tirnexxi.]\n",
+  "app.kb.tplIncidentLabel": "Riżoluzzjoni ta' inċident",
+  "app.kb.tplIncidentHint": "Sintomu, kawża, soluzzjoni u rimedju temporanju.",
+  "app.kb.tplIncidentTitle": "[Sintomu osservat]",
+  "app.kb.tplIncidentBody": "## Sintomu\n\n[Dak li tara l-persuna, bil-messaġġ ta' żball eżatt jekk ikun hemm.]\n\n## Kawża\n\n[Għaliex jiġri dan.]\n\n## Soluzzjoni\n\n1. [L-ewwel azzjoni korrettiva]\n2. [It-tieni azzjoni korrettiva]\n\n## Rimedju sadanittant\n\n> [Dak li l-persuna tista' tagħmel minnufih jekk is-soluzzjoni teħtieġ\n> l-intervent tat-tim tiegħek.]\n\n## Jekk il-problema tibqa'\n\nIftaħ talba u speċifika [l-informazzjoni utli għad-dijanjożi].\n",
+  "app.kb.tplFaqLabel": "Mistoqsija frekwenti",
+  "app.kb.tplFaqHint": "Tweġiba qasira u diretta, u mbagħad id-dettalji.",
+  "app.kb.tplFaqTitle": "[Il-mistoqsija, kif jagħmluha l-klijenti]",
+  "app.kb.tplFaqBody": "**Tweġiba qasira:** [it-tweġiba fi sentenza waħda].\n\n## Fid-dettall\n\n[Il-kuntest u l-isfumaturi utli.]\n\n## Każijiet partikolari\n\n- **[Sitwazzjoni A]** — [dak li jinbidel].\n- **[Sitwazzjoni B]** — [dak li jinbidel].\n\n## Aktar informazzjoni\n\n[Rabta mal-artiklu relatat jew mal-proċess assoċjat.]\n",
+  "app.kb.tplReleaseLabel": "Nota tal-verżjoni",
+  "app.kb.tplReleaseHint": "Funzjonijiet ġodda, titjib u korrezzjonijiet ta' rilaxx.",
+  "app.kb.tplReleaseTitle": "X'hemm ġdid f'[data jew verżjoni]",
+  "app.kb.tplReleaseBody": "## Funzjonijiet ġodda\n\n- **[Isem tal-funzjoni]** — [x'tippermetti li jagħmel l-utent].\n\n## Titjib\n\n- [Dak li jsir aktar sempliċi jew aktar mgħaġġel.]\n\n## Korrezzjonijiet\n\n- [Il-problema li ssewwiet, imfissra kif kien qed jgħaddi minnha l-klijent.]\n\n> Dawn il-bidliet diġà huma attivi fl-ispazju tax-xogħol tiegħek, ma hemmx\n> bżonn tagħmel xejn.\n",
+
 };

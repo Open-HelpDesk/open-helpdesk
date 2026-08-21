@@ -1456,6 +1456,99 @@ export const hr: Dictionary = {
   "app.settings.rules.typeLongText": "Dugi tekst",
   "app.settings.rules.typeFile": "Datoteka",
   "app.settings.rules.typeSelectLong": "Padajući popis",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) : les tables et
+     les phrases assemblées de lib/rule-labels.ts. Statuts, priorités et canaux
+     n'y sont pas — ils viennent de app.status.* / app.priority.* /
+     app.channel.*, plus bas dans ce fichier. --- */
+
+  /* Types de champs personnalisés (ST-04) ; « Tekst » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Popis",
+  "app.settings.rules.typeMultiSelect": "Višestruki odabir",
+  "app.settings.rules.typeDate": "Datum",
+  "app.settings.rules.typeNumber": "Broj",
+  "app.settings.rules.typeCheckbox": "Potvrdni okvir",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Događaj",
+  "app.settings.rules.condFieldStatus": "Status",
+  "app.settings.rules.condFieldPriority": "Prioritet",
+  "app.settings.rules.condFieldChannel": "Kanal",
+  "app.settings.rules.condFieldType": "Vrsta",
+  "app.settings.rules.condFieldSubject": "Predmet",
+  "app.settings.rules.condFieldTags": "Oznake",
+  "app.settings.rules.condFieldAssignee": "Dodijeljeno",
+  "app.settings.rules.condFieldTeam": "Tim",
+  "app.settings.rules.condFieldOrganization": "Organizacija",
+  "app.settings.rules.condFieldHoursCreated": "Sati od kreiranja",
+  "app.settings.rules.condFieldHoursUpdated": "Sati od ažuriranja",
+
+  /* Opérateurs. « Vide » et « non vide » passent par un groupe prépositionnel,
+     invariable : le croate accorderait son adjectif au genre du champ, et
+     « Organizacija je prazno » serait faux. « uključuju » est au pluriel, seul
+     « Oznake » porte cet opérateur (OPERATORS_BY_FIELD). */
+  "app.settings.rules.opIs": "je",
+  "app.settings.rules.opIsNot": "nije",
+  "app.settings.rules.opContains": "sadrži",
+  "app.settings.rules.opIncludes": "uključuju",
+  "app.settings.rules.opEmpty": "bez vrijednosti",
+  "app.settings.rules.opNotEmpty": "s vrijednošću",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Tiket kreiran",
+  "app.settings.rules.eventTicketUpdated": "Tiket ažuriran",
+  "app.settings.rules.eventMessageCreated": "Poruka primljena",
+
+  /* Actions, telles que le menu du builder les nomme — impératif, comme le
+     reste des commandes de ce fichier. */
+  "app.settings.rules.actSetStatus": "Postavi status",
+  "app.settings.rules.actSetPriority": "Postavi prioritet",
+  "app.settings.rules.actAssignUser": "Dodijeli agentu",
+  "app.settings.rules.actAssignTeam": "Dodijeli timu",
+  "app.settings.rules.actAssignRoundRobin": "Dodijeli sljedećem agentu (round-robin)",
+  "app.settings.rules.actAddTags": "Dodaj oznake",
+  "app.settings.rules.actEmailContact": "Pošalji e-poštu kontaktu",
+
+  /* Résumé d'une règle, en une ligne de liste : le croate garde l'ordre
+     « ako … → … », et les bribes s'enchaînent sans majuscule ni point. */
+  "app.settings.rules.summaryPattern": "Ako {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "i",
+  "app.settings.rules.summaryAlways": "uvijek",
+  /* « uvjet » a le même génitif au singulier et au pluriel : les trois formes
+     coïncident, mais le croate les exige toutes les trois. */
+  "app.settings.rules.summaryAnyOf": {
+    one: "barem jedan od {count} uvjeta",
+    few: "barem jedan od {count} uvjeta",
+    other: "barem jedan od {count} uvjeta",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "nedodijeljeno",
+  "app.settings.rules.summaryAssigned": "dodijeljeno",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. */
+  "app.settings.rules.summarySince": "već {duration}",
+  "app.settings.rules.summarySetStatus": "prebaci u {value}",
+  "app.settings.rules.summarySetPriority": "prioritet {value}",
+  /* {team} vaut un nom d'équipe, ou summaryAnyTeam quand il est inconnu :
+     « bez naziva » complète « dodijeli timu … » sans le répéter. */
+  "app.settings.rules.summaryAssignTeam": "dodijeli timu {team}",
+  "app.settings.rules.summaryAnyTeam": "bez naziva",
+  "app.settings.rules.summaryAssignUser": "dodijeli agentu",
+  "app.settings.rules.summaryRoundRobin": "dodijeli sljedećem agentu",
+  "app.settings.rules.summaryAddTags": "dodaj oznake {tags}",
+  "app.settings.rules.summaryEmailContact": "pošalji e-poštu kontaktu",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Status → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioritet → {value}",
+  "app.settings.rules.macroSummaryTeam": "Tim → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "bez naziva",
+  "app.settings.rules.macroSummaryAssign": "Dodijeli →",
+  "app.settings.rules.macroSummaryTag": "Oznake {tags}",
+  "app.settings.rules.macroSummaryNone": "Nema radnje",
   "app.settings.rules.fieldName": "Naziv polja",
   "app.settings.rules.fieldNamePlaceholder": "Broj narudžbe",
   "app.settings.rules.fieldOptions": "Opcije",
@@ -1672,4 +1765,135 @@ export const hr: Dictionary = {
     "Previše pokušaja prijave. Pričekajte nekoliko sekundi prije novog pokušaja.",
   "app.login.notAMember": "Ovaj identitet nije član ovog radnog prostora.",
   "app.login.providerMissing": "Ovaj davatelj usluge nije postavljen na ovoj instanci.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Quatre libellés de cet écran viennent d'ailleurs : le titre du portail dans
+     son propre aperçu (home.title), le nom du workspace et la couleur d'accent
+     (les contrôles de ST-01), et les rôles Owner / Admin / Agent / Viewer, qui
+     ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Postavljanje",
+  "app.onboarding.asideFooter": "Sve ovo možete kasnije promijeniti u postavkama.",
+  "app.onboarding.stepCounter": "Korak {step} od {total}",
+  "app.onboarding.continue": "Nastavi",
+  "app.onboarding.skip": "Preskoči ovaj korak",
+
+  "app.onboarding.stepIdentity": "Identitet",
+  "app.onboarding.stepIdentityHint": "Naziv, logotip, boja",
+  "app.onboarding.stepEmail": "E-pošta",
+  "app.onboarding.stepEmailHint": "Adresa za primanje",
+  "app.onboarding.stepTeam": "Tim",
+  "app.onboarding.stepTeamHint": "Pozivanje agenata",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "Prvi tiket",
+
+  "app.onboarding.identityTitle": "Identitet vašeg radnog prostora",
+  "app.onboarding.identityBody":
+    "Ovi će se elementi pojaviti na vašem klijentskom portalu i u porukama e-pošte koje se šalju vašim klijentima.",
+  "app.onboarding.logoDrop": "Povucite datoteku PNG ili SVG",
+  "app.onboarding.previewSearch": "Traži članak…",
+  "app.onboarding.previewCaption": "Pregled vašeg klijentskog portala",
+
+  "app.onboarding.emailTitle": "Primajte svoju e-poštu",
+  "app.onboarding.emailBody":
+    "Svi zahtjevi primljeni na ovu adresu automatski postaju tiketi.",
+  "app.onboarding.or": "ILI",
+  "app.onboarding.copy": "Kopiraj",
+  "app.onboarding.copied": "Kopirano ✓",
+  "app.onboarding.ownAddressTitle": "Povežite vlastitu adresu",
+  "app.onboarding.ownAddressBody":
+    "Preusmjerite svoju postojeću adresu ({example}) na adresu navedenu iznad. Detaljna konfiguracija nalazi se u postavkama.",
+  "app.onboarding.forwardLabel": "Adresa za preusmjeravanje",
+  "app.onboarding.forwardPlaceholder": "podrska@vasa-domena.hr",
+
+  "app.onboarding.teamTitle": "Pozovite svoj tim",
+  "app.onboarding.teamBody":
+    "Pozovite svoje agente sada ili podijelite vezu za pozivnicu. Mjesta za ulogu Viewer besplatna su.",
+  "app.onboarding.invitePlaceholder": "kolega@firma.hr",
+  "app.onboarding.addRow": "+ Dodaj redak",
+  "app.onboarding.sendInvites": "Pošalji pozivnice",
+
+  "app.onboarding.testTitle": "Pošaljite prvi tiket",
+  "app.onboarding.testBody":
+    "Provjerite cijeli tok prije nego što uslugu otvorite svojim klijentima.",
+  "app.onboarding.readyTitle": "Vaš radni prostor je spreman",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Pošaljite e-poštu na {address} da kreirate testni tiket.",
+  "app.onboarding.openInbox": "Otvori ulazni sandučić",
+
+  "app.onboarding.checklistIdentity": "Identitet je postavljen",
+  "app.onboarding.checklistEmail": "Adresa e-pošte je postavljena",
+  "app.onboarding.checklistTeam": "Tim je pozvan",
+  "app.onboarding.checklistTicket": "Prvi tiket je primljen",
+  "app.onboarding.checklistSla": "SLA politika je provjerena",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. Le croate ne peut pas accorder un
+     « uvjeti » figé avec « svi » ET « barem jedan » : le nom reste dans la
+     phrase et le sélecteur passe à la fin, en quantifieur nu. */
+  "app.settings.rules.matchIf": "AKO",
+  "app.settings.rules.matchAllPattern": "Uvjeti koji moraju biti ispunjeni: {mode}",
+  "app.settings.rules.matchAnyPattern": "Uvjeti koji moraju biti ispunjeni: {mode}",
+  "app.settings.rules.matchAll": "svi",
+  "app.settings.rules.matchAny": "barem jedan",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit ; seul « plan » est du texte, et le croate le place après. */
+  "app.settings.workspace.planFree": "Free plan",
+  "app.settings.workspace.planStandard": "Standard plan",
+  "app.settings.workspace.planPro": "Pro plan",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française : seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Pitanje",
+  "app.ticket.typeIncident": "Incident",
+  "app.ticket.typeTask": "Zadatak",
+  "app.ticket.typeOther": "Ostalo",
+
+  /* AG-09 — export CSV des rapports. « s » est déjà l'abréviation des secondes
+     ailleurs dans ce fichier (app.ticket.draftSavedSeconds). */
+  "app.reports.csvIndicator": "Pokazatelj",
+  "app.reports.csvCurrentPeriod": "Tekuće razdoblje",
+  "app.reports.csvPreviousPeriod": "Prethodno razdoblje",
+  "app.reports.csvCreated": "Kreirani tiketi",
+  "app.reports.csvResolved": "Riješeni tiketi",
+  "app.reports.csvMedianFirstReply": "Medijan 1. odgovora (s)",
+  "app.reports.csvMedianResolve": "Medijan rješavanja (s)",
+  "app.reports.csvSlaCompliance": "SLA usklađenost (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Dan",
+  "app.reports.csvCreatedShort": "Kreirani",
+  "app.reports.csvResolvedShort": "Riješeni",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Novi članak",
+  "app.kb.fromTicketSymptomHeading": "Simptom",
+  "app.kb.fromTicketSymptomPlaceholder": "[Opišite što klijent primjećuje.]",
+  "app.kb.fromTicketSolutionHeading": "Rješenje",
+  "app.kb.fromTicketSolutionPlaceholder": "[Opišite postupak koji rješava problem.]",
+  "app.kb.fromTicketMissingRequest": "početni zahtjev klijenta",
+  "app.kb.fromTicketMissingAnswer": "odgovor agenta",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Postupak korak po korak",
+  "app.kb.tplProcedureHint": "Niz numeriranih koraka s očekivanim rezultatom.",
+  "app.kb.tplProcedureTitle": "Kako [obaviti radnju]",
+  "app.kb.tplProcedureBody": "Ovaj članak objašnjava kako [obaviti radnju]. Računajte na približno [trajanje].\n\n## Prije početka\n\n- [Potrebno pravo ili uloga]\n- [Podatak koji treba imati pri ruci]\n\n## Koraci\n\n1. Otvorite [odgovarajući zaslon].\n2. Kliknite **[gumb]**.\n3. Ispunite [polje] i potvrdite.\n\n> Ako se pojavi [poseban slučaj], [kako postupiti].\n\n## Rezultat\n\n[Što osoba treba vidjeti nakon uspješno završenog postupka.]\n",
+  "app.kb.tplIncidentLabel": "Rješavanje incidenta",
+  "app.kb.tplIncidentHint": "Simptom, uzrok, rješenje i privremeno zaobilazno rješenje.",
+  "app.kb.tplIncidentTitle": "[Opaženi simptom]",
+  "app.kb.tplIncidentBody": "## Simptom\n\n[Što osoba primjećuje, uz točnu poruku o pogrešci ako postoji.]\n\n## Uzrok\n\n[Zašto se to događa.]\n\n## Rješenje\n\n1. [Prva korektivna radnja]\n2. [Druga korektivna radnja]\n\n## Zaobilazno rješenje u međuvremenu\n\n> [Što osoba može učiniti odmah ako rješenje zahtijeva\n> intervenciju vašeg tima.]\n\n## Ako problem potraje\n\nOtvorite zahtjev i navedite [podatke korisne za dijagnostiku].\n",
+  "app.kb.tplFaqLabel": "Često pitanje",
+  "app.kb.tplFaqHint": "Kratak i jasan odgovor, a zatim pojašnjenja.",
+  "app.kb.tplFaqTitle": "[Pitanje, onako kako ga klijenti postavljaju]",
+  "app.kb.tplFaqBody": "**Kratak odgovor:** [odgovor u jednoj rečenici].\n\n## Podrobnije\n\n[Kontekst i korisne nijanse.]\n\n## Posebni slučajevi\n\n- **[Situacija A]** — [što se mijenja].\n- **[Situacija B]** — [što se mijenja].\n\n## Više o tome\n\n[Uputa na srodni članak ili povezani postupak.]\n",
+  "app.kb.tplReleaseLabel": "Napomene o izdanju",
+  "app.kb.tplReleaseHint": "Novosti, poboljšanja i ispravci jednog izdanja.",
+  "app.kb.tplReleaseTitle": "Novosti u izdanju [datum ili verzija]",
+  "app.kb.tplReleaseBody": "## Novosti\n\n- **[Naziv funkcionalnosti]** — [što omogućuje korisniku].\n\n## Poboljšanja\n\n- [Što postaje jednostavnije ili brže.]\n\n## Ispravci\n\n- [Ispravljeni problem, opisan onako kako ga je klijent doživio.]\n\n> Te su promjene već aktivne u vašem radnom prostoru i ne zahtijevaju nikakvu\n> radnju s vaše strane.\n",
 };

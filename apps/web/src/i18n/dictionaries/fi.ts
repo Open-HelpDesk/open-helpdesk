@@ -1224,6 +1224,95 @@ export const fi: Dictionary = {
   "app.settings.rules.typeLongText": "Pitkä teksti",
   "app.settings.rules.typeFile": "Tiedosto",
   "app.settings.rules.typeSelectLong": "Pudotusvalikko",
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) : les statuts,
+     priorités et canaux n'y sont pas — ils viennent de app.status.* /
+     app.priority.* / app.channel.*, plus bas dans ce fichier. --- */
+
+  /* Types de champs personnalisés (ST-04) ; « Teksti » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Luettelo",
+  "app.settings.rules.typeMultiSelect": "Monivalinta",
+  "app.settings.rules.typeDate": "Päivämäärä",
+  "app.settings.rules.typeNumber": "Numero",
+  "app.settings.rules.typeCheckbox": "Valintaruutu",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Tapahtuma",
+  "app.settings.rules.condFieldStatus": "Tila",
+  "app.settings.rules.condFieldPriority": "Prioriteetti",
+  "app.settings.rules.condFieldChannel": "Kanava",
+  "app.settings.rules.condFieldType": "Tyyppi",
+  "app.settings.rules.condFieldSubject": "Aihe",
+  "app.settings.rules.condFieldTags": "Tunnisteet",
+  "app.settings.rules.condFieldAssignee": "Käsittelijä",
+  "app.settings.rules.condFieldTeam": "Tiimi",
+  "app.settings.rules.condFieldOrganization": "Organisaatio",
+  "app.settings.rules.condFieldHoursCreated": "Tunteja luonnista",
+  "app.settings.rules.condFieldHoursUpdated": "Tunteja päivityksestä",
+
+  /* Opérateurs. « sisältävät » est au pluriel : seul le champ Tunnisteet porte
+     cet opérateur (OPERATORS_BY_FIELD), et le résumé s'accorde avec lui. */
+  "app.settings.rules.opIs": "on",
+  "app.settings.rules.opIsNot": "ei ole",
+  "app.settings.rules.opContains": "sisältää",
+  "app.settings.rules.opIncludes": "sisältävät",
+  "app.settings.rules.opEmpty": "on tyhjä",
+  "app.settings.rules.opNotEmpty": "ei ole tyhjä",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Pyyntö luotu",
+  "app.settings.rules.eventTicketUpdated": "Pyyntö päivitetty",
+  "app.settings.rules.eventMessageCreated": "Viesti saapunut",
+
+  /* Actions, telles que le menu du builder les nomme — à l'impératif, comme le
+     reste des commandes de ce fichier. */
+  "app.settings.rules.actSetStatus": "Aseta tila",
+  "app.settings.rules.actSetPriority": "Aseta prioriteetti",
+  "app.settings.rules.actAssignUser": "Osoita agentille",
+  "app.settings.rules.actAssignTeam": "Osoita tiimille",
+  "app.settings.rules.actAssignRoundRobin": "Osoita seuraavalle agentille (round-robin)",
+  "app.settings.rules.actAddTags": "Lisää tunnisteita",
+  "app.settings.rules.actEmailContact": "Lähetä sähköposti yhteyshenkilölle",
+
+  /* Résumé d'une règle, en une ligne de liste : le finnois garde l'ordre
+     « jos … → … », et les bribes s'enchaînent sans majuscule ni point. */
+  "app.settings.rules.summaryPattern": "Jos {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "ja",
+  "app.settings.rules.summaryAlways": "aina",
+  /* Après un numéral, le finnois met son substantif à l'élatif singulier : les
+     deux formes coïncident, mais la langue les exige toutes les deux. */
+  "app.settings.rules.summaryAnyOf": {
+    one: "vähintään yksi {count} ehdosta",
+    other: "vähintään yksi {count} ehdosta",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "ei käsittelijää",
+  "app.settings.rules.summaryAssigned": "on käsittelijä",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas, et le finnois pose son mot APRÈS la durée. */
+  "app.settings.rules.summarySince": "{duration} ajan",
+  "app.settings.rules.summarySetStatus": "siirrä tilaan {value}",
+  "app.settings.rules.summarySetPriority": "aseta prioriteetiksi {value}",
+  /* {team} vaut un nom d'équipe, ou summaryAnyTeam quand il reste inconnu : le
+     deux-points évite d'avoir à décliner le nom propre. */
+  "app.settings.rules.summaryAssignTeam": "osoita tiimille: {team}",
+  "app.settings.rules.summaryAnyTeam": "jokin tiimi",
+  "app.settings.rules.summaryAssignUser": "osoita agentille",
+  "app.settings.rules.summaryRoundRobin": "osoita seuraavalle agentille",
+  "app.settings.rules.summaryAddTags": "lisää {tags}",
+  "app.settings.rules.summaryEmailContact": "lähetä sähköposti yhteyshenkilölle",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Tila → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioriteetti → {value}",
+  "app.settings.rules.macroSummaryTeam": "Tiimi → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "mikä tahansa",
+  "app.settings.rules.macroSummaryAssign": "Osoita →",
+  "app.settings.rules.macroSummaryTag": "Tunniste {tags}",
+  "app.settings.rules.macroSummaryNone": "Ei toimintoja",
+
   "app.settings.rules.fieldName": "Kentän nimi",
   "app.settings.rules.fieldNamePlaceholder": "Tilausnumero",
   "app.settings.rules.fieldOptions": "Vaihtoehdot",
@@ -1376,4 +1465,134 @@ export const fi: Dictionary = {
   "app.login.rateLimited": "Liian monta kirjautumisyritystä. Odota hetki ennen uutta yritystä.",
   "app.login.notAMember": "Tämä henkilöllisyys ei kuulu tähän työtilaan.",
   "app.login.providerMissing": "Tätä tarjoajaa ei ole määritetty tässä instanssissa.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Le titre du portail dans son propre aperçu (home.title), le nom du
+     workspace et la couleur d'accent viennent d'ailleurs ; les rôles Owner /
+     Admin / Agent / Viewer ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Käyttöönotto",
+  "app.onboarding.asideFooter":
+    "Voit muuttaa kaikkia näitä valintoja myöhemmin asetuksissa.",
+  "app.onboarding.stepCounter": "Vaihe {step} / {total}",
+  "app.onboarding.continue": "Jatka",
+  "app.onboarding.skip": "Ohita tämä vaihe",
+
+  "app.onboarding.stepIdentity": "Identiteetti",
+  "app.onboarding.stepIdentityHint": "Nimi, logo, väri",
+  "app.onboarding.stepEmail": "Sähköposti",
+  "app.onboarding.stepEmailHint": "Vastaanotto-osoite",
+  "app.onboarding.stepTeam": "Tiimi",
+  "app.onboarding.stepTeamHint": "Kutsu agentit",
+  "app.onboarding.stepTest": "Testi",
+  "app.onboarding.stepTestHint": "Ensimmäinen pyyntö",
+
+  "app.onboarding.identityTitle": "Työtilasi identiteetti",
+  "app.onboarding.identityBody":
+    "Nämä näkyvät asiakasportaalissasi ja asiakkaillesi lähetetyissä sähköposteissa.",
+  "app.onboarding.logoDrop": "Pudota PNG- tai SVG-tiedosto",
+  "app.onboarding.previewSearch": "Hae artikkelia…",
+  "app.onboarding.previewCaption": "Asiakasportaalisi esikatselu",
+
+  "app.onboarding.emailTitle": "Sähköpostien vastaanotto",
+  "app.onboarding.emailBody":
+    "Kaikista tähän osoitteeseen saapuvista viesteistä tulee automaattisesti pyyntöjä.",
+  "app.onboarding.or": "TAI",
+  "app.onboarding.copy": "Kopioi",
+  "app.onboarding.copied": "Kopioitu ✓",
+  "app.onboarding.ownAddressTitle": "Yhdistä oma osoitteeni",
+  "app.onboarding.ownAddressBody":
+    "Välitä nykyiseen osoitteeseesi ({example}) saapuvat viestit yllä olevaan osoitteeseen. Tarkempi määritys löytyy asetuksista.",
+  "app.onboarding.forwardLabel": "Välitettävä osoite",
+  "app.onboarding.forwardPlaceholder": "tuki@yrityksesi.fi",
+
+  "app.onboarding.teamTitle": "Kutsu tiimisi",
+  "app.onboarding.teamBody":
+    "Kutsu agenttisi nyt tai jaa kutsulinkki. Viewer-paikat ovat maksuttomia.",
+  "app.onboarding.invitePlaceholder": "kollega@yritys.fi",
+  "app.onboarding.addRow": "+ Lisää rivi",
+  "app.onboarding.sendInvites": "Lähetä kutsut",
+
+  "app.onboarding.testTitle": "Lähetä ensimmäinen pyyntö",
+  "app.onboarding.testBody":
+    "Testaa koko ketju, ennen kuin avaat palvelun asiakkaillesi.",
+  "app.onboarding.readyTitle": "Työtilasi on valmis",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Luo testipyyntö lähettämällä sähköposti osoitteeseen {address}.",
+  "app.onboarding.openInbox": "Avaa saapuneet",
+
+  "app.onboarding.checklistIdentity": "Identiteetti määritetty",
+  "app.onboarding.checklistEmail": "Sähköpostiosoite määritetty",
+  "app.onboarding.checklistTeam": "Tiimi kutsuttu",
+  "app.onboarding.checklistTicket": "Ensimmäinen pyyntö vastaanotettu",
+  "app.onboarding.checklistSla": "SLA-käytäntö tarkistettu",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. Le sélecteur ouvre la phrase en
+     finnois : « JOS [jokainen | vähintään yksi] ehdoista täsmää ». */
+  "app.settings.rules.matchIf": "JOS",
+  "app.settings.rules.matchAllPattern": "{mode} ehdoista täsmää",
+  "app.settings.rules.matchAnyPattern": "{mode} ehdoista täsmää",
+  "app.settings.rules.matchAll": "jokainen",
+  "app.settings.rules.matchAny": "vähintään yksi",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Free-paketti",
+  "app.settings.workspace.planStandard": "Standard-paketti",
+  "app.settings.workspace.planPro": "Pro-paketti",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Kysymys",
+  "app.ticket.typeIncident": "Häiriö",
+  "app.ticket.typeTask": "Tehtävä",
+  "app.ticket.typeOther": "Muu",
+
+  /* AG-09 — export CSV des rapports. */
+  "app.reports.csvIndicator": "Mittari",
+  "app.reports.csvCurrentPeriod": "Nykyinen jakso",
+  "app.reports.csvPreviousPeriod": "Edellinen jakso",
+  "app.reports.csvCreated": "Luodut pyynnöt",
+  "app.reports.csvResolved": "Ratkaistut pyynnöt",
+  "app.reports.csvMedianFirstReply": "1. vastauksen mediaani (s)",
+  "app.reports.csvMedianResolve": "Ratkaisun mediaani (s)",
+  "app.reports.csvSlaCompliance": "SLA-toteuma (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Päivä",
+  "app.reports.csvCreatedShort": "Luodut",
+  "app.reports.csvResolvedShort": "Ratkaistut",
+  "app.reports.csvAgent": "Agentti",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Uusi artikkeli",
+  "app.kb.fromTicketSymptomHeading": "Oire",
+  "app.kb.fromTicketSymptomPlaceholder": "[Kuvaa, mitä asiakas havaitsee.]",
+  "app.kb.fromTicketSolutionHeading": "Ratkaisu",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Kuvaa toimenpiteet, jotka ratkaisevat ongelman.]",
+  "app.kb.fromTicketMissingRequest": "asiakkaan alkuperäinen pyyntö",
+  "app.kb.fromTicketMissingAnswer": "agentin vastaus",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Vaiheittainen ohje",
+  "app.kb.tplProcedureHint": "Numeroidut vaiheet ja odotettu lopputulos.",
+  "app.kb.tplProcedureTitle": "Miten [teet toimenpiteen]",
+  "app.kb.tplProcedureBody": "Tässä artikkelissa kerrotaan, miten [teet toimenpiteen]. Varaa aikaa noin [kesto].\n\n## Ennen aloittamista\n\n- [Tarvittava oikeus tai rooli]\n- [Tieto, joka on hyvä olla valmiina]\n\n## Vaiheet\n\n1. Avaa [kyseinen näkymä].\n2. Napsauta **[painiketta]**.\n3. Täytä [kenttä] ja vahvista.\n\n> Jos [erityistapaus] tulee vastaan, [miten silloin toimitaan].\n\n## Lopputulos\n\n[Mitä käyttäjän pitää nähdä, kun toimenpide on onnistunut.]\n",
+  "app.kb.tplIncidentLabel": "Häiriön ratkaisu",
+  "app.kb.tplIncidentHint": "Oire, syy, ratkaisu ja väliaikainen kiertotie.",
+  "app.kb.tplIncidentTitle": "[Havaittu oire]",
+  "app.kb.tplIncidentBody": "## Oire\n\n[Mitä käyttäjä havaitsee, ja tarkka virheilmoitus, jos sellainen on.]\n\n## Syy\n\n[Miksi näin tapahtuu.]\n\n## Ratkaisu\n\n1. [Ensimmäinen korjaava toimenpide]\n2. [Toinen korjaava toimenpide]\n\n## Väliaikainen kiertotie\n\n> [Mitä käyttäjä voi tehdä heti, jos ratkaisu vaatii\n> tiimisi toimia.]\n\n## Jos ongelma jatkuu\n\nLähetä pyyntö ja kerro [diagnosointia auttavat tiedot].\n",
+  "app.kb.tplFaqLabel": "Usein kysytty kysymys",
+  "app.kb.tplFaqHint": "Lyhyt ja suora vastaus, sitten tarkennukset.",
+  "app.kb.tplFaqTitle": "[Kysymys sellaisena kuin asiakkaat sen esittävät]",
+  "app.kb.tplFaqBody": "**Lyhyt vastaus:** [vastaus yhdellä lauseella].\n\n## Tarkemmin\n\n[Taustat ja hyödylliset vivahteet.]\n\n## Erityistapaukset\n\n- **[Tilanne A]** — [mikä muuttuu].\n- **[Tilanne B]** — [mikä muuttuu].\n\n## Lisätietoja\n\n[Viittaus aiheeseen liittyvään artikkeliin tai siihen kuuluvaan prosessiin.]\n",
+  "app.kb.tplReleaseLabel": "Julkaisutiedot",
+  "app.kb.tplReleaseHint": "Julkaisun uudet ominaisuudet, parannukset ja korjaukset.",
+  "app.kb.tplReleaseTitle": "Uutta versiossa [päivämäärä tai versio]",
+  "app.kb.tplReleaseBody": "## Uudet ominaisuudet\n\n- **[Ominaisuuden nimi]** — [mitä se mahdollistaa käyttäjän näkökulmasta].\n\n## Parannukset\n\n- [Mikä helpottuu tai nopeutuu.]\n\n## Korjaukset\n\n- [Korjattu ongelma, kuvattuna niin kuin asiakas sen koki.]\n\n> Muutokset ovat jo käytössä työtilassasi, eivätkä ne vaadi sinulta\n> toimenpiteitä.\n",
 };

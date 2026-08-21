@@ -113,7 +113,7 @@ export async function signInContact(page: Page, email: string): Promise<void> {
  * Bascule un interrupteur de ST-09 et enregistre. `on` = état voulu.
  *
  * La case elle-même est masquée par le composant Toggle
- * (`.st-toggle input { opacity: 0; width: 0; height: 0 }`) : elle mesure 0×0 et
+ * (`.ohd-toggle input { opacity: 0; width: 0; height: 0 }`) : elle mesure 0×0 et
  * refuse le clic, même en `force`. C'est le curseur visible qu'il faut viser.
  */
 export async function setPortalToggle(
@@ -125,7 +125,7 @@ export async function setPortalToggle(
   const box = page.locator(`input[name="${name}"]`);
   await expect(box).toHaveCount(1);
   if ((await box.isChecked()) !== on) {
-    await page.locator(`label.st-toggle:has(input[name="${name}"])`).click();
+    await page.locator(`label.ohd-toggle:has(input[name="${name}"]) .ohd-knob`).click();
     await expect(box).toBeChecked({ checked: on });
   }
   await page.locator('form:has(input[name="portalEnabled"]) button[type=submit]').click();

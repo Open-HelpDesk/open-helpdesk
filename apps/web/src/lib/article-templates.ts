@@ -1,120 +1,59 @@
 /**
  * Modèles de départ d'un article (base de connaissances).
  *
- * Une page blanche est le premier obstacle à la rédaction : ces quatre structures
- * couvrent l'essentiel de ce qu'écrit une équipe support, et sont écrites dans le
- * format que le portail sait rendre. Le texte entre crochets est à remplacer.
+ * Une page blanche est le premier obstacle à la rédaction : ces quatre
+ * structures couvrent l'essentiel de ce qu'écrit une équipe support, et sont
+ * écrites dans le format que le portail sait rendre. Le texte entre crochets est
+ * à remplacer par l'auteur.
+ *
+ * Les textes étaient ici, en français : une équipe support bulgare se voyait donc
+ * proposer des squelettes d'articles français. Ce fichier ne porte plus que des
+ * CLÉS et le glyphe décoratif de la carte de choix, qui n'est pas du texte.
  */
+import type { MessageKey } from "@/i18n/dictionaries/fr";
 
 export type ArticleTemplate = {
   id: string;
-  label: string;
-  hint: string;
-  /** Glyphe décoratif de la carte de choix. */
+  labelKey: MessageKey;
+  hintKey: MessageKey;
+  /** Glyphe décoratif de la carte de choix — pas du texte, pas traduit. */
   glyph: string;
-  title: string;
-  body: string;
+  titleKey: MessageKey;
+  bodyKey: MessageKey;
 };
 
 export const ARTICLE_TEMPLATES: ArticleTemplate[] = [
   {
     id: "procedure",
-    label: "Procédure pas-à-pas",
-    hint: "Une suite d'étapes numérotées, avec le résultat attendu.",
+    labelKey: "app.kb.tplProcedureLabel",
+    hintKey: "app.kb.tplProcedureHint",
     glyph: "1.",
-    title: "Comment [faire l'action]",
-    body: `Cet article explique comment [faire l'action]. Comptez environ [durée].
-
-## Avant de commencer
-
-- [Droit ou rôle nécessaire]
-- [Information à avoir sous la main]
-
-## Étapes
-
-1. Ouvrez [l'écran concerné].
-2. Cliquez sur **[le bouton]**.
-3. Renseignez [le champ], puis validez.
-
-> Si [le cas particulier] se présente, [la conduite à tenir].
-
-## Résultat
-
-[Ce que la personne doit voir une fois l'opération réussie.]
-`,
+    titleKey: "app.kb.tplProcedureTitle",
+    bodyKey: "app.kb.tplProcedureBody",
   },
   {
     id: "incident",
-    label: "Résolution d'incident",
-    hint: "Symptôme, cause, solution et contournement provisoire.",
+    labelKey: "app.kb.tplIncidentLabel",
+    hintKey: "app.kb.tplIncidentHint",
     glyph: "⚠",
-    title: "[Symptôme observé]",
-    body: `## Symptôme
-
-[Ce que la personne constate, avec le message d'erreur exact s'il y en a un.]
-
-## Cause
-
-[Pourquoi cela se produit.]
-
-## Solution
-
-1. [Première action corrective]
-2. [Deuxième action corrective]
-
-## Contournement en attendant
-
-> [Ce que la personne peut faire tout de suite si la solution demande une
-> intervention de votre équipe.]
-
-## Si le problème persiste
-
-Ouvrez une demande en précisant [les informations utiles au diagnostic].
-`,
+    titleKey: "app.kb.tplIncidentTitle",
+    bodyKey: "app.kb.tplIncidentBody",
   },
   {
     id: "faq",
-    label: "Question fréquente",
-    hint: "Une réponse courte et directe, puis les précisions.",
+    labelKey: "app.kb.tplFaqLabel",
+    hintKey: "app.kb.tplFaqHint",
     glyph: "?",
-    title: "[La question, telle que les clients la posent]",
-    body: `**Réponse courte :** [la réponse en une phrase].
-
-## En détail
-
-[Le contexte et les nuances utiles.]
-
-## Cas particuliers
-
-- **[Situation A]** — [ce qui change].
-- **[Situation B]** — [ce qui change].
-
-## Pour aller plus loin
-
-[Renvoi vers l'article voisin ou la démarche associée.]
-`,
+    titleKey: "app.kb.tplFaqTitle",
+    bodyKey: "app.kb.tplFaqBody",
   },
   {
     id: "release",
-    label: "Note de version",
-    hint: "Nouveautés, améliorations et corrections d'une livraison.",
+    labelKey: "app.kb.tplReleaseLabel",
+    hintKey: "app.kb.tplReleaseHint",
     glyph: "✦",
-    title: "Nouveautés du [date ou version]",
-    body: `## Nouveautés
-
-- **[Nom de la fonctionnalité]** — [ce qu'elle permet, côté utilisateur].
-
-## Améliorations
-
-- [Ce qui devient plus simple ou plus rapide.]
-
-## Corrections
-
-- [Le problème corrigé, formulé comme le client le vivait.]
-
-> Ces changements sont déjà actifs sur votre espace, aucune action de votre part
-> n'est nécessaire.
-`,
+    titleKey: "app.kb.tplReleaseTitle",
+    bodyKey: "app.kb.tplReleaseBody",
   },
 ];
 

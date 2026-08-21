@@ -16,6 +16,7 @@ compilation :
 | Une forme de pluriel absente d'une langue qui en compte quatre | Le polonais choisit `few` ou `many` quand il le doit |
 | Un contrôle dessiné mais inerte | Le champ du logo est un vrai `input[type=file]`, et le fichier déposé s'affiche |
 | Deux statuts traduits par le même mot | Aucun libellé en double dans un jeu, sur 24 langues |
+| Un libellé écrit en dur dans un composant | Aucun texte accentué hors du dictionnaire |
 
 ## Avant de lancer
 
@@ -60,6 +61,7 @@ binaire à télécharger.
 | `branding` | Dépôt du logo et du favicon, affichage dans les deux shells, isolation entre tenants |
 | `i18n` | Bascule allemand/polonais/français, séparateurs de milliers, sélection de pluriel, contenu du tenant non traduit |
 | `i18n-source` | Tables de pluriel et jeux de vocabulaire des 24 dictionnaires — **sans navigateur** |
+| `i18n-source-francais` | Aucun texte français ne vit hors de `i18n/` — **sans navigateur** |
 
 ## Les contrôles statiques
 

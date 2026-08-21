@@ -1224,6 +1224,98 @@ export const nb: Dictionary = {
   "app.settings.rules.typeLongText": "Lang tekst",
   "app.settings.rules.typeFile": "Fil",
   "app.settings.rules.typeSelectLong": "Nedtrekksliste",
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Il vivait en français dans lib/rule-labels.ts. Statuts, priorités et
+     canaux n'y sont pas : ils viennent des clés app.status.* / app.priority.* /
+     app.channel.*, plus bas, et les libellés condField* s'accordent avec elles. */
+
+  /* Types de champs personnalisés (ST-04) ; « Tekst » est typeText, au-dessus.
+     Les trois mots repris de fieldsEmpty : « liste », « tekst », « dato ». */
+  "app.settings.rules.typeSelect": "Liste",
+  "app.settings.rules.typeMultiSelect": "Flervalg",
+  "app.settings.rules.typeDate": "Dato",
+  "app.settings.rules.typeNumber": "Tall",
+  "app.settings.rules.typeCheckbox": "Avkrysningsboks",
+
+  /* Champs sur lesquels une condition peut porter. Chaque libellé reprend le
+     mot déjà employé ailleurs : « Hendelse » de dev.colEvent, « Emne » de
+     previewSubject, « Tagger » de tickets.tags, « Tildelt » de
+     tickets.assignee, « Team » comme partout. */
+  "app.settings.rules.condFieldEvent": "Hendelse",
+  "app.settings.rules.condFieldStatus": "Status",
+  "app.settings.rules.condFieldPriority": "Prioritet",
+  "app.settings.rules.condFieldChannel": "Kanal",
+  "app.settings.rules.condFieldType": "Type",
+  "app.settings.rules.condFieldSubject": "Emne",
+  "app.settings.rules.condFieldTags": "Tagger",
+  "app.settings.rules.condFieldAssignee": "Tildelt",
+  "app.settings.rules.condFieldTeam": "Team",
+  "app.settings.rules.condFieldOrganization": "Organisasjon",
+  "app.settings.rules.condFieldHoursCreated": "Timer siden opprettelsen",
+  "app.settings.rules.condFieldHoursUpdated": "Timer siden oppdateringen",
+
+  /* Opérateurs. Les deux derniers restent des symboles : le norvégien les lit
+     comme le français. */
+  "app.settings.rules.opIs": "er",
+  "app.settings.rules.opIsNot": "er ikke",
+  "app.settings.rules.opContains": "inneholder",
+  "app.settings.rules.opIncludes": "omfatter",
+  "app.settings.rules.opEmpty": "er tom",
+  "app.settings.rules.opNotEmpty": "er ikke tom",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs, dans l'ordre de ruleHintTrigger — opprettelse,
+     oppdatering, mottatt melding. */
+  "app.settings.rules.eventTicketCreated": "Henvendelse opprettet",
+  "app.settings.rules.eventTicketUpdated": "Henvendelse oppdatert",
+  "app.settings.rules.eventMessageCreated": "Melding mottatt",
+
+  /* Actions, telles que le menu du builder les nomme : impératif, comme les
+     autres boutons du fichier (« Tildel », « Legg til i skjemaet »). */
+  "app.settings.rules.actSetStatus": "Sett status",
+  "app.settings.rules.actSetPriority": "Sett prioritet",
+  "app.settings.rules.actAssignUser": "Tildel til en agent",
+  "app.settings.rules.actAssignTeam": "Tildel til et team",
+  "app.settings.rules.actAssignRoundRobin": "Tildel til neste agent (round-robin)",
+  "app.settings.rules.actAddTags": "Legg til tagger",
+  "app.settings.rules.actEmailContact": "Send en e-post til kontakten",
+
+  /* Résumé d'une règle, en une ligne de liste. Le norvégien construit sa
+     subordonnée comme le français : « hvis … → … », le gabarit tient tel quel.
+     Les bribes restent en minuscules et sans point : elles s'enchaînent. */
+  "app.settings.rules.summaryPattern": "Hvis {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "og",
+  "app.settings.rules.summaryAlways": "alltid",
+  "app.settings.rules.summaryAnyOf": { one: "minst én av {count} betingelse", other: "minst én av {count} betingelser" },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "ikke tildelt",
+  "app.settings.rules.summaryAssigned": "tildelt",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. « i » est la préposition de durée du norvégien — « siden »
+     ne se construit pas avec une durée nue, et la bribe se recolle à celle qui
+     précède : « status = Venter i 2 j ». */
+  "app.settings.rules.summarySince": "i {duration}",
+  "app.settings.rules.summarySetStatus": "sett til {value}",
+  "app.settings.rules.summarySetPriority": "prioritet {value}",
+  "app.settings.rules.summaryAssignTeam": "tildel til {team}",
+  "app.settings.rules.summaryAnyTeam": "et team",
+  "app.settings.rules.summaryAssignUser": "tildel til en agent",
+  "app.settings.rules.summaryRoundRobin": "tildel til neste agent",
+  "app.settings.rules.summaryAddTags": "legg til {tags}",
+  "app.settings.rules.summaryEmailContact": "send en e-post til kontakten",
+
+  /* Résumé des actions d'une macro (ST-06) : celles-ci commencent une ligne,
+     donc majuscule initiale — journalNoAction reste en minuscules, lui. */
+  "app.settings.rules.macroSummaryStatus": "Status → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioritet → {value}",
+  "app.settings.rules.macroSummaryTeam": "Team → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "team",
+  "app.settings.rules.macroSummaryAssign": "Tildel →",
+  "app.settings.rules.macroSummaryTag": "Tagg {tags}",
+  "app.settings.rules.macroSummaryNone": "Ingen handling",
+
   "app.settings.rules.fieldName": "Navn på feltet",
   "app.settings.rules.fieldNamePlaceholder": "Ordrenummer",
   "app.settings.rules.fieldOptions": "Alternativer",
@@ -1376,4 +1468,143 @@ export const nb: Dictionary = {
   "app.login.rateLimited": "For mange innloggingsforsøk. Vent noen sekunder før du prøver igjen.",
   "app.login.notAMember": "Denne identiteten er ikke medlem av dette arbeidsområdet.",
   "app.login.providerMissing": "Denne leverandøren er ikke konfigurert på denne instansen.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Quatre libellés viennent d'ailleurs : le titre du portail dans son propre
+     aperçu (home.title), le nom du workspace et la couleur d'accent (ST-01), et
+     les rôles Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Oppsett",
+  "app.onboarding.asideFooter":
+    "Du kan endre alt dette senere under Innstillinger.",
+  "app.onboarding.stepCounter": "Trinn {step} av {total}",
+  "app.onboarding.continue": "Fortsett",
+  "app.onboarding.skip": "Hopp over dette trinnet",
+
+  "app.onboarding.stepIdentity": "Identitet",
+  "app.onboarding.stepIdentityHint": "Navn, logo, farge",
+  "app.onboarding.stepEmail": "E-post",
+  "app.onboarding.stepEmailHint": "Mottaksadresse",
+  "app.onboarding.stepTeam": "Team",
+  "app.onboarding.stepTeamHint": "Inviter agentene",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "Første henvendelse",
+
+  "app.onboarding.identityTitle": "Identiteten til arbeidsområdet ditt",
+  "app.onboarding.identityBody":
+    "Dette vises på kundeportalen din og i e-postene som sendes til kundene dine.",
+  "app.onboarding.logoDrop": "Slipp en PNG- eller SVG-fil",
+  "app.onboarding.previewSearch": "Søk etter en artikkel…",
+  "app.onboarding.previewCaption": "Forhåndsvisning av kundeportalen din",
+
+  "app.onboarding.emailTitle": "Motta e-postene dine",
+  /* « demande » et « ticket » sont le même mot en norvégien : la phrase dit
+     donc « e-poster » d'un côté et « henvendelser » de l'autre. */
+  "app.onboarding.emailBody":
+    "Alle e-poster som kommer inn til denne adressen, blir automatisk henvendelser.",
+  "app.onboarding.or": "ELLER",
+  "app.onboarding.copy": "Kopier",
+  "app.onboarding.copied": "Kopiert ✓",
+  "app.onboarding.ownAddressTitle": "Koble til min egen adresse",
+  "app.onboarding.ownAddressBody":
+    "Videresend den eksisterende adressen din ({example}) til adressen ovenfor. Detaljert oppsett under Innstillinger.",
+  "app.onboarding.forwardLabel": "Adresse som skal videresendes",
+  "app.onboarding.forwardPlaceholder": "support@ditt-domene.no",
+
+  "app.onboarding.teamTitle": "Inviter teamet ditt",
+  "app.onboarding.teamBody":
+    "Inviter agentene dine nå, eller del invitasjonslenken. Viewer-plasser er gratis.",
+  "app.onboarding.invitePlaceholder": "kollega@bedrift.no",
+  "app.onboarding.addRow": "+ Legg til en rad",
+  "app.onboarding.sendInvites": "Send invitasjonene",
+
+  "app.onboarding.testTitle": "Send en første henvendelse",
+  "app.onboarding.testBody":
+    "Kontroller hele kjeden før du åpner tjenesten for kundene dine.",
+  "app.onboarding.readyTitle": "Arbeidsområdet ditt er klart",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Send en e-post til {address} for å opprette en testhenvendelse.",
+  "app.onboarding.openInbox": "Åpne innboksen",
+
+  "app.onboarding.checklistIdentity": "Identiteten er satt opp",
+  "app.onboarding.checklistEmail": "E-postadressen er konfigurert",
+  "app.onboarding.checklistTeam": "Teamet er invitert",
+  "app.onboarding.checklistTicket": "Første henvendelse er mottatt",
+  "app.onboarding.checklistSla": "SLA-policyen er kontrollert",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
+     « alle / én eller flere » : les deux valeurs s'accordent avec le pluriel
+     indéfini « betingelser », qui suit le sélecteur. Le norvégien ne dit pas
+     « alle av betingelsene » — d'où le pluriel nu. « Oppfyller » reprend
+     testNoMatch, « betingelsene er ikke oppfylt ». */
+  "app.settings.rules.matchIf": "HVIS",
+  "app.settings.rules.matchAllPattern": "Oppfyller {mode} betingelser",
+  "app.settings.rules.matchAnyPattern": "Oppfyller {mode} betingelser",
+  "app.settings.rules.matchAll": "alle",
+  "app.settings.rules.matchAny": "én eller flere",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit ; « Pro-plan » comme dans auditLockedTitle. */
+  "app.settings.workspace.planFree": "Free-plan",
+  "app.settings.workspace.planStandard": "Standard-plan",
+  "app.settings.workspace.planPro": "Pro-plan",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. « Incident » ne peut pas être
+     « Hendelse » ici : ce mot est déjà l'événement (condFieldEvent,
+     dev.colEvent). « Feil » est le mot courant du support norvégien. */
+  "app.ticket.typeQuestion": "Spørsmål",
+  "app.ticket.typeIncident": "Feil",
+  "app.ticket.typeTask": "Oppgave",
+  "app.ticket.typeOther": "Annet",
+
+  /* AG-09 — export CSV des rapports. Les libellés reprennent les KPI de
+     l'écran ; les secondes s'abrègent « sek. » en norvégien. */
+  "app.reports.csvIndicator": "Indikator",
+  "app.reports.csvCurrentPeriod": "Gjeldende periode",
+  "app.reports.csvPreviousPeriod": "Forrige periode",
+  "app.reports.csvCreated": "Opprettede henvendelser",
+  "app.reports.csvResolved": "Løste henvendelser",
+  "app.reports.csvMedianFirstReply": "Median 1. svar (sek.)",
+  "app.reports.csvMedianResolve": "Median løsningstid (sek.)",
+  "app.reports.csvSlaCompliance": "SLA-overholdelse (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Dag",
+  "app.reports.csvCreatedShort": "Opprettet",
+  "app.reports.csvResolvedShort": "Løst",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Ny artikkel",
+  "app.kb.fromTicketSymptomHeading": "Symptom",
+  "app.kb.fromTicketSymptomPlaceholder": "[Beskriv hva kunden opplever.]",
+  "app.kb.fromTicketSolutionHeading": "Løsning",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Beskriv fremgangsmåten som løser problemet.]",
+  /* Les deux bribes se lisent dans « Mangler: {items}. » — minuscules. */
+  "app.kb.fromTicketMissingRequest": "den opprinnelige henvendelsen fra kunden",
+  "app.kb.fromTicketMissingAnswer": "svaret fra agenten",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Trinnvis fremgangsmåte",
+  "app.kb.tplProcedureHint": "En rekke nummererte trinn, med det forventede resultatet.",
+  "app.kb.tplProcedureTitle": "Slik [utfører du handlingen]",
+  "app.kb.tplProcedureBody": "Denne artikkelen forklarer hvordan du [utfører handlingen]. Regn med omtrent [varighet].\n\n## Før du begynner\n\n- [Tilgang eller rolle som kreves]\n- [Opplysninger du bør ha for hånden]\n\n## Trinn\n\n1. Åpne [det aktuelle skjermbildet].\n2. Klikk på **[knappen]**.\n3. Fyll inn [feltet], og bekreft.\n\n> Hvis [det spesielle tilfellet] oppstår, [hva du skal gjøre da].\n\n## Resultat\n\n[Det personen skal se når operasjonen har lykkes.]\n",
+  "app.kb.tplIncidentLabel": "Feilretting",
+  "app.kb.tplIncidentHint": "Symptom, årsak, løsning og hva som kan gjøres i mellomtiden.",
+  "app.kb.tplIncidentTitle": "[Observert symptom]",
+  "app.kb.tplIncidentBody": "## Symptom\n\n[Det personen ser, med den eksakte feilmeldingen hvis det finnes en.]\n\n## Årsak\n\n[Hvorfor dette skjer.]\n\n## Løsning\n\n1. [Første korrigerende handling]\n2. [Andre korrigerende handling]\n\n## Midlertidig løsning\n\n> [Det personen kan gjøre med én gang hvis den endelige løsningen krever at\n> teamet ditt griper inn.]\n\n## Hvis problemet vedvarer\n\nSend en henvendelse, og oppgi [opplysningene som er nyttige for feilsøkingen].\n",
+  "app.kb.tplFaqLabel": "Ofte stilt spørsmål",
+  "app.kb.tplFaqHint": "Et kort og direkte svar, og deretter detaljene.",
+  "app.kb.tplFaqTitle": "[Spørsmålet, formulert slik kundene stiller det]",
+  "app.kb.tplFaqBody": "**Kort svar:** [svaret i én setning].\n\n## I detalj\n\n[Konteksten og nyansene som er verdt å kjenne.]\n\n## Spesielle tilfeller\n\n- **[Situasjon A]** — [hva som endrer seg].\n- **[Situasjon B]** — [hva som endrer seg].\n\n## Videre lesning\n\n[Henvisning til en nærliggende artikkel eller den tilhørende fremgangsmåten.]\n",
+  "app.kb.tplReleaseLabel": "Versjonsnotat",
+  "app.kb.tplReleaseHint": "Nyheter, forbedringer og feilrettinger i en utgivelse.",
+  "app.kb.tplReleaseTitle": "Nyheter i [dato eller versjon]",
+  "app.kb.tplReleaseBody": "## Nyheter\n\n- **[Navn på funksjonen]** — [hva den gir brukerne mulighet til å gjøre].\n\n## Forbedringer\n\n- [Det som blir enklere eller raskere.]\n\n## Feilrettinger\n\n- [Problemet som er rettet, formulert slik kunden opplevde det.]\n\n> Disse endringene er allerede aktive i arbeidsområdet ditt, og du trenger ikke\n> gjøre noe.\n",
 };

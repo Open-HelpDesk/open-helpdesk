@@ -56,6 +56,46 @@ même jeu donnent un filtre inutilisable sans que rien ne plante. Attention auss
 au genre : les statuts du portail qualifient une « demande », ceux de l'espace
 agent un « ticket », et ces deux mots n'ont pas forcément le même genre.
 
+## Rien de traduisible ne vit hors de ce dossier
+
+`fr.ts` est la source, et c'est la seule. Un libellé écrit dans un composant ne
+sera jamais traduit — il ne manquera à aucune langue, le compilateur ne dira
+rien, et seul un lecteur bulgare s'en apercevra. La faute a été commise à grande
+échelle : cent quarante-huit chaînes, dont l'écran des automatisations et
+l'onboarding entiers.
+
+`packages/smoke/src/i18n-source-francais.spec.ts` monte la garde : il balaie
+`apps/web/src` hors `i18n/` et refuse tout texte accentué qui ne passe pas par
+`t()`. Quatre exceptions y sont inscrites avec leur raison — le 404 du
+middleware, qui ne peut pas connaître une langue puisqu'il n'a pas résolu le
+tenant ; les noms de catégorie saisis par le tenant, comparés tels quels ; la
+valeur en base des types de ticket ; un commentaire du JavaScript servi. Un
+cinquième cas se justifie ou passe par le dictionnaire.
+
+Trois pièges de ce balayage valent d'être connus avant d'y ajouter du texte :
+
+**Une phrase assemblée n'est pas traduisible.** Le résumé des règles concaténait
+« Si » + conditions + « → » + actions : l'ordre des mots était figé en français.
+Le gabarit est maintenant une clé (`summaryPattern`), et chaque bribe la sienne.
+Une langue qui rejette son verbe à la fin peut le faire.
+
+**Ne découpez jamais du texte rendu.** Deux écrans fabriquaient la phrase
+complète pour en retirer le début à l'expression régulière — `/^Si toujours → /`,
+`/^Si /`. Dès que la langue changeait, le `replace` ne retirait plus rien.
+Exposez la moitié dont vous avez besoin (`conditionsSummary`, `actionsSummary`)
+au lieu de rogner une chaîne.
+
+**Tout ce qui ressemble à du français n'est pas du texte.** Les jetons de durée
+`min`, `h`, `j` de ST-07 sont une syntaxe : la valeur affichée est relue par
+`parseDurationTokens` au prochain enregistrement, et les traduire empêcherait
+d'enregistrer. Les fonctions s'appelaient `formatDurationFr` / `parseDurationFr`,
+ce qui invitait précisément à l'erreur.
+
+Enfin, méfiez-vous des opérations qui ont l'air neutres : `toLowerCase()` est
+faux dès qu'une langue capitalise ses substantifs, et `localeCompare(a, "fr-FR")`
+ne classe correctement ni le cyrillique ni les diacritiques du tchèque — passez
+`t.locale.tag`.
+
 ## Ce qui n'est pas à traduire
 
 Les marques et les sigles techniques, les touches de clavier (`⌘K`, `↑↓`, `↵` —

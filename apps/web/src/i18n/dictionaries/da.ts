@@ -1225,6 +1225,85 @@ export const da: Dictionary = {
   "app.settings.rules.typeLongText": "Lang tekst",
   "app.settings.rules.typeFile": "Fil",
   "app.settings.rules.typeSelectLong": "Rulleliste",
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) --- */
+
+  /* Types de champs personnalisés (ST-04) ; « Tekst » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Liste",
+  "app.settings.rules.typeMultiSelect": "Flervalg",
+  "app.settings.rules.typeDate": "Dato",
+  "app.settings.rules.typeNumber": "Tal",
+  "app.settings.rules.typeCheckbox": "Afkrydsningsfelt",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Hændelse",
+  "app.settings.rules.condFieldStatus": "Status",
+  "app.settings.rules.condFieldPriority": "Prioritet",
+  "app.settings.rules.condFieldChannel": "Kanal",
+  "app.settings.rules.condFieldType": "Type",
+  "app.settings.rules.condFieldSubject": "Emne",
+  "app.settings.rules.condFieldTags": "Tags",
+  "app.settings.rules.condFieldAssignee": "Tildelt",
+  "app.settings.rules.condFieldTeam": "Team",
+  "app.settings.rules.condFieldOrganization": "Organisation",
+  "app.settings.rules.condFieldHoursCreated": "Timer siden oprettelsen",
+  "app.settings.rules.condFieldHoursUpdated": "Timer siden opdateringen",
+
+  /* Opérateurs. */
+  "app.settings.rules.opIs": "er",
+  "app.settings.rules.opIsNot": "er ikke",
+  "app.settings.rules.opContains": "indeholder",
+  "app.settings.rules.opIncludes": "omfatter",
+  "app.settings.rules.opEmpty": "er tom",
+  "app.settings.rules.opNotEmpty": "er ikke tom",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Sag oprettet",
+  "app.settings.rules.eventTicketUpdated": "Sag opdateret",
+  "app.settings.rules.eventMessageCreated": "Besked modtaget",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Sæt status",
+  "app.settings.rules.actSetPriority": "Sæt prioritet",
+  "app.settings.rules.actAssignUser": "Tildel til en agent",
+  "app.settings.rules.actAssignTeam": "Tildel til et team",
+  "app.settings.rules.actAssignRoundRobin": "Tildel til næste agent (round-robin)",
+  "app.settings.rules.actAddTags": "Tilføj tags",
+  "app.settings.rules.actEmailContact": "Send en e-mail til kontakten",
+
+  /* Résumé d'une règle : les bribes s'enchaînent, elles ne portent donc ni
+     majuscule initiale ni point final. */
+  "app.settings.rules.summaryPattern": "Hvis {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "og",
+  "app.settings.rules.summaryAlways": "altid",
+  "app.settings.rules.summaryAnyOf": { one: "mindst én af {count} betingelse", other: "mindst én af {count} betingelser" },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "ikke tildelt",
+  "app.settings.rules.summaryAssigned": "tildelt",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. « i » comme dans templateFollowUpDesc — « uden svar i 2
+     dage » ; « siden » ne se construit pas avec une durée en danois. */
+  "app.settings.rules.summarySince": "i {duration}",
+  "app.settings.rules.summarySetStatus": "skift til {value}",
+  "app.settings.rules.summarySetPriority": "prioritet {value}",
+  "app.settings.rules.summaryAssignTeam": "tildel til {team}",
+  "app.settings.rules.summaryAnyTeam": "et team",
+  "app.settings.rules.summaryAssignUser": "tildel til en agent",
+  "app.settings.rules.summaryRoundRobin": "tildel til næste agent",
+  "app.settings.rules.summaryAddTags": "tilføj {tags}",
+  "app.settings.rules.summaryEmailContact": "send en e-mail til kontakten",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Status → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioritet → {value}",
+  "app.settings.rules.macroSummaryTeam": "Team → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "team",
+  "app.settings.rules.macroSummaryAssign": "Tildel →",
+  "app.settings.rules.macroSummaryTag": "Tag {tags}",
+  "app.settings.rules.macroSummaryNone": "Ingen handling",
+
   "app.settings.rules.fieldName": "Feltets navn",
   "app.settings.rules.fieldNamePlaceholder": "Ordrenummer",
   "app.settings.rules.fieldOptions": "Valgmuligheder",
@@ -1377,4 +1456,123 @@ export const da: Dictionary = {
   "app.login.rateLimited": "For mange loginforsøg. Vent nogle sekunder, før du prøver igen.",
   "app.login.notAMember": "Denne identitet er ikke medlem af dette arbejdsområde.",
   "app.login.providerMissing": "Denne udbyder er ikke konfigureret på denne instans.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+
+  "app.onboarding.asideTitle": "Opsætning",
+  "app.onboarding.asideFooter": "Alle disse indstillinger kan ændres senere under Indstillinger.",
+  "app.onboarding.stepCounter": "Trin {step} af {total}",
+  "app.onboarding.continue": "Fortsæt",
+  "app.onboarding.skip": "Spring dette trin over",
+
+  "app.onboarding.stepIdentity": "Identitet",
+  "app.onboarding.stepIdentityHint": "Navn, logo, farve",
+  "app.onboarding.stepEmail": "E-mail",
+  "app.onboarding.stepEmailHint": "Modtageradresse",
+  "app.onboarding.stepTeam": "Team",
+  "app.onboarding.stepTeamHint": "Invitér agenterne",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "Første sag",
+
+  "app.onboarding.identityTitle": "Dit arbejdsområdes identitet",
+  "app.onboarding.identityBody": "Disse elementer vises på din kundeportal og i de e-mails, der sendes til dine kunder.",
+  "app.onboarding.logoDrop": "Slip en PNG- eller SVG-fil her",
+  "app.onboarding.previewSearch": "Søg efter en artikel…",
+  "app.onboarding.previewCaption": "Forhåndsvisning af din kundeportal",
+
+  "app.onboarding.emailTitle": "Modtag dine e-mails",
+  "app.onboarding.emailBody": "Alle henvendelser, der modtages på denne adresse, bliver automatisk til sager.",
+  "app.onboarding.or": "ELLER",
+  "app.onboarding.copy": "Kopiér",
+  "app.onboarding.copied": "Kopieret ✓",
+  "app.onboarding.ownAddressTitle": "Tilslut min egen adresse",
+  "app.onboarding.ownAddressBody": "Videresend din eksisterende adresse ({example}) til adressen ovenfor. Detaljeret opsætning under Indstillinger.",
+  "app.onboarding.forwardLabel": "Adresse, der skal videresendes",
+  "app.onboarding.forwardPlaceholder": "support@ditfirma.dk",
+
+  "app.onboarding.teamTitle": "Invitér dit team",
+  "app.onboarding.teamBody": "Invitér dine agenter nu, eller del invitationslinket. Viewer-pladser er gratis.",
+  "app.onboarding.invitePlaceholder": "kollega@virksomhed.dk",
+  "app.onboarding.addRow": "+ Tilføj en linje",
+  "app.onboarding.sendInvites": "Send invitationerne",
+
+  "app.onboarding.testTitle": "Send en første sag",
+  "app.onboarding.testBody": "Kontrollér hele kæden, før du åbner supporten for dine kunder.",
+  "app.onboarding.readyTitle": "Dit arbejdsområde er klar",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Send en e-mail til {address} for at oprette en testsag.",
+  "app.onboarding.openInbox": "Åbn indbakken",
+
+  "app.onboarding.checklistIdentity": "Identiteten er defineret",
+  "app.onboarding.checklistEmail": "E-mailadressen er konfigureret",
+  "app.onboarding.checklistTeam": "Teamet er inviteret",
+  "app.onboarding.checklistTicket": "Første sag modtaget",
+  "app.onboarding.checklistSla": "SLA-politikken er kontrolleret",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure le sélecteur
+     « alle / en eller flere » : les deux valeurs s'accordent avec le pluriel
+     indéfini « betingelser », qui suit le sélecteur. */
+  "app.settings.rules.matchIf": "HVIS",
+  "app.settings.rules.matchAllPattern": "Opfylder {mode} betingelser",
+  "app.settings.rules.matchAnyPattern": "Opfylder {mode} betingelser",
+  "app.settings.rules.matchAll": "alle",
+  "app.settings.rules.matchAny": "en eller flere",
+
+  /* ST-11 — noms des offres ; « Pro-plan » comme dans auditLockedTitle. */
+  "app.settings.workspace.planFree": "Free-plan",
+  "app.settings.workspace.planStandard": "Standard-plan",
+  "app.settings.workspace.planPro": "Pro-plan",
+
+  /* Types de ticket (AG-05) ; « Incident » plutôt que « Hændelse », qui nomme
+     déjà l'événement dans le builder de règles. */
+  "app.ticket.typeQuestion": "Spørgsmål",
+  "app.ticket.typeIncident": "Incident",
+  "app.ticket.typeTask": "Opgave",
+  "app.ticket.typeOther": "Andet",
+
+  /* AG-09 — export CSV des rapports. */
+  "app.reports.csvIndicator": "Indikator",
+  "app.reports.csvCurrentPeriod": "Nuværende periode",
+  "app.reports.csvPreviousPeriod": "Foregående periode",
+  "app.reports.csvCreated": "Oprettede sager",
+  "app.reports.csvResolved": "Løste sager",
+  "app.reports.csvMedianFirstReply": "Median for 1. svar (sek.)",
+  "app.reports.csvMedianResolve": "Median for løsning (sek.)",
+  "app.reports.csvSlaCompliance": "SLA-overholdelse (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Dag",
+  "app.reports.csvCreatedShort": "Oprettede",
+  "app.reports.csvResolvedShort": "Løste",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article. */
+  "app.kb.fromTicketDefaultTitle": "Ny artikel",
+  "app.kb.fromTicketSymptomHeading": "Symptom",
+  "app.kb.fromTicketSymptomPlaceholder": "[Beskriv, hvad kunden oplever.]",
+  "app.kb.fromTicketSolutionHeading": "Løsning",
+  "app.kb.fromTicketSolutionPlaceholder": "[Beskriv den fremgangsmåde, der løser problemet.]",
+  "app.kb.fromTicketMissingRequest": "kundens oprindelige henvendelse",
+  "app.kb.fromTicketMissingAnswer": "agentens svar",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Trin-for-trin-procedure",
+  "app.kb.tplProcedureHint": "En række nummererede trin med det forventede resultat.",
+  "app.kb.tplProcedureTitle": "Sådan [udfører du handlingen]",
+  "app.kb.tplProcedureBody": "Denne artikel forklarer, hvordan du [udfører handlingen]. Regn med omkring [varighed].\n\n## Inden du begynder\n\n- [Nødvendig rettighed eller rolle]\n- [Oplysning, du skal have ved hånden]\n\n## Trin\n\n1. Åbn [den relevante skærm].\n2. Klik på **[knappen]**.\n3. Udfyld [feltet], og bekræft.\n\n> Hvis [det særlige tilfælde] opstår, [gør du sådan].\n\n## Resultat\n\n[Det, som personen skal se, når handlingen er lykkedes.]\n",
+  "app.kb.tplIncidentLabel": "Problemløsning",
+  "app.kb.tplIncidentHint": "Symptom, årsag, løsning og en midlertidig nødløsning.",
+  "app.kb.tplIncidentTitle": "[Det observerede symptom]",
+  "app.kb.tplIncidentBody": "## Symptom\n\n[Det, som personen oplever, med den præcise fejlmeddelelse, hvis der er en.]\n\n## Årsag\n\n[Hvorfor det sker.]\n\n## Løsning\n\n1. [Første afhjælpende handling]\n2. [Anden afhjælpende handling]\n\n## Nødløsning i mellemtiden\n\n> [Det, som personen kan gøre med det samme, hvis løsningen kræver en\n> indsats fra jeres team.]\n\n## Hvis problemet fortsætter\n\nOpret en henvendelse med [de oplysninger, der er nyttige for fejlsøgningen].\n",
+  "app.kb.tplFaqLabel": "Ofte stillet spørgsmål",
+  "app.kb.tplFaqHint": "Et kort og direkte svar, derefter uddybningen.",
+  "app.kb.tplFaqTitle": "[Spørgsmålet, som kunderne stiller det]",
+  "app.kb.tplFaqBody": "**Kort svar:** [svaret i én sætning].\n\n## I detaljer\n\n[Den nyttige sammenhæng og de vigtige nuancer.]\n\n## Særlige tilfælde\n\n- **[Situation A]** — [det, der ændrer sig].\n- **[Situation B]** — [det, der ændrer sig].\n\n## Læs mere\n\n[Henvisning til den beslægtede artikel eller den tilhørende fremgangsmåde.]\n",
+  "app.kb.tplReleaseLabel": "Udgivelsesnote",
+  "app.kb.tplReleaseHint": "Nyheder, forbedringer og rettelser i en udgivelse.",
+  "app.kb.tplReleaseTitle": "Nyheder i [dato eller version]",
+  "app.kb.tplReleaseBody": "## Nyheder\n\n- **[Funktionens navn]** — [hvad den gør muligt for brugeren].\n\n## Forbedringer\n\n- [Det, der bliver enklere eller hurtigere.]\n\n## Rettelser\n\n- [Det rettede problem, formuleret som kunden oplevede det.]\n\n> Disse ændringer er allerede aktive i dit arbejdsområde, og du behøver ikke\n> at gøre noget.\n",
 };

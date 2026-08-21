@@ -1484,6 +1484,102 @@ export const ro: Dictionary = {
   "app.settings.rules.typeLongText": "Text lung",
   "app.settings.rules.typeFile": "Fișier",
   "app.settings.rules.typeSelectLong": "Listă derulantă",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Il vivait dans lib/rule-labels.ts, en français, tables et phrases
+     comprises : l'écran des automatisations restait donc français quelle que
+     soit la langue du workspace. Les statuts, priorités et canaux ne sont PAS
+     repris ici — ils viennent des tables partagées de lib/format.ts, celles de
+     l'inbox et de ses filtres. */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Listă",
+  "app.settings.rules.typeMultiSelect": "Selecție multiplă",
+  "app.settings.rules.typeDate": "Dată",
+  "app.settings.rules.typeNumber": "Număr",
+  "app.settings.rules.typeCheckbox": "Casetă de bifat",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Eveniment",
+  "app.settings.rules.condFieldStatus": "Stare",
+  "app.settings.rules.condFieldPriority": "Prioritate",
+  "app.settings.rules.condFieldChannel": "Canal",
+  "app.settings.rules.condFieldType": "Tip",
+  "app.settings.rules.condFieldSubject": "Subiect",
+  "app.settings.rules.condFieldTags": "Etichete",
+  "app.settings.rules.condFieldAssignee": "Atribuit",
+  "app.settings.rules.condFieldTeam": "Echipă",
+  "app.settings.rules.condFieldOrganization": "Organizație",
+  "app.settings.rules.condFieldHoursCreated": "Ore de la creare",
+  "app.settings.rules.condFieldHoursUpdated": "Ore de la actualizare",
+
+  /* Opérateurs. « est vide » / « n'est pas vide » deviennent « fără valoare » /
+     « cu valoare » : l'adjectif roumain s'accorderait avec le nom du champ, et
+     les douze champs ne sont ni du même genre ni du même nombre. */
+  "app.settings.rules.opIs": "este",
+  "app.settings.rules.opIsNot": "nu este",
+  "app.settings.rules.opContains": "conține",
+  "app.settings.rules.opIncludes": "include",
+  "app.settings.rules.opEmpty": "fără valoare",
+  "app.settings.rules.opNotEmpty": "cu valoare",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Tichet creat",
+  "app.settings.rules.eventTicketUpdated": "Tichet actualizat",
+  "app.settings.rules.eventMessageCreated": "Mesaj primit",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Definiți starea",
+  "app.settings.rules.actSetPriority": "Definiți prioritatea",
+  "app.settings.rules.actAssignUser": "Atribuiți unui agent",
+  "app.settings.rules.actAssignTeam": "Atribuiți unei echipe",
+  "app.settings.rules.actAssignRoundRobin": "Atribuiți următorului agent (round-robin)",
+  "app.settings.rules.actAddTags": "Adăugați etichete",
+  "app.settings.rules.actEmailContact": "Trimiteți un email contactului",
+
+  /* Résumé d'une règle, en une ligne de liste. Les bribes sont au présent de la
+     3ᵉ personne — « trece », « atribuie », « adaugă » — comme les descriptions
+     de modèles déjà traduites (templateCloseDesc, templateEscalationDesc). */
+  "app.settings.rules.summaryPattern": "Dacă {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "și",
+  "app.settings.rules.summaryAlways": "întotdeauna",
+  "app.settings.rules.summaryAnyOf": {
+    one: "cel puțin una din {count} condiție",
+    few: "cel puțin una din {count} condiții",
+    other: "cel puțin una din {count} de condiții",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "neatribuit",
+  "app.settings.rules.summaryAssigned": "atribuit",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : voir
+     formatDurationTokens, ils ne se traduisent pas. La bribe se colle à la
+     condition qui précède : « Stare = În așteptare de 2 j ». */
+  "app.settings.rules.summarySince": "de {duration}",
+  "app.settings.rules.summarySetStatus": "trece în {value}",
+  /* Les priorités roumaines sont des adjectifs féminins qui s'accordent avec
+     « prioritate » : « prioritate Urgentă » se lit tel quel. */
+  "app.settings.rules.summarySetPriority": "prioritate {value}",
+  "app.settings.rules.summaryAssignTeam": "atribuie echipei {team}",
+  /* Repli quand l'équipe n'est plus connue : « o echipă » redoublerait le
+     « echipei » déjà porté par le gabarit, au mauvais cas de surcroît. */
+  "app.settings.rules.summaryAnyTeam": "(nespecificată)",
+  "app.settings.rules.summaryAssignUser": "atribuie unui agent",
+  "app.settings.rules.summaryRoundRobin": "atribuie următorului agent",
+  "app.settings.rules.summaryAddTags": "adaugă {tags}",
+  "app.settings.rules.summaryEmailContact": "trimite un email contactului",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Stare → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioritate → {value}",
+  "app.settings.rules.macroSummaryTeam": "Echipă → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "(nespecificată)",
+  "app.settings.rules.macroSummaryAssign": "Atribuire →",
+  "app.settings.rules.macroSummaryTag": "Etichete {tags}",
+  "app.settings.rules.macroSummaryNone": "Nicio acțiune",
+
   "app.settings.rules.fieldName": "Numele câmpului",
   "app.settings.rules.fieldNamePlaceholder": "Număr comandă",
   "app.settings.rules.fieldOptions": "Opțiuni",
@@ -1703,4 +1799,139 @@ export const ro: Dictionary = {
     "Prea multe încercări de conectare. Așteptați câteva secunde înainte de a încerca din nou.",
   "app.login.notAMember": "Această identitate nu este membră a acestui spațiu de lucru.",
   "app.login.providerMissing": "Acest furnizor nu este configurat pe această instanță.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Tout cet écran était en français dans le code : le premier écran qu'un
+     nouveau workspace rencontre. Quatre libellés viennent d'ailleurs et ne sont
+     pas repris ici : le titre du portail dans son propre aperçu (home.title), le
+     nom du workspace et la couleur d'accent (les mêmes contrôles qu'en ST-01),
+     et les rôles Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Configurare",
+  "app.onboarding.asideFooter":
+    "Veți putea modifica toate aceste opțiuni mai târziu, din Setări.",
+  "app.onboarding.stepCounter": "Pasul {step} din {total}",
+  "app.onboarding.continue": "Continuați",
+  "app.onboarding.skip": "Omiteți acest pas",
+
+  "app.onboarding.stepIdentity": "Identitate",
+  "app.onboarding.stepIdentityHint": "Nume, logo, culoare",
+  "app.onboarding.stepEmail": "Email",
+  "app.onboarding.stepEmailHint": "Adresă de recepție",
+  "app.onboarding.stepTeam": "Echipă",
+  "app.onboarding.stepTeamHint": "Invitați agenții",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "Primul tichet",
+
+  "app.onboarding.identityTitle": "Identitatea spațiului dvs. de lucru",
+  "app.onboarding.identityBody":
+    "Aceste elemente vor apărea în portalul dvs. client și în emailurile trimise clienților dvs.",
+  "app.onboarding.logoDrop": "Trageți aici un fișier PNG sau SVG",
+  "app.onboarding.previewSearch": "Căutați un articol…",
+  "app.onboarding.previewCaption": "Previzualizarea portalului dvs. client",
+
+  "app.onboarding.emailTitle": "Primirea emailurilor dvs.",
+  "app.onboarding.emailBody":
+    "Toate solicitările primite la această adresă devin automat tichete.",
+  "app.onboarding.or": "SAU",
+  "app.onboarding.copy": "Copiați",
+  "app.onboarding.copied": "Copiat ✓",
+  "app.onboarding.ownAddressTitle": "Conectați propria adresă",
+  "app.onboarding.ownAddressBody":
+    "Redirecționați adresa dvs. existentă ({example}) către adresa furnizată mai sus. Configurare detaliată în Setări.",
+  "app.onboarding.forwardLabel": "Adresa de redirecționat",
+  "app.onboarding.forwardPlaceholder": "suport@domeniul-dvs.ro",
+
+  "app.onboarding.teamTitle": "Invitați echipa dvs.",
+  "app.onboarding.teamBody":
+    "Invitați agenții acum sau partajați linkul de invitație. Licențele Viewer sunt gratuite.",
+  "app.onboarding.invitePlaceholder": "coleg@companie.ro",
+  "app.onboarding.addRow": "+ Adăugați un rând",
+  "app.onboarding.sendInvites": "Trimiteți invitațiile",
+
+  "app.onboarding.testTitle": "Trimiteți un prim tichet",
+  "app.onboarding.testBody":
+    "Verificați întregul lanț înainte de a deschide serviciul clienților dvs.",
+  "app.onboarding.readyTitle": "Spațiul dvs. de lucru este pregătit",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody":
+    "Trimiteți un email la {address} pentru a crea un tichet de test.",
+  "app.onboarding.openInbox": "Deschideți inboxul",
+
+  "app.onboarding.checklistIdentity": "Identitate definită",
+  "app.onboarding.checklistEmail": "Adresă de email configurată",
+  "app.onboarding.checklistTeam": "Echipă invitată",
+  "app.onboarding.checklistTicket": "Primul tichet primit",
+  "app.onboarding.checklistSla": "Politică SLA verificată",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
+     « toate / cel puțin una » : le roumain ne peut pas accorder son verbe avec
+     les deux, le sélecteur passe donc en fin de phrase, après le deux-points. */
+  "app.settings.rules.matchIf": "DACĂ",
+  "app.settings.rules.matchAllPattern": "Condiții care trebuie îndeplinite: {mode}",
+  "app.settings.rules.matchAnyPattern": "Condiții care trebuie îndeplinite: {mode}",
+  "app.settings.rules.matchAll": "toate",
+  "app.settings.rules.matchAny": "cel puțin una",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Planul Free",
+  "app.settings.workspace.planStandard": "Planul Standard",
+  "app.settings.workspace.planPro": "Planul Pro",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Întrebare",
+  "app.ticket.typeIncident": "Incident",
+  "app.ticket.typeTask": "Sarcină",
+  "app.ticket.typeOther": "Altele",
+
+  /* AG-09 — export CSV des rapports. « s » est aussi l'abréviation roumaine de
+     la seconde. */
+  "app.reports.csvIndicator": "Indicator",
+  "app.reports.csvCurrentPeriod": "Perioada curentă",
+  "app.reports.csvPreviousPeriod": "Perioada anterioară",
+  "app.reports.csvCreated": "Tichete create",
+  "app.reports.csvResolved": "Tichete rezolvate",
+  "app.reports.csvMedianFirstReply": "Mediana primului răspuns (s)",
+  "app.reports.csvMedianResolve": "Mediana rezolvării (s)",
+  "app.reports.csvSlaCompliance": "Conformitate SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Zi",
+  "app.reports.csvCreatedShort": "Create",
+  "app.reports.csvResolvedShort": "Rezolvate",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Articol nou",
+  "app.kb.fromTicketSymptomHeading": "Simptom",
+  "app.kb.fromTicketSymptomPlaceholder": "[Descrieți ce constată clientul.]",
+  "app.kb.fromTicketSolutionHeading": "Soluție",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Descrieți operațiunea care rezolvă problema.]",
+  "app.kb.fromTicketMissingRequest": "solicitarea inițială a clientului",
+  "app.kb.fromTicketMissingAnswer": "răspunsul agentului",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Procedură pas cu pas",
+  "app.kb.tplProcedureHint": "O succesiune de pași numerotați, cu rezultatul așteptat.",
+  "app.kb.tplProcedureTitle": "Cum să [efectuați acțiunea]",
+  "app.kb.tplProcedureBody": "Acest articol explică cum să [efectuați acțiunea]. Durează aproximativ [durata].\n\n## Înainte de a începe\n\n- [Dreptul sau rolul necesar]\n- [Informația de avut la îndemână]\n\n## Pași\n\n1. Deschideți [ecranul vizat].\n2. Faceți clic pe **[buton]**.\n3. Completați [câmpul], apoi confirmați.\n\n> Dacă apare [cazul particular], [conduita de urmat].\n\n## Rezultat\n\n[Ce trebuie să vadă persoana după ce operațiunea a reușit.]\n",
+  "app.kb.tplIncidentLabel": "Rezolvarea unui incident",
+  "app.kb.tplIncidentHint": "Simptom, cauză, rezolvare și soluție temporară.",
+  "app.kb.tplIncidentTitle": "[Simptomul observat]",
+  "app.kb.tplIncidentBody": "## Simptom\n\n[Ce constată persoana, cu mesajul de eroare exact, dacă există unul.]\n\n## Cauză\n\n[De ce se întâmplă acest lucru.]\n\n## Soluție\n\n1. [Prima acțiune corectivă]\n2. [A doua acțiune corectivă]\n\n## Soluție temporară până atunci\n\n> [Ce poate face persoana imediat, dacă rezolvarea necesită o\n> intervenție din partea echipei dvs.]\n\n## Dacă problema persistă\n\nDeschideți o solicitare, precizând [informațiile utile pentru diagnostic].\n",
+  "app.kb.tplFaqLabel": "Întrebare frecventă",
+  "app.kb.tplFaqHint": "Un răspuns scurt și direct, apoi detaliile.",
+  "app.kb.tplFaqTitle": "[Întrebarea, așa cum o pun clienții]",
+  "app.kb.tplFaqBody": "**Răspuns scurt:** [răspunsul într-o singură frază].\n\n## În detaliu\n\n[Contextul și nuanțele utile.]\n\n## Cazuri particulare\n\n- **[Situația A]** — [ce se schimbă].\n- **[Situația B]** — [ce se schimbă].\n\n## Mai multe informații\n\n[Trimitere către articolul învecinat sau procedura asociată.]\n",
+  "app.kb.tplReleaseLabel": "Notă de versiune",
+  "app.kb.tplReleaseHint": "Noutăți, îmbunătățiri și corecții dintr-o livrare.",
+  "app.kb.tplReleaseTitle": "Noutăți în [data sau versiunea]",
+  "app.kb.tplReleaseBody": "## Noutăți\n\n- **[Numele funcționalității]** — [ce permite, din perspectiva utilizatorului].\n\n## Îmbunătățiri\n\n- [Ce devine mai simplu sau mai rapid.]\n\n## Corecții\n\n- [Problema corectată, formulată așa cum o resimțea clientul.]\n\n> Aceste modificări sunt deja active în spațiul dvs., nu este necesară nicio\n> acțiune din partea dvs.\n",
 };

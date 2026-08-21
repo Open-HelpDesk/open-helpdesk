@@ -33,6 +33,10 @@ export function middleware(request: NextRequest) {
   const slug = resolveTenantSlug(host);
 
   if (!slug) {
+    // Le seul message du produit qui ne peut PAS être traduit, et ce n'est pas
+    // un oubli : la langue vient du tenant, et c'est précisément le tenant qu'on
+    // n'a pas su résoudre. Il s'adresse d'ailleurs à qui héberge l'instance, pas
+    // à un utilisateur — d'où la mention de la variable d'environnement.
     return new NextResponse(
       "Workspace introuvable. Vérifiez l'adresse, ou définissez DEFAULT_TENANT_SLUG en auto-hébergé.",
       { status: 404 },

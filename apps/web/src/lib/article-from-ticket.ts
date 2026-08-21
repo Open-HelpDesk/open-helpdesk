@@ -1,3 +1,8 @@
+
+import type { MessageKey } from "@/i18n/dictionaries/fr";
+
+/** Ce dont la conversion a besoin : traduire. */
+type Tr = { (key: MessageKey, params?: Record<string, string | number>): string };
 /**
  * Conversion d'une demande résolue en brouillon d'article.
  *
@@ -43,7 +48,11 @@ export type TicketDraft = {
   missing: string[];
 };
 
-export function articleFromTicket(subject: string, messages: SourceMessage[]): TicketDraft {
+export function articleFromTicket(
+  t: Tr,
+  subject: string,
+  messages: SourceMessage[],
+): TicketDraft {
   const publics = messages.filter((m) => m.kind === "public_reply" && m.bodyText?.trim());
 
   const question = publics.find((m) => m.authorType === "contact");
@@ -54,19 +63,19 @@ export function articleFromTicket(subject: string, messages: SourceMessage[]): T
   const missing: string[] = [];
   const symptome = question ? cleanMessage(question.bodyText!) : "";
   const solution = answer ? cleanMessage(answer.bodyText!) : "";
-  if (!symptome) missing.push("la demande initiale du client");
-  if (!solution) missing.push("la réponse de l'agent");
+  if (!symptome) missing.push(t("app.kb.fromTicketMissingRequest"));
+  if (!solution) missing.push(t("app.kb.fromTicketMissingAnswer"));
 
   const body = [
-    "## Symptôme",
+    `## ${t("app.kb.fromTicketSymptomHeading")}`,
     "",
-    symptome || "[Décrivez ce que le client constate.]",
+    symptome || t("app.kb.fromTicketSymptomPlaceholder"),
     "",
-    "## Solution",
+    `## ${t("app.kb.fromTicketSolutionHeading")}`,
     "",
-    solution || "[Décrivez la manipulation qui résout le problème.]",
+    solution || t("app.kb.fromTicketSolutionPlaceholder"),
     "",
   ].join("\n");
 
-  return { title: subject.trim() || "Nouvel article", body, missing };
+  return { title: subject.trim() || t("app.kb.fromTicketDefaultTitle"), body, missing };
 }

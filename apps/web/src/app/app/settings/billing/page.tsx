@@ -3,7 +3,7 @@ import { attachments, db, tickets, users } from "@openhelpdesk/db";
 import { and, count, eq, gte, isNull, ne, sum } from "drizzle-orm";
 import { getT, type Translate } from "@/i18n/server";
 import {
-  PLAN_LABELS,
+  PLAN_NAME_KEYS,
   STORAGE_QUOTA_BYTES,
   entitlementsFor,
   planIdOf,
@@ -99,7 +99,7 @@ export default async function BillingPage() {
   const monthTickets = ticketRow?.n ?? 0;
   const storageBytes = Number(storageRow?.total ?? 0);
 
-  const plan = PLAN_LABELS[planId];
+  const planName = t(PLAN_NAME_KEYS[planId]);
   const seatPrice = SEAT_PRICE[planId] ?? 0;
   const monthly = seatPrice * quota;
   const seatLine =
@@ -135,7 +135,7 @@ export default async function BillingPage() {
                 className="font-bold"
                 style={{ fontSize: 18, letterSpacing: "-0.02em", color: "var(--ink)" }}
               >
-                {plan.name}
+                {planName}
               </span>
               <span
                 className="rounded-full font-bold"
@@ -180,7 +180,7 @@ export default async function BillingPage() {
               <button
                 disabled
                 title={t("app.settings.workspace.cloudOnly")}
-                className="grid place-items-center border font-semibold disabled:opacity-50"
+                className="ohd-hover-edge-ink grid place-items-center border font-semibold disabled:opacity-50"
                 style={{
                   height: 34,
                   padding: "0 14px",

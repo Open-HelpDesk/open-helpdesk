@@ -1539,6 +1539,101 @@ export const lt: Dictionary = {
   "app.settings.rules.typeLongText": "Ilgas tekstas",
   "app.settings.rules.typeFile": "Failas",
   "app.settings.rules.typeSelectLong": "Išskleidžiamasis sąrašas",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
+     tables partagées, celles de l'inbox et de ses filtres. */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Sąrašas",
+  "app.settings.rules.typeMultiSelect": "Kelių parinkčių sąrašas",
+  "app.settings.rules.typeDate": "Data",
+  "app.settings.rules.typeNumber": "Skaičius",
+  "app.settings.rules.typeCheckbox": "Žymimasis langelis",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Įvykis",
+  "app.settings.rules.condFieldStatus": "Būsena",
+  "app.settings.rules.condFieldPriority": "Prioritetas",
+  "app.settings.rules.condFieldChannel": "Kanalas",
+  "app.settings.rules.condFieldType": "Tipas",
+  "app.settings.rules.condFieldSubject": "Tema",
+  "app.settings.rules.condFieldTags": "Žymos",
+  "app.settings.rules.condFieldAssignee": "Priskirta",
+  "app.settings.rules.condFieldTeam": "Komanda",
+  "app.settings.rules.condFieldOrganization": "Organizacija",
+  "app.settings.rules.condFieldHoursCreated": "Valandos nuo sukūrimo",
+  "app.settings.rules.condFieldHoursUpdated": "Valandos nuo atnaujinimo",
+
+  /* Opérateurs. « Vide » et « non vide » passent par un groupe prépositionnel,
+     invariable : le lituanien accorderait son adjectif au genre du champ, et un
+     « yra tuščias » unique serait faux dès « Tema » ou « Žymos ». */
+  "app.settings.rules.opIs": "yra",
+  "app.settings.rules.opIsNot": "nėra",
+  "app.settings.rules.opContains": "turi",
+  "app.settings.rules.opIncludes": "apima",
+  "app.settings.rules.opEmpty": "be reikšmės",
+  "app.settings.rules.opNotEmpty": "su reikšme",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. « Gautas pranešimas » reprend les mots de
+     ruleHintTrigger, plus haut. */
+  "app.settings.rules.eventTicketCreated": "Užklausa sukurta",
+  "app.settings.rules.eventTicketUpdated": "Užklausa atnaujinta",
+  "app.settings.rules.eventMessageCreated": "Gautas pranešimas",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Nustatyti būseną",
+  "app.settings.rules.actSetPriority": "Nustatyti prioritetą",
+  "app.settings.rules.actAssignUser": "Priskirti agentui",
+  "app.settings.rules.actAssignTeam": "Priskirti komandai",
+  "app.settings.rules.actAssignRoundRobin": "Priskirti kitam agentui (round-robin)",
+  "app.settings.rules.actAddTags": "Pridėti žymų",
+  "app.settings.rules.actEmailContact": "Išsiųsti kontaktui el. laišką",
+
+  /* Résumé d'une règle, en une ligne de liste. Les bribes s'enchaînent : verbe à
+     l'infinitif, sans majuscule ni point, comme le lituanien énumère. */
+  "app.settings.rules.summaryPattern": "Jei {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "ir",
+  "app.settings.rules.summaryAlways": "visada",
+  /* « iš » régit le génitif : singulier « sąlygos » au 1 et aux décimales,
+     pluriel « sąlygų » partout ailleurs. */
+  "app.settings.rules.summaryAnyOf": {
+    one: "bent viena iš {count} sąlygos",
+    few: "bent viena iš {count} sąlygų",
+    many: "bent viena iš {count} sąlygos",
+    other: "bent viena iš {count} sąlygų",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "nepriskirta",
+  "app.settings.rules.summaryAssigned": "priskirta",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. « depuis » se dit « jau », comme dans since.*. */
+  "app.settings.rules.summarySince": "jau {duration}",
+  "app.settings.rules.summarySetStatus": "perkelti į {value}",
+  /* Les priorités sont des adjectifs qui s'accordent avec « prioritetas » :
+     « Aukštas prioritetas » se lit, « prioritetas Aukštas » non. */
+  "app.settings.rules.summarySetPriority": "{value} prioritetas",
+  "app.settings.rules.summaryAssignTeam": "priskirti komandai {team}",
+  /* Repli quand l'équipe n'est plus connue : « une équipe » redoublerait le
+     « komandai » déjà présent dans le gabarit. */
+  "app.settings.rules.summaryAnyTeam": "(nenurodyta)",
+  "app.settings.rules.summaryAssignUser": "priskirti agentui",
+  "app.settings.rules.summaryRoundRobin": "priskirti kitam agentui",
+  "app.settings.rules.summaryAddTags": "pridėti {tags}",
+  "app.settings.rules.summaryEmailContact": "išsiųsti kontaktui el. laišką",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Būsena → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioritetas → {value}",
+  "app.settings.rules.macroSummaryTeam": "Komanda → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "(nenurodyta)",
+  "app.settings.rules.macroSummaryAssign": "Priskirti →",
+  "app.settings.rules.macroSummaryTag": "Žymos {tags}",
+  "app.settings.rules.macroSummaryNone": "Jokių veiksmų",
+
   "app.settings.rules.fieldName": "Lauko pavadinimas",
   "app.settings.rules.fieldNamePlaceholder": "Užsakymo numeris",
   "app.settings.rules.fieldOptions": "Parinktys",
@@ -1757,4 +1852,142 @@ export const lt: Dictionary = {
     "Per daug prisijungimo bandymų. Prieš bandydami vėl palaukite kelias sekundes.",
   "app.login.notAMember": "Ši tapatybė nėra šios darbo erdvės narė.",
   "app.login.providerMissing": "Šis teikėjas šiame serveryje nesukonfigūruotas.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Quatre libellés viennent d'ailleurs : le titre du portail dans son propre
+     aperçu (home.title), le nom du workspace et la couleur d'accent (les mêmes
+     contrôles qu'en ST-01), et les rôles Owner / Admin / Agent / Viewer, qui ne
+     se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Sąranka",
+  "app.onboarding.asideFooter": "Visa tai vėliau galėsite pakeisti nustatymuose.",
+  "app.onboarding.stepCounter": "Žingsnis {step} iš {total}",
+  "app.onboarding.continue": "Tęsti",
+  "app.onboarding.skip": "Praleisti šį žingsnį",
+
+  "app.onboarding.stepIdentity": "Tapatybė",
+  "app.onboarding.stepIdentityHint": "Pavadinimas, logotipas, spalva",
+  "app.onboarding.stepEmail": "El. paštas",
+  "app.onboarding.stepEmailHint": "Gavimo adresas",
+  "app.onboarding.stepTeam": "Komanda",
+  "app.onboarding.stepTeamHint": "Pakviesti agentus",
+  "app.onboarding.stepTest": "Bandymas",
+  "app.onboarding.stepTestHint": "Pirmoji užklausa",
+
+  "app.onboarding.identityTitle": "Jūsų darbo erdvės tapatybė",
+  "app.onboarding.identityBody":
+    "Šie elementai bus rodomi jūsų klientų portale ir klientams siunčiamuose el. laiškuose.",
+  "app.onboarding.logoDrop": "Nuvilkite PNG arba SVG failą",
+  "app.onboarding.previewSearch": "Ieškoti straipsnio…",
+  "app.onboarding.previewCaption": "Jūsų klientų portalo peržiūra",
+
+  "app.onboarding.emailTitle": "El. laiškų gavimas",
+  /* « demande » et « ticket » se disent tous deux « užklausa » : la phrase part
+     du courriel reçu pour ne pas se répéter. */
+  "app.onboarding.emailBody":
+    "Kiekvienas šiuo adresu gautas el. laiškas automatiškai tampa užklausa.",
+  "app.onboarding.or": "ARBA",
+  "app.onboarding.copy": "Kopijuoti",
+  "app.onboarding.copied": "Nukopijuota ✓",
+  "app.onboarding.ownAddressTitle": "Prijungti savo adresą",
+  "app.onboarding.ownAddressBody":
+    "Peradresuokite savo esamą adresą ({example}) į aukščiau nurodytą adresą. Išsami sąranka — nustatymuose.",
+  "app.onboarding.forwardLabel": "Peradresuojamas adresas",
+  "app.onboarding.forwardPlaceholder": "pagalba@jusu-domenas.lt",
+
+  "app.onboarding.teamTitle": "Pakvieskite savo komandą",
+  "app.onboarding.teamBody":
+    "Pakvieskite agentus dabar arba pasidalykite pakvietimo nuoroda. Viewer vietos yra nemokamos.",
+  "app.onboarding.invitePlaceholder": "kolega@imone.lt",
+  "app.onboarding.addRow": "+ Pridėti eilutę",
+  "app.onboarding.sendInvites": "Išsiųsti pakvietimus",
+
+  "app.onboarding.testTitle": "Išsiųskite pirmąją užklausą",
+  "app.onboarding.testBody": "Prieš atverdami paslaugą klientams patikrinkite visą kelią.",
+  "app.onboarding.readyTitle": "Jūsų darbo erdvė paruošta",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody":
+    "Išsiųskite el. laišką adresu {address}, kad sukurtumėte bandomąją užklausą.",
+  "app.onboarding.openInbox": "Atverti gautuosius",
+
+  "app.onboarding.checklistIdentity": "Tapatybė nustatyta",
+  "app.onboarding.checklistEmail": "El. pašto adresas sukonfigūruotas",
+  "app.onboarding.checklistTeam": "Komanda pakviesta",
+  "app.onboarding.checklistTicket": "Pirmoji užklausa gauta",
+  "app.onboarding.checklistSla": "SLA politika patikrinta",
+
+
+/* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions, découpée autour de {mode}. En
+     lituanien le nom « sąlyga » change de NOMBRE et de CAS selon le
+     quantificateur : « visas sąlygas » au pluriel, « bent vieną sąlygą » au
+     singulier. Il part donc avec le sélecteur, et le gabarit se termine sur
+     {mode}. */
+  "app.settings.rules.matchIf": "JEI",
+  "app.settings.rules.matchAllPattern": "Atitinka {mode}",
+  "app.settings.rules.matchAnyPattern": "Atitinka {mode}",
+  "app.settings.rules.matchAll": "visas sąlygas",
+  "app.settings.rules.matchAny": "bent vieną sąlygą",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul « Plan » est du texte, et le
+     lituanien le place après le nom, comme upgradeToPro plus haut. */
+  "app.settings.workspace.planFree": "Free planas",
+  "app.settings.workspace.planStandard": "Standard planas",
+  "app.settings.workspace.planPro": "Pro planas",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française : seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Klausimas",
+  "app.ticket.typeIncident": "Incidentas",
+  "app.ticket.typeTask": "Užduotis",
+  "app.ticket.typeOther": "Kita",
+
+  /* AG-09 — export CSV des rapports. « s » est l'abréviation lituanienne des
+     secondes comme du SI, la même que dans draftSavedSeconds. */
+  "app.reports.csvIndicator": "Rodiklis",
+  "app.reports.csvCurrentPeriod": "Einamasis laikotarpis",
+  "app.reports.csvPreviousPeriod": "Ankstesnis laikotarpis",
+  "app.reports.csvCreated": "Sukurtos užklausos",
+  "app.reports.csvResolved": "Išspręstos užklausos",
+  "app.reports.csvMedianFirstReply": "1-ojo atsakymo mediana (s)",
+  "app.reports.csvMedianResolve": "Išsprendimo mediana (s)",
+  "app.reports.csvSlaCompliance": "SLA laikymasis (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Diena",
+  "app.reports.csvCreatedShort": "Sukurtos",
+  "app.reports.csvResolvedShort": "Išspręstos",
+  "app.reports.csvAgent": "Agentas",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Naujas straipsnis",
+  "app.kb.fromTicketSymptomHeading": "Simptomas",
+  "app.kb.fromTicketSymptomPlaceholder": "[Aprašykite, ką pastebi klientas.]",
+  "app.kb.fromTicketSolutionHeading": "Sprendimas",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Aprašykite veiksmus, kurie išsprendžia problemą.]",
+  "app.kb.fromTicketMissingRequest": "pradinė kliento užklausa",
+  "app.kb.fromTicketMissingAnswer": "agento atsakymas",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est une consigne à l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Instrukcija žingsnis po žingsnio",
+  "app.kb.tplProcedureHint": "Numeruotų žingsnių seka su laukiamu rezultatu.",
+  "app.kb.tplProcedureTitle": "Kaip [atlikti veiksmą]",
+  "app.kb.tplProcedureBody": "Šis straipsnis paaiškina, kaip [atlikti veiksmą]. Numatykite maždaug [trukmė].\n\n## Prieš pradedant\n\n- [Reikalinga teisė ar vaidmuo]\n- [Informacija, kurią reikia turėti po ranka]\n\n## Žingsniai\n\n1. Atverkite [reikiamą ekraną].\n2. Spustelėkite **[mygtuką]**.\n3. Užpildykite [lauką] ir patvirtinkite.\n\n> Jei pasitaiko [ypatingas atvejis], [ką tada daryti].\n\n## Rezultatas\n\n[Ką žmogus turi pamatyti, kai operacija pavyko.]\n",
+  "app.kb.tplIncidentLabel": "Incidento sprendimas",
+  "app.kb.tplIncidentHint": "Simptomas, priežastis, sprendimas ir laikinas apėjimo būdas.",
+  "app.kb.tplIncidentTitle": "[Pastebėtas simptomas]",
+  "app.kb.tplIncidentBody": "## Simptomas\n\n[Ką žmogus pastebi, su tiksliu klaidos pranešimu, jei jis rodomas.]\n\n## Priežastis\n\n[Kodėl tai nutinka.]\n\n## Sprendimas\n\n1. [Pirmas taisymo veiksmas]\n2. [Antras taisymo veiksmas]\n\n## Laikinas apėjimo būdas\n\n> [Ką žmogus gali padaryti iš karto, jei sprendimui reikia jūsų komandos\n> įsikišimo.]\n\n## Jei problema neišnyksta\n\nPateikite užklausą ir nurodykite [diagnostikai naudingą informaciją].\n",
+  "app.kb.tplFaqLabel": "Dažnas klausimas",
+  "app.kb.tplFaqHint": "Trumpas ir tiesus atsakymas, paskui patikslinimai.",
+  "app.kb.tplFaqTitle": "[Klausimas taip, kaip jį užduoda klientai]",
+  "app.kb.tplFaqBody": "**Trumpas atsakymas:** [atsakymas vienu sakiniu].\n\n## Išsamiau\n\n[Kontekstas ir naudingi niuansai.]\n\n## Ypatingi atvejai\n\n- **[Situacija A]** — [kas pasikeičia].\n- **[Situacija B]** — [kas pasikeičia].\n\n## Daugiau informacijos\n\n[Nuoroda į susijusį straipsnį ar susijusią procedūrą.]\n",
+  "app.kb.tplReleaseLabel": "Versijos aprašas",
+  "app.kb.tplReleaseHint": "Vieno leidimo naujienos, patobulinimai ir klaidų taisymai.",
+  "app.kb.tplReleaseTitle": "Kas nauja [data ar versija]",
+  "app.kb.tplReleaseBody": "## Naujienos\n\n- **[Funkcijos pavadinimas]** — [ką ji leidžia naudotojui].\n\n## Patobulinimai\n\n- [Kas tampa paprasčiau ar greičiau.]\n\n## Klaidų taisymai\n\n- [Ištaisyta problema, aprašyta taip, kaip ją matė klientas.]\n\n> Šie pakeitimai jūsų darbo erdvėje jau veikia, jums nieko daryti\n> nereikia.\n",
 };

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { businessHours, db, slaPolicies, teams } from "@openhelpdesk/db";
 import { and, asc, eq } from "drizzle-orm";
-import { parseDurationFr } from "@/lib/rule-labels";
+import { parseDurationTokens } from "@/lib/rule-labels";
 import { requireManager } from "../guard";
 
 const PRIORITIES = ["urgent", "high", "normal", "low"] as const;
@@ -46,7 +46,7 @@ export async function saveSlaTargets(formData: FormData) {
   for (const prio of PRIORITIES) {
     const entry: Record<string, number> = {};
     for (const col of COLUMNS) {
-      const minutes = parseDurationFr(String(formData.get(`t_${prio}_${col}`) ?? ""));
+      const minutes = parseDurationTokens(String(formData.get(`t_${prio}_${col}`) ?? ""));
       if (minutes) entry[col] = minutes;
     }
     if (Object.keys(entry).length > 0) targets[prio] = entry;

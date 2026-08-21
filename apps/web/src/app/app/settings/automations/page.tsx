@@ -137,7 +137,7 @@ export default async function AutomationsPage({
                 <Link
                   key={tpl.key}
                   href={`/app/settings/automations/new?template=${tpl.key}`}
-                  className="rounded-[9px] border"
+                  className="ohd-hover-edge-ink rounded-[9px] border"
                   style={{
                     padding: "13px 15px",
                     borderColor: "var(--line)",
@@ -216,6 +216,7 @@ export default async function AutomationsPage({
                   </Link>
                   <p className="truncate" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
                     {ruleSummary(
+                      t,
                       (rule.conditionsAll as never[]) ?? [],
                       (rule.conditionsAny as never[]) ?? [],
                       (rule.actions as never[]) ?? [],
@@ -237,30 +238,13 @@ export default async function AutomationsPage({
                     type="submit"
                     role="switch"
                     aria-checked={rule.active}
-                    className="relative rounded-full"
-                    style={{
-                      width: 34,
-                      height: 20,
-                      flex: "none",
-                      background: rule.active ? "var(--acc)" : "var(--line)",
-                    }}
+                    className="ohd-switch"
                     title={
                       rule.active
                         ? t("app.settings.rules.ruleDisable")
                         : t("app.settings.rules.ruleEnable")
                     }
-                  >
-                    <span
-                      className="absolute rounded-full bg-white transition-all"
-                      style={{
-                        top: 2,
-                        width: 16,
-                        height: 16,
-                        left: rule.active ? 16 : 2,
-                        boxShadow: "0 1px 3px rgba(0,0,0,.25)",
-                      }}
-                    />
-                  </button>
+                  />
                 </form>
 
                 <Drawer

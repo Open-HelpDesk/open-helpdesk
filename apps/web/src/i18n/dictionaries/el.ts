@@ -1386,6 +1386,92 @@ export const el: Dictionary = {
   "app.settings.rules.typeLongText": "Μεγάλο κείμενο",
   "app.settings.rules.typeFile": "Αρχείο",
   "app.settings.rules.typeSelectLong": "Αναπτυσσόμενη λίστα",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07). Les statuts,
+     priorités et canaux ne sont pas repris ici : ils viennent des tables
+     partagées, celles de l'inbox et de ses filtres. --- */
+
+  /* Types de champs personnalisés (ST-04) ; « Κείμενο » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Λίστα",
+  "app.settings.rules.typeMultiSelect": "Πολλαπλή επιλογή",
+  "app.settings.rules.typeDate": "Ημερομηνία",
+  "app.settings.rules.typeNumber": "Αριθμός",
+  "app.settings.rules.typeCheckbox": "Πλαίσιο επιλογής",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Γεγονός",
+  "app.settings.rules.condFieldStatus": "Κατάσταση",
+  "app.settings.rules.condFieldPriority": "Προτεραιότητα",
+  "app.settings.rules.condFieldChannel": "Κανάλι",
+  "app.settings.rules.condFieldType": "Τύπος",
+  "app.settings.rules.condFieldSubject": "Θέμα",
+  "app.settings.rules.condFieldTags": "Ετικέτες",
+  "app.settings.rules.condFieldAssignee": "Ανάθεση",
+  "app.settings.rules.condFieldTeam": "Ομάδα",
+  "app.settings.rules.condFieldOrganization": "Οργανισμός",
+  "app.settings.rules.condFieldHoursCreated": "Ώρες από τη δημιουργία",
+  "app.settings.rules.condFieldHoursUpdated": "Ώρες από την ενημέρωση",
+
+  /* Opérateurs ; les deux comparaisons numériques restent des symboles. */
+  "app.settings.rules.opIs": "είναι",
+  "app.settings.rules.opIsNot": "δεν είναι",
+  "app.settings.rules.opContains": "περιέχει",
+  "app.settings.rules.opIncludes": "περιλαμβάνει",
+  "app.settings.rules.opEmpty": "είναι κενό",
+  "app.settings.rules.opNotEmpty": "δεν είναι κενό",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs — les mêmes mots que ruleHintTrigger. */
+  "app.settings.rules.eventTicketCreated": "Δημιουργία τικέτ",
+  "app.settings.rules.eventTicketUpdated": "Ενημέρωση τικέτ",
+  "app.settings.rules.eventMessageCreated": "Λήψη μηνύματος",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Ορισμός της κατάστασης",
+  "app.settings.rules.actSetPriority": "Ορισμός της προτεραιότητας",
+  "app.settings.rules.actAssignUser": "Ανάθεση σε χειριστή",
+  "app.settings.rules.actAssignTeam": "Ανάθεση σε ομάδα",
+  "app.settings.rules.actAssignRoundRobin": "Ανάθεση στον επόμενο χειριστή (round-robin)",
+  "app.settings.rules.actAddTags": "Προσθήκη ετικετών",
+  "app.settings.rules.actEmailContact": "Αποστολή email στην επαφή",
+
+  /* Résumé d'une règle, en une ligne de liste : les bribes s'enchaînent, donc
+     sans majuscule initiale ni point final. */
+  "app.settings.rules.summaryPattern": "Αν {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "και",
+  "app.settings.rules.summaryAlways": "πάντα",
+  "app.settings.rules.summaryAnyOf": {
+    one: "τουλάχιστον μία από {count} συνθήκη",
+    other: "τουλάχιστον μία από {count} συνθήκες",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "χωρίς ανάθεση",
+  "app.settings.rules.summaryAssigned": "με ανάθεση",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : voir
+     formatDurationTokens, ils ne se traduisent pas. */
+  "app.settings.rules.summarySince": "εδώ και {duration}",
+  /* Sans préposition : deux statuts commencent déjà par « Σε » (Σε αναμονή,
+     Σε παύση), et « σε Σε αναμονή » se lirait mal. */
+  "app.settings.rules.summarySetStatus": "νέα κατάσταση {value}",
+  "app.settings.rules.summarySetPriority": "προτεραιότητα {value}",
+  "app.settings.rules.summaryAssignTeam": "ανάθεση σε {team}",
+  "app.settings.rules.summaryAnyTeam": "μια ομάδα",
+  "app.settings.rules.summaryAssignUser": "ανάθεση σε χειριστή",
+  "app.settings.rules.summaryRoundRobin": "ανάθεση στον επόμενο χειριστή",
+  "app.settings.rules.summaryAddTags": "προσθήκη {tags}",
+  "app.settings.rules.summaryEmailContact": "αποστολή email στην επαφή",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Κατάσταση → {value}",
+  "app.settings.rules.macroSummaryPriority": "Προτεραιότητα → {value}",
+  "app.settings.rules.macroSummaryTeam": "Ομάδα → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "ομάδα",
+  "app.settings.rules.macroSummaryAssign": "Ανάθεση →",
+  "app.settings.rules.macroSummaryTag": "Ετικέτα {tags}",
+  "app.settings.rules.macroSummaryNone": "Καμία ενέργεια",
+
   "app.settings.rules.fieldName": "Όνομα του πεδίου",
   "app.settings.rules.fieldNamePlaceholder": "Αριθμός παραγγελίας",
   "app.settings.rules.fieldOptions": "Επιλογές",
@@ -1606,4 +1692,139 @@ export const el: Dictionary = {
   "app.login.notAMember": "Αυτή η ταυτότητα δεν είναι μέλος αυτού του χώρου εργασίας.",
   "app.login.providerMissing":
     "Ο πάροχος αυτός δεν είναι ρυθμισμένος σε αυτήν την εγκατάσταση.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Le premier écran qu'un nouveau workspace rencontre. Le titre du portail dans
+     son propre aperçu (home.title), le nom du workspace, la couleur d'accent et
+     les rôles Owner / Admin / Agent / Viewer viennent d'ailleurs. */
+
+  "app.onboarding.asideTitle": "Διαμόρφωση",
+  "app.onboarding.asideFooter":
+    "Θα μπορέσετε να αλλάξετε όλες αυτές τις επιλογές αργότερα, από τις ρυθμίσεις.",
+  "app.onboarding.stepCounter": "Βήμα {step} από {total}",
+  "app.onboarding.continue": "Συνέχεια",
+  "app.onboarding.skip": "Παράλειψη αυτού του βήματος",
+
+  "app.onboarding.stepIdentity": "Ταυτότητα",
+  "app.onboarding.stepIdentityHint": "Όνομα, λογότυπο, χρώμα",
+  "app.onboarding.stepEmail": "Email",
+  "app.onboarding.stepEmailHint": "Διεύθυνση λήψης",
+  "app.onboarding.stepTeam": "Ομάδα",
+  "app.onboarding.stepTeamHint": "Πρόσκληση των χειριστών",
+  "app.onboarding.stepTest": "Δοκιμή",
+  "app.onboarding.stepTestHint": "Πρώτο τικέτ",
+
+  "app.onboarding.identityTitle": "Η ταυτότητα του χώρου εργασίας σας",
+  "app.onboarding.identityBody":
+    "Αυτά τα στοιχεία θα εμφανίζονται στην πύλη πελατών σας και στα email που στέλνονται στους πελάτες σας.",
+  "app.onboarding.logoDrop": "Αφήστε εδώ ένα αρχείο PNG ή SVG",
+  "app.onboarding.previewSearch": "Αναζήτηση άρθρου…",
+  "app.onboarding.previewCaption": "Προεπισκόπηση της πύλης πελατών σας",
+
+  "app.onboarding.emailTitle": "Λήψη των email σας",
+  "app.onboarding.emailBody":
+    "Όλα τα αιτήματα που λαμβάνονται σε αυτήν τη διεύθυνση γίνονται αυτόματα τικέτ.",
+  "app.onboarding.or": "Ή",
+  "app.onboarding.copy": "Αντιγραφή",
+  "app.onboarding.copied": "Αντιγράφηκε ✓",
+  "app.onboarding.ownAddressTitle": "Σύνδεση της δικής μου διεύθυνσης",
+  "app.onboarding.ownAddressBody":
+    "Προωθήστε την υπάρχουσα διεύθυνσή σας ({example}) στη διεύθυνση που δίνεται παραπάνω. Αναλυτική διαμόρφωση στις ρυθμίσεις.",
+  "app.onboarding.forwardLabel": "Διεύθυνση προς προώθηση",
+  "app.onboarding.forwardPlaceholder": "support@to-domain-sas.gr",
+
+  "app.onboarding.teamTitle": "Προσκαλέστε την ομάδα σας",
+  "app.onboarding.teamBody":
+    "Προσκαλέστε τους χειριστές σας τώρα ή κοινοποιήστε τον σύνδεσμο πρόσκλησης. Οι θέσεις Viewer είναι δωρεάν.",
+  "app.onboarding.invitePlaceholder": "synergatis@etaireia.gr",
+  "app.onboarding.addRow": "+ Προσθήκη γραμμής",
+  "app.onboarding.sendInvites": "Αποστολή των προσκλήσεων",
+
+  "app.onboarding.testTitle": "Στείλτε ένα πρώτο τικέτ",
+  "app.onboarding.testBody":
+    "Ελέγξτε ολόκληρη τη διαδρομή προτού ανοίξετε την υπηρεσία στους πελάτες σας.",
+  "app.onboarding.readyTitle": "Ο χώρος εργασίας σας είναι έτοιμος",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée autour
+     du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody":
+    "Στείλτε ένα email στο {address} για να δημιουργήσετε ένα δοκιμαστικό τικέτ.",
+  "app.onboarding.openInbox": "Άνοιγμα των εισερχομένων",
+
+  "app.onboarding.checklistIdentity": "Η ταυτότητα ορίστηκε",
+  "app.onboarding.checklistEmail": "Η διεύθυνση email ρυθμίστηκε",
+  "app.onboarding.checklistTeam": "Η ομάδα προσκλήθηκε",
+  "app.onboarding.checklistTicket": "Το πρώτο τικέτ ελήφθη",
+  "app.onboarding.checklistSla": "Η πολιτική SLA επαληθεύτηκε",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur :
+     elle est découpée autour de {mode}. Le grec exige le partitif « από τις » et
+     le quantifieur reste au milieu, entre « Αντιστοιχεί σε » et « από τις
+     συνθήκες » — « σε όλες από τις συνθήκες » ne se dit pas, d'où « κάθε μία »,
+     qui s'accorde dans les deux modes. */
+  "app.settings.rules.matchIf": "ΑΝ",
+  "app.settings.rules.matchAllPattern": "Αντιστοιχεί σε {mode} από τις συνθήκες",
+  "app.settings.rules.matchAnyPattern": "Αντιστοιχεί σε {mode} από τις συνθήκες",
+  "app.settings.rules.matchAll": "κάθε μία",
+  "app.settings.rules.matchAny": "τουλάχιστον μία",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Πρόγραμμα Free",
+  "app.settings.workspace.planStandard": "Πρόγραμμα Standard",
+  "app.settings.workspace.planPro": "Πρόγραμμα Pro",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Ερώτηση",
+  "app.ticket.typeIncident": "Περιστατικό",
+  "app.ticket.typeTask": "Εργασία",
+  "app.ticket.typeOther": "Άλλο",
+
+  /* AG-09 — export CSV des rapports. Un fichier téléchargé est du texte lu par
+     une personne : ses entêtes se traduisent, secondes abrégées comprises. */
+  "app.reports.csvIndicator": "Δείκτης",
+  "app.reports.csvCurrentPeriod": "Τρέχουσα περίοδος",
+  "app.reports.csvPreviousPeriod": "Προηγούμενη περίοδος",
+  "app.reports.csvCreated": "Τικέτ που δημιουργήθηκαν",
+  "app.reports.csvResolved": "Τικέτ που επιλύθηκαν",
+  "app.reports.csvMedianFirstReply": "Διάμεση 1η απάντηση (δευτ.)",
+  "app.reports.csvMedianResolve": "Διάμεση επίλυση (δευτ.)",
+  "app.reports.csvSlaCompliance": "Συμμόρφωση με το SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Ημέρα",
+  "app.reports.csvCreatedShort": "Δημιουργημένα",
+  "app.reports.csvResolvedShort": "Επιλυμένα",
+  "app.reports.csvAgent": "Χειριστής",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Νέο άρθρο",
+  "app.kb.fromTicketSymptomHeading": "Σύμπτωμα",
+  "app.kb.fromTicketSymptomPlaceholder": "[Περιγράψτε τι διαπιστώνει ο πελάτης.]",
+  "app.kb.fromTicketSolutionHeading": "Λύση",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Περιγράψτε τον χειρισμό που λύνει το πρόβλημα.]",
+  "app.kb.fromTicketMissingRequest": "το αρχικό αίτημα του πελάτη",
+  "app.kb.fromTicketMissingAnswer": "η απάντηση του χειριστή",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Διαδικασία βήμα προς βήμα",
+  "app.kb.tplProcedureHint": "Μια σειρά αριθμημένων βημάτων, με το αναμενόμενο αποτέλεσμα.",
+  "app.kb.tplProcedureTitle": "Πώς να [κάνετε την ενέργεια]",
+  "app.kb.tplProcedureBody": "Αυτό το άρθρο εξηγεί πώς να [κάνετε την ενέργεια]. Υπολογίστε περίπου [διάρκεια].\n\n## Πριν ξεκινήσετε\n\n- [Δικαίωμα ή ρόλος που απαιτείται]\n- [Πληροφορία που πρέπει να έχετε πρόχειρη]\n\n## Βήματα\n\n1. Ανοίξτε [τη σχετική οθόνη].\n2. Κάντε κλικ στο **[κουμπί]**.\n3. Συμπληρώστε [το πεδίο] και επιβεβαιώστε.\n\n> Αν παρουσιαστεί [η ειδική περίπτωση], [η ενέργεια που πρέπει να γίνει].\n\n## Αποτέλεσμα\n\n[Τι πρέπει να δει το άτομο μόλις η ενέργεια ολοκληρωθεί με επιτυχία.]\n",
+  "app.kb.tplIncidentLabel": "Επίλυση περιστατικού",
+  "app.kb.tplIncidentHint": "Σύμπτωμα, αιτία, λύση και προσωρινή παράκαμψη.",
+  "app.kb.tplIncidentTitle": "[Το σύμπτωμα που παρατηρήθηκε]",
+  "app.kb.tplIncidentBody": "## Σύμπτωμα\n\n[Τι διαπιστώνει το άτομο, με το ακριβές μήνυμα σφάλματος αν υπάρχει.]\n\n## Αιτία\n\n[Γιατί συμβαίνει αυτό.]\n\n## Λύση\n\n1. [Πρώτη διορθωτική ενέργεια]\n2. [Δεύτερη διορθωτική ενέργεια]\n\n## Προσωρινή παράκαμψη\n\n> [Τι μπορεί να κάνει το άτομο αμέσως, αν η λύση απαιτεί\n> παρέμβαση της ομάδας σας.]\n\n## Αν το πρόβλημα επιμένει\n\nΥποβάλετε ένα αίτημα προσδιορίζοντας [τις πληροφορίες που είναι χρήσιμες για τη διάγνωση].\n",
+  "app.kb.tplFaqLabel": "Συχνή ερώτηση",
+  "app.kb.tplFaqHint": "Μια σύντομη και άμεση απάντηση, έπειτα οι διευκρινίσεις.",
+  "app.kb.tplFaqTitle": "[Η ερώτηση, όπως τη θέτουν οι πελάτες]",
+  "app.kb.tplFaqBody": "**Σύντομη απάντηση:** [η απάντηση σε μία φράση].\n\n## Αναλυτικά\n\n[Το πλαίσιο και οι χρήσιμες λεπτομέρειες.]\n\n## Ειδικές περιπτώσεις\n\n- **[Περίπτωση Α]** — [τι αλλάζει].\n- **[Περίπτωση Β]** — [τι αλλάζει].\n\n## Για να εμβαθύνετε\n\n[Παραπομπή στο συγγενικό άρθρο ή στη σχετική διαδικασία.]\n",
+  "app.kb.tplReleaseLabel": "Σημείωμα έκδοσης",
+  "app.kb.tplReleaseHint": "Νέες δυνατότητες, βελτιώσεις και διορθώσεις μιας έκδοσης.",
+  "app.kb.tplReleaseTitle": "Τι νέο υπάρχει στο [ημερομηνία ή έκδοση]",
+  "app.kb.tplReleaseBody": "## Νέες δυνατότητες\n\n- **[Όνομα της λειτουργίας]** — [τι επιτρέπει, από την πλευρά του χρήστη].\n\n## Βελτιώσεις\n\n- [Τι γίνεται πιο απλό ή πιο γρήγορο.]\n\n## Διορθώσεις\n\n- [Το πρόβλημα που διορθώθηκε, διατυπωμένο όπως το βίωνε ο πελάτης.]\n\n> Αυτές οι αλλαγές είναι ήδη ενεργές στον χώρο σας, δεν απαιτείται καμία\n> ενέργεια από την πλευρά σας.\n",
 };

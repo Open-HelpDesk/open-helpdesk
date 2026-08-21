@@ -1254,6 +1254,93 @@ export const fr = {
   "app.settings.rules.typeLongText": "Texte long",
   "app.settings.rules.typeFile": "Fichier",
   "app.settings.rules.typeSelectLong": "Liste déroulante",
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Il vivait dans lib/rule-labels.ts, en français, tables et phrases
+     comprises : l'écran des automatisations restait donc français quelle que
+     soit la langue du workspace. Les statuts, priorités et canaux ne sont PAS
+     repris ici — ils viennent des tables partagées de lib/format.ts, celles de
+     l'inbox et de ses filtres. */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Liste",
+  "app.settings.rules.typeMultiSelect": "Multi-sélection",
+  "app.settings.rules.typeDate": "Date",
+  "app.settings.rules.typeNumber": "Nombre",
+  "app.settings.rules.typeCheckbox": "Case à cocher",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Événement",
+  "app.settings.rules.condFieldStatus": "Statut",
+  "app.settings.rules.condFieldPriority": "Priorité",
+  "app.settings.rules.condFieldChannel": "Canal",
+  "app.settings.rules.condFieldType": "Type",
+  "app.settings.rules.condFieldSubject": "Sujet",
+  "app.settings.rules.condFieldTags": "Tags",
+  "app.settings.rules.condFieldAssignee": "Assigné",
+  "app.settings.rules.condFieldTeam": "Équipe",
+  "app.settings.rules.condFieldOrganization": "Organisation",
+  "app.settings.rules.condFieldHoursCreated": "Heures depuis la création",
+  "app.settings.rules.condFieldHoursUpdated": "Heures depuis la mise à jour",
+
+  /* Opérateurs. Les deux derniers sont des symboles en français, mais ils
+     passent par le dictionnaire : une langue peut préférer un mot. */
+  "app.settings.rules.opIs": "est",
+  "app.settings.rules.opIsNot": "n'est pas",
+  "app.settings.rules.opContains": "contient",
+  "app.settings.rules.opIncludes": "inclut",
+  "app.settings.rules.opEmpty": "est vide",
+  "app.settings.rules.opNotEmpty": "n'est pas vide",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Ticket créé",
+  "app.settings.rules.eventTicketUpdated": "Ticket mis à jour",
+  "app.settings.rules.eventMessageCreated": "Message reçu",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Définir le statut",
+  "app.settings.rules.actSetPriority": "Définir la priorité",
+  "app.settings.rules.actAssignUser": "Assigner à un agent",
+  "app.settings.rules.actAssignTeam": "Assigner à une équipe",
+  "app.settings.rules.actAssignRoundRobin": "Assigner au prochain agent (round-robin)",
+  "app.settings.rules.actAddTags": "Ajouter des tags",
+  "app.settings.rules.actEmailContact": "Envoyer un email au contact",
+
+  /* Résumé d'une règle, en une ligne de liste. Le gabarit est une clé : l'ordre
+     « si … alors … » n'est pas universel, et les bribes s'y insèrent. */
+  "app.settings.rules.summaryPattern": "Si {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "et",
+  "app.settings.rules.summaryAlways": "toujours",
+  "app.settings.rules.summaryAnyOf": {
+    one: "au moins une de {count} condition",
+    other: "au moins une de {count} conditions",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "non assigné",
+  "app.settings.rules.summaryAssigned": "assigné",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : voir
+     formatDurationTokens, ils ne se traduisent pas. */
+  "app.settings.rules.summarySince": "depuis {duration}",
+  "app.settings.rules.summarySetStatus": "passer en {value}",
+  "app.settings.rules.summarySetPriority": "priorité {value}",
+  "app.settings.rules.summaryAssignTeam": "assigner à {team}",
+  "app.settings.rules.summaryAnyTeam": "une équipe",
+  "app.settings.rules.summaryAssignUser": "assigner à un agent",
+  "app.settings.rules.summaryRoundRobin": "assigner au prochain agent",
+  "app.settings.rules.summaryAddTags": "ajouter {tags}",
+  "app.settings.rules.summaryEmailContact": "envoyer un email au contact",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Statut → {value}",
+  "app.settings.rules.macroSummaryPriority": "Priorité → {value}",
+  "app.settings.rules.macroSummaryTeam": "Équipe → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "équipe",
+  "app.settings.rules.macroSummaryAssign": "Assigner →",
+  "app.settings.rules.macroSummaryTag": "Tag {tags}",
+  "app.settings.rules.macroSummaryNone": "Aucune action",
+
   "app.settings.rules.fieldName": "Nom du champ",
   "app.settings.rules.fieldNamePlaceholder": "Numéro de commande",
   "app.settings.rules.fieldOptions": "Options",
@@ -1449,6 +1536,152 @@ export const fr = {
   "app.login.rateLimited": "Trop de tentatives de connexion. Patientez quelques secondes avant de réessayer.",
   "app.login.notAMember": "Cette identité n'est pas membre de ce workspace.",
   "app.login.providerMissing": "Ce fournisseur n'est pas configuré sur cette instance.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Tout cet écran était en français dans le code : le premier écran qu'un
+     nouveau workspace rencontre, et le seul qui n'avait aucune traduction.
+     Quatre libellés viennent d'ailleurs et ne sont pas repris ici : le titre du
+     portail dans son propre aperçu (home.title), le nom du workspace et la
+     couleur d'accent (les mêmes contrôles qu'en ST-01), et les rôles du produit
+     Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Configuration",
+  "app.onboarding.asideFooter":
+    "Vous pourrez modifier tous ces réglages plus tard dans les paramètres.",
+  "app.onboarding.stepCounter": "Étape {step} sur {total}",
+  "app.onboarding.continue": "Continuer",
+  "app.onboarding.skip": "Passer cette étape",
+
+  "app.onboarding.stepIdentity": "Identité",
+  "app.onboarding.stepIdentityHint": "Nom, logo, couleur",
+  "app.onboarding.stepEmail": "Email",
+  "app.onboarding.stepEmailHint": "Adresse de réception",
+  "app.onboarding.stepTeam": "Équipe",
+  "app.onboarding.stepTeamHint": "Inviter les agents",
+  "app.onboarding.stepTest": "Essai",
+  "app.onboarding.stepTestHint": "Premier ticket",
+
+  "app.onboarding.identityTitle": "Identité de votre workspace",
+  "app.onboarding.identityBody":
+    "Ces éléments apparaîtront sur votre portail client et dans les emails envoyés à vos clients.",
+  "app.onboarding.logoDrop": "Déposer un fichier PNG ou SVG",
+  "app.onboarding.previewSearch": "Rechercher un article…",
+  "app.onboarding.previewCaption": "Aperçu de votre portail client",
+
+  "app.onboarding.emailTitle": "Recevoir vos emails",
+  "app.onboarding.emailBody":
+    "Toutes les demandes reçues à cette adresse deviennent automatiquement des tickets.",
+  "app.onboarding.or": "OU",
+  "app.onboarding.copy": "Copier",
+  "app.onboarding.copied": "Copié ✓",
+  "app.onboarding.ownAddressTitle": "Connecter ma propre adresse",
+  "app.onboarding.ownAddressBody":
+    "Transférez votre adresse existante ({example}) vers l'adresse fournie ci-dessus. Configuration détaillée dans les paramètres.",
+  "app.onboarding.forwardLabel": "Adresse à transférer",
+  "app.onboarding.forwardPlaceholder": "support@votre-domaine.fr",
+
+  "app.onboarding.teamTitle": "Inviter votre équipe",
+  "app.onboarding.teamBody":
+    "Invitez vos agents maintenant, ou partagez le lien d'invitation. Les sièges Viewer sont gratuits.",
+  "app.onboarding.invitePlaceholder": "collegue@entreprise.fr",
+  "app.onboarding.addRow": "+ Ajouter une ligne",
+  "app.onboarding.sendInvites": "Envoyer les invitations",
+
+  "app.onboarding.testTitle": "Envoyer un premier ticket",
+  "app.onboarding.testBody":
+    "Vérifiez la chaîne complète avant d'ouvrir le service à vos clients.",
+  "app.onboarding.readyTitle": "Votre workspace est prêt",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Envoyez un email à {address} pour créer un ticket de test.",
+  "app.onboarding.openInbox": "Ouvrir l'inbox",
+
+  "app.onboarding.checklistIdentity": "Identité définie",
+  "app.onboarding.checklistEmail": "Adresse email configurée",
+  "app.onboarding.checklistTeam": "Équipe invitée",
+  "app.onboarding.checklistTicket": "Premier ticket reçu",
+  "app.onboarding.checklistSla": "Politique SLA vérifiée",
+
+
+/* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
+     « toutes / au moins une » : elle est découpée autour de {mode}, sans quoi
+     l'allemand ne pourrait pas mettre son verbe à la fin. */
+  "app.settings.rules.matchIf": "SI",
+  /* Un gabarit PAR MODE, et non un seul. Le français change de déterminant
+     entre « toutes LES conditions » et « au moins une DES conditions » : le
+     cadre unique d'avant écrivait « Correspond à au moins une les conditions »,
+     et l'allemand en héritait, aggravé — « mindestens eine Bedingungen treffen
+     zu » accordait un déterminant singulier à un nom et un verbe pluriels. Les
+     vingt-deux autres langues étaient correctes et portent deux fois le même
+     cadre : elles avaient replié la flexion dans le libellé du sélecteur, ou
+     rejeté celui-ci en fin de phrase après deux-points. */
+  "app.settings.rules.matchAllPattern": "Correspond à {mode} les conditions",
+  "app.settings.rules.matchAnyPattern": "Correspond à {mode} des conditions",
+  "app.settings.rules.matchAll": "toutes",
+  "app.settings.rules.matchAny": "au moins une",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Plan Free",
+  "app.settings.workspace.planStandard": "Plan Standard",
+  "app.settings.workspace.planPro": "Plan Pro",
+
+  /* Types de ticket (AG-05). Attention : la VALEUR enregistrée en base reste la
+     chaîne française — c'est ainsi que le produit la stocke. Seul l'affichage
+     est traduit, les tickets déjà créés continuent de correspondre. */
+  "app.ticket.typeQuestion": "Question",
+  "app.ticket.typeIncident": "Incident",
+  "app.ticket.typeTask": "Tâche",
+  "app.ticket.typeOther": "Autre",
+
+  /* AG-09 — export CSV des rapports. Un fichier téléchargé est du texte lu par
+     une personne : ses entêtes se traduisent comme le reste de l'écran. */
+  "app.reports.csvIndicator": "Indicateur",
+  "app.reports.csvCurrentPeriod": "Période courante",
+  "app.reports.csvPreviousPeriod": "Période précédente",
+  "app.reports.csvCreated": "Tickets créés",
+  "app.reports.csvResolved": "Tickets résolus",
+  "app.reports.csvMedianFirstReply": "1ʳᵉ réponse médiane (s)",
+  "app.reports.csvMedianResolve": "Résolution médiane (s)",
+  "app.reports.csvSlaCompliance": "Conformité SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Jour",
+  "app.reports.csvCreatedShort": "Créés",
+  "app.reports.csvResolvedShort": "Résolus",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Nouvel article",
+  "app.kb.fromTicketSymptomHeading": "Symptôme",
+  "app.kb.fromTicketSymptomPlaceholder": "[Décrivez ce que le client constate.]",
+  "app.kb.fromTicketSolutionHeading": "Solution",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Décrivez la manipulation qui résout le problème.]",
+  "app.kb.fromTicketMissingRequest": "la demande initiale du client",
+  "app.kb.fromTicketMissingAnswer": "la réponse de l'agent",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Procédure pas-à-pas",
+  "app.kb.tplProcedureHint": "Une suite d'étapes numérotées, avec le résultat attendu.",
+  "app.kb.tplProcedureTitle": "Comment [faire l'action]",
+  "app.kb.tplProcedureBody": "Cet article explique comment [faire l'action]. Comptez environ [durée].\n\n## Avant de commencer\n\n- [Droit ou rôle nécessaire]\n- [Information à avoir sous la main]\n\n## Étapes\n\n1. Ouvrez [l'écran concerné].\n2. Cliquez sur **[le bouton]**.\n3. Renseignez [le champ], puis validez.\n\n> Si [le cas particulier] se présente, [la conduite à tenir].\n\n## Résultat\n\n[Ce que la personne doit voir une fois l'opération réussie.]\n",
+  "app.kb.tplIncidentLabel": "Résolution d'incident",
+  "app.kb.tplIncidentHint": "Symptôme, cause, solution et contournement provisoire.",
+  "app.kb.tplIncidentTitle": "[Symptôme observé]",
+  "app.kb.tplIncidentBody": "## Symptôme\n\n[Ce que la personne constate, avec le message d'erreur exact s'il y en a un.]\n\n## Cause\n\n[Pourquoi cela se produit.]\n\n## Solution\n\n1. [Première action corrective]\n2. [Deuxième action corrective]\n\n## Contournement en attendant\n\n> [Ce que la personne peut faire tout de suite si la solution demande une\n> intervention de votre équipe.]\n\n## Si le problème persiste\n\nOuvrez une demande en précisant [les informations utiles au diagnostic].\n",
+  "app.kb.tplFaqLabel": "Question fréquente",
+  "app.kb.tplFaqHint": "Une réponse courte et directe, puis les précisions.",
+  "app.kb.tplFaqTitle": "[La question, telle que les clients la posent]",
+  "app.kb.tplFaqBody": "**Réponse courte :** [la réponse en une phrase].\n\n## En détail\n\n[Le contexte et les nuances utiles.]\n\n## Cas particuliers\n\n- **[Situation A]** — [ce qui change].\n- **[Situation B]** — [ce qui change].\n\n## Pour aller plus loin\n\n[Renvoi vers l'article voisin ou la démarche associée.]\n",
+  "app.kb.tplReleaseLabel": "Note de version",
+  "app.kb.tplReleaseHint": "Nouveautés, améliorations et corrections d'une livraison.",
+  "app.kb.tplReleaseTitle": "Nouveautés du [date ou version]",
+  "app.kb.tplReleaseBody": "## Nouveautés\n\n- **[Nom de la fonctionnalité]** — [ce qu'elle permet, côté utilisateur].\n\n## Améliorations\n\n- [Ce qui devient plus simple ou plus rapide.]\n\n## Corrections\n\n- [Le problème corrigé, formulé comme le client le vivait.]\n\n> Ces changements sont déjà actifs sur votre espace, aucune action de votre part\n> n'est nécessaire.\n",
+
 } as const satisfies Record<string, Message>;
 
 /** L'ensemble des clés du produit — les autres langues sont typées dessus. */

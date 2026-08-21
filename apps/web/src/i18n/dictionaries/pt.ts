@@ -1227,6 +1227,94 @@ export const pt: Dictionary = {
   "app.settings.rules.typeLongText": "Texto longo",
   "app.settings.rules.typeFile": "Ficheiro",
   "app.settings.rules.typeSelectLong": "Lista pendente",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
+     tables partagées, celles de l'inbox et de ses filtres. */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Lista",
+  "app.settings.rules.typeMultiSelect": "Seleção múltipla",
+  "app.settings.rules.typeDate": "Data",
+  "app.settings.rules.typeNumber": "Número",
+  "app.settings.rules.typeCheckbox": "Caixa de verificação",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Evento",
+  "app.settings.rules.condFieldStatus": "Estado",
+  "app.settings.rules.condFieldPriority": "Prioridade",
+  "app.settings.rules.condFieldChannel": "Canal",
+  "app.settings.rules.condFieldType": "Tipo",
+  "app.settings.rules.condFieldSubject": "Assunto",
+  "app.settings.rules.condFieldTags": "Etiquetas",
+  "app.settings.rules.condFieldAssignee": "Atribuído",
+  "app.settings.rules.condFieldTeam": "Equipa",
+  "app.settings.rules.condFieldOrganization": "Organização",
+  "app.settings.rules.condFieldHoursCreated": "Horas desde a criação",
+  "app.settings.rules.condFieldHoursUpdated": "Horas desde a atualização",
+
+  /* Opérateurs. « está vazio » accorderait son adjectif avec le nom du champ, et
+     « Etiquetas está vazio » est faux deux fois — genre et nombre. « sem valor /
+     com valor » est invariable et se lit après n'importe lequel des douze
+     champs. Les deux derniers restent des symboles. */
+  "app.settings.rules.opIs": "é",
+  "app.settings.rules.opIsNot": "não é",
+  "app.settings.rules.opContains": "contém",
+  "app.settings.rules.opIncludes": "inclui",
+  "app.settings.rules.opEmpty": "sem valor",
+  "app.settings.rules.opNotEmpty": "com valor",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Pedido criado",
+  "app.settings.rules.eventTicketUpdated": "Pedido atualizado",
+  "app.settings.rules.eventMessageCreated": "Mensagem recebida",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Definir o estado",
+  "app.settings.rules.actSetPriority": "Definir a prioridade",
+  "app.settings.rules.actAssignUser": "Atribuir a um agente",
+  "app.settings.rules.actAssignTeam": "Atribuir a uma equipa",
+  "app.settings.rules.actAssignRoundRobin": "Atribuir ao próximo agente (round-robin)",
+  "app.settings.rules.actAddTags": "Adicionar etiquetas",
+  "app.settings.rules.actEmailContact": "Enviar um e-mail ao contacto",
+
+  /* Résumé d'une règle, en une ligne de liste. Le portugais garde l'ordre
+     « se … alors … » du français ; les bribes s'y insèrent sans majuscule
+     initiale ni point final. */
+  "app.settings.rules.summaryPattern": "Se {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "e",
+  "app.settings.rules.summaryAlways": "sempre",
+  "app.settings.rules.summaryAnyOf": {
+    one: "pelo menos uma de {count} condição",
+    other: "pelo menos uma de {count} condições",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "não atribuído",
+  "app.settings.rules.summaryAssigned": "atribuído",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. La bribe se colle à la condition qui précède —
+     « Estado = A aguardar há 2 j ». */
+  "app.settings.rules.summarySince": "há {duration}",
+  "app.settings.rules.summarySetStatus": "passar a {value}",
+  "app.settings.rules.summarySetPriority": "prioridade {value}",
+  "app.settings.rules.summaryAssignTeam": "atribuir a {team}",
+  "app.settings.rules.summaryAnyTeam": "uma equipa",
+  "app.settings.rules.summaryAssignUser": "atribuir a um agente",
+  "app.settings.rules.summaryRoundRobin": "atribuir ao próximo agente",
+  "app.settings.rules.summaryAddTags": "adicionar {tags}",
+  "app.settings.rules.summaryEmailContact": "enviar um e-mail ao contacto",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Estado → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioridade → {value}",
+  "app.settings.rules.macroSummaryTeam": "Equipa → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "equipa",
+  "app.settings.rules.macroSummaryAssign": "Atribuir →",
+  "app.settings.rules.macroSummaryTag": "Etiqueta {tags}",
+  "app.settings.rules.macroSummaryNone": "Nenhuma ação",
   "app.settings.rules.fieldName": "Nome do campo",
   "app.settings.rules.fieldNamePlaceholder": "Número da encomenda",
   "app.settings.rules.fieldOptions": "Opções",
@@ -1379,4 +1467,146 @@ export const pt: Dictionary = {
   "app.login.rateLimited": "Demasiadas tentativas de início de sessão. Aguarde alguns segundos antes de tentar novamente.",
   "app.login.notAMember": "Esta identidade não é membro deste espaço de trabalho.",
   "app.login.providerMissing": "Este fornecedor não está configurado nesta instância.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Tout cet écran était en français dans le code. Quatre libellés viennent
+     d'ailleurs et ne sont pas repris ici : le titre du portail dans son propre
+     aperçu (home.title), le nom du workspace et la couleur d'accent (les mêmes
+     contrôles qu'en ST-01), et les rôles Owner / Admin / Agent / Viewer, qui ne
+     se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Configuração",
+  "app.onboarding.asideFooter":
+    "Poderá alterar todas estas opções mais tarde nas definições.",
+  "app.onboarding.stepCounter": "Passo {step} de {total}",
+  "app.onboarding.continue": "Continuar",
+  "app.onboarding.skip": "Ignorar este passo",
+
+  "app.onboarding.stepIdentity": "Identidade",
+  "app.onboarding.stepIdentityHint": "Nome, logótipo, cor",
+  "app.onboarding.stepEmail": "E-mail",
+  "app.onboarding.stepEmailHint": "Endereço de receção",
+  "app.onboarding.stepTeam": "Equipa",
+  "app.onboarding.stepTeamHint": "Convidar os agentes",
+  "app.onboarding.stepTest": "Teste",
+  "app.onboarding.stepTestHint": "Primeiro pedido",
+
+  "app.onboarding.identityTitle": "Identidade do seu espaço de trabalho",
+  "app.onboarding.identityBody":
+    "Estes elementos aparecerão no seu portal do cliente e nos e-mails enviados aos seus clientes.",
+  "app.onboarding.logoDrop": "Largue um ficheiro PNG ou SVG",
+  "app.onboarding.previewSearch": "Pesquisar um artigo…",
+  "app.onboarding.previewCaption": "Pré-visualização do seu portal do cliente",
+
+  "app.onboarding.emailTitle": "Receber os seus e-mails",
+  /* « demandes » et « tickets » se disent tous deux « pedidos » : la phrase part
+     des messages reçus pour ne pas dire le mot deux fois. */
+  "app.onboarding.emailBody":
+    "Todas as mensagens recebidas neste endereço tornam-se automaticamente pedidos.",
+  "app.onboarding.or": "OU",
+  "app.onboarding.copy": "Copiar",
+  "app.onboarding.copied": "Copiado ✓",
+  "app.onboarding.ownAddressTitle": "Ligar o meu próprio endereço",
+  "app.onboarding.ownAddressBody":
+    "Reencaminhe o seu endereço atual ({example}) para o endereço indicado acima. Configuração detalhada nas definições.",
+  "app.onboarding.forwardLabel": "Endereço a reencaminhar",
+  "app.onboarding.forwardPlaceholder": "apoio@o-seu-dominio.pt",
+
+  "app.onboarding.teamTitle": "Convidar a sua equipa",
+  "app.onboarding.teamBody":
+    "Convide os seus agentes agora ou partilhe a ligação de convite. Os lugares Viewer são gratuitos.",
+  "app.onboarding.invitePlaceholder": "colega@empresa.pt",
+  "app.onboarding.addRow": "+ Adicionar uma linha",
+  "app.onboarding.sendInvites": "Enviar os convites",
+
+  "app.onboarding.testTitle": "Enviar um primeiro pedido",
+  "app.onboarding.testBody":
+    "Verifique toda a cadeia antes de abrir o serviço aos seus clientes.",
+  "app.onboarding.readyTitle": "O seu espaço de trabalho está pronto",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Envie um e-mail para {address} para criar um pedido de teste.",
+  "app.onboarding.openInbox": "Abrir a caixa de entrada",
+
+  "app.onboarding.checklistIdentity": "Identidade definida",
+  "app.onboarding.checklistEmail": "Endereço de e-mail configurado",
+  "app.onboarding.checklistTeam": "Equipa convidada",
+  "app.onboarding.checklistTicket": "Primeiro pedido recebido",
+  "app.onboarding.checklistSla": "Política de SLA verificada",
+
+
+/* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
+     « todas / pelo menos uma » : elle est découpée autour de {mode}. Le
+     portugais place ici le sélecteur en FIN de phrase, comme l'espagnol : les
+     deux modes ne réclament pas le même déterminant — « todas AS condições »
+     mais « pelo menos uma DAS condições » —, et aucun cadre unique ne peut
+     satisfaire les deux. « Condições a cumprir : … » se lit juste dans les deux
+     cas, la seconde moitié est donc vide. */
+  "app.settings.rules.matchIf": "SE",
+  "app.settings.rules.matchAllPattern": "Condições a cumprir: {mode}",
+  "app.settings.rules.matchAnyPattern": "Condições a cumprir: {mode}",
+  "app.settings.rules.matchAll": "todas",
+  "app.settings.rules.matchAny": "pelo menos uma",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Plano Free",
+  "app.settings.workspace.planStandard": "Plano Standard",
+  "app.settings.workspace.planPro": "Plano Pro",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Pergunta",
+  "app.ticket.typeIncident": "Incidente",
+  "app.ticket.typeTask": "Tarefa",
+  "app.ticket.typeOther": "Outro",
+
+  /* AG-09 — export CSV des rapports. Un fichier téléchargé est du texte lu par
+     une personne : ses entêtes se traduisent comme le reste de l'écran. Les
+     secondes s'abrègent « s » en portugais aussi. */
+  "app.reports.csvIndicator": "Indicador",
+  "app.reports.csvCurrentPeriod": "Período atual",
+  "app.reports.csvPreviousPeriod": "Período anterior",
+  "app.reports.csvCreated": "Pedidos criados",
+  "app.reports.csvResolved": "Pedidos resolvidos",
+  "app.reports.csvMedianFirstReply": "1.ª resposta mediana (s)",
+  "app.reports.csvMedianResolve": "Resolução mediana (s)",
+  "app.reports.csvSlaCompliance": "Cumprimento do SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Dia",
+  "app.reports.csvCreatedShort": "Criados",
+  "app.reports.csvResolvedShort": "Resolvidos",
+  "app.reports.csvAgent": "Agente",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Novo artigo",
+  "app.kb.fromTicketSymptomHeading": "Sintoma",
+  "app.kb.fromTicketSymptomPlaceholder": "[Descreva o que o cliente observa.]",
+  "app.kb.fromTicketSolutionHeading": "Solução",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Descreva os passos que resolvem o problema.]",
+  "app.kb.fromTicketMissingRequest": "o pedido inicial do cliente",
+  "app.kb.fromTicketMissingAnswer": "a resposta do agente",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Procedimento passo a passo",
+  "app.kb.tplProcedureHint": "Uma sequência de passos numerados, com o resultado esperado.",
+  "app.kb.tplProcedureTitle": "Como [realizar a ação]",
+  "app.kb.tplProcedureBody": "Este artigo explica como [realizar a ação]. Conte com cerca de [duração].\n\n## Antes de começar\n\n- [Permissão ou função necessária]\n- [Informação a ter à mão]\n\n## Passos\n\n1. Abra [o ecrã em questão].\n2. Clique em **[nome do botão]**.\n3. Preencha [o campo] e confirme.\n\n> Se [o caso particular] ocorrer, [o que fazer].\n\n## Resultado\n\n[O que a pessoa deve ver quando a operação tiver sido bem-sucedida.]\n",
+  "app.kb.tplIncidentLabel": "Resolução de incidente",
+  "app.kb.tplIncidentHint": "Sintoma, causa, solução e alternativa provisória.",
+  "app.kb.tplIncidentTitle": "[Sintoma observado]",
+  "app.kb.tplIncidentBody": "## Sintoma\n\n[O que a pessoa observa, com a mensagem de erro exata, se existir.]\n\n## Causa\n\n[Por que motivo isto acontece.]\n\n## Solução\n\n1. [Primeira ação corretiva]\n2. [Segunda ação corretiva]\n\n## Alternativa provisória\n\n> [O que a pessoa pode fazer de imediato se a solução exigir uma\n> intervenção da sua equipa.]\n\n## Se o problema persistir\n\nAbra um pedido e indique [as informações úteis ao diagnóstico].\n",
+  "app.kb.tplFaqLabel": "Pergunta frequente",
+  "app.kb.tplFaqHint": "Uma resposta curta e direta e, depois, os detalhes.",
+  "app.kb.tplFaqTitle": "[A pergunta, tal como os clientes a fazem]",
+  "app.kb.tplFaqBody": "**Resposta curta:** [a resposta numa frase].\n\n## Em detalhe\n\n[O contexto e as nuances úteis.]\n\n## Casos particulares\n\n- **[Situação A]** — [o que muda].\n- **[Situação B]** — [o que muda].\n\n## Para saber mais\n\n[Remissão para o artigo vizinho ou para o procedimento associado.]\n",
+  "app.kb.tplReleaseLabel": "Nota de versão",
+  "app.kb.tplReleaseHint": "Novidades, melhorias e correções de uma versão.",
+  "app.kb.tplReleaseTitle": "Novidades de [data ou versão]",
+  "app.kb.tplReleaseBody": "## Novidades\n\n- **[Nome da funcionalidade]** — [o que permite fazer, do lado do utilizador].\n\n## Melhorias\n\n- [O que passa a ser mais simples ou mais rápido.]\n\n## Correções\n\n- [O problema corrigido, formulado como o cliente o vivia.]\n\n> Estas alterações já estão ativas no seu espaço de trabalho, não é necessária\n> nenhuma ação da sua parte.\n",
 };

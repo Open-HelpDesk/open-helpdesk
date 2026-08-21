@@ -1227,6 +1227,91 @@ export const it: Dictionary = {
   "app.settings.rules.typeLongText": "Testo lungo",
   "app.settings.rules.typeFile": "File",
   "app.settings.rules.typeSelectLong": "Elenco a discesa",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) --- */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Elenco",
+  "app.settings.rules.typeMultiSelect": "Selezione multipla",
+  "app.settings.rules.typeDate": "Data",
+  "app.settings.rules.typeNumber": "Numero",
+  "app.settings.rules.typeCheckbox": "Casella di controllo",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Evento",
+  "app.settings.rules.condFieldStatus": "Stato",
+  "app.settings.rules.condFieldPriority": "Priorità",
+  "app.settings.rules.condFieldChannel": "Canale",
+  "app.settings.rules.condFieldType": "Tipo",
+  "app.settings.rules.condFieldSubject": "Oggetto",
+  "app.settings.rules.condFieldTags": "Tag",
+  "app.settings.rules.condFieldAssignee": "Assegnatario",
+  "app.settings.rules.condFieldTeam": "Team",
+  "app.settings.rules.condFieldOrganization": "Organizzazione",
+  "app.settings.rules.condFieldHoursCreated": "Ore dalla creazione",
+  "app.settings.rules.condFieldHoursUpdated": "Ore dall'aggiornamento",
+
+  /* Opérateurs. Les deux derniers restent des symboles en italien. */
+  "app.settings.rules.opIs": "è",
+  "app.settings.rules.opIsNot": "non è",
+  "app.settings.rules.opContains": "contiene",
+  "app.settings.rules.opIncludes": "include",
+  "app.settings.rules.opEmpty": "è vuoto",
+  "app.settings.rules.opNotEmpty": "non è vuoto",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Richiesta creata",
+  "app.settings.rules.eventTicketUpdated": "Richiesta aggiornata",
+  "app.settings.rules.eventMessageCreated": "Messaggio ricevuto",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Imposta lo stato",
+  "app.settings.rules.actSetPriority": "Imposta la priorità",
+  "app.settings.rules.actAssignUser": "Assegna a un agente",
+  "app.settings.rules.actAssignTeam": "Assegna a un team",
+  "app.settings.rules.actAssignRoundRobin": "Assegna al prossimo agente (round-robin)",
+  "app.settings.rules.actAddTags": "Aggiungi tag",
+  "app.settings.rules.actEmailContact": "Invia un'email al contatto",
+
+  /* Résumé d'une règle : l'italien garde l'ordre « se … alors … », et les
+     bribes s'y insèrent sans majuscule ni point final. */
+  "app.settings.rules.summaryPattern": "Se {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "e",
+  "app.settings.rules.summaryAlways": "sempre",
+  "app.settings.rules.summaryAnyOf": {
+    one: "almeno una su {count} condizione",
+    many: "almeno una su {count} condizioni",
+    other: "almeno una su {count} condizioni",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  /* Le sujet sous-entendu est la richiesta : accord au féminin, comme
+     app.tickets.unassigned. */
+  "app.settings.rules.summaryUnassigned": "non assegnata",
+  "app.settings.rules.summaryAssigned": "assegnata",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. */
+  "app.settings.rules.summarySince": "da {duration}",
+  "app.settings.rules.summarySetStatus": "passare a {value}",
+  "app.settings.rules.summarySetPriority": "priorità {value}",
+  "app.settings.rules.summaryAssignTeam": "assegnare a {team}",
+  "app.settings.rules.summaryAnyTeam": "un team",
+  "app.settings.rules.summaryAssignUser": "assegnare a un agente",
+  "app.settings.rules.summaryRoundRobin": "assegnare al prossimo agente",
+  "app.settings.rules.summaryAddTags": "aggiungere {tags}",
+  "app.settings.rules.summaryEmailContact": "inviare un'email al contatto",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Stato → {value}",
+  "app.settings.rules.macroSummaryPriority": "Priorità → {value}",
+  "app.settings.rules.macroSummaryTeam": "Team → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "team",
+  "app.settings.rules.macroSummaryAssign": "Assegna →",
+  "app.settings.rules.macroSummaryTag": "Tag {tags}",
+  "app.settings.rules.macroSummaryNone": "Nessuna azione",
+
   "app.settings.rules.fieldName": "Nome del campo",
   "app.settings.rules.fieldNamePlaceholder": "Numero d'ordine",
   "app.settings.rules.fieldOptions": "Opzioni",
@@ -1379,4 +1464,135 @@ export const it: Dictionary = {
   "app.login.rateLimited": "Troppi tentativi di accesso. Attendi qualche secondo prima di riprovare.",
   "app.login.notAMember": "Questa identità non è membro di questo spazio di lavoro.",
   "app.login.providerMissing": "Questo provider non è configurato su questa istanza.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  "app.onboarding.asideTitle": "Configurazione",
+  "app.onboarding.asideFooter":
+    "Potrai modificare tutte queste opzioni più tardi nelle impostazioni.",
+  "app.onboarding.stepCounter": "Passaggio {step} di {total}",
+  "app.onboarding.continue": "Continua",
+  "app.onboarding.skip": "Salta questo passaggio",
+
+  "app.onboarding.stepIdentity": "Identità",
+  "app.onboarding.stepIdentityHint": "Nome, logo, colore",
+  "app.onboarding.stepEmail": "Email",
+  "app.onboarding.stepEmailHint": "Indirizzo di ricezione",
+  "app.onboarding.stepTeam": "Team",
+  "app.onboarding.stepTeamHint": "Invita gli agenti",
+  "app.onboarding.stepTest": "Prova",
+  "app.onboarding.stepTestHint": "Prima richiesta",
+
+  "app.onboarding.identityTitle": "Identità del tuo workspace",
+  "app.onboarding.identityBody":
+    "Questi elementi compariranno sul tuo portale clienti e nelle email inviate ai tuoi clienti.",
+  "app.onboarding.logoDrop": "Trascina un file PNG o SVG",
+  "app.onboarding.previewSearch": "Cerca un articolo…",
+  "app.onboarding.previewCaption": "Anteprima del tuo portale clienti",
+
+  "app.onboarding.emailTitle": "Ricevere le tue email",
+  "app.onboarding.emailBody":
+    "Ogni messaggio ricevuto a questo indirizzo diventa automaticamente una richiesta.",
+  "app.onboarding.or": "OPPURE",
+  "app.onboarding.copy": "Copia",
+  "app.onboarding.copied": "Copiato ✓",
+  "app.onboarding.ownAddressTitle": "Collegare il mio indirizzo",
+  "app.onboarding.ownAddressBody":
+    "Inoltra il tuo indirizzo esistente ({example}) all'indirizzo fornito sopra. Configurazione dettagliata nelle impostazioni.",
+  "app.onboarding.forwardLabel": "Indirizzo da inoltrare",
+  "app.onboarding.forwardPlaceholder": "supporto@tuo-dominio.it",
+
+  "app.onboarding.teamTitle": "Invitare il tuo team",
+  "app.onboarding.teamBody":
+    "Invita i tuoi agenti adesso, oppure condividi il link di invito. Le postazioni Viewer sono gratuite.",
+  "app.onboarding.invitePlaceholder": "collega@azienda.it",
+  "app.onboarding.addRow": "+ Aggiungi una riga",
+  "app.onboarding.sendInvites": "Invia gli inviti",
+
+  "app.onboarding.testTitle": "Inviare una prima richiesta",
+  "app.onboarding.testBody":
+    "Verifica l'intera catena prima di aprire il servizio ai tuoi clienti.",
+  "app.onboarding.readyTitle": "Il tuo workspace è pronto",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Invia un'email a {address} per creare una richiesta di prova.",
+  "app.onboarding.openInbox": "Apri l'inbox",
+
+  "app.onboarding.checklistIdentity": "Identità definita",
+  "app.onboarding.checklistEmail": "Indirizzo email configurato",
+  "app.onboarding.checklistTeam": "Team invitato",
+  "app.onboarding.checklistTicket": "Prima richiesta ricevuta",
+  "app.onboarding.checklistSla": "Politica SLA verificata",
+
+
+/* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur :
+     en italien l'article voyage AVEC le quantificateur (« tutte le » /
+     « almeno una delle »), sans quoi « almeno una » ne s'accorderait pas avec
+     « le condizioni ». Le verbe « soddisfa » ouvre la phrase. */
+  "app.settings.rules.matchIf": "SE",
+  "app.settings.rules.matchAllPattern": "Soddisfa {mode} condizioni",
+  "app.settings.rules.matchAnyPattern": "Soddisfa {mode} condizioni",
+  "app.settings.rules.matchAll": "tutte le",
+  "app.settings.rules.matchAny": "almeno una delle",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Piano Free",
+  "app.settings.workspace.planStandard": "Piano Standard",
+  "app.settings.workspace.planPro": "Piano Pro",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. « Compito » plutôt que
+     « Attività », déjà pris par l'onglet Activité du ticket. */
+  "app.ticket.typeQuestion": "Domanda",
+  "app.ticket.typeIncident": "Incidente",
+  "app.ticket.typeTask": "Compito",
+  "app.ticket.typeOther": "Altro",
+
+  /* AG-09 — export CSV des rapports. « s » est aussi l'abréviation italienne
+     des secondes. */
+  "app.reports.csvIndicator": "Indicatore",
+  "app.reports.csvCurrentPeriod": "Periodo corrente",
+  "app.reports.csvPreviousPeriod": "Periodo precedente",
+  "app.reports.csvCreated": "Richieste create",
+  "app.reports.csvResolved": "Richieste risolte",
+  "app.reports.csvMedianFirstReply": "1ª risposta mediana (s)",
+  "app.reports.csvMedianResolve": "Risoluzione mediana (s)",
+  "app.reports.csvSlaCompliance": "Conformità SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Giorno",
+  "app.reports.csvCreatedShort": "Create",
+  "app.reports.csvResolvedShort": "Risolte",
+  "app.reports.csvAgent": "Agente",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Nuovo articolo",
+  "app.kb.fromTicketSymptomHeading": "Sintomo",
+  "app.kb.fromTicketSymptomPlaceholder": "[Descrivi ciò che il cliente osserva.]",
+  "app.kb.fromTicketSolutionHeading": "Soluzione",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Descrivi l'operazione che risolve il problema.]",
+  "app.kb.fromTicketMissingRequest": "la richiesta iniziale del cliente",
+  "app.kb.fromTicketMissingAnswer": "la risposta dell'agente",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Procedura passo a passo",
+  "app.kb.tplProcedureHint": "Una sequenza di passaggi numerati, con il risultato atteso.",
+  "app.kb.tplProcedureTitle": "Come [eseguire l'operazione]",
+  "app.kb.tplProcedureBody": "Questo articolo spiega come [eseguire l'operazione]. Prevedi circa [durata].\n\n## Prima di iniziare\n\n- [Autorizzazione o ruolo necessario]\n- [Informazione da avere a portata di mano]\n\n## Passaggi\n\n1. Apri [la schermata interessata].\n2. Fai clic su **[il pulsante]**.\n3. Compila [il campo], poi conferma.\n\n> Se si presenta [il caso particolare], [come procedere].\n\n## Risultato\n\n[Ciò che la persona deve vedere quando l'operazione è riuscita.]\n",
+  "app.kb.tplIncidentLabel": "Risoluzione di un incidente",
+  "app.kb.tplIncidentHint": "Sintomo, causa, soluzione e rimedio temporaneo.",
+  "app.kb.tplIncidentTitle": "[Sintomo osservato]",
+  "app.kb.tplIncidentBody": "## Sintomo\n\n[Ciò che la persona osserva, con il messaggio di errore esatto se presente.]\n\n## Causa\n\n[Perché si verifica.]\n\n## Soluzione\n\n1. [Prima azione correttiva]\n2. [Seconda azione correttiva]\n\n## Rimedio temporaneo\n\n> [Ciò che la persona può fare subito se la soluzione richiede un\n> intervento del tuo team.]\n\n## Se il problema persiste\n\nApri una richiesta indicando [le informazioni utili alla diagnosi].\n",
+  "app.kb.tplFaqLabel": "Domanda frequente",
+  "app.kb.tplFaqHint": "Una risposta breve e diretta, poi i dettagli.",
+  "app.kb.tplFaqTitle": "[La domanda, così come la pongono i clienti]",
+  "app.kb.tplFaqBody": "**Risposta breve:** [la risposta in una frase].\n\n## In dettaglio\n\n[Il contesto e le sfumature utili.]\n\n## Casi particolari\n\n- **[Situazione A]** — [che cosa cambia].\n- **[Situazione B]** — [che cosa cambia].\n\n## Per approfondire\n\n[Rimando all'articolo vicino o alla procedura associata.]\n",
+  "app.kb.tplReleaseLabel": "Note di rilascio",
+  "app.kb.tplReleaseHint": "Novità, miglioramenti e correzioni di un rilascio.",
+  "app.kb.tplReleaseTitle": "Novità di [data o versione]",
+  "app.kb.tplReleaseBody": "## Novità\n\n- **[Nome della funzionalità]** — [che cosa consente di fare, lato utente].\n\n## Miglioramenti\n\n- [Ciò che diventa più semplice o più rapido.]\n\n## Correzioni\n\n- [Il problema corretto, formulato come lo viveva il cliente.]\n\n> Queste modifiche sono già attive sul tuo workspace, non è necessaria alcuna\n> azione da parte tua.\n",
 };

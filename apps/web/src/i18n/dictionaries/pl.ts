@@ -1541,6 +1541,97 @@ export const pl: Dictionary = {
   "app.settings.rules.typeLongText": "Długi tekst",
   "app.settings.rules.typeFile": "Plik",
   "app.settings.rules.typeSelectLong": "Lista rozwijana",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
+     tables partagées, celles de l'inbox et de ses filtres. */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Lista",
+  "app.settings.rules.typeMultiSelect": "Wybór wielokrotny",
+  "app.settings.rules.typeDate": "Data",
+  "app.settings.rules.typeNumber": "Liczba",
+  "app.settings.rules.typeCheckbox": "Pole wyboru",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Zdarzenie",
+  "app.settings.rules.condFieldStatus": "Status",
+  "app.settings.rules.condFieldPriority": "Priorytet",
+  "app.settings.rules.condFieldChannel": "Kanał",
+  "app.settings.rules.condFieldType": "Typ",
+  "app.settings.rules.condFieldSubject": "Temat",
+  "app.settings.rules.condFieldTags": "Tagi",
+  "app.settings.rules.condFieldAssignee": "Przypisane do",
+  "app.settings.rules.condFieldTeam": "Zespół",
+  "app.settings.rules.condFieldOrganization": "Organizacja",
+  "app.settings.rules.condFieldHoursCreated": "Godziny od utworzenia",
+  "app.settings.rules.condFieldHoursUpdated": "Godziny od aktualizacji",
+
+  /* Opérateurs. « Vide » et « non vide » sont rendus par un groupe
+     prépositionnel, invariable : le polonais accorde son adjectif avec le champ,
+     et le résumé « Temat jest puste » serait faux là où « Tagi są puste »
+     s'impose. Les deux comparaisons restent des symboles. */
+  "app.settings.rules.opIs": "jest",
+  "app.settings.rules.opIsNot": "nie jest",
+  "app.settings.rules.opContains": "zawiera",
+  "app.settings.rules.opIncludes": "obejmuje",
+  "app.settings.rules.opEmpty": "bez wartości",
+  "app.settings.rules.opNotEmpty": "z wartością",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Zgłoszenie utworzone",
+  "app.settings.rules.eventTicketUpdated": "Zgłoszenie zaktualizowane",
+  "app.settings.rules.eventMessageCreated": "Wiadomość odebrana",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Ustaw status",
+  "app.settings.rules.actSetPriority": "Ustaw priorytet",
+  "app.settings.rules.actAssignUser": "Przypisz do agenta",
+  "app.settings.rules.actAssignTeam": "Przypisz do zespołu",
+  "app.settings.rules.actAssignRoundRobin": "Przypisz do następnego agenta (round-robin)",
+  "app.settings.rules.actAddTags": "Dodaj tagi",
+  "app.settings.rules.actEmailContact": "Wyślij e-mail do kontaktu",
+
+  /* Résumé d'une règle, en une ligne de liste : le polonais garde l'ordre
+     « jeśli … → … », les bribes s'insèrent sans majuscule ni point. */
+  "app.settings.rules.summaryPattern": "Jeśli {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "i",
+  "app.settings.rules.summaryAlways": "zawsze",
+  /* « z » régit le génitif : singulier pour one, pluriel pour few et many. */
+  "app.settings.rules.summaryAnyOf": {
+    one: "co najmniej jeden z {count} warunku",
+    few: "co najmniej jeden z {count} warunków",
+    many: "co najmniej jeden z {count} warunków",
+    other: "co najmniej jeden z {count} warunku",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "nieprzypisane",
+  "app.settings.rules.summaryAssigned": "przypisane",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. */
+  "app.settings.rules.summarySince": "od {duration}",
+  "app.settings.rules.summarySetStatus": "ustaw status na {value}",
+  "app.settings.rules.summarySetPriority": "priorytet {value}",
+  /* {team} vaut un nom d'équipe, que le polonais ne décline pas : les deux
+     points évitent le génitif qu'appellerait « do zespołu ». */
+  "app.settings.rules.summaryAssignTeam": "przypisz do zespołu: {team}",
+  "app.settings.rules.summaryAnyTeam": "nieokreślony",
+  "app.settings.rules.summaryAssignUser": "przypisz do agenta",
+  "app.settings.rules.summaryRoundRobin": "przypisz do następnego agenta",
+  "app.settings.rules.summaryAddTags": "dodaj tagi: {tags}",
+  "app.settings.rules.summaryEmailContact": "wyślij e-mail do kontaktu",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Status → {value}",
+  "app.settings.rules.macroSummaryPriority": "Priorytet → {value}",
+  "app.settings.rules.macroSummaryTeam": "Zespół → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "nieokreślony",
+  "app.settings.rules.macroSummaryAssign": "Przypisz →",
+  "app.settings.rules.macroSummaryTag": "Tagi: {tags}",
+  "app.settings.rules.macroSummaryNone": "Brak działań",
   "app.settings.rules.fieldName": "Nazwa pola",
   "app.settings.rules.fieldNamePlaceholder": "Numer zamówienia",
   "app.settings.rules.fieldOptions": "Opcje",
@@ -1763,4 +1854,141 @@ export const pl: Dictionary = {
     "Zbyt wiele prób logowania. Prosimy odczekać kilka sekund przed ponowną próbą.",
   "app.login.notAMember": "Ta tożsamość nie jest członkiem tego obszaru roboczego.",
   "app.login.providerMissing": "Ten dostawca nie jest skonfigurowany w tej instancji.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Le titre du portail dans son propre aperçu (home.title), le nom du
+     workspace et la couleur d'accent viennent d'ailleurs ; les rôles Owner /
+     Admin / Agent / Viewer ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Konfiguracja",
+  "app.onboarding.asideFooter":
+    "Wszystkie te ustawienia można później zmienić w Ustawieniach.",
+  "app.onboarding.stepCounter": "Krok {step} z {total}",
+  "app.onboarding.continue": "Kontynuuj",
+  "app.onboarding.skip": "Pomiń ten krok",
+
+  "app.onboarding.stepIdentity": "Tożsamość",
+  "app.onboarding.stepIdentityHint": "Nazwa, logo, kolor",
+  "app.onboarding.stepEmail": "E-mail",
+  "app.onboarding.stepEmailHint": "Adres odbiorczy",
+  "app.onboarding.stepTeam": "Zespół",
+  "app.onboarding.stepTeamHint": "Zaproszenie agentów",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "Pierwsze zgłoszenie",
+
+  "app.onboarding.identityTitle": "Tożsamość obszaru roboczego",
+  "app.onboarding.identityBody":
+    "Te elementy pojawią się na Państwa portalu klienta oraz w e-mailach wysyłanych do klientów.",
+  "app.onboarding.logoDrop": "Przeciągnij plik PNG lub SVG",
+  "app.onboarding.previewSearch": "Szukaj artykułu…",
+  "app.onboarding.previewCaption": "Podgląd Państwa portalu klienta",
+
+  "app.onboarding.emailTitle": "Odbieranie e-maili",
+  "app.onboarding.emailBody":
+    "Każda wiadomość odebrana na ten adres automatycznie staje się zgłoszeniem.",
+  "app.onboarding.or": "LUB",
+  "app.onboarding.copy": "Kopiuj",
+  "app.onboarding.copied": "Skopiowano ✓",
+  "app.onboarding.ownAddressTitle": "Podłączenie własnego adresu",
+  "app.onboarding.ownAddressBody":
+    "Prosimy przekierować istniejący adres ({example}) na adres podany powyżej. Szczegółową konfigurację opisano w ustawieniach.",
+  "app.onboarding.forwardLabel": "Adres do przekierowania",
+  "app.onboarding.forwardPlaceholder": "support@twoja-domena.pl",
+
+  "app.onboarding.teamTitle": "Zaproszenie zespołu",
+  "app.onboarding.teamBody":
+    "Prosimy zaprosić agentów teraz lub udostępnić link zaproszenia. Stanowiska Viewer są bezpłatne.",
+  "app.onboarding.invitePlaceholder": "kolega@firma.pl",
+  "app.onboarding.addRow": "+ Dodaj wiersz",
+  "app.onboarding.sendInvites": "Wyślij zaproszenia",
+
+  "app.onboarding.testTitle": "Wysłanie pierwszego zgłoszenia",
+  "app.onboarding.testBody":
+    "Prosimy sprawdzić całą ścieżkę, zanim usługa zostanie udostępniona klientom.",
+  "app.onboarding.readyTitle": "Państwa obszar roboczy jest gotowy",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody":
+    "Prosimy wysłać e-mail na adres {address}, aby utworzyć zgłoszenie testowe.",
+  "app.onboarding.openInbox": "Otwórz skrzynkę",
+
+  "app.onboarding.checklistIdentity": "Tożsamość ustawiona",
+  "app.onboarding.checklistEmail": "Adres e-mail skonfigurowany",
+  "app.onboarding.checklistTeam": "Zespół zaproszony",
+  "app.onboarding.checklistTicket": "Pierwsze zgłoszenie odebrane",
+  "app.onboarding.checklistSla": "Zasada SLA sprawdzona",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur :
+     le nom « warunek » voyage AVEC le sélecteur, parce que « do » régit le
+     génitif et que le polonais ne le décline pas de la même façon au singulier
+     et au pluriel. « Pasuje do » reprend app.settingsNav.matches. */
+  "app.settings.rules.matchIf": "JEŚLI",
+  "app.settings.rules.matchAllPattern": "Pasuje do {mode}",
+  "app.settings.rules.matchAnyPattern": "Pasuje do {mode}",
+  "app.settings.rules.matchAll": "wszystkich warunków",
+  "app.settings.rules.matchAny": "co najmniej jednego warunku",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Plan Free",
+  "app.settings.workspace.planStandard": "Plan Standard",
+  "app.settings.workspace.planPro": "Plan Pro",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Pytanie",
+  "app.ticket.typeIncident": "Incydent",
+  "app.ticket.typeTask": "Zadanie",
+  "app.ticket.typeOther": "Inne",
+
+  /* AG-09 — export CSV des rapports. « s » est l'abréviation polonaise de la
+     seconde ; les intitulés reprennent ceux des KPI de l'écran. */
+  "app.reports.csvIndicator": "Wskaźnik",
+  "app.reports.csvCurrentPeriod": "Bieżący okres",
+  "app.reports.csvPreviousPeriod": "Poprzedni okres",
+  "app.reports.csvCreated": "Utworzone zgłoszenia",
+  "app.reports.csvResolved": "Rozwiązane zgłoszenia",
+  "app.reports.csvMedianFirstReply": "Mediana 1. odpowiedzi (s)",
+  "app.reports.csvMedianResolve": "Mediana rozwiązania (s)",
+  "app.reports.csvSlaCompliance": "Zgodność z SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Dzień",
+  "app.reports.csvCreatedShort": "Utworzone",
+  "app.reports.csvResolvedShort": "Rozwiązane",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article. */
+  "app.kb.fromTicketDefaultTitle": "Nowy artykuł",
+  "app.kb.fromTicketSymptomHeading": "Objaw",
+  "app.kb.fromTicketSymptomPlaceholder": "[Opisz, co widzi klient.]",
+  "app.kb.fromTicketSolutionHeading": "Rozwiązanie",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Opisz czynności, które rozwiązują problem.]",
+  /* Les deux bribes entrent dans app.kb.missingFields « Brakuje: {items}. » :
+     après les deux points, le nominatif est admis. */
+  "app.kb.fromTicketMissingRequest": "pierwotne zgłoszenie klienta",
+  "app.kb.fromTicketMissingAnswer": "odpowiedź agenta",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste.
+     Les étapes numérotées gardent l'impératif direct, usage des articles d'aide
+     en polonais ; « Prosimy » reste pour la prose adressée au lecteur. */
+  "app.kb.tplProcedureLabel": "Procedura krok po kroku",
+  "app.kb.tplProcedureHint": "Ciąg numerowanych kroków wraz z oczekiwanym wynikiem.",
+  "app.kb.tplProcedureTitle": "Jak [wykonać czynność]",
+  "app.kb.tplProcedureBody": "Ten artykuł wyjaśnia, jak [wykonać czynność]. Przewidywany czas: [czas trwania].\n\n## Przed rozpoczęciem\n\n- [Wymagane uprawnienie lub rola]\n- [Informacja, którą trzeba mieć pod ręką]\n\n## Kroki\n\n1. Otwórz [odpowiedni ekran].\n2. Kliknij **[przycisk]**.\n3. Wypełnij [pole], a następnie zatwierdź.\n\n> Jeśli wystąpi [przypadek szczególny], [sposób postępowania].\n\n## Wynik\n\n[Co powinna zobaczyć dana osoba po pomyślnym wykonaniu operacji.]\n",
+  "app.kb.tplIncidentLabel": "Rozwiązanie incydentu",
+  "app.kb.tplIncidentHint": "Objaw, przyczyna, rozwiązanie i tymczasowe obejście problemu.",
+  "app.kb.tplIncidentTitle": "[Zaobserwowany objaw]",
+  "app.kb.tplIncidentBody": "## Objaw\n\n[Co widzi dana osoba, wraz z dokładną treścią komunikatu o błędzie, jeśli taki występuje.]\n\n## Przyczyna\n\n[Dlaczego tak się dzieje.]\n\n## Rozwiązanie\n\n1. [Pierwsze działanie naprawcze]\n2. [Drugie działanie naprawcze]\n\n## Obejście na czas oczekiwania\n\n> [Co dana osoba może zrobić od razu, jeśli rozwiązanie wymaga\n> interwencji Państwa zespołu.]\n\n## Jeśli problem nie ustąpi\n\nProsimy utworzyć zgłoszenie, podając [informacje przydatne w diagnostyce].\n",
+  "app.kb.tplFaqLabel": "Często zadawane pytanie",
+  "app.kb.tplFaqHint": "Krótka i bezpośrednia odpowiedź, a następnie szczegóły.",
+  "app.kb.tplFaqTitle": "[Pytanie w brzmieniu, w jakim zadają je klienci]",
+  "app.kb.tplFaqBody": "**Krótka odpowiedź:** [odpowiedź w jednym zdaniu].\n\n## Szczegóły\n\n[Kontekst i przydatne niuanse.]\n\n## Przypadki szczególne\n\n- **[Sytuacja A]** — [co się zmienia].\n- **[Sytuacja B]** — [co się zmienia].\n\n## Więcej informacji\n\n[Odesłanie do pokrewnego artykułu lub do powiązanej procedury.]\n",
+  "app.kb.tplReleaseLabel": "Informacje o wydaniu",
+  "app.kb.tplReleaseHint": "Nowości, ulepszenia i poprawki w jednym wydaniu.",
+  "app.kb.tplReleaseTitle": "Nowości: [data lub wersja]",
+  "app.kb.tplReleaseBody": "## Nowości\n\n- **[Nazwa funkcji]** — [co umożliwia użytkownikowi].\n\n## Ulepszenia\n\n- [Co staje się prostsze lub szybsze.]\n\n## Poprawki\n\n- [Naprawiony problem, opisany tak, jak odczuwał go klient.]\n\n> Te zmiany są już aktywne w Państwa obszarze roboczym i nie wymagają\n> żadnych działań z Państwa strony.\n",
 };

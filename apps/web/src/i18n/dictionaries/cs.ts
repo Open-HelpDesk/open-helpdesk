@@ -1521,6 +1521,93 @@ export const cs: Dictionary = {
   "app.settings.rules.typeLongText": "Dlouhý text",
   "app.settings.rules.typeFile": "Soubor",
   "app.settings.rules.typeSelectLong": "Rozbalovací seznam",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
+     tables partagées, celles de l'inbox et de ses filtres. */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Seznam",
+  "app.settings.rules.typeMultiSelect": "Vícenásobný výběr",
+  "app.settings.rules.typeDate": "Datum",
+  "app.settings.rules.typeNumber": "Číslo",
+  "app.settings.rules.typeCheckbox": "Zaškrtávací pole",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Událost",
+  "app.settings.rules.condFieldStatus": "Stav",
+  "app.settings.rules.condFieldPriority": "Priorita",
+  "app.settings.rules.condFieldChannel": "Kanál",
+  "app.settings.rules.condFieldType": "Typ",
+  "app.settings.rules.condFieldSubject": "Předmět",
+  "app.settings.rules.condFieldTags": "Štítky",
+  "app.settings.rules.condFieldAssignee": "Přiřazeno",
+  "app.settings.rules.condFieldTeam": "Tým",
+  "app.settings.rules.condFieldOrganization": "Organizace",
+  "app.settings.rules.condFieldHoursCreated": "Hodiny od vytvoření",
+  "app.settings.rules.condFieldHoursUpdated": "Hodiny od aktualizace",
+
+  /* Opérateurs. « Vide » et « non vide » sont rendus par un groupe
+     prépositionnel, invariable : le tchèque accorde son verbe et son adjectif
+     avec le champ, et « Štítky je prázdné » serait faux au pluriel. */
+  "app.settings.rules.opIs": "je",
+  "app.settings.rules.opIsNot": "není",
+  "app.settings.rules.opContains": "obsahuje",
+  "app.settings.rules.opIncludes": "zahrnuje",
+  "app.settings.rules.opEmpty": "bez hodnoty",
+  "app.settings.rules.opNotEmpty": "s hodnotou",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Tiket vytvořen",
+  "app.settings.rules.eventTicketUpdated": "Tiket aktualizován",
+  "app.settings.rules.eventMessageCreated": "Zpráva přijata",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Nastavit stav",
+  "app.settings.rules.actSetPriority": "Nastavit prioritu",
+  "app.settings.rules.actAssignUser": "Přiřadit agentovi",
+  "app.settings.rules.actAssignTeam": "Přiřadit týmu",
+  "app.settings.rules.actAssignRoundRobin": "Přiřadit dalšímu agentovi (round-robin)",
+  "app.settings.rules.actAddTags": "Přidat štítky",
+  "app.settings.rules.actEmailContact": "Odeslat e-mail kontaktu",
+
+  /* Résumé d'une règle, en une ligne de liste : le tchèque garde l'ordre
+     « když … → … », les bribes s'insèrent sans majuscule ni point. */
+  "app.settings.rules.summaryPattern": "Když {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "a",
+  "app.settings.rules.summaryAlways": "vždy",
+  "app.settings.rules.summaryAnyOf": {
+    one: "alespoň jedna z {count} podmínky",
+    few: "alespoň jedna z {count} podmínek",
+    many: "alespoň jedna z {count} podmínek",
+    other: "alespoň jedna z {count} podmínek",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "nepřiřazeno",
+  "app.settings.rules.summaryAssigned": "přiřazeno",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. */
+  "app.settings.rules.summarySince": "již {duration}",
+  "app.settings.rules.summarySetStatus": "nastavit stav na {value}",
+  "app.settings.rules.summarySetPriority": "priorita {value}",
+  "app.settings.rules.summaryAssignTeam": "přiřadit týmu {team}",
+  "app.settings.rules.summaryAnyTeam": "bez určení",
+  "app.settings.rules.summaryAssignUser": "přiřadit agentovi",
+  "app.settings.rules.summaryRoundRobin": "přiřadit dalšímu agentovi",
+  "app.settings.rules.summaryAddTags": "přidat štítky {tags}",
+  "app.settings.rules.summaryEmailContact": "odeslat e-mail kontaktu",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Stav → {value}",
+  "app.settings.rules.macroSummaryPriority": "Priorita → {value}",
+  "app.settings.rules.macroSummaryTeam": "Tým → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "bez určení",
+  "app.settings.rules.macroSummaryAssign": "Přiřadit →",
+  "app.settings.rules.macroSummaryTag": "Štítky {tags}",
+  "app.settings.rules.macroSummaryNone": "Žádná akce",
   "app.settings.rules.fieldName": "Název pole",
   "app.settings.rules.fieldNamePlaceholder": "Číslo objednávky",
   "app.settings.rules.fieldOptions": "Možnosti",
@@ -1740,4 +1827,131 @@ export const cs: Dictionary = {
     "Příliš mnoho pokusů o přihlášení. Než to zkusíte znovu, počkejte několik sekund.",
   "app.login.notAMember": "Tato identita není členem tohoto pracovního prostoru.",
   "app.login.providerMissing": "Tento poskytovatel není na této instanci nastaven.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  "app.onboarding.asideTitle": "Nastavení",
+  "app.onboarding.asideFooter":
+    "Vše, co zde nastavíte, můžete později změnit v nastavení.",
+  "app.onboarding.stepCounter": "Krok {step} z {total}",
+  "app.onboarding.continue": "Pokračovat",
+  "app.onboarding.skip": "Přeskočit tento krok",
+
+  "app.onboarding.stepIdentity": "Identita",
+  "app.onboarding.stepIdentityHint": "Název, logo, barva",
+  "app.onboarding.stepEmail": "E-mail",
+  "app.onboarding.stepEmailHint": "Adresa pro příjem",
+  "app.onboarding.stepTeam": "Tým",
+  "app.onboarding.stepTeamHint": "Pozvat agenty",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "První tiket",
+
+  "app.onboarding.identityTitle": "Identita vašeho pracovního prostoru",
+  "app.onboarding.identityBody":
+    "Tyto prvky se zobrazí na vašem zákaznickém portálu a v e-mailech odesílaných zákazníkům.",
+  "app.onboarding.logoDrop": "Přetáhněte sem soubor PNG nebo SVG",
+  "app.onboarding.previewSearch": "Hledat článek…",
+  "app.onboarding.previewCaption": "Náhled vašeho zákaznického portálu",
+
+  "app.onboarding.emailTitle": "Příjem vašich e-mailů",
+  "app.onboarding.emailBody":
+    "Všechny požadavky doručené na tuto adresu se automaticky stanou tikety.",
+  "app.onboarding.or": "NEBO",
+  "app.onboarding.copy": "Kopírovat",
+  "app.onboarding.copied": "Zkopírováno ✓",
+  "app.onboarding.ownAddressTitle": "Připojit vlastní adresu",
+  "app.onboarding.ownAddressBody":
+    "Nastavte přeposílání ze své existující adresy ({example}) na adresu uvedenou výše. Podrobnou konfiguraci najdete v nastavení.",
+  "app.onboarding.forwardLabel": "Přeposílaná adresa",
+  "app.onboarding.forwardPlaceholder": "podpora@vase-domena.cz",
+
+  "app.onboarding.teamTitle": "Pozvěte svůj tým",
+  "app.onboarding.teamBody":
+    "Pozvěte své agenty hned, nebo sdílejte odkaz s pozvánkou. Licence Viewer jsou zdarma.",
+  "app.onboarding.invitePlaceholder": "kolega@firma.cz",
+  "app.onboarding.addRow": "+ Přidat řádek",
+  "app.onboarding.sendInvites": "Odeslat pozvánky",
+
+  "app.onboarding.testTitle": "Odeslat první tiket",
+  "app.onboarding.testBody":
+    "Než službu otevřete zákazníkům, ověřte celý průběh.",
+  "app.onboarding.readyTitle": "Váš pracovní prostor je připraven",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Pošlete e-mail na {address} a vytvořte tak testovací tiket.",
+  "app.onboarding.openInbox": "Otevřít Doručené",
+
+  "app.onboarding.checklistIdentity": "Identita nastavena",
+  "app.onboarding.checklistEmail": "E-mailová adresa nastavena",
+  "app.onboarding.checklistTeam": "Tým pozván",
+  "app.onboarding.checklistTicket": "První tiket přijat",
+  "app.onboarding.checklistSla": "Politika SLA zkontrolována",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase est découpée autour de
+     {mode} : le tchèque met son verbe avant le sélecteur et garde le nom au
+     génitif pluriel, invariable des deux côtés du choix. */
+  "app.settings.rules.matchIf": "KDYŽ",
+  "app.settings.rules.matchAllPattern": "Musí platit {mode} z podmínek",
+  "app.settings.rules.matchAnyPattern": "Musí platit {mode} z podmínek",
+  "app.settings.rules.matchAll": "všechny",
+  "app.settings.rules.matchAny": "alespoň jedna",
+
+  /* ST-11 — noms des offres ; « Free », « Standard » et « Pro » ne se
+     traduisent pas. */
+  "app.settings.workspace.planFree": "Tarif Free",
+  "app.settings.workspace.planStandard": "Tarif Standard",
+  "app.settings.workspace.planPro": "Tarif Pro",
+
+  /* Types de ticket (AG-05) : la valeur en base reste française, seul
+     l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Dotaz",
+  "app.ticket.typeIncident": "Incident",
+  "app.ticket.typeTask": "Úkol",
+  "app.ticket.typeOther": "Jiné",
+
+  /* AG-09 — entêtes de l'export CSV des rapports. « s » est bien l'abréviation
+     tchèque de la seconde, comme « min » et « h » ailleurs dans ce fichier. */
+  "app.reports.csvIndicator": "Ukazatel",
+  "app.reports.csvCurrentPeriod": "Aktuální období",
+  "app.reports.csvPreviousPeriod": "Předchozí období",
+  "app.reports.csvCreated": "Vytvořené tikety",
+  "app.reports.csvResolved": "Vyřešené tikety",
+  "app.reports.csvMedianFirstReply": "Medián 1. odpovědi (s)",
+  "app.reports.csvMedianResolve": "Medián vyřešení (s)",
+  "app.reports.csvSlaCompliance": "Dodržení SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Den",
+  "app.reports.csvCreatedShort": "Vytvořené",
+  "app.reports.csvResolvedShort": "Vyřešené",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article ; les « ## » restent. */
+  "app.kb.fromTicketDefaultTitle": "Nový článek",
+  "app.kb.fromTicketSymptomHeading": "Příznak",
+  "app.kb.fromTicketSymptomPlaceholder": "[Popište, co zákazník pozoruje.]",
+  "app.kb.fromTicketSolutionHeading": "Řešení",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Popište postup, který problém vyřeší.]",
+  "app.kb.fromTicketMissingRequest": "původní požadavek zákazníka",
+  "app.kb.fromTicketMissingAnswer": "odpověď agenta",
+
+  /* Modèles de départ d'un article (AG-10) : markdown, le texte entre crochets
+     est à remplacer par l'auteur. */
+  "app.kb.tplProcedureLabel": "Postup krok za krokem",
+  "app.kb.tplProcedureHint": "Posloupnost číslovaných kroků s očekávaným výsledkem.",
+  "app.kb.tplProcedureTitle": "Jak [provést akci]",
+  "app.kb.tplProcedureBody": "Tento článek vysvětluje, jak [provést akci]. Zabere to přibližně [doba trvání].\n\n## Než začnete\n\n- [Potřebné právo nebo role]\n- [Informace, kterou budete mít po ruce]\n\n## Kroky\n\n1. Otevřete [příslušnou obrazovku].\n2. Klikněte na **[tlačítko]**.\n3. Vyplňte [pole] a potvrďte.\n\n> Pokud nastane [zvláštní případ], [jak postupovat].\n\n## Výsledek\n\n[Co má člověk vidět, když se operace podařila.]\n",
+  "app.kb.tplIncidentLabel": "Řešení incidentu",
+  "app.kb.tplIncidentHint": "Příznak, příčina, řešení a provizorní náhradní postup.",
+  "app.kb.tplIncidentTitle": "[Pozorovaný příznak]",
+  "app.kb.tplIncidentBody": "## Příznak\n\n[Co člověk pozoruje, včetně přesného chybového hlášení, pokud nějaké je.]\n\n## Příčina\n\n[Proč k tomu dochází.]\n\n## Řešení\n\n1. [První opravný krok]\n2. [Druhý opravný krok]\n\n## Náhradní postup do té doby\n\n> [Co může člověk udělat hned, pokud řešení vyžaduje zásah\n> vašeho týmu.]\n\n## Pokud problém trvá dál\n\nOdešlete požadavek a uveďte [informace užitečné pro diagnostiku].\n",
+  "app.kb.tplFaqLabel": "Častý dotaz",
+  "app.kb.tplFaqHint": "Krátká a přímá odpověď, potom podrobnosti.",
+  "app.kb.tplFaqTitle": "[Otázka tak, jak ji kladou zákazníci]",
+  "app.kb.tplFaqBody": "**Krátká odpověď:** [odpověď v jedné větě].\n\n## Podrobně\n\n[Kontext a užitečné nuance.]\n\n## Zvláštní případy\n\n- **[Situace A]** — [co se mění].\n- **[Situace B]** — [co se mění].\n\n## Kam dál\n\n[Odkaz na související článek nebo na navazující postup.]\n",
+  "app.kb.tplReleaseLabel": "Poznámky k verzi",
+  "app.kb.tplReleaseHint": "Novinky, vylepšení a opravy jednoho vydání.",
+  "app.kb.tplReleaseTitle": "Novinky — [datum nebo verze]",
+  "app.kb.tplReleaseBody": "## Novinky\n\n- **[Název funkce]** — [co umožňuje z pohledu uživatele].\n\n## Vylepšení\n\n- [Co je nyní jednodušší nebo rychlejší.]\n\n## Opravy\n\n- [Opravený problém, popsaný tak, jak jej zákazník zažíval.]\n\n> Tyto změny jsou ve vašem pracovním prostoru už aktivní, není z vaší strany\n> potřeba nic dělat.\n",
 };

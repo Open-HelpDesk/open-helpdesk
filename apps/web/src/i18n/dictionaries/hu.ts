@@ -1369,6 +1369,102 @@ export const hu: Dictionary = {
   "app.settings.rules.typeLongText": "Hosszú szöveg",
   "app.settings.rules.typeFile": "Fájl",
   "app.settings.rules.typeSelectLong": "Legördülő lista",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
+     tables partagées de lib/format.ts (app.status.*, app.priority.*,
+     app.channel.*), et les libellés condField* s'accordent avec elles. */
+
+  /* Types de champs personnalisés (ST-04) ; « Szöveg » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Lista",
+  "app.settings.rules.typeMultiSelect": "Többszörös választás",
+  "app.settings.rules.typeDate": "Dátum",
+  "app.settings.rules.typeNumber": "Szám",
+  "app.settings.rules.typeCheckbox": "Jelölőnégyzet",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Esemény",
+  "app.settings.rules.condFieldStatus": "Állapot",
+  "app.settings.rules.condFieldPriority": "Prioritás",
+  "app.settings.rules.condFieldChannel": "Csatorna",
+  "app.settings.rules.condFieldType": "Típus",
+  "app.settings.rules.condFieldSubject": "Tárgy",
+  "app.settings.rules.condFieldTags": "Címkék",
+  "app.settings.rules.condFieldAssignee": "Felelős",
+  "app.settings.rules.condFieldTeam": "Csapat",
+  "app.settings.rules.condFieldOrganization": "Szervezet",
+  "app.settings.rules.condFieldHoursCreated": "Létrehozás óta eltelt órák",
+  "app.settings.rules.condFieldHoursUpdated": "Frissítés óta eltelt órák",
+
+  /* Opérateurs ; les deux derniers restent des symboles. Le hongrois distingue
+     le contenu d'un texte (« tartalmazza », pour le sujet) de l'appartenance à
+     une liste (« között van », pour les étiquettes) : les deux opérateurs ne se
+     rencontrent jamais dans le même menu. */
+  "app.settings.rules.opIs": "egyenlő",
+  "app.settings.rules.opIsNot": "nem egyenlő",
+  "app.settings.rules.opContains": "tartalmazza",
+  "app.settings.rules.opIncludes": "között van",
+  "app.settings.rules.opEmpty": "üres",
+  "app.settings.rules.opNotEmpty": "nem üres",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Jegy létrehozva",
+  "app.settings.rules.eventTicketUpdated": "Jegy frissítve",
+  "app.settings.rules.eventMessageCreated": "Üzenet érkezett",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Állapot beállítása",
+  "app.settings.rules.actSetPriority": "Prioritás beállítása",
+  "app.settings.rules.actAssignUser": "Hozzárendelés ügyintézőhöz",
+  "app.settings.rules.actAssignTeam": "Hozzárendelés csapathoz",
+  "app.settings.rules.actAssignRoundRobin":
+    "Hozzárendelés a következő ügyintézőhöz (round-robin)",
+  "app.settings.rules.actAddTags": "Címkék hozzáadása",
+  "app.settings.rules.actEmailContact": "E-mail küldése a kapcsolattartónak",
+
+  /* Résumé d'une règle, en une ligne de liste. Le hongrois ouvre par sa
+     conjonction « Ha » et laisse la flèche tenir le « akkor ». Les bribes
+     s'enchaînent sans majuscule initiale ni point final ; celles qui commencent
+     par {value} héritent de la majuscule de la donnée. */
+  "app.settings.rules.summaryPattern": "Ha {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "és",
+  "app.settings.rules.summaryAlways": "mindig",
+  /* Après un nombre, le hongrois garde le singulier : les deux formes sont
+     identiques, mais les deux catégories du pluriel hongrois sont présentes. */
+  "app.settings.rules.summaryAnyOf": {
+    one: "{count} feltétel közül legalább egy",
+    other: "{count} feltétel közül legalább egy",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "nincs felelős",
+  "app.settings.rules.summaryAssigned": "van felelős",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. Le hongrois postpose son « depuis » — « 2 j óta » — et la
+     bribe se colle à la condition précédente : « Állapot = Várakozó 2 j óta ». */
+  "app.settings.rules.summarySince": "{duration} óta",
+  "app.settings.rules.summarySetStatus": "{value} állapotra állítás",
+  "app.settings.rules.summarySetPriority": "{value} prioritás",
+  /* {team} et {tags} arrivent tels quels — un nom d'équipe, une liste d'étiquettes
+     jointes par des virgules : le hongrois ne peut pas leur coller son suffixe
+     casuel, d'où la tournure à deux-points. */
+  "app.settings.rules.summaryAssignTeam": "csapat hozzárendelése: {team}",
+  "app.settings.rules.summaryAnyTeam": "(nincs megadva)",
+  "app.settings.rules.summaryAssignUser": "ügyintéző hozzárendelése",
+  "app.settings.rules.summaryRoundRobin": "a következő ügyintéző hozzárendelése",
+  "app.settings.rules.summaryAddTags": "címkék hozzáadása: {tags}",
+  "app.settings.rules.summaryEmailContact": "e-mail küldése a kapcsolattartónak",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Állapot → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioritás → {value}",
+  "app.settings.rules.macroSummaryTeam": "Csapat → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "(nincs megadva)",
+  "app.settings.rules.macroSummaryAssign": "Hozzárendelés →",
+  "app.settings.rules.macroSummaryTag": "Címke: {tags}",
+  "app.settings.rules.macroSummaryNone": "Nincs művelet",
   "app.settings.rules.fieldName": "A mező neve",
   "app.settings.rules.fieldNamePlaceholder": "Megrendelésszám",
   "app.settings.rules.fieldOptions": "Lehetőségek",
@@ -1579,4 +1675,149 @@ export const hu: Dictionary = {
     "Túl sok bejelentkezési kísérlet. Várjon néhány másodpercet, mielőtt újra próbálja.",
   "app.login.notAMember": "Ez az identitás nem tagja ennek a munkaterületnek.",
   "app.login.providerMissing": "Ez a szolgáltató nincs beállítva ezen a példányon.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Le titre du portail dans son propre aperçu (home.title), le nom du
+     workspace et la couleur d'accent viennent d'ailleurs ; les rôles Owner /
+     Admin / Agent / Viewer ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Beállítás",
+  "app.onboarding.asideFooter": "Mindezt később bármikor módosíthatja a beállításokban.",
+  "app.onboarding.stepCounter": "{step}. lépés / {total}",
+  "app.onboarding.continue": "Folytatás",
+  "app.onboarding.skip": "A lépés kihagyása",
+
+  "app.onboarding.stepIdentity": "Azonosság",
+  "app.onboarding.stepIdentityHint": "Név, logó, szín",
+  "app.onboarding.stepEmail": "E-mail",
+  "app.onboarding.stepEmailHint": "Fogadó cím",
+  "app.onboarding.stepTeam": "Csapat",
+  "app.onboarding.stepTeamHint": "Ügyintézők meghívása",
+  "app.onboarding.stepTest": "Teszt",
+  "app.onboarding.stepTestHint": "Első jegy",
+
+  "app.onboarding.identityTitle": "A munkaterület azonossága",
+  "app.onboarding.identityBody":
+    "Ezek jelennek meg az ügyfélportálon és az ügyfeleknek küldött e-mailekben.",
+  "app.onboarding.logoDrop": "Húzzon ide egy PNG- vagy SVG-fájlt",
+  "app.onboarding.previewSearch": "Cikk keresése…",
+  "app.onboarding.previewCaption": "Az ügyfélportál előnézete",
+
+  "app.onboarding.emailTitle": "E-mailek fogadása",
+  "app.onboarding.emailBody":
+    "Az erre a címre beérkező összes kérésből automatikusan jegy lesz.",
+  "app.onboarding.or": "VAGY",
+  "app.onboarding.copy": "Másolás",
+  "app.onboarding.copied": "Másolva ✓",
+  "app.onboarding.ownAddressTitle": "Saját cím összekapcsolása",
+  "app.onboarding.ownAddressBody":
+    "Továbbítsa meglévő címét ({example}) a fent megadott címre. A részletes beállítás a beállításokban található.",
+  "app.onboarding.forwardLabel": "Továbbítandó cím",
+  "app.onboarding.forwardPlaceholder": "support@sajatdomain.hu",
+
+  "app.onboarding.teamTitle": "A csapat meghívása",
+  "app.onboarding.teamBody":
+    "Hívja meg most az ügyintézőit, vagy ossza meg a meghívó hivatkozást. A Viewer licencek ingyenesek.",
+  "app.onboarding.invitePlaceholder": "kollega@cegnev.hu",
+  "app.onboarding.addRow": "+ Sor hozzáadása",
+  "app.onboarding.sendInvites": "Meghívók elküldése",
+
+  "app.onboarding.testTitle": "Első jegy küldése",
+  "app.onboarding.testBody":
+    "Ellenőrizze a teljes folyamatot, mielőtt megnyitja a szolgáltatást az ügyfelei előtt.",
+  "app.onboarding.readyTitle": "A munkaterület készen áll",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. Le hongrois
+     suffixe son complément de lieu : la phrase amène l'adresse par
+     « a következő címre: », qui laisse le paramètre intact. */
+  "app.onboarding.readyBody":
+    "Tesztjegy létrehozásához küldjön egy e-mailt a következő címre: {address}.",
+  "app.onboarding.openInbox": "A beérkezettek megnyitása",
+
+  "app.onboarding.checklistIdentity": "Azonosság megadva",
+  "app.onboarding.checklistEmail": "E-mail-cím beállítva",
+  "app.onboarding.checklistTeam": "Csapat meghívva",
+  "app.onboarding.checklistTicket": "Első jegy beérkezett",
+  "app.onboarding.checklistSla": "SLA-szabályzat ellenőrizve",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
+     « minden / legalább egy » : le hongrois place son verbe à la fin et fait
+     suivre le quantifieur d'un singulier, d'où « {mode} feltétel teljesül ».
+     Le morceau qui précède {mode} est donc vide, et tout le texte passe après. */
+  "app.settings.rules.matchIf": "HA",
+  "app.settings.rules.matchAllPattern": "{mode} feltétel teljesül",
+  "app.settings.rules.matchAnyPattern": "{mode} feltétel teljesül",
+  "app.settings.rules.matchAll": "minden",
+  "app.settings.rules.matchAny": "legalább egy",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Free csomag",
+  "app.settings.workspace.planStandard": "Standard csomag",
+  "app.settings.workspace.planPro": "Pro csomag",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Kérdés",
+  "app.ticket.typeIncident": "Incidens",
+  "app.ticket.typeTask": "Feladat",
+  "app.ticket.typeOther": "Egyéb",
+
+  /* AG-09 — export CSV des rapports. Les entêtes reprennent les libellés des
+     KPI de l'écran ; « (s) » devient « (mp) », l'abréviation hongroise de la
+     seconde. */
+  "app.reports.csvIndicator": "Mutató",
+  "app.reports.csvCurrentPeriod": "Jelenlegi időszak",
+  "app.reports.csvPreviousPeriod": "Előző időszak",
+  "app.reports.csvCreated": "Létrehozott jegyek",
+  "app.reports.csvResolved": "Megoldott jegyek",
+  "app.reports.csvMedianFirstReply": "Első válasz mediánja (mp)",
+  "app.reports.csvMedianResolve": "Megoldás mediánja (mp)",
+  "app.reports.csvSlaCompliance": "SLA-teljesítés (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Nap",
+  "app.reports.csvCreatedShort": "Létrehozott",
+  "app.reports.csvResolvedShort": "Megoldott",
+  "app.reports.csvAgent": "Ügyintéző",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Új cikk",
+  "app.kb.fromTicketSymptomHeading": "Tünet",
+  "app.kb.fromTicketSymptomPlaceholder": "[Írja le, mit tapasztal az ügyfél.]",
+  "app.kb.fromTicketSolutionHeading": "Megoldás",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Írja le a műveletet, amely megoldja a problémát.]",
+  "app.kb.fromTicketMissingRequest": "az ügyfél eredeti kérése",
+  "app.kb.fromTicketMissingAnswer": "az ügyintéző válasza",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste.
+     Les suffixes casuels du hongrois restent HORS des crochets — « a **[gomb
+     neve]** gombra », « [a mező] értékét » — pour que l'auteur n'ait qu'un nom
+     à écrire, sans avoir à le décliner. */
+  "app.kb.tplProcedureLabel": "Lépésenkénti útmutató",
+  "app.kb.tplProcedureHint": "Számozott lépések sorozata, a várt eredménnyel.",
+  "app.kb.tplProcedureTitle": "Hogyan [végezze el a műveletet]",
+  "app.kb.tplProcedureBody":
+    "Ez a cikk bemutatja, hogyan [végezze el a műveletet]. Körülbelül [időtartam] szükséges hozzá.\n\n## Mielőtt hozzákezd\n\n- [Szükséges jogosultság vagy szerepkör]\n- [Kéznél tartandó információ]\n\n## Lépések\n\n1. Nyissa meg [az érintett képernyőt].\n2. Kattintson a **[gomb neve]** gombra.\n3. Adja meg [a mező] értékét, majd hagyja jóvá.\n\n> Ha [a különleges eset] fordul elő, [a követendő teendő].\n\n## Eredmény\n\n[Amit a felhasználónak látnia kell a művelet sikeres elvégzése után.]\n",
+  "app.kb.tplIncidentLabel": "Incidens megoldása",
+  "app.kb.tplIncidentHint": "Tünet, ok, megoldás és átmeneti kerülő megoldás.",
+  "app.kb.tplIncidentTitle": "[A tapasztalt tünet]",
+  "app.kb.tplIncidentBody":
+    "## Tünet\n\n[Amit a felhasználó tapasztal, a pontos hibaüzenettel, ha van ilyen.]\n\n## Ok\n\n[Miért fordul ez elő.]\n\n## Megoldás\n\n1. [Első javító művelet]\n2. [Második javító művelet]\n\n## Átmeneti kerülő megoldás\n\n> [Amit a felhasználó azonnal megtehet, ha a megoldáshoz az Önök csapatának\n> közbelépése szükséges.]\n\n## Ha a probléma továbbra is fennáll\n\nNyisson új kérést, és adja meg [a diagnózishoz szükséges információkat].\n",
+  "app.kb.tplFaqLabel": "Gyakori kérdés",
+  "app.kb.tplFaqHint": "Rövid, közvetlen válasz, majd a részletek.",
+  "app.kb.tplFaqTitle": "[A kérdés úgy, ahogyan az ügyfelek felteszik]",
+  /* « Situation A / B » devient « 1. / 2. helyzet » : en hongrois, un « A »
+     initial se lirait comme l'article défini. */
+  "app.kb.tplFaqBody":
+    "**Rövid válasz:** [a válasz egy mondatban].\n\n## Részletesen\n\n[A hasznos háttér és a fontos részletek.]\n\n## Különleges esetek\n\n- **[1. helyzet]** — [ami változik].\n- **[2. helyzet]** — [ami változik].\n\n## További információ\n\n[Hivatkozás a kapcsolódó cikkre vagy a hozzá tartozó folyamatra.]\n",
+  "app.kb.tplReleaseLabel": "Kiadási megjegyzés",
+  "app.kb.tplReleaseHint": "Egy kiadás újdonságai, fejlesztései és hibajavításai.",
+  "app.kb.tplReleaseTitle": "A(z) [dátum vagy verzió] újdonságai",
+  "app.kb.tplReleaseBody":
+    "## Újdonságok\n\n- **[A funkció neve]** — [mit tesz lehetővé a felhasználó szempontjából].\n\n## Fejlesztések\n\n- [Ami egyszerűbbé vagy gyorsabbá válik.]\n\n## Hibajavítások\n\n- [A javított hiba, úgy megfogalmazva, ahogyan az ügyfél megtapasztalta.]\n\n> Ezek a változások már élnek a munkaterületén, semmilyen teendője nincs\n> velük.\n",
 };

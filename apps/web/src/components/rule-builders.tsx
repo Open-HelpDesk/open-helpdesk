@@ -11,11 +11,12 @@ import { useState } from "react";
 import { useT } from "@/i18n/client";
 import { X } from "lucide-react";
 import {
-  ACTION_LABELS,
-  FIELD_LABELS,
-  FIELD_VALUE_OPTIONS,
-  OPERATOR_LABELS,
+  ACTION_KEYS,
+  FIELD_KEYS,
+  FIELD_VALUE_KEYS,
+  OPERATOR_KEYS,
 } from "@/lib/rule-labels";
+import { FIELD } from "@/components/settings-page";
 
 export type Condition = { field: string; operator: string; value?: string | number };
 export type Action = { type: string; value?: unknown };
@@ -55,7 +56,7 @@ function ConditionRow({
 }) {
   const t = useT();
   const operators = OPERATORS_BY_FIELD[condition.field] ?? ["is"];
-  const options = FIELD_VALUE_OPTIONS[condition.field];
+  const options = FIELD_VALUE_KEYS[condition.field];
   return (
     <div
       className="grid items-center gap-1.5"
@@ -67,24 +68,24 @@ function ConditionRow({
           const field = e.target.value;
           onChange({ field, operator: OPERATORS_BY_FIELD[field]?.[0] ?? "is", value: "" });
         }}
-        className="min-w-0 rounded-md border px-2 py-1.5 text-sm"
+        className={`min-w-0 ${FIELD}`}
         style={inputStyle}
       >
-        {Object.entries(FIELD_LABELS).map(([v, l]) => (
+        {Object.entries(FIELD_KEYS).map(([v, cle]) => (
           <option key={v} value={v}>
-            {l}
+            {t(cle)}
           </option>
         ))}
       </select>
       <select
         value={condition.operator}
         onChange={(e) => onChange({ ...condition, operator: e.target.value })}
-        className="min-w-0 rounded-md border px-2 py-1.5 text-sm"
+        className={`min-w-0 ${FIELD}`}
         style={inputStyle}
       >
         {operators.map((op) => (
           <option key={op} value={op}>
-            {OPERATOR_LABELS[op]}
+            {OPERATOR_KEYS[op] ? t(OPERATOR_KEYS[op]) : op}
           </option>
         ))}
       </select>
@@ -94,13 +95,13 @@ function ConditionRow({
         <select
           value={String(condition.value ?? "")}
           onChange={(e) => onChange({ ...condition, value: e.target.value })}
-          className="min-w-0 rounded-md border px-2 py-1.5 text-sm"
+          className={`min-w-0 ${FIELD}`}
           style={inputStyle}
         >
           <option value="">—</option>
           {options.map((o) => (
             <option key={o.value} value={o.value}>
-              {o.label}
+              {t(o.key)}
             </option>
           ))}
         </select>
@@ -116,7 +117,7 @@ function ConditionRow({
                 : e.target.value,
             })
           }
-          className="min-w-0 rounded-md border px-2 py-1.5 text-sm"
+          className={`min-w-0 ${FIELD}`}
           style={inputStyle}
         />
       )}
@@ -190,7 +191,7 @@ export function ConditionsBuilder({
       style={{ borderColor: "var(--line)", background: "var(--panel)" }}
     >
       {label && (
-        <legend className="px-1 text-xs font-semibold" style={{ color: "var(--ink-2)" }}>
+        <legend className="px-1 text-[12.5px] font-semibold" style={{ color: "var(--ink-2)" }}>
           {label}
         </legend>
       )}
@@ -245,12 +246,12 @@ export function ActionsBuilder({
                     : { type, value: type === "add_tags" ? [] : "" },
                 );
               }}
-              className="rounded-md border px-2 py-1.5 text-sm"
+              className={FIELD}
               style={inputStyle}
             >
-              {Object.entries(ACTION_LABELS).map(([v, l]) => (
+              {Object.entries(ACTION_KEYS).map(([v, cle]) => (
                 <option key={v} value={v}>
-                  {l}
+                  {t(cle)}
                 </option>
               ))}
             </select>
@@ -259,13 +260,13 @@ export function ActionsBuilder({
               <select
                 value={String(a.value ?? "")}
                 onChange={(e) => update(i, { ...a, value: e.target.value })}
-                className="rounded-md border px-2 py-1.5 text-sm"
+                className={FIELD}
                 style={inputStyle}
               >
                 <option value="">—</option>
-                {FIELD_VALUE_OPTIONS[a.type === "set_status" ? "status" : "priority"]!.map((o) => (
+                {FIELD_VALUE_KEYS[a.type === "set_status" ? "status" : "priority"]!.map((o) => (
                   <option key={o.value} value={o.value}>
-                    {o.label}
+                    {t(o.key)}
                   </option>
                 ))}
               </select>
@@ -274,7 +275,7 @@ export function ActionsBuilder({
               <select
                 value={String(a.value ?? "")}
                 onChange={(e) => update(i, { ...a, value: e.target.value })}
-                className="rounded-md border px-2 py-1.5 text-sm"
+                className={FIELD}
                 style={inputStyle}
               >
                 <option value="">—</option>
@@ -289,7 +290,7 @@ export function ActionsBuilder({
               <select
                 value={String(a.value ?? "")}
                 onChange={(e) => update(i, { ...a, value: e.target.value })}
-                className="rounded-md border px-2 py-1.5 text-sm"
+                className={FIELD}
                 style={inputStyle}
               >
                 <option value="">—</option>
@@ -301,7 +302,7 @@ export function ActionsBuilder({
               </select>
             )}
             {a.type === "assign_round_robin" && (
-              <span className="px-1 py-1.5 text-xs" style={{ color: "var(--ink-3)" }}>
+              <span className="px-1 py-1.5 text-[12px]" style={{ color: "var(--ink-3)" }}>
                 {t("app.settingsNav.roundRobinHint")}
               </span>
             )}
@@ -318,7 +319,7 @@ export function ActionsBuilder({
                       .filter(Boolean),
                   })
                 }
-                className="w-64 rounded-md border px-2 py-1.5 text-sm"
+                className={`w-64 ${FIELD}`}
                 style={inputStyle}
               />
             )}
@@ -328,7 +329,7 @@ export function ActionsBuilder({
                 placeholder="Corps de l'email — variables : {{contact.name}}, {{ticket.number}}, {{ticket.subject}}"
                 value={String(a.value ?? "")}
                 onChange={(e) => update(i, { ...a, value: e.target.value })}
-                className="w-full max-w-md rounded-md border px-2 py-1.5 text-sm"
+                className={`w-full max-w-md ${FIELD}`}
                 style={inputStyle}
               />
             )}
@@ -362,7 +363,7 @@ export function ActionsBuilder({
       className="rounded-lg border p-3"
       style={{ borderColor: "var(--line)", background: "var(--panel)" }}
     >
-      <legend className="px-1 text-xs font-semibold" style={{ color: "var(--ink-2)" }}>
+      <legend className="px-1 text-[12.5px] font-semibold" style={{ color: "var(--ink-2)" }}>
         {t("app.settingsNav.thenActions")}
       </legend>
       {body}

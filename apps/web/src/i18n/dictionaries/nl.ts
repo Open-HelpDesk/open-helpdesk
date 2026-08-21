@@ -1226,6 +1226,89 @@ export const nl: Dictionary = {
   "app.settings.rules.typeLongText": "Lange tekst",
   "app.settings.rules.typeFile": "Bestand",
   "app.settings.rules.typeSelectLong": "Keuzelijst",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) --- */
+
+  /* Types de champs personnalisés (ST-04) ; « Tekst » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Lijst",
+  "app.settings.rules.typeMultiSelect": "Meerkeuzelijst",
+  "app.settings.rules.typeDate": "Datum",
+  "app.settings.rules.typeNumber": "Getal",
+  "app.settings.rules.typeCheckbox": "Selectievakje",
+
+  /* Champs sur lesquels une condition peut porter ; ils s'accordent avec
+     app.status.* / app.priority.* / app.channel.*, qui fournissent les valeurs. */
+  "app.settings.rules.condFieldEvent": "Gebeurtenis",
+  "app.settings.rules.condFieldStatus": "Status",
+  "app.settings.rules.condFieldPriority": "Prioriteit",
+  "app.settings.rules.condFieldChannel": "Kanaal",
+  "app.settings.rules.condFieldType": "Type",
+  "app.settings.rules.condFieldSubject": "Onderwerp",
+  "app.settings.rules.condFieldTags": "Tags",
+  "app.settings.rules.condFieldAssignee": "Toegewezen aan",
+  "app.settings.rules.condFieldTeam": "Team",
+  "app.settings.rules.condFieldOrganization": "Organisatie",
+  "app.settings.rules.condFieldHoursCreated": "Uren sinds aanmaak",
+  "app.settings.rules.condFieldHoursUpdated": "Uren sinds laatste wijziging",
+
+  /* Opérateurs ; les deux derniers restent des symboles en néerlandais. */
+  "app.settings.rules.opIs": "is",
+  "app.settings.rules.opIsNot": "is niet",
+  "app.settings.rules.opContains": "bevat",
+  "app.settings.rules.opIncludes": "omvat",
+  "app.settings.rules.opEmpty": "is leeg",
+  "app.settings.rules.opNotEmpty": "is niet leeg",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Ticket aangemaakt",
+  "app.settings.rules.eventTicketUpdated": "Ticket bijgewerkt",
+  "app.settings.rules.eventMessageCreated": "Bericht ontvangen",
+
+  /* Actions, telles que le menu du builder les nomme. Le néerlandais met son
+     verbe en fin de proposition, comme « Aan het formulier toevoegen ». */
+  "app.settings.rules.actSetStatus": "Status instellen",
+  "app.settings.rules.actSetPriority": "Prioriteit instellen",
+  "app.settings.rules.actAssignUser": "Aan een agent toewijzen",
+  "app.settings.rules.actAssignTeam": "Aan een team toewijzen",
+  "app.settings.rules.actAssignRoundRobin": "Aan de volgende agent toewijzen (round-robin)",
+  "app.settings.rules.actAddTags": "Tags toevoegen",
+  "app.settings.rules.actEmailContact": "Een e-mail naar het contact sturen",
+
+  /* Résumé d'une règle, en une ligne de liste. Les bribes s'enchaînent sans
+     majuscule ni point ; le verbe reste en fin de bribe. */
+  "app.settings.rules.summaryPattern": "Als {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "en",
+  "app.settings.rules.summaryAlways": "altijd",
+  "app.settings.rules.summaryAnyOf": {
+    one: "minstens één van {count} voorwaarde",
+    other: "minstens één van {count} voorwaarden",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "niet toegewezen",
+  "app.settings.rules.summaryAssigned": "toegewezen",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. */
+  "app.settings.rules.summarySince": "sinds {duration}",
+  "app.settings.rules.summarySetStatus": "op {value} zetten",
+  "app.settings.rules.summarySetPriority": "prioriteit {value}",
+  "app.settings.rules.summaryAssignTeam": "aan {team} toewijzen",
+  "app.settings.rules.summaryAnyTeam": "een team",
+  "app.settings.rules.summaryAssignUser": "aan een agent toewijzen",
+  "app.settings.rules.summaryRoundRobin": "aan de volgende agent toewijzen",
+  "app.settings.rules.summaryAddTags": "{tags} toevoegen",
+  "app.settings.rules.summaryEmailContact": "een e-mail naar het contact sturen",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Status → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioriteit → {value}",
+  "app.settings.rules.macroSummaryTeam": "Team → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "team",
+  "app.settings.rules.macroSummaryAssign": "Toewijzen →",
+  "app.settings.rules.macroSummaryTag": "Tag {tags}",
+  "app.settings.rules.macroSummaryNone": "Geen actie",
   "app.settings.rules.fieldName": "Naam van het veld",
   "app.settings.rules.fieldNamePlaceholder": "Bestelnummer",
   "app.settings.rules.fieldOptions": "Opties",
@@ -1378,4 +1461,136 @@ export const nl: Dictionary = {
   "app.login.rateLimited": "Te veel inlogpogingen. Wacht enkele seconden voordat u het opnieuw probeert.",
   "app.login.notAMember": "Deze identiteit is geen lid van deze werkruimte.",
   "app.login.providerMissing": "Deze provider is niet geconfigureerd op deze instantie.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Tout cet écran était en français dans le code. Quatre libellés viennent
+     d'ailleurs et ne sont pas repris ici : le titre du portail dans son propre
+     aperçu (home.title), le nom du workspace et la couleur d'accent (les mêmes
+     contrôles qu'en ST-01), et les rôles Owner / Admin / Agent / Viewer. */
+
+  "app.onboarding.asideTitle": "Configuratie",
+  "app.onboarding.asideFooter":
+    "U kunt al deze keuzes later nog aanpassen bij de instellingen.",
+  "app.onboarding.stepCounter": "Stap {step} van {total}",
+  "app.onboarding.continue": "Doorgaan",
+  "app.onboarding.skip": "Deze stap overslaan",
+
+  "app.onboarding.stepIdentity": "Identiteit",
+  "app.onboarding.stepIdentityHint": "Naam, logo, kleur",
+  "app.onboarding.stepEmail": "E-mail",
+  "app.onboarding.stepEmailHint": "Ontvangstadres",
+  "app.onboarding.stepTeam": "Team",
+  "app.onboarding.stepTeamHint": "Agents uitnodigen",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "Eerste ticket",
+
+  "app.onboarding.identityTitle": "Identiteit van uw werkruimte",
+  "app.onboarding.identityBody":
+    "Deze elementen verschijnen op uw klantportaal en in de e-mails die naar uw klanten worden verstuurd.",
+  "app.onboarding.logoDrop": "Sleep hier een PNG- of SVG-bestand",
+  "app.onboarding.previewSearch": "Zoek een artikel…",
+  "app.onboarding.previewCaption": "Voorbeeld van uw klantportaal",
+
+  "app.onboarding.emailTitle": "Uw e-mails ontvangen",
+  "app.onboarding.emailBody":
+    "Alle verzoeken die op dit adres binnenkomen, worden automatisch tickets.",
+  "app.onboarding.or": "OF",
+  "app.onboarding.copy": "Kopiëren",
+  "app.onboarding.copied": "Gekopieerd ✓",
+  "app.onboarding.ownAddressTitle": "Mijn eigen adres koppelen",
+  "app.onboarding.ownAddressBody":
+    "Stuur uw bestaande adres ({example}) door naar het adres hierboven. De volledige configuratie vindt u bij de instellingen.",
+  "app.onboarding.forwardLabel": "Adres om door te sturen",
+  "app.onboarding.forwardPlaceholder": "support@uw-domein.nl",
+
+  "app.onboarding.teamTitle": "Uw team uitnodigen",
+  "app.onboarding.teamBody":
+    "Nodig uw agents nu uit, of deel de uitnodigingslink. Viewer-licenties zijn gratis.",
+  "app.onboarding.invitePlaceholder": "collega@bedrijf.nl",
+  "app.onboarding.addRow": "+ Rij toevoegen",
+  "app.onboarding.sendInvites": "Uitnodigingen versturen",
+
+  "app.onboarding.testTitle": "Een eerste ticket versturen",
+  "app.onboarding.testBody":
+    "Controleer de volledige keten voordat u de dienst voor uw klanten opent.",
+  "app.onboarding.readyTitle": "Uw werkruimte is klaar",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Stuur een e-mail naar {address} om een testticket aan te maken.",
+  "app.onboarding.openInbox": "Inbox openen",
+
+  "app.onboarding.checklistIdentity": "Identiteit ingesteld",
+  "app.onboarding.checklistEmail": "E-mailadres geconfigureerd",
+  "app.onboarding.checklistTeam": "Team uitgenodigd",
+  "app.onboarding.checklistTicket": "Eerste ticket ontvangen",
+  "app.onboarding.checklistSla": "SLA-beleid gecontroleerd",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase est découpée autour de
+     {mode} ; c'est le sélecteur qui porte l'article, faute de quoi l'option
+     « au moins une » ne s'accorderait pas avec le pluriel « voorwaarden ». */
+  "app.settings.rules.matchIf": "ALS",
+  "app.settings.rules.matchAllPattern": "Voldoet aan {mode} voorwaarden",
+  "app.settings.rules.matchAnyPattern": "Voldoet aan {mode} voorwaarden",
+  "app.settings.rules.matchAll": "alle",
+  "app.settings.rules.matchAny": "minstens één van de",
+
+  /* ST-11 — noms des offres ; « Free », « Standard » et « Pro » ne se
+     traduisent pas, et « plan » suit app.settings.shell.planPro. */
+  "app.settings.workspace.planFree": "Free-plan",
+  "app.settings.workspace.planStandard": "Standard-plan",
+  "app.settings.workspace.planPro": "Pro-plan",
+
+  /* Types de ticket (AG-05) : la valeur en base reste française, seul
+     l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Vraag",
+  "app.ticket.typeIncident": "Incident",
+  "app.ticket.typeTask": "Taak",
+  "app.ticket.typeOther": "Overig",
+
+  /* AG-09 — entêtes de l'export CSV des rapports ; « s » est bien l'abréviation
+     néerlandaise des secondes, comme dans app.ticket.draftSavedSeconds. */
+  "app.reports.csvIndicator": "Indicator",
+  "app.reports.csvCurrentPeriod": "Huidige periode",
+  "app.reports.csvPreviousPeriod": "Vorige periode",
+  "app.reports.csvCreated": "Aangemaakte tickets",
+  "app.reports.csvResolved": "Opgeloste tickets",
+  "app.reports.csvMedianFirstReply": "Mediaan 1e antwoord (s)",
+  "app.reports.csvMedianResolve": "Mediaan oplostijd (s)",
+  "app.reports.csvSlaCompliance": "SLA-naleving (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Dag",
+  "app.reports.csvCreatedShort": "Aangemaakt",
+  "app.reports.csvResolvedShort": "Opgelost",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article ; les « ## » restent. */
+  "app.kb.fromTicketDefaultTitle": "Nieuw artikel",
+  "app.kb.fromTicketSymptomHeading": "Symptoom",
+  "app.kb.fromTicketSymptomPlaceholder": "[Beschrijf wat de klant ziet.]",
+  "app.kb.fromTicketSolutionHeading": "Oplossing",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Beschrijf de handeling die het probleem oplost.]",
+  "app.kb.fromTicketMissingRequest": "het oorspronkelijke verzoek van de klant",
+  "app.kb.fromTicketMissingAnswer": "het antwoord van de agent",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Procedure stap voor stap",
+  "app.kb.tplProcedureHint": "Een reeks genummerde stappen, met het verwachte resultaat.",
+  "app.kb.tplProcedureTitle": "Hoe u [de handeling uitvoert]",
+  "app.kb.tplProcedureBody": "Dit artikel legt uit hoe u [de handeling uitvoert]. Reken op ongeveer [duur].\n\n## Voordat u begint\n\n- [Benodigd recht of rol]\n- [Informatie die u bij de hand moet hebben]\n\n## Stappen\n\n1. Open [het betreffende scherm].\n2. Klik op **[de knop]**.\n3. Vul [het veld] in en bevestig.\n\n> Als [het bijzondere geval] zich voordoet, [wat u dan doet].\n\n## Resultaat\n\n[Wat de persoon moet zien nadat de handeling is gelukt.]\n",
+  "app.kb.tplIncidentLabel": "Incidentoplossing",
+  "app.kb.tplIncidentHint": "Symptoom, oorzaak, oplossing en noodoplossing.",
+  "app.kb.tplIncidentTitle": "[Waargenomen symptoom]",
+  "app.kb.tplIncidentBody": "## Symptoom\n\n[Wat de persoon ziet, met de exacte foutmelding als die er is.]\n\n## Oorzaak\n\n[Waarom dit gebeurt.]\n\n## Oplossing\n\n1. [Eerste corrigerende actie]\n2. [Tweede corrigerende actie]\n\n## Noodoplossing in de tussentijd\n\n> [Wat de persoon nu al kan doen als de oplossing een ingreep van uw team\n> vraagt.]\n\n## Als het probleem blijft bestaan\n\nDien een verzoek in en vermeld [de informatie die nuttig is voor de diagnose].\n",
+  "app.kb.tplFaqLabel": "Veelgestelde vraag",
+  "app.kb.tplFaqHint": "Een kort en direct antwoord, daarna de details.",
+  "app.kb.tplFaqTitle": "[De vraag, zoals klanten die stellen]",
+  "app.kb.tplFaqBody": "**Kort antwoord:** [het antwoord in één zin].\n\n## In detail\n\n[De context en de nuances die van pas komen.]\n\n## Bijzondere gevallen\n\n- **[Situatie A]** — [wat er verandert].\n- **[Situatie B]** — [wat er verandert].\n\n## Meer weten\n\n[Verwijzing naar het aanverwante artikel of de bijbehorende procedure.]\n",
+  "app.kb.tplReleaseLabel": "Release-opmerking",
+  "app.kb.tplReleaseHint": "Nieuwe functies, verbeteringen en correcties van één release.",
+  "app.kb.tplReleaseTitle": "Nieuw in [datum of versie]",
+  "app.kb.tplReleaseBody": "## Nieuwe functies\n\n- **[Naam van de functie]** — [wat de gebruiker ermee kan].\n\n## Verbeteringen\n\n- [Wat eenvoudiger of sneller wordt.]\n\n## Correcties\n\n- [Het opgeloste probleem, verwoord zoals de klant het ervoer.]\n\n> Deze wijzigingen zijn al actief in uw werkruimte, u hoeft zelf niets te\n> doen.\n",
 };

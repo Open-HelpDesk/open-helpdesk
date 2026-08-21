@@ -1352,6 +1352,96 @@ export const et: Dictionary = {
   "app.settings.rules.typeLongText": "Pikk tekst",
   "app.settings.rules.typeFile": "Fail",
   "app.settings.rules.typeSelectLong": "Rippmenüü",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Il vivait dans lib/rule-labels.ts, en français : l'écran des automatisations
+     restait donc français quelle que soit la langue du workspace. Les statuts,
+     priorités et canaux ne sont PAS repris ici — ils viennent des tables
+     partagées (app.status.*, app.priority.*, app.channel.*), et les libellés
+     condField* ci-dessous s'accordent avec elles. */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Loend",
+  "app.settings.rules.typeMultiSelect": "Mitmikvalik",
+  "app.settings.rules.typeDate": "Kuupäev",
+  "app.settings.rules.typeNumber": "Arv",
+  "app.settings.rules.typeCheckbox": "Märkeruut",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Sündmus",
+  "app.settings.rules.condFieldStatus": "Olek",
+  "app.settings.rules.condFieldPriority": "Prioriteet",
+  "app.settings.rules.condFieldChannel": "Kanal",
+  "app.settings.rules.condFieldType": "Tüüp",
+  "app.settings.rules.condFieldSubject": "Teema",
+  "app.settings.rules.condFieldTags": "Sildid",
+  "app.settings.rules.condFieldAssignee": "Käsitleja",
+  "app.settings.rules.condFieldTeam": "Tiim",
+  "app.settings.rules.condFieldOrganization": "Organisatsioon",
+  "app.settings.rules.condFieldHoursCreated": "Tunnid loomisest",
+  "app.settings.rules.condFieldHoursUpdated": "Tunnid uuendamisest",
+
+  /* Opérateurs. Les deux derniers restent des symboles en estonien. */
+  "app.settings.rules.opIs": "on",
+  "app.settings.rules.opIsNot": "ei ole",
+  "app.settings.rules.opContains": "sisaldab",
+  "app.settings.rules.opIncludes": "hõlmab",
+  "app.settings.rules.opEmpty": "on tühi",
+  "app.settings.rules.opNotEmpty": "ei ole tühi",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Pilet loodud",
+  "app.settings.rules.eventTicketUpdated": "Pilet uuendatud",
+  "app.settings.rules.eventMessageCreated": "Sõnum saabunud",
+
+  /* Actions, telles que le menu du builder les nomme : impératif, comme
+     « Määra käsitleja » de l'inbox. */
+  "app.settings.rules.actSetStatus": "Määra olek",
+  "app.settings.rules.actSetPriority": "Määra prioriteet",
+  "app.settings.rules.actAssignUser": "Määra agendile",
+  "app.settings.rules.actAssignTeam": "Määra tiimile",
+  "app.settings.rules.actAssignRoundRobin": "Määra järgmisele agendile (round-robin)",
+  "app.settings.rules.actAddTags": "Lisa sildid",
+  "app.settings.rules.actEmailContact": "Saada kontaktile e-kiri",
+
+  /* Résumé d'une règle, en une ligne de liste : les bribes s'enchaînent, sans
+     majuscule initiale ni point final. L'estonien garde l'ordre « kui … → … ». */
+  "app.settings.rules.summaryPattern": "Kui {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "ja",
+  "app.settings.rules.summaryAlways": "alati",
+  "app.settings.rules.summaryAnyOf": {
+    one: "vähemalt üks {count} tingimusest",
+    other: "vähemalt üks {count} tingimusest",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "määramata",
+  "app.settings.rules.summaryAssigned": "määratud",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : voir
+     formatDurationTokens, ils ne se traduisent pas. « juba … » reprend
+     since.hours du portail, où « depuis 3 h » se dit déjà « juba 3 h ». */
+  "app.settings.rules.summarySince": "juba {duration}",
+  "app.settings.rules.summarySetStatus": "määra olekuks {value}",
+  "app.settings.rules.summarySetPriority": "määra prioriteediks {value}",
+  "app.settings.rules.summaryAssignTeam": "määra tiimile {team}",
+  /* Repli quand l'équipe n'est plus connue : « une équipe » se dirait
+     « ühele tiimile » et doublerait le mot déjà présent dans le gabarit. */
+  "app.settings.rules.summaryAnyTeam": "(täpsustamata)",
+  "app.settings.rules.summaryAssignUser": "määra agendile",
+  "app.settings.rules.summaryRoundRobin": "määra järgmisele agendile",
+  "app.settings.rules.summaryAddTags": "lisa {tags}",
+  "app.settings.rules.summaryEmailContact": "saada kontaktile e-kiri",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Olek → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioriteet → {value}",
+  "app.settings.rules.macroSummaryTeam": "Tiim → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "(täpsustamata)",
+  "app.settings.rules.macroSummaryAssign": "Määra →",
+  "app.settings.rules.macroSummaryTag": "Silt {tags}",
+  "app.settings.rules.macroSummaryNone": "Toiminguid ei ole",
   "app.settings.rules.fieldName": "Välja nimi",
   "app.settings.rules.fieldNamePlaceholder": "Tellimuse number",
   "app.settings.rules.fieldOptions": "Valikud",
@@ -1566,4 +1656,138 @@ export const et: Dictionary = {
     "Liiga palju sisselogimiskatseid. Oodake mõni sekund ja proovige uuesti.",
   "app.login.notAMember": "See identiteet ei ole selle tööruumi liige.",
   "app.login.providerMissing": "Seda teenusepakkujat pole selles instantsis seadistatud.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Le premier écran qu'un nouveau workspace rencontre. Quatre libellés viennent
+     d'ailleurs : le titre du portail dans son propre aperçu (home.title), le nom
+     du workspace et la couleur d'accent (les mêmes contrôles qu'en ST-01), et
+     les rôles Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Seadistamine",
+  "app.onboarding.asideFooter": "Kõiki neid seadeid saate hiljem seadetes muuta.",
+  "app.onboarding.stepCounter": "Samm {step} / {total}",
+  "app.onboarding.continue": "Jätka",
+  "app.onboarding.skip": "Jäta see samm vahele",
+
+  "app.onboarding.stepIdentity": "Identiteet",
+  "app.onboarding.stepIdentityHint": "Nimi, logo, värv",
+  "app.onboarding.stepEmail": "E-post",
+  "app.onboarding.stepEmailHint": "Vastuvõtuaadress",
+  "app.onboarding.stepTeam": "Tiim",
+  "app.onboarding.stepTeamHint": "Agentide kutsumine",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "Esimene pilet",
+
+  "app.onboarding.identityTitle": "Teie tööruumi identiteet",
+  "app.onboarding.identityBody":
+    "Need ilmuvad teie kliendiportaalis ja klientidele saadetavates e-kirjades.",
+  "app.onboarding.logoDrop": "Lohistage siia PNG- või SVG-fail",
+  "app.onboarding.previewSearch": "Otsi artiklit…",
+  "app.onboarding.previewCaption": "Teie kliendiportaali eelvaade",
+
+  "app.onboarding.emailTitle": "E-kirjade vastuvõtmine",
+  "app.onboarding.emailBody":
+    "Kõik sellele aadressile saadetud päringud muutuvad automaatselt piletiteks.",
+  "app.onboarding.or": "VÕI",
+  "app.onboarding.copy": "Kopeeri",
+  "app.onboarding.copied": "Kopeeritud ✓",
+  "app.onboarding.ownAddressTitle": "Ühenda oma aadress",
+  "app.onboarding.ownAddressBody":
+    "Suunake oma olemasolev aadress ({example}) eespool antud aadressile. Üksikasjalik seadistus on seadetes.",
+  "app.onboarding.forwardLabel": "Suunatav aadress",
+  "app.onboarding.forwardPlaceholder": "tugi@teie-domeen.ee",
+
+  "app.onboarding.teamTitle": "Kutsuge oma tiim",
+  "app.onboarding.teamBody":
+    "Kutsuge agendid kohe või jagage kutselinki. Viewer-kohad on tasuta.",
+  "app.onboarding.invitePlaceholder": "kolleeg@ettevote.ee",
+  "app.onboarding.addRow": "+ Lisa rida",
+  "app.onboarding.sendInvites": "Saada kutsed",
+
+  "app.onboarding.testTitle": "Saatke esimene pilet",
+  "app.onboarding.testBody": "Kontrollige kogu ahelat, enne kui avate teenuse klientidele.",
+  "app.onboarding.readyTitle": "Teie tööruum on valmis",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée autour
+     du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Testpileti loomiseks saatke e-kiri aadressile {address}.",
+  "app.onboarding.openInbox": "Ava sisendkast",
+
+  "app.onboarding.checklistIdentity": "Identiteet määratud",
+  "app.onboarding.checklistEmail": "E-posti aadress seadistatud",
+  "app.onboarding.checklistTeam": "Tiim kutsutud",
+  "app.onboarding.checklistTicket": "Esimene pilet saabunud",
+  "app.onboarding.checklistSla": "SLA-poliitika kontrollitud",
+
+
+/* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
+     « toutes / au moins une » : en estonien le complément part AVEC le
+     sélecteur, faute de quoi « vähemalt ühele » se heurterait à un pluriel figé
+     (« kõigile tingimustele », mais « vähemalt ühele tingimusele »). */
+  "app.settings.rules.matchIf": "KUI",
+  "app.settings.rules.matchAllPattern": "Vastab {mode}",
+  "app.settings.rules.matchAnyPattern": "Vastab {mode}",
+  "app.settings.rules.matchAll": "kõigile tingimustele",
+  "app.settings.rules.matchAny": "vähemalt ühele tingimusele",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Free pakett",
+  "app.settings.workspace.planStandard": "Standard pakett",
+  "app.settings.workspace.planPro": "Pro pakett",
+
+  /* Types de ticket (AG-05). Attention : la VALEUR enregistrée en base reste la
+     chaîne française — seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Küsimus",
+  "app.ticket.typeIncident": "Intsident",
+  "app.ticket.typeTask": "Ülesanne",
+  "app.ticket.typeOther": "Muu",
+
+  /* AG-09 — export CSV des rapports. Les entêtes reprennent les KPI de l'écran ;
+     « s » est l'abréviation SI de la seconde en estonien, comme « min » et
+     « ms » ailleurs dans ce fichier. */
+  "app.reports.csvIndicator": "Näitaja",
+  "app.reports.csvCurrentPeriod": "Praegune periood",
+  "app.reports.csvPreviousPeriod": "Eelmine periood",
+  "app.reports.csvCreated": "Loodud piletid",
+  "app.reports.csvResolved": "Lahendatud piletid",
+  "app.reports.csvMedianFirstReply": "1. vastuse mediaan (s)",
+  "app.reports.csvMedianResolve": "Lahendamise mediaan (s)",
+  "app.reports.csvSlaCompliance": "SLA täitmine (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Päev",
+  "app.reports.csvCreatedShort": "Loodud",
+  "app.reports.csvResolvedShort": "Lahendatud",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Uus artikkel",
+  "app.kb.fromTicketSymptomHeading": "Sümptom",
+  "app.kb.fromTicketSymptomPlaceholder": "[Kirjeldage, mida klient näeb.]",
+  "app.kb.fromTicketSolutionHeading": "Lahendus",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Kirjeldage toimingut, mis probleemi lahendab.]",
+  "app.kb.fromTicketMissingRequest": "kliendi esialgne päring",
+  "app.kb.fromTicketMissingAnswer": "agendi vastus",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Samm-sammuline juhend",
+  "app.kb.tplProcedureHint": "Nummerdatud sammude jada koos oodatava tulemusega.",
+  "app.kb.tplProcedureTitle": "Kuidas [teha toiming]",
+  "app.kb.tplProcedureBody": "See artikkel selgitab, kuidas [teha toiming]. Arvestage umbes [kestus].\n\n## Enne alustamist\n\n- [Vajalik õigus või roll]\n- [Teave, mis peab käepärast olema]\n\n## Sammud\n\n1. Avage [vajalik vaade].\n2. Klõpsake nupul **[nupu nimi]**.\n3. Täitke väli [välja nimi] ja kinnitage.\n\n> Kui esineb [erijuhtum], siis [kuidas toimida].\n\n## Tulemus\n\n[Mida kasutaja peab nägema, kui toiming on õnnestunud.]\n",
+  "app.kb.tplIncidentLabel": "Intsidendi lahendamine",
+  "app.kb.tplIncidentHint": "Sümptom, põhjus, lahendus ja ajutine lahendus.",
+  "app.kb.tplIncidentTitle": "[Täheldatud sümptom]",
+  "app.kb.tplIncidentBody": "## Sümptom\n\n[Mida kasutaja näeb, koos täpse veateatega, kui see on olemas.]\n\n## Põhjus\n\n[Miks see juhtub.]\n\n## Lahendus\n\n1. [Esimene parandustoiming]\n2. [Teine parandustoiming]\n\n## Ajutine lahendus\n\n> [Mida kasutaja saab kohe teha, kui lahendus nõuab teie tiimi\n> sekkumist.]\n\n## Kui probleem püsib\n\nEsitage päring, märkides ära [diagnoosimiseks vajaliku teabe].\n",
+  "app.kb.tplFaqLabel": "Korduma kippuv küsimus",
+  "app.kb.tplFaqHint": "Lühike ja otsene vastus, seejärel täpsustused.",
+  "app.kb.tplFaqTitle": "[Küsimus nii, nagu kliendid selle esitavad]",
+  "app.kb.tplFaqBody": "**Lühivastus:** [vastus ühe lausega].\n\n## Üksikasjalikult\n\n[Kasulik kontekst ja nüansid.]\n\n## Erijuhud\n\n- **[Olukord A]** — [mis muutub].\n- **[Olukord B]** — [mis muutub].\n\n## Lisateave\n\n[Viide seotud artiklile või sellega kaasnevale toimingule.]\n",
+  "app.kb.tplReleaseLabel": "Väljalaskemärkmed",
+  "app.kb.tplReleaseHint": "Ühe väljalaske uued võimalused, täiustused ja parandused.",
+  "app.kb.tplReleaseTitle": "Uued võimalused: [kuupäev või versioon]",
+  "app.kb.tplReleaseBody": "## Uued võimalused\n\n- **[Funktsiooni nimi]** — [mida see kasutajale võimaldab].\n\n## Täiustused\n\n- [Mis muutub lihtsamaks või kiiremaks.]\n\n## Parandused\n\n- [Parandatud probleem, sõnastatud nii, nagu klient seda koges.]\n\n> Need muudatused on teie tööruumis juba aktiivsed, teie poolt ei ole vaja\n> midagi teha.\n",
 };

@@ -1227,6 +1227,93 @@ export const es: Dictionary = {
   "app.settings.rules.typeLongText": "Texto largo",
   "app.settings.rules.typeFile": "Archivo",
   "app.settings.rules.typeSelectLong": "Lista desplegable",
+
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
+     tables partagées, celles de l'inbox et de ses filtres. */
+
+  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  "app.settings.rules.typeSelect": "Lista",
+  "app.settings.rules.typeMultiSelect": "Selección múltiple",
+  "app.settings.rules.typeDate": "Fecha",
+  "app.settings.rules.typeNumber": "Número",
+  "app.settings.rules.typeCheckbox": "Casilla de verificación",
+
+  /* Champs sur lesquels une condition peut porter. */
+  "app.settings.rules.condFieldEvent": "Evento",
+  "app.settings.rules.condFieldStatus": "Estado",
+  "app.settings.rules.condFieldPriority": "Prioridad",
+  "app.settings.rules.condFieldChannel": "Canal",
+  "app.settings.rules.condFieldType": "Tipo",
+  "app.settings.rules.condFieldSubject": "Asunto",
+  "app.settings.rules.condFieldTags": "Etiquetas",
+  "app.settings.rules.condFieldAssignee": "Asignado a",
+  "app.settings.rules.condFieldTeam": "Equipo",
+  "app.settings.rules.condFieldOrganization": "Organización",
+  "app.settings.rules.condFieldHoursCreated": "Horas desde la creación",
+  "app.settings.rules.condFieldHoursUpdated": "Horas desde la actualización",
+
+  /* Opérateurs. « sin valor » / « con valor » plutôt que « está vacío » : le
+     résumé colle l'opérateur au nom du champ, et « Organización está vacío »
+     accorderait mal — ces deux formes-ci sont invariables. Les deux
+     comparaisons numériques restent des symboles, comme en français. */
+  "app.settings.rules.opIs": "es",
+  "app.settings.rules.opIsNot": "no es",
+  "app.settings.rules.opContains": "contiene",
+  "app.settings.rules.opIncludes": "incluye",
+  "app.settings.rules.opEmpty": "sin valor",
+  "app.settings.rules.opNotEmpty": "con valor",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs. */
+  "app.settings.rules.eventTicketCreated": "Solicitud creada",
+  "app.settings.rules.eventTicketUpdated": "Solicitud actualizada",
+  "app.settings.rules.eventMessageCreated": "Mensaje recibido",
+
+  /* Actions, telles que le menu du builder les nomme. */
+  "app.settings.rules.actSetStatus": "Definir el estado",
+  "app.settings.rules.actSetPriority": "Definir la prioridad",
+  "app.settings.rules.actAssignUser": "Asignar a un agente",
+  "app.settings.rules.actAssignTeam": "Asignar a un equipo",
+  "app.settings.rules.actAssignRoundRobin": "Asignar al siguiente agente (round-robin)",
+  "app.settings.rules.actAddTags": "Añadir etiquetas",
+  "app.settings.rules.actEmailContact": "Enviar un correo electrónico al contacto",
+
+  /* Résumé d'une règle, en une ligne de liste : l'espagnol garde l'ordre
+     « si … alors … », les bribes s'insèrent sans majuscule ni point. */
+  "app.settings.rules.summaryPattern": "Si {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "y",
+  "app.settings.rules.summaryAlways": "siempre",
+  "app.settings.rules.summaryAnyOf": {
+    one: "al menos una de {count} condición",
+    many: "al menos una de {count} condiciones",
+    other: "al menos una de {count} condiciones",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "sin asignar",
+  "app.settings.rules.summaryAssigned": "asignada",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. */
+  "app.settings.rules.summarySince": "desde hace {duration}",
+  "app.settings.rules.summarySetStatus": "pasar a {value}",
+  "app.settings.rules.summarySetPriority": "prioridad {value}",
+  "app.settings.rules.summaryAssignTeam": "asignar a {team}",
+  "app.settings.rules.summaryAnyTeam": "un equipo",
+  "app.settings.rules.summaryAssignUser": "asignar a un agente",
+  "app.settings.rules.summaryRoundRobin": "asignar al siguiente agente",
+  "app.settings.rules.summaryAddTags": "añadir {tags}",
+  "app.settings.rules.summaryEmailContact": "enviar un correo electrónico al contacto",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Estado → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioridad → {value}",
+  "app.settings.rules.macroSummaryTeam": "Equipo → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "equipo",
+  "app.settings.rules.macroSummaryAssign": "Asignar →",
+  "app.settings.rules.macroSummaryTag": "Etiqueta {tags}",
+  "app.settings.rules.macroSummaryNone": "Ninguna acción",
   "app.settings.rules.fieldName": "Nombre del campo",
   "app.settings.rules.fieldNamePlaceholder": "Número de pedido",
   "app.settings.rules.fieldOptions": "Opciones",
@@ -1379,4 +1466,145 @@ export const es: Dictionary = {
   "app.login.rateLimited": "Demasiados intentos de inicio de sesión. Espera unos segundos antes de volver a intentarlo.",
   "app.login.notAMember": "Esta identidad no es miembro de este espacio de trabajo.",
   "app.login.providerMissing": "Este proveedor no está configurado en esta instancia.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Tout cet écran était en français dans le code : le premier écran qu'un
+     nouveau workspace rencontre. Quatre libellés viennent d'ailleurs et ne sont
+     pas repris ici : le titre du portail dans son propre aperçu (home.title), le
+     nom du workspace et la couleur d'accent (les mêmes contrôles qu'en ST-01),
+     et les rôles Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Configuración",
+  "app.onboarding.asideFooter":
+    "Podrás modificar todas estas opciones más adelante en los ajustes.",
+  "app.onboarding.stepCounter": "Paso {step} de {total}",
+  "app.onboarding.continue": "Continuar",
+  "app.onboarding.skip": "Omitir este paso",
+
+  "app.onboarding.stepIdentity": "Identidad",
+  "app.onboarding.stepIdentityHint": "Nombre, logotipo, color",
+  "app.onboarding.stepEmail": "Correo electrónico",
+  "app.onboarding.stepEmailHint": "Dirección de recepción",
+  "app.onboarding.stepTeam": "Equipo",
+  "app.onboarding.stepTeamHint": "Invitar a los agentes",
+  "app.onboarding.stepTest": "Prueba",
+  "app.onboarding.stepTestHint": "Primera solicitud",
+
+  "app.onboarding.identityTitle": "Identidad de tu espacio de trabajo",
+  "app.onboarding.identityBody":
+    "Estos elementos aparecerán en tu portal del cliente y en los correos enviados a tus clientes.",
+  "app.onboarding.logoDrop": "Suelta un archivo PNG o SVG",
+  "app.onboarding.previewSearch": "Buscar un artículo…",
+  "app.onboarding.previewCaption": "Vista previa de tu portal del cliente",
+
+  "app.onboarding.emailTitle": "Recibir tus correos",
+  /* « demandes » et « tickets » se disent tous deux « solicitudes » : la phrase
+     part des courriels reçus pour ne pas dire le mot deux fois. */
+  "app.onboarding.emailBody":
+    "Todos los correos recibidos en esta dirección se convierten automáticamente en solicitudes.",
+  "app.onboarding.or": "O",
+  "app.onboarding.copy": "Copiar",
+  "app.onboarding.copied": "Copiado ✓",
+  "app.onboarding.ownAddressTitle": "Conectar mi propia dirección",
+  "app.onboarding.ownAddressBody":
+    "Reenvía tu dirección actual ({example}) a la dirección facilitada más arriba. Configuración detallada en los ajustes.",
+  "app.onboarding.forwardLabel": "Dirección para reenviar",
+  "app.onboarding.forwardPlaceholder": "soporte@tu-dominio.es",
+
+  "app.onboarding.teamTitle": "Invitar a tu equipo",
+  "app.onboarding.teamBody":
+    "Invita a tus agentes ahora o comparte el enlace de invitación. Los puestos Viewer son gratuitos.",
+  "app.onboarding.invitePlaceholder": "colega@empresa.es",
+  "app.onboarding.addRow": "+ Añadir una fila",
+  "app.onboarding.sendInvites": "Enviar las invitaciones",
+
+  "app.onboarding.testTitle": "Enviar una primera solicitud",
+  "app.onboarding.testBody":
+    "Comprueba toda la cadena antes de abrir el servicio a tus clientes.",
+  "app.onboarding.readyTitle": "Tu espacio de trabajo está listo",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Envía un correo a {address} para crear una solicitud de prueba.",
+  "app.onboarding.openInbox": "Abrir la bandeja de entrada",
+
+  "app.onboarding.checklistIdentity": "Identidad definida",
+  "app.onboarding.checklistEmail": "Dirección de correo configurada",
+  "app.onboarding.checklistTeam": "Equipo invitado",
+  "app.onboarding.checklistTicket": "Primera solicitud recibida",
+  "app.onboarding.checklistSla": "Política de SLA verificada",
+
+
+/* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
+     « todas / al menos una » : elle est découpée autour de {mode}. L'espagnol
+     place ici le sélecteur en FIN de phrase — « todas de las condiciones » ne se
+     dit pas, et « Coincide con al menos una las condiciones » non plus : les
+     deux modes ne réclament pas la même préposition. « Condiciones que deben
+     cumplirse : … » se lit juste dans les deux cas, la seconde moitié est donc
+     vide. */
+  "app.settings.rules.matchIf": "SI",
+  "app.settings.rules.matchAllPattern": "Condiciones que deben cumplirse: {mode}",
+  "app.settings.rules.matchAnyPattern": "Condiciones que deben cumplirse: {mode}",
+  "app.settings.rules.matchAll": "todas",
+  "app.settings.rules.matchAny": "al menos una",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
+  "app.settings.workspace.planFree": "Plan Free",
+  "app.settings.workspace.planStandard": "Plan Standard",
+  "app.settings.workspace.planPro": "Plan Pro",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. */
+  "app.ticket.typeQuestion": "Pregunta",
+  "app.ticket.typeIncident": "Incidencia",
+  "app.ticket.typeTask": "Tarea",
+  "app.ticket.typeOther": "Otro",
+
+  /* AG-09 — export CSV des rapports. « s » est le symbole des secondes en
+     espagnol comme en français : il ne change pas. */
+  "app.reports.csvIndicator": "Indicador",
+  "app.reports.csvCurrentPeriod": "Periodo actual",
+  "app.reports.csvPreviousPeriod": "Periodo anterior",
+  "app.reports.csvCreated": "Solicitudes creadas",
+  "app.reports.csvResolved": "Solicitudes resueltas",
+  "app.reports.csvMedianFirstReply": "Mediana de 1.ª respuesta (s)",
+  "app.reports.csvMedianResolve": "Mediana de resolución (s)",
+  "app.reports.csvSlaCompliance": "Cumplimiento del SLA (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Día",
+  "app.reports.csvCreatedShort": "Creadas",
+  "app.reports.csvResolvedShort": "Resueltas",
+  "app.reports.csvAgent": "Agente",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Nuevo artículo",
+  "app.kb.fromTicketSymptomHeading": "Síntoma",
+  "app.kb.fromTicketSymptomPlaceholder": "[Describe lo que observa el cliente.]",
+  "app.kb.fromTicketSolutionHeading": "Solución",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Describe la operación que resuelve el problema.]",
+  "app.kb.fromTicketMissingRequest": "la solicitud inicial del cliente",
+  "app.kb.fromTicketMissingAnswer": "la respuesta del agente",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Procedimiento paso a paso",
+  "app.kb.tplProcedureHint": "Una serie de pasos numerados, con el resultado esperado.",
+  "app.kb.tplProcedureTitle": "Cómo [realizar la acción]",
+  "app.kb.tplProcedureBody": "Este artículo explica cómo [realizar la acción]. Calcula aproximadamente [duración].\n\n## Antes de empezar\n\n- [Permiso o rol necesario]\n- [Información que debes tener a mano]\n\n## Pasos\n\n1. Abre [la pantalla correspondiente].\n2. Haz clic en **[el botón]**.\n3. Rellena [el campo] y confirma.\n\n> Si se da [el caso particular], [cómo actuar].\n\n## Resultado\n\n[Lo que la persona debe ver cuando la operación se haya realizado correctamente.]\n",
+  "app.kb.tplIncidentLabel": "Resolución de incidencias",
+  "app.kb.tplIncidentHint": "Síntoma, causa, solución y alternativa provisional.",
+  "app.kb.tplIncidentTitle": "[Síntoma observado]",
+  "app.kb.tplIncidentBody": "## Síntoma\n\n[Lo que observa la persona, con el mensaje de error exacto si lo hay.]\n\n## Causa\n\n[Por qué ocurre.]\n\n## Solución\n\n1. [Primera acción correctiva]\n2. [Segunda acción correctiva]\n\n## Alternativa provisional\n\n> [Lo que la persona puede hacer de inmediato si la solución requiere la\n> intervención de tu equipo.]\n\n## Si el problema persiste\n\nAbre una solicitud indicando [la información útil para el diagnóstico].\n",
+  "app.kb.tplFaqLabel": "Pregunta frecuente",
+  "app.kb.tplFaqHint": "Una respuesta corta y directa, y después los detalles.",
+  "app.kb.tplFaqTitle": "[La pregunta, tal como la formulan los clientes]",
+  "app.kb.tplFaqBody": "**Respuesta corta:** [la respuesta en una frase].\n\n## En detalle\n\n[El contexto y los matices útiles.]\n\n## Casos particulares\n\n- **[Situación A]** — [qué cambia].\n- **[Situación B]** — [qué cambia].\n\n## Para saber más\n\n[Enlace al artículo relacionado o al procedimiento asociado.]\n",
+  "app.kb.tplReleaseLabel": "Nota de versión",
+  "app.kb.tplReleaseHint": "Novedades, mejoras y correcciones de una entrega.",
+  "app.kb.tplReleaseTitle": "Novedades de [fecha o versión]",
+  "app.kb.tplReleaseBody": "## Novedades\n\n- **[Nombre de la funcionalidad]** — [qué permite hacer, desde el punto de vista del usuario].\n\n## Mejoras\n\n- [Lo que se vuelve más simple o más rápido.]\n\n## Correcciones\n\n- [El problema corregido, formulado tal como lo vivía el cliente.]\n\n> Estos cambios ya están activos en tu espacio, no necesitas hacer nada por tu\n> parte.\n",
 };

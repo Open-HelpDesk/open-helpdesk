@@ -2,6 +2,7 @@
 
 /** Morceaux interactifs de AG-02 — Onboarding. */
 import { useState } from "react";
+import { useT } from "@/i18n/client";
 import { saveIdentity, inviteTeam } from "./actions";
 
 /** Pastilles de couleur d'accent du design (étape 1). */
@@ -16,6 +17,7 @@ export function IdentityForm({
   initialName: string;
   initialAccent: string;
 }) {
+  const t = useT();
   const [name, setName] = useState(initialName);
   const [accent, setAccent] = useState(
     ACCENT_SWATCHES.includes(initialAccent) ? initialAccent : ACCENT_SWATCHES[0]!,
@@ -26,7 +28,7 @@ export function IdentityForm({
       <input type="hidden" name="accentColor" value={accent} />
 
       <label className="flex flex-col gap-1.5 text-[13px] font-medium">
-        Nom du workspace
+        {t("app.settings.workspace.generalNameLabel")}
         <input
           name="name"
           value={name}
@@ -62,13 +64,15 @@ export function IdentityForm({
             maxWidth: 300,
           }}
         >
-          Déposer un fichier PNG ou SVG
+          {t("app.onboarding.logoDrop")}
         </div>
       </div>
 
       {/* Pastilles accent */}
       <div>
-        <p className="mb-2 text-[13px] font-medium">Couleur d'accent</p>
+        <p className="mb-2 text-[13px] font-medium">
+          {t("app.settings.workspace.generalAccentLabel")}
+        </p>
         <div className="flex items-center gap-2.5">
           {ACCENT_SWATCHES.map((c) => (
             <button
@@ -100,18 +104,17 @@ export function IdentityForm({
           className="flex flex-col items-center gap-2.5 px-6 py-7 text-center"
           style={{ background: accent }}
         >
-          <p className="text-[15px] font-semibold text-white">
-            Comment pouvons-nous vous aider ?
-          </p>
+          {/* L'aperçu montre le portail : c'est bien son titre, pas un doublon. */}
+          <p className="text-[15px] font-semibold text-white">{t("home.title")}</p>
           <div
             className="w-full rounded-md bg-white px-3 py-2 text-left text-[12.5px]"
             style={{ maxWidth: 320, color: "var(--ink-3)" }}
           >
-            Rechercher un article…
+            {t("app.onboarding.previewSearch")}
           </div>
         </div>
         <p className="px-4 py-2 text-[11.5px]" style={{ color: "var(--ink-3)" }}>
-          Aperçu de votre portail client
+          {t("app.onboarding.previewCaption")}
         </p>
       </div>
 
@@ -121,10 +124,10 @@ export function IdentityForm({
           className="rounded-md px-5 text-sm font-semibold text-white"
           style={{ height: 38, background: "var(--acc)" }}
         >
-          Continuer
+          {t("app.onboarding.continue")}
         </button>
         <a href="/onboarding?step=2" className="text-[13px]" style={{ color: "var(--ink-3)" }}>
-          Passer cette étape
+          {t("app.onboarding.skip")}
         </a>
       </div>
     </form>
@@ -133,7 +136,8 @@ export function IdentityForm({
 
 /* ---------- Étape 2 — Copier l'adresse ---------- */
 
-export function CopyButton({ value, label = "Copier" }: { value: string; label?: string }) {
+export function CopyButton({ value, label }: { value: string; label?: string }) {
+  const t = useT();
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -155,7 +159,7 @@ export function CopyButton({ value, label = "Copier" }: { value: string; label?:
         color: copied ? "var(--acc-2)" : "var(--ink)",
       }}
     >
-      {copied ? "Copié ✓" : label}
+      {copied ? t("app.onboarding.copied") : (label ?? t("app.onboarding.copy"))}
     </button>
   );
 }
@@ -163,6 +167,7 @@ export function CopyButton({ value, label = "Copier" }: { value: string; label?:
 /* ---------- Étape 3 — Équipe ---------- */
 
 export function TeamInviteForm() {
+  const t = useT();
   const [rows, setRows] = useState([0, 1]);
 
   return (
@@ -172,7 +177,7 @@ export function TeamInviteForm() {
           <input
             name="email"
             type="email"
-            placeholder="collegue@entreprise.fr"
+            placeholder={t("app.onboarding.invitePlaceholder")}
             className="min-w-0 flex-1 border px-3 text-sm outline-none"
             style={{
               height: 36,
@@ -205,7 +210,7 @@ export function TeamInviteForm() {
         className="self-start rounded-md border border-dashed px-3 py-1.5 text-[13px]"
         style={{ borderColor: "var(--line)", color: "var(--ink-3)" }}
       >
-        + Ajouter une ligne
+        {t("app.onboarding.addRow")}
       </button>
 
       <div className="mt-3 flex items-center gap-4">
@@ -214,10 +219,10 @@ export function TeamInviteForm() {
           className="rounded-md px-5 text-sm font-semibold text-white"
           style={{ height: 38, background: "var(--acc)" }}
         >
-          Envoyer les invitations
+          {t("app.onboarding.sendInvites")}
         </button>
         <a href="/onboarding?step=4" className="text-[13px]" style={{ color: "var(--ink-3)" }}>
-          Passer cette étape
+          {t("app.onboarding.skip")}
         </a>
       </div>
     </form>

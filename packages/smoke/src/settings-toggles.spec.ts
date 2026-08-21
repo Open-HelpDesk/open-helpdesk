@@ -43,12 +43,16 @@ async function openPortalSettings(page: Page): Promise<void> {
 /**
  * Bascule un interrupteur de ST-09 et enregistre.
  *
- * Le helper partagé `setPortalToggle` clique l'`<input>` lui-même. Il ne peut pas
- * fonctionner ici : le toggle des réglages masque sa case
- * (`position:absolute; width:0; height:0; opacity:0`) et n'affiche qu'un curseur
- * `.st-knob` de 34×20. Un clic, même forcé, sur une boîte de 0×0 échoue
- * (« Element is outside of the viewport »). On clique donc ce que clique un
- * utilisateur : le curseur visible.
+ * On ne clique pas l'`<input>` : le toggle des réglages masque sa case
+ * (`position:absolute; width:0; height:0; opacity:0`), elle mesure 0×0 et refuse
+ * le clic même en `force` (« Element is outside of the viewport »). On clique donc
+ * ce que clique un utilisateur : le curseur visible, `span.ohd-knob`.
+ *
+ * Ce sélecteur portait un préfixe `st-` qui n'existe nulle part dans le produit —
+ * le composant rend `label.ohd-toggle`. Le clic était donc TOUJOURS ignoré, et
+ * ces deux tests ne passaient que lorsque l'état voulu se trouvait déjà en
+ * place : les tests écrits pour attraper « un réglage enregistré que personne ne
+ * lit » n'actionnaient aucun interrupteur.
  */
 async function setToggle(
   page: Page,
@@ -59,7 +63,7 @@ async function setToggle(
   const box = page.locator(`input[name="${name}"]`);
   await expect(box).toHaveCount(1);
   if ((await box.isChecked()) !== on) {
-    await page.locator(`label.st-toggle:has(input[name="${name}"]) .st-knob`).click();
+    await page.locator(`label.ohd-toggle:has(input[name="${name}"]) .ohd-knob`).click();
   }
   // L'état voulu doit être atteint AVANT l'envoi : un curseur qui n'aurait pas
   // pris le clic ferait enregistrer l'état inverse, et le test mentirait dans

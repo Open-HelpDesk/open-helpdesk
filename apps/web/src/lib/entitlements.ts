@@ -8,6 +8,7 @@ import {
   PLAN_IDS,
   type PlanId,
 } from "@openhelpdesk/config";
+import type { MessageKey } from "@/i18n/dictionaries/fr";
 
 export type Entitlements = (typeof DEFAULT_PLAN_ENTITLEMENTS)[PlanId];
 
@@ -26,11 +27,18 @@ export function seatQuota(ent: Entitlements): number {
   return ent.maxAgents ?? DEFAULT_SEAT_QUOTA;
 }
 
-/** Libellés & prix des plans — verbatim design (ST-11). */
-export const PLAN_LABELS: Record<PlanId, { name: string; priceLine: string }> = {
-  free: { name: "Plan Free", priceLine: "0 € — 3 sièges inclus" },
-  standard: { name: "Plan Standard", priceLine: "12 € par siège et par mois" },
-  pro: { name: "Plan Pro", priceLine: "39 € par siège et par mois" },
+/**
+ * Nom de l'offre affiché en ST-11 — une CLÉ, pas un libellé.
+ *
+ * La table portait aussi une ligne de prix (« 12 € par siège et par mois ») que
+ * plus personne n'affichait : l'écran la recompose depuis SEAT_PRICE et les clés
+ * `seatPricing` / `seatsIncluded`, déjà traduites. Elle est retirée plutôt que
+ * traduite.
+ */
+export const PLAN_NAME_KEYS: Record<PlanId, MessageKey> = {
+  free: "app.settings.workspace.planFree",
+  standard: "app.settings.workspace.planStandard",
+  pro: "app.settings.workspace.planPro",
 };
 
 /** Stockage inclus affiché dans ST-11 (20 Go). */

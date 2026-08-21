@@ -10,7 +10,19 @@ import { CHANNEL_KEYS, PRIORITY_COLORS, PRIORITY_KEYS } from "@/lib/format";
 import { useT } from "@/i18n/client";
 import { updateTicketProps } from "../actions";
 
-const TYPES = ["Question", "Incident", "Tâche", "Autre"];
+/**
+ * Types de ticket.
+ *
+ * La VALEUR enregistrée reste la chaîne française : c'est ainsi que le produit
+ * la stocke, et les tickets déjà créés doivent continuer de correspondre. Seul
+ * l'affichage passe par le dictionnaire.
+ */
+const TYPES = [
+  { value: "Question", key: "app.ticket.typeQuestion" },
+  { value: "Incident", key: "app.ticket.typeIncident" },
+  { value: "Tâche", key: "app.ticket.typeTask" },
+  { value: "Autre", key: "app.ticket.typeOther" },
+] as const;
 
 export function PropsForm({
   ticketId,
@@ -152,8 +164,8 @@ export function PropsForm({
             >
               <option value="">—</option>
               {TYPES.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
+                <option key={opt.value} value={opt.value}>
+                  {t(opt.key)}
                 </option>
               ))}
             </select>

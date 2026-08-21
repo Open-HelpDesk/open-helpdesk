@@ -1224,6 +1224,108 @@ export const sv: Dictionary = {
   "app.settings.rules.typeLongText": "Lång text",
   "app.settings.rules.typeFile": "Fil",
   "app.settings.rules.typeSelectLong": "Rullgardinslista",
+  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
+     Il vivait en français dans lib/rule-labels.ts, tables et phrases comprises.
+     Statuts, priorités et canaux n'y sont pas : ils viennent des clés
+     app.status.* / app.priority.* / app.channel.*, plus bas, et les libellés
+     condField* s'accordent avec elles. */
+
+  /* Types de champs personnalisés (ST-04) ; « Text » est typeText, au-dessus.
+     Les trois mots repris de fieldsEmpty : « lista », « text », « datum ». */
+  "app.settings.rules.typeSelect": "Lista",
+  "app.settings.rules.typeMultiSelect": "Flerval",
+  "app.settings.rules.typeDate": "Datum",
+  "app.settings.rules.typeNumber": "Tal",
+  "app.settings.rules.typeCheckbox": "Kryssruta",
+
+  /* Champs sur lesquels une condition peut porter. Chaque libellé reprend le
+     mot déjà employé ailleurs : « Händelse » de dev.colEvent, « Ämne » de
+     previewSubject, « Taggar » de tickets.tags, « Tilldelad » de
+     tickets.assignee, « Team » comme partout. */
+  "app.settings.rules.condFieldEvent": "Händelse",
+  "app.settings.rules.condFieldStatus": "Status",
+  "app.settings.rules.condFieldPriority": "Prioritet",
+  "app.settings.rules.condFieldChannel": "Kanal",
+  "app.settings.rules.condFieldType": "Typ",
+  "app.settings.rules.condFieldSubject": "Ämne",
+  "app.settings.rules.condFieldTags": "Taggar",
+  "app.settings.rules.condFieldAssignee": "Tilldelad",
+  "app.settings.rules.condFieldTeam": "Team",
+  "app.settings.rules.condFieldOrganization": "Organisation",
+  "app.settings.rules.condFieldHoursCreated": "Timmar sedan skapandet",
+  "app.settings.rules.condFieldHoursUpdated": "Timmar sedan uppdateringen",
+
+  /* Opérateurs. Les deux derniers restent des symboles : le suédois les lit
+     comme le français. « tomt » est au neutre — le sujet implicite est
+     « fältet », un ett-ord, et c'est aussi l'accord par défaut du suédois. */
+  "app.settings.rules.opIs": "är",
+  "app.settings.rules.opIsNot": "är inte",
+  "app.settings.rules.opContains": "innehåller",
+  "app.settings.rules.opIncludes": "omfattar",
+  "app.settings.rules.opEmpty": "är tomt",
+  "app.settings.rules.opNotEmpty": "är inte tomt",
+  "app.settings.rules.opGte": "≥",
+  "app.settings.rules.opLte": "≤",
+
+  /* Événements déclencheurs, dans l'ordre de ruleHintTrigger — skapande,
+     uppdatering, mottaget meddelande. « Ärende » est un ett-ord : le participe
+     prend le neutre (skapat, uppdaterat). */
+  "app.settings.rules.eventTicketCreated": "Ärende skapat",
+  "app.settings.rules.eventTicketUpdated": "Ärende uppdaterat",
+  "app.settings.rules.eventMessageCreated": "Meddelande mottaget",
+
+  /* Actions, telles que le menu du builder les nomme : impératif, comme les
+     autres boutons du fichier (« Tilldela », « Lägg till »). Le « till » de
+     tilldela suit templateEscalationDesc, « Tilldelar … till teamet ». */
+  "app.settings.rules.actSetStatus": "Sätt status",
+  "app.settings.rules.actSetPriority": "Sätt prioritet",
+  "app.settings.rules.actAssignUser": "Tilldela till en agent",
+  "app.settings.rules.actAssignTeam": "Tilldela till ett team",
+  "app.settings.rules.actAssignRoundRobin": "Tilldela till nästa agent (round-robin)",
+  "app.settings.rules.actAddTags": "Lägg till taggar",
+  "app.settings.rules.actEmailContact": "Skicka e-post till kontakten",
+
+  /* Résumé d'une règle, en une ligne de liste. Le suédois construit sa
+     subordonnée comme le français : « om … → … », et « om / så » est déjà la
+     paire du fichier (settingsNav.thenActions dit « SÅ »). Les bribes restent
+     en minuscules et sans point final : elles s'enchaînent. */
+  "app.settings.rules.summaryPattern": "Om {conditions} → {actions}",
+  "app.settings.rules.summaryAnd": "och",
+  "app.settings.rules.summaryAlways": "alltid",
+  /* « villkor » est invariable au pluriel indéfini : les deux formes se lisent
+     pareil, mais les deux catégories du suédois doivent être là. */
+  "app.settings.rules.summaryAnyOf": {
+    one: "minst ett av {count} villkor",
+    other: "minst ett av {count} villkor",
+  },
+  "app.settings.rules.summaryCondition": "{field} {operator} {value}",
+  "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
+  "app.settings.rules.summaryUnassigned": "ej tilldelad",
+  "app.settings.rules.summaryAssigned": "tilldelad",
+  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
+     traduisent pas. « sedan » est la préposition déjà employée pour une durée
+     écoulée — since.days, « sedan {count} dagar », et templateFollowUpDesc,
+     « utan svar sedan 2 dagar » ; la bribe se recolle à celle qui précède :
+     « status = Väntande sedan 2 j ». */
+  "app.settings.rules.summarySince": "sedan {duration}",
+  "app.settings.rules.summarySetStatus": "ändra till {value}",
+  "app.settings.rules.summarySetPriority": "prioritet {value}",
+  "app.settings.rules.summaryAssignTeam": "tilldela till {team}",
+  "app.settings.rules.summaryAnyTeam": "ett team",
+  "app.settings.rules.summaryAssignUser": "tilldela till en agent",
+  "app.settings.rules.summaryRoundRobin": "tilldela till nästa agent",
+  "app.settings.rules.summaryAddTags": "lägg till {tags}",
+  "app.settings.rules.summaryEmailContact": "skicka e-post till kontakten",
+
+  /* Résumé des actions d'une macro (ST-06). */
+  "app.settings.rules.macroSummaryStatus": "Status → {value}",
+  "app.settings.rules.macroSummaryPriority": "Prioritet → {value}",
+  "app.settings.rules.macroSummaryTeam": "Team → {team}",
+  "app.settings.rules.macroSummaryAnyTeam": "team",
+  "app.settings.rules.macroSummaryAssign": "Tilldela →",
+  "app.settings.rules.macroSummaryTag": "Tagg {tags}",
+  "app.settings.rules.macroSummaryNone": "Ingen åtgärd",
+
   "app.settings.rules.fieldName": "Fältets namn",
   "app.settings.rules.fieldNamePlaceholder": "Ordernummer",
   "app.settings.rules.fieldOptions": "Alternativ",
@@ -1376,4 +1478,142 @@ export const sv: Dictionary = {
   "app.login.rateLimited": "För många inloggningsförsök. Vänta några sekunder innan du försöker igen.",
   "app.login.notAMember": "Den här identiteten är inte medlem i den här arbetsytan.",
   "app.login.providerMissing": "Den här leverantören är inte konfigurerad på den här instansen.",
+
+  /* ===================== AG-02 Onboarding ===================== */
+  /* Le titre du portail dans son propre aperçu (home.title), le nom du
+     workspace et la couleur d'accent viennent d'ailleurs ; les rôles Owner /
+     Admin / Agent / Viewer ne se traduisent pas. */
+
+  "app.onboarding.asideTitle": "Konfiguration",
+  "app.onboarding.asideFooter":
+    "Allt det här kan du ändra senare under Inställningar.",
+  "app.onboarding.stepCounter": "Steg {step} av {total}",
+  "app.onboarding.continue": "Fortsätt",
+  "app.onboarding.skip": "Hoppa över det här steget",
+
+  "app.onboarding.stepIdentity": "Identitet",
+  "app.onboarding.stepIdentityHint": "Namn, logotyp, färg",
+  "app.onboarding.stepEmail": "E-post",
+  "app.onboarding.stepEmailHint": "Mottagaradress",
+  "app.onboarding.stepTeam": "Team",
+  "app.onboarding.stepTeamHint": "Bjud in agenterna",
+  "app.onboarding.stepTest": "Test",
+  "app.onboarding.stepTestHint": "Första ärendet",
+
+  "app.onboarding.identityTitle": "Arbetsytans identitet",
+  "app.onboarding.identityBody":
+    "Det här visas i din kundportal och i de e-postmeddelanden som skickas till dina kunder.",
+  "app.onboarding.logoDrop": "Släpp en PNG- eller SVG-fil",
+  "app.onboarding.previewSearch": "Sök artikel…",
+  "app.onboarding.previewCaption": "Förhandsvisning av din kundportal",
+
+  "app.onboarding.emailTitle": "Ta emot din e-post",
+  "app.onboarding.emailBody":
+    "Alla förfrågningar som kommer till den här adressen blir automatiskt ärenden.",
+  "app.onboarding.or": "ELLER",
+  "app.onboarding.copy": "Kopiera",
+  "app.onboarding.copied": "Kopierat ✓",
+  "app.onboarding.ownAddressTitle": "Koppla min egen adress",
+  "app.onboarding.ownAddressBody":
+    "Vidarebefordra din befintliga adress ({example}) till adressen ovan. Detaljerad konfiguration under Inställningar.",
+  "app.onboarding.forwardLabel": "Adress att vidarebefordra",
+  "app.onboarding.forwardPlaceholder": "support@ditt-foretag.se",
+
+  "app.onboarding.teamTitle": "Bjud in ditt team",
+  "app.onboarding.teamBody":
+    "Bjud in dina agenter nu, eller dela inbjudningslänken. Viewer-platser är gratis.",
+  "app.onboarding.invitePlaceholder": "kollega@foretag.se",
+  "app.onboarding.addRow": "+ Lägg till en rad",
+  "app.onboarding.sendInvites": "Skicka inbjudningarna",
+
+  "app.onboarding.testTitle": "Skicka ett första ärende",
+  "app.onboarding.testBody":
+    "Kontrollera hela kedjan innan du öppnar tjänsten för dina kunder.",
+  "app.onboarding.readyTitle": "Din arbetsyta är klar",
+  /* {address} est rendue en police à chasse fixe : la phrase est découpée
+     autour du paramètre, elle doit donc rester une seule phrase. */
+  "app.onboarding.readyBody": "Skicka ett e-postmeddelande till {address} för att skapa ett testärende.",
+  "app.onboarding.openInbox": "Öppna inkorgen",
+
+  "app.onboarding.checklistIdentity": "Identiteten är angiven",
+  "app.onboarding.checklistEmail": "E-postadressen är konfigurerad",
+  "app.onboarding.checklistTeam": "Teamet är inbjudet",
+  "app.onboarding.checklistTicket": "Första ärendet är mottaget",
+  "app.onboarding.checklistSla": "SLA-policyn är kontrollerad",
+
+  /* ===================== Reste du français codé en dur ===================== */
+
+  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
+     « alla / minst ett » : le suédois dit « uppfylla villkor », le verbe déjà
+     employé par testNoMatch (« villkoren är inte uppfyllda »). Le pluriel
+     indéfini « villkor » est identique au singulier, si bien que les deux
+     valeurs du sélecteur tombent juste : « Uppfyller alla villkor » et
+     « Uppfyller minst ett villkor ». */
+  "app.settings.rules.matchIf": "OM",
+  "app.settings.rules.matchAllPattern": "Uppfyller {mode} villkor",
+  "app.settings.rules.matchAnyPattern": "Uppfyller {mode} villkor",
+  "app.settings.rules.matchAll": "alla",
+  "app.settings.rules.matchAny": "minst ett",
+
+  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
+     produit ; « Pro-plan » comme dans shell.planPro et auditLockedTitle. */
+  "app.settings.workspace.planFree": "Free-plan",
+  "app.settings.workspace.planStandard": "Standard-plan",
+  "app.settings.workspace.planPro": "Pro-plan",
+
+  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
+     française ; seul l'affichage est traduit. « Incident » reste le terme du
+     support suédois : « Händelse » est déjà l'événement (condFieldEvent,
+     dev.colEvent) et « Fel » l'erreur (email.statusError). */
+  "app.ticket.typeQuestion": "Fråga",
+  "app.ticket.typeIncident": "Incident",
+  "app.ticket.typeTask": "Uppgift",
+  "app.ticket.typeOther": "Övrigt",
+
+  /* AG-09 — export CSV des rapports. Les libellés reprennent les KPI de
+     l'écran ; les secondes s'abrègent « s », comme dans draftSavedSeconds. */
+  "app.reports.csvIndicator": "Nyckeltal",
+  "app.reports.csvCurrentPeriod": "Aktuell period",
+  "app.reports.csvPreviousPeriod": "Föregående period",
+  "app.reports.csvCreated": "Skapade ärenden",
+  "app.reports.csvResolved": "Lösta ärenden",
+  "app.reports.csvMedianFirstReply": "Median 1:a svar (s)",
+  "app.reports.csvMedianResolve": "Median lösningstid (s)",
+  "app.reports.csvSlaCompliance": "SLA-efterlevnad (%)",
+  "app.reports.csvCsat": "CSAT (%)",
+  "app.reports.csvDay": "Dag",
+  "app.reports.csvCreatedShort": "Skapade",
+  "app.reports.csvResolvedShort": "Lösta",
+  "app.reports.csvAgent": "Agent",
+
+  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
+     section sont du markdown rendu par le portail : le « ## » reste. */
+  "app.kb.fromTicketDefaultTitle": "Ny artikel",
+  "app.kb.fromTicketSymptomHeading": "Symtom",
+  "app.kb.fromTicketSymptomPlaceholder": "[Beskriv vad kunden ser.]",
+  "app.kb.fromTicketSolutionHeading": "Lösning",
+  "app.kb.fromTicketSolutionPlaceholder":
+    "[Beskriv det tillvägagångssätt som löser problemet.]",
+  /* Les deux bribes se lisent dans « Saknas: {items}. » — minuscules. */
+  "app.kb.fromTicketMissingRequest": "kundens ursprungliga förfrågan",
+  "app.kb.fromTicketMissingAnswer": "agentens svar",
+
+  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
+     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  "app.kb.tplProcedureLabel": "Steg-för-steg-guide",
+  "app.kb.tplProcedureHint": "En följd av numrerade steg, med det förväntade resultatet.",
+  "app.kb.tplProcedureTitle": "Så här [utför du åtgärden]",
+  "app.kb.tplProcedureBody": "Den här artikeln förklarar hur du [utför åtgärden]. Räkna med ungefär [tidsåtgång].\n\n## Innan du börjar\n\n- [Behörighet eller roll som krävs]\n- [Uppgifter du behöver ha till hands]\n\n## Steg\n\n1. Öppna [den aktuella sidan].\n2. Klicka på **[knappen]**.\n3. Fyll i [fältet] och bekräfta.\n\n> Om [det särskilda fallet] uppstår, [så här gör du].\n\n## Resultat\n\n[Det som personen ska se när åtgärden har lyckats.]\n",
+  "app.kb.tplIncidentLabel": "Incidentlösning",
+  "app.kb.tplIncidentHint": "Symtom, orsak, lösning och tillfällig åtgärd.",
+  "app.kb.tplIncidentTitle": "[Observerat symtom]",
+  "app.kb.tplIncidentBody": "## Symtom\n\n[Det som personen ser, med det exakta felmeddelandet om det finns ett.]\n\n## Orsak\n\n[Varför det här inträffar.]\n\n## Lösning\n\n1. [Första korrigerande åtgärden]\n2. [Andra korrigerande åtgärden]\n\n## Tillfällig åtgärd i väntan på lösning\n\n> [Det som personen kan göra direkt om lösningen kräver att ditt team\n> griper in.]\n\n## Om problemet kvarstår\n\nSkicka en förfrågan och ange [de uppgifter som är till hjälp för felsökningen].\n",
+  "app.kb.tplFaqLabel": "Vanlig fråga",
+  "app.kb.tplFaqHint": "Ett kort och direkt svar, sedan detaljerna.",
+  "app.kb.tplFaqTitle": "[Frågan, formulerad som kunderna ställer den]",
+  "app.kb.tplFaqBody": "**Kort svar:** [svaret i en mening].\n\n## I detalj\n\n[Sammanhanget och de nyanser som är bra att känna till.]\n\n## Särskilda fall\n\n- **[Situation A]** — [vad som ändras].\n- **[Situation B]** — [vad som ändras].\n\n## Läs vidare\n\n[Hänvisning till en närliggande artikel eller det tillhörande förfarandet.]\n",
+  "app.kb.tplReleaseLabel": "Versionsinformation",
+  "app.kb.tplReleaseHint": "Nyheter, förbättringar och rättningar i en ny version.",
+  "app.kb.tplReleaseTitle": "Nyheter i [datum eller version]",
+  "app.kb.tplReleaseBody": "## Nyheter\n\n- **[Funktionens namn]** — [vad den gör möjligt för användaren].\n\n## Förbättringar\n\n- [Det som blir enklare eller snabbare.]\n\n## Rättningar\n\n- [Problemet som är åtgärdat, formulerat som kunden upplevde det.]\n\n> De här ändringarna är redan aktiva i din arbetsyta, du behöver inte göra\n> något.\n",
 };
