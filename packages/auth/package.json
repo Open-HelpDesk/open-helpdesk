@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@openhelpdesk/db": "workspace:*",
+    "@openhelpdesk/mail": "workspace:*",
     "better-auth": "^1.3.0"
   },
   "devDependencies": {

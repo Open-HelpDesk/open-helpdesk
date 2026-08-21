@@ -7,6 +7,7 @@
  * workspace est vérifiée à chaque requête via app.users (email), côté apps/web.
  */
 import { betterAuth } from "better-auth";
+import { sendInstanceEmail } from "@openhelpdesk/mail";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
   authAccounts,
@@ -32,6 +33,16 @@ if (process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET) {
 
 const baseDomain = process.env.BASE_DOMAIN ?? "localhost:3000";
 
+/*
+ * Options cloud, inertes en auto-hébergé :
+ * - AUTH_COOKIE_DOMAIN pose le cookie sur .open-helpdesk.com — la session du
+ *   signup (www.) est déjà valide sur {slug}. à l'arrivée dans l'onboarding.
+ * - REQUIRE_EMAIL_VERIFICATION=true bloque la connexion par mot de passe tant
+ *   que l'email n'est pas vérifié (l'inscription OAuth est vérifiée d'office).
+ */
+const cookieDomain = process.env.AUTH_COOKIE_DOMAIN;
+const requireEmailVerification = process.env.REQUIRE_EMAIL_VERIFICATION === "true";
+
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET ?? "dev-secret-change-me",
   baseURL: process.env.BETTER_AUTH_URL ?? `http://${baseDomain}`,
@@ -53,7 +64,29 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification,
   },
+  emailVerification: {
+    sendOnSignUp: requireEmailVerification,
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendInstanceEmail({
+        to: user.email,
+        subject: "Vérifiez votre adresse email — Verify your email address",
+        text:
+          `Confirmez votre adresse pour activer votre compte Open HelpDesk :\n${url}\n\n` +
+          `Confirm your address to activate your Open HelpDesk account:\n${url}\n\n` +
+          `Si vous n'êtes pas à l'origine de cette demande, ignorez cet email. / ` +
+          `If you did not request this, please ignore this email.`,
+      });
+    },
+  },
+  ...(cookieDomain
+    ? {
+        advanced: {
+          crossSubDomainCookies: { enabled: true, domain: cookieDomain },
+        },
+      }
+    : {}),
   socialProviders,
 });
 

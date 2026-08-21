@@ -20,6 +20,7 @@ export {
 export {
   getEmailSettings,
   resolveMailConfig,
+  sendInstanceEmail,
   transportFor,
   type EmailSettingsRow,
   type ResolvedMailConfig,

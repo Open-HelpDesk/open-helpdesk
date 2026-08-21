@@ -65,6 +65,27 @@ export function transportFor(row: EmailSettingsRow): MailTransport {
   }
 }
 
+/**
+ * Envoi transactionnel PRÉ-tenant (vérification d'email au signup, invitation
+ * avant première connexion…) : transport d'instance, repli console en dev.
+ */
+export async function sendInstanceEmail(input: {
+  to: string;
+  subject: string;
+  text: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  const instance = instanceConfig();
+  const transport = instance?.transport ?? consoleTransport;
+  const domain = (process.env.BASE_DOMAIN ?? "open-helpdesk.local").split(":")[0];
+  const from = process.env.MAIL_FROM ?? `no-reply@${domain}`;
+  try {
+    await transport.send({ from, to: input.to, subject: input.subject, text: input.text });
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 /** Configuration d'instance (auto-hébergement / cloud) depuis l'environnement. */
 function instanceConfig(): { provider: MailProvider; transport: MailTransport } | null {
   if (process.env.RESEND_API_KEY) {
