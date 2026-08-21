@@ -782,7 +782,7 @@ export const mt: Dictionary = {
   "app.reports.columnAgent": "Aġent",
   "app.reports.columnFirstReply": "L-1 tweġiba",
   "app.reports.customReports": "Rapporti personalizzati",
-  "app.reports.proPlanBadge": "PJAN PRO",
+  "app.reports.enterprisePlanBadge": "PJAN ENTERPRISE",
   "app.reports.discover": "Skopri",
   "app.reports.chartDailyAria": "{labelA} u {labelB} kuljum",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -809,8 +809,8 @@ export const mt: Dictionary = {
   "app.settings.shell.saved": "✓ Maħżun",
   "app.settings.shell.cancel": "Ikkanċella",
   "app.settings.shell.save": "Aħżen",
-  "app.settings.shell.planPro": "PJAN PRO",
-  "app.settings.shell.upgradeToPro": "Aqbeż għall-pjan Pro",
+  "app.settings.shell.planEnterprise": "PJAN ENTERPRISE",
+  "app.settings.shell.upgradeToEnterprise": "Aqbeż għall-pjan Enterprise",
   "app.settings.shell.eeSelfHostedTitle": "Funzjonalità tal-edizzjoni Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Din il-funzjonalità hija koperta mil-liċenzja kummerċjali (id-direttorju ee/ tar-repożitorju) u mhijiex inkluża fl-edizzjoni open source ospitata minnek.",
@@ -983,10 +983,10 @@ export const mt: Dictionary = {
   "app.settings.sso.agentTitle": "SSO tal-aġenti",
   "app.settings.sso.agentSubtitle":
     "Awtentikazzjoni unika SAML 2.0 u provvediment SCIM għat-tim tas-support tiegħek.",
-  "app.settings.sso.agentLockedTitle": "L-SSO tal-aġenti huwa riżervat għall-pjan Pro",
+  "app.settings.sso.agentLockedTitle": "L-SSO tal-aġenti huwa riżervat għall-pjan Enterprise",
   "app.settings.sso.agentLockedText":
     "Qabbad il-fornitur tal-identità SAML 2.0 tiegħek, ipprovdi l-aġenti bis-SCIM u impona l-awtentikazzjoni unika fuq it-tim kollu.",
-  "app.settings.sso.agentProOnly": "L-SSO tal-aġenti huwa riżervat għall-pjan Pro.",
+  "app.settings.sso.agentEnterpriseOnly": "L-SSO tal-aġenti huwa riżervat għall-pjan Enterprise.",
   "app.settings.sso.idpOther": "Oħra (SAML ġeneriku)",
   "app.settings.sso.samlToggleLabel": "Attiva l-awtentikazzjoni unika SAML 2.0",
   "app.settings.sso.samlHeading": "Awtentikazzjoni unika SAML 2.0",
@@ -1080,11 +1080,11 @@ export const mt: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Kull organizzazzjoni klijenta tqabbad il-fornitur tal-identità tagħha mill-portal. Minn hawn int tissorvelja kollox.",
   "app.settings.sso.customerLockedTitle":
-    "L-SSO tal-organizzazzjonijiet klijenti huwa riżervat għall-pjan Pro",
+    "L-SSO tal-organizzazzjonijiet klijenti huwa riżervat għall-pjan Enterprise",
   "app.settings.sso.customerLockedText":
     "Ħalli kull organizzazzjoni klijenta tqabbad il-fornitur tal-identità tagħha (SAML jew OIDC) u ssorvelja kollox minn dan l-iskrin.",
-  "app.settings.sso.customerProOnly":
-    "L-SSO tal-organizzazzjonijiet klijenti huwa riżervat għall-pjan Pro.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "L-SSO tal-organizzazzjonijiet klijenti huwa riżervat għall-pjan Enterprise.",
   "app.settings.sso.statusActive": "Attiva",
   "app.settings.sso.statusPending": "Għall-verifika",
   "app.settings.sso.statusError": "Errur",
@@ -1292,7 +1292,7 @@ export const mt: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Bażi tal-għarfien ippubblikata",
   "app.settings.portal.kbPublishedHint": "L-artikli ppubblikati jidhru mingħajr dħul.",
   "app.settings.portal.hidePoweredByLabel": "Aħbi “Imħaddem minn Open HelpDesk”",
-  "app.settings.portal.hidePoweredByHint": "Disponibbli mill-pjan Pro 'l fuq.",
+  "app.settings.portal.hidePoweredByHint": "Disponibbli mill-pjan Enterprise 'l fuq.",
   "app.settings.portal.kbVisibilityLabel": "Viżibbiltà tal-bażi tal-għarfien",
   "app.settings.portal.kbVisibilityPublic": "Pubblika",
   "app.settings.portal.kbVisibilityAuthenticated": "Wara d-dħul",
@@ -1525,6 +1525,7 @@ export const mt: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Pjan, postijiet, kwoti, metodu ta' pagament u storja tal-fatturi.",
   "app.settings.workspace.selfHosted": "AWTO-OSPITAT",
+  "app.settings.workspace.trialBadge": "PROVA",
   "app.settings.workspace.priceMonthly": "€{amount}",
   "app.settings.workspace.seatPricing": {
     one: "fix-xahar · {count} post bi €{price}",
@@ -1828,7 +1829,7 @@ export const mt: Dictionary = {
   "app.settings.dev.auditTitle": "Audit log",
   "app.settings.dev.auditSubtitle":
     "Reġistru sħiħ tal-azzjonijiet ta' amministrazzjoni. Jinżamm sentejn.",
-  "app.settings.dev.auditLockedTitle": "L-audit log huwa riżervat għall-pjan Pro",
+  "app.settings.dev.auditLockedTitle": "L-audit log huwa riżervat għall-pjan Enterprise",
   "app.settings.dev.auditLockedText":
     "Żomm rekord ta' kull azzjoni ta' amministrazzjoni għal sentejn, bid-diff qabel/wara u esportazzjoni CSV.",
   "app.settings.dev.filterActorAll": "Attur: kollha",
@@ -1853,7 +1854,7 @@ export const mt: Dictionary = {
   "app.settings.dev.actorContact": "Kuntatt",
   "app.settings.dev.exportUnauthorized": "Mhux awtorizzat",
   "app.settings.dev.exportForbidden": "Riżervat għar-rwoli Owner u Admin.",
-  "app.settings.dev.exportProOnly": "L-audit log huwa riżervat għall-pjan Pro.",
+  "app.settings.dev.exportEnterpriseOnly": "L-audit log huwa riżervat għall-pjan Enterprise.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Spazju tax-xogħol",
@@ -2025,8 +2026,8 @@ export const mt: Dictionary = {
   /* ST-11 — noms des offres ; « Free », « Standard » et « Pro » ne se
      traduisent pas. */
   "app.settings.workspace.planFree": "Pjan Free",
-  "app.settings.workspace.planStandard": "Pjan Standard",
-  "app.settings.workspace.planPro": "Pjan Pro",
+  "app.settings.workspace.planTeam": "Pjan Team",
+  "app.settings.workspace.planEnterprise": "Pjan Enterprise",
 
   /* Types de ticket (AG-05) : la valeur en base reste française, seul
      l'affichage est traduit. */

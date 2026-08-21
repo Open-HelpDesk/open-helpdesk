@@ -754,7 +754,7 @@ export const lt: Dictionary = {
   "app.reports.columnAgent": "Agentas",
   "app.reports.columnFirstReply": "1-asis atsakymas",
   "app.reports.customReports": "Pasirinktinės ataskaitos",
-  "app.reports.proPlanBadge": "PRO PLANAS",
+  "app.reports.enterprisePlanBadge": "ENTERPRISE PLANAS",
   "app.reports.discover": "Sužinoti daugiau",
   "app.reports.chartDailyAria": "{labelA} ir {labelB} pagal dieną",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -779,8 +779,8 @@ export const lt: Dictionary = {
   "app.settings.shell.saved": "✓ Įrašyta",
   "app.settings.shell.cancel": "Atšaukti",
   "app.settings.shell.save": "Įrašyti",
-  "app.settings.shell.planPro": "PRO PLANAS",
-  "app.settings.shell.upgradeToPro": "Pereiti prie Pro plano",
+  "app.settings.shell.planEnterprise": "ENTERPRISE PLANAS",
+  "app.settings.shell.upgradeToEnterprise": "Pereiti prie Enterprise plano",
   "app.settings.shell.eeSelfHostedTitle": "Leidimo „Enterprise Edition“ funkcija",
   "app.settings.shell.eeSelfHostedText":
     "Šiai funkcijai taikoma komercinė licencija (saugyklos katalogas ee/), ji neįtraukta į savarankiškai talpinamą atvirojo kodo leidimą.",
@@ -954,10 +954,10 @@ export const lt: Dictionary = {
   "app.settings.sso.agentTitle": "Agentų SSO",
   "app.settings.sso.agentSubtitle":
     "SAML 2.0 vieningas prisijungimas ir SCIM aprūpinimas jūsų pagalbos komandai.",
-  "app.settings.sso.agentLockedTitle": "Agentų SSO galimas tik su Pro planu",
+  "app.settings.sso.agentLockedTitle": "Agentų SSO galimas tik su Enterprise planu",
   "app.settings.sso.agentLockedText":
     "Prijunkite savo SAML 2.0 tapatybės teikėją, aprūpinkite agentus per SCIM ir įveskite vieningą prisijungimą visai komandai.",
-  "app.settings.sso.agentProOnly": "Agentų SSO galimas tik su Pro planu.",
+  "app.settings.sso.agentEnterpriseOnly": "Agentų SSO galimas tik su Enterprise planu.",
   "app.settings.sso.idpOther": "Kita (bendrasis SAML)",
   "app.settings.sso.samlToggleLabel": "Įjungti SAML 2.0 vieningą prisijungimą",
   "app.settings.sso.samlHeading": "SAML 2.0 vieningas prisijungimas",
@@ -1050,10 +1050,10 @@ export const lt: Dictionary = {
   "app.settings.sso.customerTitle": "Klientų organizacijų SSO",
   "app.settings.sso.customerSubtitle":
     "Kiekviena kliento organizacija portale prijungia savo tapatybės teikėją. Čia jūs stebite visą jų parką.",
-  "app.settings.sso.customerLockedTitle": "Klientų organizacijų SSO galimas tik su Pro planu",
+  "app.settings.sso.customerLockedTitle": "Klientų organizacijų SSO galimas tik su Enterprise planu",
   "app.settings.sso.customerLockedText":
     "Leiskite kiekvienai kliento organizacijai prijungti savo tapatybės teikėją (SAML arba OIDC) ir stebėkite visą parką šiame ekrane.",
-  "app.settings.sso.customerProOnly": "Klientų organizacijų SSO galimas tik su Pro planu.",
+  "app.settings.sso.customerEnterpriseOnly": "Klientų organizacijų SSO galimas tik su Enterprise planu.",
   "app.settings.sso.statusActive": "Aktyvus",
   "app.settings.sso.statusPending": "Reikia patvirtinti",
   "app.settings.sso.statusError": "Klaida",
@@ -1252,7 +1252,7 @@ export const lt: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Žinių bazė paskelbta",
   "app.settings.portal.kbPublishedHint": "Paskelbti straipsniai matomi neprisijungus.",
   "app.settings.portal.hidePoweredByLabel": "Nerodyti „Veikia su Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Galima nuo Pro plano.",
+  "app.settings.portal.hidePoweredByHint": "Galima nuo Enterprise plano.",
   "app.settings.portal.kbVisibilityLabel": "Žinių bazės matomumas",
   "app.settings.portal.kbVisibilityPublic": "Vieša",
   "app.settings.portal.kbVisibilityAuthenticated": "Tik prisijungusiems",
@@ -1480,6 +1480,7 @@ export const lt: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Planas, vietos, kvotos, mokėjimo būdas ir sąskaitų istorija.",
   "app.settings.workspace.selfHosted": "SAVARANKIŠKAI TALPINAMA",
+  "app.settings.workspace.trialBadge": "BANDOMASIS",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     one: "per mėnesį · {count} vieta po {price} €",
@@ -1778,7 +1779,7 @@ export const lt: Dictionary = {
   "app.settings.dev.dayYesterday": "Vakar {time}",
   "app.settings.dev.auditTitle": "Audito žurnalas",
   "app.settings.dev.auditSubtitle": "Visų administravimo veiksmų žurnalas. Saugoma 2 metus.",
-  "app.settings.dev.auditLockedTitle": "Audito žurnalas galimas tik su Pro planu",
+  "app.settings.dev.auditLockedTitle": "Audito žurnalas galimas tik su Enterprise planu",
   "app.settings.dev.auditLockedText":
     "Saugokite kiekvieno administravimo veiksmo įrašą 2 metus su „prieš / po“ palyginimu ir CSV eksportu.",
   "app.settings.dev.filterActorAll": "Vykdytojas: visi",
@@ -1802,7 +1803,7 @@ export const lt: Dictionary = {
   "app.settings.dev.actorContact": "Kontaktas",
   "app.settings.dev.exportUnauthorized": "Neautorizuota",
   "app.settings.dev.exportForbidden": "Skirta tik Owner ir Admin vaidmenims.",
-  "app.settings.dev.exportProOnly": "Audito žurnalas galimas tik su Pro planu.",
+  "app.settings.dev.exportEnterpriseOnly": "Audito žurnalas galimas tik su Enterprise planu.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Darbo erdvė",
@@ -1977,8 +1978,8 @@ export const lt: Dictionary = {
      produit et ne se traduisent pas ; seul « Plan » est du texte, et le
      lituanien le place après le nom, comme upgradeToPro plus haut. */
   "app.settings.workspace.planFree": "Free planas",
-  "app.settings.workspace.planStandard": "Standard planas",
-  "app.settings.workspace.planPro": "Pro planas",
+  "app.settings.workspace.planTeam": "Team planas",
+  "app.settings.workspace.planEnterprise": "Enterprise planas",
 
   /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
      française : seul l'affichage est traduit. */

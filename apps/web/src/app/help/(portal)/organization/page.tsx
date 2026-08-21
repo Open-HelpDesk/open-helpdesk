@@ -34,7 +34,7 @@ export default async function OrganizationPage({
 
   // Le SSO délégué est une capacité EE (ST-14/PT-08) : sans elle, l'onglet
   // disparaît — pas d'écran verrouillé côté client final.
-  const ssoEnabled = entitlementsFor(session.tenant.plan).customerSso;
+  const ssoEnabled = entitlementsFor(session.tenant).customerSso;
   const tabs = ssoEnabled ? TABS : TABS.filter(([key]) => key !== "sso");
 
   const { tab: tabParam, provider: providerParam, error, domain } = await searchParams;

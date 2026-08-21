@@ -754,7 +754,7 @@ export const pl: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. odpowiedź",
   "app.reports.customReports": "Raporty własne",
-  "app.reports.proPlanBadge": "PLAN PRO",
+  "app.reports.enterprisePlanBadge": "PLAN ENTERPRISE",
   "app.reports.discover": "Dowiedz się więcej",
   "app.reports.chartDailyAria": "{labelA} i {labelB} według dnia",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -779,8 +779,8 @@ export const pl: Dictionary = {
   "app.settings.shell.saved": "✓ Zapisano",
   "app.settings.shell.cancel": "Anuluj",
   "app.settings.shell.save": "Zapisz",
-  "app.settings.shell.planPro": "PLAN PRO",
-  "app.settings.shell.upgradeToPro": "Przejdź na plan Pro",
+  "app.settings.shell.planEnterprise": "PLAN ENTERPRISE",
+  "app.settings.shell.upgradeToEnterprise": "Przejdź na plan Enterprise",
   "app.settings.shell.eeSelfHostedTitle": "Funkcja edycji Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Ta funkcja podlega licencji komercyjnej (katalog ee/ w repozytorium) i nie wchodzi w skład samodzielnie hostowanej edycji open source.",
@@ -955,10 +955,10 @@ export const pl: Dictionary = {
   "app.settings.sso.agentTitle": "SSO agentów",
   "app.settings.sso.agentSubtitle":
     "Logowanie jednokrotne SAML 2.0 i przydzielanie kont SCIM dla zespołu wsparcia.",
-  "app.settings.sso.agentLockedTitle": "SSO agentów jest dostępne tylko w planie Pro",
+  "app.settings.sso.agentLockedTitle": "SSO agentów jest dostępne tylko w planie Enterprise",
   "app.settings.sso.agentLockedText":
     "Podłącz dostawcę tożsamości SAML 2.0, przydzielaj konta agentów przez SCIM i wymagaj logowania jednokrotnego od całego zespołu.",
-  "app.settings.sso.agentProOnly": "SSO agentów jest dostępne tylko w planie Pro.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO agentów jest dostępne tylko w planie Enterprise.",
   "app.settings.sso.idpOther": "Inny (ogólny SAML)",
   "app.settings.sso.samlToggleLabel": "Włącz logowanie jednokrotne SAML 2.0",
   "app.settings.sso.samlHeading": "Logowanie jednokrotne SAML 2.0",
@@ -1052,11 +1052,11 @@ export const pl: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Każda organizacja kliencka podłącza własnego dostawcę tożsamości z portalu. W tym miejscu nadzorują Państwo całość.",
   "app.settings.sso.customerLockedTitle":
-    "SSO organizacji klienckich jest dostępne tylko w planie Pro",
+    "SSO organizacji klienckich jest dostępne tylko w planie Enterprise",
   "app.settings.sso.customerLockedText":
     "Pozwól każdej organizacji klienckiej podłączyć własnego dostawcę tożsamości (SAML lub OIDC) i nadzoruj całość z tego ekranu.",
-  "app.settings.sso.customerProOnly":
-    "SSO organizacji klienckich jest dostępne tylko w planie Pro.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "SSO organizacji klienckich jest dostępne tylko w planie Enterprise.",
   "app.settings.sso.statusActive": "Aktywne",
   "app.settings.sso.statusPending": "Do weryfikacji",
   "app.settings.sso.statusError": "Błąd",
@@ -1254,7 +1254,7 @@ export const pl: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Baza wiedzy opublikowana",
   "app.settings.portal.kbPublishedHint": "Opublikowane artykuły są widoczne bez logowania.",
   "app.settings.portal.hidePoweredByLabel": "Ukryj „Obsługiwane przez Open HelpDesk”",
-  "app.settings.portal.hidePoweredByHint": "Dostępne od planu Pro.",
+  "app.settings.portal.hidePoweredByHint": "Dostępne od planu Enterprise.",
   "app.settings.portal.kbVisibilityLabel": "Widoczność bazy wiedzy",
   "app.settings.portal.kbVisibilityPublic": "Publiczna",
   "app.settings.portal.kbVisibilityAuthenticated": "Po zalogowaniu",
@@ -1482,6 +1482,7 @@ export const pl: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Plan, stanowiska, limity, metoda płatności i historia faktur.",
   "app.settings.workspace.selfHosted": "WŁASNY HOSTING",
+  "app.settings.workspace.trialBadge": "OKRES PRÓBNY",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     one: "miesięcznie · {count} stanowisko po {price} €",
@@ -1780,7 +1781,7 @@ export const pl: Dictionary = {
   "app.settings.dev.auditTitle": "Dziennik audytu",
   "app.settings.dev.auditSubtitle":
     "Pełny dziennik działań administracyjnych. Przechowywanie 2 lata.",
-  "app.settings.dev.auditLockedTitle": "Dziennik audytu jest dostępny tylko w planie Pro",
+  "app.settings.dev.auditLockedTitle": "Dziennik audytu jest dostępny tylko w planie Enterprise",
   "app.settings.dev.auditLockedText":
     "Zachowaj ślad każdego działania administracyjnego przez 2 lata, wraz z porównaniem przed/po i eksportem CSV.",
   "app.settings.dev.filterActorAll": "Wykonawca: wszyscy",
@@ -1804,7 +1805,7 @@ export const pl: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Brak autoryzacji",
   "app.settings.dev.exportForbidden": "Dostępne tylko dla ról Owner i Admin.",
-  "app.settings.dev.exportProOnly": "Dziennik audytu jest dostępny tylko w planie Pro.",
+  "app.settings.dev.exportEnterpriseOnly": "Dziennik audytu jest dostępny tylko w planie Enterprise.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Obszar roboczy",
@@ -1975,8 +1976,8 @@ export const pl: Dictionary = {
   /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
      produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
   "app.settings.workspace.planFree": "Plan Free",
-  "app.settings.workspace.planStandard": "Plan Standard",
-  "app.settings.workspace.planPro": "Plan Pro",
+  "app.settings.workspace.planTeam": "Plan Team",
+  "app.settings.workspace.planEnterprise": "Plan Enterprise",
 
   /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
      française ; seul l'affichage est traduit. */

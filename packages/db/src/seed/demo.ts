@@ -787,7 +787,7 @@ async function seed() {
       slug: "acme",
       name: "Acme Support",
       branding: { accentColor: "#0B5F46" },
-      plan: "pro",
+      plan: "enterprise",
     })
     .onConflictDoNothing({ target: tenants.slug })
     .returning();

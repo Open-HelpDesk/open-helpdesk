@@ -713,7 +713,7 @@ export const lv: Dictionary = {
   "app.reports.columnAgent": "Aģents",
   "app.reports.columnFirstReply": "1. atbilde",
   "app.reports.customReports": "Pielāgotas atskaites",
-  "app.reports.proPlanBadge": "PRO PLĀNS",
+  "app.reports.enterprisePlanBadge": "ENTERPRISE PLĀNS",
   "app.reports.discover": "Uzzināt vairāk",
   "app.reports.chartDailyAria": "{labelA} un {labelB} pa dienām",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -737,8 +737,8 @@ export const lv: Dictionary = {
   "app.settings.shell.saved": "✓ Saglabāts",
   "app.settings.shell.cancel": "Atcelt",
   "app.settings.shell.save": "Saglabāt",
-  "app.settings.shell.planPro": "PRO PLĀNS",
-  "app.settings.shell.upgradeToPro": "Pāriet uz Pro plānu",
+  "app.settings.shell.planEnterprise": "ENTERPRISE PLĀNS",
+  "app.settings.shell.upgradeToEnterprise": "Pāriet uz Enterprise plānu",
   "app.settings.shell.eeSelfHostedTitle": "Izdevuma Enterprise Edition funkcija",
   "app.settings.shell.eeSelfHostedText":
     "Uz šo funkciju attiecas komerciālā licence (repozitorija katalogs ee/), un tā nav iekļauta pašizvietotajā atvērtā pirmkoda izdevumā.",
@@ -910,10 +910,10 @@ export const lv: Dictionary = {
   "app.settings.sso.agentTitle": "Aģentu SSO",
   "app.settings.sso.agentSubtitle":
     "SAML 2.0 vienotā pieteikšanās un SCIM nodrošināšana jūsu atbalsta komandai.",
-  "app.settings.sso.agentLockedTitle": "Aģentu SSO ir pieejams tikai Pro plānā",
+  "app.settings.sso.agentLockedTitle": "Aģentu SSO ir pieejams tikai Enterprise plānā",
   "app.settings.sso.agentLockedText":
     "Pievienojiet savu SAML 2.0 identitātes nodrošinātāju, nodrošiniet aģentu kontus ar SCIM un ieviesiet vienoto pieteikšanos visai komandai.",
-  "app.settings.sso.agentProOnly": "Aģentu SSO ir pieejams tikai Pro plānā.",
+  "app.settings.sso.agentEnterpriseOnly": "Aģentu SSO ir pieejams tikai Enterprise plānā.",
   "app.settings.sso.idpOther": "Cits (universāls SAML)",
   "app.settings.sso.samlToggleLabel": "Iespējot SAML 2.0 vienoto pieteikšanos",
   "app.settings.sso.samlHeading": "SAML 2.0 vienotā pieteikšanās",
@@ -1006,10 +1006,10 @@ export const lv: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Katra klienta organizācija portālā pievieno savu identitātes nodrošinātāju. Šeit jūs pārraugāt visu kopumu.",
   "app.settings.sso.customerLockedTitle":
-    "Klientu organizāciju SSO ir pieejams tikai Pro plānā",
+    "Klientu organizāciju SSO ir pieejams tikai Enterprise plānā",
   "app.settings.sso.customerLockedText":
     "Ļaujiet katrai klienta organizācijai pievienot savu identitātes nodrošinātāju (SAML vai OIDC) un pārraugiet visu kopumu no šī ekrāna.",
-  "app.settings.sso.customerProOnly": "Klientu organizāciju SSO ir pieejams tikai Pro plānā.",
+  "app.settings.sso.customerEnterpriseOnly": "Klientu organizāciju SSO ir pieejams tikai Enterprise plānā.",
   "app.settings.sso.statusActive": "Aktīvs",
   "app.settings.sso.statusPending": "Jāapstiprina",
   "app.settings.sso.statusError": "Kļūda",
@@ -1199,7 +1199,7 @@ export const lv: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Zināšanu bāze publicēta",
   "app.settings.portal.kbPublishedHint": "Publicētie raksti ir redzami bez pieteikšanās.",
   "app.settings.portal.hidePoweredByLabel": "Slēpt „Nodrošina Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Pieejams no Pro plāna.",
+  "app.settings.portal.hidePoweredByHint": "Pieejams no Enterprise plāna.",
   "app.settings.portal.kbVisibilityLabel": "Zināšanu bāzes redzamība",
   "app.settings.portal.kbVisibilityPublic": "Publiska",
   "app.settings.portal.kbVisibilityAuthenticated": "Tikai pēc pieteikšanās",
@@ -1417,6 +1417,7 @@ export const lv: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Plāns, licences, kvotas, maksāšanas veids un rēķinu vēsture.",
   "app.settings.workspace.selfHosted": "PAŠMITINĀTS",
+  "app.settings.workspace.trialBadge": "IZMĒĢINĀJUMS",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     zero: "mēnesī · {count} licenču par {price} €",
@@ -1713,7 +1714,7 @@ export const lv: Dictionary = {
   "app.settings.dev.dayYesterday": "Vakar {time}",
   "app.settings.dev.auditTitle": "Audita žurnāls",
   "app.settings.dev.auditSubtitle": "Pilns administrēšanas darbību žurnāls. Glabāšana 2 gadi.",
-  "app.settings.dev.auditLockedTitle": "Audita žurnāls ir pieejams tikai Pro plānā",
+  "app.settings.dev.auditLockedTitle": "Audita žurnāls ir pieejams tikai Enterprise plānā",
   "app.settings.dev.auditLockedText":
     "Saglabājiet ierakstu par katru administrēšanas darbību 2 gadus, ar izmaiņu salīdzinājumu pirms/pēc un CSV eksportu.",
   "app.settings.dev.filterActorAll": "Izpildītājs: visi",
@@ -1736,7 +1737,7 @@ export const lv: Dictionary = {
   "app.settings.dev.actorContact": "Kontaktpersona",
   "app.settings.dev.exportUnauthorized": "Nav autorizēts",
   "app.settings.dev.exportForbidden": "Pieejams tikai Owner un Admin lomām.",
-  "app.settings.dev.exportProOnly": "Audita žurnāls ir pieejams tikai Pro plānā.",
+  "app.settings.dev.exportEnterpriseOnly": "Audita žurnāls ir pieejams tikai Enterprise plānā.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Darbvieta",
@@ -1909,8 +1910,8 @@ export const lv: Dictionary = {
   /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
      produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
   "app.settings.workspace.planFree": "Free plāns",
-  "app.settings.workspace.planStandard": "Standard plāns",
-  "app.settings.workspace.planPro": "Pro plāns",
+  "app.settings.workspace.planTeam": "Team plāns",
+  "app.settings.workspace.planEnterprise": "Enterprise plāns",
 
   /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
      française ; seul l'affichage est traduit. */

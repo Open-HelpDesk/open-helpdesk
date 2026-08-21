@@ -716,7 +716,7 @@ export const ro: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "Primul răspuns",
   "app.reports.customReports": "Rapoarte personalizate",
-  "app.reports.proPlanBadge": "PLANUL PRO",
+  "app.reports.enterprisePlanBadge": "PLANUL ENTERPRISE",
   "app.reports.discover": "Descoperiți",
   "app.reports.chartDailyAria": "{labelA} și {labelB} pe zi",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -740,8 +740,8 @@ export const ro: Dictionary = {
   "app.settings.shell.saved": "✓ Salvat",
   "app.settings.shell.cancel": "Anulați",
   "app.settings.shell.save": "Salvați",
-  "app.settings.shell.planPro": "PLANUL PRO",
-  "app.settings.shell.upgradeToPro": "Treceți la planul Pro",
+  "app.settings.shell.planEnterprise": "PLANUL ENTERPRISE",
+  "app.settings.shell.upgradeToEnterprise": "Treceți la planul Enterprise",
   "app.settings.shell.eeSelfHostedTitle": "Funcționalitate a ediției Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Această funcționalitate este supusă licenței comerciale (directorul ee/ din depozit) și nu este inclusă în ediția open source auto-găzduită.",
@@ -914,10 +914,10 @@ export const ro: Dictionary = {
   "app.settings.sso.agentTitle": "SSO pentru agenți",
   "app.settings.sso.agentSubtitle":
     "Autentificare unică SAML 2.0 și provizionare SCIM pentru echipa dvs. de suport.",
-  "app.settings.sso.agentLockedTitle": "SSO pentru agenți este disponibil doar în planul Pro",
+  "app.settings.sso.agentLockedTitle": "SSO pentru agenți este disponibil doar în planul Enterprise",
   "app.settings.sso.agentLockedText":
     "Conectați furnizorul dvs. de identitate SAML 2.0, provizionați agenții prin SCIM și impuneți autentificarea unică întregii echipe.",
-  "app.settings.sso.agentProOnly": "SSO pentru agenți este disponibil doar în planul Pro.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO pentru agenți este disponibil doar în planul Enterprise.",
   "app.settings.sso.idpOther": "Altul (SAML generic)",
   "app.settings.sso.samlToggleLabel": "Activați autentificarea unică SAML 2.0",
   "app.settings.sso.samlHeading": "Autentificare unică SAML 2.0",
@@ -1010,11 +1010,11 @@ export const ro: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Fiecare organizație client își conectează propriul furnizor de identitate din portal. Aici supervizați întregul parc.",
   "app.settings.sso.customerLockedTitle":
-    "SSO pentru organizațiile client este disponibil doar în planul Pro",
+    "SSO pentru organizațiile client este disponibil doar în planul Enterprise",
   "app.settings.sso.customerLockedText":
     "Lăsați fiecare organizație client să își conecteze propriul furnizor de identitate (SAML sau OIDC) și supervizați întregul parc din acest ecran.",
-  "app.settings.sso.customerProOnly":
-    "SSO pentru organizațiile client este disponibil doar în planul Pro.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "SSO pentru organizațiile client este disponibil doar în planul Enterprise.",
   "app.settings.sso.statusActive": "Activă",
   "app.settings.sso.statusPending": "De verificat",
   "app.settings.sso.statusError": "Eroare",
@@ -1205,7 +1205,7 @@ export const ro: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Bază de cunoștințe publicată",
   "app.settings.portal.kbPublishedHint": "Articolele publicate sunt vizibile fără conectare.",
   "app.settings.portal.hidePoweredByLabel": "Ascundeți „Propulsat de Open HelpDesk”",
-  "app.settings.portal.hidePoweredByHint": "Disponibil începând cu planul Pro.",
+  "app.settings.portal.hidePoweredByHint": "Disponibil începând cu planul Enterprise.",
   "app.settings.portal.kbVisibilityLabel": "Vizibilitatea bazei de cunoștințe",
   "app.settings.portal.kbVisibilityPublic": "Publică",
   "app.settings.portal.kbVisibilityAuthenticated": "După conectare",
@@ -1424,6 +1424,7 @@ export const ro: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Plan, licențe, cote, metodă de plată și istoricul facturilor.",
   "app.settings.workspace.selfHosted": "AUTOGĂZDUIT",
+  "app.settings.workspace.trialBadge": "PROBĂ",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     one: "pe lună · {count} licență la {price} €",
@@ -1724,7 +1725,7 @@ export const ro: Dictionary = {
   "app.settings.dev.auditTitle": "Audit log",
   "app.settings.dev.auditSubtitle":
     "Jurnal complet al acțiunilor de administrare. Retenție 2 ani.",
-  "app.settings.dev.auditLockedTitle": "Auditul log este disponibil doar în planul Pro",
+  "app.settings.dev.auditLockedTitle": "Auditul log este disponibil doar în planul Enterprise",
   "app.settings.dev.auditLockedText":
     "Păstrați urma fiecărei acțiuni de administrare timp de 2 ani, cu diferențe înainte/după și export CSV.",
   "app.settings.dev.filterActorAll": "Autor: toți",
@@ -1747,7 +1748,7 @@ export const ro: Dictionary = {
   "app.settings.dev.actorContact": "Contact",
   "app.settings.dev.exportUnauthorized": "Neautorizat",
   "app.settings.dev.exportForbidden": "Rezervat rolurilor Owner și Admin.",
-  "app.settings.dev.exportProOnly": "Auditul log este disponibil doar în planul Pro.",
+  "app.settings.dev.exportEnterpriseOnly": "Auditul log este disponibil doar în planul Enterprise.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Spațiu de lucru",
@@ -1919,8 +1920,8 @@ export const ro: Dictionary = {
   /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
      produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
   "app.settings.workspace.planFree": "Planul Free",
-  "app.settings.workspace.planStandard": "Planul Standard",
-  "app.settings.workspace.planPro": "Planul Pro",
+  "app.settings.workspace.planTeam": "Planul Team",
+  "app.settings.workspace.planEnterprise": "Planul Enterprise",
 
   /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
      française ; seul l'affichage est traduit. */

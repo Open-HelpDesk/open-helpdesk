@@ -653,7 +653,7 @@ export const el: Dictionary = {
   "app.reports.columnAgent": "Χειριστής",
   "app.reports.columnFirstReply": "1η απάντηση",
   "app.reports.customReports": "Προσαρμοσμένες αναφορές",
-  "app.reports.proPlanBadge": "ΠΡΟΓΡΑΜΜΑ PRO",
+  "app.reports.enterprisePlanBadge": "ΠΡΟΓΡΑΜΜΑ ENTERPRISE",
   "app.reports.discover": "Μάθετε περισσότερα",
   "app.reports.chartDailyAria": "{labelA} και {labelB} ανά ημέρα",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -677,8 +677,8 @@ export const el: Dictionary = {
   "app.settings.shell.saved": "✓ Αποθηκεύτηκε",
   "app.settings.shell.cancel": "Ακύρωση",
   "app.settings.shell.save": "Αποθήκευση",
-  "app.settings.shell.planPro": "ΠΡΟΓΡΑΜΜΑ PRO",
-  "app.settings.shell.upgradeToPro": "Αναβάθμιση στο πρόγραμμα Pro",
+  "app.settings.shell.planEnterprise": "ΠΡΟΓΡΑΜΜΑ ENTERPRISE",
+  "app.settings.shell.upgradeToEnterprise": "Αναβάθμιση στο πρόγραμμα Enterprise",
   "app.settings.shell.eeSelfHostedTitle": "Λειτουργία της έκδοσης Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Αυτή η λειτουργία υπόκειται στην εμπορική άδεια (κατάλογος ee/ του αποθετηρίου) και δεν περιλαμβάνεται στην αυτοφιλοξενούμενη έκδοση ανοικτού κώδικα.",
@@ -857,11 +857,11 @@ export const el: Dictionary = {
   "app.settings.sso.agentSubtitle":
     "Ενιαία σύνδεση SAML 2.0 και παροχή λογαριασμών SCIM για την ομάδα υποστήριξής σας.",
   "app.settings.sso.agentLockedTitle":
-    "Το SSO των χειριστών είναι διαθέσιμο μόνο στο πρόγραμμα Pro",
+    "Το SSO των χειριστών είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise",
   "app.settings.sso.agentLockedText":
     "Συνδέστε τον πάροχο ταυτότητας SAML 2.0 σας, δημιουργήστε τους λογαριασμούς των χειριστών σας μέσω SCIM και επιβάλετε την ενιαία σύνδεση σε όλη την ομάδα.",
-  "app.settings.sso.agentProOnly":
-    "Το SSO των χειριστών είναι διαθέσιμο μόνο στο πρόγραμμα Pro.",
+  "app.settings.sso.agentEnterpriseOnly":
+    "Το SSO των χειριστών είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise.",
   "app.settings.sso.idpOther": "Άλλος (γενικό SAML)",
   "app.settings.sso.samlToggleLabel": "Ενεργοποίηση της ενιαίας σύνδεσης SAML 2.0",
   "app.settings.sso.samlHeading": "Ενιαία σύνδεση SAML 2.0",
@@ -950,11 +950,11 @@ export const el: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Κάθε οργανισμός-πελάτης συνδέει τον δικό του πάροχο ταυτότητας από την πύλη. Εδώ επιβλέπετε το σύνολο.",
   "app.settings.sso.customerLockedTitle":
-    "Το SSO των οργανισμών-πελατών είναι διαθέσιμο μόνο στο πρόγραμμα Pro",
+    "Το SSO των οργανισμών-πελατών είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise",
   "app.settings.sso.customerLockedText":
     "Αφήστε κάθε οργανισμό-πελάτη να συνδέσει τον δικό του πάροχο ταυτότητας (SAML ή OIDC) και επιβλέψτε το σύνολο από αυτήν την οθόνη.",
-  "app.settings.sso.customerProOnly":
-    "Το SSO των οργανισμών-πελατών είναι διαθέσιμο μόνο στο πρόγραμμα Pro.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "Το SSO των οργανισμών-πελατών είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise.",
   "app.settings.sso.statusActive": "Ενεργή",
   "app.settings.sso.statusPending": "Προς επαλήθευση",
   "app.settings.sso.statusError": "Σφάλμα",
@@ -1117,7 +1117,7 @@ export const el: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Βάση γνώσης δημοσιευμένη",
   "app.settings.portal.kbPublishedHint": "Τα δημοσιευμένα άρθρα είναι ορατά χωρίς σύνδεση.",
   "app.settings.portal.hidePoweredByLabel": "Απόκρυψη του «Με την τεχνολογία Open HelpDesk»",
-  "app.settings.portal.hidePoweredByHint": "Διαθέσιμο από το πρόγραμμα Pro.",
+  "app.settings.portal.hidePoweredByHint": "Διαθέσιμο από το πρόγραμμα Enterprise.",
   "app.settings.portal.kbVisibilityLabel": "Ορατότητα της βάσης γνώσης",
   "app.settings.portal.kbVisibilityPublic": "Δημόσια",
   "app.settings.portal.kbVisibilityAuthenticated": "Μόνο μετά από σύνδεση",
@@ -1331,6 +1331,7 @@ export const el: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Πρόγραμμα, θέσεις, ποσοστώσεις, μέθοδος πληρωμής και ιστορικό τιμολογίων.",
   "app.settings.workspace.selfHosted": "ΑΥΤΟΦΙΛΟΞΕΝΟΥΜΕΝΟ",
+  "app.settings.workspace.trialBadge": "ΔΟΚΙΜΗ",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     one: "τον μήνα · {count} θέση προς {price} €",
@@ -1619,7 +1620,7 @@ export const el: Dictionary = {
   "app.settings.dev.auditSubtitle":
     "Πλήρης καταγραφή των ενεργειών διαχείρισης. Διατήρηση 2 ετών.",
   "app.settings.dev.auditLockedTitle":
-    "Το αρχείο ελέγχου είναι διαθέσιμο μόνο στο πρόγραμμα Pro",
+    "Το αρχείο ελέγχου είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise",
   "app.settings.dev.auditLockedText":
     "Διατηρήστε το ίχνος κάθε ενέργειας διαχείρισης για 2 έτη, με σύγκριση πριν/μετά και εξαγωγή CSV.",
   "app.settings.dev.filterActorAll": "Εκτελεστής: όλοι",
@@ -1641,7 +1642,7 @@ export const el: Dictionary = {
   "app.settings.dev.actorContact": "Επαφή",
   "app.settings.dev.exportUnauthorized": "Χωρίς εξουσιοδότηση",
   "app.settings.dev.exportForbidden": "Διαθέσιμο μόνο στους ρόλους Owner και Admin.",
-  "app.settings.dev.exportProOnly": "Το αρχείο ελέγχου είναι διαθέσιμο μόνο στο πρόγραμμα Pro.",
+  "app.settings.dev.exportEnterpriseOnly": "Το αρχείο ελέγχου είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Χώρος εργασίας",
@@ -1814,8 +1815,8 @@ export const el: Dictionary = {
   /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
      produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
   "app.settings.workspace.planFree": "Πρόγραμμα Free",
-  "app.settings.workspace.planStandard": "Πρόγραμμα Standard",
-  "app.settings.workspace.planPro": "Πρόγραμμα Pro",
+  "app.settings.workspace.planTeam": "Πρόγραμμα Team",
+  "app.settings.workspace.planEnterprise": "Πρόγραμμα Enterprise",
 
   /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
      française ; seul l'affichage est traduit. */

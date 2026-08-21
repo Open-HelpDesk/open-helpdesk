@@ -641,7 +641,7 @@ export const fr = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1ʳᵉ réponse",
   "app.reports.customReports": "Rapports personnalisés",
-  "app.reports.proPlanBadge": "PLAN PRO",
+  "app.reports.enterprisePlanBadge": "PLAN ENTREPRISE",
   "app.reports.discover": "Découvrir",
   "app.reports.chartDailyAria": "{labelA} et {labelB} par jour",
   "app.reports.chartDailyPoint": "{date} — {labelA} : {created} · {labelB} : {resolved}",
@@ -661,8 +661,8 @@ export const fr = {
   "app.settings.shell.saved": "✓ Enregistré",
   "app.settings.shell.cancel": "Annuler",
   "app.settings.shell.save": "Enregistrer",
-  "app.settings.shell.planPro": "PLAN PRO",
-  "app.settings.shell.upgradeToPro": "Passer au plan Pro",
+  "app.settings.shell.planEnterprise": "PLAN ENTREPRISE",
+  "app.settings.shell.upgradeToEnterprise": "Passer au plan Entreprise",
   "app.settings.shell.eeSelfHostedTitle": "Fonctionnalité Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Cette fonctionnalité relève de la licence commerciale (dossier ee/ du dépôt) et n'est pas incluse dans l'édition open source auto-hébergée.",
@@ -811,9 +811,9 @@ export const fr = {
   /* --- settings.sso --- */
   "app.settings.sso.agentTitle": "SSO des agents",
   "app.settings.sso.agentSubtitle": "Authentification unique SAML 2.0 et provisionnement SCIM pour votre équipe support.",
-  "app.settings.sso.agentLockedTitle": "Le SSO des agents est réservé au plan Pro",
+  "app.settings.sso.agentLockedTitle": "Le SSO des agents est réservé au plan Entreprise",
   "app.settings.sso.agentLockedText": "Connectez votre fournisseur d'identité SAML 2.0, provisionnez vos agents en SCIM et imposez l'authentification unique à toute l'équipe.",
-  "app.settings.sso.agentProOnly": "Le SSO des agents est réservé au plan Pro.",
+  "app.settings.sso.agentEnterpriseOnly": "Le SSO des agents est réservé au plan Entreprise.",
   "app.settings.sso.idpOther": "Autre (SAML générique)",
   "app.settings.sso.samlToggleLabel": "Activer l'authentification unique SAML 2.0",
   "app.settings.sso.samlHeading": "Authentification unique SAML 2.0",
@@ -888,9 +888,9 @@ export const fr = {
   "app.settings.sso.addMapping": "+ Ajouter une correspondance",
   "app.settings.sso.customerTitle": "SSO des organisations clientes",
   "app.settings.sso.customerSubtitle": "Chaque organisation cliente connecte son propre fournisseur d'identité depuis le portail. Vous supervisez ici l'ensemble du parc.",
-  "app.settings.sso.customerLockedTitle": "Le SSO des organisations clientes est réservé au plan Pro",
+  "app.settings.sso.customerLockedTitle": "Le SSO des organisations clientes est réservé au plan Entreprise",
   "app.settings.sso.customerLockedText": "Laissez chaque organisation cliente brancher son propre fournisseur d'identité (SAML ou OIDC) et supervisez l'ensemble du parc depuis cet écran.",
-  "app.settings.sso.customerProOnly": "Le SSO des organisations clientes est réservé au plan Pro.",
+  "app.settings.sso.customerEnterpriseOnly": "Le SSO des organisations clientes est réservé au plan Entreprise.",
   "app.settings.sso.statusActive": "Active",
   "app.settings.sso.statusPending": "À vérifier",
   "app.settings.sso.statusError": "Erreur",
@@ -1029,7 +1029,7 @@ export const fr = {
   "app.settings.portal.kbPublishedLabel": "Base de connaissances publiée",
   "app.settings.portal.kbPublishedHint": "Les articles publiés sont visibles sans connexion.",
   "app.settings.portal.hidePoweredByLabel": "Masquer « Propulsé par Open HelpDesk »",
-  "app.settings.portal.hidePoweredByHint": "Disponible à partir du plan Pro.",
+  "app.settings.portal.hidePoweredByHint": "Disponible à partir du plan Entreprise.",
   "app.settings.portal.kbVisibilityLabel": "Visibilité de la base de connaissances",
   "app.settings.portal.kbVisibilityPublic": "Publique",
   "app.settings.portal.kbVisibilityAuthenticated": "Sur connexion",
@@ -1212,6 +1212,7 @@ export const fr = {
   "app.settings.workspace.billingTitle": "Abonnement & facturation",
   "app.settings.workspace.billingSubtitle": "Plan, sièges, quotas, moyen de paiement et historique des factures.",
   "app.settings.workspace.selfHosted": "AUTO-HÉBERGÉ",
+  "app.settings.workspace.trialBadge": "ESSAI",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": { one: "par mois · {count} siège à {price} €", other: "par mois · {count} sièges à {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "par mois · {count} siège inclus", other: "par mois · {count} sièges inclus" },
@@ -1475,7 +1476,7 @@ export const fr = {
   "app.settings.dev.dayYesterday": "Hier {time}",
   "app.settings.dev.auditTitle": "Audit log",
   "app.settings.dev.auditSubtitle": "Journal complet des actions d'administration. Rétention 2 ans.",
-  "app.settings.dev.auditLockedTitle": "L'audit log est réservé au plan Pro",
+  "app.settings.dev.auditLockedTitle": "L'audit log est réservé au plan Entreprise",
   "app.settings.dev.auditLockedText": "Conservez la trace de chaque action d'administration pendant 2 ans, avec diff avant/après et export CSV.",
   "app.settings.dev.filterActorAll": "Acteur : tous",
   "app.settings.dev.filterActionAll": "Action : toutes",
@@ -1492,7 +1493,7 @@ export const fr = {
   "app.settings.dev.actorContact": "Contact",
   "app.settings.dev.exportUnauthorized": "Non autorisé",
   "app.settings.dev.exportForbidden": "Réservé aux rôles Owner et Admin.",
-  "app.settings.dev.exportProOnly": "L'audit log est réservé au plan Pro.",
+  "app.settings.dev.exportEnterpriseOnly": "L'audit log est réservé au plan Entreprise.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Espace de travail",
@@ -1666,8 +1667,8 @@ export const fr = {
   /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
      produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
   "app.settings.workspace.planFree": "Plan Free",
-  "app.settings.workspace.planStandard": "Plan Standard",
-  "app.settings.workspace.planPro": "Plan Pro",
+  "app.settings.workspace.planTeam": "Plan Team",
+  "app.settings.workspace.planEnterprise": "Plan Entreprise",
 
   /* Types de ticket (AG-05). Attention : la VALEUR enregistrée en base reste la
      chaîne française — c'est ainsi que le produit la stocke. Seul l'affichage

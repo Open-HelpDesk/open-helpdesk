@@ -44,18 +44,31 @@ export const AUTO_CLOSE_AFTER_DAYS = 4;
 /** Rétention d'un tenant résilié avant purge (parcours clé n°4). */
 export const TENANT_RETENTION_DAYS = 60;
 
-/** Plans cloud — quotas indicatifs, la vérité vit dans cloud.plans (CO-06). */
-export const PLAN_IDS = ["free", "standard", "pro"] as const;
+/**
+ * Plans cloud — quotas indicatifs, la vérité vit dans cloud.plans (CO-06).
+ *
+ * Free : jusqu'à 3 agents, une boîte email — ticketing, portail et KB complets.
+ * Team (9 €/agent/mois à partir du 4ᵉ agent) : + SLA, automatisations, CSAT,
+ * rapports, API, IA de triage et de résumé (aiBasic).
+ * Enterprise (19 €/agent/mois, lancé avec le Lot 5) : + SSO SAML/SCIM, audit,
+ * multi-marques, domaine custom, IA complète sans compteur (aiFull).
+ */
+export const PLAN_IDS = ["free", "team", "enterprise"] as const;
 export type PlanId = (typeof PLAN_IDS)[number];
 
 export type PlanEntitlements = {
   maxAgents: number | null;
   maxMailboxes: number | null;
+  /** Stockage total des pièces jointes, en octets — null = illimité. */
+  maxStorageBytes: number | null;
   automations: boolean;
   sla: boolean;
   csat: boolean;
   reports: boolean;
-  ai: boolean;
+  /** IA de triage et de résumé (Team) — mesurée par un compteur d'usage. */
+  aiBasic: boolean;
+  /** IA complète, sans compteur : suggestions de réponse, ton… (Enterprise). */
+  aiFull: boolean;
   agentSso: boolean;
   customerSso: boolean;
   customDomain: boolean;
@@ -63,43 +76,51 @@ export type PlanEntitlements = {
   multiBrand: boolean;
 };
 
+const GB = 1024 * 1024 * 1024;
+
 export const DEFAULT_PLAN_ENTITLEMENTS: Record<PlanId, PlanEntitlements> = {
   free: {
     maxAgents: 3,
     maxMailboxes: 1,
+    maxStorageBytes: 1 * GB,
     automations: false,
     sla: false,
     csat: false,
     reports: false,
-    ai: false,
+    aiBasic: false,
+    aiFull: false,
     agentSso: false,
     customerSso: false,
     customDomain: false,
     auditLog: false,
     multiBrand: false,
   },
-  standard: {
+  team: {
     maxAgents: null,
     maxMailboxes: null,
+    maxStorageBytes: 20 * GB,
     automations: true,
     sla: true,
     csat: true,
     reports: true,
-    ai: false,
+    aiBasic: true,
+    aiFull: false,
     agentSso: false,
     customerSso: false,
     customDomain: false,
     auditLog: false,
     multiBrand: false,
   },
-  pro: {
+  enterprise: {
     maxAgents: null,
     maxMailboxes: null,
+    maxStorageBytes: 100 * GB,
     automations: true,
     sla: true,
     csat: true,
     reports: true,
-    ai: true,
+    aiBasic: true,
+    aiFull: true,
     agentSso: true,
     customerSso: true,
     customDomain: true,

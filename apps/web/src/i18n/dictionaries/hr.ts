@@ -698,7 +698,7 @@ export const hr: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. odgovor",
   "app.reports.customReports": "Prilagođeni izvještaji",
-  "app.reports.proPlanBadge": "PRO PLAN",
+  "app.reports.enterprisePlanBadge": "ENTERPRISE PLAN",
   "app.reports.discover": "Otkrij",
   "app.reports.chartDailyAria": "{labelA} i {labelB} po danu",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -722,8 +722,8 @@ export const hr: Dictionary = {
   "app.settings.shell.saved": "✓ Spremljeno",
   "app.settings.shell.cancel": "Odustani",
   "app.settings.shell.save": "Spremi",
-  "app.settings.shell.planPro": "PRO PLAN",
-  "app.settings.shell.upgradeToPro": "Prijeđi na Pro plan",
+  "app.settings.shell.planEnterprise": "ENTERPRISE PLAN",
+  "app.settings.shell.upgradeToEnterprise": "Prijeđi na Enterprise plan",
   "app.settings.shell.eeSelfHostedTitle": "Značajka izdanja Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Ova značajka podliježe komercijalnoj licenci (direktorij ee/ u repozitoriju) i nije uključena u samostalno hostano izdanje otvorenog koda.",
@@ -898,10 +898,10 @@ export const hr: Dictionary = {
   "app.settings.sso.agentTitle": "SSO agenata",
   "app.settings.sso.agentSubtitle":
     "Jedinstvena prijava SAML 2.0 i SCIM provizioniranje za vaš tim podrške.",
-  "app.settings.sso.agentLockedTitle": "SSO agenata dostupan je samo u Pro planu",
+  "app.settings.sso.agentLockedTitle": "SSO agenata dostupan je samo u Enterprise planu",
   "app.settings.sso.agentLockedText":
     "Povežite svojeg SAML 2.0 davatelja identiteta, provizionirajte agente putem SCIM-a i uvedite obveznu jedinstvenu prijavu za cijeli tim.",
-  "app.settings.sso.agentProOnly": "SSO agenata dostupan je samo u Pro planu.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO agenata dostupan je samo u Enterprise planu.",
   "app.settings.sso.idpOther": "Drugo (generički SAML)",
   "app.settings.sso.samlToggleLabel": "Uključi jedinstvenu prijavu SAML 2.0",
   "app.settings.sso.samlHeading": "Jedinstvena prijava SAML 2.0",
@@ -993,11 +993,11 @@ export const hr: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Svaka klijentska organizacija povezuje vlastitog davatelja identiteta s portala. Ovdje nadzirete sve njihove prijave.",
   "app.settings.sso.customerLockedTitle":
-    "SSO klijentskih organizacija dostupan je samo u Pro planu",
+    "SSO klijentskih organizacija dostupan je samo u Enterprise planu",
   "app.settings.sso.customerLockedText":
     "Dopustite svakoj klijentskoj organizaciji da poveže vlastitog davatelja identiteta (SAML ili OIDC) i nadzirite sve prijave s ovog zaslona.",
-  "app.settings.sso.customerProOnly":
-    "SSO klijentskih organizacija dostupan je samo u Pro planu.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "SSO klijentskih organizacija dostupan je samo u Enterprise planu.",
   "app.settings.sso.statusActive": "Aktivna",
   "app.settings.sso.statusPending": "Za potvrdu",
   "app.settings.sso.statusError": "Greška",
@@ -1184,7 +1184,7 @@ export const hr: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Baza znanja objavljena",
   "app.settings.portal.kbPublishedHint": "Objavljeni članci vidljivi su bez prijave.",
   "app.settings.portal.hidePoweredByLabel": "Sakrij „Pokreće Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Dostupno od Pro plana.",
+  "app.settings.portal.hidePoweredByHint": "Dostupno od Enterprise plana.",
   "app.settings.portal.kbVisibilityLabel": "Vidljivost baze znanja",
   "app.settings.portal.kbVisibilityPublic": "Javna",
   "app.settings.portal.kbVisibilityAuthenticated": "Nakon prijave",
@@ -1398,6 +1398,7 @@ export const hr: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Plan, mjesta, kvote, način plaćanja i povijest računa.",
   "app.settings.workspace.selfHosted": "SAMOSTALNO HOSTIRANO",
+  "app.settings.workspace.trialBadge": "PROBNO",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     one: "mjesečno · {count} mjesto po {price} €",
@@ -1691,7 +1692,7 @@ export const hr: Dictionary = {
   "app.settings.dev.auditTitle": "Audit log",
   "app.settings.dev.auditSubtitle":
     "Potpuni zapisnik administratorskih radnji. Zadržavanje 2 godine.",
-  "app.settings.dev.auditLockedTitle": "Audit log dostupan je samo u Pro planu",
+  "app.settings.dev.auditLockedTitle": "Audit log dostupan je samo u Enterprise planu",
   "app.settings.dev.auditLockedText":
     "Sačuvajte trag svake administratorske radnje 2 godine, s prikazom razlika prije i poslije te CSV izvozom.",
   "app.settings.dev.filterActorAll": "Izvršitelj: svi",
@@ -1714,7 +1715,7 @@ export const hr: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Nije ovlašteno",
   "app.settings.dev.exportForbidden": "Samo za uloge Owner i Admin.",
-  "app.settings.dev.exportProOnly": "Audit log dostupan je samo u Pro planu.",
+  "app.settings.dev.exportEnterpriseOnly": "Audit log dostupan je samo u Enterprise planu.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Radni prostor",
@@ -1882,8 +1883,8 @@ export const hr: Dictionary = {
   /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
      produit ; seul « plan » est du texte, et le croate le place après. */
   "app.settings.workspace.planFree": "Free plan",
-  "app.settings.workspace.planStandard": "Standard plan",
-  "app.settings.workspace.planPro": "Pro plan",
+  "app.settings.workspace.planTeam": "Team plan",
+  "app.settings.workspace.planEnterprise": "Enterprise plan",
 
   /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
      française : seul l'affichage est traduit. */

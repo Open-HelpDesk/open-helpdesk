@@ -787,7 +787,7 @@ export const ga: Dictionary = {
   "app.reports.columnAgent": "Gníomhaire",
   "app.reports.columnFirstReply": "An chéad fhreagra",
   "app.reports.customReports": "Tuairiscí saincheaptha",
-  "app.reports.proPlanBadge": "PLEAN PRO",
+  "app.reports.enterprisePlanBadge": "PLEAN ENTERPRISE",
   "app.reports.discover": "Faigh amach tuilleadh",
   "app.reports.chartDailyAria": "{labelA} agus {labelB} in aghaidh an lae",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -813,8 +813,8 @@ export const ga: Dictionary = {
   "app.settings.shell.saved": "✓ Sábháilte",
   "app.settings.shell.cancel": "Cealaigh",
   "app.settings.shell.save": "Sábháil",
-  "app.settings.shell.planPro": "PLEAN PRO",
-  "app.settings.shell.upgradeToPro": "Uasghrádaigh go Pro",
+  "app.settings.shell.planEnterprise": "PLEAN ENTERPRISE",
+  "app.settings.shell.upgradeToEnterprise": "Uasghrádaigh go Enterprise",
   "app.settings.shell.eeSelfHostedTitle": "Gné den eagrán Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Tá an ghné seo faoin gceadúnas tráchtála (an chomhadlann ee/ sa stór) agus níl sí san áireamh san eagrán foinse oscailte féin-óstáilte.",
@@ -990,10 +990,10 @@ export const ga: Dictionary = {
   "app.settings.sso.agentTitle": "SSO na ngníomhairí",
   "app.settings.sso.agentSubtitle":
     "Aonsínithe isteach SAML 2.0 agus soláthar SCIM do do fhoireann tacaíochta.",
-  "app.settings.sso.agentLockedTitle": "Níl SSO na ngníomhairí ar fáil ach ar an bplean Pro",
+  "app.settings.sso.agentLockedTitle": "Níl SSO na ngníomhairí ar fáil ach ar an bplean Enterprise",
   "app.settings.sso.agentLockedText":
     "Ceangail do sholáthraí aitheantais SAML 2.0, soláthair do ghníomhairí trí SCIM agus éiligh aonsínithe isteach ar an bhfoireann ar fad.",
-  "app.settings.sso.agentProOnly": "Níl SSO na ngníomhairí ar fáil ach ar an bplean Pro.",
+  "app.settings.sso.agentEnterpriseOnly": "Níl SSO na ngníomhairí ar fáil ach ar an bplean Enterprise.",
   "app.settings.sso.idpOther": "Eile (SAML ginearálta)",
   "app.settings.sso.samlToggleLabel": "Cumasaigh aonsínithe isteach SAML 2.0",
   "app.settings.sso.samlHeading": "Aonsínithe isteach SAML 2.0",
@@ -1088,11 +1088,11 @@ export const ga: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Ceanglaíonn gach eagraíocht chustaiméara a soláthraí aitheantais féin ón tairseach. Déanann tú maoirseacht ar gach ceann acu anseo.",
   "app.settings.sso.customerLockedTitle":
-    "Níl SSO na n-eagraíochtaí custaiméirí ar fáil ach ar an bplean Pro",
+    "Níl SSO na n-eagraíochtaí custaiméirí ar fáil ach ar an bplean Enterprise",
   "app.settings.sso.customerLockedText":
     "Lig do gach eagraíocht chustaiméara a soláthraí aitheantais féin (SAML nó OIDC) a phlugáil isteach agus déan maoirseacht ar gach ceann acu ón scáileán seo.",
-  "app.settings.sso.customerProOnly":
-    "Níl SSO na n-eagraíochtaí custaiméirí ar fáil ach ar an bplean Pro.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "Níl SSO na n-eagraíochtaí custaiméirí ar fáil ach ar an bplean Enterprise.",
   "app.settings.sso.statusActive": "Gníomhach",
   "app.settings.sso.statusPending": "Le fíorú",
   "app.settings.sso.statusError": "Earráid",
@@ -1298,7 +1298,7 @@ export const ga: Dictionary = {
   "app.settings.portal.kbPublishedHint":
     "Bíonn ailt fhoilsithe le feiceáil gan logáil isteach.",
   "app.settings.portal.hidePoweredByLabel": "Folaigh “Cumhachtaithe ag Open HelpDesk”",
-  "app.settings.portal.hidePoweredByHint": "Ar fáil ón bplean Pro.",
+  "app.settings.portal.hidePoweredByHint": "Ar fáil ón bplean Enterprise.",
   "app.settings.portal.kbVisibilityLabel": "Infheictheacht an bhunachair eolais",
   "app.settings.portal.kbVisibilityPublic": "Poiblí",
   "app.settings.portal.kbVisibilityAuthenticated": "Logáilte isteach amháin",
@@ -1533,6 +1533,7 @@ export const ga: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Plean, suíocháin, cuótaí, modh íocaíochta agus stair na sonrasc.",
   "app.settings.workspace.selfHosted": "FÉINÓSTAILTE",
+  "app.settings.workspace.trialBadge": "TRIAIL",
   "app.settings.workspace.priceMonthly": "€{amount}",
   "app.settings.workspace.seatPricing": {
     one: "sa mhí · {count} suíochán ar €{price}",
@@ -1837,7 +1838,7 @@ export const ga: Dictionary = {
   "app.settings.dev.auditTitle": "Loga iniúchta",
   "app.settings.dev.auditSubtitle":
     "Loga iomlán de na gníomhartha riaracháin. Coinnítear ar feadh 2 bhliain.",
-  "app.settings.dev.auditLockedTitle": "Níl an loga iniúchta ar fáil ach ar an bplean Pro",
+  "app.settings.dev.auditLockedTitle": "Níl an loga iniúchta ar fáil ach ar an bplean Enterprise",
   "app.settings.dev.auditLockedText":
     "Coinnigh taifead ar gach gníomh riaracháin ar feadh 2 bhliain, le difríocht roimh/tar éis agus easpórtáil CSV.",
   "app.settings.dev.filterActorAll": "Gníomhaí: uile",
@@ -1862,7 +1863,7 @@ export const ga: Dictionary = {
   "app.settings.dev.actorContact": "Teagmhálaí",
   "app.settings.dev.exportUnauthorized": "Neamhúdaraithe",
   "app.settings.dev.exportForbidden": "Teoranta do na róil Owner agus Admin.",
-  "app.settings.dev.exportProOnly": "Níl an loga iniúchta ar fáil ach ar an bplean Pro.",
+  "app.settings.dev.exportEnterpriseOnly": "Níl an loga iniúchta ar fáil ach ar an bplean Enterprise.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Spás oibre",
@@ -2033,8 +2034,8 @@ export const ga: Dictionary = {
   /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
      produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
   "app.settings.workspace.planFree": "Plean Free",
-  "app.settings.workspace.planStandard": "Plean Standard",
-  "app.settings.workspace.planPro": "Plean Pro",
+  "app.settings.workspace.planTeam": "Plean Team",
+  "app.settings.workspace.planEnterprise": "Plean Enterprise",
 
   /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
      française ; seul l'affichage est traduit. */

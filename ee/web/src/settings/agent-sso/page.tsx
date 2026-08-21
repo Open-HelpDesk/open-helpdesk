@@ -9,7 +9,7 @@ import {
   LockedScreen,
   PageHeader,
   PageShell,
-  PlanProBadge,
+  EnterpriseBadge,
   SaveBar,
   Select,
   StatusPill,
@@ -169,7 +169,7 @@ export default async function AgentSsoPage({
 }) {
   const t = await getT();
   const { tenant } = await requireAgent();
-  const ent = entitlementsFor(tenant.plan);
+  const ent = entitlementsFor(tenant);
   const { tab, saved } = await searchParams;
   const activeTab = tab === "scim" ? "scim" : "saml";
 
@@ -280,7 +280,7 @@ export default async function AgentSsoPage({
                 <span className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
                   {t("app.settings.sso.samlHeading")}
                 </span>
-                <PlanProBadge />
+                <EnterpriseBadge />
                 {connected ? (
                   <StatusPill tone="ok">{t("app.settings.sso.statusConnected")}</StatusPill>
                 ) : (
@@ -635,7 +635,7 @@ export default async function AgentSsoPage({
                 <span className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
                   {t("app.settings.sso.scimHeading")}
                 </span>
-                <PlanProBadge />
+                <EnterpriseBadge />
               </div>
               <p style={{ fontSize: 12.5, color: "var(--ink-2)", textWrap: "pretty" }}>
                 {t("app.settings.sso.scimIntro")}

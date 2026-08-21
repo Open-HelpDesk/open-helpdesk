@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
   if (agent.role !== "owner" && agent.role !== "admin") {
     return new NextResponse(t("app.settings.dev.exportForbidden"), { status: 403 });
   }
-  if (!entitlementsFor(tenant.plan).auditLog) {
-    return new NextResponse(t("app.settings.dev.exportProOnly"), { status: 403 });
+  if (!entitlementsFor(tenant).auditLog) {
+    return new NextResponse(t("app.settings.dev.exportEnterpriseOnly"), { status: 403 });
   }
 
   const params = request.nextUrl.searchParams;

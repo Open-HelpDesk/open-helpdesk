@@ -4,7 +4,7 @@ import {
   Field,
   PageHeader,
   PageShell,
-  PlanProBadge,
+  EnterpriseBadge,
   SaveBar,
   Select,
   Toggle,
@@ -91,7 +91,7 @@ export default async function PortalSettingsPage({
   const accent = branding.accentColor ?? "#0B5F46";
   const widgetColor = widget.color ?? accent;
   const widgetTitle = widget.title ?? t("app.settings.portal.widgetTitleDefault");
-  const ent = entitlementsFor(tenant.plan);
+  const ent = entitlementsFor(tenant);
   const isPro = ent.multiBrand;
   const portalHost = `${tenant.slug}.open-helpdesk.com`;
   const snippet = `<script src="https://${portalHost}/widget.js" async></script>`;
@@ -208,7 +208,7 @@ export default async function PortalSettingsPage({
                   <span className="font-semibold" style={{ fontSize: 12, color: "var(--ink-2)" }}>
                     {t("app.settings.portal.customDomain")}
                   </span>
-                  <PlanProBadge />
+                  <EnterpriseBadge />
                 </div>
                 <div
                   className="overflow-hidden border"

@@ -746,7 +746,7 @@ export const cs: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. odpověď",
   "app.reports.customReports": "Vlastní přehledy",
-  "app.reports.proPlanBadge": "TARIF PRO",
+  "app.reports.enterprisePlanBadge": "TARIF ENTERPRISE",
   "app.reports.discover": "Zjistit více",
   "app.reports.chartDailyAria": "{labelA} a {labelB} po dnech",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -771,8 +771,8 @@ export const cs: Dictionary = {
   "app.settings.shell.saved": "✓ Uloženo",
   "app.settings.shell.cancel": "Zrušit",
   "app.settings.shell.save": "Uložit",
-  "app.settings.shell.planPro": "TARIF PRO",
-  "app.settings.shell.upgradeToPro": "Přejít na tarif Pro",
+  "app.settings.shell.planEnterprise": "TARIF ENTERPRISE",
+  "app.settings.shell.upgradeToEnterprise": "Přejít na tarif Enterprise",
   "app.settings.shell.eeSelfHostedTitle": "Funkce edice Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Tato funkce podléhá komerční licenci (adresář ee/ v repozitáři) a není součástí samostatně hostované open source edice.",
@@ -947,10 +947,10 @@ export const cs: Dictionary = {
   "app.settings.sso.agentTitle": "SSO agentů",
   "app.settings.sso.agentSubtitle":
     "Jednotné přihlášení SAML 2.0 a provisioning SCIM pro váš tým podpory.",
-  "app.settings.sso.agentLockedTitle": "SSO agentů je součástí pouze tarifu Pro",
+  "app.settings.sso.agentLockedTitle": "SSO agentů je součástí pouze tarifu Enterprise",
   "app.settings.sso.agentLockedText":
     "Připojte svého poskytovatele identit SAML 2.0, provisionujte agenty přes SCIM a vyžadujte jednotné přihlášení v celém týmu.",
-  "app.settings.sso.agentProOnly": "SSO agentů je součástí pouze tarifu Pro.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO agentů je součástí pouze tarifu Enterprise.",
   "app.settings.sso.idpOther": "Jiný (obecný SAML)",
   "app.settings.sso.samlToggleLabel": "Zapnout jednotné přihlášení SAML 2.0",
   "app.settings.sso.samlHeading": "Jednotné přihlášení SAML 2.0",
@@ -1043,11 +1043,11 @@ export const cs: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Každá zákaznická organizace si z portálu připojí vlastního poskytovatele identit. Zde máte přehled o všech připojeních.",
   "app.settings.sso.customerLockedTitle":
-    "SSO zákaznických organizací je součástí pouze tarifu Pro",
+    "SSO zákaznických organizací je součástí pouze tarifu Enterprise",
   "app.settings.sso.customerLockedText":
     "Nechte každou zákaznickou organizaci připojit vlastního poskytovatele identit (SAML nebo OIDC) a mějte na této obrazovce přehled o všech připojeních.",
-  "app.settings.sso.customerProOnly":
-    "SSO zákaznických organizací je součástí pouze tarifu Pro.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "SSO zákaznických organizací je součástí pouze tarifu Enterprise.",
   "app.settings.sso.statusActive": "Aktivní",
   "app.settings.sso.statusPending": "K ověření",
   "app.settings.sso.statusError": "Chyba",
@@ -1243,7 +1243,7 @@ export const cs: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Znalostní báze publikovaná",
   "app.settings.portal.kbPublishedHint": "Publikované články jsou viditelné bez přihlášení.",
   "app.settings.portal.hidePoweredByLabel": "Skrýt „Běží na Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Dostupné od tarifu Pro.",
+  "app.settings.portal.hidePoweredByHint": "Dostupné od tarifu Enterprise.",
   "app.settings.portal.kbVisibilityLabel": "Viditelnost znalostní báze",
   "app.settings.portal.kbVisibilityPublic": "Veřejná",
   "app.settings.portal.kbVisibilityAuthenticated": "Po přihlášení",
@@ -1462,6 +1462,7 @@ export const cs: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Tarif, licence, kvóty, platební metoda a historie faktur.",
   "app.settings.workspace.selfHosted": "VLASTNÍ HOSTING",
+  "app.settings.workspace.trialBadge": "ZKUŠEBNÍ",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     one: "měsíčně · {count} licence po {price} €",
@@ -1751,7 +1752,7 @@ export const cs: Dictionary = {
   "app.settings.dev.auditTitle": "Audit log",
   "app.settings.dev.auditSubtitle":
     "Kompletní protokol administrátorských akcí. Uchování 2 roky.",
-  "app.settings.dev.auditLockedTitle": "Audit log je součástí pouze tarifu Pro",
+  "app.settings.dev.auditLockedTitle": "Audit log je součástí pouze tarifu Enterprise",
   "app.settings.dev.auditLockedText":
     "Uchovejte záznam o každé administrátorské akci po 2 roky, včetně rozdílu před/po a exportu do CSV.",
   "app.settings.dev.filterActorAll": "Aktér: všichni",
@@ -1775,7 +1776,7 @@ export const cs: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Neautorizováno",
   "app.settings.dev.exportForbidden": "Vyhrazeno rolím Owner a Admin.",
-  "app.settings.dev.exportProOnly": "Audit log je součástí pouze tarifu Pro.",
+  "app.settings.dev.exportEnterpriseOnly": "Audit log je součástí pouze tarifu Enterprise.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Pracovní prostor",
@@ -1940,8 +1941,8 @@ export const cs: Dictionary = {
   /* ST-11 — noms des offres ; « Free », « Standard » et « Pro » ne se
      traduisent pas. */
   "app.settings.workspace.planFree": "Tarif Free",
-  "app.settings.workspace.planStandard": "Tarif Standard",
-  "app.settings.workspace.planPro": "Tarif Pro",
+  "app.settings.workspace.planTeam": "Tarif Team",
+  "app.settings.workspace.planEnterprise": "Tarif Enterprise",
 
   /* Types de ticket (AG-05) : la valeur en base reste française, seul
      l'affichage est traduit. */

@@ -75,7 +75,7 @@ export default async function TeamPage({
   // Une invitation réserve son siège : sinon le quota serait dépassé dès l'acceptation.
   // En auto-hébergé la limite est null : pas de jauge, pas de plafond.
   const seats = agents.filter((a) => a.status !== "disabled" && a.role !== "viewer").length;
-  const quota = seatLimitFor(tenant.plan);
+  const quota = seatLimitFor(tenant);
   const seatFull = quota !== null && seats >= quota;
   const seatPct = quota !== null && quota > 0 ? Math.min(100, Math.round((seats / quota) * 100)) : 0;
 

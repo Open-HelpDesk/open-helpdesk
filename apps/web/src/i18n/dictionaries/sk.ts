@@ -748,7 +748,7 @@ export const sk: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. odpoveď",
   "app.reports.customReports": "Vlastné prehľady",
-  "app.reports.proPlanBadge": "PLÁN PRO",
+  "app.reports.enterprisePlanBadge": "PLÁN ENTERPRISE",
   "app.reports.discover": "Zistiť viac",
   "app.reports.chartDailyAria": "{labelA} a {labelB} po dňoch",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -773,8 +773,8 @@ export const sk: Dictionary = {
   "app.settings.shell.saved": "✓ Uložené",
   "app.settings.shell.cancel": "Zrušiť",
   "app.settings.shell.save": "Uložiť",
-  "app.settings.shell.planPro": "PLÁN PRO",
-  "app.settings.shell.upgradeToPro": "Prejsť na plán Pro",
+  "app.settings.shell.planEnterprise": "PLÁN ENTERPRISE",
+  "app.settings.shell.upgradeToEnterprise": "Prejsť na plán Enterprise",
   "app.settings.shell.eeSelfHostedTitle": "Funkcia edície Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Táto funkcia podlieha komerčnej licencii (adresár ee/ v repozitári) a nie je súčasťou samostatne hostovanej open source edície.",
@@ -950,10 +950,10 @@ export const sk: Dictionary = {
   "app.settings.sso.agentTitle": "SSO pre agentov",
   "app.settings.sso.agentSubtitle":
     "Jednotné prihlásenie SAML 2.0 a poskytovanie kont cez SCIM pre váš tím podpory.",
-  "app.settings.sso.agentLockedTitle": "SSO pre agentov je dostupné iba v pláne Pro",
+  "app.settings.sso.agentLockedTitle": "SSO pre agentov je dostupné iba v pláne Enterprise",
   "app.settings.sso.agentLockedText":
     "Pripojte svojho poskytovateľa identity SAML 2.0, spravujte kontá agentov cez SCIM a vyžadujte jednotné prihlásenie od celého tímu.",
-  "app.settings.sso.agentProOnly": "SSO pre agentov je dostupné iba v pláne Pro.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO pre agentov je dostupné iba v pláne Enterprise.",
   "app.settings.sso.idpOther": "Iný (všeobecný SAML)",
   "app.settings.sso.samlToggleLabel": "Zapnúť jednotné prihlásenie SAML 2.0",
   "app.settings.sso.samlHeading": "Jednotné prihlásenie SAML 2.0",
@@ -1047,11 +1047,11 @@ export const sk: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Každá klientska organizácia si z portálu pripojí vlastného poskytovateľa identity. Tu máte prehľad o všetkých pripojeniach.",
   "app.settings.sso.customerLockedTitle":
-    "SSO klientskych organizácií je dostupné iba v pláne Pro",
+    "SSO klientskych organizácií je dostupné iba v pláne Enterprise",
   "app.settings.sso.customerLockedText":
     "Nechajte každú klientsku organizáciu pripojiť si vlastného poskytovateľa identity (SAML alebo OIDC) a majte z tejto obrazovky prehľad o všetkých pripojeniach.",
-  "app.settings.sso.customerProOnly":
-    "SSO klientskych organizácií je dostupné iba v pláne Pro.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "SSO klientskych organizácií je dostupné iba v pláne Enterprise.",
   "app.settings.sso.statusActive": "Aktívne",
   "app.settings.sso.statusPending": "Na overenie",
   "app.settings.sso.statusError": "Chyba",
@@ -1249,7 +1249,7 @@ export const sk: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Databáza znalostí publikovaná",
   "app.settings.portal.kbPublishedHint": "Publikované články sú viditeľné bez prihlásenia.",
   "app.settings.portal.hidePoweredByLabel": "Skryť „Beží na Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Dostupné od plánu Pro.",
+  "app.settings.portal.hidePoweredByHint": "Dostupné od plánu Enterprise.",
   "app.settings.portal.kbVisibilityLabel": "Viditeľnosť databázy znalostí",
   "app.settings.portal.kbVisibilityPublic": "Verejná",
   "app.settings.portal.kbVisibilityAuthenticated": "Iba po prihlásení",
@@ -1471,6 +1471,7 @@ export const sk: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Plán, licencie, kvóty, spôsob platby a história faktúr.",
   "app.settings.workspace.selfHosted": "VLASTNÝ HOSTING",
+  "app.settings.workspace.trialBadge": "SKÚŠOBNÁ",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     one: "za mesiac · {count} licencia po {price} €",
@@ -1769,7 +1770,7 @@ export const sk: Dictionary = {
   "app.settings.dev.auditTitle": "Audit log",
   "app.settings.dev.auditSubtitle":
     "Úplný záznam administrátorských akcií. Uchovávanie 2 roky.",
-  "app.settings.dev.auditLockedTitle": "Audit log je dostupný iba v pláne Pro",
+  "app.settings.dev.auditLockedTitle": "Audit log je dostupný iba v pláne Enterprise",
   "app.settings.dev.auditLockedText":
     "Uchovávajte 2 roky záznam o každej administrátorskej akcii, s porovnaním pred/po a exportom do CSV.",
   "app.settings.dev.filterActorAll": "Aktér: všetci",
@@ -1793,7 +1794,7 @@ export const sk: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Neautorizované",
   "app.settings.dev.exportForbidden": "Vyhradené pre roly Owner a Admin.",
-  "app.settings.dev.exportProOnly": "Audit log je dostupný iba v pláne Pro.",
+  "app.settings.dev.exportEnterpriseOnly": "Audit log je dostupný iba v pláne Enterprise.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Pracovný priestor",
@@ -1961,8 +1962,8 @@ export const sk: Dictionary = {
   /* ST-11 — noms des offres ; « Free », « Standard » et « Pro » ne se
      traduisent pas. */
   "app.settings.workspace.planFree": "Plán Free",
-  "app.settings.workspace.planStandard": "Plán Standard",
-  "app.settings.workspace.planPro": "Plán Pro",
+  "app.settings.workspace.planTeam": "Plán Team",
+  "app.settings.workspace.planEnterprise": "Plán Enterprise",
 
   /* Types de ticket (AG-05) : la VALEUR enregistrée en base reste la chaîne
      française, seul l'affichage est traduit. */

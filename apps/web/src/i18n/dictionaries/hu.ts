@@ -651,7 +651,7 @@ export const hu: Dictionary = {
   "app.reports.columnAgent": "Ügyintéző",
   "app.reports.columnFirstReply": "Első válasz",
   "app.reports.customReports": "Egyéni jelentések",
-  "app.reports.proPlanBadge": "PRO CSOMAG",
+  "app.reports.enterprisePlanBadge": "ENTERPRISE CSOMAG",
   "app.reports.discover": "Felfedezés",
   "app.reports.chartDailyAria": "{labelA} és {labelB} naponta",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -675,8 +675,8 @@ export const hu: Dictionary = {
   "app.settings.shell.saved": "✓ Mentve",
   "app.settings.shell.cancel": "Mégse",
   "app.settings.shell.save": "Mentés",
-  "app.settings.shell.planPro": "PRO CSOMAG",
-  "app.settings.shell.upgradeToPro": "Váltás a Pro csomagra",
+  "app.settings.shell.planEnterprise": "ENTERPRISE CSOMAG",
+  "app.settings.shell.upgradeToEnterprise": "Váltás a Enterprise csomagra",
   "app.settings.shell.eeSelfHostedTitle": "Az Enterprise Edition funkciója",
   "app.settings.shell.eeSelfHostedText":
     "Ez a funkció a kereskedelmi licenc hatálya alá tartozik (a tároló ee/ könyvtára), és nem része a saját üzemeltetésű nyílt forráskódú kiadásnak.",
@@ -850,10 +850,10 @@ export const hu: Dictionary = {
   "app.settings.sso.agentTitle": "Ügyintézők SSO-ja",
   "app.settings.sso.agentSubtitle":
     "SAML 2.0 egyszeri bejelentkezés és SCIM-alapú kiosztás a támogatási csapat számára.",
-  "app.settings.sso.agentLockedTitle": "Az ügyintézők SSO-ja csak a Pro csomagban érhető el",
+  "app.settings.sso.agentLockedTitle": "Az ügyintézők SSO-ja csak a Enterprise csomagban érhető el",
   "app.settings.sso.agentLockedText":
     "Kapcsolja össze SAML 2.0 identitásszolgáltatóját, ossza ki ügyintézőit SCIM-en keresztül, és tegye kötelezővé az egyszeri bejelentkezést az egész csapatnak.",
-  "app.settings.sso.agentProOnly": "Az ügyintézők SSO-ja csak a Pro csomagban érhető el.",
+  "app.settings.sso.agentEnterpriseOnly": "Az ügyintézők SSO-ja csak a Enterprise csomagban érhető el.",
   "app.settings.sso.idpOther": "Egyéb (általános SAML)",
   "app.settings.sso.samlToggleLabel": "SAML 2.0 egyszeri bejelentkezés bekapcsolása",
   "app.settings.sso.samlHeading": "SAML 2.0 egyszeri bejelentkezés",
@@ -942,11 +942,11 @@ export const hu: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Minden ügyfélszervezet a portálról kapcsolja össze a saját identitásszolgáltatóját. Itt Ön az egész állományt felügyeli.",
   "app.settings.sso.customerLockedTitle":
-    "Az ügyfélszervezetek SSO-ja csak a Pro csomagban érhető el",
+    "Az ügyfélszervezetek SSO-ja csak a Enterprise csomagban érhető el",
   "app.settings.sso.customerLockedText":
     "Hagyja, hogy minden ügyfélszervezet a saját identitásszolgáltatóját (SAML vagy OIDC) kapcsolja be, az egész állományt pedig erről a képernyőről felügyelje.",
-  "app.settings.sso.customerProOnly":
-    "Az ügyfélszervezetek SSO-ja csak a Pro csomagban érhető el.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "Az ügyfélszervezetek SSO-ja csak a Enterprise csomagban érhető el.",
   "app.settings.sso.statusActive": "Aktív",
   "app.settings.sso.statusPending": "Ellenőrzésre vár",
   "app.settings.sso.statusError": "Hiba",
@@ -1105,7 +1105,7 @@ export const hu: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "A tudásbázis közzétéve",
   "app.settings.portal.kbPublishedHint": "A közzétett cikkek bejelentkezés nélkül is láthatók.",
   "app.settings.portal.hidePoweredByLabel": "A „Működteti: Open HelpDesk” felirat elrejtése",
-  "app.settings.portal.hidePoweredByHint": "A Pro csomagtól érhető el.",
+  "app.settings.portal.hidePoweredByHint": "A Enterprise csomagtól érhető el.",
   "app.settings.portal.kbVisibilityLabel": "A tudásbázis láthatósága",
   "app.settings.portal.kbVisibilityPublic": "Nyilvános",
   "app.settings.portal.kbVisibilityAuthenticated": "Bejelentkezés után",
@@ -1313,6 +1313,7 @@ export const hu: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Csomag, licencek, kvóták, fizetési mód és számlatörténet.",
   "app.settings.workspace.selfHosted": "SAJÁT ÜZEMELTETÉS",
+  "app.settings.workspace.trialBadge": "PRÓBA",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     one: "havonta · {count} licenc, egyenként {price} €",
@@ -1608,7 +1609,7 @@ export const hu: Dictionary = {
   "app.settings.dev.auditTitle": "Auditnapló",
   "app.settings.dev.auditSubtitle":
     "Az adminisztrációs műveletek teljes naplója. Megőrzés 2 évig.",
-  "app.settings.dev.auditLockedTitle": "Az auditnapló csak a Pro csomagban érhető el",
+  "app.settings.dev.auditLockedTitle": "Az auditnapló csak a Enterprise csomagban érhető el",
   "app.settings.dev.auditLockedText":
     "Őrizze meg minden adminisztrációs művelet nyomát 2 évig, előtte-utána összehasonlítással és CSV-exporttal.",
   "app.settings.dev.filterActorAll": "Végrehajtó: összes",
@@ -1627,7 +1628,7 @@ export const hu: Dictionary = {
   "app.settings.dev.actorContact": "Kapcsolattartó",
   "app.settings.dev.exportUnauthorized": "Nincs hitelesítve",
   "app.settings.dev.exportForbidden": "Csak az Owner és az Admin szerepkör számára.",
-  "app.settings.dev.exportProOnly": "Az auditnapló csak a Pro csomagban érhető el.",
+  "app.settings.dev.exportEnterpriseOnly": "Az auditnapló csak a Enterprise csomagban érhető el.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Munkaterület",
@@ -1796,8 +1797,8 @@ export const hu: Dictionary = {
   /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
      produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
   "app.settings.workspace.planFree": "Free csomag",
-  "app.settings.workspace.planStandard": "Standard csomag",
-  "app.settings.workspace.planPro": "Pro csomag",
+  "app.settings.workspace.planTeam": "Team csomag",
+  "app.settings.workspace.planEnterprise": "Enterprise csomag",
 
   /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
      française ; seul l'affichage est traduit. */

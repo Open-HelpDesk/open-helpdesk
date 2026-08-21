@@ -85,7 +85,7 @@ export default async function AuditPage({
 }) {
   const t = await getT();
   const { tenant } = await requireAgent();
-  const ent = entitlementsFor(tenant.plan);
+  const ent = entitlementsFor(tenant);
   const { actor, action, days } = await searchParams;
 
   const header = (

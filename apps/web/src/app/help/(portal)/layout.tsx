@@ -21,8 +21,9 @@ export default async function PortalChromeLayout({ children }: { children: React
   const logo = (tenant?.branding as { logoUrl?: string } | null)?.logoUrl ?? null;
   // « Masquer Propulsé par Open HelpDesk » : réglage ST-09, réservé au plan Pro.
   const hidePoweredBy =
-    (tenant?.portalConfig as { hidePoweredBy?: boolean } | null)?.hidePoweredBy === true &&
-    entitlementsFor(tenant?.plan ?? "").multiBrand;
+    tenant != null &&
+    (tenant.portalConfig as { hidePoweredBy?: boolean } | null)?.hidePoweredBy === true &&
+    entitlementsFor(tenant).multiBrand;
 
   const [poweredBefore, poweredAfter] = t.parts("chrome.poweredBy", "product");
 

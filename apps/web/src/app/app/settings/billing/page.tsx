@@ -1,25 +1,26 @@
 import { notFound } from "next/navigation";
 import { isSelfHosted } from "@openhelpdesk/config";
 import { requireAgent } from "@/lib/session";
-import { attachments, db, tickets, users } from "@openhelpdesk/db";
-import { and, count, eq, gte, isNull, ne, sum } from "drizzle-orm";
+import { attachments, db, tickets } from "@openhelpdesk/db";
+import { and, count, eq, gte, isNull, sum } from "drizzle-orm";
 import { getT, type Translate } from "@/i18n/server";
 import {
-  PLAN_NAME_KEYS,
-  STORAGE_QUOTA_BYTES,
+  billingOf,
   entitlementsFor,
+  occupiedSeats,
+  planDisplayName,
   planIdOf,
-  seatQuota,
+  seatLimitFor,
 } from "@/lib/entitlements";
 import { PageHeader, PageShell } from "@/components/settings-page";
 
 const INVOICE_GRID = "150px minmax(180px,1fr) 130px 130px 110px";
 
-/** Prix mensuel par siège et par plan (ST-11). */
-const SEAT_PRICE: Record<string, number> = { free: 0, standard: 12, pro: 39 };
-
-/** Volume mensuel de référence de la jauge « illimité » (indicatif, aucun plafond). */
-const TICKETS_SCALE = 10_000;
+/**
+ * Prix mensuel de repli par siège quand l'abonnement n'est pas encore
+ * dénormalisé (essai) — Team se facture à partir du 4ᵉ agent (paliers Stripe).
+ */
+const SEAT_PRICE: Record<string, number> = { free: 0, team: 9, enterprise: 19 };
 
 /** Volume en gigaoctets, arrondi au dixieme. */
 function gbLabel(t: Translate, bytes: number): string {
@@ -70,20 +71,16 @@ export default async function BillingPage() {
   const t = await getT();
   const { tenant } = await requireAgent();
   const planId = planIdOf(tenant.plan);
-  const ent = entitlementsFor(tenant.plan);
-  const quota = seatQuota(ent);
+  const ent = entitlementsFor(tenant);
+  const billing = billingOf(tenant);
+  const seatLimit = seatLimitFor(tenant);
 
   const monthStart = new Date();
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
 
-  const [[seatRow], [ticketRow], [storageRow]] = await Promise.all([
-    db
-      .select({ n: count() })
-      .from(users)
-      .where(
-        and(eq(users.tenantId, tenant.id), eq(users.status, "active"), ne(users.role, "viewer")),
-      ),
+  const [seats, [ticketRow], [storageRow]] = await Promise.all([
+    occupiedSeats(tenant.id),
     db
       .select({ n: count() })
       .from(tickets)
@@ -100,17 +97,19 @@ export default async function BillingPage() {
       .where(eq(attachments.tenantId, tenant.id)),
   ]);
 
-  const seats = seatRow?.n ?? 0;
   const monthTickets = ticketRow?.n ?? 0;
   const storageBytes = Number(storageRow?.total ?? 0);
 
-  const planName = t(PLAN_NAME_KEYS[planId]);
-  const seatPrice = SEAT_PRICE[planId] ?? 0;
-  const monthly = seatPrice * quota;
+  const planName = planDisplayName(tenant, t);
+  // Abonnement dénormalisé par le control plane ; repli sur la grille publique
+  // (essai ou tenant pas encore facturé). Team : 3 premiers sièges inclus.
+  const seatPrice = billing.seatPriceCents != null ? billing.seatPriceCents / 100 : (SEAT_PRICE[planId] ?? 0);
+  const billedSeats = billing.seats ?? Math.max(0, seats - (planId === "team" ? 3 : 0));
+  const monthly = planId === "free" ? 0 : seatPrice * billedSeats;
   const seatLine =
-    seatPrice > 0
-      ? t("app.settings.workspace.seatPricing", { count: quota, price: seatPrice })
-      : t("app.settings.workspace.seatsIncluded", { count: quota });
+    monthly > 0
+      ? t("app.settings.workspace.seatPricing", { count: billedSeats, price: seatPrice })
+      : t("app.settings.workspace.seatsIncluded", { count: Math.max(seats, 1) });
 
   return (
     <PageShell maxWidth={1040}>
@@ -151,7 +150,9 @@ export default async function BillingPage() {
                   color: "var(--acc)",
                 }}
               >
-                {t("app.settings.workspace.selfHosted")}
+                {tenant.status === "trial"
+                  ? t("app.settings.workspace.trialBadge")
+                  : planName}
               </span>
             </div>
             <div className="flex flex-wrap items-baseline" style={{ gap: 6 }}>
@@ -218,18 +219,22 @@ export default async function BillingPage() {
             </p>
             <QuotaRow
               label={t("app.settings.workspace.quotaSeats")}
-              value={`${seats} / ${quota}`}
-              pct={quota > 0 ? (seats / quota) * 100 : 0}
+              value={seatLimit != null ? `${seats} / ${seatLimit}` : `${seats}`}
+              pct={seatLimit != null && seatLimit > 0 ? (seats / seatLimit) * 100 : 0}
             />
             <QuotaRow
               label={t("app.settings.workspace.quotaTickets")}
               value={t("app.settings.workspace.quotaTicketsValue", { tickets: monthTickets })}
-              pct={(monthTickets / TICKETS_SCALE) * 100}
+              pct={0}
             />
             <QuotaRow
               label={t("app.settings.workspace.quotaStorage")}
-              value={`${gbLabel(t, storageBytes)} / ${gbLabel(t, STORAGE_QUOTA_BYTES)}`}
-              pct={(storageBytes / STORAGE_QUOTA_BYTES) * 100}
+              value={
+                ent.maxStorageBytes != null
+                  ? `${gbLabel(t, storageBytes)} / ${gbLabel(t, ent.maxStorageBytes)}`
+                  : gbLabel(t, storageBytes)
+              }
+              pct={ent.maxStorageBytes != null ? (storageBytes / ent.maxStorageBytes) * 100 : 0}
             />
           </div>
         </div>

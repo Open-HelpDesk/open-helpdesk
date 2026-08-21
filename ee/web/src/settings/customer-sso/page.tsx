@@ -17,7 +17,7 @@ import {
   LockedScreen,
   PageHeader,
   PageShell,
-  PlanProBadge,
+  EnterpriseBadge,
   StatusPill,
 } from "@/components/settings-page";
 import { Drawer } from "@/components/settings-overlays";
@@ -98,7 +98,7 @@ export default async function CustomerSsoPage({
 }) {
   const t = await getT();
   const { tenant } = await requireAgent();
-  const ent = entitlementsFor(tenant.plan);
+  const ent = entitlementsFor(tenant);
   const { filter, q } = await searchParams;
   const query = (q ?? "").trim().toLowerCase();
 
@@ -324,7 +324,7 @@ export default async function CustomerSsoPage({
               <span className="font-semibold" style={{ fontSize: 13.5, color: "var(--ink)" }}>
                 {t("app.settings.sso.delegationTitle")}
               </span>
-              <PlanProBadge />
+              <EnterpriseBadge />
             </div>
             <p style={{ fontSize: 12.5, color: "var(--ink-2)", textWrap: "pretty" }}>
               {t("app.settings.sso.delegationText")}

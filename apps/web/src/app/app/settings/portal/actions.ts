@@ -22,7 +22,7 @@ export async function savePortalConfig(formData: FormData) {
   const { tenant } = await requireManager();
   const section = formData.get("section") === "widget" ? "widget" : "portal";
   const config = ((tenant.portalConfig as PortalConfig) ?? {}) as PortalConfig;
-  const ent = entitlementsFor(tenant.plan);
+  const ent = entitlementsFor(tenant);
 
   let next: PortalConfig;
   if (section === "portal") {

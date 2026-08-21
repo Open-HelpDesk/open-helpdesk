@@ -3,20 +3,10 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db, mailboxes, teamMembers, teams, tickets, users } from "@openhelpdesk/db";
-import { and, count, eq, inArray, ne } from "drizzle-orm";
-import { seatLimitFor } from "@/lib/entitlements";
+import { and, eq, inArray } from "drizzle-orm";
+import { occupiedSeats, seatLimitFor } from "@/lib/entitlements";
 import { requireManager } from "../guard";
 
-/** Sièges occupés : agents non désactivés hors viewer — une invitation réserve le sien (ST-02). */
-async function occupiedSeats(tenantId: string): Promise<number> {
-  const [row] = await db
-    .select({ n: count() })
-    .from(users)
-    .where(
-      and(eq(users.tenantId, tenantId), ne(users.status, "disabled"), ne(users.role, "viewer")),
-    );
-  return row?.n ?? 0;
-}
 
 /** ST-02 — Invitation multi-emails (séparés par des virgules) avec un rôle commun. */
 export async function inviteAgents(formData: FormData) {
@@ -37,7 +27,7 @@ export async function inviteAgents(formData: FormData) {
   // Quota de sièges (cloud) : les invitations payantes ne dépassent pas la limite
   // du plan. Les emails déjà connus ne consomment rien — l'insert ci-dessous est
   // en onConflictDoNothing.
-  const limit = seatLimitFor(tenant.plan);
+  const limit = seatLimitFor(tenant);
   if (limit !== null && safeRole !== "viewer") {
     const existing = await db
       .select({ email: users.email })
@@ -84,7 +74,7 @@ export async function updateAgentRole(formData: FormData) {
 
   // Passage viewer → rôle payant : consomme un siège (cloud).
   if (target.role === "viewer" && role !== "viewer" && target.status !== "disabled") {
-    const limit = seatLimitFor(tenant.plan);
+    const limit = seatLimitFor(tenant);
     if (limit !== null && (await occupiedSeats(tenant.id)) >= limit) {
       redirect("/app/settings/team?error=seats");
     }
@@ -112,7 +102,7 @@ export async function toggleAgentActive(formData: FormData) {
 
   if (target.status === "disabled") {
     // Réactivation : le siège doit être disponible (cloud).
-    const limit = seatLimitFor(tenant.plan);
+    const limit = seatLimitFor(tenant);
     if (limit !== null && target.role !== "viewer" && (await occupiedSeats(tenant.id)) >= limit) {
       redirect("/app/settings/team?error=seats");
     }

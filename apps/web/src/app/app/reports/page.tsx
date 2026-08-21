@@ -495,7 +495,7 @@ export default async function ReportsPage({
               letterSpacing: ".04em",
             }}
           >
-            {t("app.reports.proPlanBadge")}
+            {t("app.reports.enterprisePlanBadge")}
           </span>
           <span className="flex-1" />
           {/* Le CTA mène à ST-11, invisible en auto-hébergé : pas de lien mort. */}

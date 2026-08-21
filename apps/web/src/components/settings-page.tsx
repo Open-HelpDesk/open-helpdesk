@@ -337,7 +337,7 @@ export function Gauge({
   );
 }
 
-export function PlanProBadge({ label }: { label?: string }) {
+export function EnterpriseBadge({ label }: { label?: string }) {
   const t = useT();
   return (
     <span
@@ -350,7 +350,7 @@ export function PlanProBadge({ label }: { label?: string }) {
         color: "var(--new)",
       }}
     >
-      {label ?? t("app.settings.shell.planPro")}
+      {label ?? t("app.settings.shell.planEnterprise")}
     </span>
   );
 }
@@ -389,7 +389,7 @@ export function LockedScreen({
             boxShadow: "0 12px 32px rgba(17,33,28,.14)",
           }}
         >
-          <PlanProBadge label={variant === "self-hosted" ? "EE" : undefined} />
+          <EnterpriseBadge label={variant === "self-hosted" ? "EE" : undefined} />
           <h2 className="mt-3 font-semibold" style={{ fontSize: 16, color: "var(--ink)" }}>
             {title}
           </h2>
@@ -402,7 +402,7 @@ export function LockedScreen({
               className="mt-4 inline-flex items-center rounded-md px-4 font-semibold text-white"
               style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
             >
-              {t("app.settings.shell.upgradeToPro")}
+              {t("app.settings.shell.upgradeToEnterprise")}
             </Link>
           )}
         </div>

@@ -93,6 +93,20 @@ export const tenants = app.table("tenants", {
   locale: text("locale").notNull().default("fr"),
   timezone: text("timezone").notNull().default("Europe/Paris"),
   plan: text("plan").notNull().default("free"),
+  /*
+   * Cycle de vie et facturation — colonnes DÉNORMALISÉES en édition cloud :
+   * le control plane privé les écrit (applyTenantBillingState), apps/web ne
+   * fait que les lire. En auto-hébergé elles restent à leurs défauts.
+   */
+  /** active | trial | suspended | deleting. */
+  status: text("status").notNull().default("active"),
+  trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }),
+  /** PlanEntitlements résolu (plan + overrides) — null : défauts du plan. */
+  entitlements: jsonb("entitlements"),
+  /** Libellé d'un plan privé négocié — null : clé i18n du plan public. */
+  planName: text("plan_name"),
+  /** { seats, interval, seatPriceCents, currency, currentPeriodEnd, cancelAtPeriodEnd, dunningDeadline } */
+  billing: jsonb("billing"),
   featureFlags: jsonb("feature_flags").notNull().default({}),
   branding: jsonb("branding").notNull().default({}),
   ticketNumberFormat: text("ticket_number_format").notNull().default("#{number}"),

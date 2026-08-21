@@ -638,7 +638,7 @@ export const bg: Dictionary = {
   "app.reports.columnAgent": "Агент",
   "app.reports.columnFirstReply": "1-ви отговор",
   "app.reports.customReports": "Персонализирани отчети",
-  "app.reports.proPlanBadge": "ПЛАН PRO",
+  "app.reports.enterprisePlanBadge": "ПЛАН ENTERPRISE",
   "app.reports.discover": "Научете повече",
   "app.reports.chartDailyAria": "{labelA} и {labelB} по дни",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -661,8 +661,8 @@ export const bg: Dictionary = {
   "app.settings.shell.saved": "✓ Запазено",
   "app.settings.shell.cancel": "Отказ",
   "app.settings.shell.save": "Запазване",
-  "app.settings.shell.planPro": "ПЛАН PRO",
-  "app.settings.shell.upgradeToPro": "Преминаване към план Pro",
+  "app.settings.shell.planEnterprise": "ПЛАН ENTERPRISE",
+  "app.settings.shell.upgradeToEnterprise": "Преминаване към план Enterprise",
   "app.settings.shell.eeSelfHostedTitle": "Функция от изданието Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Тази функция е предмет на търговския лиценз (директорията ee/ в хранилището) и не е включена в самостоятелно хостваното издание с отворен код.",
@@ -836,10 +836,10 @@ export const bg: Dictionary = {
   "app.settings.sso.agentTitle": "SSO за агенти",
   "app.settings.sso.agentSubtitle":
     "Единно влизане чрез SAML 2.0 и осигуряване чрез SCIM за Вашия екип по поддръжката.",
-  "app.settings.sso.agentLockedTitle": "SSO за агенти е достъпно само в план Pro",
+  "app.settings.sso.agentLockedTitle": "SSO за агенти е достъпно само в план Enterprise",
   "app.settings.sso.agentLockedText":
     "Свържете своя доставчик на идентичност по SAML 2.0, осигурявайте агентите си чрез SCIM и наложете единно влизане на целия екип.",
-  "app.settings.sso.agentProOnly": "SSO за агенти е достъпно само в план Pro.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO за агенти е достъпно само в план Enterprise.",
   "app.settings.sso.idpOther": "Друг (общ SAML)",
   "app.settings.sso.samlToggleLabel": "Включване на единното влизане чрез SAML 2.0",
   "app.settings.sso.samlHeading": "Единно влизане чрез SAML 2.0",
@@ -928,11 +928,11 @@ export const bg: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Всяка клиентска организация свързва своя доставчик на идентичност от портала. Тук наблюдавате всички връзки.",
   "app.settings.sso.customerLockedTitle":
-    "SSO за клиентските организации е достъпно само в план Pro",
+    "SSO за клиентските организации е достъпно само в план Enterprise",
   "app.settings.sso.customerLockedText":
     "Позволете на всяка клиентска организация да включи своя доставчик на идентичност (SAML или OIDC) и наблюдавайте всички връзки от този екран.",
-  "app.settings.sso.customerProOnly":
-    "SSO за клиентските организации е достъпно само в план Pro.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "SSO за клиентските организации е достъпно само в план Enterprise.",
   "app.settings.sso.statusActive": "Активна",
   "app.settings.sso.statusPending": "За потвърждаване",
   "app.settings.sso.statusError": "Грешка",
@@ -1089,7 +1089,7 @@ export const bg: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Базата знания е публикувана",
   "app.settings.portal.kbPublishedHint": "Публикуваните статии се виждат без вход.",
   "app.settings.portal.hidePoweredByLabel": "Скриване на „Задвижвано от Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Достъпно от план Pro нататък.",
+  "app.settings.portal.hidePoweredByHint": "Достъпно от план Enterprise нататък.",
   "app.settings.portal.kbVisibilityLabel": "Видимост на базата знания",
   "app.settings.portal.kbVisibilityPublic": "Публична",
   "app.settings.portal.kbVisibilityAuthenticated": "Само след вход",
@@ -1296,6 +1296,7 @@ export const bg: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "План, места, квоти, начин на плащане и история на фактурите.",
   "app.settings.workspace.selfHosted": "СОБСТВЕН ХОСТИНГ",
+  "app.settings.workspace.trialBadge": "ПРОБЕН",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     one: "на месец · {count} място по {price} €",
@@ -1567,7 +1568,7 @@ export const bg: Dictionary = {
   "app.settings.dev.auditTitle": "Одитен дневник",
   "app.settings.dev.auditSubtitle":
     "Пълен дневник на административните действия. Съхранение 2 години.",
-  "app.settings.dev.auditLockedTitle": "Одитният дневник е достъпен само в план Pro",
+  "app.settings.dev.auditLockedTitle": "Одитният дневник е достъпен само в план Enterprise",
   "app.settings.dev.auditLockedText":
     "Запазвайте следа от всяко административно действие в продължение на 2 години, с разлика преди/след и експорт в CSV.",
   "app.settings.dev.filterActorAll": "Извършител: всички",
@@ -1589,7 +1590,7 @@ export const bg: Dictionary = {
   "app.settings.dev.actorContact": "Контакт",
   "app.settings.dev.exportUnauthorized": "Неоторизиран",
   "app.settings.dev.exportForbidden": "Само за ролите Owner и Admin.",
-  "app.settings.dev.exportProOnly": "Одитният дневник е достъпен само в план Pro.",
+  "app.settings.dev.exportEnterpriseOnly": "Одитният дневник е достъпен само в план Enterprise.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Работно пространство",
@@ -1746,8 +1747,8 @@ export const bg: Dictionary = {
   "app.settings.rules.matchAny": "поне едно",
 
   "app.settings.workspace.planFree": "План Free",
-  "app.settings.workspace.planStandard": "План Standard",
-  "app.settings.workspace.planPro": "План Pro",
+  "app.settings.workspace.planTeam": "План Team",
+  "app.settings.workspace.planEnterprise": "План Enterprise",
 
   "app.ticket.typeQuestion": "Въпрос",
   "app.ticket.typeIncident": "Инцидент",

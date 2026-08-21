@@ -9,9 +9,9 @@ import { getT } from "@/i18n/server";
 
 async function requirePro() {
   const current = await requireManager();
-  if (!entitlementsFor(current.tenant.plan).customerSso) {
+  if (!entitlementsFor(current.tenant).customerSso) {
     const t = await getT();
-    throw new Error(t("app.settings.sso.customerProOnly"));
+    throw new Error(t("app.settings.sso.customerEnterpriseOnly"));
   }
   return current;
 }

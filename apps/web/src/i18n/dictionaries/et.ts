@@ -646,7 +646,7 @@ export const et: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. vastus",
   "app.reports.customReports": "Kohandatud aruanded",
-  "app.reports.proPlanBadge": "PRO PAKETT",
+  "app.reports.enterprisePlanBadge": "ENTERPRISE PAKETT",
   "app.reports.discover": "Tutvu lähemalt",
   "app.reports.chartDailyAria": "{labelA} ja {labelB} päevade kaupa",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -669,8 +669,8 @@ export const et: Dictionary = {
   "app.settings.shell.saved": "✓ Salvestatud",
   "app.settings.shell.cancel": "Tühista",
   "app.settings.shell.save": "Salvesta",
-  "app.settings.shell.planPro": "PRO PAKETT",
-  "app.settings.shell.upgradeToPro": "Mine üle Pro paketile",
+  "app.settings.shell.planEnterprise": "ENTERPRISE PAKETT",
+  "app.settings.shell.upgradeToEnterprise": "Mine üle Enterprise paketile",
   "app.settings.shell.eeSelfHostedTitle": "Väljaande Enterprise Edition funktsioon",
   "app.settings.shell.eeSelfHostedText":
     "See funktsioon kuulub kommertslitsentsi alla (hoidla kataloog ee/) ega sisaldu ise majutatavas avatud lähtekoodiga väljaandes.",
@@ -841,10 +841,10 @@ export const et: Dictionary = {
   "app.settings.sso.agentTitle": "Agentide SSO",
   "app.settings.sso.agentSubtitle":
     "SAML 2.0 ühekordne sisselogimine ja SCIM-provisioneerimine teie tugitiimile.",
-  "app.settings.sso.agentLockedTitle": "Agentide SSO on ainult Pro paketis",
+  "app.settings.sso.agentLockedTitle": "Agentide SSO on ainult Enterprise paketis",
   "app.settings.sso.agentLockedText":
     "Ühendage oma SAML 2.0 identiteedipakkuja, provisioneerige agendid SCIM-i kaudu ja nõudke ühekordset sisselogimist kogu tiimilt.",
-  "app.settings.sso.agentProOnly": "Agentide SSO on ainult Pro paketis.",
+  "app.settings.sso.agentEnterpriseOnly": "Agentide SSO on ainult Enterprise paketis.",
   "app.settings.sso.idpOther": "Muu (üldine SAML)",
   "app.settings.sso.samlToggleLabel": "Luba SAML 2.0 ühekordne sisselogimine",
   "app.settings.sso.samlHeading": "SAML 2.0 ühekordne sisselogimine",
@@ -931,10 +931,10 @@ export const et: Dictionary = {
   "app.settings.sso.customerTitle": "Kliendiorganisatsioonide SSO",
   "app.settings.sso.customerSubtitle":
     "Iga kliendiorganisatsioon ühendab portaalist oma identiteedipakkuja. Siin jälgite kogu tervikpilti.",
-  "app.settings.sso.customerLockedTitle": "Kliendiorganisatsioonide SSO on ainult Pro paketis",
+  "app.settings.sso.customerLockedTitle": "Kliendiorganisatsioonide SSO on ainult Enterprise paketis",
   "app.settings.sso.customerLockedText":
     "Laske igal kliendiorganisatsioonil ühendada oma identiteedipakkuja (SAML või OIDC) ja jälgige kogu tervikpilti sellelt ekraanilt.",
-  "app.settings.sso.customerProOnly": "Kliendiorganisatsioonide SSO on ainult Pro paketis.",
+  "app.settings.sso.customerEnterpriseOnly": "Kliendiorganisatsioonide SSO on ainult Enterprise paketis.",
   "app.settings.sso.statusActive": "Aktiivne",
   "app.settings.sso.statusPending": "Kinnitamata",
   "app.settings.sso.statusError": "Viga",
@@ -1092,7 +1092,7 @@ export const et: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Teadmusbaas on avaldatud",
   "app.settings.portal.kbPublishedHint": "Avaldatud artiklid on nähtavad ilma sisselogimiseta.",
   "app.settings.portal.hidePoweredByLabel": "Peida „Teenuse pakub Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Saadaval alates Pro paketist.",
+  "app.settings.portal.hidePoweredByHint": "Saadaval alates Enterprise paketist.",
   "app.settings.portal.kbVisibilityLabel": "Teadmusbaasi nähtavus",
   "app.settings.portal.kbVisibilityPublic": "Avalik",
   "app.settings.portal.kbVisibilityAuthenticated": "Sisselogimisel",
@@ -1299,6 +1299,7 @@ export const et: Dictionary = {
   "app.settings.workspace.billingSubtitle":
     "Pakett, kohad, kvoodid, makseviis ja arvete ajalugu.",
   "app.settings.workspace.selfHosted": "ISEMAJUTATUD",
+  "app.settings.workspace.trialBadge": "PROOV",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
     one: "kuus · {count} koht hinnaga {price} €",
@@ -1586,7 +1587,7 @@ export const et: Dictionary = {
   "app.settings.dev.auditTitle": "Auditilogi",
   "app.settings.dev.auditSubtitle":
     "Kõigi haldustoimingute täielik logi. Säilitusaeg 2 aastat.",
-  "app.settings.dev.auditLockedTitle": "Auditilogi on ainult Pro paketis",
+  "app.settings.dev.auditLockedTitle": "Auditilogi on ainult Enterprise paketis",
   "app.settings.dev.auditLockedText":
     "Hoidke iga haldustoimingu jälge 2 aastat, koos enne/pärast võrdlusega ja CSV ekspordiga.",
   "app.settings.dev.filterActorAll": "Tegija: kõik",
@@ -1608,7 +1609,7 @@ export const et: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Autoriseerimata",
   "app.settings.dev.exportForbidden": "Ainult rollidele Owner ja Admin.",
-  "app.settings.dev.exportProOnly": "Auditilogi on ainult Pro paketis.",
+  "app.settings.dev.exportEnterpriseOnly": "Auditilogi on ainult Enterprise paketis.",
 
   /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
   "app.settingsNav.groupWorkspace": "Tööruum",
@@ -1776,8 +1777,8 @@ export const et: Dictionary = {
   /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
      produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
   "app.settings.workspace.planFree": "Free pakett",
-  "app.settings.workspace.planStandard": "Standard pakett",
-  "app.settings.workspace.planPro": "Pro pakett",
+  "app.settings.workspace.planTeam": "Team pakett",
+  "app.settings.workspace.planEnterprise": "Enterprise pakett",
 
   /* Types de ticket (AG-05). Attention : la VALEUR enregistrée en base reste la
      chaîne française — seul l'affichage est traduit. */

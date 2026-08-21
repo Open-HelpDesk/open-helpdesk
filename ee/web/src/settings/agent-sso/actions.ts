@@ -32,9 +32,9 @@ export type AgentSsoConfig = {
 
 async function requirePro() {
   const current = await requireManager();
-  if (!entitlementsFor(current.tenant.plan).agentSso) {
+  if (!entitlementsFor(current.tenant).agentSso) {
     const t = await getT();
-    throw new Error(t("app.settings.sso.agentProOnly"));
+    throw new Error(t("app.settings.sso.agentEnterpriseOnly"));
   }
   return current;
 }
