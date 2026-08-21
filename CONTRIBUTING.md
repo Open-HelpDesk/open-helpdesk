@@ -34,14 +34,10 @@ Then open http://acme.localhost:3000 — demo login `marie.dupont@acme.example` 
 ## Scope of contributions
 
 - **Core (everything outside `ee/`)**: contributions welcome — bug fixes,
-  features from the roadmap (`specs/01-produit-et-architecture.md` § 9),
-  translations, documentation.
+  features from the roadmap (see the README), translations, documentation.
 - **`ee/`**: commercially licensed; contributions are by invitation. By
   submitting changes to `ee/`, you agree they are assigned to the copyright
   holder (see `ee/LICENSE`).
-
-Note: product specifications and design notes (`specs/`, `design-notes/`) are
-currently written in French.
 
 ## Developer Certificate of Origin
 

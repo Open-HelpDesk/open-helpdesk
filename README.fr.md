@@ -18,13 +18,10 @@ L'instance répond sur http://localhost:3000 avec le workspace de démonstration
 (`marie.dupont@acme.example` / `demo-openhelpdesk`). La carte « Santé de
 l'installation » (Paramètres → Général) dit ce qu'il reste à configurer.
 
-- **Spécifications** (51 écrans, v1.2) : [`specs/`](specs/README.md)
-- **Maquettes validées** : [`design/`](design/) — références d'implémentation extraites
-  dans [`design-notes/`](design-notes/)
-- **Fidélité design** : les 32 écrans produit (AG-01→10, ST-01→14, PT-01→08) sont
-  implémentés au plus près des maquettes ; les défauts imaginés par le design (macros,
-  politiques SLA, règles, équipes, horaires, champs) sont installés dans tout nouveau
-  workspace par `packages/db/src/seed/defaults.ts`
+- Les 32 écrans produit sont implémentés au plus près des maquettes de référence ;
+  les défauts imaginés par le design (macros, politiques SLA, règles, équipes,
+  horaires, champs) sont installés dans tout nouveau workspace par
+  `packages/db/src/seed/defaults.ts`
 
 ## Structure
 
@@ -67,7 +64,7 @@ Puis ouvrir **http://acme.localhost:3000** — le middleware résout le tenant p
 sous-domaine ({slug}.BASE_DOMAIN, voir `.env.example`). Connexion de démo :
 `marie.dupont@acme.example` / `demo-openhelpdesk`.
 
-## État d'avancement (roadmap specs/01 § 9)
+## État d'avancement
 
 | Lot | Contenu | État |
 |---|---|---|

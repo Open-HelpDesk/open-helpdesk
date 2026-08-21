@@ -1,15 +1,18 @@
-# Contexte de build Docker : le code et les manifestes, rien du poste de travail.
-node_modules
+# Contexte de build Docker en liste blanche : seul le produit entre dans l'image.
+*
+!apps
+!packages
+!ee
+!docker
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!turbo.json
+!tsconfig.base.json
+!.env.example
+# … et jamais les artefacts de build, même sous les dossiers autorisés.
 **/node_modules
 **/.next
-.git
-.env
-.env.*
-!.env.example
-design
-design-notes
-specs
-specs-v2
-specs-v3
-*.png
-*.log
+**/.turbo
+**/test-results
+**/playwright-report

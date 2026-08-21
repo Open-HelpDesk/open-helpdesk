@@ -1,4 +1,4 @@
-# Auto-hébergement — la promesse « trois commandes » (SM-06) :
+# Auto-hébergement — la promesse « trois commandes » :
 #   git clone https://github.com/open-helpdesk/open-helpdesk && cd open-helpdesk
 #   cp .env.example .env        # puis renseigner les secrets
 #   docker compose up -d

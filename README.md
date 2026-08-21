@@ -70,14 +70,13 @@ Then open http://acme.localhost:3000. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Everything outside [`ee/`](ee/) is [AGPL-3.0](LICENSE). The `ee/` directory is
 source-visible but requires a commercial agreement for production use — see
-[`ee/LICENSE`](ee/LICENSE). The full breakdown lives in
-`specs/01-produit-et-architecture.md` § 6.
+[`ee/LICENSE`](ee/LICENSE).
 
 ## Documentation
 
-Product specifications (51 screens), design system and implementation notes
-live in [`specs/`](specs/README.md) and [`design-notes/`](design-notes/) —
-**currently written in French**. English documentation is planned.
+English documentation is planned. In the meantime, [CONTRIBUTING.md](CONTRIBUTING.md)
+covers the development setup, and the diagnostics card (Settings → General)
+covers the installation.
 
 Une version française de ce README est disponible : [README.fr.md](README.fr.md).
 

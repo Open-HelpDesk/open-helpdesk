@@ -1,7 +1,7 @@
 # /ee — Édition Entreprise
 
-Ce dossier contient les fonctionnalités sous **licence commerciale** (modèle open-core,
-voir `specs/01-produit-et-architecture.md` § 1 et § 6) :
+Ce dossier contient les fonctionnalités sous **licence commerciale** (modèle
+open-core, voir la section « Editions & licensing » du README) :
 
 - SSO SAML/SCIM des agents (ST-13) — `ee/web/src/settings/agent-sso`
 - SSO délégué des organisations clientes (ST-14, PT-08) — `ee/web/src/settings/customer-sso`, `ee/web/src/portal`
