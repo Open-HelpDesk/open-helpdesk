@@ -1,7 +1,8 @@
 {
   "name": "@openhelpdesk/www",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
+  "license": "AGPL-3.0-only",
   "scripts": {
     "dev": "next dev --port 3002",
     "build": "next build",

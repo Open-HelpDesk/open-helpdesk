@@ -63,9 +63,6 @@ const processors: Record<QueueName, Processor> = {
     const applied = await runScheduledRules();
     if (applied) console.log(`[automations] règles horaires : ${applied} application(s)`);
   },
-  provisioning: async (job) => {
-    console.log(`[provisioning] job ${job.id} — à implémenter (Lot 4)`);
-  },
   housekeeping: async () => {
     // Rétention 90 j des événements d'auth SSO (specs/15 § 3).
     await db

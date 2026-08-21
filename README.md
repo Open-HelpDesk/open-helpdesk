@@ -1,67 +1,95 @@
 # Open HelpDesk
 
-Plateforme de ticketing **open-core** : un cœur open source auto-hébergeable (AGPL-3.0 +
-dossier `/ee` sous licence commerciale), et une offre cloud managée en sous-domaines de
-`open-helpdesk.com`.
+**Open-core helpdesk you can actually self-host.** Ticketing, email channel,
+automations, SLA, CSAT, knowledge base and customer portal — AGPL-3.0 core,
+commercial features in [`ee/`](ee/), and a managed cloud on the way.
 
-- **Spécifications** (51 écrans, v1.2) : [`specs/`](specs/README.md)
-- **Maquettes validées** : [`design/`](design/) — références d'implémentation extraites
-  dans [`design-notes/`](design-notes/)
-- **Fidélité design** : les 32 écrans produit (AG-01→10, ST-01→14, PT-01→08) sont
-  implémentés au plus près des maquettes ; les défauts imaginés par le design (macros,
-  politiques SLA, règles, équipes, horaires, champs) sont installés dans tout nouveau
-  workspace par `packages/db/src/seed/defaults.ts`
+[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
+[![CI](https://github.com/open-helpdesk/open-helpdesk/actions/workflows/ci.yml/badge.svg)](https://github.com/open-helpdesk/open-helpdesk/actions/workflows/ci.yml)
+[![Status: Alpha](https://img.shields.io/badge/status-alpha-orange)](CHANGELOG.md)
 
-## Structure
+> **Alpha.** The core product (roadmap lots 0–3) works end-to-end and is
+> covered by a Playwright smoke suite, but APIs, schema and screens still move
+> fast. Not production-advice yet — perfect time to try it and open issues.
 
-```
-apps/
-  web/       Produit : espace agent + admin tenant + portail client (Next.js)
-  console/   Control plane cloud — console interne (Next.js, accent cuivre)
-  www/       Site vitrine + signup (Next.js)
-  worker/    Jobs BullMQ : SLA, envoi et ingestion email, automatisations, provisioning
-packages/
-  config/    Constantes partagées (statuts, plans, sous-domaines réservés…)
-  crypto/    Chiffrement AES-256-GCM des secrets (SMTP, clés d'API, SSO)
-  mail/      Envoi (SMTP, Resend, Brevo, Mailjet) + ingestion + boîte d'envoi
-  db/        Schémas PostgreSQL app + cloud (Drizzle), RLS, seed de démo
-  ui/        Design system — tokens extraits des maquettes
-ee/          Fonctionnalités sous licence commerciale (SSO, audit log, IA…)
-docker/      postgres + redis + minio + mailpit (SMTP de développement)
-```
+![Ticket view](.github/assets/ticket.png)
 
-## Démarrage
+## Features
+
+- **Ticketing** — conversations, internal notes, priorities, views, macros,
+  tags, keyboard-first inbox, ⌘K palette
+- **Email channel** — outbound via SMTP, Resend, Brevo or Mailjet (credentials
+  encrypted at rest); inbound via provider webhooks or IMAP polling
+- **Automations** — trigger rules, scheduled rules, round-robin assignment,
+  auto-close
+- **SLA & CSAT** — policies with business hours, satisfaction surveys
+- **Knowledge base & portal** — public help center, embeddable widget,
+  magic-link customer accounts, article voting and search deflection
+- **Reports** — operational dashboard, CSV export
+- **Multi-tenant** — subdomain resolution, PostgreSQL row-level security
+- **25 languages** — the 24 official EU languages + Norwegian, with strict
+  dictionary parity enforced at compile time
+- **Installation diagnostics** — a six-probe health card in Settings → General
+
+## Self-host in three commands
 
 ```bash
-corepack enable                 # active pnpm (version épinglée dans package.json)
-pnpm install
-cp .env.example .env
-docker compose -f docker/docker-compose.yml up -d
-pnpm db:generate && pnpm db:migrate
-psql "$DATABASE_URL" -f packages/db/sql/rls.sql
-pnpm db:seed                    # workspace de démo « Acme Support »
-pnpm db:seed:auth               # comptes agents de démo
-pnpm dev                        # web :3000 · console :3001 · www :3002 · worker
+git clone https://github.com/open-helpdesk/open-helpdesk && cd open-helpdesk
+cp .env.example .env   # set BETTER_AUTH_SECRET and ENCRYPTION_KEY
+docker compose up -d
 ```
 
-Les emails de développement sont capturés par **Mailpit** : http://localhost:8026.
-Pour envoyer pour de vrai, chaque workspace choisit son fournisseur dans
-**Paramètres → Canaux → Email** (SMTP, Resend, Brevo ou Mailjet — identifiants chiffrés
-en base). En auto-hébergement mono-tenant, les variables `SMTP_*` / `*_API_KEY` de
-`.env` servent de configuration d'instance par défaut.
+Open http://localhost:3000 — the stack (web, worker, PostgreSQL 17, Redis,
+MinIO) starts with a demo workspace: `marie.dupont@acme.example` /
+`demo-openhelpdesk`. Set `SEED_DEMO=false` once your own agents exist. The
+diagnostics card in **Settings → General** tells you what is left to configure.
 
-Puis ouvrir **http://acme.localhost:3000** — le middleware résout le tenant par
-sous-domaine ({slug}.BASE_DOMAIN, voir `.env.example`). Connexion de démo :
-`marie.dupont@acme.example` / `demo-openhelpdesk`.
+## Development
 
-## État d'avancement (roadmap specs/01 § 9)
+```bash
+corepack enable
+pnpm install
+cp .env.example .env
+docker compose -f docker/docker-compose.yml up -d   # deps + Mailpit for emails
+pnpm db:generate && pnpm db:migrate
+pnpm --filter @openhelpdesk/db db:rls
+pnpm db:seed && pnpm db:seed:auth
+pnpm dev
+```
 
-| Lot | Contenu | État |
+Then open http://acme.localhost:3000. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Editions & licensing
+
+| | Self-hosted (AGPL-3.0) | Cloud / Enterprise |
 |---|---|---|
-| Lot 0 — Socle | Monorepo, schéma DB + RLS, multi-tenant par sous-domaine, tokens design, docker, auth (Better Auth) | **Fait** — reste : 2FA, CI |
-| Lot 1 — Cœur ticketing | Tickets, conversations, email, contacts/orgs, vues, recherche | **En cours** — fait : AG-01, AG-03, AG-04, AG-05, AG-06 (⌘K), AG-07 (contacts + blocage spam), AG-08 (organisations + domaines éditables + partage), pipeline email entrant/sortant. Reste : vues personnalisées, actions groupées, temps réel, poller IMAP, import CSV, fusion |
-| Lot 2 — Productivité | Macros, automatisations, SLA, champs, CSAT, rapports | **Quasi fait** — moteur de règles + worker, administration (ST-02, ST-05, ST-06, ST-07, ST-08 CSAT), rapports AG-09. Reste : équipes, champs custom (ST-04), heures ouvrées, drag & drop, « Tester sur un ticket », export CSV |
-| Lot 3 — Portail & KB | KB, portail client, widget, déflexion | **Fait** — portail complet (PT-01→PT-07), gestion KB (AG-10), config portail & widget (ST-09), widget embarquable, pièces jointes S3/MinIO. Reste (Lot 2 rattaché) : formulaires dynamiques ST-04 |
-| Lot 4 — Cloud | Signup, provisioning, Stripe, console | À venir |
-| Lot 5a/5b/5c — Identité & IA | SSO agents, SSO clients délégué, IA | À venir |
-| Lot 6 — Acquisition | Site vitrine, documentation publique | À venir |
+| Ticketing, email, automations, SLA, CSAT, KB, portal, reports, API | ✔ unlimited seats | ✔ |
+| Agent SSO (SAML/SCIM), customer-organization SSO, audit log | — | `ee/`, commercial license |
+| AI triage & reply suggestions, custom domains, multi-brand | — | planned |
+| Hosting, backups, support | your infra | managed |
+
+Everything outside [`ee/`](ee/) is [AGPL-3.0](LICENSE). The `ee/` directory is
+source-visible but requires a commercial agreement for production use — see
+[`ee/LICENSE`](ee/LICENSE). The full breakdown lives in
+`specs/01-produit-et-architecture.md` § 6.
+
+## Documentation
+
+Product specifications (51 screens), design system and implementation notes
+live in [`specs/`](specs/README.md) and [`design-notes/`](design-notes/) —
+**currently written in French**. English documentation is planned.
+
+Une version française de ce README est disponible : [README.fr.md](README.fr.md).
+
+## Roadmap
+
+| | |
+|---|---|
+| ✅ Lots 0–3 | Core ticketing, email, automations/SLA/CSAT, portal & KB — this release |
+| 🔜 Lot 4 | Managed cloud (signup, provisioning, billing) |
+| 🔜 Lot 5 | Enterprise identity (SAML/SCIM runtime, delegated customer SSO), AI |
+| 🔜 Lot 6 | Public website & docs |
+
+## Security
+
+Please report vulnerabilities privately — see [SECURITY.md](SECURITY.md).

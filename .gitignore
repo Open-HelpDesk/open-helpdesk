@@ -12,3 +12,5 @@ coverage/
 # Smoke test — artefacts d'exécution
 packages/smoke/test-results/
 packages/smoke/playwright-report/
+
+/*.png

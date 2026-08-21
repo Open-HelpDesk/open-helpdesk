@@ -5,7 +5,6 @@
  * - mail-send     : envoi sortant avec retries (journal email_deliveries)
  * - imap-poll     : relève des boîtes IMAP connectées (ST-03)
  * - automations   : règles horaires (relances, clôture auto à J+4)
- * - provisioning  : cycle de vie des tenants cloud (création, suspension, purge)
  * - housekeeping  : purges (SsoAuthEvent 90 j, corbeille tickets 30 j, revérif domaines 24 h)
  */
 export const QUEUE_NAMES = [
@@ -14,7 +13,6 @@ export const QUEUE_NAMES = [
   "mail-send",
   "imap-poll",
   "automations",
-  "provisioning",
   "housekeeping",
 ] as const;
 

@@ -1,0 +1,38 @@
+name: Smoke (end-to-end)
+
+on:
+  schedule:
+    - cron: "17 3 * * *" # nightly
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: cp .env.example .env
+      - run: docker compose -f docker/docker-compose.yml up -d --wait
+      - run: pnpm db:migrate
+      - run: pnpm --filter @openhelpdesk/db db:rls
+      - run: pnpm db:seed && pnpm db:seed:auth
+      - run: pnpm --filter @openhelpdesk/web build
+      - name: Start web
+        run: |
+          BASE_DOMAIN=localhost:3006 pnpm --filter @openhelpdesk/web exec next start --port 3006 &
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:3006/help && break
+            sleep 2
+          done
+      - run: pnpm --filter @openhelpdesk/smoke smoke
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: packages/smoke/playwright-report/

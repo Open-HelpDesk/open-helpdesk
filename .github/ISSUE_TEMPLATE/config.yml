@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/open-helpdesk/open-helpdesk/security/advisories/new
+    about: Please report security issues privately — never in a public issue.
+  - name: Questions & discussions
+    url: https://github.com/open-helpdesk/open-helpdesk/discussions
+    about: Ask questions and discuss ideas.
