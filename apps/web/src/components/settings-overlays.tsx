@@ -53,10 +53,10 @@ export function Drawer({
         {trigger}
       </button>
       {open && (
-        <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal>
+        <div className="fixed inset-0 z-40 flex justify-end" role="dialog" aria-modal>
           <div
             className="absolute inset-0"
-            style={{ background: "rgba(17,33,28,.35)" }}
+            style={{ background: "var(--scrim-drawer)" }}
             onClick={() => setOpen(false)}
           />
           <div
@@ -137,10 +137,11 @@ export function Modal({
           className="fixed inset-0 z-50 flex items-center justify-center"
           role="dialog"
           aria-modal
+          style={{ padding: 24 }}
         >
           <div
             className="absolute inset-0"
-            style={{ background: "rgba(17,33,28,.35)" }}
+            style={{ background: "var(--scrim-modal)" }}
             onClick={() => setOpen(false)}
           />
           <div
@@ -204,8 +205,14 @@ export function SlugConfirmField({
           onChange={(e) => setValue(e.target.value)}
           autoComplete="off"
           spellCheck={false}
-          className="rounded-md border px-2.5 py-1.5 font-mono text-sm"
-          style={{ borderColor: "var(--line)", background: "var(--bg)", color: "var(--ink)" }}
+          className="rounded-md border font-mono text-[13.5px]"
+          style={{
+            minHeight: 36,
+            padding: "7px 11px",
+            borderColor: "var(--line)",
+            background: "var(--bg)",
+            color: "var(--ink)",
+          }}
         />
       </label>
       <button

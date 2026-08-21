@@ -195,7 +195,7 @@ export default async function AuditPage({
               return (
                 <div
                   key={e.id}
-                  className="st-row grid items-center border-b"
+                  className="ohd-hover grid items-center border-b"
                   style={{
                     gridTemplateColumns: AUDIT_GRID,
                     height: 42,

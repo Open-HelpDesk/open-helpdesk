@@ -300,30 +300,13 @@ export default async function CustomerSsoPage({
               type="submit"
               role="switch"
               aria-checked={tenant.ssoDelegationEnabled}
-              className="relative block rounded-full"
-              style={{
-                width: 34,
-                height: 20,
-                background: tenant.ssoDelegationEnabled ? "var(--acc)" : "var(--line)",
-              }}
+              className="ohd-switch block"
               title={
                 tenant.ssoDelegationEnabled
                   ? t("app.settings.sso.disable")
                   : t("app.settings.sso.enable")
               }
-            >
-              <span
-                className="absolute rounded-full bg-white"
-                style={{
-                  top: 2,
-                  width: 16,
-                  height: 16,
-                  left: tenant.ssoDelegationEnabled ? 16 : 2,
-                  boxShadow: "0 1px 3px rgba(0,0,0,.25)",
-                  transition: "left .15s ease",
-                }}
-              />
-            </button>
+            />
           </form>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center" style={{ gap: 9 }}>
@@ -406,7 +389,7 @@ export default async function CustomerSsoPage({
               <Link
                 key={f.key}
                 href={`/app/settings/customer-sso${qs ? `?${qs}` : ""}`}
-                className="flex items-center border"
+                className="ohd-hover-edge flex items-center border"
                 style={{
                   ...CHIP,
                   borderColor: active ? "var(--acc)" : "var(--line)",
@@ -457,7 +440,7 @@ export default async function CustomerSsoPage({
                 <Drawer
                   key={org.id}
                   title={t("app.settings.sso.drawerTitle", { name: org.name })}
-                  triggerClassName="st-row"
+                  triggerClassName="ohd-hover"
                   triggerStyle={{
                     display: "grid",
                     gridTemplateColumns: PARK_GRID,
@@ -779,7 +762,7 @@ function OrgDetail({
           <input type="hidden" name="connectionId" value={connection.id} />
           <button
             type="submit"
-            className="w-full rounded-md border font-medium"
+            className="ohd-hover-edge-ink w-full rounded-md border font-medium"
             style={{
               height: 32,
               fontSize: 13,

@@ -268,7 +268,7 @@ export function ReplyEditor({
             type="button"
             title={b.title}
             onClick={b.run}
-            className="grid place-items-center hover:opacity-70"
+            className="grid place-items-center ohd-hover"
             style={{
               ...toolBtn,
               fontWeight: b.label === "B" ? 700 : 400,
@@ -311,7 +311,7 @@ export function ReplyEditor({
                   key={m.id}
                   type="button"
                   onClick={() => applyMacro(m.id)}
-                  className="px-3 py-1.5 text-left text-[12.5px] hover:opacity-70"
+                  className="px-3 py-1.5 text-left text-[12.5px] ohd-hover"
                 >
                   {m.category && (
                     <span style={{ color: "var(--ink-3)" }}>{m.category} · </span>
@@ -362,7 +362,7 @@ export function ReplyEditor({
                     insertAtCursor(v.key);
                     setVarMenu(false);
                   }}
-                  className="flex items-baseline justify-between gap-3 px-3 py-1.5 text-left text-[12.5px] hover:opacity-70"
+                  className="flex items-baseline justify-between gap-3 px-3 py-1.5 text-left text-[12.5px] ohd-hover"
                 >
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: 11.5 }}>
                     {v.key}
@@ -458,7 +458,7 @@ export function ReplyEditor({
                       setNextStatus(s);
                       setStatusMenu(false);
                     }}
-                    className="px-3 py-1.5 text-left text-[12.5px] hover:opacity-70"
+                    className="px-3 py-1.5 text-left text-[12.5px] ohd-hover"
                     style={{
                       fontWeight: s === nextStatus ? 600 : 400,
                       color: s === nextStatus ? "var(--acc)" : "var(--ink)",

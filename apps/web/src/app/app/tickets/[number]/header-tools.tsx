@@ -59,8 +59,8 @@ export function MergeChip({ ticketId, ticketNumber }: { ticketId: string; ticket
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center"
-          style={{ background: "rgba(8,14,12,.42)", paddingTop: "18vh" }}
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ background: "var(--scrim-modal)", padding: 24 }}
           onClick={() => setOpen(false)}
         >
           <div

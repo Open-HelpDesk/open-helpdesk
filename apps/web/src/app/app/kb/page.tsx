@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { isManager, requireAgent } from "@/lib/session";
 import { db, kbArticles, kbCategories, users } from "@openhelpdesk/db";
@@ -108,10 +109,10 @@ export default async function KbPage({
       padding: "6px 9px",
       borderRadius: 6,
       fontSize: 13,
-      background: active ? "var(--acc-t)" : "transparent",
+      "--row-bg": active ? "var(--acc-t)" : "transparent",
       color: active ? "var(--acc)" : "var(--ink)",
       fontWeight: active ? 600 : 400,
-    }) as const;
+    }) as CSSProperties;
 
   // État vide global.
   if (parents.length === 0) {
@@ -186,7 +187,7 @@ export default async function KbPage({
               <li key={c.id}>
                 <Link
                   href={`/app/kb?cat=${c.id}`}
-                  className="flex items-center gap-1.5"
+                  className="ohd-row flex items-center gap-1.5"
                   style={itemStyle(active)}
                 >
                   <span
@@ -215,7 +216,7 @@ export default async function KbPage({
                         <li key={k.id}>
                           <Link
                             href={`/app/kb?cat=${k.id}`}
-                            className="flex items-center gap-1.5"
+                            className="ohd-row flex items-center gap-1.5"
                             style={{ ...itemStyle(kidActive), paddingLeft: 26 }}
                           >
                             <span className="min-w-0 flex-1 truncate">{k.name}</span>
@@ -335,7 +336,7 @@ export default async function KbPage({
 
         <div className="min-h-0 flex-1 overflow-auto" style={{ background: "var(--bg)" }}>
           {articles.length === 0 ? (
-            <p className="py-20 text-center text-sm" style={{ color: "var(--ink-3)" }}>
+            <p className="py-20 text-center text-[12.5px]" style={{ color: "var(--ink-3)" }}>
               {t("app.kb.noArticles")}
             </p>
           ) : (

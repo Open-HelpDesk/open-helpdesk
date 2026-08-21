@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { and, asc, count, eq, ne } from "drizzle-orm";
 import { db, mailboxes, tickets, users } from "@openhelpdesk/db";
@@ -96,7 +97,7 @@ function FilterChip({
   return (
     <details className="relative">
       <summary
-        className="flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden"
+        className="ohd-hover-edge flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden"
         style={{
           ...CHIP,
           borderColor: current ? "var(--acc-b)" : "var(--line)",
@@ -270,17 +271,17 @@ export default async function TicketsPage({
             <Link
               key={v.key}
               href={`/app/tickets?view=${v.key}`}
-              className="flex items-center"
+              className="ohd-row flex items-center"
               style={{
                 gap: 9,
                 margin: "0 8px 1px",
                 padding: "7px 9px",
                 borderRadius: 6,
                 fontSize: 13,
-                background: active ? "var(--acc-t)" : "transparent",
+                "--row-bg": active ? "var(--acc-t)" : "transparent",
                 color: active ? "var(--acc)" : "var(--ink-2)",
                 fontWeight: active ? 600 : 450,
-              }}
+              } as CSSProperties}
             >
               <span
                 className="shrink-0 rounded-full"
@@ -313,17 +314,17 @@ export default async function TicketsPage({
                 <Link
                   key={v.id}
                   href={`/app/tickets?tv=${v.id}`}
-                  className="flex items-center"
+                  className="ohd-row flex items-center"
                   style={{
                     gap: 9,
                     margin: "0 8px 1px",
                     padding: "7px 9px",
                     borderRadius: 6,
                     fontSize: 13,
-                    background: active ? "var(--acc-t)" : "transparent",
+                    "--row-bg": active ? "var(--acc-t)" : "transparent",
                     color: active ? "var(--acc)" : "var(--ink-2)",
                     fontWeight: active ? 600 : 450,
-                  }}
+                  } as CSSProperties}
                 >
                   <span className="min-w-0 flex-1 truncate">{v.name}</span>
                   <span

@@ -600,7 +600,7 @@ export default async function EmailSettingsPage({
               >
                 <form action={testEmailConnection}>
                   <button
-                    className="rounded-md border px-3 font-medium"
+                    className="ohd-hover-edge-ink rounded-md border px-3 font-medium"
                     style={{
                       height: 32,
                       fontSize: 12.5,
@@ -673,7 +673,7 @@ export default async function EmailSettingsPage({
                     placeholder={t("app.settings.email.signaturePlaceholder", {
                       name: tenant.name,
                     })}
-                    className="rounded-md border px-2.5 py-1.5 text-sm"
+                    className="rounded-md border px-2.5 py-[7px] text-[13px]"
                     style={{
                       borderColor: "var(--line)",
                       background: "var(--bg)",

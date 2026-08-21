@@ -189,6 +189,7 @@ export default async function ReportsPage({
         >
           {PERIODS.map(({ days: d }) => (
             <Link
+              className="ohd-hover-edge-ink"
               key={d}
               href={buildUrl({ p: String(d) })}
               style={{

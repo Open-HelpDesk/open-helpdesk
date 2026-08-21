@@ -406,7 +406,7 @@ export default async function ApiSettingsPage({
             ))}
             <button
               type="submit"
-              className="grid place-items-center border font-semibold"
+              className="ohd-hover-edge-ink grid place-items-center border font-semibold"
               style={{
                 height: 32,
                 padding: "0 13px",

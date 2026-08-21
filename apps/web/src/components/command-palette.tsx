@@ -186,9 +186,9 @@ export function CommandPalette() {
   let lastGroup = "";
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center"
+      className="fixed inset-0 z-[60] flex items-start justify-center"
       style={{
-        background: "rgba(8,14,12,.42)",
+        background: "var(--scrim-palette)",
         backdropFilter: "blur(2px)",
         paddingTop: "11vh",
       }}

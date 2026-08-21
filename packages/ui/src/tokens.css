@@ -53,6 +53,17 @@
   /* Typographie */
   --font-ui: "Inter", Inter, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* Voiles — relevés dans les maquettes agent et administration. Quatre densités,
+     une par type de surface posée par-dessus l'écran ; les maquettes les écrivent
+     en dur, donc identiques dans les deux thèmes (elles sont déjà quasi opaques).
+     Le voile de panneau verrouillé, lui, suit le thème : voir --veil. */
+  --scrim-palette: rgba(8, 14, 12, 42%); /* palette ⌘K — + blur 2px, padding-top 11vh */
+  --scrim-drawer: rgba(8, 14, 12, 34%); /* tiroir latéral */
+  --scrim-modal: rgba(8, 14, 12, 44%); /* modale centrée — padding 24 */
+  --scrim-viewer: rgba(6, 12, 10, 86%); /* visionneuse de pièce jointe */
+  /* Panneau désactivé/verrouillé : un voile de la couleur du fond, pas un
+     assombrissement — le contenu reste lisible sous le blur 3px. */
+  --veil: rgba(246, 248, 247, 60%);
 }
 
 /* ---------- 1bis. Produit — sombre ---------- */
@@ -66,12 +77,13 @@
   --sunk: #0a100e;
   --hi: #2a2510;
   --ink: #e8efeb;
-  --ink-2: #94a69f;
-  --ink-3: #697b75;
+  --ink-2: #98aaa3;
+  --ink-3: #6a7c76;
   --mute: #96a59e;
   --line: #232e2a;
-  --line-2: #19221f;
+  --line-2: #1a2320;
   --acc-2: #48d0a0;
+  --veil: rgba(8, 12, 11, 62%);
   --note: #251e0c;
   --note-line: #5c4a16;
   --new: #a98bf5;

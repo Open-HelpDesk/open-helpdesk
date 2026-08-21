@@ -5,6 +5,7 @@
  * titre « Paramètres » 15px/600, groupes 10.5px/700 uppercase, items 13px avec
  * badges EE sur les écrans réservés au plan Pro.
  */
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useT } from "@/i18n/client";
@@ -91,15 +92,15 @@ export function SettingsNav() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="flex items-center gap-2"
+                    className="ohd-row flex items-center gap-2"
                     style={{
                       padding: "7px 9px",
                       borderRadius: 6,
                       fontSize: 13,
                       fontWeight: active ? 600 : 400,
-                      background: active ? "var(--acc-t)" : "transparent",
+                      "--row-bg": active ? "var(--acc-t)" : "transparent",
                       color: active ? "var(--acc)" : "var(--ink)",
-                    }}
+                    } as CSSProperties}
                   >
                     <span className="min-w-0 flex-1 truncate">{t(item.labelKey)}</span>
                     {item.ee && (

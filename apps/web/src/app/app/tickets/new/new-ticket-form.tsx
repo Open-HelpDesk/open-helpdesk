@@ -298,7 +298,7 @@ export function NewTicketForm({
                   type="button"
                   title={b.title}
                   onClick={b.run}
-                  className="grid place-items-center hover:opacity-70"
+                  className="grid place-items-center ohd-hover"
                   style={{
                     width: 24,
                     height: 24,
@@ -416,7 +416,7 @@ export function NewTicketForm({
       >
         <Link
           href="/app/tickets"
-          className="grid place-items-center"
+          className="ohd-hover-edge-ink grid place-items-center"
           style={{
             height: 34,
             padding: "0 14px",

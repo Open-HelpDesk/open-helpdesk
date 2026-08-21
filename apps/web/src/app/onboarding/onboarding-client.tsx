@@ -126,7 +126,7 @@ export function IdentityForm({
         >
           {t("app.onboarding.continue")}
         </button>
-        <a href="/onboarding?step=2" className="text-[13px]" style={{ color: "var(--ink-3)" }}>
+        <a href="/onboarding?step=2" className="text-[13px] hover:underline" style={{ color: "var(--ink-3)" }}>
           {t("app.onboarding.skip")}
         </a>
       </div>
@@ -221,7 +221,7 @@ export function TeamInviteForm() {
         >
           {t("app.onboarding.sendInvites")}
         </button>
-        <a href="/onboarding?step=4" className="text-[13px]" style={{ color: "var(--ink-3)" }}>
+        <a href="/onboarding?step=4" className="text-[13px] hover:underline" style={{ color: "var(--ink-3)" }}>
           {t("app.onboarding.skip")}
         </a>
       </div>

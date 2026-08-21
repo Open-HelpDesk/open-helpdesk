@@ -8,6 +8,223 @@ body {
   /* Densité app agent : 14 px (specs/02) */
   font-size: 14px;
   line-height: 1.45;
+  /* Les maquettes lissent le texte : à cette densité Inter 600 s'épaissit
+     visiblement sans, et les libellés 11–12,5 px ne tiennent plus le même poids
+     que dans le design. */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Surfaces produit — ce que les maquettes posent sur le document ----------
+ * `.ohd` est la classe racine des maquettes espace agent et administration.
+ * Ce qu'elles déclarent globalement vit ici, scopé à cette classe : le portail
+ * client a sa propre convention de liens (soulignés au repos) et sa propre
+ * typographie, et ne doit pas hériter de celle-ci. */
+
+/* Lien de texte : accent, jamais souligné au repos ; au survol la teinte se
+   rapproche du fond opposé — plus sombre en clair, plus claire en sombre — et le
+   soulignement apparaît. Le survol sombre est en dur : la maquette y vise une
+   teinte plus claire qu'--acc-2, qui n'a pas de token.
+ *
+ * Classe explicite, et non `.ohd a`. Les maquettes peuvent poser la règle sur la
+ * balise parce que chez elles TOUT contrôle est un <div> : le seul <a> d'un écran
+ * est un vrai lien dans une phrase. Ici les lignes de table, la navigation et les
+ * boutons d'icône sont des <Link>, donc des <a> — 37 sur l'inbox, contre trois
+ * liens de texte dans tout l'espace produit. Sur la balise, la règle soulignait
+ * les libellés de navigation au survol : un défaut que la maquette n'a pas. */
+.ohd-link {
+  color: var(--acc-2);
+  text-decoration: none;
+}
+
+.ohd-link:hover {
+  color: var(--acc);
+  text-decoration: underline;
+}
+
+[data-theme="dark"] .ohd-link {
+  color: var(--acc);
+}
+
+[data-theme="dark"] .ohd-link:hover {
+  color: #5bd3a8;
+}
+
+/* Ascenseurs : filet discret, jamais de gouttière grise. Le liseré transparent
+   en `content-box` amincit le pouce sans réduire la zone d'accroche. */
+.ohd ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.ohd ::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border: 3px solid transparent;
+  border-radius: 6px;
+  background-clip: content-box;
+}
+
+/* ---------- Survol : le vocabulaire complet des maquettes ----------
+ * Les maquettes n'emploient que ces réactions, et AUCUNE n'est animée — pas de
+ * `transition` sur un survol. Les deux seules transitions du design sont celles
+ * de l'interrupteur (.ohd-toggle). Un `transition-colors` ajouté ici suffirait à
+ * faire sentir la différence sur une liste dense.
+ *
+ * `!important` n'est pas de la paresse, c'est ce qui rend ces classes fiables.
+ * Comme les maquettes, cet écran s'écrit en `style` inline : la quasi-totalité
+ * des boutons bordés y posent leur `borderColor`, et une déclaration inline bat
+ * toujours un `:hover` de feuille de style. Sans `!important`, poser la classe
+ * ne produit rien — un survol muet, qui ne se voit qu'à l'usage. La contrainte
+ * se retournerait contre le prochain bouton écrit dans le style de la maison.
+ * Les éléments qui doivent AUSSI peindre leur état au repos (ligne
+ * sélectionnée, vignette bordée) passent, eux, par une variable : --row-bg,
+ * --edge. */
+
+/* Le survol par défaut : ligne de tableau, élément de liste, bouton fantôme,
+   pastille, bouton d'icône. */
+.ohd-hover:hover {
+  background: var(--sunk) !important;
+}
+
+/* Ligne de table et élément de navigation : mêmes réactions, mais l'élément
+   porte déjà un fond au repos (--acc-t quand il est sélectionné). Ce fond passe
+   par --row-bg et non par `style`, sinon la déclaration inline battrait toujours
+   le :hover de la feuille de style et la ligne resterait inerte. */
+.ohd-row {
+  background: var(--row-bg, transparent);
+}
+
+.ohd-row:hover {
+  background: var(--sunk) !important;
+}
+
+/* Boîte bordée — champ, carte : seul le filet réagit. */
+.ohd-hover-edge:hover {
+  border-color: var(--acc-b) !important;
+}
+
+/* Bouton secondaire bordé : le filet et le libellé passent à l'accent. */
+.ohd-hover-edge-ink:hover {
+  border-color: var(--acc-b) !important;
+  color: var(--acc-2) !important;
+}
+
+/* Carte sélectionnable (administration) : le filet et le fond passent à l'accent. */
+.ohd-hover-edge-fill:hover {
+  border-color: var(--acc-b) !important;
+  background: var(--acc-t) !important;
+}
+
+/* Vignette de pièce jointe (curseur zoom-in) : filet à l'accent plein. Le filet
+   au repos arrive par --edge, pour la même raison que --row-bg plus haut. */
+.ohd-hover-acc {
+  border: 1px solid var(--edge, var(--line));
+}
+
+.ohd-hover-acc:hover {
+  border-color: var(--acc) !important;
+}
+
+/* Focus clavier : le liseré des maquettes — 2px d'accent, décalé de 2px.
+   `:has()` couvre la boîte dont le champ réel est masqué à l'intérieur (dépôt de
+   fichier) : c'est la boîte qu'on doit voir prendre le focus, pas le champ. */
+.ohd-focus:focus-visible,
+.ohd-focus:has(:focus-visible) {
+  outline: 2px solid var(--acc);
+  outline-offset: 2px;
+}
+
+/* ---------- Interrupteur 34×20 ----------
+ * Piste 34×20 radius 11, pastille 16 blanche de left 2 à left 16, ombre portée
+ * 0 1px 3px. Les deux seules transitions du design : la piste sur `background`,
+ * la pastille sur `left`, toutes deux en .15s.
+ *
+ * Attendu : <label class="ohd-toggle"><input type="checkbox"><span class="ohd-knob"/>…
+ * Le `input` reste dans le flux (masqué, taille nulle) pour garder le focus
+ * clavier et l'étiquetage natifs. */
+.ohd-toggle input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.ohd-toggle .ohd-knob {
+  position: relative;
+  flex: none;
+  width: 34px;
+  height: 20px;
+  /* Comme dans la maquette : l'interrupteur borde toujours un libellé sur deux
+     lignes, aligné en haut. Le décalage d'1px le centre sur la hauteur de
+     capitale de la première ligne plutôt que sur son interligne. */
+  margin-top: 1px;
+  border-radius: 11px;
+  background: var(--line);
+  transition: background 0.15s;
+}
+
+.ohd-toggle .ohd-knob::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
+  transition: left 0.15s;
+}
+
+.ohd-toggle input:checked + .ohd-knob {
+  background: var(--acc);
+}
+
+.ohd-toggle input:checked + .ohd-knob::after {
+  left: 16px;
+}
+
+.ohd-toggle input:focus-visible + .ohd-knob {
+  outline: 2px solid var(--acc);
+  outline-offset: 2px;
+}
+
+/* Même interrupteur, piloté par `aria-checked` : les écrans dont l'état part en
+   server action soumettent un <button role="switch">, pas une case à cocher.
+   La géométrie ne doit pas pour autant être recopiée à chaque appel — c'est
+   comme cela que les cinq interrupteurs de l'app avaient fini par différer
+   (ombre portée absente ici, transition sur la piste là). */
+.ohd-switch {
+  position: relative;
+  flex: none;
+  width: 34px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 11px;
+  background: var(--line);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ohd-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
+  transition: left 0.15s;
+}
+
+.ohd-switch[aria-checked="true"] {
+  background: var(--acc);
+}
+
+.ohd-switch[aria-checked="true"]::after {
+  left: 16px;
 }
 
 /* ---------- Animations du design espace agent ---------- */
@@ -22,13 +239,15 @@ body {
   }
 }
 
+/* La maquette fait retomber un fond --hi vers transparent, en alternance : la
+   ligne qui vient de changer s'éclaire puis s'éteint. Une pulsation d'opacité
+   ferait clignoter le texte, ce qui n'est pas la même chose du tout. */
 @keyframes ohd-flash {
-  0%,
-  100% {
-    opacity: 1;
+  from {
+    background: var(--hi);
   }
-  50% {
-    opacity: 0.25;
+  to {
+    background: transparent;
   }
 }
 
@@ -38,12 +257,18 @@ body {
   }
 }
 
-.ohd-rise {
-  animation: ohd-rise 0.2s ease both;
+/* Cinq durées, une par profondeur de surface — de la visionneuse (.14s, elle
+   couvre déjà tout l'écran) à l'écran complet (.25s). */
+.ohd-rise-viewer {
+  animation: ohd-rise 0.14s ease both;
 }
 
 .ohd-rise-fast {
   animation: ohd-rise 0.16s ease both;
+}
+
+.ohd-rise {
+  animation: ohd-rise 0.2s ease both;
 }
 
 .ohd-rise-slow {
@@ -51,11 +276,11 @@ body {
 }
 
 .ohd-flash {
-  animation: ohd-flash 1.2s ease-in-out infinite;
+  animation: ohd-flash 1.4s infinite alternate;
 }
 
 .ohd-spin {
-  animation: ohd-spin 0.9s linear infinite;
+  animation: ohd-spin 0.8s linear infinite;
 }
 
 /* Touche clavier (⌘K, j, k, ↵…) */

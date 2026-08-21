@@ -246,7 +246,7 @@ export function ArticleEditor({
                   aria-label={t(action.titre)}
                   aria-pressed={actif}
                   onClick={() => action.lancer(editor)}
-                  className="flex items-center justify-center hover:bg-[var(--sunk)]"
+                  className="flex items-center justify-center ohd-hover"
                   style={{
                     width: 26,
                     height: 24,
@@ -277,7 +277,7 @@ export function ArticleEditor({
               }
               editor.chain().focus().extendMarkRange("link").setLink({ href: url.trim() }).run();
             }}
-            className="flex items-center justify-center hover:bg-[var(--sunk)]"
+            className="flex items-center justify-center ohd-hover"
             style={{
               width: 26,
               height: 24,
@@ -295,7 +295,7 @@ export function ArticleEditor({
             title={t("app.kb.insertImage")}
             aria-label={t("app.kb.insertImage")}
             onClick={() => fichier.current?.click()}
-            className="flex items-center justify-center hover:bg-[var(--sunk)]"
+            className="flex items-center justify-center ohd-hover"
             style={{ width: 26, height: 24, borderRadius: 5, fontSize: 11, color: "var(--ink-2)" }}
           >
             🖼

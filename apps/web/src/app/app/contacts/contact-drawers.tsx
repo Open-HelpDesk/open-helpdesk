@@ -16,8 +16,8 @@ function Drawer({
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex justify-end"
-      style={{ background: "rgba(8,14,12,.42)" }}
+      className="fixed inset-0 z-40 flex justify-end"
+      style={{ background: "var(--scrim-drawer)" }}
       onClick={onClose}
     >
       <div
@@ -26,7 +26,7 @@ function Drawer({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-sm font-semibold">{title}</p>
+          <p className="text-[15px] font-semibold">{title}</p>
           <button type="button" onClick={onClose} style={{ color: "var(--ink-3)" }}>
             ✕
           </button>

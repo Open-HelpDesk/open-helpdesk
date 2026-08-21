@@ -85,7 +85,7 @@ export function SegTabs({ tabs }: { tabs: PageTab[] }) {
         <Link
           key={t.label}
           href={t.href}
-          className="whitespace-nowrap"
+          className="ohd-hover-edge-ink whitespace-nowrap"
           style={{
             padding: "6px 12px",
             borderRadius: 5,
@@ -136,7 +136,7 @@ export function SaveBar({
       <span className="flex-1" />
       <Link
         href={cancelHref}
-        className="inline-flex items-center rounded-md border px-3 font-medium"
+        className="ohd-hover-edge-ink inline-flex items-center rounded-md border px-3 font-medium"
         style={{ height: 32, fontSize: 13, borderColor: "var(--line)", background: "var(--panel)", color: "var(--ink)" }}
       >
         {t("app.settings.shell.cancel")}
@@ -240,14 +240,19 @@ export const inputStyle: CSSProperties = {
   color: "var(--ink)",
 };
 
+/*
+ * Champ de saisie : h32, 13 px, radius 6, padding 0 10px — la mesure la plus
+ * répandue des maquettes d'administration. `text-sm` valait 14 px et un
+ * `py-1.5` laissait la hauteur suivre la police : deux champs voisins ne
+ * tombaient pas à la même hauteur. Seuls les écrans d'authentification montent
+ * à h36/14px (voir la maquette AG-01).
+ */
+export const FIELD = "h-8 rounded-md border px-2.5 text-[13px]";
+
 export function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   const { className, style, ...rest } = props;
   return (
-    <input
-      {...rest}
-      className={`rounded-md border px-2.5 py-1.5 text-sm ${className ?? ""}`}
-      style={{ ...inputStyle, ...style }}
-    />
+    <input {...rest} className={`${FIELD} ${className ?? ""}`} style={{ ...inputStyle, ...style }} />
   );
 }
 
@@ -256,13 +261,13 @@ export function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
       {...rest}
-      className={`rounded-md border px-2 py-1.5 text-sm ${className ?? ""}`}
+      className={`${FIELD} ${className ?? ""}`}
       style={{ ...inputStyle, ...style }}
     />
   );
 }
 
-/** Toggle 34×20 pastille 16 (left 2→16) — CSS pur, classe .st-toggle du layout. */
+/** Toggle 34×20 pastille 16 (left 2→16) — CSS pur, classe .ohd-toggle du layout. */
 export function Toggle({
   name,
   defaultChecked,
@@ -280,7 +285,7 @@ export function Toggle({
 }) {
   return (
     <label
-      className="st-toggle flex items-start gap-3"
+      className="ohd-toggle flex items-start gap-3"
       style={{ opacity: disabled ? 0.55 : 1, cursor: disabled ? "not-allowed" : "pointer" }}
     >
       <input
@@ -290,7 +295,7 @@ export function Toggle({
         defaultChecked={defaultChecked}
         disabled={disabled}
       />
-      <span className="st-knob" aria-hidden />
+      <span className="ohd-knob" aria-hidden />
       <span className="flex min-w-0 flex-col">
         <span className="font-medium" style={{ fontSize: 13.5, color: "var(--ink)" }}>
           {label}

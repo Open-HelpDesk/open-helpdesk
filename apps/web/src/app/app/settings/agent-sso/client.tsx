@@ -82,7 +82,7 @@ export function EnforcementRadios({
           return (
             <label
               key={o.value}
-              className="flex cursor-pointer items-start border"
+              className="ohd-hover-edge-fill flex cursor-pointer items-start border"
               style={{
                 gap: 12,
                 padding: "13px 14px",

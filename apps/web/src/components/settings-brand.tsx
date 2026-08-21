@@ -18,7 +18,7 @@
  *    langue qu'on venait de changer sans les enregistrer. Le retrait est donc un
  *    état, porté par un champ caché, et il s'annule d'un second clic.
  */
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { useT } from "@/i18n/client";
 
 type Props = {
@@ -105,12 +105,18 @@ export function BrandAssetField({
         {/* La zone en pointillés de la maquette EST le contrôle : un `label` qui
             enveloppe le champ, plutôt qu'un bouton qui le cliquerait en
             JavaScript. Le clic est alors natif, le champ est correctement
-            étiqueté, et `focus-within` ramène l'anneau de focus sur la boîte —
-            un champ en `sr-only` recevrait le focus hors de l'écran. */}
+            étiqueté, et le focus se voit sur la boîte — un champ en `sr-only`
+            recevrait le focus hors de l'écran.
+
+            Survol et focus sont ceux que la maquette donne à ses boîtes en
+            pointillés « + ajouter » : filet et libellé à l'accent, liseré 2px.
+            Le rayon suit le carré d'aperçu voisin (10) et non le `rounded-lg` de
+            Tailwind, qui vaut 8 et désalignait les deux angles côte à côte. */}
         <label
-          className="flex flex-1 cursor-pointer items-center justify-center rounded-lg border border-dashed px-2 focus-within:ring-2"
+          className="ohd-hover-edge-ink ohd-focus flex flex-1 cursor-pointer items-center justify-center border border-dashed px-2"
           style={{
             height: 46,
+            borderRadius: 10,
             borderColor: "var(--line)",
             fontSize: 12.5,
             color: nomFichier ? "var(--ink-2)" : "var(--ink-3)",
@@ -141,16 +147,20 @@ export function BrandAssetField({
             aria-pressed={retire}
             aria-label={removeLabel}
             title={removeLabel}
-            className="grid place-items-center rounded-lg border"
+            className="ohd-row grid place-items-center border"
             style={{
               width: 30,
               height: 30,
               flex: "none",
+              borderRadius: 6,
               borderColor: retire ? "var(--dang)" : "var(--line)",
               color: retire ? "var(--dang)" : "var(--ink-3)",
-              background: retire ? "var(--dang-t)" : "transparent",
+              // Bouton d'icône 30×30 de la maquette : survol --sunk. Le fond de
+              // l'état « retrait demandé » passe par --row-bg pour que le survol
+              // reste perceptible — en style inline il l'aurait masqué.
+              "--row-bg": retire ? "var(--dang-t)" : "transparent",
               fontSize: 13,
-            }}
+            } as CSSProperties}
           >
             {retire ? "↺" : "✕"}
           </button>

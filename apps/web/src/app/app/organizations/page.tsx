@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { requireAgent } from "@/lib/session";
@@ -74,7 +75,7 @@ export default async function OrganizationsPage({
 
         <div className="min-h-0 flex-1 overflow-auto" style={{ background: "var(--bg)" }}>
           {rows.length === 0 ? (
-            <p className="py-24 text-center text-sm" style={{ color: "var(--ink-3)" }}>
+            <p className="py-24 text-center text-[12.5px]" style={{ color: "var(--ink-3)" }}>
               {query
                 ? t("app.contacts.orgEmptyQuery", { query })
                 : t("app.contacts.orgEmpty")}
@@ -103,13 +104,13 @@ export default async function OrganizationsPage({
                   <Link
                     key={o.id}
                     href={buildUrl(query, o.id, tab)}
-                    className="grid items-center border-b"
+                    className="ohd-row grid items-center border-b"
                     style={{
                       gridTemplateColumns: GRID,
                       height: 42,
                       borderColor: "var(--line-2)",
-                      background: active ? "var(--acc-t)" : "var(--bg)",
-                    }}
+                      "--row-bg": active ? "var(--acc-t)" : "var(--bg)",
+                    } as CSSProperties}
                   >
                     <span className="flex min-w-0 items-center gap-2 pl-4">
                       <span
@@ -266,19 +267,9 @@ export default async function OrganizationsPage({
                 type="submit"
                 role="switch"
                 aria-checked={detail.org.sharedTickets}
-                className="relative mt-0.5 shrink-0 rounded-full transition-colors"
-                style={{
-                  width: 34,
-                  height: 20,
-                  background: detail.org.sharedTickets ? "var(--acc)" : "var(--line)",
-                }}
+                className="ohd-switch mt-0.5"
                 title={t("app.contacts.orgToggle")}
-              >
-                <span
-                  className="absolute top-0.5 rounded-full bg-white transition-all"
-                  style={{ width: 16, height: 16, left: detail.org.sharedTickets ? 16 : 2 }}
-                />
-              </button>
+              />
               <span>
                 <span className="block text-[12.5px] font-medium">
                   {t("app.contacts.orgSharedTickets")}

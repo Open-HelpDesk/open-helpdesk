@@ -79,7 +79,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       <label className="flex flex-col gap-1 text-[13px] font-medium">
         <span className="flex items-baseline justify-between">
           {t("app.login.password")}
-          <a href="#" className="font-normal" style={{ color: "var(--acc-2)", fontSize: 12 }}>
+          <a href="#" className="ohd-link font-normal" style={{ fontSize: 12 }}>
             {t("app.login.forgot")}
           </a>
         </span>

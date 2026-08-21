@@ -86,7 +86,7 @@ export function CreateKeyForm({
         <button
           type="submit"
           disabled={pending}
-          className="grid place-items-center border font-semibold disabled:opacity-50"
+          className="ohd-hover-edge-ink grid place-items-center border font-semibold disabled:opacity-50"
           style={{
             height: 32,
             padding: "0 13px",

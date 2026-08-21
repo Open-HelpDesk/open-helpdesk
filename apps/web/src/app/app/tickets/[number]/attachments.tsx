@@ -5,7 +5,7 @@
  * visionneuse overlay : zoom 60–160 %, précédente/suivante, Télécharger, ✕),
  * chips pour les autres fichiers.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { size } from "@/lib/format";
 import { useT } from "@/i18n/client";
 
@@ -66,14 +66,17 @@ export function MessageAttachments({
                 setViewerIndex(i);
                 setZoom(100);
               }}
-              className="overflow-hidden text-left"
+              className="ohd-hover-acc overflow-hidden text-left"
               style={{
                 width: 138,
                 borderRadius: 8,
-                border: `1px solid ${borderColor}`,
+                // Le filet au repos passe par --edge et non par `border` : une
+                // couleur de bordure posée en inline battrait le :hover de la
+                // classe, et la vignette resterait inerte au survol.
+                "--edge": borderColor,
                 background: "var(--panel)",
                 cursor: "zoom-in",
-              }}
+              } as CSSProperties}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -146,8 +149,8 @@ export function MessageAttachments({
       {/* Visionneuse */}
       {current && viewerIndex !== null && (
         <div
-          className="ohd-rise-fast fixed inset-0 z-50 flex flex-col"
-          style={{ background: "rgba(6,12,10,.86)", color: VIEWER_INK }}
+          className="ohd-rise-viewer fixed inset-0 z-[80] flex flex-col"
+          style={{ background: "var(--scrim-viewer)", color: VIEWER_INK }}
           onClick={() => setViewerIndex(null)}
         >
           {/* En-tête : nom + méta, zoom, Télécharger, ✕ */}

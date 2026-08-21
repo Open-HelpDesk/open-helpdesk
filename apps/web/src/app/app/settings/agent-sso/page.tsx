@@ -259,9 +259,9 @@ export default async function AgentSsoPage({
         <form action={saveSamlConfig} className="st-rise flex flex-col" style={{ gap: 24 }}>
           {/* Activation */}
           <Panel accent={saml.enabled === true}>
-            <label className="st-toggle flex items-start" style={{ gap: 12 }}>
+            <label className="ohd-toggle flex items-start" style={{ gap: 12 }}>
               <input type="checkbox" name="enabled" defaultChecked={saml.enabled === true} />
-              <span className="st-knob" aria-hidden />
+              <span className="ohd-knob" aria-hidden />
               <span className="sr-only">{t("app.settings.sso.samlToggleLabel")}</span>
             </label>
             <div className="min-w-0 flex-1">
@@ -362,7 +362,7 @@ export default async function AgentSsoPage({
                 type="button"
                 disabled
                 title={t("app.settings.sso.comingSoon")}
-                className="grid place-items-center border font-semibold disabled:opacity-50"
+                className="ohd-hover-edge-ink grid place-items-center border font-semibold disabled:opacity-50"
                 style={{
                   minHeight: 32,
                   padding: "6px 13px",
@@ -476,13 +476,13 @@ export default async function AgentSsoPage({
             </div>
 
             <Panel>
-              <label className="st-toggle flex items-start" style={{ gap: 12 }}>
+              <label className="ohd-toggle flex items-start" style={{ gap: 12 }}>
                 <input
                   type="checkbox"
                   name="rolesFromIdp"
                   defaultChecked={saml.rolesFromIdp === true}
                 />
-                <span className="st-knob" aria-hidden />
+                <span className="ohd-knob" aria-hidden />
                 <span className="sr-only">{t("app.settings.sso.rolesFromIdp")}</span>
               </label>
               <div className="min-w-0 flex-1">
@@ -609,14 +609,14 @@ export default async function AgentSsoPage({
         <div className="st-rise flex flex-col" style={{ gap: 24 }}>
           {/* Activation SCIM — associée au formulaire « scim-config » ci-dessous */}
           <Panel accent={scimEnabled}>
-            <label className="st-toggle flex items-start" style={{ gap: 12 }}>
+            <label className="ohd-toggle flex items-start" style={{ gap: 12 }}>
               <input
                 type="checkbox"
                 name="scimEnabled"
                 form="scim-config"
                 defaultChecked={scimEnabled}
               />
-              <span className="st-knob" aria-hidden />
+              <span className="ohd-knob" aria-hidden />
               <span className="sr-only">{t("app.settings.sso.scimToggleLabel")}</span>
             </label>
             <div className="min-w-0 flex-1">

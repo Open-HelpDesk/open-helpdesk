@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { requireAgent } from "@/lib/session";
 import { getContact, listContacts } from "@/lib/directory";
@@ -126,14 +127,14 @@ export default async function ContactsPage({
                   <Link
                     key={c.id}
                     href={buildUrl(query, c.id, tab)}
-                    className="grid items-center border-b"
+                    className="ohd-row grid items-center border-b"
                     style={{
                       gridTemplateColumns: GRID,
                       height: 42,
                       padding: "0 16px",
                       borderColor: "var(--line-2)",
-                      background: active ? "var(--acc-t)" : "transparent",
-                    }}
+                      "--row-bg": active ? "var(--acc-t)" : "transparent",
+                    } as CSSProperties}
                   >
                     <span className="flex min-w-0 items-center" style={{ gap: 9 }}>
                       <Avatar name={c.name ?? c.email} size={24} fontSize={9.5} tone={i} />
@@ -263,6 +264,7 @@ export default async function ContactsPage({
               ] as [Tab, string][]
             ).map(([key, label]) => (
               <Link
+                className="ohd-hover-edge-ink"
                 key={key}
                 href={buildUrl(query, detail.contact.id, key)}
                 style={{

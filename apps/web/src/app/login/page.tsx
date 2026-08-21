@@ -25,7 +25,7 @@ export default async function LoginPage({
   const accent = branding.accentColor || "var(--acc)";
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
+    <main className="ohd flex min-h-screen items-center justify-center p-4">
       <div className="ohd-rise-slow w-full" style={{ maxWidth: 400 }}>
         {/* Logo + nom du workspace */}
         <div className="mb-5 flex flex-col items-center gap-2.5">

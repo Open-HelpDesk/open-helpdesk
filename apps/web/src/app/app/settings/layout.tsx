@@ -6,7 +6,11 @@ import { getT } from "@/i18n/server";
  * Shell de l'administration (ST-01 → ST-14, design-notes/administration.md) :
  * navigation secondaire 220 px groupée (codes ST-xx en mono, badges EE) +
  * zone de contenu padding 26px 28px 40px. Accès Owner/Admin uniquement.
- * CSS local : st-rise (transition d'écran), st-slide (drawer), toggles 34×20.
+ *
+ * CSS local : uniquement les entrées d'écran propres à l'administration
+ * (st-rise, st-slide, st-pop). L'interrupteur et les survols sont des primitives
+ * partagées (.ohd-toggle, .ohd-hover) — ils sont identiques dans les deux
+ * maquettes, et les dupliquer ici les laissait dériver.
  */
 export default async function SettingsLayout({ children }: { children: React.ReactNode }) {
   const { agent } = await requireAgent();
@@ -15,7 +19,7 @@ export default async function SettingsLayout({ children }: { children: React.Rea
   if (agent.role !== "owner" && agent.role !== "admin") {
     return (
       <div className="flex h-full items-center justify-center p-8">
-        <p className="text-sm" style={{ color: "var(--ink-2)" }}>
+        <p className="text-[13px]" style={{ color: "var(--ink-2)" }}>
           {t("app.settings.shell.roleRestricted")}
         </p>
       </div>
@@ -24,29 +28,15 @@ export default async function SettingsLayout({ children }: { children: React.Rea
 
   return (
     <div className="flex h-full">
+      {/* `both` n'est pas décoratif : sans lui l'écran s'affiche une frame à son
+          état final avant de repartir de translateY(6px), et l'entrée saute. */}
       <style>{`
         @keyframes st-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-        .st-rise { animation: st-rise .18s ease; }
+        .st-rise { animation: st-rise .18s ease both; }
         @keyframes st-slide { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
-        .st-slide { animation: st-slide .18s ease; }
+        .st-slide { animation: st-slide .18s ease both; }
         @keyframes st-pop { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
-        .st-pop { animation: st-pop .16s ease; }
-        .st-toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
-        .st-toggle .st-knob {
-          flex: none; position: relative; width: 34px; height: 20px; margin-top: 1px;
-          border-radius: 999px; background: var(--line); transition: background .15s ease;
-        }
-        .st-toggle .st-knob::after {
-          content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
-          border-radius: 999px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25);
-          transition: left .15s ease;
-        }
-        .st-toggle input:checked + .st-knob { background: var(--acc); }
-        .st-toggle input:checked + .st-knob::after { left: 16px; }
-        .st-toggle input:focus-visible + .st-knob { outline: 2px solid var(--acc); outline-offset: 2px; }
-        /* Ligne cliquable d'une liste réordonnable (ST-07) : survol --sunk. */
-        .st-row { transition: background .12s ease; }
-        .st-row:hover { background: var(--sunk); }
+        .st-pop { animation: st-pop .16s ease both; }
       `}</style>
       <SettingsNav />
       {/* Le padding et la largeur maximale vivent dans PageShell, comme dans le design. */}

@@ -598,7 +598,7 @@ export default async function TicketPage({
             <p style={PANEL_GROUP}>{t("app.ticket.kbGroup")}</p>
             <Link
               href={`/app/kb/new?depuis=${ticket.number}`}
-              className="inline-flex items-center justify-center rounded-md border font-medium"
+              className="ohd-hover-edge-ink inline-flex items-center justify-center rounded-md border font-medium"
               style={{
                 height: 30,
                 fontSize: 12.5,

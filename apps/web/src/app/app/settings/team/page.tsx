@@ -156,7 +156,7 @@ export default async function TeamPage({
             </span>
             <Link
               href="/app/settings/billing"
-              className="inline-flex items-center justify-center rounded-md border font-semibold"
+              className="ohd-hover-edge-ink inline-flex items-center justify-center rounded-md border font-semibold"
               style={{
                 height: 32,
                 padding: "0 13px",
@@ -563,7 +563,7 @@ function TeamForm({
           <button
             type="submit"
             formAction={deleteTeam}
-            className="rounded-md border font-medium"
+            className="ohd-hover-edge-ink rounded-md border font-medium"
             style={{
               height: 34,
               padding: "0 14px",
