@@ -1,0 +1,112 @@
+# Auto-hébergement — la promesse « trois commandes » (SM-06) :
+#   git clone https://github.com/open-helpdesk/open-helpdesk && cd open-helpdesk
+#   cp .env.example .env        # puis renseigner les secrets
+#   docker compose up -d
+#
+# L'application répond ensuite sur http://localhost:3000 (BASE_DOMAIN).
+# Avec SEED_DEMO=true (défaut du .env.example), l'instance démarre avec le
+# workspace de démonstration Acme — connexion marie.dupont@acme.example /
+# demo-openhelpdesk, à remplacer par vos agents dès la première session.
+#
+# Les hôtes internes (postgres, redis, minio) sont fixés ici et priment sur
+# le .env, écrit pour le développement sur les ports de la machine hôte.
+
+name: open-helpdesk-prod
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-openhelpdesk}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-openhelpdesk}
+      POSTGRES_DB: ${POSTGRES_DB:-openhelpdesk}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-openhelpdesk}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:8-alpine
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID:-openhelpdesk}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:-openhelpdesk}
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: migrate
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-openhelpdesk}:${POSTGRES_PASSWORD:-openhelpdesk}@postgres:5432/${POSTGRES_DB:-openhelpdesk}
+      SEED_DEMO: ${SEED_DEMO:-true}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: web
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-openhelpdesk}:${POSTGRES_PASSWORD:-openhelpdesk}@postgres:5432/${POSTGRES_DB:-openhelpdesk}
+      REDIS_URL: redis://redis:6379
+      S3_ENDPOINT: http://minio:9000
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: worker
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-openhelpdesk}:${POSTGRES_PASSWORD:-openhelpdesk}@postgres:5432/${POSTGRES_DB:-openhelpdesk}
+      REDIS_URL: redis://redis:6379
+      S3_ENDPOINT: http://minio:9000
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:

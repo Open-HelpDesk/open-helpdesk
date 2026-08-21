@@ -45,11 +45,19 @@ async function ensureBucket() {
 
 /**
  * Sonde du diagnostic (ST-01) : HeadBucket frais (sans le cache bucketReady),
- * puis écriture et suppression d'un objet témoin d'un octet, hors préfixes
- * métier. Toute exception remonte au diagnostic, qui l'affiche.
+ * création du bucket s'il n'existe pas encore — sur une installation vierge,
+ * l'app ne le crée qu'au premier téléversement —, puis écriture et suppression
+ * d'un objet témoin d'un octet, hors préfixes métier. Toute exception remonte
+ * au diagnostic, qui l'affiche.
  */
 export async function probeStorage(): Promise<{ bucket: string }> {
-  await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));
+  try {
+    await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));
+  } catch {
+    // Bucket absent ou injoignable : CreateBucket tranche — il réussit sur une
+    // instance vierge et échoue avec la vraie erreur si S3 est en panne.
+    await s3.send(new CreateBucketCommand({ Bucket: BUCKET }));
+  }
   const key = `diagnostics/probe-${randomUUID()}`;
   await s3.send(new PutObjectCommand({ Bucket: BUCKET, Key: key, Body: new Uint8Array([1]) }));
   await s3.send(new DeleteObjectCommand({ Bucket: BUCKET, Key: key }));
