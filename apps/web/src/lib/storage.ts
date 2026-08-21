@@ -43,6 +43,19 @@ async function ensureBucket() {
   bucketReady = true;
 }
 
+/**
+ * Sonde du diagnostic (ST-01) : HeadBucket frais (sans le cache bucketReady),
+ * puis écriture et suppression d'un objet témoin d'un octet, hors préfixes
+ * métier. Toute exception remonte au diagnostic, qui l'affiche.
+ */
+export async function probeStorage(): Promise<{ bucket: string }> {
+  await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));
+  const key = `diagnostics/probe-${randomUUID()}`;
+  await s3.send(new PutObjectCommand({ Bucket: BUCKET, Key: key, Body: new Uint8Array([1]) }));
+  await s3.send(new DeleteObjectCommand({ Bucket: BUCKET, Key: key }));
+  return { bucket: BUCKET };
+}
+
 function sanitizeFilename(name: string): string {
   return name.replace(/[^\w.\-àâäéèêëîïôöùûüç ]/gi, "_").slice(0, 120) || "fichier";
 }

@@ -1105,6 +1105,40 @@ export const en: Dictionary = {
   "app.settings.workspace.seatsManage": "Manage",
   "app.settings.workspace.seatLimitReached":
     "Seat limit reached ({quota}). Deactivate an agent or add seats.",
+  "app.settings.workspace.diagTitle": "Installation health",
+  "app.settings.workspace.diagHint":
+    "Checks the database, outbound and inbound email, file storage, queues and encryption. The storage probe writes then deletes a witness object.",
+  "app.settings.workspace.diagRun": "Run diagnostics",
+  "app.settings.workspace.diagRunAgain": "Run diagnostics again",
+  "app.settings.workspace.diagProbeDb": "Database",
+  "app.settings.workspace.diagProbeMailOut": "Outbound email",
+  "app.settings.workspace.diagProbeMailIn": "Inbound email",
+  "app.settings.workspace.diagProbeStorage": "File storage",
+  "app.settings.workspace.diagProbeQueue": "Queues",
+  "app.settings.workspace.diagProbeCrypto": "Secrets encryption",
+  "app.settings.workspace.diagStatusOk": "Operational",
+  "app.settings.workspace.diagStatusWarn": "Needs attention",
+  "app.settings.workspace.diagStatusFail": "Down",
+  "app.settings.workspace.diagDetailOk": "Responding correctly.",
+  "app.settings.workspace.diagTimeout": "No response after 5 seconds.",
+  "app.settings.workspace.diagMailOutNone":
+    "No provider configured: emails are not sent (development transport).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Inbound webhook secret missing or development value (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook ready. No IMAP mailbox to check.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook ready. IMAP mailboxes verified: {count}.",
+  "app.settings.workspace.diagStorageOk": "Witness object written then deleted in “{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL missing: direct sending without a queue, SLA timers inactive.",
+  "app.settings.workspace.diagQueueWorkerNever": "Redis responds, but no worker run is recorded.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis responds, but the worker looks stopped — last run: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker active — last run: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Key derived from BETTER_AUTH_SECRET: set a dedicated ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Public development key: set ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Total: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Role",
   "app.settings.workspace.colLastSeen": "Last seen",

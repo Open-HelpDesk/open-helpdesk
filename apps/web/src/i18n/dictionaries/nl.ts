@@ -1117,6 +1117,42 @@ export const nl: Dictionary = {
   "app.settings.workspace.seatsManage": "Beheren",
   "app.settings.workspace.seatLimitReached":
     "Licentielimiet bereikt ({quota}). Deactiveer een agent of voeg licenties toe.",
+  "app.settings.workspace.diagTitle": "Gezondheid van de installatie",
+  "app.settings.workspace.diagHint":
+    "Controleert de database, uitgaande en inkomende e-mail, bestandsopslag, wachtrijen en versleuteling. De opslagsonde schrijft en verwijdert een testobject.",
+  "app.settings.workspace.diagRun": "Diagnose uitvoeren",
+  "app.settings.workspace.diagRunAgain": "Diagnose opnieuw uitvoeren",
+  "app.settings.workspace.diagProbeDb": "Database",
+  "app.settings.workspace.diagProbeMailOut": "Uitgaande e-mail",
+  "app.settings.workspace.diagProbeMailIn": "Inkomende e-mail",
+  "app.settings.workspace.diagProbeStorage": "Bestandsopslag",
+  "app.settings.workspace.diagProbeQueue": "Wachtrijen",
+  "app.settings.workspace.diagProbeCrypto": "Versleuteling van geheimen",
+  "app.settings.workspace.diagStatusOk": "Operationeel",
+  "app.settings.workspace.diagStatusWarn": "Vraagt aandacht",
+  "app.settings.workspace.diagStatusFail": "Buiten dienst",
+  "app.settings.workspace.diagDetailOk": "Antwoordt correct.",
+  "app.settings.workspace.diagTimeout": "Geen antwoord na 5 seconden.",
+  "app.settings.workspace.diagMailOutNone":
+    "Geen provider geconfigureerd: e-mails vertrekken niet (ontwikkelingstransport).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Secret van de inkomende webhook ontbreekt of is de ontwikkelingswaarde (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook gereed. Geen IMAP-postvak te controleren.",
+  "app.settings.workspace.diagMailInImapOk":
+    "Webhook gereed. Gecontroleerde IMAP-postvakken: {count}.",
+  "app.settings.workspace.diagStorageOk": "Testobject geschreven en verwijderd in “{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL ontbreekt: directe verzending zonder wachtrij, SLA-timers inactief.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis antwoordt, maar er is geen enkele run van de worker geregistreerd.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis antwoordt, maar de worker lijkt gestopt — laatste run: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker actief — laatste run: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Sleutel afgeleid van BETTER_AUTH_SECRET: stel een specifieke ENCRYPTION_KEY in.",
+  "app.settings.workspace.diagCryptoDev": "Publieke ontwikkelingssleutel: stel ENCRYPTION_KEY in.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Totaal: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rol",
   "app.settings.workspace.colLastSeen": "Laatst actief",

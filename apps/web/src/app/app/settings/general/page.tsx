@@ -1,4 +1,5 @@
 import { requireAgent } from "@/lib/session";
+import { DiagnosticsCard } from "./diagnostics-card";
 import { getT } from "@/i18n/server";
 import { LOCALES } from "@/i18n/locales";
 import { contacts, db, kbArticles, tickets, users } from "@openhelpdesk/db";
@@ -65,11 +66,11 @@ function utcOffset(timeZone: string): string {
 export default async function GeneralSettingsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string; error?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string; diag?: string }>;
 }) {
   const t = await getT();
   const { tenant, agent: me } = await requireAgent();
-  const { saved, error } = await searchParams;
+  const { saved, error, diag } = await searchParams;
 
   const [admins, [ticketCount], [contactCount], [articleCount]] = await Promise.all([
     db
@@ -232,6 +233,10 @@ export default async function GeneralSettingsPage({
 
         <SaveBar saved={saved === "1"} cancelHref="/app/settings/general" />
       </form>
+
+      {/* Santé de l'installation — sondes exécutées au rendu quand ?diag=1.
+          Le layout settings filtre déjà owner|admin. */}
+      <DiagnosticsCard tenantId={tenant.id} run={diag === "1"} />
 
       {/* Zone de danger — cadre --dang, 2 lignes (panel puis --dang-t) */}
       <Card title={t("app.settings.workspace.dangerZone")} danger style={{ padding: 0 }}>

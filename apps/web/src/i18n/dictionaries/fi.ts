@@ -1115,6 +1115,43 @@ export const fi: Dictionary = {
   "app.settings.workspace.seatsManage": "Hallitse",
   "app.settings.workspace.seatLimitReached":
     "Paikkaraja on saavutettu ({quota}). Poista agentti käytöstä tai lisää paikkoja.",
+  "app.settings.workspace.diagTitle": "Asennuksen kunto",
+  "app.settings.workspace.diagHint":
+    "Tarkistaa tietokannan, lähtevän ja saapuvan sähköpostin, tiedostojen tallennuksen, jonot ja salauksen. Tallennusluotain kirjoittaa ja poistaa testiobjektin.",
+  "app.settings.workspace.diagRun": "Suorita diagnostiikka",
+  "app.settings.workspace.diagRunAgain": "Suorita diagnostiikka uudelleen",
+  "app.settings.workspace.diagProbeDb": "Tietokanta",
+  "app.settings.workspace.diagProbeMailOut": "Lähtevä sähköposti",
+  "app.settings.workspace.diagProbeMailIn": "Saapuva sähköposti",
+  "app.settings.workspace.diagProbeStorage": "Tiedostojen tallennus",
+  "app.settings.workspace.diagProbeQueue": "Jonot",
+  "app.settings.workspace.diagProbeCrypto": "Salaisuuksien salaus",
+  "app.settings.workspace.diagStatusOk": "Toiminnassa",
+  "app.settings.workspace.diagStatusWarn": "Vaatii huomiota",
+  "app.settings.workspace.diagStatusFail": "Ei toiminnassa",
+  "app.settings.workspace.diagDetailOk": "Vastaa oikein.",
+  "app.settings.workspace.diagTimeout": "Ei vastausta 5 sekunnin jälkeen.",
+  "app.settings.workspace.diagMailOutNone":
+    "Palveluntarjoajaa ei ole määritetty: sähköpostit eivät lähde (kehitystila).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Saapuvan webhookin secret puuttuu tai on kehitysarvo (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap":
+    "Webhook valmis. Ei tarkistettavia IMAP-postilaatikoita.",
+  "app.settings.workspace.diagMailInImapOk":
+    "Webhook valmis. Tarkistetut IMAP-postilaatikot: {count}.",
+  "app.settings.workspace.diagStorageOk": "Testiobjekti kirjoitettu ja poistettu: ”{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL puuttuu: suora lähetys ilman jonoa, SLA-ajastimet eivät toimi.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis vastaa, mutta yhtään workerin ajoa ei ole kirjattu.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis vastaa, mutta worker näyttää pysähtyneen — viimeisin ajo: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker toiminnassa — viimeisin ajo: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Avain johdettu BETTER_AUTH_SECRET-arvosta: määritä oma ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Julkinen kehitysavain: määritä ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Yhteensä: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rooli",
   "app.settings.workspace.colLastSeen": "Viimeksi nähty",

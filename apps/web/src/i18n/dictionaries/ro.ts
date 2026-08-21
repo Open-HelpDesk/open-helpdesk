@@ -1348,6 +1348,41 @@ export const ro: Dictionary = {
   "app.settings.workspace.seatsManage": "Gestionați",
   "app.settings.workspace.seatLimitReached":
     "Limita de licențe a fost atinsă ({quota}). Dezactivați un agent sau adăugați licențe.",
+  "app.settings.workspace.diagTitle": "Starea instalării",
+  "app.settings.workspace.diagHint":
+    "Verifică baza de date, emailul de ieșire și de intrare, stocarea fișierelor, cozile și criptarea. Sonda stocării scrie și apoi șterge un obiect de test.",
+  "app.settings.workspace.diagRun": "Rulați diagnosticarea",
+  "app.settings.workspace.diagRunAgain": "Rulați din nou diagnosticarea",
+  "app.settings.workspace.diagProbeDb": "Bază de date",
+  "app.settings.workspace.diagProbeMailOut": "Email de ieșire",
+  "app.settings.workspace.diagProbeMailIn": "Email de intrare",
+  "app.settings.workspace.diagProbeStorage": "Stocarea fișierelor",
+  "app.settings.workspace.diagProbeQueue": "Cozi",
+  "app.settings.workspace.diagProbeCrypto": "Criptarea secretelor",
+  "app.settings.workspace.diagStatusOk": "Funcțional",
+  "app.settings.workspace.diagStatusWarn": "Necesită atenție",
+  "app.settings.workspace.diagStatusFail": "Nefuncțional",
+  "app.settings.workspace.diagDetailOk": "Răspunde corect.",
+  "app.settings.workspace.diagTimeout": "Niciun răspuns după 5 secunde.",
+  "app.settings.workspace.diagMailOutNone":
+    "Niciun furnizor configurat: emailurile nu pleacă (transport de dezvoltare).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Secretul webhookului de intrare lipsește sau are valoarea de dezvoltare (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook pregătit. Nicio căsuță IMAP de verificat.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook pregătit. Căsuțe IMAP verificate: {count}.",
+  "app.settings.workspace.diagStorageOk": "Obiect de test scris și șters în „{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL lipsește: trimitere directă fără coadă, cronometrele SLA inactive.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis răspunde, dar nicio trecere a workerului nu este înregistrată.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis răspunde, dar workerul pare oprit — ultima trecere: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker activ — ultima trecere: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Cheie derivată din BETTER_AUTH_SECRET: definiți o ENCRYPTION_KEY dedicată.",
+  "app.settings.workspace.diagCryptoDev": "Cheie de dezvoltare publică: definiți ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Total: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rol",
   "app.settings.workspace.colLastSeen": "Ultimul acces",

@@ -1118,6 +1118,41 @@ export const it: Dictionary = {
   "app.settings.workspace.seatsManage": "Gestisci",
   "app.settings.workspace.seatLimitReached":
     "Limite di postazioni raggiunto ({quota}). Disattiva un agente o aggiungi postazioni.",
+  "app.settings.workspace.diagTitle": "Salute dell'installazione",
+  "app.settings.workspace.diagHint":
+    "Verifica database, email in uscita e in entrata, archiviazione dei file, code e cifratura. La sonda dell'archiviazione scrive e poi elimina un oggetto di prova.",
+  "app.settings.workspace.diagRun": "Avvia la diagnostica",
+  "app.settings.workspace.diagRunAgain": "Ripeti la diagnostica",
+  "app.settings.workspace.diagProbeDb": "Database",
+  "app.settings.workspace.diagProbeMailOut": "Email in uscita",
+  "app.settings.workspace.diagProbeMailIn": "Email in entrata",
+  "app.settings.workspace.diagProbeStorage": "Archiviazione dei file",
+  "app.settings.workspace.diagProbeQueue": "Code",
+  "app.settings.workspace.diagProbeCrypto": "Cifratura dei segreti",
+  "app.settings.workspace.diagStatusOk": "Operativo",
+  "app.settings.workspace.diagStatusWarn": "Da verificare",
+  "app.settings.workspace.diagStatusFail": "Fuori servizio",
+  "app.settings.workspace.diagDetailOk": "Risponde correttamente.",
+  "app.settings.workspace.diagTimeout": "Nessuna risposta dopo 5 secondi.",
+  "app.settings.workspace.diagMailOutNone":
+    "Nessun provider configurato: le email non partono (trasporto di sviluppo).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Segreto del webhook in entrata assente o di sviluppo (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook pronto. Nessuna casella IMAP da verificare.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook pronto. Caselle IMAP verificate: {count}.",
+  "app.settings.workspace.diagStorageOk": "Oggetto di prova scritto e poi eliminato in «{bucket}».",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL assente: invio diretto senza coda, timer SLA inattivi.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis risponde, ma nessun passaggio del worker risulta registrato.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis risponde, ma il worker sembra fermo — ultimo passaggio: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker attivo — ultimo passaggio: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Chiave derivata da BETTER_AUTH_SECRET: definisci una ENCRYPTION_KEY dedicata.",
+  "app.settings.workspace.diagCryptoDev": "Chiave di sviluppo pubblica: definisci ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Totale: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Ruolo",
   "app.settings.workspace.colLastSeen": "Ultimo accesso",

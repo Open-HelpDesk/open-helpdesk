@@ -1115,6 +1115,41 @@ export const sv: Dictionary = {
   "app.settings.workspace.seatsManage": "Hantera",
   "app.settings.workspace.seatLimitReached":
     "Platsgränsen är nådd ({quota}). Inaktivera en agent eller lägg till platser.",
+  "app.settings.workspace.diagTitle": "Installationens hälsa",
+  "app.settings.workspace.diagHint":
+    "Kontrollerar databasen, utgående och inkommande e-post, fillagring, köer och kryptering. Lagringssonden skriver och raderar ett testobjekt.",
+  "app.settings.workspace.diagRun": "Kör diagnostik",
+  "app.settings.workspace.diagRunAgain": "Kör diagnostik igen",
+  "app.settings.workspace.diagProbeDb": "Databas",
+  "app.settings.workspace.diagProbeMailOut": "Utgående e-post",
+  "app.settings.workspace.diagProbeMailIn": "Inkommande e-post",
+  "app.settings.workspace.diagProbeStorage": "Fillagring",
+  "app.settings.workspace.diagProbeQueue": "Köer",
+  "app.settings.workspace.diagProbeCrypto": "Kryptering av hemligheter",
+  "app.settings.workspace.diagStatusOk": "I drift",
+  "app.settings.workspace.diagStatusWarn": "Kräver tillsyn",
+  "app.settings.workspace.diagStatusFail": "Ur funktion",
+  "app.settings.workspace.diagDetailOk": "Svarar korrekt.",
+  "app.settings.workspace.diagTimeout": "Inget svar efter 5 sekunder.",
+  "app.settings.workspace.diagMailOutNone":
+    "Ingen leverantör konfigurerad: e-post skickas inte (utvecklingstransport).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Den inkommande webhookens secret saknas eller är utvecklingsvärdet (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook redo. Ingen IMAP-brevlåda att kontrollera.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook redo. Kontrollerade IMAP-brevlådor: {count}.",
+  "app.settings.workspace.diagStorageOk": "Testobjekt skrivet och raderat i ”{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL saknas: direkt utskick utan kö, SLA-timers inaktiva.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis svarar, men ingen körning av workern finns registrerad.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis svarar, men workern verkar stoppad — senaste körning: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker aktiv — senaste körning: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Nyckel härledd från BETTER_AUTH_SECRET: ange en dedikerad ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Publik utvecklingsnyckel: ange ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Totalt: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Roll",
   "app.settings.workspace.colLastSeen": "Senast aktiv",

@@ -85,3 +85,18 @@ export function secretHint(secret: string): string {
 export function usingDevEncryptionKey(): boolean {
   return !process.env.ENCRYPTION_KEY && !process.env.BETTER_AUTH_SECRET;
 }
+
+/**
+ * Provenance du matériel de clé — miroir exact de keyMaterial(), pour que le
+ * diagnostic (ST-01) qualifie l'installation sans dupliquer les seuils :
+ * `explicit` = ENCRYPTION_KEY dédiée · `derived` = dérivée de
+ * BETTER_AUTH_SECRET (acceptable, à corriger) · `dev` = clé publique de
+ * développement (jamais en production).
+ */
+export function encryptionKeySource(): "explicit" | "derived" | "dev" {
+  const explicit = process.env.ENCRYPTION_KEY;
+  if (explicit && explicit.length >= 16) return "explicit";
+  const fallback = process.env.BETTER_AUTH_SECRET;
+  if (fallback && fallback.length >= 8) return "derived";
+  return "dev";
+}

@@ -1118,6 +1118,41 @@ export const es: Dictionary = {
   "app.settings.workspace.seatsManage": "Gestionar",
   "app.settings.workspace.seatLimitReached":
     "Límite de puestos alcanzado ({quota}). Desactiva un agente o añade puestos.",
+  "app.settings.workspace.diagTitle": "Salud de la instalación",
+  "app.settings.workspace.diagHint":
+    "Comprueba la base de datos, el correo saliente y entrante, el almacenamiento de archivos, las colas y el cifrado. La sonda de almacenamiento escribe y borra un objeto testigo.",
+  "app.settings.workspace.diagRun": "Ejecutar el diagnóstico",
+  "app.settings.workspace.diagRunAgain": "Repetir el diagnóstico",
+  "app.settings.workspace.diagProbeDb": "Base de datos",
+  "app.settings.workspace.diagProbeMailOut": "Correo saliente",
+  "app.settings.workspace.diagProbeMailIn": "Correo entrante",
+  "app.settings.workspace.diagProbeStorage": "Almacenamiento de archivos",
+  "app.settings.workspace.diagProbeQueue": "Colas",
+  "app.settings.workspace.diagProbeCrypto": "Cifrado de los secretos",
+  "app.settings.workspace.diagStatusOk": "Operativo",
+  "app.settings.workspace.diagStatusWarn": "Requiere atención",
+  "app.settings.workspace.diagStatusFail": "Caído",
+  "app.settings.workspace.diagDetailOk": "Responde correctamente.",
+  "app.settings.workspace.diagTimeout": "Sin respuesta tras 5 segundos.",
+  "app.settings.workspace.diagMailOutNone":
+    "Ningún proveedor configurado: los correos no salen (transporte de desarrollo).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Secreto del webhook entrante ausente o de desarrollo (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook listo. Ningún buzón IMAP que comprobar.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook listo. Buzones IMAP verificados: {count}.",
+  "app.settings.workspace.diagStorageOk": "Objeto testigo escrito y borrado en «{bucket}».",
+  "app.settings.workspace.diagQueueNoUrl":
+    "Falta REDIS_URL: envío directo sin cola, temporizadores de SLA inactivos.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis responde, pero no consta ningún paso del worker.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis responde, pero el worker parece detenido — último paso: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker activo — último paso: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Clave derivada de BETTER_AUTH_SECRET: define una ENCRYPTION_KEY dedicada.",
+  "app.settings.workspace.diagCryptoDev": "Clave de desarrollo pública: define ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Total: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rol",
   "app.settings.workspace.colLastSeen": "Último acceso",

@@ -1224,6 +1224,43 @@ export const et: Dictionary = {
   "app.settings.workspace.seatsManage": "Halda",
   "app.settings.workspace.seatLimitReached":
     "Kohtade limiit on täis ({quota}). Deaktiveerige agent või lisage kohti.",
+  "app.settings.workspace.diagTitle": "Paigalduse seisund",
+  "app.settings.workspace.diagHint":
+    "Kontrollib andmebaasi, väljuvat ja sissetulevat e-posti, failihoidlat, järjekordi ja krüpteerimist. Hoidla sond kirjutab ja seejärel kustutab testobjekti.",
+  "app.settings.workspace.diagRun": "Käivita diagnostika",
+  "app.settings.workspace.diagRunAgain": "Käivita diagnostika uuesti",
+  "app.settings.workspace.diagProbeDb": "Andmebaas",
+  "app.settings.workspace.diagProbeMailOut": "Väljuv e-post",
+  "app.settings.workspace.diagProbeMailIn": "Sissetulev e-post",
+  "app.settings.workspace.diagProbeStorage": "Failihoidla",
+  "app.settings.workspace.diagProbeQueue": "Järjekorrad",
+  "app.settings.workspace.diagProbeCrypto": "Saladuste krüpteerimine",
+  "app.settings.workspace.diagStatusOk": "Töökorras",
+  "app.settings.workspace.diagStatusWarn": "Vajab tähelepanu",
+  "app.settings.workspace.diagStatusFail": "Rivist väljas",
+  "app.settings.workspace.diagDetailOk": "Vastab õigesti.",
+  "app.settings.workspace.diagTimeout": "Vastust pole 5 sekundi järel.",
+  "app.settings.workspace.diagMailOutNone":
+    "Ühtegi teenusepakkujat pole seadistatud: e-kirju ei saadeta (arendustransport).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Sissetuleva webhooki secret puudub või on arendusväärtus (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap":
+    "Webhook valmis. Ühtegi IMAP-postkasti pole kontrollida.",
+  "app.settings.workspace.diagMailInImapOk":
+    "Webhook valmis. Kontrollitud IMAP-postkastid: {count}.",
+  "app.settings.workspace.diagStorageOk": "Testobjekt kirjutatud ja kustutatud: „{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL puudub: otsesaatmine ilma järjekorrata, SLA taimerid ei tööta.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis vastab, kuid workeri ühtegi läbimist pole kirjas.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis vastab, kuid worker näib seiskunud — viimane läbimine: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker töötab — viimane läbimine: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Võti tuletatud saladusest BETTER_AUTH_SECRET: määrake eraldi ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Avalik arendusvõti: määrake ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Kokku: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Roll",
   "app.settings.workspace.colLastSeen": "Viimane sisenemine",

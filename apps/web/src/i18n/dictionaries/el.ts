@@ -1254,6 +1254,43 @@ export const el: Dictionary = {
   "app.settings.workspace.seatsManage": "Διαχείριση",
   "app.settings.workspace.seatLimitReached":
     "Συμπληρώθηκε το όριο θέσεων ({quota}). Απενεργοποιήστε έναν χειριστή ή προσθέστε θέσεις.",
+  "app.settings.workspace.diagTitle": "Υγεία της εγκατάστασης",
+  "app.settings.workspace.diagHint":
+    "Ελέγχει τη βάση δεδομένων, την εξερχόμενη και εισερχόμενη αλληλογραφία, την αποθήκευση αρχείων, τις ουρές και την κρυπτογράφηση. Ο έλεγχος αποθήκευσης γράφει και μετά διαγράφει ένα δοκιμαστικό αντικείμενο.",
+  "app.settings.workspace.diagRun": "Εκτέλεση διαγνωστικών",
+  "app.settings.workspace.diagRunAgain": "Νέα εκτέλεση διαγνωστικών",
+  "app.settings.workspace.diagProbeDb": "Βάση δεδομένων",
+  "app.settings.workspace.diagProbeMailOut": "Εξερχόμενη αλληλογραφία",
+  "app.settings.workspace.diagProbeMailIn": "Εισερχόμενη αλληλογραφία",
+  "app.settings.workspace.diagProbeStorage": "Αποθήκευση αρχείων",
+  "app.settings.workspace.diagProbeQueue": "Ουρές",
+  "app.settings.workspace.diagProbeCrypto": "Κρυπτογράφηση μυστικών",
+  "app.settings.workspace.diagStatusOk": "Σε λειτουργία",
+  "app.settings.workspace.diagStatusWarn": "Απαιτεί προσοχή",
+  "app.settings.workspace.diagStatusFail": "Εκτός λειτουργίας",
+  "app.settings.workspace.diagDetailOk": "Αποκρίνεται σωστά.",
+  "app.settings.workspace.diagTimeout": "Καμία απόκριση μετά από 5 δευτερόλεπτα.",
+  "app.settings.workspace.diagMailOutNone":
+    "Δεν έχει ρυθμιστεί πάροχος: τα email δεν αποστέλλονται (μεταφορά ανάπτυξης).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Το secret του εισερχόμενου webhook λείπει ή είναι η τιμή ανάπτυξης (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook έτοιμο. Καμία θυρίδα IMAP για έλεγχο.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook έτοιμο. Ελεγμένες θυρίδες IMAP: {count}.",
+  "app.settings.workspace.diagStorageOk":
+    "Δοκιμαστικό αντικείμενο γράφτηκε και διαγράφηκε στο «{bucket}».",
+  "app.settings.workspace.diagQueueNoUrl":
+    "Το REDIS_URL λείπει: απευθείας αποστολή χωρίς ουρά, τα χρονόμετρα SLA ανενεργά.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Το Redis αποκρίνεται, αλλά δεν έχει καταγραφεί καμία εκτέλεση του worker.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Το Redis αποκρίνεται, αλλά ο worker φαίνεται σταματημένος — τελευταία εκτέλεση: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk":
+    "Ο worker είναι ενεργός — τελευταία εκτέλεση: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Κλειδί παράγωγο του BETTER_AUTH_SECRET: ορίστε αποκλειστικό ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Δημόσιο κλειδί ανάπτυξης: ορίστε ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Σύνολο: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Ρόλος",
   "app.settings.workspace.colLastSeen": "Τελευταία πρόσβαση",

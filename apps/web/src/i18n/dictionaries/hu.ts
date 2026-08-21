@@ -1237,6 +1237,42 @@ export const hu: Dictionary = {
   "app.settings.workspace.seatsManage": "Kezelés",
   "app.settings.workspace.seatLimitReached":
     "A licencek száma elérte a felső határt ({quota}). Deaktiváljon egy ügyintézőt, vagy adjon hozzá licenceket.",
+  "app.settings.workspace.diagTitle": "A telepítés állapota",
+  "app.settings.workspace.diagHint":
+    "Ellenőrzi az adatbázist, a kimenő és bejövő e-mailt, a fájltárolót, a sorokat és a titkosítást. A tároló szondája ír, majd töröl egy tesztobjektumot.",
+  "app.settings.workspace.diagRun": "Diagnosztika futtatása",
+  "app.settings.workspace.diagRunAgain": "Diagnosztika újbóli futtatása",
+  "app.settings.workspace.diagProbeDb": "Adatbázis",
+  "app.settings.workspace.diagProbeMailOut": "Kimenő e-mail",
+  "app.settings.workspace.diagProbeMailIn": "Bejövő e-mail",
+  "app.settings.workspace.diagProbeStorage": "Fájltároló",
+  "app.settings.workspace.diagProbeQueue": "Sorok",
+  "app.settings.workspace.diagProbeCrypto": "Titkok titkosítása",
+  "app.settings.workspace.diagStatusOk": "Működik",
+  "app.settings.workspace.diagStatusWarn": "Figyelmet igényel",
+  "app.settings.workspace.diagStatusFail": "Nem működik",
+  "app.settings.workspace.diagDetailOk": "Helyesen válaszol.",
+  "app.settings.workspace.diagTimeout": "Nincs válasz 5 másodperc után.",
+  "app.settings.workspace.diagMailOutNone":
+    "Nincs beállított szolgáltató: az e-mailek nem mennek ki (fejlesztői transport).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "A bejövő webhook secretje hiányzik, vagy a fejlesztői érték (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook kész. Nincs ellenőrizendő IMAP-postafiók.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook kész. Ellenőrzött IMAP-postafiókok: {count}.",
+  "app.settings.workspace.diagStorageOk": "Tesztobjektum írva, majd törölve itt: „{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "A REDIS_URL hiányzik: közvetlen küldés sor nélkül, az SLA-időzítők nem futnak.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "A Redis válaszol, de a worker egyetlen futása sincs rögzítve.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "A Redis válaszol, de a worker leállt — utolsó futás: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "A worker aktív — utolsó futás: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "A kulcs a BETTER_AUTH_SECRET-ből származik: állítson be dedikált ENCRYPTION_KEY-t.",
+  "app.settings.workspace.diagCryptoDev":
+    "Nyilvános fejlesztői kulcs: állítson be ENCRYPTION_KEY-t.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Összesen: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Szerepkör",
   "app.settings.workspace.colLastSeen": "Utolsó belépés",

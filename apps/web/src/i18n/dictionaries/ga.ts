@@ -1455,6 +1455,41 @@ export const ga: Dictionary = {
   "app.settings.workspace.seatsManage": "Bainistigh",
   "app.settings.workspace.seatLimitReached":
     "Tá teorainn na suíochán sroichte ({quota}). Díghníomhachtaigh gníomhaire nó cuir suíocháin leis.",
+  "app.settings.workspace.diagTitle": "Sláinte na suiteála",
+  "app.settings.workspace.diagHint":
+    "Seiceálann sé an bunachar sonraí, an ríomhphost amach agus isteach, stóráil na gcomhad, na scuainí agus an criptiú. Scríobhann tóireadóir na stórála réad tástála agus scriosann é ansin.",
+  "app.settings.workspace.diagRun": "Rith an diagnóisic",
+  "app.settings.workspace.diagRunAgain": "Rith an diagnóisic arís",
+  "app.settings.workspace.diagProbeDb": "Bunachar sonraí",
+  "app.settings.workspace.diagProbeMailOut": "Ríomhphost amach",
+  "app.settings.workspace.diagProbeMailIn": "Ríomhphost isteach",
+  "app.settings.workspace.diagProbeStorage": "Stóráil comhad",
+  "app.settings.workspace.diagProbeQueue": "Scuainí",
+  "app.settings.workspace.diagProbeCrypto": "Criptiú na rún",
+  "app.settings.workspace.diagStatusOk": "Ag feidhmiú",
+  "app.settings.workspace.diagStatusWarn": "Aird de dhíth",
+  "app.settings.workspace.diagStatusFail": "As feidhm",
+  "app.settings.workspace.diagDetailOk": "Freagraíonn sé i gceart.",
+  "app.settings.workspace.diagTimeout": "Gan freagra tar éis 5 shoicind.",
+  "app.settings.workspace.diagMailOutNone":
+    "Níl aon soláthraí cumraithe: ní sheoltar ríomhphoist (iompar forbartha).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Tá secret an webhook isteach ar iarraidh nó is luach forbartha é (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook réidh. Níl aon bhosca IMAP le seiceáil.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook réidh. Boscaí IMAP fíoraithe: {count}.",
+  "app.settings.workspace.diagStorageOk": "Réad tástála scríofa agus scriosta i “{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "Tá REDIS_URL ar iarraidh: seoladh díreach gan scuaine, amadóirí SLA neamhghníomhach.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Freagraíonn Redis, ach níl aon rith de chuid an worker taifeadta.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Freagraíonn Redis, ach is cosúil go bhfuil an worker stoptha — an rith deireanach: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker gníomhach — an rith deireanach: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Eochair díorthaithe ó BETTER_AUTH_SECRET: socraigh ENCRYPTION_KEY tiomnaithe.",
+  "app.settings.workspace.diagCryptoDev": "Eochair forbartha phoiblí: socraigh ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Iomlán: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Ról",
   "app.settings.workspace.colLastSeen": "Feicthe go deireanach",

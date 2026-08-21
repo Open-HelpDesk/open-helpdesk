@@ -1222,6 +1222,41 @@ export const bg: Dictionary = {
   "app.settings.workspace.seatsManage": "Управление",
   "app.settings.workspace.seatLimitReached":
     "Достигнат е лимитът на местата ({quota}). Деактивирайте агент или добавете места.",
+  "app.settings.workspace.diagTitle": "Състояние на инсталацията",
+  "app.settings.workspace.diagHint":
+    "Проверява базата данни, изходящата и входящата поща, файловото хранилище, опашките и шифроването. Сондата на хранилището записва и после изтрива тестов обект.",
+  "app.settings.workspace.diagRun": "Стартиране на диагностиката",
+  "app.settings.workspace.diagRunAgain": "Повторно стартиране на диагностиката",
+  "app.settings.workspace.diagProbeDb": "База данни",
+  "app.settings.workspace.diagProbeMailOut": "Изходяща поща",
+  "app.settings.workspace.diagProbeMailIn": "Входяща поща",
+  "app.settings.workspace.diagProbeStorage": "Файлово хранилище",
+  "app.settings.workspace.diagProbeQueue": "Опашки",
+  "app.settings.workspace.diagProbeCrypto": "Шифроване на тайните",
+  "app.settings.workspace.diagStatusOk": "Работи",
+  "app.settings.workspace.diagStatusWarn": "Изисква внимание",
+  "app.settings.workspace.diagStatusFail": "Не работи",
+  "app.settings.workspace.diagDetailOk": "Отговаря коректно.",
+  "app.settings.workspace.diagTimeout": "Няма отговор след 5 секунди.",
+  "app.settings.workspace.diagMailOutNone":
+    "Няма конфигуриран доставчик: имейлите не се изпращат (транспорт за разработка).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Тайната на входящия webhook липсва или е стойността за разработка (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook готов. Няма IMAP кутии за проверка.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook готов. Проверени IMAP кутии: {count}.",
+  "app.settings.workspace.diagStorageOk": "Тестов обект записан и изтрит в „{bucket}“.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL липсва: директно изпращане без опашка, SLA таймерите са неактивни.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis отговаря, но не е отбелязано нито едно преминаване на worker-а.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis отговаря, но worker-ът изглежда спрян — последно преминаване: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker-ът е активен — последно преминаване: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Ключ, извлечен от BETTER_AUTH_SECRET: задайте отделен ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Публичен ключ за разработка: задайте ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Общо: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Роля",
   "app.settings.workspace.colLastSeen": "Последен достъп",

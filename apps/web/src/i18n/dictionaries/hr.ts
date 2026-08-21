@@ -1323,6 +1323,41 @@ export const hr: Dictionary = {
   "app.settings.workspace.seatsManage": "Upravljaj",
   "app.settings.workspace.seatLimitReached":
     "Dosegnut je limit mjesta ({quota}). Deaktivirajte agenta ili dodajte mjesta.",
+  "app.settings.workspace.diagTitle": "Stanje instalacije",
+  "app.settings.workspace.diagHint":
+    "Provjerava bazu podataka, odlaznu i dolaznu e-poštu, pohranu datoteka, redove i šifriranje. Sonda pohrane zapisuje pa briše testni objekt.",
+  "app.settings.workspace.diagRun": "Pokreni dijagnostiku",
+  "app.settings.workspace.diagRunAgain": "Ponovno pokreni dijagnostiku",
+  "app.settings.workspace.diagProbeDb": "Baza podataka",
+  "app.settings.workspace.diagProbeMailOut": "Odlazna e-pošta",
+  "app.settings.workspace.diagProbeMailIn": "Dolazna e-pošta",
+  "app.settings.workspace.diagProbeStorage": "Pohrana datoteka",
+  "app.settings.workspace.diagProbeQueue": "Redovi",
+  "app.settings.workspace.diagProbeCrypto": "Šifriranje tajni",
+  "app.settings.workspace.diagStatusOk": "U funkciji",
+  "app.settings.workspace.diagStatusWarn": "Zahtijeva pažnju",
+  "app.settings.workspace.diagStatusFail": "U kvaru",
+  "app.settings.workspace.diagDetailOk": "Odgovara ispravno.",
+  "app.settings.workspace.diagTimeout": "Nema odgovora nakon 5 sekundi.",
+  "app.settings.workspace.diagMailOutNone":
+    "Nijedan pružatelj nije konfiguriran: e-poruke se ne šalju (razvojni transport).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Secret dolaznog webhooka nedostaje ili je razvojna vrijednost (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook spreman. Nema IMAP pretinaca za provjeru.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook spreman. Provjereni IMAP pretinci: {count}.",
+  "app.settings.workspace.diagStorageOk": "Testni objekt zapisan i obrisan u „{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL nedostaje: izravno slanje bez reda, SLA brojači neaktivni.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis odgovara, ali nijedan prolaz workera nije zabilježen.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis odgovara, ali worker se čini zaustavljenim — posljednji prolaz: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker aktivan — posljednji prolaz: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Ključ izveden iz BETTER_AUTH_SECRET: postavite namjenski ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Javni razvojni ključ: postavite ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Ukupno: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Uloga",
   "app.settings.workspace.colLastSeen": "Posljednji pristup",

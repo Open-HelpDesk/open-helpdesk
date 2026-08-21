@@ -1401,6 +1401,43 @@ export const lt: Dictionary = {
   "app.settings.workspace.seatsManage": "Tvarkyti",
   "app.settings.workspace.seatLimitReached":
     "Pasiektas vietų limitas ({quota}). Išjunkite agentą arba pridėkite vietų.",
+  "app.settings.workspace.diagTitle": "Diegimo būklė",
+  "app.settings.workspace.diagHint":
+    "Patikrina duomenų bazę, siunčiamą ir gaunamą el. paštą, failų saugyklą, eiles ir šifravimą. Saugyklos zondas įrašo, o tada ištrina bandomąjį objektą.",
+  "app.settings.workspace.diagRun": "Paleisti diagnostiką",
+  "app.settings.workspace.diagRunAgain": "Paleisti diagnostiką iš naujo",
+  "app.settings.workspace.diagProbeDb": "Duomenų bazė",
+  "app.settings.workspace.diagProbeMailOut": "Siunčiamas el. paštas",
+  "app.settings.workspace.diagProbeMailIn": "Gaunamas el. paštas",
+  "app.settings.workspace.diagProbeStorage": "Failų saugykla",
+  "app.settings.workspace.diagProbeQueue": "Eilės",
+  "app.settings.workspace.diagProbeCrypto": "Paslapčių šifravimas",
+  "app.settings.workspace.diagStatusOk": "Veikia",
+  "app.settings.workspace.diagStatusWarn": "Reikia dėmesio",
+  "app.settings.workspace.diagStatusFail": "Neveikia",
+  "app.settings.workspace.diagDetailOk": "Atsako teisingai.",
+  "app.settings.workspace.diagTimeout": "Jokio atsakymo po 5 sekundžių.",
+  "app.settings.workspace.diagMailOutNone":
+    "Nesukonfigūruotas joks tiekėjas: el. laiškai nesiunčiami (kūrimo transportas).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Gaunamo webhook secret nėra arba jis yra kūrimo reikšmė (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap":
+    "Webhook parengtas. Nėra tikrintinų IMAP pašto dėžučių.",
+  "app.settings.workspace.diagMailInImapOk":
+    "Webhook parengtas. Patikrintos IMAP pašto dėžutės: {count}.",
+  "app.settings.workspace.diagStorageOk": "Bandomasis objektas įrašytas ir ištrintas: „{bucket}“.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "Nėra REDIS_URL: tiesioginis siuntimas be eilės, SLA laikmačiai neveikia.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis atsako, bet neužfiksuotas nė vienas worker praėjimas.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis atsako, bet worker atrodo sustojęs — paskutinis praėjimas: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker aktyvus — paskutinis praėjimas: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Raktas išvestas iš BETTER_AUTH_SECRET: nustatykite atskirą ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Viešas kūrimo raktas: nustatykite ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Iš viso: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Vaidmuo",
   "app.settings.workspace.colLastSeen": "Paskutinė prieiga",

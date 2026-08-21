@@ -1395,6 +1395,42 @@ export const sk: Dictionary = {
   "app.settings.workspace.seatsManage": "Spravovať",
   "app.settings.workspace.seatLimitReached":
     "Bol dosiahnutý limit licencií ({quota}). Deaktivujte agenta alebo pridajte licencie.",
+  "app.settings.workspace.diagTitle": "Stav inštalácie",
+  "app.settings.workspace.diagHint":
+    "Kontroluje databázu, odchádzajúci a prichádzajúci e-mail, úložisko súborov, fronty a šifrovanie. Sonda úložiska zapíše a potom zmaže testovací objekt.",
+  "app.settings.workspace.diagRun": "Spustiť diagnostiku",
+  "app.settings.workspace.diagRunAgain": "Spustiť diagnostiku znova",
+  "app.settings.workspace.diagProbeDb": "Databáza",
+  "app.settings.workspace.diagProbeMailOut": "Odchádzajúci e-mail",
+  "app.settings.workspace.diagProbeMailIn": "Prichádzajúci e-mail",
+  "app.settings.workspace.diagProbeStorage": "Úložisko súborov",
+  "app.settings.workspace.diagProbeQueue": "Fronty",
+  "app.settings.workspace.diagProbeCrypto": "Šifrovanie tajomstiev",
+  "app.settings.workspace.diagStatusOk": "V prevádzke",
+  "app.settings.workspace.diagStatusWarn": "Vyžaduje pozornosť",
+  "app.settings.workspace.diagStatusFail": "Mimo prevádzky",
+  "app.settings.workspace.diagDetailOk": "Odpovedá správne.",
+  "app.settings.workspace.diagTimeout": "Žiadna odpoveď po 5 sekundách.",
+  "app.settings.workspace.diagMailOutNone":
+    "Nie je nakonfigurovaný žiadny poskytovateľ: e-maily sa neodosielajú (vývojový transport).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Secret prichádzajúceho webhooku chýba alebo má vývojovú hodnotu (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap":
+    "Webhook pripravený. Žiadna schránka IMAP na kontrolu.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook pripravený. Overené schránky IMAP: {count}.",
+  "app.settings.workspace.diagStorageOk": "Testovací objekt zapísaný a zmazaný v „{bucket}“.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL chýba: priame odosielanie bez fronty, časovače SLA nebežia.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis odpovedá, ale žiadny prechod workera nie je zaznamenaný.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis odpovedá, ale worker sa zdá zastavený — posledný prechod: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker aktívny — posledný prechod: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Kľúč odvodený z BETTER_AUTH_SECRET: nastavte vyhradený ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Verejný vývojový kľúč: nastavte ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Spolu: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rola",
   "app.settings.workspace.colLastSeen": "Posledný prístup",

@@ -1391,6 +1391,43 @@ export const sl: Dictionary = {
   "app.settings.workspace.seatsManage": "Upravljaj",
   "app.settings.workspace.seatLimitReached":
     "Dosežen je limit licenc ({quota}). Deaktivirajte agenta ali dodajte licence.",
+  "app.settings.workspace.diagTitle": "Stanje namestitve",
+  "app.settings.workspace.diagHint":
+    "Preveri bazo podatkov, odhodno in dohodno e-pošto, shrambo datotek, vrste in šifriranje. Sonda shrambe zapiše in nato izbriše testni objekt.",
+  "app.settings.workspace.diagRun": "Zaženi diagnostiko",
+  "app.settings.workspace.diagRunAgain": "Znova zaženi diagnostiko",
+  "app.settings.workspace.diagProbeDb": "Baza podatkov",
+  "app.settings.workspace.diagProbeMailOut": "Odhodna e-pošta",
+  "app.settings.workspace.diagProbeMailIn": "Dohodna e-pošta",
+  "app.settings.workspace.diagProbeStorage": "Shramba datotek",
+  "app.settings.workspace.diagProbeQueue": "Vrste",
+  "app.settings.workspace.diagProbeCrypto": "Šifriranje skrivnosti",
+  "app.settings.workspace.diagStatusOk": "Deluje",
+  "app.settings.workspace.diagStatusWarn": "Zahteva pozornost",
+  "app.settings.workspace.diagStatusFail": "Ne deluje",
+  "app.settings.workspace.diagDetailOk": "Odgovarja pravilno.",
+  "app.settings.workspace.diagTimeout": "Ni odgovora po 5 sekundah.",
+  "app.settings.workspace.diagMailOutNone":
+    "Noben ponudnik ni nastavljen: e-pošta se ne pošilja (razvojni transport).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Secret dohodnega webhooka manjka ali ima razvojno vrednost (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap":
+    "Webhook pripravljen. Ni IMAP nabiralnikov za preverjanje.",
+  "app.settings.workspace.diagMailInImapOk":
+    "Webhook pripravljen. Preverjeni IMAP nabiralniki: {count}.",
+  "app.settings.workspace.diagStorageOk": "Testni objekt zapisan in izbrisan v „{bucket}“.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL manjka: neposredno pošiljanje brez vrste, SLA-merilniki neaktivni.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis odgovarja, vendar ni zabeleženega nobenega prehoda workerja.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis odgovarja, vendar se zdi worker ustavljen — zadnji prehod: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker aktiven — zadnji prehod: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Ključ, izpeljan iz BETTER_AUTH_SECRET: nastavite namenski ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Javni razvojni ključ: nastavite ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Skupaj: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Vloga",
   "app.settings.workspace.colLastSeen": "Zadnji dostop",

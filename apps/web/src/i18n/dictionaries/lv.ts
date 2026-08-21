@@ -1341,6 +1341,42 @@ export const lv: Dictionary = {
   "app.settings.workspace.seatsManage": "Pārvaldīt",
   "app.settings.workspace.seatLimitReached":
     "Sasniegts licenču limits ({quota}). Deaktivizējiet aģentu vai pievienojiet licences.",
+  "app.settings.workspace.diagTitle": "Instalācijas stāvoklis",
+  "app.settings.workspace.diagHint":
+    "Pārbauda datubāzi, izejošo un ienākošo e-pastu, failu krātuvi, rindas un šifrēšanu. Krātuves zonde ieraksta un pēc tam izdzēš testa objektu.",
+  "app.settings.workspace.diagRun": "Palaist diagnostiku",
+  "app.settings.workspace.diagRunAgain": "Palaist diagnostiku vēlreiz",
+  "app.settings.workspace.diagProbeDb": "Datubāze",
+  "app.settings.workspace.diagProbeMailOut": "Izejošais e-pasts",
+  "app.settings.workspace.diagProbeMailIn": "Ienākošais e-pasts",
+  "app.settings.workspace.diagProbeStorage": "Failu krātuve",
+  "app.settings.workspace.diagProbeQueue": "Rindas",
+  "app.settings.workspace.diagProbeCrypto": "Noslēpumu šifrēšana",
+  "app.settings.workspace.diagStatusOk": "Darbojas",
+  "app.settings.workspace.diagStatusWarn": "Jāpievērš uzmanība",
+  "app.settings.workspace.diagStatusFail": "Nedarbojas",
+  "app.settings.workspace.diagDetailOk": "Atbild pareizi.",
+  "app.settings.workspace.diagTimeout": "Nav atbildes pēc 5 sekundēm.",
+  "app.settings.workspace.diagMailOutNone":
+    "Nav konfigurēts neviens pakalpojumu sniedzējs: e-pasti netiek sūtīti (izstrādes transports).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Ienākošā webhook secret trūkst vai ir izstrādes vērtība (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook gatavs. Nav pārbaudāmu IMAP pastkastīšu.",
+  "app.settings.workspace.diagMailInImapOk":
+    "Webhook gatavs. Pārbaudītās IMAP pastkastītes: {count}.",
+  "app.settings.workspace.diagStorageOk": "Testa objekts ierakstīts un izdzēsts: “{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "Trūkst REDIS_URL: tieša sūtīšana bez rindas, SLA taimeri neaktīvi.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis atbild, bet nav reģistrēta neviena worker izpilde.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis atbild, bet worker šķiet apturēts — pēdējā izpilde: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker aktīvs — pēdējā izpilde: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Atslēga atvasināta no BETTER_AUTH_SECRET: iestatiet atsevišķu ENCRYPTION_KEY.",
+  "app.settings.workspace.diagCryptoDev": "Publiska izstrādes atslēga: iestatiet ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Kopā: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Loma",
   "app.settings.workspace.colLastSeen": "Pēdējā piekļuve",

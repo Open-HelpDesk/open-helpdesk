@@ -1447,6 +1447,41 @@ export const mt: Dictionary = {
   "app.settings.workspace.seatsManage": "Immexxi",
   "app.settings.workspace.seatLimitReached":
     "Intlaħaq il-limitu tal-postijiet ({quota}). Iddiżattiva aġent jew żid postijiet.",
+  "app.settings.workspace.diagTitle": "Saħħa tal-installazzjoni",
+  "app.settings.workspace.diagHint":
+    "Jiċċekkja d-database, l-email ħiereġ u dieħel, il-ħażna tal-fajls, il-kjuwijiet u l-kriptaġġ. Is-sonda tal-ħażna tikteb u mbagħad tħassar oġġett tat-test.",
+  "app.settings.workspace.diagRun": "Ħaddem id-dijanjostika",
+  "app.settings.workspace.diagRunAgain": "Erġa' ħaddem id-dijanjostika",
+  "app.settings.workspace.diagProbeDb": "Database",
+  "app.settings.workspace.diagProbeMailOut": "Email ħiereġ",
+  "app.settings.workspace.diagProbeMailIn": "Email dieħel",
+  "app.settings.workspace.diagProbeStorage": "Ħażna tal-fajls",
+  "app.settings.workspace.diagProbeQueue": "Kjuwijiet",
+  "app.settings.workspace.diagProbeCrypto": "Kriptaġġ tas-sigrieti",
+  "app.settings.workspace.diagStatusOk": "Jaħdem",
+  "app.settings.workspace.diagStatusWarn": "Jeħtieġ attenzjoni",
+  "app.settings.workspace.diagStatusFail": "Ma jaħdimx",
+  "app.settings.workspace.diagDetailOk": "Iwieġeb sew.",
+  "app.settings.workspace.diagTimeout": "L-ebda tweġiba wara 5 sekondi.",
+  "app.settings.workspace.diagMailOutNone":
+    "L-ebda fornitur ikkonfigurat: l-emails ma jintbagħtux (trasport tal-iżvilupp).",
+  "app.settings.workspace.diagMailInDevSecret":
+    "Is-secret tal-webhook dieħel nieqes jew huwa l-valur tal-iżvilupp (MAIL_INGRESS_SECRET).",
+  "app.settings.workspace.diagMailInNoImap": "Webhook lest. L-ebda kaxxa IMAP x'tiġi ċċekkjata.",
+  "app.settings.workspace.diagMailInImapOk": "Webhook lest. Kaxxi IMAP verifikati: {count}.",
+  "app.settings.workspace.diagStorageOk": "Oġġett tat-test miktub u mħassar f'“{bucket}”.",
+  "app.settings.workspace.diagQueueNoUrl":
+    "REDIS_URL nieqes: bgħit dirett mingħajr kju, it-timers tal-SLA mhux attivi.",
+  "app.settings.workspace.diagQueueWorkerNever":
+    "Redis iwieġeb, iżda l-ebda esekuzzjoni tal-worker ma hija rreġistrata.",
+  "app.settings.workspace.diagQueueWorkerStale":
+    "Redis iwieġeb, iżda l-worker jidher imwaqqaf — l-aħħar esekuzzjoni: {time}.",
+  "app.settings.workspace.diagQueueWorkerOk": "Worker attiv — l-aħħar esekuzzjoni: {time}.",
+  "app.settings.workspace.diagCryptoDerived":
+    "Ċavetta derivata minn BETTER_AUTH_SECRET: issettja ENCRYPTION_KEY dedikata.",
+  "app.settings.workspace.diagCryptoDev": "Ċavetta pubblika tal-iżvilupp: issettja ENCRYPTION_KEY.",
+  "app.settings.workspace.diagMs": "{ms} ms",
+  "app.settings.workspace.diagTotal": "Total: {ms} ms",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rwol",
   "app.settings.workspace.colLastSeen": "L-aħħar aċċess",
