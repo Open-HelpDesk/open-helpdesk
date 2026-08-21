@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { db, tenants } from "@openhelpdesk/db";
 import { eq } from "drizzle-orm";
 import { entitlementsFor } from "@/lib/entitlements";
-import { requireManager } from "../guard";
+import { requireManager } from "@/app/app/settings/guard";
 import { getT } from "@/i18n/server";
 
 export type AgentSsoConfig = {

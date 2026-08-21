@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   transpilePackages: [
     "@openhelpdesk/ui",
+    "@openhelpdesk/ee-web",
     "@openhelpdesk/config",
     "@openhelpdesk/crypto",
     "@openhelpdesk/db",

@@ -8,7 +8,6 @@ import {
   kbCategories,
   organizations,
   orgAdminGrants,
-  orgSsoConnections,
   tickets,
   ticketFields,
   ticketMessages,
@@ -481,18 +480,4 @@ export async function listOrgDomains(tenantId: string, organizationId: string) {
       and(eq(verifiedDomains.tenantId, tenantId), eq(verifiedDomains.organizationId, organizationId)),
     )
     .orderBy(asc(verifiedDomains.createdAt));
-}
-
-/** Connexion SSO de l'organisation (au plus une). */
-export async function getOrgSsoConnection(tenantId: string, organizationId: string) {
-  const [row] = await db
-    .select()
-    .from(orgSsoConnections)
-    .where(
-      and(
-        eq(orgSsoConnections.tenantId, tenantId),
-        eq(orgSsoConnections.organizationId, organizationId),
-      ),
-    );
-  return row ?? null;
 }

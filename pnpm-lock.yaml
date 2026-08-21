@@ -63,6 +63,9 @@ importers:
       '@openhelpdesk/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@openhelpdesk/ee-web':
+        specifier: workspace:*
+        version: link:../../ee/web
       '@openhelpdesk/mail':
         specifier: workspace:*
         version: link:../../packages/mail
@@ -186,6 +189,37 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.0
         version: 19.2.4(@types/react@19.2.18)
+      typescript:
+        specifier: ^5.8.0
+        version: 5.9.3
+
+  ee/web:
+    dependencies:
+      '@openhelpdesk/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@openhelpdesk/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      drizzle-orm:
+        specifier: ^0.44.0
+        version: 0.44.7(kysely@0.29.5)(postgres@3.4.9)
+      next:
+        specifier: '*'
+        version: 15.5.23(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react:
+        specifier: '*'
+        version: 19.2.8
+      react-dom:
+        specifier: '*'
+        version: 19.2.8(react@19.2.8)
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.18
       typescript:
         specifier: ^5.8.0
         version: 5.9.3

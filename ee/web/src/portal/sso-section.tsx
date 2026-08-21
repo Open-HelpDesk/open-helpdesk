@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { saveSsoConnection, toggleSsoEnabled } from "./actions";
-import { CopyButton } from "./copy-button";
+import { saveSsoConnection, toggleSsoEnabled } from "./sso-actions";
+import { CopyButton } from "@/app/help/(portal)/organization/copy-button";
 import { getT, type Translate } from "@/i18n/server";
 import type { MessageKey } from "@/i18n/dictionaries/fr";
 

@@ -1,28 +1,19 @@
 "use server";
 
 /**
- * PT-08 — actions de l'administration d'organisation (réservées aux contacts
- * porteurs d'un orgAdminGrant) : domaines vérifiés (DNS TXT), partage des
- * demandes, persistance minimale de la connexion SSO (le flux OIDC réel
- * arrive au Lot 5b).
+ * PT-08 — actions core de l'administration d'organisation (réservées aux
+ * contacts porteurs d'un orgAdminGrant) : domaines vérifiés (DNS TXT) et
+ * partage des demandes. Les actions SSO vivent dans ee/web (licence
+ * commerciale) : ee/web/src/portal/sso-actions.ts.
  */
 import { randomBytes } from "node:crypto";
 import { resolveTxt } from "node:dns/promises";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { db, organizations, orgSsoConnections, verifiedDomains } from "@openhelpdesk/db";
+import { db, organizations, verifiedDomains } from "@openhelpdesk/db";
 import { and, eq } from "drizzle-orm";
 import { DOMAIN_VERIFICATION_TXT_PREFIX, PUBLIC_EMAIL_DOMAINS } from "@openhelpdesk/config";
-import { getPortalContact } from "@/lib/portal-auth";
-import { getOrgAdminOrg, getOrgSsoConnection } from "@/lib/portal-data";
-
-async function requireOrgAdmin() {
-  const session = await getPortalContact();
-  if (!session) redirect("/help/login");
-  const org = await getOrgAdminOrg(session.tenant.id, session.contact.id);
-  if (!org) redirect("/help");
-  return { session, org };
-}
+import { requireOrgAdmin } from "@/lib/portal-auth";
 
 /** Nom de domaine plausible : étiquettes alphanumériques + tirets, au moins un point. */
 const DOMAIN_RE = /^(?!-)[a-z0-9-]{1,63}(?<!-)(\.(?!-)[a-z0-9-]{1,63}(?<!-))+$/;
@@ -98,100 +89,4 @@ export async function toggleOrgSharing() {
     .where(and(eq(organizations.id, org.id), eq(organizations.tenantId, session.tenant.id)));
   revalidatePath("/help/organization");
   redirect("/help/organization?tab=members");
-}
-
-const PROVIDER_PROTOCOLS = {
-  entra: "oidc",
-  google: "oidc",
-  okta: "oidc",
-  generic: "saml",
-} as const;
-type SsoProviderKey = keyof typeof PROVIDER_PROTOCOLS;
-
-/**
- * « Tester la connexion » (PT-08) : persistance minimale — la connexion est
- * enregistrée en statut "pending", rien n'est activé tant que le test réel
- * (Lot 5b) n'a pas abouti.
- */
-export async function saveSsoConnection(formData: FormData) {
-  const { session, org } = await requireOrgAdmin();
-  const providerRaw = String(formData.get("provider") ?? "entra");
-  const provider: SsoProviderKey =
-    providerRaw in PROVIDER_PROTOCOLS ? (providerRaw as SsoProviderKey) : "entra";
-  const protocol = PROVIDER_PROTOCOLS[provider];
-  const strictMode = formData.get("strict") === "on";
-  const jitEnabled = formData.get("jit") === "on";
-
-  const existing = await getOrgSsoConnection(session.tenant.id, org.id);
-  let previous: Record<string, unknown> = {};
-  if (existing) {
-    try {
-      previous = JSON.parse(Buffer.from(existing.encryptedConfig, "base64").toString("utf8"));
-    } catch {
-      previous = {};
-    }
-  }
-
-  const clientSecret = String(formData.get("clientSecret") ?? "").trim();
-  const config =
-    protocol === "oidc"
-      ? {
-          // TODO chiffrement KMS (Lot 5b) — en attendant, JSON encodé base64, jamais renvoyé en clair.
-          _todo: "chiffrement KMS",
-          clientId: String(formData.get("clientId") ?? "").trim() || previous.clientId || "",
-          clientSecret: clientSecret || previous.clientSecret || "",
-          idpTenant: String(formData.get("idpTenant") ?? "").trim() || previous.idpTenant || "",
-        }
-      : {
-          _todo: "chiffrement KMS",
-          metadataUrl: String(formData.get("metadataUrl") ?? "").trim() || previous.metadataUrl || "",
-        };
-  const encryptedConfig = Buffer.from(JSON.stringify(config)).toString("base64");
-  const secretHint = clientSecret ? clientSecret.slice(-4) : (existing?.secretHint ?? null);
-
-  if (existing) {
-    await db
-      .update(orgSsoConnections)
-      .set({
-        protocol,
-        provider,
-        status: "pending",
-        encryptedConfig,
-        secretHint,
-        strictMode,
-        jitEnabled,
-        updatedAt: new Date(),
-      })
-      .where(eq(orgSsoConnections.id, existing.id));
-  } else {
-    await db.insert(orgSsoConnections).values({
-      tenantId: session.tenant.id,
-      organizationId: org.id,
-      protocol,
-      provider,
-      status: "pending",
-      encryptedConfig,
-      secretHint,
-      strictMode,
-      jitEnabled,
-    });
-  }
-  revalidatePath("/help/organization");
-  redirect(`/help/organization?tab=sso&provider=${provider}`);
-}
-
-/** Bandeau d'activation : bascule pending ↔ disabled (l'activation réelle attend le test, Lot 5b). */
-export async function toggleSsoEnabled() {
-  const { session, org } = await requireOrgAdmin();
-  const existing = await getOrgSsoConnection(session.tenant.id, org.id);
-  if (!existing) redirect("/help/organization?tab=sso");
-  await db
-    .update(orgSsoConnections)
-    .set({
-      status: existing.status === "disabled" ? "pending" : "disabled",
-      updatedAt: new Date(),
-    })
-    .where(eq(orgSsoConnections.id, existing.id));
-  revalidatePath("/help/organization");
-  redirect("/help/organization?tab=sso");
 }

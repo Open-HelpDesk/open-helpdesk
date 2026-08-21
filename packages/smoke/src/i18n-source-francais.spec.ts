@@ -24,6 +24,8 @@ import { join, relative } from "node:path";
  */
 
 const SRC = join(__dirname, "../../../apps/web/src");
+// Le code EE vit hors d'apps/web mais parle aux mêmes écrans : même règle.
+const SRCS = [SRC, join(__dirname, "../../../ee/web/src")];
 const ACCENTS = /[éèêëàâäçîïôöûùü]/i;
 
 /**
@@ -63,14 +65,15 @@ const AUTORISE: { fichier: string; contient: string; pourquoi: string }[] = [
 /** Tous les fichiers TypeScript du produit, hors dictionnaires. */
 function sources(): string[] {
   const out: string[] = [];
-  (function walk(d: string) {
+  function walk(d: string) {
     for (const e of readdirSync(d)) {
       const p = join(d, e);
       if (statSync(p).isDirectory()) {
         if (e !== "i18n" && e !== "node_modules" && e !== ".next") walk(p);
       } else if (/\.tsx?$/.test(e)) out.push(p);
     }
-  })(SRC);
+  }
+  for (const racine of SRCS) walk(racine);
   return out.sort();
 }
 
@@ -129,7 +132,8 @@ test.describe("Français hors dictionnaire", () => {
   test("aucun texte français ne vit en dehors de i18n/", () => {
     const fautes: string[] = [];
     for (const chemin of sources()) {
-      const rel = relative(SRC, chemin);
+      const racine = SRCS.find((r) => chemin.startsWith(r))!;
+      const rel = relative(racine, chemin);
       const code = sansCommentaires(readFileSync(chemin, "utf8"));
       for (const { ligne, texte } of candidats(code)) {
         const permis = AUTORISE.some(

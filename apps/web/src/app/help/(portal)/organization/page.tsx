@@ -1,17 +1,14 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getPortalContact } from "@/lib/portal-auth";
-import {
-  getOrgAdminOrg,
-  getOrgSsoConnection,
-  listOrgDomains,
-  listOrgMembers,
-} from "@/lib/portal-data";
+import { getOrgAdminOrg, listOrgDomains, listOrgMembers } from "@/lib/portal-data";
+import { entitlementsFor } from "@/lib/entitlements";
+import { getOrgSsoConnection } from "@openhelpdesk/ee-web/portal/sso-data";
 import { initials } from "@/i18n/format";
 import { getT } from "@/i18n/server";
 import { DomainsSection } from "./domains-section";
 import { MembersSection } from "./members-section";
-import { SSO_PROVIDERS, SsoSection, type SsoProviderKey } from "./sso-section";
+import { SSO_PROVIDERS, SsoSection, type SsoProviderKey } from "@openhelpdesk/ee-web/portal/sso-section";
 
 const TABS = [
   ["sso", "org.tabSso"],
@@ -35,13 +32,18 @@ export default async function OrganizationPage({
   const org = await getOrgAdminOrg(session.tenant.id, session.contact.id);
   if (!org) redirect("/help");
 
+  // Le SSO délégué est une capacité EE (ST-14/PT-08) : sans elle, l'onglet
+  // disparaît — pas d'écran verrouillé côté client final.
+  const ssoEnabled = entitlementsFor(session.tenant.plan).customerSso;
+  const tabs = ssoEnabled ? TABS : TABS.filter(([key]) => key !== "sso");
+
   const { tab: tabParam, provider: providerParam, error, domain } = await searchParams;
-  const tab = TABS.some(([key]) => key === tabParam) ? tabParam! : "sso";
+  const tab = tabs.some(([key]) => key === tabParam) ? tabParam! : ssoEnabled ? "sso" : "domains";
 
   const [members, domains, conn] = await Promise.all([
     listOrgMembers(session.tenant.id, org.id),
     listOrgDomains(session.tenant.id, org.id),
-    getOrgSsoConnection(session.tenant.id, org.id),
+    ssoEnabled ? getOrgSsoConnection(session.tenant.id, org.id) : Promise.resolve(null),
   ]);
 
   const provider: SsoProviderKey = SSO_PROVIDERS.some((p) => p.key === providerParam)
@@ -88,7 +90,7 @@ export default async function OrganizationPage({
 
         {/* Onglets */}
         <nav className="flex flex-wrap gap-0.5 border-b" style={{ borderColor: "var(--line)" }}>
-          {TABS.map(([key, labelKey]) => {
+          {tabs.map(([key, labelKey]) => {
             const active = tab === key;
             return (
               <Link
@@ -106,7 +108,7 @@ export default async function OrganizationPage({
           })}
         </nav>
 
-        {tab === "sso" && (
+        {tab === "sso" && ssoEnabled && (
           <SsoSection
             tenantSlug={session.tenant.slug}
             orgId={org.id}

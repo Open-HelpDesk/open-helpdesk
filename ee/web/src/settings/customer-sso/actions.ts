@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { db, orgSsoConnections, tenants } from "@openhelpdesk/db";
 import { and, eq, not } from "drizzle-orm";
 import { entitlementsFor } from "@/lib/entitlements";
-import { requireManager } from "../guard";
+import { requireManager } from "@/app/app/settings/guard";
 import { getT } from "@/i18n/server";
 
 async function requirePro() {

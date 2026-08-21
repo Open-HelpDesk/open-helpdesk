@@ -14,6 +14,7 @@
     "@openhelpdesk/config": "workspace:*",
     "@openhelpdesk/crypto": "workspace:*",
     "@openhelpdesk/db": "workspace:*",
+    "@openhelpdesk/ee-web": "workspace:*",
     "@openhelpdesk/mail": "workspace:*",
     "@openhelpdesk/rules": "workspace:*",
     "@openhelpdesk/ui": "workspace:*",

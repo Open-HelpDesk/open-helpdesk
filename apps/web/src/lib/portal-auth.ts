@@ -5,7 +5,9 @@
  */
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { contacts, db, tenants } from "@openhelpdesk/db";
+import { getOrgAdminOrg } from "@/lib/portal-data";
 import { and, eq } from "drizzle-orm";
 
 const SECRET = process.env.BETTER_AUTH_SECRET ?? "dev-secret-change-me";
@@ -67,4 +69,17 @@ export async function getPortalContact() {
     .where(and(eq(contacts.tenantId, tenant.id), eq(contacts.id, contactId)));
   if (!contact || contact.blocked) return null;
   return { tenant, contact };
+}
+
+/**
+ * PT-08 — session portail + organisation dont le contact est administrateur
+ * (orgAdminGrant). Redirige sinon. Partagé entre les actions core (domaines,
+ * partage) et les actions SSO de ee/web.
+ */
+export async function requireOrgAdmin() {
+  const session = await getPortalContact();
+  if (!session) redirect("/help/login");
+  const org = await getOrgAdminOrg(session.tenant.id, session.contact.id);
+  if (!org) redirect("/help");
+  return { session, org };
 }

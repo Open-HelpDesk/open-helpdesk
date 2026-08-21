@@ -1,0 +1,35 @@
+{
+  "name": "@openhelpdesk/ee-web",
+  "version": "0.1.0",
+  "private": true,
+  "license": "SEE LICENSE IN ../LICENSE",
+  "type": "module",
+  "exports": {
+    "./settings/agent-sso/page": "./src/settings/agent-sso/page.tsx",
+    "./settings/agent-sso/actions": "./src/settings/agent-sso/actions.ts",
+    "./settings/customer-sso/page": "./src/settings/customer-sso/page.tsx",
+    "./settings/audit/page": "./src/settings/audit/page.tsx",
+    "./settings/audit/export-route": "./src/settings/audit/export-route.ts",
+    "./portal/sso-section": "./src/portal/sso-section.tsx",
+    "./portal/sso-actions": "./src/portal/sso-actions.ts",
+    "./portal/sso-data": "./src/portal/sso-data.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@openhelpdesk/config": "workspace:*",
+    "@openhelpdesk/db": "workspace:*",
+    "drizzle-orm": "^0.44.0"
+  },
+  "peerDependencies": {
+    "next": "*",
+    "react": "*",
+    "react-dom": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "typescript": "^5.8.0"
+  }
+}
