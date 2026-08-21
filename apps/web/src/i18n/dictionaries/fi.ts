@@ -649,6 +649,9 @@ export const fi: Dictionary = {
   "app.settings.shell.save": "Tallenna",
   "app.settings.shell.planPro": "PRO-PAKETTI",
   "app.settings.shell.upgradeToPro": "Siirry Pro-pakettiin",
+  "app.settings.shell.eeSelfHostedTitle": "Enterprise Edition -ominaisuus",
+  "app.settings.shell.eeSelfHostedText":
+    "Tämä ominaisuus kuuluu kaupallisen lisenssin piiriin (repositorion ee/-hakemisto) eikä sisälly itse isännöityyn avoimen lähdekoodin versioon.",
   "app.settings.email.title": "Sähköpostikanava",
   "app.settings.email.subtitle": "Lähetyspalvelu, vastaanotto-osoitteet, toimitettavuus ja lokit.",
   "app.settings.email.tabSending": "Lähetys",
@@ -1110,6 +1113,8 @@ export const fi: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Viewer-roolit ovat maksuttomia ja rajattomia.",
   "app.settings.workspace.seatsAddAction": "Lisää paikkoja",
   "app.settings.workspace.seatsManage": "Hallitse",
+  "app.settings.workspace.seatLimitReached":
+    "Paikkaraja on saavutettu ({quota}). Poista agentti käytöstä tai lisää paikkoja.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rooli",
   "app.settings.workspace.colLastSeen": "Viimeksi nähty",

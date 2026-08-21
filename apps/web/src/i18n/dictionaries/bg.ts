@@ -663,6 +663,9 @@ export const bg: Dictionary = {
   "app.settings.shell.save": "Запазване",
   "app.settings.shell.planPro": "ПЛАН PRO",
   "app.settings.shell.upgradeToPro": "Преминаване към план Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Функция от изданието Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Тази функция е предмет на търговския лиценз (директорията ee/ в хранилището) и не е включена в самостоятелно хостваното издание с отворен код.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "Имейл канал",
@@ -1217,6 +1220,8 @@ export const bg: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Ролите Viewer са безплатни и неограничени.",
   "app.settings.workspace.seatsAddAction": "Добавяне на места",
   "app.settings.workspace.seatsManage": "Управление",
+  "app.settings.workspace.seatLimitReached":
+    "Достигнат е лимитът на местата ({quota}). Деактивирайте агент или добавете места.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Роля",
   "app.settings.workspace.colLastSeen": "Последен достъп",

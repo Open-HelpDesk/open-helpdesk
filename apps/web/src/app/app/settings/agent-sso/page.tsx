@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { requireAgent } from "@/lib/session";
 import { db, teams, users } from "@openhelpdesk/db";
 import { and, asc, eq, ne } from "drizzle-orm";
+import { getEdition } from "@openhelpdesk/config";
 import { entitlementsFor } from "@/lib/entitlements";
 import {
   Field,
@@ -181,12 +182,22 @@ export default async function AgentSsoPage({
   );
 
   if (!ent.agentSso) {
+    const edition = getEdition();
     return (
       <PageShell maxWidth={1000}>
         {header()}
         <LockedScreen
-          title={t("app.settings.sso.agentLockedTitle")}
-          text={t("app.settings.sso.agentLockedText")}
+          variant={edition}
+          title={t(
+            edition === "cloud"
+              ? "app.settings.sso.agentLockedTitle"
+              : "app.settings.shell.eeSelfHostedTitle",
+          )}
+          text={t(
+            edition === "cloud"
+              ? "app.settings.sso.agentLockedText"
+              : "app.settings.shell.eeSelfHostedText",
+          )}
           ghost={<GhostForm />}
         />
       </PageShell>

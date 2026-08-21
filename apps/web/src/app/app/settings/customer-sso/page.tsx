@@ -11,6 +11,7 @@ import {
   verifiedDomains,
 } from "@openhelpdesk/db";
 import { and, asc, count, eq, gte } from "drizzle-orm";
+import { getEdition } from "@openhelpdesk/config";
 import { entitlementsFor } from "@/lib/entitlements";
 import {
   LockedScreen,
@@ -109,12 +110,22 @@ export default async function CustomerSsoPage({
   );
 
   if (!ent.customerSso) {
+    const edition = getEdition();
     return (
       <PageShell maxWidth={1180}>
         {header}
         <LockedScreen
-          title={t("app.settings.sso.customerLockedTitle")}
-          text={t("app.settings.sso.customerLockedText")}
+          variant={edition}
+          title={t(
+            edition === "cloud"
+              ? "app.settings.sso.customerLockedTitle"
+              : "app.settings.shell.eeSelfHostedTitle",
+          )}
+          text={t(
+            edition === "cloud"
+              ? "app.settings.sso.customerLockedText"
+              : "app.settings.shell.eeSelfHostedText",
+          )}
           ghost={<GhostPark t={t} />}
         />
       </PageShell>

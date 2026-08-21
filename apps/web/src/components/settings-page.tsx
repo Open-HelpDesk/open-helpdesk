@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
+import type { Edition } from "@openhelpdesk/config";
 import { useT } from "@/i18n/client";
 
 /**
@@ -354,15 +355,21 @@ export function PlanProBadge({ label }: { label?: string }) {
   );
 }
 
-/** État verrouillé EE (ST-12/13/14) : voile blur(3px) + carte plan Pro. */
+/**
+ * État verrouillé EE (ST-12/13/14) : voile blur(3px) + carte plan Pro.
+ * En self-hosted le CTA « Passer au plan Pro » n'a pas de destination
+ * (ST-11 est invisible) : badge EE et pas de bouton.
+ */
 export function LockedScreen({
   title,
   text,
   ghost,
+  variant = "cloud",
 }: {
   title: string;
   text: string;
   ghost: ReactNode;
+  variant?: Edition;
 }) {
   const t = useT();
   return (
@@ -382,20 +389,22 @@ export function LockedScreen({
             boxShadow: "0 12px 32px rgba(17,33,28,.14)",
           }}
         >
-          <PlanProBadge />
+          <PlanProBadge label={variant === "self-hosted" ? "EE" : undefined} />
           <h2 className="mt-3 font-semibold" style={{ fontSize: 16, color: "var(--ink)" }}>
             {title}
           </h2>
           <p className="mt-2" style={{ fontSize: 13, color: "var(--ink-2)" }}>
             {text}
           </p>
-          <Link
-            href="/app/settings/billing"
-            className="mt-4 inline-flex items-center rounded-md px-4 font-semibold text-white"
-            style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
-          >
-            {t("app.settings.shell.upgradeToPro")}
-          </Link>
+          {variant === "cloud" && (
+            <Link
+              href="/app/settings/billing"
+              className="mt-4 inline-flex items-center rounded-md px-4 font-semibold text-white"
+              style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+            >
+              {t("app.settings.shell.upgradeToPro")}
+            </Link>
+          )}
         </div>
       </div>
     </div>

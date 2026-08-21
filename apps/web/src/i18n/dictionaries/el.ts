@@ -679,6 +679,9 @@ export const el: Dictionary = {
   "app.settings.shell.save": "Αποθήκευση",
   "app.settings.shell.planPro": "ΠΡΟΓΡΑΜΜΑ PRO",
   "app.settings.shell.upgradeToPro": "Αναβάθμιση στο πρόγραμμα Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Λειτουργία της έκδοσης Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Αυτή η λειτουργία υπόκειται στην εμπορική άδεια (κατάλογος ee/ του αποθετηρίου) και δεν περιλαμβάνεται στην αυτοφιλοξενούμενη έκδοση ανοικτού κώδικα.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "Κανάλι email",
@@ -1249,6 +1252,8 @@ export const el: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Οι ρόλοι Viewer είναι δωρεάν και χωρίς περιορισμό.",
   "app.settings.workspace.seatsAddAction": "Προσθήκη θέσεων",
   "app.settings.workspace.seatsManage": "Διαχείριση",
+  "app.settings.workspace.seatLimitReached":
+    "Συμπληρώθηκε το όριο θέσεων ({quota}). Απενεργοποιήστε έναν χειριστή ή προσθέστε θέσεις.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Ρόλος",
   "app.settings.workspace.colLastSeen": "Τελευταία πρόσβαση",

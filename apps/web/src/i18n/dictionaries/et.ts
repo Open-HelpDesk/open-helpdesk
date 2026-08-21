@@ -671,6 +671,9 @@ export const et: Dictionary = {
   "app.settings.shell.save": "Salvesta",
   "app.settings.shell.planPro": "PRO PAKETT",
   "app.settings.shell.upgradeToPro": "Mine üle Pro paketile",
+  "app.settings.shell.eeSelfHostedTitle": "Väljaande Enterprise Edition funktsioon",
+  "app.settings.shell.eeSelfHostedText":
+    "See funktsioon kuulub kommertslitsentsi alla (hoidla kataloog ee/) ega sisaldu ise majutatavas avatud lähtekoodiga väljaandes.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "E-posti kanal",
@@ -1219,6 +1222,8 @@ export const et: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Viewer-rollid on tasuta ja piiramatud.",
   "app.settings.workspace.seatsAddAction": "Lisa kohti",
   "app.settings.workspace.seatsManage": "Halda",
+  "app.settings.workspace.seatLimitReached":
+    "Kohtade limiit on täis ({quota}). Deaktiveerige agent või lisage kohti.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Roll",
   "app.settings.workspace.colLastSeen": "Viimane sisenemine",

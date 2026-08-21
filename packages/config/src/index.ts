@@ -48,23 +48,22 @@ export const TENANT_RETENTION_DAYS = 60;
 export const PLAN_IDS = ["free", "standard", "pro"] as const;
 export type PlanId = (typeof PLAN_IDS)[number];
 
-export const DEFAULT_PLAN_ENTITLEMENTS: Record<
-  PlanId,
-  {
-    maxAgents: number | null;
-    maxMailboxes: number | null;
-    automations: boolean;
-    sla: boolean;
-    csat: boolean;
-    reports: boolean;
-    ai: boolean;
-    agentSso: boolean;
-    customerSso: boolean;
-    customDomain: boolean;
-    auditLog: boolean;
-    multiBrand: boolean;
-  }
-> = {
+export type PlanEntitlements = {
+  maxAgents: number | null;
+  maxMailboxes: number | null;
+  automations: boolean;
+  sla: boolean;
+  csat: boolean;
+  reports: boolean;
+  ai: boolean;
+  agentSso: boolean;
+  customerSso: boolean;
+  customDomain: boolean;
+  auditLog: boolean;
+  multiBrand: boolean;
+};
+
+export const DEFAULT_PLAN_ENTITLEMENTS: Record<PlanId, PlanEntitlements> = {
   free: {
     maxAgents: 3,
     maxMailboxes: 1,
@@ -136,3 +135,5 @@ export const PUBLIC_EMAIL_DOMAINS = [
 
 /** Préfixe de l'enregistrement TXT de vérification de domaine. */
 export const DOMAIN_VERIFICATION_TXT_PREFIX = "ohd-verify=";
+
+export * from "./edition";

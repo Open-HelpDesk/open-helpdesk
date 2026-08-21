@@ -777,6 +777,9 @@ export const sl: Dictionary = {
   "app.settings.shell.save": "Shrani",
   "app.settings.shell.planPro": "PAKET PRO",
   "app.settings.shell.upgradeToPro": "Nadgradi na paket Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Funkcija izdaje Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Ta funkcija je predmet komercialne licence (imenik ee/ v repozitoriju) in ni vključena v samostojno gostovano odprtokodno izdajo.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "E-poštni kanal",
@@ -1386,6 +1389,8 @@ export const sl: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Vloge Viewer so brezplačne in neomejene.",
   "app.settings.workspace.seatsAddAction": "Dodaj licence",
   "app.settings.workspace.seatsManage": "Upravljaj",
+  "app.settings.workspace.seatLimitReached":
+    "Dosežen je limit licenc ({quota}). Deaktivirajte agenta ali dodajte licence.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Vloga",
   "app.settings.workspace.colLastSeen": "Zadnji dostop",

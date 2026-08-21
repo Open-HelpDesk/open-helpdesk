@@ -3,8 +3,20 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db, mailboxes, teamMembers, teams, tickets, users } from "@openhelpdesk/db";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, count, eq, inArray, ne } from "drizzle-orm";
+import { seatLimitFor } from "@/lib/entitlements";
 import { requireManager } from "../guard";
+
+/** Sièges occupés : agents non désactivés hors viewer — une invitation réserve le sien (ST-02). */
+async function occupiedSeats(tenantId: string): Promise<number> {
+  const [row] = await db
+    .select({ n: count() })
+    .from(users)
+    .where(
+      and(eq(users.tenantId, tenantId), ne(users.status, "disabled"), ne(users.role, "viewer")),
+    );
+  return row?.n ?? 0;
+}
 
 /** ST-02 — Invitation multi-emails (séparés par des virgules) avec un rôle commun. */
 export async function inviteAgents(formData: FormData) {
@@ -21,6 +33,22 @@ export async function inviteAgents(formData: FormData) {
     .map((e) => e.trim().toLowerCase())
     .filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
   if (emails.length === 0) return;
+
+  // Quota de sièges (cloud) : les invitations payantes ne dépassent pas la limite
+  // du plan. Les emails déjà connus ne consomment rien — l'insert ci-dessous est
+  // en onConflictDoNothing.
+  const limit = seatLimitFor(tenant.plan);
+  if (limit !== null && safeRole !== "viewer") {
+    const existing = await db
+      .select({ email: users.email })
+      .from(users)
+      .where(and(eq(users.tenantId, tenant.id), inArray(users.email, emails)));
+    const known = new Set(existing.map((u) => u.email.toLowerCase()));
+    const fresh = emails.filter((e) => !known.has(e)).length;
+    if (fresh > 0 && (await occupiedSeats(tenant.id)) + fresh > limit) {
+      redirect("/app/settings/team?error=seats");
+    }
+  }
 
   for (const email of emails) {
     const localPart = email.split("@")[0] ?? email;
@@ -54,6 +82,14 @@ export async function updateAgentRole(formData: FormData) {
   if (!target) return;
   if (target.role === "owner" && me.role !== "owner") return;
 
+  // Passage viewer → rôle payant : consomme un siège (cloud).
+  if (target.role === "viewer" && role !== "viewer" && target.status !== "disabled") {
+    const limit = seatLimitFor(tenant.plan);
+    if (limit !== null && (await occupiedSeats(tenant.id)) >= limit) {
+      redirect("/app/settings/team?error=seats");
+    }
+  }
+
   await db
     .update(users)
     .set({ role: role as "owner" | "admin" | "agent" | "viewer" })
@@ -75,6 +111,11 @@ export async function toggleAgentActive(formData: FormData) {
   if (target.role === "owner" && me.role !== "owner") return;
 
   if (target.status === "disabled") {
+    // Réactivation : le siège doit être disponible (cloud).
+    const limit = seatLimitFor(tenant.plan);
+    if (limit !== null && target.role !== "viewer" && (await occupiedSeats(tenant.id)) >= limit) {
+      redirect("/app/settings/team?error=seats");
+    }
     await db.update(users).set({ status: "active" }).where(eq(users.id, target.id));
   } else {
     await db.update(users).set({ status: "disabled" }).where(eq(users.id, target.id));

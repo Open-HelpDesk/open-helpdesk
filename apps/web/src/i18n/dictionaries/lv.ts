@@ -739,6 +739,9 @@ export const lv: Dictionary = {
   "app.settings.shell.save": "Saglabāt",
   "app.settings.shell.planPro": "PRO PLĀNS",
   "app.settings.shell.upgradeToPro": "Pāriet uz Pro plānu",
+  "app.settings.shell.eeSelfHostedTitle": "Izdevuma Enterprise Edition funkcija",
+  "app.settings.shell.eeSelfHostedText":
+    "Uz šo funkciju attiecas komerciālā licence (repozitorija katalogs ee/), un tā nav iekļauta pašizvietotajā atvērtā pirmkoda izdevumā.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "E-pasta kanāls",
@@ -1336,6 +1339,8 @@ export const lv: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Viewer lomas ir bez maksas un neierobežotā skaitā.",
   "app.settings.workspace.seatsAddAction": "Pievienot licences",
   "app.settings.workspace.seatsManage": "Pārvaldīt",
+  "app.settings.workspace.seatLimitReached":
+    "Sasniegts licenču limits ({quota}). Deaktivizējiet aģentu vai pievienojiet licences.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Loma",
   "app.settings.workspace.colLastSeen": "Pēdējā piekļuve",

@@ -811,6 +811,9 @@ export const mt: Dictionary = {
   "app.settings.shell.save": "Aħżen",
   "app.settings.shell.planPro": "PJAN PRO",
   "app.settings.shell.upgradeToPro": "Aqbeż għall-pjan Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Funzjonalità tal-edizzjoni Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Din il-funzjonalità hija koperta mil-liċenzja kummerċjali (id-direttorju ee/ tar-repożitorju) u mhijiex inkluża fl-edizzjoni open source ospitata minnek.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "Kanal tal-email",
@@ -1442,6 +1445,8 @@ export const mt: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Ir-rwoli Viewer huma bla ħlas u bla limitu.",
   "app.settings.workspace.seatsAddAction": "Żid postijiet",
   "app.settings.workspace.seatsManage": "Immexxi",
+  "app.settings.workspace.seatLimitReached":
+    "Intlaħaq il-limitu tal-postijiet ({quota}). Iddiżattiva aġent jew żid postijiet.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rwol",
   "app.settings.workspace.colLastSeen": "L-aħħar aċċess",

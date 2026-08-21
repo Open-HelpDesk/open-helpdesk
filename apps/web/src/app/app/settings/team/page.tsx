@@ -5,7 +5,7 @@ import { asc, eq, sql } from "drizzle-orm";
 import { initialsOf } from "@/lib/format";
 import { getT, type Translate } from "@/i18n/server";
 import { Avatar } from "@/components/ticket-bits";
-import { entitlementsFor, seatQuota } from "@/lib/entitlements";
+import { seatLimitFor } from "@/lib/entitlements";
 import {
   Field,
   PageHeader,
@@ -43,7 +43,7 @@ const AV_TONES = [
 export default async function TeamPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string; saved?: string }>;
+  searchParams: Promise<{ tab?: string; saved?: string; error?: string }>;
 }) {
   const t = await getT();
   const { tenant, agent: me } = await requireAgent();
@@ -53,7 +53,7 @@ export default async function TeamPage({
     agent: t("app.settings.workspace.roleAgent"),
     viewer: t("app.settings.workspace.roleViewer"),
   };
-  const { tab, saved } = await searchParams;
+  const { tab, saved, error } = await searchParams;
   const activeTab = tab === "teams" ? "teams" : "agents";
 
   const [agents, teamRows, memberRows, calendars] = await Promise.all([
@@ -73,10 +73,11 @@ export default async function TeamPage({
   ]);
 
   // Une invitation réserve son siège : sinon le quota serait dépassé dès l'acceptation.
+  // En auto-hébergé la limite est null : pas de jauge, pas de plafond.
   const seats = agents.filter((a) => a.status !== "disabled" && a.role !== "viewer").length;
-  const quota = seatQuota(entitlementsFor(tenant.plan));
-  const seatFull = quota > 0 && seats >= quota;
-  const seatPct = quota > 0 ? Math.min(100, Math.round((seats / quota) * 100)) : 0;
+  const quota = seatLimitFor(tenant.plan);
+  const seatFull = quota !== null && seats >= quota;
+  const seatPct = quota !== null && quota > 0 ? Math.min(100, Math.round((seats / quota) * 100)) : 0;
 
   const teamsByUser = new Map<string, string[]>();
   const usersByTeam = new Map<string, string[]>();
@@ -116,10 +117,17 @@ export default async function TeamPage({
       {saved === "1" && (
         <p style={{ fontSize: 12.5, color: "var(--ok)" }}>{t("app.settings.workspace.saved")}</p>
       )}
+      {error === "seats" && quota !== null && (
+        <p style={{ fontSize: 12.5, color: "var(--dang)" }}>
+          {t("app.settings.workspace.seatLimitReached", { quota })}
+        </p>
+      )}
 
       {activeTab === "agents" ? (
         <div className="st-rise flex flex-col" style={{ gap: 16 }}>
-          {/* Carte sièges — 160×7, bordure/fond --wait quand la limite est atteinte */}
+          {/* Carte sièges — 160×7, bordure/fond --wait quand la limite est atteinte.
+              Masquée en auto-hébergé : pas de quota, et son CTA mène à ST-11. */}
+          {quota !== null && (
           <div
             className="flex flex-wrap items-center rounded-[10px] border"
             style={{
@@ -171,6 +179,7 @@ export default async function TeamPage({
                 : t("app.settings.workspace.seatsManage")}
             </Link>
           </div>
+          )}
 
           {/* Table des agents */}
           <div

@@ -1,6 +1,7 @@
 import { requireAgent } from "@/lib/session";
 import { auditEvents, db, users } from "@openhelpdesk/db";
 import { and, asc, desc, eq, gte } from "drizzle-orm";
+import { getEdition } from "@openhelpdesk/config";
 import { entitlementsFor } from "@/lib/entitlements";
 import { LockedScreen, PageHeader, PageShell } from "@/components/settings-page";
 import { AutoSubmitSelect } from "@/components/settings-overlays";
@@ -95,12 +96,22 @@ export default async function AuditPage({
   );
 
   if (!ent.auditLog) {
+    const edition = getEdition();
     return (
       <PageShell maxWidth={1040}>
         {header}
         <LockedScreen
-          title={t("app.settings.dev.auditLockedTitle")}
-          text={t("app.settings.dev.auditLockedText")}
+          variant={edition}
+          title={t(
+            edition === "cloud"
+              ? "app.settings.dev.auditLockedTitle"
+              : "app.settings.shell.eeSelfHostedTitle",
+          )}
+          text={t(
+            edition === "cloud"
+              ? "app.settings.dev.auditLockedText"
+              : "app.settings.shell.eeSelfHostedText",
+          )}
           ghost={<GhostTable t={t} />}
         />
       </PageShell>

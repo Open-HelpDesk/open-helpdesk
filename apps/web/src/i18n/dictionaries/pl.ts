@@ -781,6 +781,9 @@ export const pl: Dictionary = {
   "app.settings.shell.save": "Zapisz",
   "app.settings.shell.planPro": "PLAN PRO",
   "app.settings.shell.upgradeToPro": "Przejdź na plan Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Funkcja edycji Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Ta funkcja podlega licencji komercyjnej (katalog ee/ w repozytorium) i nie wchodzi w skład samodzielnie hostowanej edycji open source.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "Kanał e-mail",
@@ -1398,6 +1401,8 @@ export const pl: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Rola Viewer jest bezpłatna i nielimitowana.",
   "app.settings.workspace.seatsAddAction": "Dodaj stanowiska",
   "app.settings.workspace.seatsManage": "Zarządzaj",
+  "app.settings.workspace.seatLimitReached":
+    "Osiągnięto limit stanowisk ({quota}). Prosimy dezaktywować agenta lub dodać stanowiska.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rola",
   "app.settings.workspace.colLastSeen": "Ostatnia aktywność",

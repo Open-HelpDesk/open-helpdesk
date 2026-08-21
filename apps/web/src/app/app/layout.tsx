@@ -10,6 +10,7 @@ import {
 } from "@openhelpdesk/db";
 import { isManager, requireAgent } from "@/lib/session";
 import { Avatar } from "@/components/ticket-bits";
+import { getEdition } from "@openhelpdesk/config";
 import { CommandPalette } from "@/components/command-palette";
 import { RailNav, TopBar, type ShellCounts } from "@/components/app-shell";
 import { SignOutButton } from "./sign-out-button";
@@ -125,7 +126,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
         </div>
 
-        <CommandPalette />
+        <CommandPalette edition={getEdition()} />
       </div>
     </I18nProvider>
   );

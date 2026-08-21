@@ -775,6 +775,9 @@ export const sk: Dictionary = {
   "app.settings.shell.save": "Uložiť",
   "app.settings.shell.planPro": "PLÁN PRO",
   "app.settings.shell.upgradeToPro": "Prejsť na plán Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Funkcia edície Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Táto funkcia podlieha komerčnej licencii (adresár ee/ v repozitári) a nie je súčasťou samostatne hostovanej open source edície.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "E-mailový kanál",
@@ -1390,6 +1393,8 @@ export const sk: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Roly Viewer sú bezplatné a bez obmedzenia.",
   "app.settings.workspace.seatsAddAction": "Pridať licencie",
   "app.settings.workspace.seatsManage": "Spravovať",
+  "app.settings.workspace.seatLimitReached":
+    "Bol dosiahnutý limit licencií ({quota}). Deaktivujte agenta alebo pridajte licencie.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rola",
   "app.settings.workspace.colLastSeen": "Posledný prístup",

@@ -781,6 +781,9 @@ export const lt: Dictionary = {
   "app.settings.shell.save": "Įrašyti",
   "app.settings.shell.planPro": "PRO PLANAS",
   "app.settings.shell.upgradeToPro": "Pereiti prie Pro plano",
+  "app.settings.shell.eeSelfHostedTitle": "Leidimo „Enterprise Edition“ funkcija",
+  "app.settings.shell.eeSelfHostedText":
+    "Šiai funkcijai taikoma komercinė licencija (saugyklos katalogas ee/), ji neįtraukta į savarankiškai talpinamą atvirojo kodo leidimą.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "El. pašto kanalas",
@@ -1396,6 +1399,8 @@ export const lt: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Viewer vaidmenys nemokami ir neriboti.",
   "app.settings.workspace.seatsAddAction": "Pridėti vietų",
   "app.settings.workspace.seatsManage": "Tvarkyti",
+  "app.settings.workspace.seatLimitReached":
+    "Pasiektas vietų limitas ({quota}). Išjunkite agentą arba pridėkite vietų.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Vaidmuo",
   "app.settings.workspace.colLastSeen": "Paskutinė prieiga",

@@ -773,6 +773,9 @@ export const cs: Dictionary = {
   "app.settings.shell.save": "Uložit",
   "app.settings.shell.planPro": "TARIF PRO",
   "app.settings.shell.upgradeToPro": "Přejít na tarif Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Funkce edice Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Tato funkce podléhá komerční licenci (adresář ee/ v repozitáři) a není součástí samostatně hostované open source edice.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "E-mailový kanál",
@@ -1382,6 +1385,8 @@ export const cs: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Role Viewer jsou zdarma a bez omezení.",
   "app.settings.workspace.seatsAddAction": "Přidat licence",
   "app.settings.workspace.seatsManage": "Spravovat",
+  "app.settings.workspace.seatLimitReached":
+    "Byl dosažen limit licencí ({quota}). Deaktivujte agenta, nebo přidejte licence.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Role",
   "app.settings.workspace.colLastSeen": "Poslední přístup",

@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { STATUS_KEYS, STATUS_TOKEN } from "@/lib/format";
 import { useT } from "@/i18n/client";
+import type { Edition } from "@openhelpdesk/config";
 
 type Results = {
   tickets: { number: number; subject: string; status: string }[];
@@ -31,7 +32,7 @@ type Item = {
 
 const EMPTY: Results = { tickets: [], contacts: [], organizations: [], articles: [] };
 
-export function CommandPalette() {
+export function CommandPalette({ edition }: { edition: Edition }) {
   const t = useT();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -155,18 +156,23 @@ export function CommandPalette() {
       tagBg: "var(--sunk)",
       tagColor: "var(--ink-2)",
     },
-    {
-      key: "action-billing",
-      href: "/app/settings/billing",
-      group: t("app.shell.paletteGroupActions"),
-      label: t("app.shell.paletteGoBilling"),
-      meta: t("app.shell.paletteGoBillingShortcut"),
-      tag: "⌘",
-      tagBg: "var(--sunk)",
-      tagColor: "var(--ink-2)",
-    },
+    // ST-11 est cloud uniquement : pas d'entrée Abonnement en auto-hébergé.
+    ...(edition === "cloud"
+      ? [
+          {
+            key: "action-billing",
+            href: "/app/settings/billing",
+            group: t("app.shell.paletteGroupActions"),
+            label: t("app.shell.paletteGoBilling"),
+            meta: t("app.shell.paletteGoBillingShortcut"),
+            tag: "⌘",
+            tagBg: "var(--sunk)",
+            tagColor: "var(--ink-2)",
+          },
+        ]
+      : []),
   ];
-  const ACTION_COUNT = 2;
+  const ACTION_COUNT = edition === "cloud" ? 2 : 1;
 
   function onInputKey(e: React.KeyboardEvent) {
     if (e.key === "ArrowDown") {

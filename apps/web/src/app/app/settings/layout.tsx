@@ -1,3 +1,4 @@
+import { getEdition } from "@openhelpdesk/config";
 import { requireAgent } from "@/lib/session";
 import { SettingsNav } from "@/components/settings-nav";
 import { getT } from "@/i18n/server";
@@ -38,7 +39,7 @@ export default async function SettingsLayout({ children }: { children: React.Rea
         @keyframes st-pop { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
         .st-pop { animation: st-pop .16s ease both; }
       `}</style>
-      <SettingsNav />
+      <SettingsNav edition={getEdition()} />
       {/* Le padding et la largeur maximale vivent dans PageShell, comme dans le design. */}
       <div className="min-w-0 flex-1 overflow-y-auto" style={{ background: "var(--canvas)" }}>
         {children}

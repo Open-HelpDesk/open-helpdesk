@@ -651,6 +651,9 @@ export const nl: Dictionary = {
   "app.settings.shell.save": "Opslaan",
   "app.settings.shell.planPro": "Pro-plan",
   "app.settings.shell.upgradeToPro": "Overstappen naar Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Functie van de Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Deze functie valt onder de commerciële licentie (de map ee/ in de repository) en is niet inbegrepen in de zelfgehoste opensource-editie.",
   "app.settings.email.title": "E-mailkanaal",
   "app.settings.email.subtitle": "Verzendprovider, ontvangstadressen, afleverbaarheid en logboeken.",
   "app.settings.email.tabSending": "Verzenden",
@@ -1112,6 +1115,8 @@ export const nl: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Viewer-rollen zijn gratis en onbeperkt.",
   "app.settings.workspace.seatsAddAction": "Licenties toevoegen",
   "app.settings.workspace.seatsManage": "Beheren",
+  "app.settings.workspace.seatLimitReached":
+    "Licentielimiet bereikt ({quota}). Deactiveer een agent of voeg licenties toe.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rol",
   "app.settings.workspace.colLastSeen": "Laatst actief",

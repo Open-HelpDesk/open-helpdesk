@@ -742,6 +742,9 @@ export const ro: Dictionary = {
   "app.settings.shell.save": "Salvați",
   "app.settings.shell.planPro": "PLANUL PRO",
   "app.settings.shell.upgradeToPro": "Treceți la planul Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Funcționalitate a ediției Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Această funcționalitate este supusă licenței comerciale (directorul ee/ din depozit) și nu este inclusă în ediția open source auto-găzduită.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "Canal email",
@@ -1343,6 +1346,8 @@ export const ro: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Rolurile Viewer sunt gratuite și nelimitate.",
   "app.settings.workspace.seatsAddAction": "Adăugați licențe",
   "app.settings.workspace.seatsManage": "Gestionați",
+  "app.settings.workspace.seatLimitReached":
+    "Limita de licențe a fost atinsă ({quota}). Dezactivați un agent sau adăugați licențe.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rol",
   "app.settings.workspace.colLastSeen": "Ultimul acces",

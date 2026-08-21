@@ -71,7 +71,10 @@ export async function magicLinkFor(email: string, timeoutMs = 15_000): Promise<s
     const { messages } = (await res.json()) as { messages: MailpitMessage[] };
     const hit = messages.find((m) => m.To.some((t) => t.Address.toLowerCase() === email.toLowerCase()));
     if (hit) {
-      const full = await (await fetch(`${MAILPIT_URL}/api/v1/message/${hit.ID}`)).json();
+      const full = (await (await fetch(`${MAILPIT_URL}/api/v1/message/${hit.ID}`)).json()) as {
+        Text?: string;
+        HTML?: string;
+      };
       const body = `${full.Text ?? ""}${full.HTML ?? ""}`;
       const link = [...body.matchAll(/https?:\/\/[^\s"<>]+/g)]
         .map((m) => m[0])

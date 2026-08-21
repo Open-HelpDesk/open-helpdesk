@@ -651,6 +651,9 @@ export const de: Dictionary = {
   "app.settings.shell.save": "Speichern",
   "app.settings.shell.planPro": "Pro-Tarif",
   "app.settings.shell.upgradeToPro": "Auf den Pro-Tarif wechseln",
+  "app.settings.shell.eeSelfHostedTitle": "Funktion der Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Diese Funktion unterliegt der kommerziellen Lizenz (Verzeichnis ee/ im Repository) und ist in der selbst gehosteten Open-Source-Edition nicht enthalten.",
   "app.settings.email.title": "E-Mail-Kanal",
   "app.settings.email.subtitle": "Versandanbieter, Empfangsadressen, Zustellbarkeit und Protokolle.",
   "app.settings.email.tabSending": "Versand",
@@ -1112,6 +1115,8 @@ export const de: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Viewer-Rollen sind kostenlos und unbegrenzt.",
   "app.settings.workspace.seatsAddAction": "Plätze hinzufügen",
   "app.settings.workspace.seatsManage": "Verwalten",
+  "app.settings.workspace.seatLimitReached":
+    "Platzlimit erreicht ({quota}). Deaktivieren Sie einen Agenten oder fügen Sie Plätze hinzu.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rolle",
   "app.settings.workspace.colLastSeen": "Zuletzt aktiv",

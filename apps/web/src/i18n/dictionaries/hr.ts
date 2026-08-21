@@ -724,6 +724,9 @@ export const hr: Dictionary = {
   "app.settings.shell.save": "Spremi",
   "app.settings.shell.planPro": "PRO PLAN",
   "app.settings.shell.upgradeToPro": "Prijeđi na Pro plan",
+  "app.settings.shell.eeSelfHostedTitle": "Značajka izdanja Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Ova značajka podliježe komercijalnoj licenci (direktorij ee/ u repozitoriju) i nije uključena u samostalno hostano izdanje otvorenog koda.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "Kanal e-pošte",
@@ -1318,6 +1321,8 @@ export const hr: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Uloge Viewer besplatne su i neograničene.",
   "app.settings.workspace.seatsAddAction": "Dodaj mjesta",
   "app.settings.workspace.seatsManage": "Upravljaj",
+  "app.settings.workspace.seatLimitReached":
+    "Dosegnut je limit mjesta ({quota}). Deaktivirajte agenta ili dodajte mjesta.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Uloga",
   "app.settings.workspace.colLastSeen": "Posljednji pristup",

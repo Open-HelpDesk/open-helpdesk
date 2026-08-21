@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+import { isSelfHosted } from "@openhelpdesk/config";
 import { requireAgent } from "@/lib/session";
 import { attachments, db, tickets, users } from "@openhelpdesk/db";
 import { and, count, eq, gte, isNull, ne, sum } from "drizzle-orm";
@@ -62,6 +64,9 @@ function QuotaRow({ label, value, pct }: { label: string; value: string; pct: nu
  * factures (état vide — la facturation vit sur l'offre cloud).
  */
 export default async function BillingPage() {
+  // ST-11 est cloud uniquement : invisible en auto-hébergé (specs/11 § ST-11).
+  if (isSelfHosted()) notFound();
+
   const t = await getT();
   const { tenant } = await requireAgent();
   const planId = planIdOf(tenant.plan);

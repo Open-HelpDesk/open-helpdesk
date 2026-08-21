@@ -650,6 +650,9 @@ export const da: Dictionary = {
   "app.settings.shell.save": "Gem",
   "app.settings.shell.planPro": "Pro-plan",
   "app.settings.shell.upgradeToPro": "Skift til Pro-planen",
+  "app.settings.shell.eeSelfHostedTitle": "Funktion i Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Denne funktion er omfattet af den kommercielle licens (mappen ee/ i repositoriet) og indgår ikke i den selvhostede open source-udgave.",
   "app.settings.email.title": "E-mailkanal",
   "app.settings.email.subtitle": "Afsendelsesudbyder, modtageradresser, leveringsevne og logfiler.",
   "app.settings.email.tabSending": "Afsendelse",
@@ -1111,6 +1114,8 @@ export const da: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Viewer-roller er gratis og ubegrænsede.",
   "app.settings.workspace.seatsAddAction": "Tilføj pladser",
   "app.settings.workspace.seatsManage": "Administrér",
+  "app.settings.workspace.seatLimitReached":
+    "Grænsen for pladser er nået ({quota}). Deaktivér en agent, eller tilføj pladser.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rolle",
   "app.settings.workspace.colLastSeen": "Seneste adgang",

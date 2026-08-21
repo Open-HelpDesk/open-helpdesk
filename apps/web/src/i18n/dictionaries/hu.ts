@@ -677,6 +677,9 @@ export const hu: Dictionary = {
   "app.settings.shell.save": "Mentés",
   "app.settings.shell.planPro": "PRO CSOMAG",
   "app.settings.shell.upgradeToPro": "Váltás a Pro csomagra",
+  "app.settings.shell.eeSelfHostedTitle": "Az Enterprise Edition funkciója",
+  "app.settings.shell.eeSelfHostedText":
+    "Ez a funkció a kereskedelmi licenc hatálya alá tartozik (a tároló ee/ könyvtára), és nem része a saját üzemeltetésű nyílt forráskódú kiadásnak.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "E-mail-csatorna",
@@ -1232,6 +1235,8 @@ export const hu: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "A Viewer szerepkör ingyenes és korlátlan.",
   "app.settings.workspace.seatsAddAction": "Licencek hozzáadása",
   "app.settings.workspace.seatsManage": "Kezelés",
+  "app.settings.workspace.seatLimitReached":
+    "A licencek száma elérte a felső határt ({quota}). Deaktiváljon egy ügyintézőt, vagy adjon hozzá licenceket.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Szerepkör",
   "app.settings.workspace.colLastSeen": "Utolsó belépés",

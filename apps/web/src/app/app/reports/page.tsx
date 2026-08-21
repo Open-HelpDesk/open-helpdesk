@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { asc, eq } from "drizzle-orm";
 import { db, teams } from "@openhelpdesk/db";
+import { isCloud } from "@openhelpdesk/config";
 import { requireAgent } from "@/lib/session";
 import { getReportData } from "@/lib/reports";
 import { duration } from "@/lib/format";
@@ -497,9 +498,12 @@ export default async function ReportsPage({
             {t("app.reports.proPlanBadge")}
           </span>
           <span className="flex-1" />
-          <Link href="/app/settings/billing" style={{ fontSize: 12.5 }}>
-            {t("app.reports.discover")}
-          </Link>
+          {/* Le CTA mène à ST-11, invisible en auto-hébergé : pas de lien mort. */}
+          {isCloud() && (
+            <Link href="/app/settings/billing" style={{ fontSize: 12.5 }}>
+              {t("app.reports.discover")}
+            </Link>
+          )}
         </div>
       </div>
     </div>

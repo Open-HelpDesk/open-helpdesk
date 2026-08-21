@@ -649,6 +649,9 @@ export const sv: Dictionary = {
   "app.settings.shell.save": "Spara",
   "app.settings.shell.planPro": "Pro-plan",
   "app.settings.shell.upgradeToPro": "Uppgradera till Pro-planen",
+  "app.settings.shell.eeSelfHostedTitle": "Funktion i Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Den här funktionen omfattas av den kommersiella licensen (katalogen ee/ i repositoriet) och ingår inte i den självhostade open source-utgåvan.",
   "app.settings.email.title": "E-postkanal",
   "app.settings.email.subtitle": "Sändningsleverantör, mottagaradresser, leveransbarhet och loggar.",
   "app.settings.email.tabSending": "Sändning",
@@ -1110,6 +1113,8 @@ export const sv: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Viewer-roller är gratis och obegränsade.",
   "app.settings.workspace.seatsAddAction": "Lägg till platser",
   "app.settings.workspace.seatsManage": "Hantera",
+  "app.settings.workspace.seatLimitReached":
+    "Platsgränsen är nådd ({quota}). Inaktivera en agent eller lägg till platser.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Roll",
   "app.settings.workspace.colLastSeen": "Senast aktiv",

@@ -9,6 +9,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useT } from "@/i18n/client";
+import type { Edition } from "@openhelpdesk/config";
 import type { MessageKey } from "@/i18n/dictionaries/fr";
 
 type NavItem = { labelKey: MessageKey; href: string; ee?: boolean };
@@ -57,9 +58,15 @@ const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
-export function SettingsNav() {
+export function SettingsNav({ edition }: { edition: Edition }) {
   const t = useT();
   const pathname = usePathname();
+
+  // Self-hosted : pas d'abonnement (ST-11 est invisible en auto-hébergé, specs/11).
+  const groups =
+    edition === "cloud"
+      ? NAV_GROUPS
+      : NAV_GROUPS.filter((group) => group.titleKey !== "app.settingsNav.groupAccount");
 
   return (
     <nav
@@ -72,7 +79,7 @@ export function SettingsNav() {
       >
         {t("app.shell.settings")}
       </p>
-      {NAV_GROUPS.map((group) => (
+      {groups.map((group) => (
         <div key={group.titleKey}>
           <p
             className="font-bold uppercase"

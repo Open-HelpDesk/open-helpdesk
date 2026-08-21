@@ -652,6 +652,9 @@ export const es: Dictionary = {
   "app.settings.shell.save": "Guardar",
   "app.settings.shell.planPro": "PLAN PRO",
   "app.settings.shell.upgradeToPro": "Pasar al plan Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Función de la Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Esta función está sujeta a la licencia comercial (directorio ee/ del repositorio) y no está incluida en la edición open source autoalojada.",
   "app.settings.email.title": "Canal de correo electrónico",
   "app.settings.email.subtitle": "Proveedor de envío, direcciones de recepción, entregabilidad y registros.",
   "app.settings.email.tabSending": "Envío",
@@ -1113,6 +1116,8 @@ export const es: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Los roles Viewer son gratuitos e ilimitados.",
   "app.settings.workspace.seatsAddAction": "Añadir puestos",
   "app.settings.workspace.seatsManage": "Gestionar",
+  "app.settings.workspace.seatLimitReached":
+    "Límite de puestos alcanzado ({quota}). Desactiva un agente o añade puestos.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rol",
   "app.settings.workspace.colLastSeen": "Último acceso",

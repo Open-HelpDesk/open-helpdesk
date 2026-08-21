@@ -6,6 +6,8 @@
 import {
   DEFAULT_PLAN_ENTITLEMENTS,
   PLAN_IDS,
+  SELF_HOSTED_ENTITLEMENTS,
+  isSelfHosted,
   type PlanId,
 } from "@openhelpdesk/config";
 import type { MessageKey } from "@/i18n/dictionaries/fr";
@@ -17,6 +19,7 @@ export function planIdOf(plan: string): PlanId {
 }
 
 export function entitlementsFor(plan: string): Entitlements {
+  if (isSelfHosted()) return SELF_HOSTED_ENTITLEMENTS;
   return DEFAULT_PLAN_ENTITLEMENTS[planIdOf(plan)];
 }
 
@@ -25,6 +28,16 @@ export const DEFAULT_SEAT_QUOTA = 10;
 
 export function seatQuota(ent: Entitlements): number {
   return ent.maxAgents ?? DEFAULT_SEAT_QUOTA;
+}
+
+/**
+ * Limite de sièges applicable : null en auto-hébergé (illimité), sinon le
+ * quota du plan cloud. Le siège compte les agents actifs hors viewer
+ * (ST-02 — une invitation réserve son siège).
+ */
+export function seatLimitFor(plan: string): number | null {
+  if (isSelfHosted()) return null;
+  return seatQuota(DEFAULT_PLAN_ENTITLEMENTS[planIdOf(plan)]);
 }
 
 /**

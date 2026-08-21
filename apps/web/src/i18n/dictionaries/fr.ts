@@ -663,6 +663,9 @@ export const fr = {
   "app.settings.shell.save": "Enregistrer",
   "app.settings.shell.planPro": "PLAN PRO",
   "app.settings.shell.upgradeToPro": "Passer au plan Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Fonctionnalité Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Cette fonctionnalité relève de la licence commerciale (dossier ee/ du dépôt) et n'est pas incluse dans l'édition open source auto-hébergée.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "Canal email",
@@ -1138,6 +1141,8 @@ export const fr = {
   "app.settings.workspace.seatsFreeHint": "Les rôles Viewer sont gratuits et illimités.",
   "app.settings.workspace.seatsAddAction": "Ajouter des sièges",
   "app.settings.workspace.seatsManage": "Gérer",
+  "app.settings.workspace.seatLimitReached":
+    "Limite de sièges atteinte ({quota}). Désactivez un agent ou ajoutez des sièges.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Rôle",
   "app.settings.workspace.colLastSeen": "Dernier accès",

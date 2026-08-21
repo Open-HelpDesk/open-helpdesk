@@ -815,6 +815,9 @@ export const ga: Dictionary = {
   "app.settings.shell.save": "Sábháil",
   "app.settings.shell.planPro": "PLEAN PRO",
   "app.settings.shell.upgradeToPro": "Uasghrádaigh go Pro",
+  "app.settings.shell.eeSelfHostedTitle": "Gné den eagrán Enterprise Edition",
+  "app.settings.shell.eeSelfHostedText":
+    "Tá an ghné seo faoin gceadúnas tráchtála (an chomhadlann ee/ sa stór) agus níl sí san áireamh san eagrán foinse oscailte féin-óstáilte.",
 
   /* --- settings.email --- */
   "app.settings.email.title": "Cainéal ríomhphoist",
@@ -1450,6 +1453,8 @@ export const ga: Dictionary = {
   "app.settings.workspace.seatsFreeHint": "Tá róil Viewer saor in aisce agus gan teorainn.",
   "app.settings.workspace.seatsAddAction": "Cuir suíocháin leis",
   "app.settings.workspace.seatsManage": "Bainistigh",
+  "app.settings.workspace.seatLimitReached":
+    "Tá teorainn na suíochán sroichte ({quota}). Díghníomhachtaigh gníomhaire nó cuir suíocháin leis.",
   "app.settings.workspace.roleAgent": "Agent",
   "app.settings.workspace.colRole": "Ról",
   "app.settings.workspace.colLastSeen": "Feicthe go deireanach",
