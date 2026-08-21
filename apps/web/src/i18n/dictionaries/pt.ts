@@ -9,6 +9,8 @@ export const pt: Dictionary = {
   "chrome.myOrganization": "A minha organização",
   "chrome.signOut": "Terminar sessão",
   "chrome.poweredBy": "Com tecnologia {product}",
+  "chrome.suspendedBanner":
+    "Este serviço está temporariamente suspenso: a consulta continua aberta, os novos pedidos estão desativados.",
   "chrome.copyright": "© {year} {name}",
 
   "home.eyebrow": "Centro de ajuda",
@@ -298,6 +300,11 @@ export const pt: Dictionary = {
   "app.shell.reports": "Relatórios",
   "app.shell.knowledgeBase": "Base de conhecimento",
   "app.shell.settings": "Definições",
+  "app.shell.suspendedTitle": "Este workspace está suspenso",
+  "app.shell.suspendedText": "Contacte o seu administrador para restabelecer o acesso.",
+  "app.shell.suspendedOwnerText":
+    "Escolha um plano ou atualize o seu método de pagamento para reativar o workspace.",
+  "app.shell.suspendedBillingCta": "Abrir Subscrição e faturação",
   "app.shell.myTickets": "Os meus pedidos",
   "app.shell.newTicket": "Novo pedido",
   "app.shell.topbarTickets": { one: "{count} pedido · atualizado agora mesmo", other: "{count} pedidos · atualizado agora mesmo" },
@@ -1500,6 +1507,7 @@ export const pt: Dictionary = {
   "app.login.emailPlaceholder": "voce@empresa.pt",
   "app.login.password": "Palavra-passe",
   "app.login.forgot": "Esqueceu-se da palavra-passe?",
+  "app.login.suspended": "Este workspace está suspenso — contacte o seu administrador.",
   "app.login.submit": "Iniciar sessão",
   "app.login.pending": "A iniciar sessão…",
   "app.login.or": "OU",

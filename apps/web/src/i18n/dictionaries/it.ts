@@ -9,6 +9,8 @@ export const it: Dictionary = {
   "chrome.myOrganization": "La mia organizzazione",
   "chrome.signOut": "Esci",
   "chrome.poweredBy": "Con tecnologia {product}",
+  "chrome.suspendedBanner":
+    "Questo servizio è momentaneamente sospeso: la consultazione resta aperta, le nuove richieste sono disattivate.",
   "chrome.copyright": "© {year} {name}",
 
   "home.eyebrow": "Centro assistenza",
@@ -298,6 +300,11 @@ export const it: Dictionary = {
   "app.shell.reports": "Report",
   "app.shell.knowledgeBase": "Base di conoscenza",
   "app.shell.settings": "Impostazioni",
+  "app.shell.suspendedTitle": "Questo workspace è sospeso",
+  "app.shell.suspendedText": "Contatta il tuo amministratore per ripristinare l'accesso.",
+  "app.shell.suspendedOwnerText":
+    "Scegli un piano o aggiorna il metodo di pagamento per riattivare il workspace.",
+  "app.shell.suspendedBillingCta": "Apri Abbonamento e fatturazione",
   "app.shell.myTickets": "Le mie richieste",
   "app.shell.newTicket": "Nuova richiesta",
   "app.shell.topbarTickets": { one: "{count} richiesta · aggiornata poco fa", other: "{count} richieste · aggiornate poco fa" },
@@ -1496,6 +1503,7 @@ export const it: Dictionary = {
   "app.login.emailPlaceholder": "tu@azienda.it",
   "app.login.password": "Password",
   "app.login.forgot": "Password dimenticata?",
+  "app.login.suspended": "Questo workspace è sospeso — contatta il tuo amministratore.",
   "app.login.submit": "Accedi",
   "app.login.pending": "Accesso…",
   "app.login.or": "OPPURE",

@@ -9,6 +9,8 @@ export const da: Dictionary = {
   "chrome.myOrganization": "Min organisation",
   "chrome.signOut": "Log ud",
   "chrome.poweredBy": "Leveret af {product}",
+  "chrome.suspendedBanner":
+    "Denne tjeneste er midlertidigt suspenderet: læsning er fortsat mulig, nye henvendelser er deaktiveret.",
   "chrome.copyright": "© {year} {name}",
 
   "home.eyebrow": "Hjælpecenter",
@@ -296,6 +298,11 @@ export const da: Dictionary = {
   "app.shell.reports": "Rapporter",
   "app.shell.knowledgeBase": "Vidensbase",
   "app.shell.settings": "Indstillinger",
+  "app.shell.suspendedTitle": "Dette workspace er suspenderet",
+  "app.shell.suspendedText": "Kontakt din administrator for at genoprette adgangen.",
+  "app.shell.suspendedOwnerText":
+    "Vælg en plan, eller opdater din betalingsmetode for at genaktivere dit workspace.",
+  "app.shell.suspendedBillingCta": "Åbn Abonnement & fakturering",
   "app.shell.myTickets": "Mine sager",
   "app.shell.newTicket": "Ny sag",
   "app.shell.topbarTickets": { one: "{count} sag · opdateret lige nu", other: "{count} sager · opdateret lige nu" },
@@ -1489,6 +1496,7 @@ export const da: Dictionary = {
   "app.login.emailPlaceholder": "dig@virksomhed.dk",
   "app.login.password": "Adgangskode",
   "app.login.forgot": "Glemt adgangskoden?",
+  "app.login.suspended": "Dette workspace er suspenderet — kontakt din administrator.",
   "app.login.submit": "Log ind",
   "app.login.pending": "Logger ind…",
   "app.login.or": "ELLER",

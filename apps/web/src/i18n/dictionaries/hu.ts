@@ -10,6 +10,8 @@ export const hu: Dictionary = {
   "chrome.myOrganization": "Szervezetem",
   "chrome.signOut": "Kijelentkezés",
   "chrome.poweredBy": "Működteti: {product}",
+  "chrome.suspendedBanner":
+    "A szolgáltatás átmenetileg szünetel: a böngészés továbbra is elérhető, új kérések nem adhatók be.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -270,6 +272,11 @@ export const hu: Dictionary = {
   "app.shell.reports": "Jelentések",
   "app.shell.knowledgeBase": "Tudásbázis",
   "app.shell.settings": "Beállítások",
+  "app.shell.suspendedTitle": "Ez a workspace fel van függesztve",
+  "app.shell.suspendedText": "Forduljon a rendszergazdához a hozzáférés visszaállításához.",
+  "app.shell.suspendedOwnerText":
+    "Válasszon csomagot, vagy frissítse fizetési módját a workspace újraaktiválásához.",
+  "app.shell.suspendedBillingCta": "Előfizetés és számlázás megnyitása",
   "app.shell.myTickets": "Jegyeim",
   "app.shell.newTicket": "Új jegy",
   "app.shell.topbarTickets": {
@@ -1707,6 +1714,7 @@ export const hu: Dictionary = {
   "app.login.emailPlaceholder": "nev@cegnev.hu",
   "app.login.password": "Jelszó",
   "app.login.forgot": "Elfelejtette a jelszavát?",
+  "app.login.suspended": "Ez a workspace fel van függesztve — forduljon a rendszergazdához.",
   "app.login.submit": "Bejelentkezés",
   "app.login.pending": "Bejelentkezés…",
   "app.login.or": "VAGY",

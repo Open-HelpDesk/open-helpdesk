@@ -10,6 +10,8 @@ export const cs: Dictionary = {
   "chrome.myOrganization": "Moje organizace",
   "chrome.signOut": "Odhlásit se",
   "chrome.poweredBy": "Běží na {product}",
+  "chrome.suspendedBanner":
+    "Služba je dočasně pozastavena: prohlížení zůstává dostupné, nové požadavky jsou vypnuty.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -303,6 +305,11 @@ export const cs: Dictionary = {
   "app.shell.reports": "Přehledy",
   "app.shell.knowledgeBase": "Znalostní báze",
   "app.shell.settings": "Nastavení",
+  "app.shell.suspendedTitle": "Tento workspace je pozastaven",
+  "app.shell.suspendedText": "Obraťte se na svého administrátora, aby obnovil přístup.",
+  "app.shell.suspendedOwnerText":
+    "Vyberte tarif, nebo aktualizujte platební metodu, abyste workspace znovu aktivovali.",
+  "app.shell.suspendedBillingCta": "Otevřít Předplatné a fakturaci",
   "app.shell.myTickets": "Moje tikety",
   "app.shell.newTicket": "Nový tiket",
   "app.shell.topbarTickets": {
@@ -1858,6 +1865,7 @@ export const cs: Dictionary = {
   "app.login.emailPlaceholder": "vy@firma.cz",
   "app.login.password": "Heslo",
   "app.login.forgot": "Zapomněli jste heslo?",
+  "app.login.suspended": "Tento workspace je pozastaven — obraťte se na svého administrátora.",
   "app.login.submit": "Přihlásit se",
   "app.login.pending": "Přihlašování…",
   "app.login.or": "NEBO",

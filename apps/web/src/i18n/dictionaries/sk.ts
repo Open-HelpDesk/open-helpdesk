@@ -10,6 +10,8 @@ export const sk: Dictionary = {
   "chrome.myOrganization": "Moja organizácia",
   "chrome.signOut": "Odhlásiť sa",
   "chrome.poweredBy": "Beží na {product}",
+  "chrome.suspendedBanner":
+    "Služba je dočasne pozastavená: prehliadanie zostáva dostupné, nové požiadavky sú vypnuté.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -304,6 +306,11 @@ export const sk: Dictionary = {
   "app.shell.reports": "Prehľady",
   "app.shell.knowledgeBase": "Databáza znalostí",
   "app.shell.settings": "Nastavenia",
+  "app.shell.suspendedTitle": "Tento workspace je pozastavený",
+  "app.shell.suspendedText": "Obráťte sa na svojho administrátora, aby obnovil prístup.",
+  "app.shell.suspendedOwnerText":
+    "Vyberte plán alebo aktualizujte platobnú metódu, aby ste workspace znova aktivovali.",
+  "app.shell.suspendedBillingCta": "Otvoriť Predplatné a fakturáciu",
   "app.shell.myTickets": "Moje tikety",
   "app.shell.newTicket": "Nový tiket",
   "app.shell.topbarTickets": {
@@ -1876,6 +1883,7 @@ export const sk: Dictionary = {
   "app.login.emailPlaceholder": "vy@firma.sk",
   "app.login.password": "Heslo",
   "app.login.forgot": "Zabudli ste heslo?",
+  "app.login.suspended": "Tento workspace je pozastavený — obráťte sa na svojho administrátora.",
   "app.login.submit": "Prihlásiť sa",
   "app.login.pending": "Prihlasovanie…",
   "app.login.or": "ALEBO",

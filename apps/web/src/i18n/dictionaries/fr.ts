@@ -23,6 +23,8 @@ export const fr = {
   "chrome.myOrganization": "Mon organisation",
   "chrome.signOut": "Se déconnecter",
   "chrome.poweredBy": "Propulsé par {product}",
+  "chrome.suspendedBanner":
+    "Ce service est momentanément suspendu : la consultation reste ouverte, les nouvelles demandes sont désactivées.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -295,6 +297,11 @@ export const fr = {
   "app.shell.reports": "Rapports",
   "app.shell.knowledgeBase": "Base de connaissances",
   "app.shell.settings": "Paramètres",
+  "app.shell.suspendedTitle": "Ce workspace est suspendu",
+  "app.shell.suspendedText": "Contactez votre administrateur pour réactiver l'accès.",
+  "app.shell.suspendedOwnerText":
+    "Choisissez un plan ou mettez à jour votre moyen de paiement pour réactiver le workspace.",
+  "app.shell.suspendedBillingCta": "Ouvrir Abonnement & facturation",
   "app.shell.myTickets": "Mes tickets",
   "app.shell.newTicket": "Nouveau ticket",
   "app.shell.topbarTickets": { one: "{count} ticket · mis à jour à l'instant", other: "{count} tickets · mis à jour à l'instant" },
@@ -1569,6 +1576,7 @@ export const fr = {
   "app.login.emailPlaceholder": "vous@entreprise.fr",
   "app.login.password": "Mot de passe",
   "app.login.forgot": "Mot de passe oublié ?",
+  "app.login.suspended": "Ce workspace est suspendu — contactez votre administrateur.",
   "app.login.submit": "Se connecter",
   "app.login.pending": "Connexion…",
   "app.login.or": "OU",

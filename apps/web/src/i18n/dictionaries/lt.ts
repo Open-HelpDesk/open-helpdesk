@@ -10,6 +10,8 @@ export const lt: Dictionary = {
   "chrome.myOrganization": "Mano organizacija",
   "chrome.signOut": "Atsijungti",
   "chrome.poweredBy": "Veikia su {product}",
+  "chrome.suspendedBanner":
+    "Paslauga laikinai sustabdyta: peržiūra tebegalima, naujos užklausos išjungtos.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -308,6 +310,11 @@ export const lt: Dictionary = {
   "app.shell.reports": "Ataskaitos",
   "app.shell.knowledgeBase": "Žinių bazė",
   "app.shell.settings": "Nustatymai",
+  "app.shell.suspendedTitle": "Ši darbo erdvė sustabdyta",
+  "app.shell.suspendedText": "Kreipkitės į savo administratorių, kad atkurtų prieigą.",
+  "app.shell.suspendedOwnerText":
+    "Pasirinkite planą arba atnaujinkite mokėjimo būdą, kad vėl aktyvintumėte darbo erdvę.",
+  "app.shell.suspendedBillingCta": "Atidaryti Prenumeratą ir sąskaitas",
   "app.shell.myTickets": "Mano užklausos",
   "app.shell.newTicket": "Nauja užklausa",
   "app.shell.topbarTickets": {
@@ -1885,6 +1892,7 @@ export const lt: Dictionary = {
   "app.login.emailPlaceholder": "jus@imone.lt",
   "app.login.password": "Slaptažodis",
   "app.login.forgot": "Pamiršote slaptažodį?",
+  "app.login.suspended": "Ši darbo erdvė sustabdyta — kreipkitės į savo administratorių.",
   "app.login.submit": "Prisijungti",
   "app.login.pending": "Prisijungiama…",
   "app.login.or": "ARBA",

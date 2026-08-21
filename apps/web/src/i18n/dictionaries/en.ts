@@ -9,6 +9,8 @@ export const en: Dictionary = {
   "chrome.myOrganization": "My organisation",
   "chrome.signOut": "Sign out",
   "chrome.poweredBy": "Powered by {product}",
+  "chrome.suspendedBanner":
+    "This service is temporarily suspended: browsing remains available, new requests are disabled.",
   "chrome.copyright": "© {year} {name}",
 
   "home.eyebrow": "Help centre",
@@ -285,6 +287,11 @@ export const en: Dictionary = {
   "app.shell.reports": "Reports",
   "app.shell.knowledgeBase": "Knowledge base",
   "app.shell.settings": "Settings",
+  "app.shell.suspendedTitle": "This workspace is suspended",
+  "app.shell.suspendedText": "Contact your administrator to restore access.",
+  "app.shell.suspendedOwnerText":
+    "Choose a plan or update your payment method to reactivate the workspace.",
+  "app.shell.suspendedBillingCta": "Open Billing & subscription",
   "app.shell.myTickets": "My tickets",
   "app.shell.newTicket": "New ticket",
   "app.shell.topbarTickets": { one: "{count} ticket · updated just now", other: "{count} tickets · updated just now" },
@@ -1480,6 +1487,7 @@ export const en: Dictionary = {
   "app.login.emailPlaceholder": "you@company.com",
   "app.login.password": "Password",
   "app.login.forgot": "Forgot your password?",
+  "app.login.suspended": "This workspace is suspended — contact your administrator.",
   "app.login.submit": "Sign in",
   "app.login.pending": "Signing in…",
   "app.login.or": "OR",

@@ -10,6 +10,8 @@ export const el: Dictionary = {
   "chrome.myOrganization": "Ο οργανισμός μου",
   "chrome.signOut": "Αποσύνδεση",
   "chrome.poweredBy": "Με την τεχνολογία {product}",
+  "chrome.suspendedBanner":
+    "Η υπηρεσία έχει ανασταλεί προσωρινά: η προβολή παραμένει διαθέσιμη, τα νέα αιτήματα είναι απενεργοποιημένα.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -274,6 +276,12 @@ export const el: Dictionary = {
   "app.shell.reports": "Αναφορές",
   "app.shell.knowledgeBase": "Βάση γνώσης",
   "app.shell.settings": "Ρυθμίσεις",
+  "app.shell.suspendedTitle": "Αυτό το workspace έχει ανασταλεί",
+  "app.shell.suspendedText":
+    "Επικοινωνήστε με τον διαχειριστή σας για να αποκατασταθεί η πρόσβαση.",
+  "app.shell.suspendedOwnerText":
+    "Επιλέξτε πρόγραμμα ή ενημερώστε τον τρόπο πληρωμής για να επανενεργοποιήσετε το workspace.",
+  "app.shell.suspendedBillingCta": "Άνοιγμα Συνδρομής και χρέωσης",
   "app.shell.myTickets": "Τα τικέτ μου",
   "app.shell.newTicket": "Νέο τικέτ",
   "app.shell.topbarTickets": {
@@ -1724,6 +1732,7 @@ export const el: Dictionary = {
   "app.login.emailPlaceholder": "onoma@etaireia.gr",
   "app.login.password": "Κωδικός πρόσβασης",
   "app.login.forgot": "Ξεχάσατε τον κωδικό σας;",
+  "app.login.suspended": "Αυτό το workspace έχει ανασταλεί — επικοινωνήστε με τον διαχειριστή σας.",
   "app.login.submit": "Σύνδεση",
   "app.login.pending": "Σύνδεση…",
   "app.login.or": "Ή",

@@ -27,6 +27,14 @@ export default async function LoginPage({
   return (
     <main className="ohd flex min-h-screen items-center justify-center p-4">
       <div className="ohd-rise-slow w-full" style={{ maxWidth: 400 }}>
+        {(tenant?.status === "suspended" || tenant?.status === "deleting") && (
+          <p
+            className="mb-4 rounded-md px-3.5 py-2.5 text-center"
+            style={{ fontSize: 13, background: "var(--dang-t)", color: "var(--dang)" }}
+          >
+            {t("app.login.suspended")}
+          </p>
+        )}
         {/* Logo + nom du workspace */}
         <div className="mb-5 flex flex-col items-center gap-2.5">
           <div

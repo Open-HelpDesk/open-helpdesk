@@ -10,6 +10,8 @@ export const lv: Dictionary = {
   "chrome.myOrganization": "Mana organizācija",
   "chrome.signOut": "Iziet",
   "chrome.poweredBy": "Nodrošina {product}",
+  "chrome.suspendedBanner":
+    "Pakalpojums ir īslaicīgi apturēts: pārlūkošana joprojām ir pieejama, jauni pieprasījumi ir atspējoti.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -294,6 +296,11 @@ export const lv: Dictionary = {
   "app.shell.reports": "Atskaites",
   "app.shell.knowledgeBase": "Zināšanu bāze",
   "app.shell.settings": "Iestatījumi",
+  "app.shell.suspendedTitle": "Šī darbvieta ir apturēta",
+  "app.shell.suspendedText": "Sazinieties ar savu administratoru, lai atjaunotu piekļuvi.",
+  "app.shell.suspendedOwnerText":
+    "Izvēlieties plānu vai atjauniniet maksājuma veidu, lai atkal aktivizētu darbvietu.",
+  "app.shell.suspendedBillingCta": "Atvērt Abonementu un rēķinus",
   "app.shell.myTickets": "Mani pieteikumi",
   "app.shell.newTicket": "Jauns pieteikums",
   "app.shell.topbarTickets": {
@@ -1818,6 +1825,7 @@ export const lv: Dictionary = {
   "app.login.emailPlaceholder": "jus@uznemums.lv",
   "app.login.password": "Parole",
   "app.login.forgot": "Aizmirsāt paroli?",
+  "app.login.suspended": "Šī darbvieta ir apturēta — sazinieties ar savu administratoru.",
   "app.login.submit": "Pieteikties",
   "app.login.pending": "Notiek pieteikšanās…",
   "app.login.or": "VAI",

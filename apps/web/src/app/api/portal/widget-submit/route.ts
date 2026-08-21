@@ -27,6 +27,9 @@ export async function POST(request: NextRequest) {
   }
   const tenant = await getPortalTenant();
   if (!tenant) return NextResponse.json({ error: "tenant_not_found" }, { status: 404 });
+  if (tenant.status === "suspended" || tenant.status === "deleting") {
+    return NextResponse.json({ error: "tenant_suspended" }, { status: 403 });
+  }
 
   const form = await request.formData();
   const email = String(form.get("email") ?? "").trim().toLowerCase();

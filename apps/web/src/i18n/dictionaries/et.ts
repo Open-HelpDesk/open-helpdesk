@@ -10,6 +10,8 @@ export const et: Dictionary = {
   "chrome.myOrganization": "Minu organisatsioon",
   "chrome.signOut": "Logi välja",
   "chrome.poweredBy": "Teenuse pakub {product}",
+  "chrome.suspendedBanner":
+    "Teenus on ajutiselt peatatud: sirvimine on endiselt võimalik, uued pöördumised on keelatud.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -267,6 +269,11 @@ export const et: Dictionary = {
   "app.shell.reports": "Aruanded",
   "app.shell.knowledgeBase": "Teadmusbaas",
   "app.shell.settings": "Seaded",
+  "app.shell.suspendedTitle": "See tööruum on peatatud",
+  "app.shell.suspendedText": "Juurdepääsu taastamiseks pöörduge oma halduri poole.",
+  "app.shell.suspendedOwnerText":
+    "Tööruumi taasaktiveerimiseks valige pakett või uuendage makseviisi.",
+  "app.shell.suspendedBillingCta": "Ava Tellimus ja arveldus",
   "app.shell.myTickets": "Minu piletid",
   "app.shell.newTicket": "Uus pilet",
   "app.shell.topbarTickets": {
@@ -1689,6 +1696,7 @@ export const et: Dictionary = {
   "app.login.emailPlaceholder": "teie@ettevote.ee",
   "app.login.password": "Parool",
   "app.login.forgot": "Kas unustasite parooli?",
+  "app.login.suspended": "See tööruum on peatatud — pöörduge oma halduri poole.",
   "app.login.submit": "Logi sisse",
   "app.login.pending": "Sisselogimine…",
   "app.login.or": "VÕI",

@@ -10,6 +10,8 @@ export const ga: Dictionary = {
   "chrome.myOrganization": "M'eagraíocht",
   "chrome.signOut": "Logáil amach",
   "chrome.poweredBy": "Cumhachtaithe ag {product}",
+  "chrome.suspendedBanner":
+    "Tá an tseirbhís ar fionraí go sealadach: is féidir brabhsáil i gcónaí, tá iarratais nua díchumasaithe.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -322,6 +324,11 @@ export const ga: Dictionary = {
   "app.shell.reports": "Tuairiscí",
   "app.shell.knowledgeBase": "Bunachar eolais",
   "app.shell.settings": "Socruithe",
+  "app.shell.suspendedTitle": "Tá an workspace seo ar fionraí",
+  "app.shell.suspendedText": "Déan teagmháil le do riarthóir chun rochtain a athbhunú.",
+  "app.shell.suspendedOwnerText":
+    "Roghnaigh plean nó nuashonraigh do mhodh íocaíochta chun an workspace a athghníomhachtú.",
+  "app.shell.suspendedBillingCta": "Oscail Síntiús & billeáil",
   "app.shell.myTickets": "Mo thicéid",
   "app.shell.newTicket": "Ticéad nua",
   "app.shell.topbarTickets": {
@@ -1947,6 +1954,7 @@ export const ga: Dictionary = {
   "app.login.emailPlaceholder": "tusa@comhlacht.ie",
   "app.login.password": "Pasfhocal",
   "app.login.forgot": "Pasfhocal dearmadta?",
+  "app.login.suspended": "Tá an workspace seo ar fionraí — déan teagmháil le do riarthóir.",
   "app.login.submit": "Logáil isteach",
   "app.login.pending": "Ag logáil isteach…",
   "app.login.or": "NÓ",

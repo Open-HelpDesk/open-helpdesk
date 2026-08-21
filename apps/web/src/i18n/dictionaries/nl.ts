@@ -9,6 +9,8 @@ export const nl: Dictionary = {
   "chrome.myOrganization": "Mijn organisatie",
   "chrome.signOut": "Uitloggen",
   "chrome.poweredBy": "Mogelijk gemaakt door {product}",
+  "chrome.suspendedBanner":
+    "Deze dienst is tijdelijk opgeschort: raadplegen blijft mogelijk, nieuwe aanvragen zijn uitgeschakeld.",
   "chrome.copyright": "© {year} {name}",
 
   "home.eyebrow": "Helpcentrum",
@@ -297,6 +299,11 @@ export const nl: Dictionary = {
   "app.shell.reports": "Rapporten",
   "app.shell.knowledgeBase": "Kennisbank",
   "app.shell.settings": "Instellingen",
+  "app.shell.suspendedTitle": "Deze workspace is opgeschort",
+  "app.shell.suspendedText": "Neem contact op met uw beheerder om de toegang te herstellen.",
+  "app.shell.suspendedOwnerText":
+    "Kies een abonnement of werk uw betaalmethode bij om de workspace te heractiveren.",
+  "app.shell.suspendedBillingCta": "Abonnement & facturatie openen",
   "app.shell.myTickets": "Mijn tickets",
   "app.shell.newTicket": "Nieuw ticket",
   "app.shell.topbarTickets": { one: "{count} ticket · zojuist bijgewerkt", other: "{count} tickets · zojuist bijgewerkt" },
@@ -1494,6 +1501,7 @@ export const nl: Dictionary = {
   "app.login.emailPlaceholder": "u@bedrijf.nl",
   "app.login.password": "Wachtwoord",
   "app.login.forgot": "Wachtwoord vergeten?",
+  "app.login.suspended": "Deze workspace is opgeschort — neem contact op met uw beheerder.",
   "app.login.submit": "Inloggen",
   "app.login.pending": "Inloggen…",
   "app.login.or": "OF",

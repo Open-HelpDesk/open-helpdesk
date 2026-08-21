@@ -10,6 +10,8 @@ export const ro: Dictionary = {
   "chrome.myOrganization": "Organizația mea",
   "chrome.signOut": "Deconectare",
   "chrome.poweredBy": "Propulsat de {product}",
+  "chrome.suspendedBanner":
+    "Serviciul este suspendat temporar: consultarea rămâne deschisă, cererile noi sunt dezactivate.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -287,6 +289,11 @@ export const ro: Dictionary = {
   "app.shell.reports": "Rapoarte",
   "app.shell.knowledgeBase": "Bază de cunoștințe",
   "app.shell.settings": "Setări",
+  "app.shell.suspendedTitle": "Acest workspace este suspendat",
+  "app.shell.suspendedText": "Contactați administratorul pentru a restabili accesul.",
+  "app.shell.suspendedOwnerText":
+    "Alegeți un plan sau actualizați metoda de plată pentru a reactiva workspace-ul.",
+  "app.shell.suspendedBillingCta": "Deschide Abonament și facturare",
   "app.shell.myTickets": "Tichetele mele",
   "app.shell.newTicket": "Tichet nou",
   "app.shell.topbarTickets": {
@@ -1830,6 +1837,7 @@ export const ro: Dictionary = {
   "app.login.emailPlaceholder": "dvs@companie.ro",
   "app.login.password": "Parolă",
   "app.login.forgot": "Ați uitat parola?",
+  "app.login.suspended": "Acest workspace este suspendat — contactați administratorul.",
   "app.login.submit": "Conectare",
   "app.login.pending": "Se conectează…",
   "app.login.or": "SAU",

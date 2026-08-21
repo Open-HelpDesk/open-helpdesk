@@ -9,6 +9,8 @@ export const de: Dictionary = {
   "chrome.myOrganization": "Meine Organisation",
   "chrome.signOut": "Abmelden",
   "chrome.poweredBy": "Bereitgestellt von {product}",
+  "chrome.suspendedBanner":
+    "Dieser Dienst ist vorübergehend ausgesetzt: Lesen bleibt möglich, neue Anfragen sind deaktiviert.",
   "chrome.copyright": "© {year} {name}",
 
   "home.eyebrow": "Hilfecenter",
@@ -297,6 +299,12 @@ export const de: Dictionary = {
   "app.shell.reports": "Berichte",
   "app.shell.knowledgeBase": "Wissensdatenbank",
   "app.shell.settings": "Einstellungen",
+  "app.shell.suspendedTitle": "Dieser Workspace ist gesperrt",
+  "app.shell.suspendedText":
+    "Wenden Sie sich an Ihren Administrator, um den Zugang wiederherzustellen.",
+  "app.shell.suspendedOwnerText":
+    "Wählen Sie einen Tarif oder aktualisieren Sie Ihre Zahlungsmethode, um den Workspace zu reaktivieren.",
+  "app.shell.suspendedBillingCta": "Abonnement & Abrechnung öffnen",
   "app.shell.myTickets": "Meine Tickets",
   "app.shell.newTicket": "Neues Ticket",
   "app.shell.topbarTickets": { one: "{count} Ticket · gerade aktualisiert", other: "{count} Tickets · gerade aktualisiert" },
@@ -1492,6 +1500,7 @@ export const de: Dictionary = {
   "app.login.emailPlaceholder": "sie@firma.de",
   "app.login.password": "Passwort",
   "app.login.forgot": "Passwort vergessen?",
+  "app.login.suspended": "Dieser Workspace ist gesperrt — wenden Sie sich an Ihren Administrator.",
   "app.login.submit": "Anmelden",
   "app.login.pending": "Anmeldung…",
   "app.login.or": "ODER",

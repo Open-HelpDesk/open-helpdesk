@@ -5,7 +5,7 @@
  * file BullMQ (`mail-send`) pour être réessayé en cas d'échec. Si Redis est indisponible,
  * l'envoi est tenté immédiatement plutôt que perdu.
  */
-import { db, emailDeliveries } from "@openhelpdesk/db";
+import { db, emailDeliveries, tenants } from "@openhelpdesk/db";
 import { eq } from "drizzle-orm";
 import { resolveMailConfig } from "./settings";
 import type { MailKind } from "./types";
@@ -120,6 +120,20 @@ export async function deliverEmail(
     .from(emailDeliveries)
     .where(eq(emailDeliveries.id, deliveryId));
   if (!delivery) return { sent: false, error: "Livraison introuvable", from: "" };
+
+  // Tenant suspendu : le sortant est coupé (l'entrant continue d'être ingéré).
+  // sent:true = « traité » — la livraison est marquée en échec, sans retry BullMQ.
+  const [tenantRow] = await db
+    .select({ status: tenants.status })
+    .from(tenants)
+    .where(eq(tenants.id, delivery.tenantId));
+  if (tenantRow && tenantRow.status !== "active" && tenantRow.status !== "trial") {
+    await db
+      .update(emailDeliveries)
+      .set({ status: "failed", error: "tenant_suspended" })
+      .where(eq(emailDeliveries.id, deliveryId));
+    return { sent: true, from: "" };
+  }
 
   const config = await resolveMailConfig(delivery.tenantId);
   const { text, headers } = body;

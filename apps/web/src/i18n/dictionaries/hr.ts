@@ -10,6 +10,8 @@ export const hr: Dictionary = {
   "chrome.myOrganization": "Moja organizacija",
   "chrome.signOut": "Odjava",
   "chrome.poweredBy": "Pokreće {product}",
+  "chrome.suspendedBanner":
+    "Usluga je privremeno suspendirana: pregled ostaje dostupan, novi zahtjevi su onemogućeni.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -279,6 +281,11 @@ export const hr: Dictionary = {
   "app.shell.reports": "Izvještaji",
   "app.shell.knowledgeBase": "Baza znanja",
   "app.shell.settings": "Postavke",
+  "app.shell.suspendedTitle": "Ovaj workspace je suspendiran",
+  "app.shell.suspendedText": "Obratite se svojem administratoru za ponovni pristup.",
+  "app.shell.suspendedOwnerText":
+    "Odaberite plan ili ažurirajte način plaćanja da biste ponovno aktivirali workspace.",
+  "app.shell.suspendedBillingCta": "Otvori Pretplatu i naplatu",
   "app.shell.myTickets": "Moji tiketi",
   "app.shell.newTicket": "Novi tiket",
   "app.shell.topbarTickets": {
@@ -1796,6 +1803,7 @@ export const hr: Dictionary = {
   "app.login.emailPlaceholder": "vi@firma.hr",
   "app.login.password": "Zaporka",
   "app.login.forgot": "Zaboravili ste zaporku?",
+  "app.login.suspended": "Ovaj workspace je suspendiran — obratite se svojem administratoru.",
   "app.login.submit": "Prijavi se",
   "app.login.pending": "Prijava…",
   "app.login.or": "ILI",

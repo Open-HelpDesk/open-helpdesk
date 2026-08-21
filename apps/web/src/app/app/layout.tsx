@@ -1,4 +1,6 @@
 import { Suspense } from "react";
+import Link from "next/link";
+import { headers } from "next/headers";
 import { and, count, eq, inArray, isNull } from "drizzle-orm";
 import {
   contacts,
@@ -25,6 +27,41 @@ import { getT } from "@/i18n/server";
  */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { tenant, agent } = await requireAgent();
+  const t0 = await getT();
+
+  // Workspace suspendu (impayé, fin d'essai…) : tout est bloqué, sauf
+  // Abonnement & facturation pour l'Owner — c'est là que la suspension se lève.
+  if (tenant.status === "suspended" || tenant.status === "deleting") {
+    const pathname = (await headers()).get("x-pathname") ?? "";
+    const ownerOnBilling =
+      agent.role === "owner" && pathname.startsWith("/app/settings/billing");
+    if (!ownerOnBilling) {
+      return (
+        <main className="ohd flex min-h-screen items-center justify-center p-6">
+          <div className="w-full text-center" style={{ maxWidth: 440 }}>
+            <h1 className="font-bold" style={{ fontSize: 22, color: "var(--ink)" }}>
+              {t0("app.shell.suspendedTitle")}
+            </h1>
+            <p className="mt-3" style={{ fontSize: 14, color: "var(--ink-2)" }}>
+              {agent.role === "owner"
+                ? t0("app.shell.suspendedOwnerText")
+                : t0("app.shell.suspendedText")}
+            </p>
+            {agent.role === "owner" && (
+              <Link
+                href="/app/settings/billing"
+                className="mt-5 inline-flex items-center rounded-md px-4 font-semibold text-white"
+                style={{ height: 36, fontSize: 13.5, background: "var(--acc)" }}
+              >
+                {t0("app.shell.suspendedBillingCta")}
+              </Link>
+            )}
+          </div>
+        </main>
+      );
+    }
+  }
+
   const branding = (tenant.branding ?? {}) as { accentColor?: string; logoUrl?: string };
 
   const [[myOpen], [contactCount], [orgCount], [articleCount], [categoryCount]] =

@@ -123,6 +123,8 @@ const URGENCY_TO_PRIORITY: Record<string, "low" | "normal" | "high"> = {
 export async function submitRequest(formData: FormData) {
   const tenant = await getPortalTenant();
   if (!tenant) return;
+  // Workspace suspendu : consultation ouverte, création coupée (bandeau côté layout).
+  if (tenant.status === "suspended" || tenant.status === "deleting") return;
   const session = await getPortalContact();
 
   const email =
@@ -192,6 +194,10 @@ export async function submitRequest(formData: FormData) {
 
 /** PT-06 — répondre sur sa demande (rouvre si résolue, côté moteur). */
 export async function replyToRequest(formData: FormData) {
+  {
+    const tenant = await getPortalTenant();
+    if (tenant && (tenant.status === "suspended" || tenant.status === "deleting")) return;
+  }
   const session = await getPortalContact();
   if (!session) redirect("/help/login");
   const number = Number(formData.get("number"));

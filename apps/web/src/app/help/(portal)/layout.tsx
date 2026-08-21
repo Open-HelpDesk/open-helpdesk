@@ -29,6 +29,14 @@ export default async function PortalChromeLayout({ children }: { children: React
 
   return (
     <div className="flex min-h-screen flex-col" style={{ background: "var(--bg)" }}>
+      {(tenant?.status === "suspended" || tenant?.status === "deleting") && (
+        <p
+          className="px-4 py-2.5 text-center"
+          style={{ fontSize: 13, background: "var(--wait-t)", color: "var(--wait)" }}
+        >
+          {t("chrome.suspendedBanner")}
+        </p>
+      )}
       <header
         className="flex-none border-b"
         style={{ background: "var(--panel)", borderColor: "var(--line-2)" }}

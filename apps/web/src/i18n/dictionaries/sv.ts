@@ -9,6 +9,8 @@ export const sv: Dictionary = {
   "chrome.myOrganization": "Min organisation",
   "chrome.signOut": "Logga ut",
   "chrome.poweredBy": "Drivs av {product}",
+  "chrome.suspendedBanner":
+    "Tjänsten är tillfälligt avstängd: läsning är fortfarande möjlig, nya ärenden är inaktiverade.",
   "chrome.copyright": "© {year} {name}",
 
   "home.eyebrow": "Hjälpcenter",
@@ -295,6 +297,11 @@ export const sv: Dictionary = {
   "app.shell.reports": "Rapporter",
   "app.shell.knowledgeBase": "Kunskapsbas",
   "app.shell.settings": "Inställningar",
+  "app.shell.suspendedTitle": "Den här arbetsytan är avstängd",
+  "app.shell.suspendedText": "Kontakta din administratör för att återställa åtkomsten.",
+  "app.shell.suspendedOwnerText":
+    "Välj en plan eller uppdatera din betalningsmetod för att återaktivera arbetsytan.",
+  "app.shell.suspendedBillingCta": "Öppna Prenumeration & fakturering",
   "app.shell.myTickets": "Mina ärenden",
   "app.shell.newTicket": "Nytt ärende",
   "app.shell.topbarTickets": { one: "{count} ärende · uppdaterat nyss", other: "{count} ärenden · uppdaterat nyss" },
@@ -1510,6 +1517,7 @@ export const sv: Dictionary = {
   "app.login.emailPlaceholder": "du@foretag.se",
   "app.login.password": "Lösenord",
   "app.login.forgot": "Glömt lösenordet?",
+  "app.login.suspended": "Den här arbetsytan är avstängd — kontakta din administratör.",
   "app.login.submit": "Logga in",
   "app.login.pending": "Loggar in…",
   "app.login.or": "ELLER",

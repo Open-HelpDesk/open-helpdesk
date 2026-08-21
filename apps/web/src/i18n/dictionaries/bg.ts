@@ -10,6 +10,8 @@ export const bg: Dictionary = {
   "chrome.myOrganization": "Моята организация",
   "chrome.signOut": "Изход",
   "chrome.poweredBy": "Задвижвано от {product}",
+  "chrome.suspendedBanner":
+    "Услугата е временно спряна: прегледът остава достъпен, новите запитвания са изключени.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -265,6 +267,11 @@ export const bg: Dictionary = {
   "app.shell.reports": "Отчети",
   "app.shell.knowledgeBase": "База знания",
   "app.shell.settings": "Настройки",
+  "app.shell.suspendedTitle": "Това работно пространство е спряно",
+  "app.shell.suspendedText": "Свържете се с вашия администратор, за да възстановите достъпа.",
+  "app.shell.suspendedOwnerText":
+    "Изберете план или актуализирайте начина си на плащане, за да активирате отново работното пространство.",
+  "app.shell.suspendedBillingCta": "Отваряне на Абонамент и фактуриране",
   "app.shell.myTickets": "Моите тикети",
   "app.shell.newTicket": "Нов тикет",
   "app.shell.topbarTickets": {
@@ -1670,6 +1677,7 @@ export const bg: Dictionary = {
   "app.login.emailPlaceholder": "ivan@firma.bg",
   "app.login.password": "Парола",
   "app.login.forgot": "Забравена парола?",
+  "app.login.suspended": "Това работно пространство е спряно — свържете се с вашия администратор.",
   "app.login.submit": "Вход",
   "app.login.pending": "Влизане…",
   "app.login.or": "ИЛИ",

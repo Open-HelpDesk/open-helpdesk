@@ -10,6 +10,8 @@ export const mt: Dictionary = {
   "chrome.myOrganization": "L-organizzazzjoni tiegħi",
   "chrome.signOut": "Oħroġ",
   "chrome.poweredBy": "Imħaddem minn {product}",
+  "chrome.suspendedBanner":
+    "Is-servizz huwa sospiż temporanjament: il-konsultazzjoni tibqa' miftuħa, talbiet ġodda huma diżattivati.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -318,6 +320,12 @@ export const mt: Dictionary = {
   "app.shell.reports": "Rapporti",
   "app.shell.knowledgeBase": "Bażi tal-għarfien",
   "app.shell.settings": "Impostazzjonijiet",
+  "app.shell.suspendedTitle": "Dan il-workspace huwa sospiż",
+  "app.shell.suspendedText":
+    "Ikkuntattja lill-amministratur tiegħek biex jerġa' jingħata l-aċċess.",
+  "app.shell.suspendedOwnerText":
+    "Agħżel pjan jew aġġorna l-metodu ta' ħlas biex terġa' tattiva l-workspace.",
+  "app.shell.suspendedBillingCta": "Iftaħ Abbonament u fatturazzjoni",
   "app.shell.myTickets": "It-tickets tiegħi",
   "app.shell.newTicket": "Ticket ġdid",
   "app.shell.topbarTickets": {
@@ -1938,6 +1946,7 @@ export const mt: Dictionary = {
   "app.login.emailPlaceholder": "inti@kumpanija.com.mt",
   "app.login.password": "Password",
   "app.login.forgot": "Insejt il-password?",
+  "app.login.suspended": "Dan il-workspace huwa sospiż — ikkuntattja lill-amministratur tiegħek.",
   "app.login.submit": "Idħol",
   "app.login.pending": "Qed tidħol…",
   "app.login.or": "JEW",

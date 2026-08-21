@@ -10,6 +10,8 @@ export const pl: Dictionary = {
   "chrome.myOrganization": "Moja organizacja",
   "chrome.signOut": "Wyloguj się",
   "chrome.poweredBy": "Obsługiwane przez {product}",
+  "chrome.suspendedBanner":
+    "Usługa jest tymczasowo zawieszona: przeglądanie pozostaje dostępne, nowe zgłoszenia są wyłączone.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -308,6 +310,11 @@ export const pl: Dictionary = {
   "app.shell.reports": "Raporty",
   "app.shell.knowledgeBase": "Baza wiedzy",
   "app.shell.settings": "Ustawienia",
+  "app.shell.suspendedTitle": "To workspace jest zawieszone",
+  "app.shell.suspendedText": "Prosimy skontaktować się z administratorem, aby przywrócić dostęp.",
+  "app.shell.suspendedOwnerText":
+    "Prosimy wybrać plan lub zaktualizować metodę płatności, aby ponownie aktywować workspace.",
+  "app.shell.suspendedBillingCta": "Otwórz Subskrypcję i rozliczenia",
   "app.shell.myTickets": "Moje zgłoszenia",
   "app.shell.newTicket": "Nowe zgłoszenie",
   "app.shell.topbarTickets": {
@@ -1887,6 +1894,8 @@ export const pl: Dictionary = {
   "app.login.emailPlaceholder": "jan.kowalski@firma.pl",
   "app.login.password": "Hasło",
   "app.login.forgot": "Zapomniane hasło?",
+  "app.login.suspended":
+    "To workspace jest zawieszone — prosimy skontaktować się z administratorem.",
   "app.login.submit": "Zaloguj się",
   "app.login.pending": "Logowanie…",
   "app.login.or": "LUB",

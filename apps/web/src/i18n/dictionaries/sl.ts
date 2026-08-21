@@ -10,6 +10,8 @@ export const sl: Dictionary = {
   "chrome.myOrganization": "Moja organizacija",
   "chrome.signOut": "Odjava",
   "chrome.poweredBy": "Omogoča {product}",
+  "chrome.suspendedBanner":
+    "Storitev je začasno zadržana: pregledovanje ostaja na voljo, nove zahteve so onemogočene.",
   "chrome.copyright": "© {year} {name}",
 
   /* ---------- PT-01 Accueil ---------- */
@@ -305,6 +307,11 @@ export const sl: Dictionary = {
   "app.shell.reports": "Poročila",
   "app.shell.knowledgeBase": "Baza znanja",
   "app.shell.settings": "Nastavitve",
+  "app.shell.suspendedTitle": "Ta workspace je zadržan",
+  "app.shell.suspendedText": "Obrnite se na svojega skrbnika za obnovitev dostopa.",
+  "app.shell.suspendedOwnerText":
+    "Izberite paket ali posodobite način plačila, da workspace znova aktivirate.",
+  "app.shell.suspendedBillingCta": "Odpri Naročnino in obračun",
   "app.shell.myTickets": "Moji zahtevki",
   "app.shell.newTicket": "Nov zahtevek",
   "app.shell.topbarTickets": {
@@ -1874,6 +1881,7 @@ export const sl: Dictionary = {
   "app.login.emailPlaceholder": "vi@podjetje.si",
   "app.login.password": "Geslo",
   "app.login.forgot": "Ste pozabili geslo?",
+  "app.login.suspended": "Ta workspace je zadržan — obrnite se na svojega skrbnika.",
   "app.login.submit": "Prijava",
   "app.login.pending": "Prijavljanje…",
   "app.login.or": "ALI",

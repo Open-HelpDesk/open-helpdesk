@@ -45,6 +45,8 @@ export function middleware(request: NextRequest) {
 
   const headers = new Headers(request.headers);
   headers.set("x-tenant-slug", slug);
+  // Les layouts serveur n'ont pas accès au chemin : la suspension (ST-11) en a besoin.
+  headers.set("x-pathname", request.nextUrl.pathname);
   return NextResponse.next({ request: { headers } });
 }
 

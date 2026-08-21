@@ -9,6 +9,8 @@ export const fi: Dictionary = {
   "chrome.myOrganization": "Oma organisaationi",
   "chrome.signOut": "Kirjaudu ulos",
   "chrome.poweredBy": "Palvelun tarjoaa {product}",
+  "chrome.suspendedBanner":
+    "Palvelu on tilapäisesti keskeytetty: selaaminen on yhä mahdollista, uudet pyynnöt on poistettu käytöstä.",
   "chrome.copyright": "© {year} {name}",
 
   "home.eyebrow": "Ohjekeskus",
@@ -295,6 +297,11 @@ export const fi: Dictionary = {
   "app.shell.reports": "Raportit",
   "app.shell.knowledgeBase": "Tietopankki",
   "app.shell.settings": "Asetukset",
+  "app.shell.suspendedTitle": "Tämä työtila on jäädytetty",
+  "app.shell.suspendedText": "Ota yhteyttä ylläpitäjääsi palauttaaksesi pääsyn.",
+  "app.shell.suspendedOwnerText":
+    "Valitse tilaus tai päivitä maksutapasi aktivoidaksesi työtilan uudelleen.",
+  "app.shell.suspendedBillingCta": "Avaa Tilaus ja laskutus",
   "app.shell.myTickets": "Omat pyyntöni",
   "app.shell.newTicket": "Uusi pyyntö",
   "app.shell.topbarTickets": { one: "{count} pyyntö · päivitetty juuri nyt", other: "{count} pyyntöä · päivitetty juuri nyt" },
@@ -1499,6 +1506,7 @@ export const fi: Dictionary = {
   "app.login.emailPlaceholder": "sina@yritys.fi",
   "app.login.password": "Salasana",
   "app.login.forgot": "Unohtuiko salasana?",
+  "app.login.suspended": "Tämä työtila on jäädytetty — ota yhteyttä ylläpitäjääsi.",
   "app.login.submit": "Kirjaudu sisään",
   "app.login.pending": "Kirjaudutaan…",
   "app.login.or": "TAI",
