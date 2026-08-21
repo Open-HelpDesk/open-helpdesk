@@ -1408,6 +1408,9 @@ export const lt: Dictionary = {
   "app.settings.workspace.seatsManage": "Tvarkyti",
   "app.settings.workspace.seatLimitReached":
     "Pasiektas vietų limitas ({quota}). Išjunkite agentą arba pridėkite vietų.",
+  "app.settings.workspace.inviteEmailSubject": "Kvietimas į darbo erdvę {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Esate pakviesti į darbo erdvę {workspace} platformoje Open HelpDesk.\n\nAktyvinkite savo prieigą: {url}\n\nNuoroda nustos galioti po 7 dienų. Jei šio kvietimo nesitikėjote, ignoruokite šį laišką.",
   "app.settings.workspace.diagTitle": "Diegimo būklė",
   "app.settings.workspace.diagHint":
     "Patikrina duomenų bazę, siunčiamą ir gaunamą el. paštą, failų saugyklą, eiles ir šifravimą. Saugyklos zondas įrašo, o tada ištrina bandomąjį objektą.",
@@ -1893,6 +1896,16 @@ export const lt: Dictionary = {
   "app.login.password": "Slaptažodis",
   "app.login.forgot": "Pamiršote slaptažodį?",
   "app.login.suspended": "Ši darbo erdvė sustabdyta — kreipkitės į savo administratorių.",
+  "app.login.invited": "Kvietimas priimtas — prisijunkite, kad tęstumėte.",
+  "app.invite.title": "Prisijungti prie darbo erdvės {workspace}",
+  "app.invite.subtitle": "Kvietimas {email} — pasirinkite slaptažodį prieigai aktyvinti.",
+  "app.invite.invalidTitle": "Negaliojantis arba pasibaigęs kvietimas",
+  "app.invite.invalidText": "Paprašykite darbo erdvės administratoriaus atsiųsti naują kvietimą.",
+  "app.invite.nameLabel": "Rodomas vardas",
+  "app.invite.passwordLabel": "Slaptažodis",
+  "app.invite.submit": "Aktyvinti mano prieigą",
+  "app.invite.passwordTooShort": "Slaptažodį turi sudaryti bent 8 simboliai.",
+  "app.invite.failed": "Aktyvinti nepavyko. Bandykite dar kartą arba paprašykite naujos nuorodos.",
   "app.login.submit": "Prisijungti",
   "app.login.pending": "Prisijungiama…",
   "app.login.or": "ARBA",

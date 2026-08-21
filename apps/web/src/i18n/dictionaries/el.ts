@@ -1262,6 +1262,9 @@ export const el: Dictionary = {
   "app.settings.workspace.seatsManage": "Διαχείριση",
   "app.settings.workspace.seatLimitReached":
     "Συμπληρώθηκε το όριο θέσεων ({quota}). Απενεργοποιήστε έναν χειριστή ή προσθέστε θέσεις.",
+  "app.settings.workspace.inviteEmailSubject": "Πρόσκληση στο workspace {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Έχετε προσκληθεί στο workspace {workspace} στο Open HelpDesk.\n\nΕνεργοποιήστε την πρόσβασή σας: {url}\n\nΟ σύνδεσμος λήγει σε 7 ημέρες. Αν δεν περιμένατε αυτήν την πρόσκληση, αγνοήστε αυτό το email.",
   "app.settings.workspace.diagTitle": "Υγεία της εγκατάστασης",
   "app.settings.workspace.diagHint":
     "Ελέγχει τη βάση δεδομένων, την εξερχόμενη και εισερχόμενη αλληλογραφία, την αποθήκευση αρχείων, τις ουρές και την κρυπτογράφηση. Ο έλεγχος αποθήκευσης γράφει και μετά διαγράφει ένα δοκιμαστικό αντικείμενο.",
@@ -1733,6 +1736,17 @@ export const el: Dictionary = {
   "app.login.password": "Κωδικός πρόσβασης",
   "app.login.forgot": "Ξεχάσατε τον κωδικό σας;",
   "app.login.suspended": "Αυτό το workspace έχει ανασταλεί — επικοινωνήστε με τον διαχειριστή σας.",
+  "app.login.invited": "Η πρόσκληση έγινε αποδεκτή — συνδεθείτε για να συνεχίσετε.",
+  "app.invite.title": "Συμμετοχή στο workspace {workspace}",
+  "app.invite.subtitle":
+    "Πρόσκληση για {email} — επιλέξτε κωδικό πρόσβασης για να ενεργοποιήσετε την πρόσβασή σας.",
+  "app.invite.invalidTitle": "Μη έγκυρη ή ληγμένη πρόσκληση",
+  "app.invite.invalidText": "Ζητήστε από έναν διαχειριστή του workspace να στείλει νέα πρόσκληση.",
+  "app.invite.nameLabel": "Εμφανιζόμενο όνομα",
+  "app.invite.passwordLabel": "Κωδικός πρόσβασης",
+  "app.invite.submit": "Ενεργοποίηση της πρόσβασής μου",
+  "app.invite.passwordTooShort": "Ο κωδικός πρόσβασης πρέπει να έχει τουλάχιστον 8 χαρακτήρες.",
+  "app.invite.failed": "Η ενεργοποίηση απέτυχε. Δοκιμάστε ξανά ή ζητήστε νέο σύνδεσμο.",
   "app.login.submit": "Σύνδεση",
   "app.login.pending": "Σύνδεση…",
   "app.login.or": "Ή",

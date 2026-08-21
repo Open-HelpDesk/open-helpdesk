@@ -1122,6 +1122,9 @@ export const fi: Dictionary = {
   "app.settings.workspace.seatsManage": "Hallitse",
   "app.settings.workspace.seatLimitReached":
     "Paikkaraja on saavutettu ({quota}). Poista agentti käytöstä tai lisää paikkoja.",
+  "app.settings.workspace.inviteEmailSubject": "Kutsu liittyä työtilaan {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Sinut on kutsuttu liittymään työtilaan {workspace} Open HelpDeskissä.\n\nAktivoi pääsysi: {url}\n\nLinkki vanhenee 7 päivässä. Jos et odottanut tätä kutsua, jätä tämä viesti huomiotta.",
   "app.settings.workspace.diagTitle": "Asennuksen kunto",
   "app.settings.workspace.diagHint":
     "Tarkistaa tietokannan, lähtevän ja saapuvan sähköpostin, tiedostojen tallennuksen, jonot ja salauksen. Tallennusluotain kirjoittaa ja poistaa testiobjektin.",
@@ -1507,6 +1510,16 @@ export const fi: Dictionary = {
   "app.login.password": "Salasana",
   "app.login.forgot": "Unohtuiko salasana?",
   "app.login.suspended": "Tämä työtila on jäädytetty — ota yhteyttä ylläpitäjääsi.",
+  "app.login.invited": "Kutsu hyväksytty — kirjaudu sisään jatkaaksesi.",
+  "app.invite.title": "Liity työtilaan {workspace}",
+  "app.invite.subtitle": "Kutsu osoitteelle {email} — valitse salasana aktivoidaksesi pääsysi.",
+  "app.invite.invalidTitle": "Virheellinen tai vanhentunut kutsu",
+  "app.invite.invalidText": "Pyydä työtilan ylläpitäjää lähettämään uusi kutsu.",
+  "app.invite.nameLabel": "Näyttönimi",
+  "app.invite.passwordLabel": "Salasana",
+  "app.invite.submit": "Aktivoi pääsyni",
+  "app.invite.passwordTooShort": "Salasanassa on oltava vähintään 8 merkkiä.",
+  "app.invite.failed": "Aktivointi epäonnistui. Yritä uudelleen tai pyydä uusi linkki.",
   "app.login.submit": "Kirjaudu sisään",
   "app.login.pending": "Kirjaudutaan…",
   "app.login.or": "TAI",

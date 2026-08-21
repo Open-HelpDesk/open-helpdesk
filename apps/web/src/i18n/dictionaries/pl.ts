@@ -1410,6 +1410,9 @@ export const pl: Dictionary = {
   "app.settings.workspace.seatsManage": "Zarządzaj",
   "app.settings.workspace.seatLimitReached":
     "Osiągnięto limit stanowisk ({quota}). Prosimy dezaktywować agenta lub dodać stanowiska.",
+  "app.settings.workspace.inviteEmailSubject": "Zaproszenie do workspace'u {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Otrzymano zaproszenie do workspace'u {workspace} w Open HelpDesk.\n\nProsimy aktywować dostęp: {url}\n\nLink wygasa za 7 dni. Jeśli to zaproszenie jest nieoczekiwane, prosimy zignorować tę wiadomość.",
   "app.settings.workspace.diagTitle": "Stan instalacji",
   "app.settings.workspace.diagHint":
     "Sprawdza bazę danych, pocztę wychodzącą i przychodzącą, magazyn plików, kolejki i szyfrowanie. Sonda magazynu zapisuje, a następnie usuwa obiekt testowy.",
@@ -1896,6 +1899,18 @@ export const pl: Dictionary = {
   "app.login.forgot": "Zapomniane hasło?",
   "app.login.suspended":
     "To workspace jest zawieszone — prosimy skontaktować się z administratorem.",
+  "app.login.invited": "Zaproszenie przyjęte — prosimy się zalogować, aby kontynuować.",
+  "app.invite.title": "Dołącz do workspace'u {workspace}",
+  "app.invite.subtitle": "Zaproszenie dla {email} — prosimy wybrać hasło, aby aktywować dostęp.",
+  "app.invite.invalidTitle": "Nieprawidłowe lub wygasłe zaproszenie",
+  "app.invite.invalidText":
+    "Prosimy poprosić administratora workspace'u o wysłanie nowego zaproszenia.",
+  "app.invite.nameLabel": "Wyświetlana nazwa",
+  "app.invite.passwordLabel": "Hasło",
+  "app.invite.submit": "Aktywuj mój dostęp",
+  "app.invite.passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
+  "app.invite.failed":
+    "Aktywacja nie powiodła się. Prosimy spróbować ponownie lub poprosić o nowy link.",
   "app.login.submit": "Zaloguj się",
   "app.login.pending": "Logowanie…",
   "app.login.or": "LUB",

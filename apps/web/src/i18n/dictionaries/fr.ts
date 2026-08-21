@@ -1150,6 +1150,9 @@ export const fr = {
   "app.settings.workspace.seatsManage": "Gérer",
   "app.settings.workspace.seatLimitReached":
     "Limite de sièges atteinte ({quota}). Désactivez un agent ou ajoutez des sièges.",
+  "app.settings.workspace.inviteEmailSubject": "Invitation à rejoindre le workspace {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Vous êtes invité à rejoindre le workspace {workspace} sur Open HelpDesk.\n\nActivez votre accès : {url}\n\nCe lien expire dans 7 jours. Si vous n'attendiez pas cette invitation, ignorez cet email.",
   "app.settings.workspace.diagTitle": "Santé de l'installation",
   "app.settings.workspace.diagHint":
     "Vérifie la base de données, l'email sortant et entrant, le stockage des fichiers, les files d'attente et le chiffrement. La sonde du stockage écrit puis supprime un objet témoin.",
@@ -1577,6 +1580,17 @@ export const fr = {
   "app.login.password": "Mot de passe",
   "app.login.forgot": "Mot de passe oublié ?",
   "app.login.suspended": "Ce workspace est suspendu — contactez votre administrateur.",
+  "app.login.invited": "Invitation acceptée — connectez-vous pour continuer.",
+  "app.invite.title": "Rejoindre le workspace {workspace}",
+  "app.invite.subtitle":
+    "Invitation pour {email} — choisissez un mot de passe pour activer votre accès.",
+  "app.invite.invalidTitle": "Invitation invalide ou expirée",
+  "app.invite.invalidText": "Demandez à un administrateur du workspace de renvoyer une invitation.",
+  "app.invite.nameLabel": "Nom affiché",
+  "app.invite.passwordLabel": "Mot de passe",
+  "app.invite.submit": "Activer mon accès",
+  "app.invite.passwordTooShort": "Le mot de passe doit compter au moins 8 caractères.",
+  "app.invite.failed": "L'activation a échoué. Réessayez, ou demandez un nouveau lien.",
   "app.login.submit": "Se connecter",
   "app.login.pending": "Connexion…",
   "app.login.or": "OU",

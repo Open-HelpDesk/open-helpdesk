@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { db, mailboxes, teamMembers, teams, tickets, users } from "@openhelpdesk/db";
 import { and, eq, inArray } from "drizzle-orm";
 import { occupiedSeats, seatLimitFor } from "@/lib/entitlements";
+import { sendAgentInvite } from "@/lib/agent-invite";
 import { requireManager } from "../guard";
 
 
@@ -47,10 +48,16 @@ export async function inviteAgents(formData: FormData) {
       .filter(Boolean)
       .map((p) => p[0]!.toUpperCase() + p.slice(1))
       .join(" ");
-    await db
+    // returning() ne rend que les lignes réellement insérées : une adresse
+    // déjà membre ne reçoit pas d'email.
+    const inserted = await db
       .insert(users)
       .values({ tenantId: tenant.id, email, name: name || email, role: safeRole, status: "invited" })
-      .onConflictDoNothing();
+      .onConflictDoNothing()
+      .returning({ id: users.id, email: users.email });
+    for (const row of inserted) {
+      await sendAgentInvite(tenant, row);
+    }
   }
 
   revalidatePath("/app/settings/team");
@@ -123,7 +130,7 @@ export async function toggleAgentActive(formData: FormData) {
   revalidatePath("/app/settings/team");
 }
 
-/** Renvoi d'invitation — l'envoi réel arrive avec le canal email managé (no-op honnête). */
+/** Renvoi d'invitation : nouveau jeton, nouvel email. */
 export async function resendInvite(formData: FormData) {
   const { tenant } = await requireManager();
   const userId = String(formData.get("userId"));
@@ -132,6 +139,7 @@ export async function resendInvite(formData: FormData) {
     .from(users)
     .where(and(eq(users.tenantId, tenant.id), eq(users.id, userId)));
   if (!target || target.status !== "invited") return;
+  await sendAgentInvite(tenant, { id: target.id, email: target.email });
   revalidatePath("/app/settings/team");
 }
 

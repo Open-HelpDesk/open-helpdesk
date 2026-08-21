@@ -1124,6 +1124,9 @@ export const nl: Dictionary = {
   "app.settings.workspace.seatsManage": "Beheren",
   "app.settings.workspace.seatLimitReached":
     "Licentielimiet bereikt ({quota}). Deactiveer een agent of voeg licenties toe.",
+  "app.settings.workspace.inviteEmailSubject": "Uitnodiging voor de workspace {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "U bent uitgenodigd voor de workspace {workspace} op Open HelpDesk.\n\nActiveer uw toegang: {url}\n\nDeze link verloopt over 7 dagen. Verwachtte u deze uitnodiging niet, negeer dan deze e-mail.",
   "app.settings.workspace.diagTitle": "Gezondheid van de installatie",
   "app.settings.workspace.diagHint":
     "Controleert de database, uitgaande en inkomende e-mail, bestandsopslag, wachtrijen en versleuteling. De opslagsonde schrijft en verwijdert een testobject.",
@@ -1502,6 +1505,18 @@ export const nl: Dictionary = {
   "app.login.password": "Wachtwoord",
   "app.login.forgot": "Wachtwoord vergeten?",
   "app.login.suspended": "Deze workspace is opgeschort — neem contact op met uw beheerder.",
+  "app.login.invited": "Uitnodiging geaccepteerd — meld u aan om verder te gaan.",
+  "app.invite.title": "Deelnemen aan de workspace {workspace}",
+  "app.invite.subtitle":
+    "Uitnodiging voor {email} — kies een wachtwoord om uw toegang te activeren.",
+  "app.invite.invalidTitle": "Ongeldige of verlopen uitnodiging",
+  "app.invite.invalidText":
+    "Vraag een beheerder van de workspace om een nieuwe uitnodiging te sturen.",
+  "app.invite.nameLabel": "Weergavenaam",
+  "app.invite.passwordLabel": "Wachtwoord",
+  "app.invite.submit": "Mijn toegang activeren",
+  "app.invite.passwordTooShort": "Het wachtwoord moet minstens 8 tekens lang zijn.",
+  "app.invite.failed": "Activering mislukt. Probeer het opnieuw of vraag een nieuwe link aan.",
   "app.login.submit": "Inloggen",
   "app.login.pending": "Inloggen…",
   "app.login.or": "OF",

@@ -1122,6 +1122,9 @@ export const sv: Dictionary = {
   "app.settings.workspace.seatsManage": "Hantera",
   "app.settings.workspace.seatLimitReached":
     "Platsgränsen är nådd ({quota}). Inaktivera en agent eller lägg till platser.",
+  "app.settings.workspace.inviteEmailSubject": "Inbjudan att gå med i arbetsytan {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Du har bjudits in till arbetsytan {workspace} på Open HelpDesk.\n\nAktivera din åtkomst: {url}\n\nLänken upphör att gälla om 7 dagar. Om du inte väntade dig den här inbjudan kan du ignorera det här mejlet.",
   "app.settings.workspace.diagTitle": "Installationens hälsa",
   "app.settings.workspace.diagHint":
     "Kontrollerar databasen, utgående och inkommande e-post, fillagring, köer och kryptering. Lagringssonden skriver och raderar ett testobjekt.",
@@ -1518,6 +1521,16 @@ export const sv: Dictionary = {
   "app.login.password": "Lösenord",
   "app.login.forgot": "Glömt lösenordet?",
   "app.login.suspended": "Den här arbetsytan är avstängd — kontakta din administratör.",
+  "app.login.invited": "Inbjudan accepterad — logga in för att fortsätta.",
+  "app.invite.title": "Gå med i arbetsytan {workspace}",
+  "app.invite.subtitle": "Inbjudan för {email} — välj ett lösenord för att aktivera din åtkomst.",
+  "app.invite.invalidTitle": "Ogiltig eller utgången inbjudan",
+  "app.invite.invalidText": "Be en administratör för arbetsytan att skicka en ny inbjudan.",
+  "app.invite.nameLabel": "Visningsnamn",
+  "app.invite.passwordLabel": "Lösenord",
+  "app.invite.submit": "Aktivera min åtkomst",
+  "app.invite.passwordTooShort": "Lösenordet måste vara minst 8 tecken långt.",
+  "app.invite.failed": "Aktiveringen misslyckades. Försök igen eller begär en ny länk.",
   "app.login.submit": "Logga in",
   "app.login.pending": "Loggar in…",
   "app.login.or": "ELLER",

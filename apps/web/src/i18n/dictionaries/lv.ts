@@ -1348,6 +1348,9 @@ export const lv: Dictionary = {
   "app.settings.workspace.seatsManage": "Pārvaldīt",
   "app.settings.workspace.seatLimitReached":
     "Sasniegts licenču limits ({quota}). Deaktivizējiet aģentu vai pievienojiet licences.",
+  "app.settings.workspace.inviteEmailSubject": "Ielūgums darbvietā {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Jūs esat uzaicināts darbvietā {workspace} platformā Open HelpDesk.\n\nAktivizējiet savu piekļuvi: {url}\n\nSaite zaudēs spēku pēc 7 dienām. Ja šo ielūgumu negaidījāt, ignorējiet šo e-pastu.",
   "app.settings.workspace.diagTitle": "Instalācijas stāvoklis",
   "app.settings.workspace.diagHint":
     "Pārbauda datubāzi, izejošo un ienākošo e-pastu, failu krātuvi, rindas un šifrēšanu. Krātuves zonde ieraksta un pēc tam izdzēš testa objektu.",
@@ -1826,6 +1829,17 @@ export const lv: Dictionary = {
   "app.login.password": "Parole",
   "app.login.forgot": "Aizmirsāt paroli?",
   "app.login.suspended": "Šī darbvieta ir apturēta — sazinieties ar savu administratoru.",
+  "app.login.invited": "Ielūgums pieņemts — pierakstieties, lai turpinātu.",
+  "app.invite.title": "Pievienoties darbvietai {workspace}",
+  "app.invite.subtitle":
+    "Ielūgums adresātam {email} — izvēlieties paroli, lai aktivizētu piekļuvi.",
+  "app.invite.invalidTitle": "Nederīgs vai beidzies ielūgums",
+  "app.invite.invalidText": "Palūdziet darbvietas administratoram nosūtīt jaunu ielūgumu.",
+  "app.invite.nameLabel": "Attēlotais vārds",
+  "app.invite.passwordLabel": "Parole",
+  "app.invite.submit": "Aktivizēt manu piekļuvi",
+  "app.invite.passwordTooShort": "Parolei jābūt vismaz 8 rakstzīmes garai.",
+  "app.invite.failed": "Aktivizēšana neizdevās. Mēģiniet vēlreiz vai pieprasiet jaunu saiti.",
   "app.login.submit": "Pieteikties",
   "app.login.pending": "Notiek pieteikšanās…",
   "app.login.or": "VAI",

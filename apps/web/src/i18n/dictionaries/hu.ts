@@ -1244,6 +1244,9 @@ export const hu: Dictionary = {
   "app.settings.workspace.seatsManage": "Kezelés",
   "app.settings.workspace.seatLimitReached":
     "A licencek száma elérte a felső határt ({quota}). Deaktiváljon egy ügyintézőt, vagy adjon hozzá licenceket.",
+  "app.settings.workspace.inviteEmailSubject": "Meghívó a(z) {workspace} workspace-be",
+  "app.settings.workspace.inviteEmailBody":
+    "Meghívást kapott a(z) {workspace} workspace-be az Open HelpDesken.\n\nAktiválja hozzáférését: {url}\n\nA link 7 nap múlva lejár. Ha nem várta ezt a meghívót, hagyja figyelmen kívül ezt az e-mailt.",
   "app.settings.workspace.diagTitle": "A telepítés állapota",
   "app.settings.workspace.diagHint":
     "Ellenőrzi az adatbázist, a kimenő és bejövő e-mailt, a fájltárolót, a sorokat és a titkosítást. A tároló szondája ír, majd töröl egy tesztobjektumot.",
@@ -1715,6 +1718,18 @@ export const hu: Dictionary = {
   "app.login.password": "Jelszó",
   "app.login.forgot": "Elfelejtette a jelszavát?",
   "app.login.suspended": "Ez a workspace fel van függesztve — forduljon a rendszergazdához.",
+  "app.login.invited": "Meghívó elfogadva — jelentkezzen be a folytatáshoz.",
+  "app.invite.title": "Csatlakozás a(z) {workspace} workspace-hez",
+  "app.invite.subtitle":
+    "Meghívó a következőnek: {email} — válasszon jelszót a hozzáférés aktiválásához.",
+  "app.invite.invalidTitle": "Érvénytelen vagy lejárt meghívó",
+  "app.invite.invalidText":
+    "Kérje meg a workspace egyik rendszergazdáját, hogy küldjön új meghívót.",
+  "app.invite.nameLabel": "Megjelenített név",
+  "app.invite.passwordLabel": "Jelszó",
+  "app.invite.submit": "Hozzáférésem aktiválása",
+  "app.invite.passwordTooShort": "A jelszónak legalább 8 karakterből kell állnia.",
+  "app.invite.failed": "Az aktiválás nem sikerült. Próbálja újra, vagy kérjen új linket.",
   "app.login.submit": "Bejelentkezés",
   "app.login.pending": "Bejelentkezés…",
   "app.login.or": "VAGY",

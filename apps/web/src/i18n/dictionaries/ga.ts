@@ -1462,6 +1462,9 @@ export const ga: Dictionary = {
   "app.settings.workspace.seatsManage": "Bainistigh",
   "app.settings.workspace.seatLimitReached":
     "Tá teorainn na suíochán sroichte ({quota}). Díghníomhachtaigh gníomhaire nó cuir suíocháin leis.",
+  "app.settings.workspace.inviteEmailSubject": "Cuireadh chuig an workspace {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Tugadh cuireadh duit chuig an workspace {workspace} ar Open HelpDesk.\n\nGníomhachtaigh do rochtain: {url}\n\nRachaidh an nasc in éag i gceann 7 lá. Mura raibh tú ag súil leis an gcuireadh seo, déan neamhaird den ríomhphost seo.",
   "app.settings.workspace.diagTitle": "Sláinte na suiteála",
   "app.settings.workspace.diagHint":
     "Seiceálann sé an bunachar sonraí, an ríomhphost amach agus isteach, stóráil na gcomhad, na scuainí agus an criptiú. Scríobhann tóireadóir na stórála réad tástála agus scriosann é ansin.",
@@ -1955,6 +1958,17 @@ export const ga: Dictionary = {
   "app.login.password": "Pasfhocal",
   "app.login.forgot": "Pasfhocal dearmadta?",
   "app.login.suspended": "Tá an workspace seo ar fionraí — déan teagmháil le do riarthóir.",
+  "app.login.invited": "Glacadh leis an gcuireadh — sínigh isteach chun leanúint ar aghaidh.",
+  "app.invite.title": "Bí páirteach sa workspace {workspace}",
+  "app.invite.subtitle":
+    "Cuireadh do {email} — roghnaigh pasfhocal chun do rochtain a ghníomhachtú.",
+  "app.invite.invalidTitle": "Cuireadh neamhbhailí nó as feidhm",
+  "app.invite.invalidText": "Iarr ar riarthóir de chuid an workspace cuireadh nua a sheoladh.",
+  "app.invite.nameLabel": "Ainm taispeána",
+  "app.invite.passwordLabel": "Pasfhocal",
+  "app.invite.submit": "Gníomhachtaigh mo rochtain",
+  "app.invite.passwordTooShort": "Caithfidh 8 gcarachtar ar a laghad a bheith sa phasfhocal.",
+  "app.invite.failed": "Theip ar an ngníomhachtú. Bain triail eile as, nó iarr nasc nua.",
   "app.login.submit": "Logáil isteach",
   "app.login.pending": "Ag logáil isteach…",
   "app.login.or": "NÓ",

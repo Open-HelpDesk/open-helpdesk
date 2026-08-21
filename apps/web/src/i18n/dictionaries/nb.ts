@@ -1122,6 +1122,9 @@ export const nb: Dictionary = {
   "app.settings.workspace.seatsManage": "Administrer",
   "app.settings.workspace.seatLimitReached":
     "Grensen for plasser er nådd ({quota}). Deaktiver en agent, eller legg til plasser.",
+  "app.settings.workspace.inviteEmailSubject": "Invitasjon til å bli med i workspacet {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Du er invitert til å bli med i workspacet {workspace} på Open HelpDesk.\n\nAktiver tilgangen din: {url}\n\nLenken utløper om 7 dager. Hvis du ikke ventet denne invitasjonen, kan du se bort fra denne e-posten.",
   "app.settings.workspace.diagTitle": "Installasjonens tilstand",
   "app.settings.workspace.diagHint":
     "Kontrollerer databasen, utgående og innkommende e-post, fillagring, køer og kryptering. Lagringssonden skriver og sletter et testobjekt.",
@@ -1508,6 +1511,16 @@ export const nb: Dictionary = {
   "app.login.password": "Passord",
   "app.login.forgot": "Glemt passordet?",
   "app.login.suspended": "Dette workspacet er suspendert — kontakt administratoren din.",
+  "app.login.invited": "Invitasjon akseptert — logg inn for å fortsette.",
+  "app.invite.title": "Bli med i workspacet {workspace}",
+  "app.invite.subtitle": "Invitasjon til {email} — velg et passord for å aktivere tilgangen din.",
+  "app.invite.invalidTitle": "Ugyldig eller utløpt invitasjon",
+  "app.invite.invalidText": "Be en administrator av workspacet om å sende en ny invitasjon.",
+  "app.invite.nameLabel": "Visningsnavn",
+  "app.invite.passwordLabel": "Passord",
+  "app.invite.submit": "Aktiver tilgangen min",
+  "app.invite.passwordTooShort": "Passordet må være på minst 8 tegn.",
+  "app.invite.failed": "Aktiveringen mislyktes. Prøv igjen, eller be om en ny lenke.",
   "app.login.submit": "Logg inn",
   "app.login.pending": "Logger inn…",
   "app.login.or": "ELLER",

@@ -1231,6 +1231,9 @@ export const et: Dictionary = {
   "app.settings.workspace.seatsManage": "Halda",
   "app.settings.workspace.seatLimitReached":
     "Kohtade limiit on täis ({quota}). Deaktiveerige agent või lisage kohti.",
+  "app.settings.workspace.inviteEmailSubject": "Kutse tööruumi {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Teid on kutsutud tööruumi {workspace} Open HelpDeskis.\n\nAktiveerige oma juurdepääs: {url}\n\nLink aegub 7 päeva pärast. Kui te seda kutset ei oodanud, ignoreerige seda kirja.",
   "app.settings.workspace.diagTitle": "Paigalduse seisund",
   "app.settings.workspace.diagHint":
     "Kontrollib andmebaasi, väljuvat ja sissetulevat e-posti, failihoidlat, järjekordi ja krüpteerimist. Hoidla sond kirjutab ja seejärel kustutab testobjekti.",
@@ -1697,6 +1700,16 @@ export const et: Dictionary = {
   "app.login.password": "Parool",
   "app.login.forgot": "Kas unustasite parooli?",
   "app.login.suspended": "See tööruum on peatatud — pöörduge oma halduri poole.",
+  "app.login.invited": "Kutse vastu võetud — jätkamiseks logige sisse.",
+  "app.invite.title": "Liitu tööruumiga {workspace}",
+  "app.invite.subtitle": "Kutse aadressile {email} — valige parool juurdepääsu aktiveerimiseks.",
+  "app.invite.invalidTitle": "Kehtetu või aegunud kutse",
+  "app.invite.invalidText": "Paluge tööruumi halduril saata uus kutse.",
+  "app.invite.nameLabel": "Kuvatav nimi",
+  "app.invite.passwordLabel": "Parool",
+  "app.invite.submit": "Aktiveeri minu juurdepääs",
+  "app.invite.passwordTooShort": "Parool peab olema vähemalt 8 tähemärki pikk.",
+  "app.invite.failed": "Aktiveerimine ebaõnnestus. Proovige uuesti või küsige uus link.",
   "app.login.submit": "Logi sisse",
   "app.login.pending": "Sisselogimine…",
   "app.login.or": "VÕI",

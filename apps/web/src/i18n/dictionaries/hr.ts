@@ -1330,6 +1330,9 @@ export const hr: Dictionary = {
   "app.settings.workspace.seatsManage": "Upravljaj",
   "app.settings.workspace.seatLimitReached":
     "Dosegnut je limit mjesta ({quota}). Deaktivirajte agenta ili dodajte mjesta.",
+  "app.settings.workspace.inviteEmailSubject": "Pozivnica za workspace {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Pozvani ste u workspace {workspace} na Open HelpDesku.\n\nAktivirajte svoj pristup: {url}\n\nPoveznica istječe za 7 dana. Ako niste očekivali ovu pozivnicu, zanemarite ovu e-poruku.",
   "app.settings.workspace.diagTitle": "Stanje instalacije",
   "app.settings.workspace.diagHint":
     "Provjerava bazu podataka, odlaznu i dolaznu e-poštu, pohranu datoteka, redove i šifriranje. Sonda pohrane zapisuje pa briše testni objekt.",
@@ -1804,6 +1807,16 @@ export const hr: Dictionary = {
   "app.login.password": "Zaporka",
   "app.login.forgot": "Zaboravili ste zaporku?",
   "app.login.suspended": "Ovaj workspace je suspendiran — obratite se svojem administratoru.",
+  "app.login.invited": "Pozivnica prihvaćena — prijavite se za nastavak.",
+  "app.invite.title": "Pridružite se workspaceu {workspace}",
+  "app.invite.subtitle": "Pozivnica za {email} — odaberite lozinku za aktivaciju pristupa.",
+  "app.invite.invalidTitle": "Nevažeća ili istekla pozivnica",
+  "app.invite.invalidText": "Zamolite administratora workspacea da pošalje novu pozivnicu.",
+  "app.invite.nameLabel": "Prikazano ime",
+  "app.invite.passwordLabel": "Lozinka",
+  "app.invite.submit": "Aktiviraj moj pristup",
+  "app.invite.passwordTooShort": "Lozinka mora imati najmanje 8 znakova.",
+  "app.invite.failed": "Aktivacija nije uspjela. Pokušajte ponovno ili zatražite novu poveznicu.",
   "app.login.submit": "Prijavi se",
   "app.login.pending": "Prijava…",
   "app.login.or": "ILI",

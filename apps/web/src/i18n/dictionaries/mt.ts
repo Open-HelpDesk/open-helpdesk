@@ -1455,6 +1455,9 @@ export const mt: Dictionary = {
   "app.settings.workspace.seatsManage": "Immexxi",
   "app.settings.workspace.seatLimitReached":
     "Intlaħaq il-limitu tal-postijiet ({quota}). Iddiżattiva aġent jew żid postijiet.",
+  "app.settings.workspace.inviteEmailSubject": "Stedina għall-workspace {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Ġejt mistieden għall-workspace {workspace} fuq Open HelpDesk.\n\nAttiva l-aċċess tiegħek: {url}\n\nIl-link jiskadi fi żmien 7 ijiem. Jekk ma kontx qed tistenna din l-istedina, injora din l-email.",
   "app.settings.workspace.diagTitle": "Saħħa tal-installazzjoni",
   "app.settings.workspace.diagHint":
     "Jiċċekkja d-database, l-email ħiereġ u dieħel, il-ħażna tal-fajls, il-kjuwijiet u l-kriptaġġ. Is-sonda tal-ħażna tikteb u mbagħad tħassar oġġett tat-test.",
@@ -1947,6 +1950,16 @@ export const mt: Dictionary = {
   "app.login.password": "Password",
   "app.login.forgot": "Insejt il-password?",
   "app.login.suspended": "Dan il-workspace huwa sospiż — ikkuntattja lill-amministratur tiegħek.",
+  "app.login.invited": "L-istedina ġiet aċċettata — idħol biex tkompli.",
+  "app.invite.title": "Ingħaqad mal-workspace {workspace}",
+  "app.invite.subtitle": "Stedina għal {email} — agħżel password biex tattiva l-aċċess tiegħek.",
+  "app.invite.invalidTitle": "Stedina invalida jew skaduta",
+  "app.invite.invalidText": "Itlob lil amministratur tal-workspace jibgħat stedina ġdida.",
+  "app.invite.nameLabel": "Isem muri",
+  "app.invite.passwordLabel": "Password",
+  "app.invite.submit": "Attiva l-aċċess tiegħi",
+  "app.invite.passwordTooShort": "Il-password trid ikollha mill-inqas 8 karattri.",
+  "app.invite.failed": "L-attivazzjoni falliet. Erġa' pprova jew itlob link ġdid.",
   "app.login.submit": "Idħol",
   "app.login.pending": "Qed tidħol…",
   "app.login.or": "JEW",

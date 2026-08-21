@@ -1355,6 +1355,9 @@ export const ro: Dictionary = {
   "app.settings.workspace.seatsManage": "Gestionați",
   "app.settings.workspace.seatLimitReached":
     "Limita de licențe a fost atinsă ({quota}). Dezactivați un agent sau adăugați licențe.",
+  "app.settings.workspace.inviteEmailSubject": "Invitație în workspace-ul {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Ați fost invitat în workspace-ul {workspace} pe Open HelpDesk.\n\nActivați-vă accesul: {url}\n\nLinkul expiră în 7 zile. Dacă nu așteptați această invitație, ignorați acest email.",
   "app.settings.workspace.diagTitle": "Starea instalării",
   "app.settings.workspace.diagHint":
     "Verifică baza de date, emailul de ieșire și de intrare, stocarea fișierelor, cozile și criptarea. Sonda stocării scrie și apoi șterge un obiect de test.",
@@ -1838,6 +1841,17 @@ export const ro: Dictionary = {
   "app.login.password": "Parolă",
   "app.login.forgot": "Ați uitat parola?",
   "app.login.suspended": "Acest workspace este suspendat — contactați administratorul.",
+  "app.login.invited": "Invitație acceptată — autentificați-vă pentru a continua.",
+  "app.invite.title": "Alăturați-vă workspace-ului {workspace}",
+  "app.invite.subtitle": "Invitație pentru {email} — alegeți o parolă pentru a vă activa accesul.",
+  "app.invite.invalidTitle": "Invitație nevalidă sau expirată",
+  "app.invite.invalidText":
+    "Cereți unui administrator al workspace-ului să trimită o invitație nouă.",
+  "app.invite.nameLabel": "Nume afișat",
+  "app.invite.passwordLabel": "Parolă",
+  "app.invite.submit": "Activează-mi accesul",
+  "app.invite.passwordTooShort": "Parola trebuie să aibă cel puțin 8 caractere.",
+  "app.invite.failed": "Activarea a eșuat. Încercați din nou sau cereți un link nou.",
   "app.login.submit": "Conectare",
   "app.login.pending": "Se conectează…",
   "app.login.or": "SAU",

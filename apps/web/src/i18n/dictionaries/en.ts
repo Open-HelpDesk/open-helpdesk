@@ -1112,6 +1112,9 @@ export const en: Dictionary = {
   "app.settings.workspace.seatsManage": "Manage",
   "app.settings.workspace.seatLimitReached":
     "Seat limit reached ({quota}). Deactivate an agent or add seats.",
+  "app.settings.workspace.inviteEmailSubject": "Invitation to join the {workspace} workspace",
+  "app.settings.workspace.inviteEmailBody":
+    "You have been invited to join the {workspace} workspace on Open HelpDesk.\n\nActivate your access: {url}\n\nThis link expires in 7 days. If you were not expecting this invitation, please ignore this email.",
   "app.settings.workspace.diagTitle": "Installation health",
   "app.settings.workspace.diagHint":
     "Checks the database, outbound and inbound email, file storage, queues and encryption. The storage probe writes then deletes a witness object.",
@@ -1488,6 +1491,16 @@ export const en: Dictionary = {
   "app.login.password": "Password",
   "app.login.forgot": "Forgot your password?",
   "app.login.suspended": "This workspace is suspended — contact your administrator.",
+  "app.login.invited": "Invitation accepted — sign in to continue.",
+  "app.invite.title": "Join the {workspace} workspace",
+  "app.invite.subtitle": "Invitation for {email} — choose a password to activate your access.",
+  "app.invite.invalidTitle": "Invalid or expired invitation",
+  "app.invite.invalidText": "Ask a workspace administrator to send a new invitation.",
+  "app.invite.nameLabel": "Display name",
+  "app.invite.passwordLabel": "Password",
+  "app.invite.submit": "Activate my access",
+  "app.invite.passwordTooShort": "The password must be at least 8 characters long.",
+  "app.invite.failed": "Activation failed. Try again, or request a new link.",
   "app.login.submit": "Sign in",
   "app.login.pending": "Signing in…",
   "app.login.or": "OR",

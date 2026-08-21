@@ -1123,6 +1123,9 @@ export const da: Dictionary = {
   "app.settings.workspace.seatsManage": "Administrér",
   "app.settings.workspace.seatLimitReached":
     "Grænsen for pladser er nået ({quota}). Deaktivér en agent, eller tilføj pladser.",
+  "app.settings.workspace.inviteEmailSubject": "Invitation til at deltage i workspacet {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Du er inviteret til at deltage i workspacet {workspace} på Open HelpDesk.\n\nAktivér din adgang: {url}\n\nLinket udløber om 7 dage. Hvis du ikke ventede denne invitation, kan du ignorere denne e-mail.",
   "app.settings.workspace.diagTitle": "Installationens tilstand",
   "app.settings.workspace.diagHint":
     "Kontrollerer databasen, udgående og indgående e-mail, fillagring, køer og kryptering. Lagringssonden skriver og sletter et testobjekt.",
@@ -1497,6 +1500,16 @@ export const da: Dictionary = {
   "app.login.password": "Adgangskode",
   "app.login.forgot": "Glemt adgangskoden?",
   "app.login.suspended": "Dette workspace er suspenderet — kontakt din administrator.",
+  "app.login.invited": "Invitation accepteret — log ind for at fortsætte.",
+  "app.invite.title": "Deltag i workspacet {workspace}",
+  "app.invite.subtitle": "Invitation til {email} — vælg en adgangskode for at aktivere din adgang.",
+  "app.invite.invalidTitle": "Ugyldig eller udløbet invitation",
+  "app.invite.invalidText": "Bed en administrator af workspacet om at sende en ny invitation.",
+  "app.invite.nameLabel": "Visningsnavn",
+  "app.invite.passwordLabel": "Adgangskode",
+  "app.invite.submit": "Aktivér min adgang",
+  "app.invite.passwordTooShort": "Adgangskoden skal være på mindst 8 tegn.",
+  "app.invite.failed": "Aktiveringen mislykkedes. Prøv igen, eller anmod om et nyt link.",
   "app.login.submit": "Log ind",
   "app.login.pending": "Logger ind…",
   "app.login.or": "ELLER",

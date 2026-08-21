@@ -1398,6 +1398,9 @@ export const sl: Dictionary = {
   "app.settings.workspace.seatsManage": "Upravljaj",
   "app.settings.workspace.seatLimitReached":
     "Dosežen je limit licenc ({quota}). Deaktivirajte agenta ali dodajte licence.",
+  "app.settings.workspace.inviteEmailSubject": "Povabilo v workspace {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Povabljeni ste v workspace {workspace} na Open HelpDesk.\n\nAktivirajte svoj dostop: {url}\n\nPovezava poteče čez 7 dni. Če tega povabila niste pričakovali, to sporočilo prezrite.",
   "app.settings.workspace.diagTitle": "Stanje namestitve",
   "app.settings.workspace.diagHint":
     "Preveri bazo podatkov, odhodno in dohodno e-pošto, shrambo datotek, vrste in šifriranje. Sonda shrambe zapiše in nato izbriše testni objekt.",
@@ -1882,6 +1885,16 @@ export const sl: Dictionary = {
   "app.login.password": "Geslo",
   "app.login.forgot": "Ste pozabili geslo?",
   "app.login.suspended": "Ta workspace je zadržan — obrnite se na svojega skrbnika.",
+  "app.login.invited": "Povabilo sprejeto — prijavite se za nadaljevanje.",
+  "app.invite.title": "Pridružite se workspaceu {workspace}",
+  "app.invite.subtitle": "Povabilo za {email} — izberite geslo za aktivacijo dostopa.",
+  "app.invite.invalidTitle": "Neveljavno ali poteklo povabilo",
+  "app.invite.invalidText": "Prosite skrbnika workspacea, naj pošlje novo povabilo.",
+  "app.invite.nameLabel": "Prikazano ime",
+  "app.invite.passwordLabel": "Geslo",
+  "app.invite.submit": "Aktiviraj moj dostop",
+  "app.invite.passwordTooShort": "Geslo mora imeti vsaj 8 znakov.",
+  "app.invite.failed": "Aktivacija ni uspela. Poskusite znova ali zahtevajte novo povezavo.",
   "app.login.submit": "Prijava",
   "app.login.pending": "Prijavljanje…",
   "app.login.or": "ALI",

@@ -1229,6 +1229,9 @@ export const bg: Dictionary = {
   "app.settings.workspace.seatsManage": "Управление",
   "app.settings.workspace.seatLimitReached":
     "Достигнат е лимитът на местата ({quota}). Деактивирайте агент или добавете места.",
+  "app.settings.workspace.inviteEmailSubject": "Покана за работното пространство {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Поканени сте в работното пространство {workspace} в Open HelpDesk.\n\nАктивирайте достъпа си: {url}\n\nВръзката изтича след 7 дни. Ако не сте очаквали тази покана, игнорирайте този имейл.",
   "app.settings.workspace.diagTitle": "Състояние на инсталацията",
   "app.settings.workspace.diagHint":
     "Проверява базата данни, изходящата и входящата поща, файловото хранилище, опашките и шифроването. Сондата на хранилището записва и после изтрива тестов обект.",
@@ -1678,6 +1681,17 @@ export const bg: Dictionary = {
   "app.login.password": "Парола",
   "app.login.forgot": "Забравена парола?",
   "app.login.suspended": "Това работно пространство е спряно — свържете се с вашия администратор.",
+  "app.login.invited": "Поканата е приета — влезте, за да продължите.",
+  "app.invite.title": "Присъединяване към работното пространство {workspace}",
+  "app.invite.subtitle": "Покана за {email} — изберете парола, за да активирате достъпа си.",
+  "app.invite.invalidTitle": "Невалидна или изтекла покана",
+  "app.invite.invalidText":
+    "Помолете администратор на работното пространство да изпрати нова покана.",
+  "app.invite.nameLabel": "Показвано име",
+  "app.invite.passwordLabel": "Парола",
+  "app.invite.submit": "Активиране на достъпа ми",
+  "app.invite.passwordTooShort": "Паролата трябва да съдържа поне 8 знака.",
+  "app.invite.failed": "Активирането не бе успешно. Опитайте отново или поискайте нова връзка.",
   "app.login.submit": "Вход",
   "app.login.pending": "Влизане…",
   "app.login.or": "ИЛИ",

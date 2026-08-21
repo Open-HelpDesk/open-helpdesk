@@ -14,10 +14,10 @@ import { getT } from "@/i18n/server";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; accepted?: string }>;
 }) {
   const t = await getT();
-  const { error } = await searchParams;
+  const { error, accepted } = await searchParams;
   const slug = await getTenantSlug();
   const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug));
   const workspaceName = tenant?.name ?? "Open HelpDesk";
@@ -27,6 +27,14 @@ export default async function LoginPage({
   return (
     <main className="ohd flex min-h-screen items-center justify-center p-4">
       <div className="ohd-rise-slow w-full" style={{ maxWidth: 400 }}>
+        {accepted === "1" && (
+          <p
+            className="mb-4 rounded-md px-3.5 py-2.5 text-center"
+            style={{ fontSize: 13, background: "var(--ok-t)", color: "var(--ok)" }}
+          >
+            {t("app.login.invited")}
+          </p>
+        )}
         {(tenant?.status === "suspended" || tenant?.status === "deleting") && (
           <p
             className="mb-4 rounded-md px-3.5 py-2.5 text-center"

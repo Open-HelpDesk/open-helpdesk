@@ -1125,6 +1125,9 @@ export const it: Dictionary = {
   "app.settings.workspace.seatsManage": "Gestisci",
   "app.settings.workspace.seatLimitReached":
     "Limite di postazioni raggiunto ({quota}). Disattiva un agente o aggiungi postazioni.",
+  "app.settings.workspace.inviteEmailSubject": "Invito a unirsi al workspace {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Sei stato invitato a unirti al workspace {workspace} su Open HelpDesk.\n\nAttiva il tuo accesso: {url}\n\nQuesto link scade tra 7 giorni. Se non aspettavi questo invito, ignora questa email.",
   "app.settings.workspace.diagTitle": "Salute dell'installazione",
   "app.settings.workspace.diagHint":
     "Verifica database, email in uscita e in entrata, archiviazione dei file, code e cifratura. La sonda dell'archiviazione scrive e poi elimina un oggetto di prova.",
@@ -1504,6 +1507,16 @@ export const it: Dictionary = {
   "app.login.password": "Password",
   "app.login.forgot": "Password dimenticata?",
   "app.login.suspended": "Questo workspace è sospeso — contatta il tuo amministratore.",
+  "app.login.invited": "Invito accettato — accedi per continuare.",
+  "app.invite.title": "Unisciti al workspace {workspace}",
+  "app.invite.subtitle": "Invito per {email} — scegli una password per attivare il tuo accesso.",
+  "app.invite.invalidTitle": "Invito non valido o scaduto",
+  "app.invite.invalidText": "Chiedi a un amministratore del workspace di inviare un nuovo invito.",
+  "app.invite.nameLabel": "Nome visualizzato",
+  "app.invite.passwordLabel": "Password",
+  "app.invite.submit": "Attiva il mio accesso",
+  "app.invite.passwordTooShort": "La password deve contenere almeno 8 caratteri.",
+  "app.invite.failed": "Attivazione non riuscita. Riprova o richiedi un nuovo link.",
   "app.login.submit": "Accedi",
   "app.login.pending": "Accesso…",
   "app.login.or": "OPPURE",

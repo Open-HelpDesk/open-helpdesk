@@ -1394,6 +1394,9 @@ export const cs: Dictionary = {
   "app.settings.workspace.seatsManage": "Spravovat",
   "app.settings.workspace.seatLimitReached":
     "Byl dosažen limit licencí ({quota}). Deaktivujte agenta, nebo přidejte licence.",
+  "app.settings.workspace.inviteEmailSubject": "Pozvánka do workspace {workspace}",
+  "app.settings.workspace.inviteEmailBody":
+    "Byli jste pozváni do workspace {workspace} na Open HelpDesk.\n\nAktivujte svůj přístup: {url}\n\nOdkaz vyprší za 7 dní. Pokud jste tuto pozvánku nečekali, e-mail ignorujte.",
   "app.settings.workspace.diagTitle": "Stav instalace",
   "app.settings.workspace.diagHint":
     "Kontroluje databázi, odchozí a příchozí e-mail, úložiště souborů, fronty a šifrování. Sonda úložiště zapíše a poté smaže testovací objekt.",
@@ -1866,6 +1869,16 @@ export const cs: Dictionary = {
   "app.login.password": "Heslo",
   "app.login.forgot": "Zapomněli jste heslo?",
   "app.login.suspended": "Tento workspace je pozastaven — obraťte se na svého administrátora.",
+  "app.login.invited": "Pozvánka přijata — přihlaste se a pokračujte.",
+  "app.invite.title": "Připojit se k workspace {workspace}",
+  "app.invite.subtitle": "Pozvánka pro {email} — zvolte heslo pro aktivaci přístupu.",
+  "app.invite.invalidTitle": "Neplatná nebo prošlá pozvánka",
+  "app.invite.invalidText": "Požádejte administrátora workspace o zaslání nové pozvánky.",
+  "app.invite.nameLabel": "Zobrazované jméno",
+  "app.invite.passwordLabel": "Heslo",
+  "app.invite.submit": "Aktivovat můj přístup",
+  "app.invite.passwordTooShort": "Heslo musí mít alespoň 8 znaků.",
+  "app.invite.failed": "Aktivace se nezdařila. Zkuste to znovu, nebo si vyžádejte nový odkaz.",
   "app.login.submit": "Přihlásit se",
   "app.login.pending": "Přihlašování…",
   "app.login.or": "NEBO",

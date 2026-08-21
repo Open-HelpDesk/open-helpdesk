@@ -1,5 +1,6 @@
 "use server";
 
+import { sendAgentInvite } from "@/lib/agent-invite";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db, tenants, users } from "@openhelpdesk/db";
@@ -52,7 +53,7 @@ export async function inviteTeam(formData: FormData) {
     const role = ["admin", "agent", "viewer"].includes(roles[i] ?? "")
       ? (roles[i] as "admin" | "agent" | "viewer")
       : "agent";
-    await db
+    const inserted = await db
       .insert(users)
       .values({
         tenantId: tenant.id,
@@ -61,7 +62,11 @@ export async function inviteTeam(formData: FormData) {
         role,
         status: "invited",
       })
-      .onConflictDoNothing();
+      .onConflictDoNothing()
+      .returning({ id: users.id, email: users.email });
+    for (const row of inserted) {
+      await sendAgentInvite(tenant, row);
+    }
   }
 
   revalidatePath("/onboarding");
