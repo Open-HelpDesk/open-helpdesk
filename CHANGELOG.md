@@ -4,6 +4,46 @@ All notable changes to this project are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0-alpha] - 2026-08-21
+
+Cloud-ready release — the groundwork the managed offer builds on. Self-hosted
+behaviour is unchanged: every plan-related mechanism stays dormant without
+`OPENHELPDESK_EDITION=cloud`.
+
+### Added
+
+- **Agent invitations**: invitation emails (sent in the workspace language via
+  its own email transport), a 7-day signed acceptance link, and the
+  `/invite/[token]` page — password or OAuth — that finally activates invited
+  agents (`invited → active` transition, verified end to end).
+- **Workspace lifecycle**: `tenants.status` with a dedicated suspended screen
+  (the Owner keeps access to Billing), a login notice, a read-only customer
+  portal (submissions and widget refused), and outbound email cut while
+  inbound keeps being ingested — an unpaid invoice loses no tickets.
+- **Denormalized billing columns** on `tenants` (`entitlements`, `planName`,
+  `billing`, `trialEndsAt`) written by the cloud control plane and read
+  synchronously by the app, with plan defaults as fallback.
+- **Managed email groundwork**: `MANAGED_MAIL_DOMAIN` unifies the provided
+  address domain (four diverging literals, two TLDs), ingress webhooks compare
+  secrets in constant time and skip tenant resolution, `SIGNUP_URL` turns the
+  unknown-workspace 404 into a signup invitation.
+- **Cloud auth options** (inert when self-hosted): `AUTH_COOKIE_DOMAIN` for
+  cross-subdomain sessions, `REQUIRE_EMAIL_VERIFICATION` with instance-level
+  verification emails.
+
+### Changed
+
+- **Plans are now Free / Team / Enterprise** (was free/standard/pro): Free up
+  to 3 agents, Team adds SLA, automations, CSAT, reports, API and triage &
+  summary AI, Enterprise adds SSO, audit log, multi-brand, custom domain and
+  full AI. Entitlements gain `maxStorageBytes`; `ai` split into
+  `aiBasic`/`aiFull`. Seat limits follow purchased seats — the hardcoded
+  10-seat display cap on unlimited plans is gone, and ST-02/ST-11 now share
+  one seat definition.
+- ~70 reserved subdomains (was 5); workspace deletion retention correctly
+  documented as 60 days; Docker images keep `latest` for stable tags only.
+- `apps/www` (marketing site stub) moved to the private cloud repository.
+
 ## [0.1.0-alpha] - 2026-08-21
 
 First public release — the self-hostable core (roadmap lots 0–3).
@@ -42,4 +82,5 @@ First public release — the self-hostable core (roadmap lots 0–3).
   building web, worker, migrations, PostgreSQL 17, Redis and MinIO; row-level
   security applied per tenant.
 
+[0.2.0-alpha]: https://github.com/open-helpdesk/open-helpdesk/releases/tag/v0.2.0-alpha
 [0.1.0-alpha]: https://github.com/open-helpdesk/open-helpdesk/releases/tag/v0.1.0-alpha
