@@ -13,6 +13,8 @@ import {
   seatLimitFor,
 } from "@/lib/entitlements";
 import { PageHeader, PageShell } from "@/components/settings-page";
+import { gatewayConfigured } from "@/lib/cloud-gateway";
+import { goCheckout, goPortal } from "./actions";
 
 const INVOICE_GRID = "150px minmax(180px,1fr) 130px 130px 110px";
 
@@ -167,39 +169,45 @@ export default async function BillingPage() {
             <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
               {t("app.settings.workspace.billingNoDue")}
             </p>
+            {/* Les sessions Stripe viennent de la gateway privée : sans elle
+                (dev, control plane éteint), les boutons restent inertes. */}
             <div className="flex" style={{ gap: 8, marginTop: 2 }}>
-              <button
-                disabled
-                title={t("app.settings.workspace.cloudOnly")}
-                className="grid place-items-center font-semibold text-white disabled:opacity-50"
-                style={{
-                  height: 34,
-                  padding: "0 14px",
-                  borderRadius: 6,
-                  fontSize: 13,
-                  background: "var(--acc)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {t("app.settings.workspace.changePlan")}
-              </button>
-              <button
-                disabled
-                title={t("app.settings.workspace.cloudOnly")}
-                className="ohd-hover-edge-ink grid place-items-center border font-semibold disabled:opacity-50"
-                style={{
-                  height: 34,
-                  padding: "0 14px",
-                  borderRadius: 6,
-                  fontSize: 13,
-                  borderColor: "var(--acc-b)",
-                  background: "var(--panel)",
-                  color: "var(--ink-2)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {t("app.settings.workspace.manageSeats")}
-              </button>
+              <form action={goCheckout}>
+                <button
+                  disabled={!gatewayConfigured()}
+                  title={gatewayConfigured() ? undefined : t("app.settings.workspace.cloudOnly")}
+                  className="grid place-items-center font-semibold text-white disabled:opacity-50"
+                  style={{
+                    height: 34,
+                    padding: "0 14px",
+                    borderRadius: 6,
+                    fontSize: 13,
+                    background: "var(--acc)",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {t("app.settings.workspace.changePlan")}
+                </button>
+              </form>
+              <form action={goPortal}>
+                <button
+                  disabled={!gatewayConfigured()}
+                  title={gatewayConfigured() ? undefined : t("app.settings.workspace.cloudOnly")}
+                  className="ohd-hover-edge-ink grid place-items-center border font-semibold disabled:opacity-50"
+                  style={{
+                    height: 34,
+                    padding: "0 14px",
+                    borderRadius: 6,
+                    fontSize: 13,
+                    borderColor: "var(--acc-b)",
+                    background: "var(--panel)",
+                    color: "var(--ink-2)",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {t("app.settings.workspace.manageSeats")}
+                </button>
+              </form>
             </div>
           </div>
 
