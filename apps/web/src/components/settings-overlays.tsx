@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * Overlays client de l'administration : drawer 420 px (st-slide .18s), modal 460 px
- * (st-rise .16s), bouton copier, select auto-soumis. Le contenu (children) est rendu
- * côté serveur et peut contenir des formulaires branchés sur des server actions —
- * le drawer se referme à la soumission.
+ * Client overlays of the admin area: 420 px drawer (st-slide .18s), 460 px modal
+ * (st-rise .16s), copy button, auto-submitted select. The content (children) is
+ * rendered server-side and may contain forms wired to server actions —
+ * the drawer closes on submit.
  */
 import { useT } from "@/i18n/client";
 import {
@@ -31,6 +31,7 @@ export function Drawer({
   children: ReactNode;
   width?: number;
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -80,7 +81,7 @@ export function Drawer({
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Fermer"
+                aria-label={t("app.settings.shell.close")}
                 style={{ color: "var(--ink-3)" }}
               >
                 <X size={16} />
@@ -111,6 +112,7 @@ export function Modal({
   children: ReactNode;
   width?: number;
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -163,7 +165,7 @@ export function Modal({
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Fermer"
+                aria-label={t("app.settings.shell.close")}
                 style={{ color: "var(--ink-3)" }}
               >
                 <X size={16} />
@@ -178,8 +180,8 @@ export function Modal({
 }
 
 /**
- * Confirmation par saisie du slug (ST-01) : le bouton reste désactivé tant que la
- * saisie ne correspond pas exactement au slug du workspace.
+ * Confirmation by typing the slug (ST-01): the button stays disabled as long as
+ * the input does not match the workspace slug exactly.
  */
 export function SlugConfirmField({
   slug,
@@ -187,7 +189,7 @@ export function SlugConfirmField({
   buttonLabel,
 }: {
   slug: string;
-  /** « Saisissez « acme » pour confirmer » — déjà traduit et interpolé. */
+  /** "Type 'acme' to confirm" — already translated and interpolated. */
   prompt: string;
   buttonLabel: string;
 }) {
@@ -253,7 +255,7 @@ export function CopyButton({ text, label }: { text: string; label?: string }) {
   );
 }
 
-/** Select qui soumet son formulaire au changement (rôle inline de ST-02). */
+/** Select that submits its form on change (ST-02 inline role). */
 export function AutoSubmitSelect({
   name,
   defaultValue,

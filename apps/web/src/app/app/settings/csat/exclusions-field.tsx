@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * ST-08 — Exclusions en chips (« tag : spam », « tag : interne »,
- * « formulaire : Commercial ») dans un cadre unique min-height 44 : la saisie se
- * fait en ligne (placeholder « Ajouter un tag ou un formulaire… », validation
- * Entrée ou perte de focus). Les valeurs sont portées par des inputs cachés
- * répétés, lus par la server action à l'enregistrement.
+ * ST-08 — Exclusions as chips ("tag: spam", "tag: internal",
+ * "form: Commercial") inside a single min-height 44 frame: typing happens
+ * inline (placeholder "Add a tag or a form…", committed on Enter or on blur).
+ * The values are carried by repeated hidden inputs, read by the server action
+ * on save.
  */
 import { useState } from "react";
 import { useT } from "@/i18n/client";

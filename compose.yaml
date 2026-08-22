@@ -1,15 +1,15 @@
-# Auto-hébergement — la promesse « trois commandes » :
+# Self-hosting — the "three commands" promise:
 #   git clone https://github.com/open-helpdesk/open-helpdesk && cd open-helpdesk
-#   cp .env.example .env        # puis renseigner les secrets
+#   cp .env.example .env        # then fill in the secrets
 #   docker compose up -d
 #
-# L'application répond ensuite sur http://localhost:3000 (BASE_DOMAIN).
-# Avec SEED_DEMO=true (défaut du .env.example), l'instance démarre avec le
-# workspace de démonstration Acme — connexion marie.dupont@acme.example /
-# demo-openhelpdesk, à remplacer par vos agents dès la première session.
+# The application then answers on http://localhost:3000 (BASE_DOMAIN).
+# With SEED_DEMO=true (the .env.example default), the instance starts with the
+# Acme demo workspace — login marie.dupont@acme.example / demo-openhelpdesk,
+# to be replaced by your own agents from the first session on.
 #
-# Les hôtes internes (postgres, redis, minio) sont fixés ici et priment sur
-# le .env, écrit pour le développement sur les ports de la machine hôte.
+# The internal hosts (postgres, redis, minio) are pinned here and take
+# precedence over .env, written for development on the host machine's ports.
 
 name: open-helpdesk-prod
 

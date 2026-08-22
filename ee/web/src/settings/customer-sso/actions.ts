@@ -16,7 +16,7 @@ async function requirePro() {
   return current;
 }
 
-/** ST-14 — Interrupteur global de délégation SSO (tenants.ssoDelegationEnabled). */
+/** ST-14 — Global SSO delegation switch (tenants.ssoDelegationEnabled). */
 export async function toggleSsoDelegation() {
   const { tenant } = await requirePro();
   await db
@@ -26,7 +26,7 @@ export async function toggleSsoDelegation() {
   revalidatePath("/app/settings/customer-sso");
 }
 
-/** Seule action du drawer de détail : désactiver la connexion d'une organisation. */
+/** The detail drawer's only action: disable an organization's connection. */
 export async function disableOrgConnection(formData: FormData) {
   const { tenant } = await requirePro();
   const connectionId = String(formData.get("connectionId") ?? "");

@@ -1,6 +1,6 @@
 "use client";
 
-/** AG-07 — Tiroirs et confirmations du panneau contact (création, fusion, RGPD). */
+/** AG-07 — Drawers and confirmations of the contact panel (creation, merge, GDPR). */
 import { useState } from "react";
 import { useT } from "@/i18n/client";
 import { createContact, deleteContactRgpd, mergeContacts } from "./actions";
@@ -91,7 +91,7 @@ export function NewContactButton() {
   );
 }
 
-/** Chip du panneau détail (design) : padding 4px 9px, radius 5, 12px ink-2, sans fond. */
+/** Detail panel chip (design): padding 4px 9px, radius 5, 12px ink-2, no background. */
 const chipStyle = {
   padding: "4px 9px",
   borderRadius: 5,

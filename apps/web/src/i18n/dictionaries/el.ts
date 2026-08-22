@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const el: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const el: Dictionary = {
     "Η υπηρεσία έχει ανασταλεί προσωρινά: η προβολή παραμένει διαθέσιμη, τα νέα αιτήματα είναι απενεργοποιημένα.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Κέντρο βοήθειας",
   "home.title": "Πώς μπορούμε να σας βοηθήσουμε;",
   "home.subtitle":
@@ -25,7 +25,7 @@ export const el: Dictionary = {
   "home.ctaTitle": "Δεν βρίσκετε αυτό που ψάχνετε;",
   "home.ctaBody": "Η ομάδα μας απαντά κατά μέσο όρο σε 34 λεπτά εντός των ωρών λειτουργίας.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Αναζήτηση στη βοήθεια…",
   "search.emptyTitle": "Κανένα αποτέλεσμα για «{query}»",
   "search.emptyBody":
@@ -33,7 +33,7 @@ export const el: Dictionary = {
   "search.breadcrumb": "Αναζήτηση",
   "search.resultsTitle": "Αποτελέσματα για «{query}»",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Βοήθεια",
   "category.otherCategories": "Άλλες κατηγορίες",
   "category.otherArticles": "Άλλα άρθρα",
@@ -55,7 +55,7 @@ export const el: Dictionary = {
   "vote.prefill": "Δημιουργία προσυμπληρωμένου αιτήματος",
   "vote.prefillSubject": "Σχετικά με το άρθρο «{title}»",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Υποβολή αιτήματος",
   "newRequest.subtitle": "Περιγράψτε την περίπτωσή σας. Απαντάμε εντός 4 εργάσιμων ωρών.",
   "newRequest.type": "Τύπος αιτήματος",
@@ -96,7 +96,7 @@ export const el: Dictionary = {
   "submitted.track": "Παρακολούθηση του αιτήματος",
   "submitted.backToHelp": "Επιστροφή στη βοήθεια",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "Τα αιτήματά μου",
   "requests.new": "Νέο αίτημα",
   "requests.tabOpen": "Ανοιχτά",
@@ -108,13 +108,13 @@ export const el: Dictionary = {
     "Τα αιτήματα υποστήριξής σας θα εμφανίζονται εδώ, με την κατάστασή τους και το ιστορικό των μηνυμάτων.",
   "requests.awaitingReply": "Αναμένεται απάντηση",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "Σε εξέλιξη",
   "status.waiting": "Αναμένεται η απάντησή σας",
   "status.resolved": "Επιλυμένο",
   "status.closed": "Κλειστό",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Επιλύθηκε {when}",
   "activity.closed": "Έκλεισε {when}",
   "activity.waiting": "Αναμένεται η απάντησή σας {since}",
@@ -122,13 +122,13 @@ export const el: Dictionary = {
   "activity.youReplied": "Απαντήσατε {when}",
   "activity.created": "Δημιουργήθηκε {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": { one: "εδώ και {count} λεπ.", other: "εδώ και {count} λεπ." },
   "since.hours": { one: "εδώ και {count} ώ.", other: "εδώ και {count} ώ." },
   "since.days": { one: "από χθες", other: "εδώ και {count} ημέρες" },
   "since.date": "από τις {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Εσείς",
   "request.team": "Η ομάδα",
   "request.agentAuthor": "{name} — {tenant}",
@@ -145,7 +145,7 @@ export const el: Dictionary = {
   "request.markSolved": "Σήμανση ως επιλυμένο",
   "request.reopen": "Άνοιγμα του αιτήματος ξανά",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Παρακολουθήστε τα αιτήματά σας",
   "login.magicIntro":
     "Δώστε το email σας και θα σας στείλουμε έναν σύνδεσμο σύνδεσης. Δεν χρειάζεται να θυμάστε κωδικό.",
@@ -159,7 +159,15 @@ export const el: Dictionary = {
   "login.footer":
     "Δεν έχετε ακόμη αίτημα; Ο λογαριασμός σας δημιουργείται αυτόματα με την πρώτη υποβολή.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Ο σύνδεσμος σύνδεσής σας — {workspace}",
+  "login.emailBody":
+    "Γεια σας,\n\nΚάντε κλικ σε αυτόν τον σύνδεσμο για να δείτε τα αιτήματά σας (ισχύει για 15 λεπτά):\n{url}\n\nΑν δεν ζητήσατε εσείς τον σύνδεσμο, αγνοήστε αυτό το email.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Είστε διαχειριστής αυτού του οργανισμού. Όσα ρυθμίζετε εδώ ισχύουν για {count} άτομο του οργανισμού {org} που χρησιμοποιεί την υποστήριξη {tenant}.",
     other: "Είστε διαχειριστής αυτού του οργανισμού. Όσα ρυθμίζετε εδώ ισχύουν για τα {count} άτομα του οργανισμού {org} που χρησιμοποιούν την υποστήριξη {tenant}.",
@@ -245,7 +253,7 @@ export const el: Dictionary = {
   "members.note":
     "Τα μέλη εμφανίζονται αυτόματα με την πρώτη τους σύνδεση ή το πρώτο τους αίτημα. Μπορείτε να ορίσετε έναν δεύτερο διαχειριστή, ώστε να μην είστε το μόνο σημείο επαφής.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Χρειάζεστε βοήθεια;",
   "widget.close": "Κλείσιμο",
   "widget.messageLabel": "Το μήνυμά σας",
@@ -266,7 +274,7 @@ export const el: Dictionary = {
   "csatPage.doneTitle": "Ευχαριστούμε!",
   "csatPage.doneBody": "Το σχόλιό σας διαβιβάστηκε στην ομάδα.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Εισερχόμενα",
@@ -280,7 +288,7 @@ export const el: Dictionary = {
   "app.shell.suspendedText":
     "Επικοινωνήστε με τον διαχειριστή σας για να αποκατασταθεί η πρόσβαση.",
   "app.shell.suspendedOwnerText":
-    "Επιλέξτε πρόγραμμα ή ενημερώστε τον τρόπο πληρωμής για να επανενεργοποιήσετε το workspace.",
+    "Τακτοποιήστε τη συνδρομή ή ενημερώστε τον τρόπο πληρωμής για να επανενεργοποιήσετε το workspace.",
   "app.shell.suspendedBillingCta": "Άνοιγμα Συνδρομής και χρέωσης",
   "app.shell.myTickets": "Τα τικέτ μου",
   "app.shell.newTicket": "Νέο τικέτ",
@@ -661,7 +669,7 @@ export const el: Dictionary = {
   "app.reports.columnAgent": "Χειριστής",
   "app.reports.columnFirstReply": "1η απάντηση",
   "app.reports.customReports": "Προσαρμοσμένες αναφορές",
-  "app.reports.enterprisePlanBadge": "ΠΡΟΓΡΑΜΜΑ ENTERPRISE",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Μάθετε περισσότερα",
   "app.reports.chartDailyAria": "{labelA} και {labelB} ανά ημέρα",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -685,8 +693,11 @@ export const el: Dictionary = {
   "app.settings.shell.saved": "✓ Αποθηκεύτηκε",
   "app.settings.shell.cancel": "Ακύρωση",
   "app.settings.shell.save": "Αποθήκευση",
-  "app.settings.shell.planEnterprise": "ΠΡΟΓΡΑΜΜΑ ENTERPRISE",
-  "app.settings.shell.upgradeToEnterprise": "Αναβάθμιση στο πρόγραμμα Enterprise",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Κλείσιμο",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Διαχείριση της συνδρομής",
   "app.settings.shell.eeSelfHostedTitle": "Λειτουργία της έκδοσης Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Αυτή η λειτουργία υπόκειται στην εμπορική άδεια (κατάλογος ee/ του αποθετηρίου) και δεν περιλαμβάνεται στην αυτοφιλοξενούμενη έκδοση ανοικτού κώδικα.",
@@ -865,11 +876,11 @@ export const el: Dictionary = {
   "app.settings.sso.agentSubtitle":
     "Ενιαία σύνδεση SAML 2.0 και παροχή λογαριασμών SCIM για την ομάδα υποστήριξής σας.",
   "app.settings.sso.agentLockedTitle":
-    "Το SSO των χειριστών είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise",
+    "Το SSO των χειριστών αποτελεί μέρος της έκδοσης Enterprise Edition",
   "app.settings.sso.agentLockedText":
     "Συνδέστε τον πάροχο ταυτότητας SAML 2.0 σας, δημιουργήστε τους λογαριασμούς των χειριστών σας μέσω SCIM και επιβάλετε την ενιαία σύνδεση σε όλη την ομάδα.",
   "app.settings.sso.agentEnterpriseOnly":
-    "Το SSO των χειριστών είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise.",
+    "Το SSO των χειριστών αποτελεί μέρος της έκδοσης Enterprise Edition.",
   "app.settings.sso.idpOther": "Άλλος (γενικό SAML)",
   "app.settings.sso.samlToggleLabel": "Ενεργοποίηση της ενιαίας σύνδεσης SAML 2.0",
   "app.settings.sso.samlHeading": "Ενιαία σύνδεση SAML 2.0",
@@ -958,11 +969,11 @@ export const el: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Κάθε οργανισμός-πελάτης συνδέει τον δικό του πάροχο ταυτότητας από την πύλη. Εδώ επιβλέπετε το σύνολο.",
   "app.settings.sso.customerLockedTitle":
-    "Το SSO των οργανισμών-πελατών είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise",
+    "Το SSO των οργανισμών-πελατών αποτελεί μέρος της έκδοσης Enterprise Edition",
   "app.settings.sso.customerLockedText":
     "Αφήστε κάθε οργανισμό-πελάτη να συνδέσει τον δικό του πάροχο ταυτότητας (SAML ή OIDC) και επιβλέψτε το σύνολο από αυτήν την οθόνη.",
   "app.settings.sso.customerEnterpriseOnly":
-    "Το SSO των οργανισμών-πελατών είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise.",
+    "Το SSO των οργανισμών-πελατών αποτελεί μέρος της έκδοσης Enterprise Edition.",
   "app.settings.sso.statusActive": "Ενεργή",
   "app.settings.sso.statusPending": "Προς επαλήθευση",
   "app.settings.sso.statusError": "Σφάλμα",
@@ -1125,7 +1136,7 @@ export const el: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Βάση γνώσης δημοσιευμένη",
   "app.settings.portal.kbPublishedHint": "Τα δημοσιευμένα άρθρα είναι ορατά χωρίς σύνδεση.",
   "app.settings.portal.hidePoweredByLabel": "Απόκρυψη του «Με την τεχνολογία Open HelpDesk»",
-  "app.settings.portal.hidePoweredByHint": "Διαθέσιμο από το πρόγραμμα Enterprise.",
+  "app.settings.portal.hidePoweredByHint": "Διαθέσιμο με την έκδοση Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Ορατότητα της βάσης γνώσης",
   "app.settings.portal.kbVisibilityPublic": "Δημόσια",
   "app.settings.portal.kbVisibilityAuthenticated": "Μόνο μετά από σύνδεση",
@@ -1189,8 +1200,8 @@ export const el: Dictionary = {
   "app.settings.workspace.generalTitle": "Γενικά και εταιρική ταυτότητα",
   "app.settings.workspace.generalSubtitle":
     "Ταυτότητα του χώρου εργασίας, γλώσσα, ζώνη ώρας και αρίθμηση των τικέτ.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "Η διαγραφή απορρίφθηκε — η προγραμματισμένη διαγραφή είναι διαθέσιμη στην έκδοση cloud.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Η διαγραφή απορρίφθηκε — η προγραμματισμένη διαγραφή απαιτεί control plane.",
   "app.settings.workspace.generalIdentity": "Ταυτότητα",
   "app.settings.workspace.generalNameLabel": "Όνομα του χώρου εργασίας",
   "app.settings.workspace.generalLogoLabel": "Λογότυπο",
@@ -1257,7 +1268,8 @@ export const el: Dictionary = {
   },
   "app.settings.workspace.seatsAddHint":
     "Προσθέστε θέσεις για να προσκαλέσετε νέους χειριστές.",
-  "app.settings.workspace.seatsFreeHint": "Οι ρόλοι Viewer είναι δωρεάν και χωρίς περιορισμό.",
+  "app.settings.workspace.seatsFreeHint":
+    "Οι ρόλοι Viewer δεν καταλαμβάνουν θέση και είναι χωρίς περιορισμό.",
   "app.settings.workspace.seatsAddAction": "Προσθήκη θέσεων",
   "app.settings.workspace.seatsManage": "Διαχείριση",
   "app.settings.workspace.seatLimitReached":
@@ -1340,8 +1352,8 @@ export const el: Dictionary = {
   "app.settings.workspace.save": "Αποθήκευση",
   "app.settings.workspace.billingTitle": "Συνδρομή και χρέωση",
   "app.settings.workspace.billingSubtitle":
-    "Πρόγραμμα, θέσεις, ποσοστώσεις, μέθοδος πληρωμής και ιστορικό τιμολογίων.",
-  "app.settings.workspace.selfHosted": "ΑΥΤΟΦΙΛΟΞΕΝΟΥΜΕΝΟ",
+    "Συνδρομή, θέσεις, ποσοστώσεις, μέθοδος πληρωμής και ιστορικό τιμολογίων.",
+  "app.settings.workspace.subscriptionNone": "Καμία συνδρομή",
   "app.settings.workspace.trialBadge": "ΔΟΚΙΜΗ",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
@@ -1352,10 +1364,9 @@ export const el: Dictionary = {
     one: "τον μήνα · {count} θέση περιλαμβάνεται",
     other: "τον μήνα · {count} θέσεις περιλαμβάνονται",
   },
-  "app.settings.workspace.billingNoDue":
-    "Καμία οφειλή σε αυτήν την εγκατάσταση — η χρέωση γίνεται στην έκδοση cloud.",
-  "app.settings.workspace.cloudOnly": "Διαθέσιμο στην έκδοση cloud",
-  "app.settings.workspace.changePlan": "Αλλαγή προγράμματος",
+  "app.settings.workspace.billingNoDue": "Καμία οφειλή αυτή τη στιγμή.",
+  "app.settings.workspace.requiresControlPlane": "Απαιτεί control plane",
+  "app.settings.workspace.changeSubscription": "Αλλαγή συνδρομής",
   "app.settings.workspace.manageSeats": "Διαχείριση θέσεων",
   "app.settings.workspace.usageTitle": "Κατανάλωση του μήνα",
   "app.settings.workspace.quotaSeats": "Θέσεις",
@@ -1367,8 +1378,7 @@ export const el: Dictionary = {
   "app.settings.workspace.colNumber": "Αριθμός",
   "app.settings.workspace.colPeriod": "Περίοδος",
   "app.settings.workspace.colAmount": "Ποσό",
-  "app.settings.workspace.invoicesEmpty":
-    "Κανένα τιμολόγιο — τα τιμολόγια θα εμφανίζονται εδώ στην έκδοση cloud.",
+  "app.settings.workspace.invoicesEmpty": "Δεν υπάρχουν ακόμη τιμολόγια.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Αποθηκεύτηκε",
@@ -1441,18 +1451,18 @@ export const el: Dictionary = {
   "app.settings.rules.typeFile": "Αρχείο",
   "app.settings.rules.typeSelectLong": "Αναπτυσσόμενη λίστα",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07). Les statuts,
-     priorités et canaux ne sont pas repris ici : ils viennent des tables
-     partagées, celles de l'inbox et de ses filtres. --- */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07). Statuses, priorities
+     and channels are not repeated here: they come from the shared tables, the
+     ones used by the inbox and its filters. --- */
 
-  /* Types de champs personnalisés (ST-04) ; « Κείμενο » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Κείμενο” is typeText, above. */
   "app.settings.rules.typeSelect": "Λίστα",
   "app.settings.rules.typeMultiSelect": "Πολλαπλή επιλογή",
   "app.settings.rules.typeDate": "Ημερομηνία",
   "app.settings.rules.typeNumber": "Αριθμός",
   "app.settings.rules.typeCheckbox": "Πλαίσιο επιλογής",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Γεγονός",
   "app.settings.rules.condFieldStatus": "Κατάσταση",
   "app.settings.rules.condFieldPriority": "Προτεραιότητα",
@@ -1466,7 +1476,7 @@ export const el: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Ώρες από τη δημιουργία",
   "app.settings.rules.condFieldHoursUpdated": "Ώρες από την ενημέρωση",
 
-  /* Opérateurs ; les deux comparaisons numériques restent des symboles. */
+  /* Operators; the two numeric comparisons stay symbols. */
   "app.settings.rules.opIs": "είναι",
   "app.settings.rules.opIsNot": "δεν είναι",
   "app.settings.rules.opContains": "περιέχει",
@@ -1476,12 +1486,12 @@ export const el: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs — les mêmes mots que ruleHintTrigger. */
+  /* Trigger events — the same words as ruleHintTrigger. */
   "app.settings.rules.eventTicketCreated": "Δημιουργία τικέτ",
   "app.settings.rules.eventTicketUpdated": "Ενημέρωση τικέτ",
   "app.settings.rules.eventMessageCreated": "Λήψη μηνύματος",
 
-  /* Actions, telles que le menu du builder les nomme. */
+  /* Actions, as the builder's menu names them. */
   "app.settings.rules.actSetStatus": "Ορισμός της κατάστασης",
   "app.settings.rules.actSetPriority": "Ορισμός της προτεραιότητας",
   "app.settings.rules.actAssignUser": "Ανάθεση σε χειριστή",
@@ -1490,8 +1500,8 @@ export const el: Dictionary = {
   "app.settings.rules.actAddTags": "Προσθήκη ετικετών",
   "app.settings.rules.actEmailContact": "Αποστολή email στην επαφή",
 
-  /* Résumé d'une règle, en une ligne de liste : les bribes s'enchaînent, donc
-     sans majuscule initiale ni point final. */
+  /* One-line rule summary: the fragments run on, so no initial capital and
+     no final full stop. */
   "app.settings.rules.summaryPattern": "Αν {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "και",
   "app.settings.rules.summaryAlways": "πάντα",
@@ -1503,11 +1513,11 @@ export const el: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "χωρίς ανάθεση",
   "app.settings.rules.summaryAssigned": "με ανάθεση",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : voir
-     formatDurationTokens, ils ne se traduisent pas. */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): see
+     formatDurationTokens, they are not translated. */
   "app.settings.rules.summarySince": "εδώ και {duration}",
-  /* Sans préposition : deux statuts commencent déjà par « Σε » (Σε αναμονή,
-     Σε παύση), et « σε Σε αναμονή » se lirait mal. */
+  /* No preposition: two statuses already start with “Σε” (Σε αναμονή,
+     Σε παύση), and “σε Σε αναμονή” would read badly. */
   "app.settings.rules.summarySetStatus": "νέα κατάσταση {value}",
   "app.settings.rules.summarySetPriority": "προτεραιότητα {value}",
   "app.settings.rules.summaryAssignTeam": "ανάθεση σε {team}",
@@ -1517,7 +1527,7 @@ export const el: Dictionary = {
   "app.settings.rules.summaryAddTags": "προσθήκη {tags}",
   "app.settings.rules.summaryEmailContact": "αποστολή email στην επαφή",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Κατάσταση → {value}",
   "app.settings.rules.macroSummaryPriority": "Προτεραιότητα → {value}",
   "app.settings.rules.macroSummaryTeam": "Ομάδα → {team}",
@@ -1631,7 +1641,7 @@ export const el: Dictionary = {
   "app.settings.dev.auditSubtitle":
     "Πλήρης καταγραφή των ενεργειών διαχείρισης. Διατήρηση 2 ετών.",
   "app.settings.dev.auditLockedTitle":
-    "Το αρχείο ελέγχου είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise",
+    "Το αρχείο ελέγχου αποτελεί μέρος της έκδοσης Enterprise Edition",
   "app.settings.dev.auditLockedText":
     "Διατηρήστε το ίχνος κάθε ενέργειας διαχείρισης για 2 έτη, με σύγκριση πριν/μετά και εξαγωγή CSV.",
   "app.settings.dev.filterActorAll": "Εκτελεστής: όλοι",
@@ -1653,9 +1663,10 @@ export const el: Dictionary = {
   "app.settings.dev.actorContact": "Επαφή",
   "app.settings.dev.exportUnauthorized": "Χωρίς εξουσιοδότηση",
   "app.settings.dev.exportForbidden": "Διαθέσιμο μόνο στους ρόλους Owner και Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Το αρχείο ελέγχου είναι διαθέσιμο μόνο στο πρόγραμμα Enterprise.",
+  "app.settings.dev.exportEnterpriseOnly":
+    "Το αρχείο ελέγχου αποτελεί μέρος της έκδοσης Enterprise Edition.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Χώρος εργασίας",
   "app.settingsNav.itemGeneral": "Γενικά",
   "app.settingsNav.itemTeam": "Χειριστές και ομάδες",
@@ -1690,7 +1701,7 @@ export const el: Dictionary = {
   "app.settingsNav.copied": "Αντιγράφηκε",
   "app.settingsNav.copy": "Αντιγραφή",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Νέο",
   "app.status.open": "Ανοιχτό",
   "app.status.waiting": "Σε αναμονή",
@@ -1711,7 +1722,7 @@ export const el: Dictionary = {
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Τα τικέτ μου",
   "app.views.unassigned": "Χωρίς ανάθεση",
   "app.views.breaching": "Κοντά σε υπέρβαση",
@@ -1719,7 +1730,7 @@ export const el: Dictionary = {
   "app.views.urgent": "Επείγοντα αυτήν την εβδομάδα",
   "app.views.escalation": "Κλιμακώσεις",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Μετονομασία",
   "app.kb.renameSave": "Αποθήκευση",
   "app.kb.deleteCategory": "Διαγραφή της κατηγορίας",
@@ -1730,7 +1741,7 @@ export const el: Dictionary = {
     other: "Η κατηγορία αυτή περιέχει ακόμη {count} στοιχεία. Μετακινήστε τα προτού τη διαγράψετε.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "Email",
   "app.login.emailPlaceholder": "onoma@etaireia.gr",
   "app.login.password": "Κωδικός πρόσβασης",
@@ -1760,9 +1771,9 @@ export const el: Dictionary = {
     "Ο πάροχος αυτός δεν είναι ρυθμισμένος σε αυτήν την εγκατάσταση.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Le premier écran qu'un nouveau workspace rencontre. Le titre du portail dans
-     son propre aperçu (home.title), le nom du workspace, la couleur d'accent et
-     les rôles Owner / Admin / Agent / Viewer viennent d'ailleurs. */
+  /* The first screen a new workspace meets. The portal title in its own
+     preview (home.title), the workspace name, the accent colour and the
+     Owner / Admin / Agent / Viewer roles come from elsewhere. */
 
   "app.onboarding.asideTitle": "Διαμόρφωση",
   "app.onboarding.asideFooter":
@@ -1801,7 +1812,7 @@ export const el: Dictionary = {
 
   "app.onboarding.teamTitle": "Προσκαλέστε την ομάδα σας",
   "app.onboarding.teamBody":
-    "Προσκαλέστε τους χειριστές σας τώρα ή κοινοποιήστε τον σύνδεσμο πρόσκλησης. Οι θέσεις Viewer είναι δωρεάν.",
+    "Προσκαλέστε τους χειριστές σας τώρα ή κοινοποιήστε τον σύνδεσμο πρόσκλησης. Οι ρόλοι Viewer δεν καταλαμβάνουν θέση.",
   "app.onboarding.invitePlaceholder": "synergatis@etaireia.gr",
   "app.onboarding.addRow": "+ Προσθήκη γραμμής",
   "app.onboarding.sendInvites": "Αποστολή των προσκλήσεων",
@@ -1810,8 +1821,8 @@ export const el: Dictionary = {
   "app.onboarding.testBody":
     "Ελέγξτε ολόκληρη τη διαδρομή προτού ανοίξετε την υπηρεσία στους πελάτες σας.",
   "app.onboarding.readyTitle": "Ο χώρος εργασίας σας είναι έτοιμος",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée autour
-     du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split around
+     the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody":
     "Στείλτε ένα email στο {address} για να δημιουργήσετε ένα δοκιμαστικό τικέτ.",
   "app.onboarding.openInbox": "Άνοιγμα των εισερχομένων",
@@ -1822,34 +1833,44 @@ export const el: Dictionary = {
   "app.onboarding.checklistTicket": "Το πρώτο τικέτ ελήφθη",
   "app.onboarding.checklistSla": "Η πολιτική SLA επαληθεύτηκε",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur :
-     elle est découpée autour de {mode}. Le grec exige le partitif « από τις » et
-     le quantifieur reste au milieu, entre « Αντιστοιχεί σε » et « από τις
-     συνθήκες » — « σε όλες από τις συνθήκες » ne se dit pas, d'où « κάθε μία »,
-     qui s'accorde dans les deux modes. */
+  /* ST-05 — the condition group header. The sentence wraps a selector: it
+     is split around {mode}. Greek requires the partitive “από τις” and the
+     quantifier stays in the middle, between “Αντιστοιχεί σε” and “από τις
+     συνθήκες” — “σε όλες από τις συνθήκες” is not said, hence “κάθε μία”,
+     which agrees in both modes. */
   "app.settings.rules.matchIf": "ΑΝ",
   "app.settings.rules.matchAllPattern": "Αντιστοιχεί σε {mode} από τις συνθήκες",
   "app.settings.rules.matchAnyPattern": "Αντιστοιχεί σε {mode} από τις συνθήκες",
   "app.settings.rules.matchAll": "κάθε μία",
   "app.settings.rules.matchAny": "τουλάχιστον μία",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
-  "app.settings.workspace.planFree": "Πρόγραμμα Free",
-  "app.settings.workspace.planTeam": "Πρόγραμμα Team",
-  "app.settings.workspace.planEnterprise": "Πρόγραμμα Enterprise",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "ΤΟΤΕ",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Δοκιμή σε υπάρχον τικέτ",
+  "app.settings.rules.testRunning": "Δοκιμή σε εξέλιξη…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Αφαίρεση",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Σώμα του email — μεταβλητές: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française ; seul l'affichage est traduit. */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string; only the display is translated. */
   "app.ticket.typeQuestion": "Ερώτηση",
   "app.ticket.typeIncident": "Περιστατικό",
   "app.ticket.typeTask": "Εργασία",
   "app.ticket.typeOther": "Άλλο",
 
-  /* AG-09 — export CSV des rapports. Un fichier téléchargé est du texte lu par
-     une personne : ses entêtes se traduisent, secondes abrégées comprises. */
+  /* AG-09 — CSV export of the reports. A downloaded file is text read by a
+     person: its headers are translated, abbreviated seconds included. */
   "app.reports.csvIndicator": "Δείκτης",
   "app.reports.csvCurrentPeriod": "Τρέχουσα περίοδος",
   "app.reports.csvPreviousPeriod": "Προηγούμενη περίοδος",
@@ -1864,8 +1885,8 @@ export const el: Dictionary = {
   "app.reports.csvResolvedShort": "Επιλυμένα",
   "app.reports.csvAgent": "Χειριστής",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Νέο άρθρο",
   "app.kb.fromTicketSymptomHeading": "Σύμπτωμα",
   "app.kb.fromTicketSymptomPlaceholder": "[Περιγράψτε τι διαπιστώνει ο πελάτης.]",
@@ -1875,8 +1896,8 @@ export const el: Dictionary = {
   "app.kb.fromTicketMissingRequest": "το αρχικό αίτημα του πελάτη",
   "app.kb.fromTicketMissingAnswer": "η απάντηση του χειριστή",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Διαδικασία βήμα προς βήμα",
   "app.kb.tplProcedureHint": "Μια σειρά αριθμημένων βημάτων, με το αναμενόμενο αποτέλεσμα.",
   "app.kb.tplProcedureTitle": "Πώς να [κάνετε την ενέργεια]",

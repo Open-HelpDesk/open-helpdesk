@@ -1,8 +1,8 @@
 /**
- * SLA (ST-07) : la première politique dont les conditions matchent s'applique.
- * Calcul 24/7 tant que la politique n'a pas de calendrier ouvré (le calcul en heures
- * ouvrées arrive avec l'écran ST-07). Le worker balaye les échéances : avertissement
- * à T-30 min, dépassement — chacun une seule fois (sla_warned_at / sla_breached_at).
+ * SLA (ST-07): the first policy whose conditions match applies.
+ * 24/7 computation as long as the policy has no business calendar (the business hours
+ * computation arrives with the ST-07 screen). The worker sweeps the due dates: warning
+ * at T-30 min, breach — each only once (sla_warned_at / sla_breached_at).
  */
 import { businessHours, db, slaPolicies, ticketMessages, tickets } from "@openhelpdesk/db";
 import { and, asc, eq, inArray, isNull, isNotNull, or } from "drizzle-orm";
@@ -10,7 +10,7 @@ import { evaluateConditions } from "./evaluate";
 import { addBusinessMinutes, type BusinessCalendar } from "./business-hours";
 import type { Condition, SlaTargets } from "./types";
 
-/** Calendrier ouvré d'une politique — null = 24/7. */
+/** Business calendar of a policy — null = 24/7. */
 async function calendarFor(businessHoursId: string | null): Promise<BusinessCalendar | null> {
   if (!businessHoursId) return null;
   const [row] = await db
@@ -27,6 +27,17 @@ async function calendarFor(businessHoursId: string | null): Promise<BusinessCale
 
 const MIN = 60_000;
 const WARN_BEFORE_MS = 30 * MIN;
+
+/**
+ * Due date written into the internal notes below. Neither a locale nor a time zone:
+ * a package knows neither the tenant's language nor its dictionaries
+ * (apps/web/src/i18n), and a localized format would lie as soon as the tenant reads
+ * in another language. The ISO-8601 slice (UTC, "2026-08-22 14:30") is unambiguous
+ * everywhere. The note text itself stays in English for the same reason.
+ */
+function dueLabel(due: Date): string {
+  return due.toISOString().slice(0, 16).replace("T", " ");
+}
 
 async function matchPolicy(ticket: typeof tickets.$inferSelect) {
   const policies = await db
@@ -58,7 +69,7 @@ export async function applySlaOnCreate(tenantId: string, ticketId: string): Prom
   const targets = (policy.targets as SlaTargets)[ticket.priority];
   if (!targets) return;
 
-  // Échéances calculées en heures ouvrées du calendrier de la politique (24/7 sans calendrier).
+  // Due dates computed in the business hours of the policy's calendar (24/7 without a calendar).
   const calendar = await calendarFor(policy.businessHoursId);
   await db
     .update(tickets)
@@ -74,7 +85,7 @@ export async function applySlaOnCreate(tenantId: string, ticketId: string): Prom
     .where(eq(tickets.id, ticket.id));
 }
 
-/** Réponse d'un contact → échéance de prochaine réponse (si la politique en définit une). */
+/** Reply from a contact → next reply due date (if the policy defines one). */
 export async function onContactReplySla(tenantId: string, ticketId: string): Promise<void> {
   const [ticket] = await db
     .select()
@@ -96,7 +107,7 @@ export async function onContactReplySla(tenantId: string, ticketId: string): Pro
     .where(eq(tickets.id, ticket.id));
 }
 
-/** Réponse publique d'un agent → l'échéance de réponse est tenue. */
+/** Public reply from an agent → the reply due date is met. */
 export async function onAgentReplySla(tenantId: string, ticketId: string): Promise<void> {
   await db
     .update(tickets)
@@ -104,7 +115,7 @@ export async function onAgentReplySla(tenantId: string, ticketId: string): Promi
     .where(and(eq(tickets.tenantId, tenantId), eq(tickets.id, ticketId)));
 }
 
-/** Échéance active d'un ticket : 1ʳᵉ réponse tant qu'elle est due, sinon la plus proche. */
+/** Active due date of a ticket: 1st reply as long as it is due, otherwise the nearest one. */
 function activeDue(t: {
   firstRepliedAt: Date | null;
   firstReplyDueAt: Date | null;
@@ -120,8 +131,8 @@ function activeDue(t: {
 }
 
 /**
- * Balayage périodique du worker : avertissement T-30 min puis dépassement,
- * chacun une seule fois. Les compteurs sont suspendus sur En attente / En pause.
+ * Periodic sweep of the worker: T-30 min warning then breach, each only
+ * once. The counters are suspended on Waiting / On hold.
  */
 export async function scanSlaTimers(now: Date = new Date()): Promise<{ warned: number; breached: number }> {
   const candidates = await db
@@ -156,7 +167,7 @@ export async function scanSlaTimers(now: Date = new Date()): Promise<{ warned: n
         ticketId: ticket.id,
         kind: "system_event",
         authorType: "system",
-        bodyText: `SLA dépassé (échéance ${due.toLocaleString("fr-FR")})`,
+        bodyText: `SLA breached (due ${dueLabel(due)} UTC)`,
       });
       breached += 1;
     } else if (remaining > 0 && remaining <= WARN_BEFORE_MS && !ticket.slaWarnedAt) {
@@ -166,7 +177,7 @@ export async function scanSlaTimers(now: Date = new Date()): Promise<{ warned: n
         ticketId: ticket.id,
         kind: "system_event",
         authorType: "system",
-        bodyText: `SLA : échéance dans moins de 30 minutes (${due.toLocaleString("fr-FR")})`,
+        bodyText: `SLA: due in less than 30 minutes (${dueLabel(due)} UTC)`,
       });
       warned += 1;
     }

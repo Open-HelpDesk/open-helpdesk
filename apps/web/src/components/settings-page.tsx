@@ -6,25 +6,25 @@ import type { Edition } from "@openhelpdesk/config";
 import { useT } from "@/i18n/client";
 
 /**
- * Primitives partagées de l'administration (ST-01 → ST-14) — gabarit commun de
- * design-notes/administration.md : en-tête de page (chip code + titre 20px/600 +
- * sous-titre 13.5px), segmented control, barre de sauvegarde, cartes, toggles,
- * jauges, états vides et verrouillés (plans EE).
+ * Shared primitives of the admin area (ST-01 → ST-14) — shared template from
+ * The administration frame: page header (code chip + 20px/600 title +
+ * 13.5px subtitle), segmented control, save bar, cards, toggles, gauges, empty
+ * and locked states (EE plans).
  *
- * Module client : deux formulaires clients (ST-03) importent déjà Field/Select/
- * TextInput d'ici, le fichier vit donc dans le graphe navigateur. Les libellés
- * partagés (Enregistrer, Annuler…) passent par useT() plutôt que getT(), qui y
- * embarquerait next/headers et les onze dictionnaires.
+ * Client module: two client forms (ST-03) already import Field/Select/TextInput
+ * from here, so the file lives in the browser graph. The shared labels (Save,
+ * Cancel…) go through useT() rather than getT(), which would pull next/headers
+ * and the eleven dictionaries in with it.
  */
 
 export type PageTab = { label: string; href: string; active: boolean };
 
 /**
- * Colonne de contenu d'un écran d'administration.
+ * Content column of an admin screen.
  *
- * Le design porte `max-width` sur le conteneur AVEC son padding (26px 28px 40px) et
- * ne le centre pas : le bloc démarre au ras de la navigation. Centrer ici (ancien
- * `mx-auto`) décalait chaque écran vers la droite et l'élargissait de 56 px.
+ * The design puts `max-width` on the container WITH its padding (26px 28px 40px) and
+ * does not center it: the block starts flush with the navigation. Centering here
+ * (the former `mx-auto`) shifted every screen to the right and widened it by 56 px.
  */
 export function PageShell({
   maxWidth,
@@ -75,7 +75,7 @@ export function PageHeader({
   );
 }
 
-/** Segmented control — conteneur --sunk radius 7 padding 2, segment actif fond panel/600. */
+/** Segmented control — --sunk container, radius 7, padding 2, active segment panel background/600. */
 export function SegTabs({ tabs }: { tabs: PageTab[] }) {
   return (
     <div
@@ -105,8 +105,8 @@ export function SegTabs({ tabs }: { tabs: PageTab[] }) {
 }
 
 /**
- * Barre de pied « ✓ Enregistré / Annuler / Enregistrer » — à placer DANS un <form>.
- * « ✓ Enregistré » s'affiche quand la server action a redirigé avec ?saved=1.
+ * Footer bar "✓ Saved / Cancel / Save" — to be placed INSIDE a <form>.
+ * "✓ Saved" shows when the server action has redirected with ?saved=1.
  */
 export function SaveBar({
   saved,
@@ -117,7 +117,7 @@ export function SaveBar({
   saved?: boolean;
   cancelHref: string;
   submitLabel?: string;
-  /** « panel » quand la barre vit DANS une carte (fond blanc), « canvas » en pied de page. */
+  /** "panel" when the bar lives INSIDE a card (white background), "canvas" at the page footer. */
   surface?: "canvas" | "panel";
 }) {
   const t = useT();
@@ -153,7 +153,7 @@ export function SaveBar({
   );
 }
 
-/** Carte de section — panel, bordure --line, radius 10. */
+/** Section card — panel, --line border, radius 10. */
 export function Card({
   title,
   action,
@@ -162,13 +162,13 @@ export function Card({
   danger,
 }: {
   title?: string;
-  /** Contenu aligné à droite du titre (badge de statut, lien…). */
+  /** Content aligned to the right of the title (status badge, link…). */
   action?: ReactNode;
   children: ReactNode;
   style?: CSSProperties;
   danger?: boolean;
 }) {
-  // Carte « flush » (padding 0, tables pleine largeur) : l'en-tête garde son retrait.
+  // "Flush" card (padding 0, full-width tables): the header keeps its inset.
   const flush = style?.padding === 0;
   return (
     <section
@@ -210,7 +210,7 @@ export function Card({
   );
 }
 
-/** Libellé de champ + hint 12px ink-3. */
+/** Field label + 12px ink-3 hint. */
 export function Field({
   label,
   hint,
@@ -242,11 +242,11 @@ export const inputStyle: CSSProperties = {
 };
 
 /*
- * Champ de saisie : h32, 13 px, radius 6, padding 0 10px — la mesure la plus
- * répandue des maquettes d'administration. `text-sm` valait 14 px et un
- * `py-1.5` laissait la hauteur suivre la police : deux champs voisins ne
- * tombaient pas à la même hauteur. Seuls les écrans d'authentification montent
- * à h36/14px (voir la maquette AG-01).
+ * Input field: h32, 13 px, radius 6, padding 0 10px — the most widespread
+ * measurement of the admin mockups. `text-sm` was 14 px and a `py-1.5` let the
+ * height follow the font: two neighboring fields did not land at the same
+ * height. Only the authentication screens go up to h36/14px (see the AG-01
+ * mockup).
  */
 export const FIELD = "h-8 rounded-md border px-2.5 text-[13px]";
 
@@ -268,7 +268,7 @@ export function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   );
 }
 
-/** Toggle 34×20 pastille 16 (left 2→16) — CSS pur, classe .ohd-toggle du layout. */
+/** 34×20 toggle, 16 knob (left 2→16) — pure CSS, .ohd-toggle class from the layout. */
 export function Toggle({
   name,
   defaultChecked,
@@ -309,7 +309,7 @@ export function Toggle({
   );
 }
 
-/** Jauge — orange au-delà de 85 % (ST-11), 160×7 par défaut (ST-02). */
+/** Gauge — orange beyond 85% (ST-11), 160×7 by default (ST-02). */
 export function Gauge({
   value,
   max,
@@ -350,15 +350,15 @@ export function EnterpriseBadge({ label }: { label?: string }) {
         color: "var(--new)",
       }}
     >
-      {label ?? t("app.settings.shell.planEnterprise")}
+      {label ?? t("app.settings.shell.enterpriseEdition")}
     </span>
   );
 }
 
 /**
- * État verrouillé EE (ST-12/13/14) : voile blur(3px) + carte plan Pro.
- * En self-hosted le CTA « Passer au plan Pro » n'a pas de destination
- * (ST-11 est invisible) : badge EE et pas de bouton.
+ * EE locked state (ST-12/13/14): blur(3px) veil + Pro plan card.
+ * When self-hosted the "Upgrade to the Pro plan" CTA has no destination
+ * (ST-11 is invisible): EE badge and no button.
  */
 export function LockedScreen({
   title,
@@ -402,7 +402,7 @@ export function LockedScreen({
               className="mt-4 inline-flex items-center rounded-md px-4 font-semibold text-white"
               style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
             >
-              {t("app.settings.shell.upgradeToEnterprise")}
+              {t("app.settings.shell.manageSubscription")}
             </Link>
           )}
         </div>
@@ -442,9 +442,9 @@ export function EmptyState({
 }
 
 /**
- * En-tête de table en grid — design : h34, fond --sunk, 11px/700 ink-3.
- * Le `gap-3` est conservé : les lignes de corps l'utilisent aussi, et c'est lui qui
- * garantit que les colonnes tombent au même endroit qu'en-tête.
+ * Grid table header — design: h34, --sunk background, 11px/700 ink-3.
+ * The `gap-3` is kept: body rows use it too, and it is what guarantees that the
+ * columns land in the same place as in the header.
  */
 export function GridHead({
   columns,
@@ -476,7 +476,7 @@ export function GridHead({
   );
 }
 
-/** Pastille de statut générique (Vérifiée, En attente, Actif…). */
+/** Generic status pill (Verified, Pending, Active…). */
 export function StatusPill({
   tone,
   children,
@@ -496,7 +496,7 @@ export function StatusPill({
   );
 }
 
-/** Pastille priorité (ST-07/ST-05) — Basse #8A9993 · Normale #1D4ED8 · Haute #E2711D · Urgente #C0342B. */
+/** Priority dot (ST-07/ST-05) — Low #8A9993 · Normal #1D4ED8 · High #E2711D · Urgent #C0342B. */
 export const PRIORITY_DOT_COLORS: Record<string, string> = {
   low: "#8A9993",
   normal: "#1D4ED8",

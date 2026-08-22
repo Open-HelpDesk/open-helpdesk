@@ -6,9 +6,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.2.0-alpha] - 2026-08-21
 
-Cloud-ready release — the groundwork the managed offer builds on. Self-hosted
-behaviour is unchanged: every plan-related mechanism stays dormant without
-`OPENHELPDESK_EDITION=cloud`.
+Control-plane-ready release — the groundwork an external control plane hooks
+into. Self-hosted behaviour is unchanged: every entitlement mechanism stays
+dormant without `OPENHELPDESK_EDITION=cloud`.
 
 ### Added
 
@@ -19,34 +19,42 @@ behaviour is unchanged: every plan-related mechanism stays dormant without
 - **Workspace lifecycle**: `tenants.status` with a dedicated suspended screen
   (the Owner keeps access to Billing), a login notice, a read-only customer
   portal (submissions and widget refused), and outbound email cut while
-  inbound keeps being ingested — an unpaid invoice loses no tickets.
-- **Denormalized billing columns** on `tenants` (`entitlements`, `planName`,
-  `billing`, `trialEndsAt`) written by the cloud control plane and read
-  synchronously by the app, with plan defaults as fallback.
-- **Managed email groundwork**: `MANAGED_MAIL_DOMAIN` unifies the provided
+  inbound keeps being ingested — a suspended workspace loses no tickets.
+- **Denormalized entitlement columns** on `tenants` (`entitlements`,
+  `planName`, `billing`, `trialEndsAt`) written by the control plane and read
+  synchronously by the app, with self-hosted defaults as fallback.
+- **Provided-address groundwork**: `MANAGED_MAIL_DOMAIN` unifies the provided
   address domain (four diverging literals, two TLDs), ingress webhooks compare
   secrets in constant time and skip tenant resolution, `SIGNUP_URL` turns the
-  unknown-workspace 404 into a signup invitation.
-- **Cloud auth options** (inert when self-hosted): `AUTH_COOKIE_DOMAIN` for
-  cross-subdomain sessions, `REQUIRE_EMAIL_VERIFICATION` with instance-level
-  verification emails.
+  unknown-workspace 404 into a pointer to the instance's sign-up page.
+- **Control-plane auth options** (inert when self-hosted):
+  `AUTH_COOKIE_DOMAIN` for cross-subdomain sessions,
+  `REQUIRE_EMAIL_VERIFICATION` with instance-level verification emails.
 
 ### Changed
 
-- **Plans are now Free / Team / Enterprise** (was free/standard/pro): Free up
-  to 3 agents, Team adds SLA, automations, CSAT, reports, API and triage &
-  summary AI, Enterprise adds SSO, audit log, multi-brand, custom domain and
-  full AI. Entitlements gain `maxStorageBytes`; `ai` split into
-  `aiBasic`/`aiFull`. Seat limits follow purchased seats — the hardcoded
-  10-seat display cap on unlimited plans is gone, and ST-02/ST-11 now share
-  one seat definition.
+- **Feature entitlements are now resolved per workspace**, provided by an
+  optional control plane; the core is unlimited when self-hosted. Entitlements
+  gain `maxStorageBytes`, and `ai` splits into `aiBasic`/`aiFull`. Seat limits
+  follow the seat count the control plane reports — the hardcoded 10-seat
+  display cap is gone, and ST-02/ST-11 now share one seat definition.
+- **English is now the source language**, in the code as in the data: `en.ts`
+  is the dictionary the other twenty-four are typed against, a new workspace
+  starts in English, and the install defaults, the demo data set and the ticket
+  type vocabulary come in English (existing tickets are carried over by a
+  migration, and keep their displayed wording in every language).
+- **The product describes no commercial offer.** Feature entitlements are
+  resolved from the workspace row, never from a named tier: `CORE_ENTITLEMENTS`
+  replaces the plan grid, `tenants.plan` becomes an opaque nullable identifier,
+  and ST-11 renders only what a control plane wrote — no price, no plan
+  comparison, no payment SDK.
 - ~70 reserved subdomains (was 5); workspace deletion retention correctly
   documented as 60 days; Docker images keep `latest` for stable tags only.
-- `apps/www` (marketing site stub) moved to the private cloud repository.
+- `apps/www` (marketing site stub) moved out of this repository.
 
 ## [0.1.0-alpha] - 2026-08-21
 
-First public release — the self-hostable core (roadmap lots 0–3).
+First public release — the self-hostable core (roadmap milestones 0–3).
 
 ### Added
 
@@ -72,8 +80,9 @@ First public release — the self-hostable core (roadmap lots 0–3).
   (database, outbound/inbound email, storage, queues and worker liveness,
   secrets encryption).
 - **Editions**: `OPENHELPDESK_EDITION` runtime switch — self-hosted unlocks
-  the full AGPL core with unlimited seats; cloud enables plan-based gating.
-- **Enterprise (`ee/`, commercial license)**: agent SSO (SAML/SCIM) and
+  the full AGPL core with unlimited seats; `cloud` defers entitlement
+  resolution to a control plane.
+- **Commercially licensed features (`ee/`)**: agent SSO (SAML/SCIM) and
   customer-organization SSO administration screens, audit log with CSV export
   (ST-12→ST-14) — runtime SSO flows land in a later release.
 - **i18n**: 25 languages (the 24 official EU languages + Norwegian), strict

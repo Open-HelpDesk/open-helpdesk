@@ -11,10 +11,10 @@ import { ArticleBody } from "@/components/article-body";
 import { parseArticle } from "@/lib/article-format";
 import { VoteBlock } from "./vote-block";
 
-/** PT-03 — Article : rendu riche 66ch, méta, vote, articles liés, TOC « Sur cette page ». */
+/** PT-03 — Article: rich 66ch rendering, meta, vote, related articles, "On this page" TOC. */
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const t = await getT();
-  // ST-09 : base non publiée, ou réservée aux personnes connectées.
+  // ST-09: knowledge base not published, or restricted to signed-in people.
   if (!(await canReadKb(Boolean(await getPortalContact())))) notFound();
   const tenant = await getPortalTenant();
   const { slug } = await params;
@@ -23,7 +23,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   if (!data) notFound();
   const { article, related, root } = data;
 
-  // Compteur de vues (alimente « Les plus consultés » de PT-01).
+  // View counter (feeds PT-01's "Most viewed").
   await db
     .update(kbArticles)
     .set({ viewCount: sql`${kbArticles.viewCount} + 1` })

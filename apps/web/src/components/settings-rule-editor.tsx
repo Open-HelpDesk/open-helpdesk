@@ -1,13 +1,13 @@
 "use client";
 
 /**
- * ST-05 — Corps interactif de l'éditeur de règle, au gabarit du design :
- * bloc SI (bordure/en-tête --open) avec UN seul groupe de conditions et un segmented
- * control « {t("app.settingsNav.matches")} toutes / au moins une », bloc ALORS (bordure --acc-b), et
- * zone pointillée dont le résultat s'affiche sur la même ligne que le bouton.
+ * ST-05 — Interactive body of the rule editor, following the design template:
+ * IF block (--open border/header) with a SINGLE condition group and a segmented
+ * control "{t("app.settingsNav.matches")} all / at least one", THEN block (--acc-b border), and
+ * a dashed area whose result shows on the same line as the button.
  *
- * Le mode de correspondance choisit la colonne soumise : « toutes » → conditionsAll,
- * « au moins une » → conditionsAny (l'autre est envoyée vide).
+ * The match mode picks the submitted column: "all" → conditionsAll,
+ * "at least one" → conditionsAny (the other one is sent empty).
  */
 import { useState, useTransition } from "react";
 import { useT } from "@/i18n/client";
@@ -20,7 +20,7 @@ import {
 
 export type RuleTestResult = { ok: boolean; text: string };
 
-/** Les deux modes du sélecteur ; le libellé est une clé. */
+/** The two modes of the selector; the label is a key. */
 const MATCH_MODES = [
   { key: "all" as const, label: "app.settings.rules.matchAll" as const },
   { key: "any" as const, label: "app.settings.rules.matchAny" as const },
@@ -45,18 +45,18 @@ export function RuleEditorBody({
     actions: Action[];
   }) => Promise<RuleTestResult>;
 }) {
-  // Une règle existante n'a normalement qu'un groupe rempli ; « au moins une » gagne
-  // quand les deux le sont, pour ne pas perdre de conditions à l'affichage.
+  // An existing rule normally has only one group filled; "at least one" wins when
+  // both are, so as not to lose conditions on display.
   const startsAny = initialAny.length > 0;
   const [mode, setMode] = useState<"all" | "any">(startsAny ? "any" : "all");
   const [rows, setRows] = useState<Condition[]>(startsAny ? initialAny : initialAll);
   const [actions, setActions] = useState<Action[]>(initialActions);
   const [result, setResult] = useState<RuleTestResult | null>(null);
   const t = useT();
-  // Le cadre de la phrase suit le mode : « … toutes LES conditions » contre
-  // « … au moins une DES conditions ». Un cadre unique était fautif dans la
-  // moitié des cas, en français comme en allemand.
-  const [matchAvant, matchApres] = t.parts(
+  // The sentence frame follows the mode: "… all THE conditions" against
+  // "… at least one OF THE conditions". A single frame was wrong in half the
+  // cases, in French as in German.
+  const [matchBefore, matchAfter] = t.parts(
     mode === "all"
       ? "app.settings.rules.matchAllPattern"
       : "app.settings.rules.matchAnyPattern",
@@ -69,7 +69,7 @@ export function RuleEditorBody({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Bloc SI */}
+      {/* IF block */}
       <section
         className="overflow-hidden rounded-[10px] border"
         style={{ borderColor: "var(--open)" }}
@@ -85,10 +85,10 @@ export function RuleEditorBody({
           <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", color: "var(--open)" }}>
             {t("app.settings.rules.matchIf")}
           </span>
-          {/* La phrase entoure le sélecteur : elle est découpée autour de
-              {mode} pour que chaque langue place ses mots comme elle veut —
-              l'allemand met son verbe à la fin. */}
-          <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>{matchAvant}</span>
+          {/* The sentence surrounds the selector: it is split around {mode} so
+              that each language places its words as it likes — German puts its
+              verb at the end. */}
+          <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>{matchBefore}</span>
           <span
             className="inline-flex items-center"
             style={{ background: "var(--panel)", borderRadius: 7, padding: 2 }}
@@ -111,7 +111,7 @@ export function RuleEditorBody({
               </button>
             ))}
           </span>
-          <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>{matchApres}</span>
+          <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>{matchAfter}</span>
         </div>
         <div style={{ padding: 13, background: "var(--panel)" }}>
           <input type="hidden" name={emptyName} value="[]" />
@@ -126,7 +126,7 @@ export function RuleEditorBody({
         </div>
       </section>
 
-      {/* Bloc ALORS */}
+      {/* THEN block */}
       <section
         className="overflow-hidden rounded-[10px] border"
         style={{ borderColor: "var(--acc-b)" }}
@@ -136,7 +136,7 @@ export function RuleEditorBody({
           style={{ padding: "9px 13px", background: "var(--acc-t)", borderColor: "var(--acc-b)" }}
         >
           <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.05em", color: "var(--acc)" }}>
-            ALORS
+            {t("app.settings.rules.matchThen")}
           </span>
           <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
             {t("app.settingsNav.actionsInOrder")}
@@ -155,7 +155,7 @@ export function RuleEditorBody({
         </div>
       </section>
 
-      {/* Zone de test — résultat sur la même ligne que le bouton (design) */}
+      {/* Test area — result on the same line as the button (design) */}
       <section
         className="border border-dashed"
         style={{ borderColor: "var(--line)", borderRadius: 9, padding: 13, background: "var(--panel)" }}
@@ -184,7 +184,9 @@ export function RuleEditorBody({
               color: "var(--ink-2)",
             }}
           >
-            {pending ? "Test en cours…" : "Tester sur un ticket existant"}
+            {pending
+              ? t("app.settings.rules.testRunning")
+              : t("app.settings.rules.testOnTicket")}
           </button>
           {result ? (
             <span

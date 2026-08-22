@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * ST-07 — Liste des politiques dans une carte unique : ⠿ glisser-déposer réel
- * (« Faites glisser pour réordonner »), n° d'ordre mono, nom + conditions, calendrier,
- * badge PAR DÉFAUT. La ligne sélectionnée porte le fond --acc-t et pilote la grille
- * de cibles affichée dessous.
+ * ST-07 — Policy list in a single card: ⠿ real drag-and-drop
+ * ("Drag to reorder"), mono order number, name + conditions, calendar,
+ * DEFAULT badge. The selected row carries the --acc-t background and drives the
+ * target grid displayed below.
  */
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -32,7 +32,7 @@ export function PolicyRows({
   const [dragId, setDragId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
-  // Les politiques peuvent changer côté serveur (création, suppression) : resynchronise.
+  // Policies can change server-side (creation, deletion): resynchronize.
   const serverKey = policies.map((p) => p.id).join("|");
   const localKey = order.map((p) => p.id).join("|");
   if (serverKey.split("|").sort().join("|") !== localKey.split("|").sort().join("|")) {

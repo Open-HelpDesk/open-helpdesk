@@ -1,24 +1,23 @@
 # @openhelpdesk/db
 
-Schéma PostgreSQL (Drizzle ORM) : schéma `app` (cœur produit, multi-tenant, RLS) et
-schéma `cloud` (control plane, console uniquement).
+PostgreSQL schema (Drizzle ORM): the `app` schema — the product core,
+multi-tenant, under row-level security.
 
-## Démarrage
+## Getting started
 
 ```bash
 docker compose -f ../../docker/docker-compose.yml up -d postgres
-pnpm db:generate   # génère les migrations SQL dans ./drizzle
-pnpm db:migrate    # les applique
-psql "$DATABASE_URL" -f sql/rls.sql   # active la Row-Level Security
-pnpm db:seed       # jeu de démonstration figé (Acme Support — specs/03 § 4)
+pnpm db:generate   # generates the SQL migrations into ./drizzle
+pnpm db:migrate    # applies them
+psql "$DATABASE_URL" -f sql/rls.sql   # enables row-level security
+pnpm db:seed       # frozen demo data set (Acme Support)
 ```
 
-## Règles
+## Rules
 
-- **Toute table du schéma `app` porte `tenant_id`** et passe par `withTenant()` :
-  la RLS rejette les requêtes sans contexte tenant.
-- L'app produit se connecte avec un rôle **non propriétaire** des tables (sinon la RLS
-  est contournée). Le worker et la console utilisent un rôle `bypassrls` dédié.
-- Le schéma `cloud` n'est jamais importé par `apps/web` — seul `apps/console` et
-  `apps/worker` y accèdent.
-- Relancer `sql/rls.sql` (idempotent) après toute migration créant une table.
+- **Every table of the `app` schema carries `tenant_id`** and goes through
+  `withTenant()`: RLS rejects queries that carry no tenant context.
+- The product app connects with a role that does **not** own the tables
+  (otherwise RLS is bypassed). The worker uses a dedicated `bypassrls` role.
+- Re-run `sql/rls.sql` (it is idempotent) after any migration that creates a
+  table.

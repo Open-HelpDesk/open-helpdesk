@@ -29,7 +29,7 @@ Then open http://acme.localhost:3000 — demo login `marie.dupont@acme.example` 
   `pnpm --filter @openhelpdesk/smoke smoke` (see `packages/smoke/README.md`
   for the prerequisites).
 - Any user-visible string must live in the i18n dictionaries — hardcoded text
-  fails the `i18n-source-francais` guard.
+  fails the `i18n-hardcoded` guard in `packages/smoke/`.
 
 ## Scope of contributions
 
@@ -50,4 +50,4 @@ that you have the right to submit the code under the project license.
 - One topic per pull request, with a clear description of the user-visible
   behaviour it changes.
 - Match the surrounding code: server components + server actions, guards
-  duplicated on page and action, comments in the language of the file you edit.
+  duplicated on page and action, comments in English explaining the *why*.

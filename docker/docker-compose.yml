@@ -8,8 +8,8 @@ services:
       POSTGRES_PASSWORD: openhelpdesk
       POSTGRES_DB: openhelpdesk
     ports:
-      # Port hôte décalé pour cohabiter avec d'autres Postgres locaux ;
-      # surcharger via OHD_POSTGRES_PORT.
+      # Host port shifted so the stack can coexist with other local Postgres
+      # instances; override through OHD_POSTGRES_PORT.
       - "${OHD_POSTGRES_PORT:-5439}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -48,8 +48,8 @@ services:
       timeout: 3s
       retries: 10
 
-  # Serveur SMTP de développement : capture tous les emails et les affiche
-  # sur http://localhost:8026 (aucun email ne sort de la machine).
+  # Development SMTP server: captures every email and displays it on
+  # http://localhost:8026 (no email ever leaves the machine).
   mailpit:
     image: axllent/mailpit:latest
     ports:

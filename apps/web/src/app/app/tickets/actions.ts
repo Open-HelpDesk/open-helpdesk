@@ -20,7 +20,7 @@ import { saveUploadedFiles } from "@/lib/storage";
 
 const OPENING_STATUS = new Set(["new", "open", "waiting", "on_hold"]);
 
-/** Répondre / noter en interne, avec bascule de statut optionnelle (AG-04, bouton scindé). */
+/** Reply / write an internal note, with an optional status switch (AG-04, split button). */
 export async function sendReply(formData: FormData) {
   const { tenant, agent } = await requireAgent();
   const ticketId = String(formData.get("ticketId"));
@@ -52,7 +52,7 @@ export async function sendReply(formData: FormData) {
     await saveUploadedFiles(tenant.id, message.id, files);
   }
 
-  // Réponse publique → email au demandeur (transport console en dev, Resend en cloud).
+  // Public reply → email to the requester (console transport in dev, Resend in cloud).
   if (kind === "public_reply" && message) {
     try {
       const [requester] = await db
@@ -75,8 +75,8 @@ export async function sendReply(formData: FormData) {
         }
       }
     } catch (err) {
-      // L'échec d'envoi ne bloque pas la réponse — il sera visible dans le journal (ST-03).
-      console.error("[mail] échec d'envoi de la réponse :", err);
+      // A send failure does not block the reply — it will show up in the log (ST-03).
+      console.error("[mail] failed to send the reply:", err);
     }
   }
 
@@ -86,7 +86,7 @@ export async function sendReply(formData: FormData) {
     await onAgentReplySla(tenant.id, ticketId);
   }
 
-  // Actions serveur de la macro appliquée (priorité, équipe, tags — ST-06).
+  // Server actions of the applied macro (priority, team, tags — ST-06).
   const macroId = String(formData.get("macroId") ?? "");
   if (macroId) {
     const { macros } = await import("@openhelpdesk/db");
@@ -125,7 +125,7 @@ export async function sendReply(formData: FormData) {
   revalidatePath("/app/tickets");
 }
 
-/** Panneau propriétés (AG-04) : assigné, équipe, priorité, type, statut. */
+/** Properties panel (AG-04): assignee, team, priority, type, status. */
 export async function updateTicketProps(formData: FormData) {
   const { tenant } = await requireAgent();
   const ticketId = String(formData.get("ticketId"));
@@ -171,11 +171,11 @@ export async function updateTicketProps(formData: FormData) {
   revalidatePath("/app/tickets");
 }
 
-/* ---------- AG-03 — Actions groupées (barre flottante) ---------- */
+/* ---------- AG-03 — Bulk actions (floating bar) ---------- */
 
 export type BulkOp = "assign" | "status" | "priority" | "tag" | "delete";
 
-/** Barre de sélection multiple : Assigner / Statut / Priorité / Taguer / Supprimer. */
+/** Multi-selection bar: Assign / Status / Priority / Tag / Delete. */
 export async function bulkUpdateTickets(input: {
   ids: string[];
   op: BulkOp;
@@ -237,9 +237,9 @@ export async function bulkUpdateTickets(input: {
   revalidatePath("/app/tickets");
 }
 
-/* ---------- AG-04 — Fusion de tickets ---------- */
+/* ---------- AG-04 — Ticket merge ---------- */
 
-/** Fusionner ce ticket dans un ticket cible : mergedIntoId + messages système + redirection. */
+/** Merge this ticket into a target ticket: mergedIntoId + system messages + redirect. */
 export async function mergeTicket(formData: FormData) {
   const { tenant, agent } = await requireAgent();
   const t = await getT();
@@ -294,8 +294,8 @@ export async function mergeTicket(formData: FormData) {
 }
 
 /**
- * AG-05 — Nouveau ticket au nom d'un client. Contact trouvé ou créé à la volée ;
- * rattachement automatique à l'organisation par domaine email (AG-08).
+ * AG-05 — New ticket on behalf of a customer. Contact found or created on the fly;
+ * automatic attachment to the organization by email domain (AG-08).
  */
 export async function createTicket(formData: FormData) {
   const { tenant, agent } = await requireAgent();
@@ -343,7 +343,7 @@ export async function createTicket(formData: FormData) {
     }
   }
 
-  // Options AG-05 (carte « Nouveau ticket ») — rétro-compatibles.
+  // AG-05 options ("New ticket" card) — backward-compatible.
   const statusInput = String(formData.get("status") ?? "");
   const status = (
     ["new", "open", "waiting", "on_hold"].includes(statusInput) ? statusInput : "open"
@@ -386,7 +386,7 @@ export async function createTicket(formData: FormData) {
       })
       .returning();
 
-    // « Envoyer la réponse par email au contact » (encart AG-05).
+    // "Send the reply by email to the contact" (AG-05 callout).
     if (sendEmail && message) {
       try {
         const sent = await sendTicketReplyEmail({
@@ -403,7 +403,7 @@ export async function createTicket(formData: FormData) {
             .where(eq(ticketMessages.id, message.id));
         }
       } catch (err) {
-        console.error("[mail] échec d'envoi à la création du ticket :", err);
+        console.error("[mail] failed to send on ticket creation:", err);
       }
     }
   }

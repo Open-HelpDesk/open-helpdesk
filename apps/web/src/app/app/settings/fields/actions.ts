@@ -19,7 +19,7 @@ function slugify(label: string): string {
     .slice(0, 60);
 }
 
-/** ST-04 — Création / édition d'un champ personnalisé (drawer). */
+/** ST-04 — Creating / editing a custom field (drawer). */
 export async function saveField(formData: FormData) {
   const { tenant } = await requireManager();
   const fieldId = String(formData.get("fieldId") ?? "");
@@ -74,7 +74,7 @@ export async function deleteField(formData: FormData) {
   redirect("/app/settings/fields?saved=1");
 }
 
-/** Onglet Formulaires — ajout d'un champ par clic (colonne « Champs disponibles »). */
+/** Forms tab — adding a field with one click (the "Available fields" column). */
 export async function addFieldToForm(formData: FormData) {
   const { tenant } = await requireManager();
   const formId = String(formData.get("formId") ?? "");

@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * ST-01 — Couleur d'accent : 5 pastilles 30×30 + champ hex synchronisé.
- * La valeur est portée par un input caché lu par la server action.
+ * ST-01 — Accent color: 5 swatches 30×30 + a synchronized hex field.
+ * The value is carried by a hidden input read by the server action.
  */
 import { useState } from "react";
 import { useT } from "@/i18n/client";
@@ -31,7 +31,7 @@ export function AccentPicker({ name, initial }: { name: string; initial: string 
               height: 30,
               borderRadius: 7,
               background: c,
-              // Design : la sélection est un seul contour --ink, rien sur les autres.
+              // Design: the selection is a single --ink outline, nothing on the others.
               outline: selected ? "2px solid var(--ink)" : "none",
               outlineOffset: 2,
             }}

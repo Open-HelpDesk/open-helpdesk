@@ -2,214 +2,214 @@ import { expect, test, type Page } from "@playwright/test";
 import { AGENTS, expectStatus, signInAgent } from "./helpers";
 
 /**
- * Le portail tel qu'un visiteur anonyme le rencontre : pas de session, pas de
- * cookie, juste une adresse. C'est la moitié publique du produit — celle qui
- * doit fonctionner avant que quiconque songe à ouvrir une demande.
+ * The portal as an anonymous visitor meets it: no session, no cookie, just an
+ * address. It is the public half of the product — the one that has to work
+ * before anybody thinks of opening a request.
  *
- * Ce qu'elle a de particulier, c'est qu'elle dépend de réglages qui vivent
- * ailleurs : le tenant est résolu par le sous-domaine, la base de connaissances
- * n'est servie que si ST-09 l'autorise. Un smoke test qui ouvre ces pages
- * anonymement vérifie donc bien plus que du rendu.
+ * What is peculiar about it is that it depends on settings living elsewhere:
+ * the tenant is resolved from the subdomain, the knowledge base is only served
+ * if ST-09 allows it. So a smoke test that opens these pages anonymously
+ * verifies far more than rendering.
  */
 
-/* Éléments du jeu de démonstration choisis pour leur stabilité : la catégorie
-   et l'article existent depuis le seed et ne dépendent d'aucune autre spec. */
-const CATEGORIE = { nom: "Facturation", slug: "facturation" } as const;
+/* Items of the demo data set chosen for their stability: the category and the
+   article exist from the seed on and depend on no other spec. */
+const CATEGORY = { name: "Billing", slug: "billing" } as const;
 const ARTICLE = {
-  titre: "Comment télécharger vos factures",
-  slug: "comment-telecharger-vos-factures",
+  title: "How to download your invoices",
+  slug: "how-to-download-your-invoices",
 } as const;
 
-/** Le conteneur de la barre du hero : le champ ET son panneau de suggestions. */
-function rechercheHero(page: Page) {
+/** The hero bar's container: the field AND its suggestions panel. */
+function heroSearch(page: Page) {
   return page.locator('div:has(> form[role="search"])');
 }
 
 /**
- * Le nombre de votes « Oui » d'un article, lu là où le produit l'expose
- * vraiment : la colonne « Utile » d'AG-10.
+ * An article's number of “Yes” votes, read where the product really exposes it:
+ * AG-10's “Helpful” column.
  *
- * Le portail ne l'affiche nulle part et le bouton de vote est optimiste — il se
- * colore avant même que la server action ait répondu. Se contenter du
- * remerciement à l'écran laisserait passer un vote qui n'atteint jamais la base.
+ * The portal displays it nowhere and the vote button is optimistic — it colours
+ * itself before the server action has even answered. Settling for the thank-you
+ * on screen would let through a vote that never reaches the database.
  */
-async function votesUtiles(agentPage: Page): Promise<number> {
+async function helpfulVotes(agentPage: Page): Promise<number> {
   await agentPage.goto("/app/kb");
-  // L'arbre s'ouvre sur la première catégorie : il faut sélectionner celle qui
-  // porte l'article (une catégorie parente inclut les articles de ses sections).
-  await agentPage.locator('a[href^="/app/kb?cat="]').filter({ hasText: CATEGORIE.nom }).click();
+  // The tree opens on the first category: the one carrying the article has to
+  // be selected (a parent category includes the articles of its sections).
+  await agentPage.locator('a[href^="/app/kb?cat="]').filter({ hasText: CATEGORY.name }).click();
   await agentPage.waitForURL(/\/app\/kb\?cat=/, { timeout: 10_000 });
 
-  const ligne = agentPage.locator('a[href^="/app/kb/"]').filter({ hasText: ARTICLE.titre });
-  await expect(ligne).toHaveCount(1, { timeout: 10_000 });
+  const row = agentPage.locator('a[href^="/app/kb/"]').filter({ hasText: ARTICLE.title });
+  await expect(row).toHaveCount(1, { timeout: 10_000 });
 
-  // La colonne « Utile » est la seule cellule de la ligne à préfixer son nombre
-  // d'un « + » : on la désigne par là plutôt que par sa position, qui bougerait
-  // au premier remaniement de la table. Un article sans vote affiche « — » et
-  // aucune cellule ne correspond alors : c'est zéro.
-  const cellule = ligne.locator("> span").filter({ hasText: /^\+\d/ });
-  if ((await cellule.count()) === 0) return 0;
-  return Number((await cellule.innerText()).replace(/\D/g, ""));
+  // The “Helpful” column is the row's only cell to prefix its number with a
+  // “+”: that is how it is designated, rather than by its position, which would
+  // move on the first reshuffle of the table. An article with no vote shows “—”
+  // and no cell matches then: that is zero.
+  const cell = row.locator("> span").filter({ hasText: /^\+\d/ });
+  if ((await cell.count()) === 0) return 0;
+  return Number((await cell.innerText()).replace(/\D/g, ""));
 }
 
-test.describe("Portail public", () => {
-  test("l'accueil du centre d'aide s'ouvre sans compte et porte son hero", async ({ page }) => {
-    // Un 200 franc, sans redirection : c'est la preuve que le middleware a
-    // résolu le tenant depuis le sous-domaine. Quand cette résolution tombe,
-    // tout le portail répond 404 et chaque autre assertion ment sur la cause.
+test.describe("Public portal", () => {
+  test("the help centre home page opens without an account and carries its hero", async ({ page }) => {
+    // A blunt 200, no redirect: that is the proof that the middleware resolved
+    // the tenant from the subdomain. When that resolution falls over, the whole
+    // portal answers 404 and every other assertion lies about the cause.
     await expectStatus(page, "/help", 200);
 
     await page.goto("/help");
-    const titre = page.getByRole("heading", { level: 1 });
-    await expect(titre).toBeVisible();
-    // Le hero affiche soit le texte d'accueil réglé dans ST-09, soit la
-    // traduction : on ne fige pas sa valeur, mais un titre vide serait un
-    // accueil cassé — c'est la seule chose que le visiteur lit en arrivant.
-    await expect(titre).not.toBeEmpty();
+    const heading = page.getByRole("heading", { level: 1 });
+    await expect(heading).toBeVisible();
+    // The hero shows either the welcome text set in ST-09 or the translation:
+    // we do not pin its value down, but an empty heading would be a broken home
+    // page — it is the only thing the visitor reads on arriving.
+    await expect(heading).not.toBeEmpty();
 
-    // La recherche est offerte à l'anonyme : la base est publiée et publique.
-    await expect(rechercheHero(page).getByRole("textbox")).toBeVisible();
+    // Search is offered to the anonymous visitor: the base is published and public.
+    await expect(heroSearch(page).getByRole("textbox")).toBeVisible();
   });
 
-  test("la recherche du hero suggère des articles pendant la frappe", async ({ page }) => {
+  test("the hero search suggests articles while typing", async ({ page }) => {
     await page.goto("/help");
-    const barre = rechercheHero(page);
-    await barre.getByRole("textbox").fill("factur");
+    const bar = heroSearch(page);
+    await bar.getByRole("textbox").fill("invoice");
 
-    // Les suggestions viennent de /api/portal/kb-suggest, appelée après une
-    // pause de frappe : on attend le panneau, jamais un délai. L'assertion est
-    // portée par le conteneur de la barre, car les mêmes titres figurent aussi
-    // dans « Les plus consultés » plus bas — y chercher un lien passerait au
-    // vert avec un typeahead entièrement mort.
-    const suggestion = barre.getByRole("link", { name: ARTICLE.titre });
+    // The suggestions come from /api/portal/kb-suggest, called after a typing
+    // pause: we wait for the panel, never for a delay. The assertion is carried
+    // by the bar's container, because the same titles also appear in “Most
+    // viewed” further down — looking for a link there would go green with an
+    // entirely dead typeahead.
+    const suggestion = bar.getByRole("link", { name: ARTICLE.title });
     await expect(suggestion).toBeVisible();
     await expect(suggestion).toHaveAttribute("href", `/help/articles/${ARTICLE.slug}`);
   });
 
-  test("une catégorie de l'accueil ouvre sa page", async ({ page }) => {
+  test("a category on the home page opens its own page", async ({ page }) => {
     await page.goto("/help");
-    await page.locator(`a[href="/help/categories/${CATEGORIE.slug}"]`).click();
+    await page.locator(`a[href="/help/categories/${CATEGORY.slug}"]`).click();
 
-    await expect(page).toHaveURL(new RegExp(`/help/categories/${CATEGORIE.slug}$`));
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(CATEGORIE.nom);
+    await expect(page).toHaveURL(new RegExp(`/help/categories/${CATEGORY.slug}$`));
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(CATEGORY.name);
   });
 
-  test("un article s'ouvre depuis sa catégorie avec son corps, sa date et son vote", async ({
+  test("an article opens from its category with its body, its date and its vote", async ({
     page,
   }) => {
-    await page.goto(`/help/categories/${CATEGORIE.slug}`);
-    await page.getByRole("link", { name: ARTICLE.titre }).click();
+    await page.goto(`/help/categories/${CATEGORY.slug}`);
+    await page.getByRole("link", { name: ARTICLE.title }).click();
 
     await expect(page).toHaveURL(new RegExp(`/help/articles/${ARTICLE.slug}$`));
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(ARTICLE.titre);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(ARTICLE.title);
 
-    // Le corps est stocké en markdown et rendu par ArticleBody : un titre de
-    // section prouve que le rendu riche a bien eu lieu, là où un simple bout de
-    // texte passerait même si la page recrachait le markdown brut.
-    await expect(page.getByRole("heading", { level: 2, name: "Depuis l'espace client" })).toBeVisible();
-    await expect(page.locator("p").filter({ hasText: "restent accessibles pendant dix ans" })).toBeVisible();
+    // The body is stored as markdown and rendered by ArticleBody: a section
+    // heading proves the rich rendering really happened, where a mere snippet
+    // of text would pass even if the page spat the raw markdown back out.
+    await expect(page.getByRole("heading", { level: 2, name: "From the customer area" })).toBeVisible();
+    await expect(page.locator("p").filter({ hasText: "stay accessible for ten years" })).toBeVisible();
 
-    // La méta doit porter une VRAIE date : l'assertion exige un chiffre après
-    // « Mis à jour le », ce qu'un gabarit non interpolé (« {date} ») n'aurait
-    // pas. Elle est cherchée dans un <p> et non dans toute la page, car le
-    // dictionnaire de traduction est sérialisé dans un <script> de la page et
-    // contient le gabarit mot pour mot.
-    await expect(page.locator("p").filter({ hasText: /^Mis à jour le \d/ })).toBeVisible();
+    // The meta line must carry a REAL date: the assertion demands a digit
+    // after “Updated”, which an uninterpolated template (“{date}”)
+    // would not have. It is looked for inside a <p> and not in the whole page,
+    // because the translation dictionary is serialised in a <script> of the page
+    // and contains the template word for word.
+    await expect(page.locator("p").filter({ hasText: /^Updated \d/ })).toBeVisible();
 
-    // Le bloc de vote fait partie de l'article : sans lui, aucun retour ne
-    // remonte de la base de connaissances.
-    await expect(page.getByRole("button", { name: /Oui/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /Non/ })).toBeVisible();
+    // The vote block is part of the article: without it, no feedback comes back
+    // from the knowledge base.
+    await expect(page.getByRole("button", { name: /Yes/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /No/ })).toBeVisible();
   });
 
-  test("le vote « Oui » d'un article est comptabilisé et le visiteur est remercié", async ({
+  test("an article's “Yes” vote is counted and the visitor is thanked", async ({
     page,
   }) => {
-    // Deux sessions et plusieurs allers-retours sur AG-10 : la vérification vaut
-    // le temps qu'elle prend, mais elle ne tient pas dans le budget par défaut.
+    // Two sessions and several round trips through AG-10: the check is worth
+    // the time it takes, but it does not fit in the default budget.
     test.setTimeout(120_000);
 
     const agent = await page.context().browser()!.newContext();
     const agentPage = await agent.newPage();
-    // Deux raisons, toutes deux étrangères au portail, font échouer une
-    // connexion agent isolée : AG-01 est un composant client, et un clic arrivé
-    // avant l'hydratation part en soumission native qui laisse le navigateur sur
-    // /login ; et Better Auth limite /sign-in/email à trois appels par dizaine de
-    // secondes et par IP, ce que l'écran affiche comme « Identifiants
-    // incorrects ». On réessaie jusqu'à ce que l'espace agent s'ouvre.
+    // Two reasons, both foreign to the portal, make an isolated agent sign-in
+    // fail: AG-01 is a client component, and a click arriving before hydration
+    // goes out as a native submission that leaves the browser on /login; and
+    // Better Auth limits /sign-in/email to three calls per ten seconds per IP,
+    // which the screen displays as “Incorrect credentials”. We retry until the
+    // agent workspace opens.
     await expect(async () => {
       await signInAgent(agentPage, AGENTS.admin);
     }).toPass({ timeout: 45_000 });
-    const avant = await votesUtiles(agentPage);
+    const before = await helpfulVotes(agentPage);
 
     await page.goto(`/help/articles/${ARTICLE.slug}`);
 
-    // Même course pour le bloc de vote : un clic antérieur à l'hydratation est
-    // perdu sans un mot à l'écran. On réessaie jusqu'au remerciement — le
-    // composant ignore un second clic identique, le compteur ne peut donc pas
-    // être incrémenté deux fois par cette boucle. Le +1 laissé sur l'article du
-    // seed est assumé : c'est un compteur, pas un réglage, et l'exécution
-    // suivante repart de la valeur qu'elle vient de lire.
+    // Same race for the vote block: a click earlier than hydration is lost
+    // without a word on screen. We retry until the thank-you — the component
+    // ignores a second identical click, so the counter cannot be incremented
+    // twice by this loop. The +1 left on the seeded article is deliberate: it is
+    // a counter, not a setting, and the next run starts again from the value it
+    // has just read.
     await expect(async () => {
-      await page.getByRole("button", { name: /Oui/ }).click();
-      await expect(page.locator("p").filter({ hasText: "Merci pour votre retour." })).toBeVisible({
+      await page.getByRole("button", { name: /Yes/ }).click();
+      await expect(page.locator("p").filter({ hasText: "Thanks for your feedback." })).toBeVisible({
         timeout: 2_000,
       });
     }).toPass({ timeout: 15_000 });
 
-    // Ce que le produit retient. Le vote part dans une transition React : la
-    // base est en retard sur l'écran, on relit la colonne jusqu'au +1 plutôt
-    // que de parier sur un instant.
+    // What the product retains. The vote goes out in a React transition: the
+    // database lags behind the screen, so the column is read again until the +1
+    // rather than betting on a single moment.
     await expect(async () => {
-      expect(await votesUtiles(agentPage)).toBe(avant + 1);
+      expect(await helpfulVotes(agentPage)).toBe(before + 1);
     }).toPass({ timeout: 25_000 });
 
     await agent.close();
   });
 
-  test("la recherche pleine page liste les articles correspondants", async ({ page }) => {
-    await page.goto("/help/search?q=facture");
+  test("the full-page search lists the matching articles", async ({ page }) => {
+    await page.goto("/help/search?q=invoice");
 
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Résultats");
-    // Au moins un résultat, et il mène quelque part : la liste de résultats
-    // sait rendre des titres sans savoir construire les liens vers les articles.
-    const resultats = page.locator('main a[href^="/help/articles/"]');
-    await expect(resultats.first()).toBeVisible();
-    await expect(resultats.filter({ hasText: ARTICLE.titre })).toHaveCount(1);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Results");
+    // At least one result, and it leads somewhere: the result list can render
+    // titles without knowing how to build the links to the articles.
+    const results = page.locator('main a[href^="/help/articles/"]');
+    await expect(results.first()).toBeVisible();
+    await expect(results.filter({ hasText: ARTICLE.title })).toHaveCount(1);
   });
 
-  test("une recherche sans résultat propose de soumettre une demande", async ({ page }) => {
-    const introuvable = "zzqqxwv-introuvable";
-    await page.goto(`/help/search?q=${introuvable}`);
+  test("a search with no result offers to submit a request", async ({ page }) => {
+    const query = "zzqqxwv-introuvable";
+    await page.goto(`/help/search?q=${query}`);
 
-    // L'état vide reprend la requête : c'est ce qui distingue « rien trouvé
-    // pour ce mot » d'une page de recherche cassée.
-    await expect(page.locator("p").filter({ hasText: "Aucun résultat" })).toContainText(introuvable);
+    // The empty state echoes the query: that is what distinguishes “nothing
+    // found for this word” from a broken search page.
+    await expect(page.locator("p").filter({ hasText: "No results" })).toContainText(query);
 
-    // Le bouton est la sortie de secours du visiteur. Il est cherché dans
-    // <main> : l'en-tête du portail porte le même libellé sur toutes les pages,
-    // et le trouver là ne dirait rien de l'état vide.
-    const bouton = page.locator("main").getByRole("link", { name: "Soumettre une demande" });
-    await expect(bouton).toBeVisible();
-    await expect(bouton).toHaveAttribute("href", "/help/requests/new");
+    // The button is the visitor's emergency exit. It is looked for inside
+    // <main>: the portal header carries the same label on every page, and
+    // finding it there would say nothing about the empty state.
+    const button = page.locator("main").getByRole("link", { name: "Submit a request" });
+    await expect(button).toBeVisible();
+    await expect(button).toHaveAttribute("href", "/help/requests/new");
   });
 
-  test("le pied de page du portail porte le copyright du tenant", async ({ page }) => {
+  test("the portal footer carries the tenant's copyright", async ({ page }) => {
     await page.goto("/help");
-    const pied = page.locator("footer");
+    const footer = page.locator("footer");
 
-    // Le copyright est toujours là, quel que soit le réglage.
-    await expect(pied).toContainText(new RegExp(`© ${new Date().getFullYear()}`));
+    // The copyright is always there, whatever the setting.
+    await expect(footer).toContainText(new RegExp(`© ${new Date().getFullYear()}`));
 
-    // « Propulsé par Open HelpDesk » dépend de ST-09 (« Masquer Propulsé par »,
-    // réservé au plan Pro) : un smoke test ne doit pas présumer d'un réglage
-    // qu'il ne pilote pas. On vérifie donc seulement la cohérence — si la
-    // mention est là, la phrase est recollée autour de son lien, ce qui est le
-    // vrai risque (elle est découpée pour garder l'ordre des mots de chaque
-    // langue). Le fait de la masquer est couvert par settings-toggles.
-    const mention = pied.getByRole("link", { name: "Open HelpDesk" });
+    // “Powered by Open HelpDesk” depends on ST-09 (“Hide Powered by”, gated by
+    // an entitlement): a smoke test must not presume a setting it does not
+    // drive. So only consistency is checked — if the mention is there, the
+    // sentence is glued back together around its link, which is the real risk
+    // (it is split up to keep each language's word order). Hiding it is covered
+    // by settings-toggles.
+    const mention = footer.getByRole("link", { name: "Open HelpDesk" });
     if ((await mention.count()) > 0) {
-      await expect(pied).toContainText("Propulsé par Open HelpDesk");
+      await expect(footer).toContainText("Powered by Open HelpDesk");
       await expect(mention).toHaveAttribute("href", "https://open-helpdesk.com");
     }
   });

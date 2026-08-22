@@ -26,7 +26,7 @@ import {
 } from "./actions";
 
 const AGENT_GRID = "minmax(190px,1.4fr) 150px 180px 130px 110px 80px";
-/** Rotation de teintes des avatars (open, new, acc, wait, pause) — index de ligne. */
+/** Avatar tone rotation (open, new, acc, wait, pause) — by row index. */
 const AV_TONES = [
   ["var(--open-t)", "var(--open)"],
   ["var(--new-t)", "var(--new)"],
@@ -36,9 +36,9 @@ const AV_TONES = [
 ] as const;
 
 /**
- * ST-02 — Agents, équipes & rôles (1100 px) : carte sièges avec jauge 160×7 et
- * bouton d'action, table des agents (rôle inline), barre d'invitation sous la table,
- * onglet Équipes (cartes en-tête/corps + drawer CRUD teams/teamMembers).
+ * ST-02 — Agents, teams & roles (1100 px): seats card with a 160×7 gauge and an
+ * action button, agents table (inline role), invitation bar below the table,
+ * Teams tab (header/body cards + teams/teamMembers CRUD drawer).
  */
 export default async function TeamPage({
   searchParams,
@@ -61,7 +61,7 @@ export default async function TeamPage({
       .select()
       .from(users)
       .where(eq(users.tenantId, tenant.id))
-      // Ordre du design : activité la plus récente d'abord, invités (sans accès) en fin.
+      // Design order: most recent activity first, invited users (no access) last.
       .orderBy(sql`${users.lastSeenAt} desc nulls last`, asc(users.name)),
     db.select().from(teams).where(eq(teams.tenantId, tenant.id)).orderBy(asc(teams.name)),
     db.select().from(teamMembers).where(eq(teamMembers.tenantId, tenant.id)),
@@ -72,8 +72,8 @@ export default async function TeamPage({
       .orderBy(asc(businessHours.name)),
   ]);
 
-  // Une invitation réserve son siège : sinon le quota serait dépassé dès l'acceptation.
-  // En auto-hébergé la limite est null : pas de jauge, pas de plafond.
+  // An invitation reserves its seat: otherwise the quota would be exceeded as soon
+  // as it is accepted. Self-hosted has a null limit: no gauge, no cap.
   const seats = agents.filter((a) => a.status !== "disabled" && a.role !== "viewer").length;
   const quota = seatLimitFor(tenant);
   const seatFull = quota !== null && seats >= quota;
@@ -125,8 +125,8 @@ export default async function TeamPage({
 
       {activeTab === "agents" ? (
         <div className="st-rise flex flex-col" style={{ gap: 16 }}>
-          {/* Carte sièges — 160×7, bordure/fond --wait quand la limite est atteinte.
-              Masquée en auto-hébergé : pas de quota, et son CTA mène à ST-11. */}
+          {/* Seats card — 160×7, --wait border/background when the limit is reached.
+              Hidden in self-hosted: no quota, and its CTA leads to ST-11. */}
           {quota !== null && (
           <div
             className="flex flex-wrap items-center rounded-[10px] border"
@@ -181,7 +181,7 @@ export default async function TeamPage({
           </div>
           )}
 
-          {/* Table des agents */}
+          {/* Agents table */}
           <div
             className="overflow-x-auto rounded-[10px] border"
             style={{ background: "var(--panel)", borderColor: "var(--line)" }}
@@ -325,7 +325,7 @@ export default async function TeamPage({
             })}
           </div>
 
-          {/* Barre d'invitation — sous la table (ordre du design) */}
+          {/* Invitation bar — below the table (design order) */}
           <form action={inviteAgents} className="flex flex-wrap items-center" style={{ gap: 9 }}>
             <TextInput
               name="emails"
@@ -493,7 +493,7 @@ export default async function TeamPage({
   );
 }
 
-/** Formulaire d'équipe (drawer 420 px) — création et édition partagent le même corps. */
+/** Team form (420 px drawer) — creation and editing share the same body. */
 function TeamForm({
   action,
   t,

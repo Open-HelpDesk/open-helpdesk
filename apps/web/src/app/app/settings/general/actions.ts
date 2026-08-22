@@ -14,13 +14,13 @@ import {
 } from "@/lib/storage";
 
 /**
- * Formats acceptés pour l'identité visuelle.
+ * Accepted formats for the visual identity.
  *
- * Les aides sous les champs conseillent PNG ou SVG en 512 px pour le logo et
- * 32 × 32 pour le favicon : c'est un conseil de qualité, pas la liste des
- * formats admis. On accepte donc aussi le JPEG et le WebP, qu'un logo de marque
- * a de bonnes chances d'être, et l'ICO pour le favicon. Ce qui est refusé l'est
- * avec un message qui nomme les formats — jamais en silence.
+ * The hints under the fields recommend PNG or SVG at 512 px for the logo and
+ * 32 × 32 for the favicon: that is quality advice, not the list of accepted
+ * formats. So we also accept JPEG and WebP, which a brand logo has a good
+ * chance of being, and ICO for the favicon. Whatever gets rejected is rejected
+ * with a message that names the formats — never silently.
  */
 const FORMATS: Record<BrandAssetKind, Set<string>> = {
   logo: new Set(["image/png", "image/svg+xml", "image/jpeg", "image/webp"]),
@@ -28,12 +28,12 @@ const FORMATS: Record<BrandAssetKind, Set<string>> = {
 };
 
 /**
- * Dépose le fichier du champ `kind` s'il y en a un, et renvoie son URL.
+ * Uploads the file from the `kind` field if there is one, and returns its URL.
  *
- * `null` signifie « rien n'a été déposé » — donc « ne touche pas au réglage
- * existant ». Un fichier refusé n'est pas un `null` : il interrompt
- * l'enregistrement par une redirection, parce qu'un dépôt qui n'aboutit pas
- * sans le dire est exactement le défaut que ce produit a déjà payé.
+ * `null` means "nothing was uploaded" — hence "do not touch the existing
+ * setting". A rejected file is not a `null`: it interrupts the save with a
+ * redirect, because an upload that fails without saying so is exactly the flaw
+ * this product has already paid for.
  */
 async function uploadIfProvided(
   tenantId: string,
@@ -47,7 +47,7 @@ async function uploadIfProvided(
   return saveBrandAsset(tenantId, kind, file);
 }
 
-/** ST-01 — Identité + régionalisation : tenants.name, branding jsonb, locale, timezone, format. */
+/** ST-01 — Identity + regional settings: tenants.name, branding jsonb, locale, timezone, format. */
 export async function saveGeneral(formData: FormData) {
   const { tenant } = await requireManager();
 
@@ -59,28 +59,28 @@ export async function saveGeneral(formData: FormData) {
   const firstNumberRaw = String(formData.get("firstNumber") ?? "").trim();
   const firstNumber = Number(firstNumberRaw);
 
-  // Les dépôts d'abord : un format refusé doit interrompre l'enregistrement
-  // AVANT d'écrire quoi que ce soit, sinon le nom et la langue seraient
-  // enregistrés et le message d'erreur laisserait croire que rien ne l'a été.
-  const ancien = (tenant.branding as Record<string, unknown>) ?? {};
+  // Uploads first: a rejected format must interrupt the save BEFORE anything
+  // is written, otherwise the name and the language would be saved and the
+  // error message would suggest that nothing had been.
+  const previous = (tenant.branding as Record<string, unknown>) ?? {};
   const logoUrl = await uploadIfProvided(tenant.id, "logo", formData);
   const faviconUrl = await uploadIfProvided(tenant.id, "favicon", formData);
 
-  // Retirer est un état du formulaire, pas une action à part : l'écran n'a
-  // qu'une barre d'enregistrement, et un bouton qui aurait soumis de son côté
-  // aurait emporté le nom ou la langue qu'on venait de changer. Un dépôt
-  // l'emporte sur un retrait — le composant les rend d'ailleurs exclusifs.
-  const retireLogo = !logoUrl && formData.get("remove-logo") === "1";
-  const retireFavicon = !faviconUrl && formData.get("remove-favicon") === "1";
+  // Removing is a state of the form, not a separate action: the screen only
+  // has one save bar, and a button that submitted on its own would have thrown
+  // away the name or the language just changed. An upload wins over a removal
+  // — the component actually makes them mutually exclusive.
+  const removeLogo = !logoUrl && formData.get("remove-logo") === "1";
+  const removeFavicon = !faviconUrl && formData.get("remove-favicon") === "1";
 
   const branding = {
-    ...ancien,
-    // Un dépôt remplace, un retrait efface la clé : dans les deux cas l'ancien
-    // objet n'est plus désigné par personne et part du bucket plus bas.
+    ...previous,
+    // An upload replaces, a removal erases the key: in both cases the old
+    // object is no longer referenced by anyone and leaves the bucket below.
     ...(logoUrl ? { logoUrl } : {}),
     ...(faviconUrl ? { faviconUrl } : {}),
-    ...(retireLogo ? { logoUrl: undefined } : {}),
-    ...(retireFavicon ? { faviconUrl: undefined } : {}),
+    ...(removeLogo ? { logoUrl: undefined } : {}),
+    ...(removeFavicon ? { faviconUrl: undefined } : {}),
     accentColor: /^#[0-9a-fA-F]{6}$/.test(accent) ? accent : undefined,
     firstTicketNumber:
       firstNumberRaw !== "" && Number.isInteger(firstNumber) && firstNumber > 0
@@ -100,19 +100,19 @@ export async function saveGeneral(formData: FormData) {
     })
     .where(eq(tenants.id, tenant.id));
 
-  if ((logoUrl || retireLogo) && typeof ancien.logoUrl === "string") {
-    await deleteBrandAsset(ancien.logoUrl);
+  if ((logoUrl || removeLogo) && typeof previous.logoUrl === "string") {
+    await deleteBrandAsset(previous.logoUrl);
   }
-  if ((faviconUrl || retireFavicon) && typeof ancien.faviconUrl === "string") {
-    await deleteBrandAsset(ancien.faviconUrl);
+  if ((faviconUrl || removeFavicon) && typeof previous.faviconUrl === "string") {
+    await deleteBrandAsset(previous.faviconUrl);
   }
 
-  // Le logo est rendu par les deux shells et le favicon par la mise en page
-  // racine : ils ne se rafraîchiraient pas en ne revalidant que cet écran.
+  // The logo is rendered by both shells and the favicon by the root layout:
+  // they would not refresh if we revalidated only this screen.
   revalidatePath("/", "layout");
   redirect("/app/settings/general?saved=1");
 }
-/** ST-01 — Zone de danger : transfert de propriété (Owner uniquement, action réelle). */
+/** ST-01 — Danger zone: ownership transfer (Owner only, real action). */
 export async function transferOwnership(formData: FormData) {
   const { tenant, agent: me } = await requireManager();
   if (me.role !== "owner") return;
@@ -134,8 +134,8 @@ export async function transferOwnership(formData: FormData) {
 }
 
 /**
- * ST-01 — Suppression du workspace : REFUS en dur. La suppression programmée
- * (rétention 30 jours) est disponible sur l'offre cloud uniquement.
+ * ST-01 — Workspace deletion: hard-coded REFUSAL. Scheduled deletion (30-day
+ * retention) is available on the cloud plan only.
  */
 export async function deleteWorkspace(formData: FormData) {
   const { tenant } = await requireManager();
@@ -143,6 +143,6 @@ export async function deleteWorkspace(formData: FormData) {
   if (confirmation !== tenant.slug) {
     redirect("/app/settings/general?error=slug");
   }
-  // Refus volontaire — aucune suppression exécutée en auto-hébergé.
+  // Deliberate refusal — no deletion is performed when self-hosted.
   redirect("/app/settings/general?error=delete-cloud");
 }

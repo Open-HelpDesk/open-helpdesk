@@ -2,22 +2,22 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 /**
- * Lecture des dictionnaires de traduction depuis leur source.
+ * Reading the translation dictionaries from their source.
  *
- * Ce paquet n'a ni les alias de chemin d'`apps/web` ni son bundler : importer
- * `@/i18n/dictionaries/pl` d'ici demanderait de recréer sa configuration pour
- * lire une table de constantes. On balaie donc le fichier comme du texte, ce
- * qui suffit aux deux questions qu'on lui pose : quelles clés porte-t-il des
- * formes de pluriel, et quelles formes exactement.
+ * This package has neither `apps/web`'s path aliases nor its bundler: importing
+ * `@/i18n/dictionaries/pl` from here would mean recreating its configuration to
+ * read a table of constants. So the file is scanned as text, which is enough
+ * for the two questions asked of it: which keys carry plural forms, and which
+ * forms exactly.
  *
- * Ce paquet est transpilé en CommonJS par le chargeur de Playwright :
- * `__dirname` est disponible, `import.meta` non.
+ * This package is transpiled to CommonJS by Playwright's loader:
+ * `__dirname` is available, `import.meta` is not.
  */
 
 const DICTS = join(__dirname, "../../../apps/web/src/i18n/dictionaries");
 const LOCALES_TS = join(DICTS, "../locales.ts");
 
-/** `{ code: "pl", tag: "pl-PL" }` → l'étiquette qui porte les règles de pluriel. */
+/** `{ code: "pl", tag: "pl-PL" }` → the tag that carries the plural rules. */
 export function localeTags(): Map<string, string> {
   const src = readFileSync(LOCALES_TS, "utf8");
   return new Map(
@@ -25,22 +25,22 @@ export function localeTags(): Map<string, string> {
   );
 }
 
-/** Les codes qui ont un fichier de dictionnaire, français exclu (c'est la source). */
+/** The codes that have a dictionary file, English excluded (it is the source). */
 export function dictionaryCodes(): string[] {
   return readdirSync(DICTS)
-    .filter((f) => f.endsWith(".ts") && f !== "fr.ts")
+    .filter((f) => f.endsWith(".ts") && f !== "en.ts")
     .map((f) => f.replace(".ts", ""))
     .sort();
 }
 
 /**
- * Les entrées au pluriel d'un dictionnaire : clé → { forme: texte }.
+ * A dictionary's plural entries: key → { form: text }.
  *
- * Une entrée au pluriel s'écrit `"clé": { one: "…", other: "…" }` sur une ligne
- * ou sur plusieurs. On repère donc le début, puis on lit jusqu'à l'accolade
- * fermante — les accolades des paramètres (`{count}`) vont toujours par paires,
- * ce qui rend le comptage fiable. Le `\s*` après les deux-points est
- * indispensable : une forme au texte long passe à la ligne suivante.
+ * A plural entry is written `"key": { one: "…", other: "…" }` on a single line
+ * or across several. So the start is spotted, then read up to the closing
+ * brace — the braces of the parameters (`{count}`) always come in pairs, which
+ * makes the counting reliable. The `\s*` after the colon is indispensable: a
+ * form with a long text wraps onto the next line.
  */
 export function pluralEntries(code: string): Map<string, Record<string, string>> {
   const lines = readFileSync(join(DICTS, `${code}.ts`), "utf8").split("\n");
@@ -52,21 +52,20 @@ export function pluralEntries(code: string): Map<string, Record<string, string>>
     while ((acc.match(/\{/g) ?? []).length !== (acc.match(/\}/g) ?? []).length) {
       acc += `\n${lines[++i]!}`;
     }
-    const formes: Record<string, string> = {};
+    const forms: Record<string, string> = {};
     for (const m of acc.matchAll(/(?:^|[{\s])(\w+):\s*"((?:[^"\\]|\\.)*)"/g)) {
-      formes[m[1]!] = m[2]!.replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+      forms[m[1]!] = m[2]!.replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
     }
-    out.set(start[1]!, formes);
+    out.set(start[1]!, forms);
   }
   return out;
 }
 
 /**
- * Les entrées à valeur simple d'un dictionnaire : clé → texte.
+ * A dictionary's plain-value entries: key → text.
  *
- * Sert aux contrôles qui comparent des libellés entre eux — les jeux de
- * vocabulaire, par exemple, où deux valeurs identiques rendraient un filtre
- * inutilisable.
+ * Used by the checks that compare labels with one another — the vocabulary
+ * sets, for instance, where two identical values would make a filter unusable.
  */
 export function simpleEntries(code: string): Map<string, string> {
   const src = readFileSync(join(DICTS, `${code}.ts`), "utf8");

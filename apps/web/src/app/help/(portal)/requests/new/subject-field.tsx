@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * Déflexion (PT-04) : suggestions d'articles KB en direct pendant la saisie du sujet,
- * dans l'encart teinté de la maquette (« Ces articles répondent peut-être à votre question »).
+ * Deflection (PT-04): live KB article suggestions while the subject is typed,
+ * in the mockup's tinted callout ("These articles may answer your question").
  */
 import { useEffect, useState } from "react";
 import { useT } from "@/i18n/client";
@@ -27,7 +27,7 @@ export function SubjectWithDeflection({ defaultSubject = "" }: { defaultSubject?
         });
         if (res.ok) setSuggestions((await res.json()) as Suggestion[]);
       } catch {
-        /* annulé */
+        /* aborted */
       }
     }, 250);
     return () => {

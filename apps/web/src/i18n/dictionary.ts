@@ -1,15 +1,15 @@
 /**
- * Mécanique de traduction : types, sélection de pluriel, interpolation.
+ * Translation machinery: types, plural selection, interpolation.
  *
- * Le français est la source. `fr.ts` définit l'ensemble des clés ; les autres
- * langues sont typées `Dictionary` sur cet ensemble, si bien qu'une clé oubliée
- * ou en trop est une erreur de compilation et non un texte anglais qui
- * réapparaît en production.
+ * French is the source. `fr.ts` defines the whole set of keys; the other
+ * languages are typed `Dictionary` against that set, so that a forgotten or
+ * extra key is a compile error and not an English string resurfacing in
+ * production.
  *
- * Une valeur est soit une chaîne, soit une table de formes de pluriel. Les
- * formes sont celles d'`Intl.PluralRules` pour la langue : `one`/`other` en
- * allemand ou en néerlandais, `one`/`many`/`other` en français. On fournit
- * toujours `other` — c'est le repli quand la catégorie exacte manque.
+ * A value is either a string or a table of plural forms. The forms are the ones
+ * `Intl.PluralRules` gives for the language: `one`/`other` in German or in
+ * Dutch, `one`/`many`/`other` in French. `other` is always supplied — it is the
+ * fallback when the exact category is missing.
  */
 
 import type { PluralCategory } from "./format";
@@ -19,16 +19,16 @@ export type Message = string | ({ other: string } & Partial<Record<PluralCategor
 export type MessageParams = Record<string, string | number>;
 
 /**
- * Remplace {nom} par sa valeur. Un paramètre absent laisse l'accolade visible,
- * ce qui saute aux yeux en relecture au lieu de produire un trou silencieux.
+ * Replaces {name} with its value. A missing parameter leaves the brace visible,
+ * which catches the eye on review instead of producing a silent hole.
  *
- * Un paramètre NUMÉRIQUE est mis en forme dans la langue courante : « 4 128 »
- * en français, « 4,128 » en anglais, « 4.128 » en allemand. Sans cela, un
- * `String(n)` rendait « 4128 » partout et faisait perdre le séparateur de
- * milliers que les anciens helpers `numberFr` posaient.
+ * A NUMERIC parameter is formatted in the current language: "4 128" in French,
+ * "4,128" in English, "4.128" in German. Without this, a `String(n)` rendered
+ * "4128" everywhere and lost the thousands separator that the old `numberFr`
+ * helpers used to add.
  *
- * Un nombre qui ne doit PAS être groupé — une année, un numéro de version —
- * se passe donc en chaîne : `{ year: String(2026) }`.
+ * A number that must NOT be grouped — a year, a version number — is therefore
+ * passed as a string: `{ year: String(2026) }`.
  */
 function interpolate(
   template: string,
@@ -61,11 +61,11 @@ export function renderMessage(
 }
 
 /**
- * Découpe une phrase traduite autour d'un paramètre rendu en JSX (un lien, une
- * référence en gras). Rendre `t("…", { ref: <b/> })` est impossible — une
- * traduction est une chaîne — et couper la phrase en deux clés casserait
- * l'ordre des mots des autres langues. On interpole donc un séparateur
- * improbable, puis on redécoupe.
+ * Splits a translated sentence around a parameter rendered in JSX (a link, a
+ * reference in bold). Rendering `t("…", { ref: <b/> })` is impossible — a
+ * translation is a string — and cutting the sentence into two keys would break
+ * word order in the other languages. So an improbable separator is
+ * interpolated, then split back out.
  */
 const SLOT = "\u0000";
 

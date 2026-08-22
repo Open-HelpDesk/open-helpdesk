@@ -1,12 +1,12 @@
 /**
- * Historique de démonstration — 90 jours d'activité pour le workspace Acme Support.
+ * Demonstration history — 90 days of activity for the Acme Support workspace.
  *
- * Sans lui, les Rapports (AG-09), la carte de chaleur et la conformité SLA sont vides :
- * le design montre un workspace actif, pas un workspace neuf. Les tickets sont numérotés
- * SOUS #4821 (le ticket de référence des captures reste le plus récent).
+ * Without it, Reports (AG-09), the heatmap and SLA compliance are empty: the design
+ * shows an active workspace, not a brand-new one. The tickets are numbered BELOW
+ * #4821 (the reference ticket of the screenshots stays the most recent one).
  *
- * Entièrement déterministe (générateur congruentiel à graine fixe) : deux exécutions
- * produisent exactement le même jeu de données, condition pour que la démo reste figée.
+ * Fully deterministic (congruential generator with a fixed seed): two runs produce
+ * exactly the same data set, the condition for the demo to stay frozen.
  */
 import { and, eq, gte, lt } from "drizzle-orm";
 import { db } from "../client";
@@ -15,15 +15,15 @@ import { contacts, csatResponses, ticketMessages, tickets, users } from "../sche
 const HOUR = 3600 * 1000;
 const DAY = 24 * HOUR;
 
-/** Premier numéro de l'historique — #4821 reste le ticket le plus récent. */
+/** First number of the history — #4821 stays the most recent ticket. */
 const FIRST_NUMBER = 4300;
 const LAST_NUMBER = 4816;
 
-/** Générateur congruentiel linéaire (Numerical Recipes) — reproductible. */
+/** Linear congruential generator (Numerical Recipes) — reproducible. */
 function makeRandom(seed: number) {
   let state = seed >>> 0;
   return {
-    /** Flottant dans [0, 1). */
+    /** Float in [0, 1). */
     next(): number {
       state = (state * 1664525 + 1013904223) >>> 0;
       return state / 0x100000000;
@@ -31,7 +31,7 @@ function makeRandom(seed: number) {
     int(maxExclusive: number): number {
       return Math.floor(this.next() * maxExclusive);
     },
-    /** Tire une entrée selon des poids entiers. */
+    /** Draws an entry according to integer weights. */
     weighted<T>(entries: [T, number][]): T {
       const total = entries.reduce((sum, [, w]) => sum + w, 0);
       let roll = this.next() * total;
@@ -48,46 +48,46 @@ function makeRandom(seed: number) {
 }
 
 const SUBJECTS = [
-  "Export PDF des factures illisible",
-  "Impossible de réinitialiser mon mot de passe",
-  "Ajout d'un utilisateur sur le compte",
-  "Facture en double sur le mois de juin",
-  "Erreur 500 à l'ouverture du tableau de bord",
-  "Demande de devis pour 20 licences",
-  "Le filtre par date ne renvoie rien",
-  "Synchronisation interrompue depuis hier",
-  "Question sur la politique de rétention",
-  "Changement d'adresse de facturation",
-  "Import CSV rejeté sans message d'erreur",
-  "Notifications non reçues depuis la mise à jour",
-  "Demande d'accès à l'API",
-  "Lenteur sur la liste des commandes",
-  "Suppression d'un compte collaborateur",
-  "問題 avec l'affichage des accents dans l'export",
-  "Relance sur le ticket précédent",
-  "Panne du connecteur comptable",
-  "Documentation manquante sur les webhooks",
-  "Demande de rappel téléphonique",
+  "Invoice PDF export is unreadable",
+  "Cannot reset my password",
+  "Adding a user to the account",
+  "Duplicate invoice for the month of June",
+  "Error 500 when opening the dashboard",
+  "Quote request for 20 licences",
+  "The date filter returns nothing",
+  "Synchronisation has been stopped since yesterday",
+  "Question about the retention policy",
+  "Change of billing address",
+  "CSV import rejected with no error message",
+  "No notifications received since the update",
+  "Request for API access",
+  "Order list is slow",
+  "Deleting a collaborator account",
+  "問題 with non-ASCII characters in the export",
+  "Following up on the previous ticket",
+  "Accounting connector is down",
+  "Missing documentation on webhooks",
+  "Request for a phone call back",
 ];
 
-const TYPES = ["Question", "Incident", "Demande", "Réclamation"];
+const TYPES = ["Question", "Incident", "Task", "Other"];
 
 const COMMENTS_GOOD = [
-  "Réponse rapide et efficace, merci.",
-  "Problème résolu du premier coup.",
-  "Très bon suivi, je recommande.",
+  "Quick and effective answer, thank you.",
+  "Problem solved on the first try.",
+  "Very good follow-up, I recommend it.",
   null,
   null,
 ];
 const COMMENTS_BAD = [
-  "Trop de temps pour obtenir une réponse.",
-  "Le problème est revenu deux jours après.",
+  "Took too long to get an answer.",
+  "The problem came back two days later.",
   null,
 ];
 
 /**
- * Crée l'historique s'il manque. Idempotent : on ne fait rien si des tickets de la
- * plage historique existent déjà.
+ * Creates the history if it is missing. Idempotent: nothing is done if tickets in
+ * the history range already exist.
  */
 export async function installDemoHistory(tenantId: string): Promise<number> {
   const existing = await db
@@ -115,7 +115,7 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
   const contactIds = contactRows.map((c) => c.id);
   if (agentIds.length === 0 || contactIds.length === 0) return 0;
 
-  // Agent de démonstration : celui avec lequel on se connecte pour l'examen.
+  // Demonstration agent: the one used to sign in for the review.
   const [demoRow] = await db
     .select({ id: users.id })
     .from(users)
@@ -144,18 +144,18 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
   for (let number = FIRST_NUMBER; number <= LAST_NUMBER; number++) {
     if (taken.has(number)) continue;
 
-    // Les 22 derniers numéros forment la file courante : tickets des 3 derniers jours,
-    // encore ouverts, majoritairement assignés à l'agent de démonstration — sans eux
-    // l'écran d'accueil « Mes tickets » est vide alors que le design le montre plein.
+    // The last 22 numbers form the current queue: tickets from the last 3 days, still
+    // open, mostly assigned to the demonstration agent — without them the landing
+    // screen "My tickets" is empty where the design shows it full.
     const isCurrentQueue = number > LAST_NUMBER - 22;
 
-    // Répartition sur 90 jours : les numéros croissants sont plus récents.
+    // Spread over 90 days: increasing numbers are more recent.
     const progress = (number - FIRST_NUMBER) / (LAST_NUMBER - FIRST_NUMBER);
     const daysAgo = isCurrentQueue
       ? rnd.int(4)
       : Math.max(2, Math.round(90 - progress * 90 + (rnd.next() * 6 - 3)));
 
-    // Heures ouvrées : 8 h → 18 h, creux à midi, très peu le week-end.
+    // Business hours: 8:00 → 18:00, a dip at noon, very little on weekends.
     const dayStart = new Date(now - daysAgo * DAY);
     dayStart.setHours(0, 0, 0, 0);
     const weekday = dayStart.getDay();
@@ -168,7 +168,7 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
     const createdAt = new Date(dayStart.getTime() + hour * HOUR + rnd.int(60) * 60 * 1000);
     if (createdAt.getTime() > now) continue;
 
-    // L'agent de démonstration (le premier inscrit) porte la moitié de la file courante.
+    // The demonstration agent (the first one registered) carries half of the current queue.
     const agentId = isCurrentQueue && rnd.next() < 0.5 ? demoAgentId : rnd.pick(agentIds);
     const contactId = rnd.pick(contactIds);
     const priority = rnd.weighted([
@@ -184,20 +184,20 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
       ["api", 7],
     ] as [("email" | "portal" | "widget" | "api"), number][]);
 
-    // Cibles SLA selon la priorité (cohérentes avec la politique par défaut).
+    // SLA targets by priority (consistent with the default policy).
     const firstReplyTargetH = priority === "urgent" ? 0.5 : priority === "high" ? 2 : 4;
     const resolveTargetH = priority === "urgent" ? 4 : priority === "high" ? 8 : 48;
 
-    // ~92 % des réponses tiennent la cible ; les autres la dépassent nettement.
+    // ~92% of the replies hold the target; the others overshoot it clearly.
     const onTime = rnd.next() < 0.92;
     const firstReplyH = onTime
       ? firstReplyTargetH * (0.15 + rnd.next() * 0.7)
       : firstReplyTargetH * (1.2 + rnd.next() * 2);
     const firstRepliedAt = new Date(createdAt.getTime() + firstReplyH * HOUR);
 
-    // Un ticket passé n'est JAMAIS laissé ouvert : sinon son échéance SLA, calculée à
-    // la création, serait dépassée de plusieurs semaines et toute la file paraîtrait
-    // en incendie. Seuls les cinq derniers jours portent des tickets en cours.
+    // A past ticket is NEVER left open: otherwise its SLA deadline, computed at
+    // creation, would be weeks overdue and the whole queue would look like it is on
+    // fire. Only the last five days carry tickets in progress.
     let status = isCurrentQueue
       ? rnd.weighted([
           ["open", 42],
@@ -220,14 +220,14 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
             ] as ["resolved" | "open" | "waiting" | "on_hold" | "new", number][]),
     );
 
-    // Garde-fou : un ticket encore ouvert dont l'échéance est loin derrière n'existe
-    // pas dans une file saine. On tolère un léger dépassement (< 12 h) pour que la
-    // vue « Bientôt en retard » et les badges rouges aient de quoi s'illustrer.
+    // Guard rail: a still-open ticket whose deadline is far behind does not exist in
+    // a healthy queue. A slight overshoot (< 12 h) is tolerated so that the
+    // "Breaching soon" view and the red badges have something to show.
     let resolveDueAt = new Date(createdAt.getTime() + resolveTargetH * HOUR);
     const stillOpen = status !== "resolved" && status !== "closed";
     if (stillOpen && resolveDueAt.getTime() < now - 12 * HOUR) {
-      // Dans la file courante on reporte l'échéance (le ticket vient d'être requalifié) ;
-      // ailleurs, un ticket si ancien aurait été traité depuis longtemps.
+      // In the current queue the deadline is pushed back (the ticket has just been
+      // requalified); elsewhere, a ticket that old would have been handled long ago.
       if (isCurrentQueue) {
         resolveDueAt = new Date(now + (2 + rnd.next() * 30) * HOUR);
       } else {
@@ -272,7 +272,7 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
 
   if (newTickets.length === 0) return 0;
 
-  // Insertion par lots (un INSERT de 500 lignes dépasse les limites de paramètres).
+  // Batched insert (a 500-row INSERT exceeds the parameter limits).
   const inserted: { id: string; number: number }[] = [];
   for (let i = 0; i < newTickets.length; i += 60) {
     const batch = await db
@@ -284,7 +284,7 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
   }
   const idByNumber = new Map(inserted.map((t) => [t.number, t.id]));
 
-  // Un message d'ouverture par ticket : le détail ne doit jamais être vide.
+  // One opening message per ticket: the detail view must never be empty.
   const messages: (typeof ticketMessages.$inferInsert)[] = [];
   const responses: (typeof csatResponses.$inferInsert)[] = [];
   for (const t of pending) {
@@ -297,11 +297,11 @@ export async function installDemoHistory(tenantId: string): Promise<number> {
       authorType: "contact",
       authorId: t.contactId,
       source: "email",
-      bodyText: `${t.subject} — pouvez-vous regarder ? Merci d'avance.`,
+      bodyText: `${t.subject} — could you have a look? Thanks in advance.`,
       createdAt: t.createdAt,
     });
 
-    // Enquête CSAT sur ~38 % des tickets résolus, 88 % de satisfaits.
+    // CSAT survey on ~38% of the solved tickets, 88% satisfied.
     if (t.resolvedAt && rnd.next() < 0.38) {
       const good = rnd.next() < 0.88;
       const answeredAt = new Date(t.resolvedAt.getTime() + (2 + rnd.next() * 20) * HOUR);

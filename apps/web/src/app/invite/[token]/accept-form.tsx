@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Formulaire d'acceptation d'invitation : mot de passe (server action) ou
- * OAuth — le fournisseur revient sur la page d'invitation, qui active alors
- * la session déjà ouverte.
+ * Invitation acceptance form: password (server action) or OAuth — the provider
+ * comes back to the invitation page, which then activates the session already
+ * open.
  */
 import { useState } from "react";
 import { useT } from "@/i18n/client";

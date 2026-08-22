@@ -4,14 +4,14 @@ import { getTenantFromHeaders } from "@/lib/tenant";
 import "./globals.css";
 
 /**
- * Le favicon vient du tenant (ST-01), pas d'un fichier du dépôt.
+ * The favicon comes from the tenant (ST-01), not from a file in the repo.
  *
- * C'est pour cela qu'il n'y a ni `app/icon.png` ni `app/favicon.ico` : un
- * fichier statique serait le même pour tous les workspaces, et Next le
- * servirait en priorité sur ce qui est déclaré ici. Sans favicon déposé, le
- * navigateur n'en affiche aucun — plutôt que celui d'un autre.
+ * That is why there is neither `app/icon.png` nor `app/favicon.ico`: a static
+ * file would be the same for every workspace, and Next would serve it in
+ * preference to what is declared here. With no favicon uploaded, the browser
+ * shows none — rather than someone else's.
  *
- * `generateMetadata` et non une constante : la valeur dépend de la requête.
+ * `generateMetadata` and not a constant: the value depends on the request.
  */
 export async function generateMetadata(): Promise<Metadata> {
   const tenant = await getTenantFromHeaders().catch(() => null);
@@ -23,9 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * `lang` et `dir` viennent de la langue du tenant (ST-01), pas d'une constante :
- * ils commandent la coupure de mots, la synthèse vocale et la correction
- * orthographique des champs de saisie.
+ * `lang` and `dir` come from the tenant's language (ST-01), not from a constant:
+ * they drive word breaking, speech synthesis and the spell checking of input
+ * fields.
  */
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();

@@ -1,23 +1,23 @@
 import { cache } from "react";
 import { headers } from "next/headers";
 
-/** Slug du tenant courant, posé par le middleware. */
+/** Slug of the current tenant, set by the middleware. */
 export async function getTenantSlug(): Promise<string> {
   const h = await headers();
   const slug = h.get("x-tenant-slug");
   if (!slug) {
-    throw new Error("Tenant non résolu — la requête n'est pas passée par le middleware.");
+    throw new Error("Tenant not resolved — the request did not go through the middleware.");
   }
   return slug;
 }
 
 /**
- * Tenant courant (résolu depuis le domaine) — pour les routes publiques.
+ * Current tenant (resolved from the domain) — for the public routes.
  *
- * Mémoïsé par requête : la mise en page racine en a besoin deux fois, pour la
- * langue et pour le favicon, et le portail y ajoute son accent et son logo.
- * Sans `cache`, une seule page du portail déclenchait quatre fois la même
- * requête SQL.
+ * Memoized per request: the root layout needs it twice, for the language and
+ * for the favicon, and the portal adds its accent color and its logo on top.
+ * Without `cache`, a single portal page triggered the same SQL query four
+ * times.
  */
 export const getTenantFromHeaders = cache(async () => {
   const { db, tenants } = await import("@openhelpdesk/db");
@@ -28,13 +28,13 @@ export const getTenantFromHeaders = cache(async () => {
 });
 
 /**
- * Origine réelle d'une requête, reconstruite depuis l'en-tête `Host`.
+ * Real origin of a request, rebuilt from the `Host` header.
  *
- * `request.url` d'un route handler ne porte pas toujours le sous-domaine du
- * tenant. Une redirection construite dessus perd le workspace et tombe en 404 :
- * c'est ce qui faisait échouer l'atterrissage du lien magique et la confirmation
- * du widget. `Host` est la source que le middleware emploie déjà pour résoudre
- * le tenant — les redirections s'y adossent aussi.
+ * A route handler's `request.url` does not always carry the tenant's subdomain.
+ * A redirect built on it loses the workspace and falls into a 404: that is what
+ * broke the magic link landing and the widget confirmation. `Host` is the source
+ * the middleware already uses to resolve the tenant — the redirects lean on it
+ * too.
  */
 export function requestOrigin(request: {
   headers: { get: (name: string) => string | null };

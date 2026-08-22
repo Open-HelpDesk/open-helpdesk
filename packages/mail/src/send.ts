@@ -1,8 +1,8 @@
 /**
- * Réponse d'agent → email au demandeur. Le numéro dans le sujet ([#N]) sert de repli de
- * threading côté ingestion ; le Message-ID renvoyé est stocké dans email_meta.
+ * Agent reply → email to the requester. The number in the subject ([#N]) acts as the
+ * threading fallback on the ingestion side; the Message-ID returned is stored in email_meta.
  *
- * L'envoi passe par la boîte d'envoi (journal + file + retries) : voir outbox.ts.
+ * The send goes through the outbox (log + queue + retries): see outbox.ts.
  */
 import { sendTenantEmail } from "./outbox";
 

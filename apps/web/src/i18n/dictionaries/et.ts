@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const et: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const et: Dictionary = {
     "Teenus on ajutiselt peatatud: sirvimine on endiselt võimalik, uued pöördumised on keelatud.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Abikeskus",
   "home.title": "Kuidas saame teid aidata?",
   "home.subtitle":
@@ -25,7 +25,7 @@ export const et: Dictionary = {
   "home.ctaTitle": "Ei leia otsitavat?",
   "home.ctaBody": "Meie tiim vastab tööajal keskmiselt 34 minutiga.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Otsi abikeskusest…",
   "search.emptyTitle": "Päringule „{query}“ ei leitud tulemusi",
   "search.emptyBody":
@@ -33,7 +33,7 @@ export const et: Dictionary = {
   "search.breadcrumb": "Otsing",
   "search.resultsTitle": "Tulemused päringule „{query}“",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Abi",
   "category.otherCategories": "Muud kategooriad",
   "category.otherArticles": "Muud artiklid",
@@ -55,7 +55,7 @@ export const et: Dictionary = {
   "vote.prefill": "Loo eeltäidetud päring",
   "vote.prefillSubject": "Artikli „{title}“ kohta",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Esita päring",
   "newRequest.subtitle": "Kirjeldage oma olukorda. Vastame 4 töötunni jooksul.",
   "newRequest.type": "Päringu tüüp",
@@ -90,7 +90,7 @@ export const et: Dictionary = {
   "submitted.track": "Jälgi minu päringut",
   "submitted.backToHelp": "Tagasi abikeskusesse",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "Minu päringud",
   "requests.new": "Uus päring",
   "requests.tabOpen": "Avatud",
@@ -101,13 +101,13 @@ export const et: Dictionary = {
   "requests.emptyBody": "Teie tugipäringud ilmuvad siia koos oleku ja kogu suhtlusajalooga.",
   "requests.awaitingReply": "Ootab vastust",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "Töös",
   "status.waiting": "Ootab teie vastust",
   "status.resolved": "Lahendatud",
   "status.closed": "Suletud",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Lahendatud {when}",
   "activity.closed": "Suletud {when}",
   "activity.waiting": "Ootab teie vastust {since}",
@@ -115,13 +115,13 @@ export const et: Dictionary = {
   "activity.youReplied": "Vastasite {when}",
   "activity.created": "Loodud {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": { one: "juba {count} min", other: "juba {count} min" },
   "since.hours": { one: "juba {count} h", other: "juba {count} h" },
   "since.days": { one: "alates eilsest", other: "juba {count} päeva" },
   "since.date": "alates {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Teie",
   "request.team": "Tiim",
   "request.agentAuthor": "{name} — {tenant}",
@@ -138,7 +138,7 @@ export const et: Dictionary = {
   "request.markSolved": "Märgi lahendatuks",
   "request.reopen": "Ava päring uuesti",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Jälgige oma päringuid",
   "login.magicIntro":
     "Sisestage oma e-posti aadress: saadame teile sisselogimislingi. Parooli pole vaja meelde jätta.",
@@ -153,7 +153,15 @@ export const et: Dictionary = {
   "login.footer":
     "Pole veel päringut esitanud? Teie konto luuakse automaatselt esimese päringu saatmisel.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Teie sisselogimislink — {workspace}",
+  "login.emailBody":
+    "Tere!\n\nKlõpsake sellel lingil, et pääseda oma päringute juurde (link kehtib 15 minutit):\n{url}\n\nKui te seda linki ei küsinud, ignoreerige seda kirja.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Olete selle organisatsiooni administraator. Siin tehtud seaded kehtivad organisatsiooni {org} töötajale, kes kasutab tugiteenust {tenant}.",
     other: "Olete selle organisatsiooni administraator. Siin tehtud seaded kehtivad {count} organisatsiooni {org} töötajale, kes kasutavad tugiteenust {tenant}.",
@@ -238,7 +246,7 @@ export const et: Dictionary = {
   "members.note":
     "Töötajad ilmuvad automaatselt esimesel sisselogimisel või esimese päringu esitamisel. Võite määrata teise administraatori, et te ei jääks ainsaks kontaktisikuks.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Vajate abi?",
   "widget.close": "Sulge",
   "widget.messageLabel": "Teie sõnum",
@@ -259,7 +267,7 @@ export const et: Dictionary = {
   "csatPage.doneTitle": "Aitäh!",
   "csatPage.doneBody": "Teie kommentaar on tiimile edastatud.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Sisendkast",
@@ -272,7 +280,7 @@ export const et: Dictionary = {
   "app.shell.suspendedTitle": "See tööruum on peatatud",
   "app.shell.suspendedText": "Juurdepääsu taastamiseks pöörduge oma halduri poole.",
   "app.shell.suspendedOwnerText":
-    "Tööruumi taasaktiveerimiseks valige pakett või uuendage makseviisi.",
+    "Tööruumi taasaktiveerimiseks tasuge tellimus või uuendage makseviisi.",
   "app.shell.suspendedBillingCta": "Ava Tellimus ja arveldus",
   "app.shell.myTickets": "Minu piletid",
   "app.shell.newTicket": "Uus pilet",
@@ -653,7 +661,7 @@ export const et: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. vastus",
   "app.reports.customReports": "Kohandatud aruanded",
-  "app.reports.enterprisePlanBadge": "ENTERPRISE PAKETT",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Tutvu lähemalt",
   "app.reports.chartDailyAria": "{labelA} ja {labelB} päevade kaupa",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -676,8 +684,11 @@ export const et: Dictionary = {
   "app.settings.shell.saved": "✓ Salvestatud",
   "app.settings.shell.cancel": "Tühista",
   "app.settings.shell.save": "Salvesta",
-  "app.settings.shell.planEnterprise": "ENTERPRISE PAKETT",
-  "app.settings.shell.upgradeToEnterprise": "Mine üle Enterprise paketile",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Sulge",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Halda tellimust",
   "app.settings.shell.eeSelfHostedTitle": "Väljaande Enterprise Edition funktsioon",
   "app.settings.shell.eeSelfHostedText":
     "See funktsioon kuulub kommertslitsentsi alla (hoidla kataloog ee/) ega sisaldu ise majutatavas avatud lähtekoodiga väljaandes.",
@@ -848,10 +859,10 @@ export const et: Dictionary = {
   "app.settings.sso.agentTitle": "Agentide SSO",
   "app.settings.sso.agentSubtitle":
     "SAML 2.0 ühekordne sisselogimine ja SCIM-provisioneerimine teie tugitiimile.",
-  "app.settings.sso.agentLockedTitle": "Agentide SSO on ainult Enterprise paketis",
+  "app.settings.sso.agentLockedTitle": "Agentide SSO kuulub väljaandesse Enterprise Edition",
   "app.settings.sso.agentLockedText":
     "Ühendage oma SAML 2.0 identiteedipakkuja, provisioneerige agendid SCIM-i kaudu ja nõudke ühekordset sisselogimist kogu tiimilt.",
-  "app.settings.sso.agentEnterpriseOnly": "Agentide SSO on ainult Enterprise paketis.",
+  "app.settings.sso.agentEnterpriseOnly": "Agentide SSO kuulub väljaandesse Enterprise Edition.",
   "app.settings.sso.idpOther": "Muu (üldine SAML)",
   "app.settings.sso.samlToggleLabel": "Luba SAML 2.0 ühekordne sisselogimine",
   "app.settings.sso.samlHeading": "SAML 2.0 ühekordne sisselogimine",
@@ -938,10 +949,12 @@ export const et: Dictionary = {
   "app.settings.sso.customerTitle": "Kliendiorganisatsioonide SSO",
   "app.settings.sso.customerSubtitle":
     "Iga kliendiorganisatsioon ühendab portaalist oma identiteedipakkuja. Siin jälgite kogu tervikpilti.",
-  "app.settings.sso.customerLockedTitle": "Kliendiorganisatsioonide SSO on ainult Enterprise paketis",
+  "app.settings.sso.customerLockedTitle":
+    "Kliendiorganisatsioonide SSO kuulub väljaandesse Enterprise Edition",
   "app.settings.sso.customerLockedText":
     "Laske igal kliendiorganisatsioonil ühendada oma identiteedipakkuja (SAML või OIDC) ja jälgige kogu tervikpilti sellelt ekraanilt.",
-  "app.settings.sso.customerEnterpriseOnly": "Kliendiorganisatsioonide SSO on ainult Enterprise paketis.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "Kliendiorganisatsioonide SSO kuulub väljaandesse Enterprise Edition.",
   "app.settings.sso.statusActive": "Aktiivne",
   "app.settings.sso.statusPending": "Kinnitamata",
   "app.settings.sso.statusError": "Viga",
@@ -1099,7 +1112,7 @@ export const et: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Teadmusbaas on avaldatud",
   "app.settings.portal.kbPublishedHint": "Avaldatud artiklid on nähtavad ilma sisselogimiseta.",
   "app.settings.portal.hidePoweredByLabel": "Peida „Teenuse pakub Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Saadaval alates Enterprise paketist.",
+  "app.settings.portal.hidePoweredByHint": "Saadaval väljaandega Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Teadmusbaasi nähtavus",
   "app.settings.portal.kbVisibilityPublic": "Avalik",
   "app.settings.portal.kbVisibilityAuthenticated": "Sisselogimisel",
@@ -1159,8 +1172,8 @@ export const et: Dictionary = {
   "app.settings.workspace.generalTitle": "Üldine ja bränding",
   "app.settings.workspace.generalSubtitle":
     "Tööruumi identiteet, keel, ajavöönd ja piletite numeratsioon.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "Kustutamine keelatud — ajastatud kustutamine on saadaval pilveteenuses.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Kustutamine keelatud — ajastatud kustutamine vajab control plane'i.",
   "app.settings.workspace.generalIdentity": "Identiteet",
   "app.settings.workspace.generalNameLabel": "Tööruumi nimi",
   "app.settings.workspace.generalLogoLabel": "Logo",
@@ -1226,7 +1239,7 @@ export const et: Dictionary = {
     other: "{count} / {quota} kohta kasutusel — piir on täis",
   },
   "app.settings.workspace.seatsAddHint": "Uute agentide kutsumiseks lisage kohti.",
-  "app.settings.workspace.seatsFreeHint": "Viewer-rollid on tasuta ja piiramatud.",
+  "app.settings.workspace.seatsFreeHint": "Viewer-rollid ei võta kohta ja on piiramatud.",
   "app.settings.workspace.seatsAddAction": "Lisa kohti",
   "app.settings.workspace.seatsManage": "Halda",
   "app.settings.workspace.seatLimitReached":
@@ -1307,8 +1320,8 @@ export const et: Dictionary = {
   "app.settings.workspace.save": "Salvesta",
   "app.settings.workspace.billingTitle": "Tellimus ja arveldus",
   "app.settings.workspace.billingSubtitle":
-    "Pakett, kohad, kvoodid, makseviis ja arvete ajalugu.",
-  "app.settings.workspace.selfHosted": "ISEMAJUTATUD",
+    "Tellimus, kohad, kvoodid, makseviis ja arvete ajalugu.",
+  "app.settings.workspace.subscriptionNone": "Tellimus puudub",
   "app.settings.workspace.trialBadge": "PROOV",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
@@ -1319,10 +1332,9 @@ export const et: Dictionary = {
     one: "kuus · {count} koht sisaldub",
     other: "kuus · {count} kohta sisaldub",
   },
-  "app.settings.workspace.billingNoDue":
-    "Selles instantsis makseid ei ole — arveldust hallatakse pilvepaketis.",
-  "app.settings.workspace.cloudOnly": "Saadaval pilvepaketis",
-  "app.settings.workspace.changePlan": "Muuda paketti",
+  "app.settings.workspace.billingNoDue": "Praegu ei ole makseid.",
+  "app.settings.workspace.requiresControlPlane": "Vajab control plane'i",
+  "app.settings.workspace.changeSubscription": "Muuda tellimust",
   "app.settings.workspace.manageSeats": "Halda kohti",
   "app.settings.workspace.usageTitle": "Selle kuu tarbimine",
   "app.settings.workspace.quotaSeats": "Kohad",
@@ -1334,7 +1346,7 @@ export const et: Dictionary = {
   "app.settings.workspace.colNumber": "Number",
   "app.settings.workspace.colPeriod": "Periood",
   "app.settings.workspace.colAmount": "Summa",
-  "app.settings.workspace.invoicesEmpty": "Arveid ei ole — arved ilmuvad siia pilvepaketis.",
+  "app.settings.workspace.invoicesEmpty": "Arveid veel ei ole.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Salvestatud",
@@ -1406,21 +1418,21 @@ export const et: Dictionary = {
   "app.settings.rules.typeFile": "Fail",
   "app.settings.rules.typeSelectLong": "Rippmenüü",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Il vivait dans lib/rule-labels.ts, en français : l'écran des automatisations
-     restait donc français quelle que soit la langue du workspace. Les statuts,
-     priorités et canaux ne sont PAS repris ici — ils viennent des tables
-     partagées (app.status.*, app.priority.*, app.channel.*), et les libellés
-     condField* ci-dessous s'accordent avec elles. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     It lived in lib/rule-labels.ts, in French: the automations screen
+     therefore stayed French whatever the workspace language. Statuses,
+     priorities and channels are NOT repeated here — they come from the shared
+     tables (app.status.*, app.priority.*, app.channel.*), and the condField*
+     labels below agree with them. */
 
-  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Texte” is typeText, above. */
   "app.settings.rules.typeSelect": "Loend",
   "app.settings.rules.typeMultiSelect": "Mitmikvalik",
   "app.settings.rules.typeDate": "Kuupäev",
   "app.settings.rules.typeNumber": "Arv",
   "app.settings.rules.typeCheckbox": "Märkeruut",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Sündmus",
   "app.settings.rules.condFieldStatus": "Olek",
   "app.settings.rules.condFieldPriority": "Prioriteet",
@@ -1434,7 +1446,7 @@ export const et: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Tunnid loomisest",
   "app.settings.rules.condFieldHoursUpdated": "Tunnid uuendamisest",
 
-  /* Opérateurs. Les deux derniers restent des symboles en estonien. */
+  /* Operators. The last two stay symbols in Estonian. */
   "app.settings.rules.opIs": "on",
   "app.settings.rules.opIsNot": "ei ole",
   "app.settings.rules.opContains": "sisaldab",
@@ -1444,13 +1456,13 @@ export const et: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Pilet loodud",
   "app.settings.rules.eventTicketUpdated": "Pilet uuendatud",
   "app.settings.rules.eventMessageCreated": "Sõnum saabunud",
 
-  /* Actions, telles que le menu du builder les nomme : impératif, comme
-     « Määra käsitleja » de l'inbox. */
+  /* Actions, as the builder's menu names them: imperative, like the inbox's
+     “Määra käsitleja”. */
   "app.settings.rules.actSetStatus": "Määra olek",
   "app.settings.rules.actSetPriority": "Määra prioriteet",
   "app.settings.rules.actAssignUser": "Määra agendile",
@@ -1459,8 +1471,8 @@ export const et: Dictionary = {
   "app.settings.rules.actAddTags": "Lisa sildid",
   "app.settings.rules.actEmailContact": "Saada kontaktile e-kiri",
 
-  /* Résumé d'une règle, en une ligne de liste : les bribes s'enchaînent, sans
-     majuscule initiale ni point final. L'estonien garde l'ordre « kui … → … ». */
+  /* One-line rule summary: the fragments run on, with no initial capital
+     and no final full stop. Estonian keeps the “kui … → …” order. */
   "app.settings.rules.summaryPattern": "Kui {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "ja",
   "app.settings.rules.summaryAlways": "alati",
@@ -1472,22 +1484,22 @@ export const et: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "määramata",
   "app.settings.rules.summaryAssigned": "määratud",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : voir
-     formatDurationTokens, ils ne se traduisent pas. « juba … » reprend
-     since.hours du portail, où « depuis 3 h » se dit déjà « juba 3 h ». */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): see
+     formatDurationTokens, they are not translated. “juba …” echoes the
+     portal's since.hours, where “depuis 3 h” is already said “juba 3 h”. */
   "app.settings.rules.summarySince": "juba {duration}",
   "app.settings.rules.summarySetStatus": "määra olekuks {value}",
   "app.settings.rules.summarySetPriority": "määra prioriteediks {value}",
   "app.settings.rules.summaryAssignTeam": "määra tiimile {team}",
-  /* Repli quand l'équipe n'est plus connue : « une équipe » se dirait
-     « ühele tiimile » et doublerait le mot déjà présent dans le gabarit. */
+  /* Fallback when the team is no longer known: “a team” would be “ühele
+     tiimile” and would double the word already present in the template. */
   "app.settings.rules.summaryAnyTeam": "(täpsustamata)",
   "app.settings.rules.summaryAssignUser": "määra agendile",
   "app.settings.rules.summaryRoundRobin": "määra järgmisele agendile",
   "app.settings.rules.summaryAddTags": "lisa {tags}",
   "app.settings.rules.summaryEmailContact": "saada kontaktile e-kiri",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Olek → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioriteet → {value}",
   "app.settings.rules.macroSummaryTeam": "Tiim → {team}",
@@ -1597,7 +1609,7 @@ export const et: Dictionary = {
   "app.settings.dev.auditTitle": "Auditilogi",
   "app.settings.dev.auditSubtitle":
     "Kõigi haldustoimingute täielik logi. Säilitusaeg 2 aastat.",
-  "app.settings.dev.auditLockedTitle": "Auditilogi on ainult Enterprise paketis",
+  "app.settings.dev.auditLockedTitle": "Auditilogi kuulub väljaandesse Enterprise Edition",
   "app.settings.dev.auditLockedText":
     "Hoidke iga haldustoimingu jälge 2 aastat, koos enne/pärast võrdlusega ja CSV ekspordiga.",
   "app.settings.dev.filterActorAll": "Tegija: kõik",
@@ -1619,9 +1631,9 @@ export const et: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Autoriseerimata",
   "app.settings.dev.exportForbidden": "Ainult rollidele Owner ja Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Auditilogi on ainult Enterprise paketis.",
+  "app.settings.dev.exportEnterpriseOnly": "Auditilogi kuulub väljaandesse Enterprise Edition.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Tööruum",
   "app.settingsNav.itemGeneral": "Üldine",
   "app.settingsNav.itemTeam": "Agendid ja tiimid",
@@ -1655,7 +1667,7 @@ export const et: Dictionary = {
   "app.settingsNav.copied": "Kopeeritud",
   "app.settingsNav.copy": "Kopeeri",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Uus",
   "app.status.open": "Avatud",
   "app.status.waiting": "Ootel",
@@ -1676,7 +1688,7 @@ export const et: Dictionary = {
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Minu piletid",
   "app.views.unassigned": "Määramata",
   "app.views.breaching": "Peagi hilinemas",
@@ -1684,7 +1696,7 @@ export const et: Dictionary = {
   "app.views.urgent": "Kiireloomulised sel nädalal",
   "app.views.escalation": "Eskaleerimised",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Nimeta ümber",
   "app.kb.renameSave": "Salvesta",
   "app.kb.deleteCategory": "Kustuta kategooria",
@@ -1694,7 +1706,7 @@ export const et: Dictionary = {
     other: "Selles kategoorias on veel {count} elementi. Enne kustutamist teisaldage need mujale.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-post",
   "app.login.emailPlaceholder": "teie@ettevote.ee",
   "app.login.password": "Parool",
@@ -1722,10 +1734,10 @@ export const et: Dictionary = {
   "app.login.providerMissing": "Seda teenusepakkujat pole selles instantsis seadistatud.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Le premier écran qu'un nouveau workspace rencontre. Quatre libellés viennent
-     d'ailleurs : le titre du portail dans son propre aperçu (home.title), le nom
-     du workspace et la couleur d'accent (les mêmes contrôles qu'en ST-01), et
-     les rôles Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+  /* The first screen a new workspace meets. Four labels come from
+     elsewhere: the portal title in its own preview (home.title), the workspace
+     name and the accent colour (the same controls as in ST-01), and the
+     Owner / Admin / Agent / Viewer roles, which are not translated. */
 
   "app.onboarding.asideTitle": "Seadistamine",
   "app.onboarding.asideFooter": "Kõiki neid seadeid saate hiljem seadetes muuta.",
@@ -1763,7 +1775,7 @@ export const et: Dictionary = {
 
   "app.onboarding.teamTitle": "Kutsuge oma tiim",
   "app.onboarding.teamBody":
-    "Kutsuge agendid kohe või jagage kutselinki. Viewer-kohad on tasuta.",
+    "Kutsuge agendid kohe või jagage kutselinki. Viewer-rollid ei võta kohta.",
   "app.onboarding.invitePlaceholder": "kolleeg@ettevote.ee",
   "app.onboarding.addRow": "+ Lisa rida",
   "app.onboarding.sendInvites": "Saada kutsed",
@@ -1771,8 +1783,8 @@ export const et: Dictionary = {
   "app.onboarding.testTitle": "Saatke esimene pilet",
   "app.onboarding.testBody": "Kontrollige kogu ahelat, enne kui avate teenuse klientidele.",
   "app.onboarding.readyTitle": "Teie tööruum on valmis",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée autour
-     du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split around
+     the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Testpileti loomiseks saatke e-kiri aadressile {address}.",
   "app.onboarding.openInbox": "Ava sisendkast",
 
@@ -1783,34 +1795,44 @@ export const et: Dictionary = {
   "app.onboarding.checklistSla": "SLA-poliitika kontrollitud",
 
 
-/* ===================== Reste du français codé en dur ===================== */
+/* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
-     « toutes / au moins une » : en estonien le complément part AVEC le
-     sélecteur, faute de quoi « vähemalt ühele » se heurterait à un pluriel figé
-     (« kõigile tingimustele », mais « vähemalt ühele tingimusele »). */
+  /* ST-05 — the condition group header. The sentence wraps an
+     “all / at least one” selector: in Estonian the complement travels WITH the
+     selector, otherwise “vähemalt ühele” would clash with a frozen plural
+     (“kõigile tingimustele”, but “vähemalt ühele tingimusele”). */
   "app.settings.rules.matchIf": "KUI",
   "app.settings.rules.matchAllPattern": "Vastab {mode}",
   "app.settings.rules.matchAnyPattern": "Vastab {mode}",
   "app.settings.rules.matchAll": "kõigile tingimustele",
   "app.settings.rules.matchAny": "vähemalt ühele tingimusele",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
-  "app.settings.workspace.planFree": "Free pakett",
-  "app.settings.workspace.planTeam": "Team pakett",
-  "app.settings.workspace.planEnterprise": "Enterprise pakett",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "SIIS",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Testi olemasoleval piletil",
+  "app.settings.rules.testRunning": "Testimine…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Eemalda",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "E-kirja sisu — muutujad: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). Attention : la VALEUR enregistrée en base reste la
-     chaîne française — seul l'affichage est traduit. */
+  /* Ticket types (AG-05). Careful: the VALUE stored in the database stays
+     the French string — only the display is translated. */
   "app.ticket.typeQuestion": "Küsimus",
   "app.ticket.typeIncident": "Intsident",
   "app.ticket.typeTask": "Ülesanne",
   "app.ticket.typeOther": "Muu",
 
-  /* AG-09 — export CSV des rapports. Les entêtes reprennent les KPI de l'écran ;
-     « s » est l'abréviation SI de la seconde en estonien, comme « min » et
-     « ms » ailleurs dans ce fichier. */
+  /* AG-09 — CSV export of the reports. The headers echo the screen's KPIs;
+     “s” is the SI abbreviation for the second in Estonian, like “min” and
+     “ms” elsewhere in this file. */
   "app.reports.csvIndicator": "Näitaja",
   "app.reports.csvCurrentPeriod": "Praegune periood",
   "app.reports.csvPreviousPeriod": "Eelmine periood",
@@ -1825,8 +1847,8 @@ export const et: Dictionary = {
   "app.reports.csvResolvedShort": "Lahendatud",
   "app.reports.csvAgent": "Agent",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Uus artikkel",
   "app.kb.fromTicketSymptomHeading": "Sümptom",
   "app.kb.fromTicketSymptomPlaceholder": "[Kirjeldage, mida klient näeb.]",
@@ -1836,8 +1858,8 @@ export const et: Dictionary = {
   "app.kb.fromTicketMissingRequest": "kliendi esialgne päring",
   "app.kb.fromTicketMissingAnswer": "agendi vastus",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Samm-sammuline juhend",
   "app.kb.tplProcedureHint": "Nummerdatud sammude jada koos oodatava tulemusega.",
   "app.kb.tplProcedureTitle": "Kuidas [teha toiming]",

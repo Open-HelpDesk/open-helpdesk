@@ -25,10 +25,10 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       password: String(form.get("password")),
     });
     if (error) {
-      // Un refus de quota n'est pas un mauvais mot de passe. Better Auth plafonne
-      // /sign-in à quelques appels par dizaine de secondes ; les confondre
-      // reprochait à un agent légitime une faute qu'il n'avait pas commise, et
-      // l'invitait à corriger un mot de passe correct au lieu de patienter.
+      // A rate-limit refusal is not a wrong password. Better Auth caps /sign-in
+      // at a few calls per ten seconds; conflating the two blamed a legitimate
+      // agent for a fault they had not committed, and invited them to fix a
+      // correct password instead of waiting.
       const rateLimited = error.status === 429;
       setError(rateLimited ? t("app.login.rateLimited") : t("app.login.badCredentials"));
       setBadCredentials(!rateLimited);
@@ -58,11 +58,11 @@ export function LoginForm({ initialError }: { initialError?: string }) {
   } as const;
 
   return (
-    // `method="post"` alors que la soumission est interceptée en JavaScript : c'est
-    // le filet pour la fenêtre d'avant l'hydratation. Sans lui, un formulaire sans
-    // méthode part en GET, et l'email comme le mot de passe se retrouvent en
-    // paramètres d'URL — donc dans la barre d'adresse, l'historique et les
-    // journaux d'accès du serveur.
+    // `method="post"` even though submission is intercepted in JavaScript: this
+    // is the safety net for the window before hydration. Without it, a form with
+    // no method goes out as GET, and both the email and the password end up in
+    // URL parameters — hence in the address bar, the history and the server
+    // access logs.
     <form onSubmit={onSubmit} method="post" className="flex flex-col gap-3">
       <label className="flex flex-col gap-1 text-[13px] font-medium">
         {t("app.login.email")}

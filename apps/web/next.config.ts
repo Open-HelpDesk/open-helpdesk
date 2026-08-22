@@ -3,8 +3,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Image Docker : `NEXT_OUTPUT=standalone pnpm build` produit .next/standalone
-  // (serveur autonome tracé sur tout le monorepo). Sans la variable, build
-  // classique — `next start` et la suite smoke restent inchangés.
+  // (a standalone server traced over the whole monorepo). Without the variable,
+  // a classic build — `next start` and the smoke suite stay unchanged.
   output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   outputFileTracingRoot: path.resolve(__dirname, "../.."),
   transpilePackages: [
@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
     "@openhelpdesk/mail",
     "@openhelpdesk/rules",
   ],
-  // postgres.js et better-auth restent côté Node.
+  // postgres.js and better-auth stay on the Node side.
   serverExternalPackages: ["postgres", "nodemailer", "bullmq", "ioredis"],
 };
 

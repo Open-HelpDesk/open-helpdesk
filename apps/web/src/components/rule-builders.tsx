@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * Builders conditions / actions (ST-05, réutilisés par ST-07 et les vues) :
- * lignes champ-opérateur-valeur en grid `1fr 140px 1fr 30px` (design ST-05),
- * groupes « toutes » / « au moins une ». L'état est sérialisé en JSON dans un
- * input caché lu par la server action. Mode contrôlé optionnel (rows/onChange)
- * pour l'éditeur ST-05 qui doit lire l'état courant (« Tester sur un ticket »).
+ * Condition / action builders (ST-05, reused by ST-07 and the saved views):
+ * field-operator-value rows on a `1fr 140px 1fr 30px` grid (ST-05 design),
+ * "all" / "any" groups. The state is serialized as JSON in a hidden input read
+ * by the server action. Optional controlled mode (rows/onChange) for the ST-05
+ * editor, which has to read the current state ("Test on a ticket").
  */
 import { useState } from "react";
 import { useT } from "@/i18n/client";
@@ -71,9 +71,9 @@ function ConditionRow({
         className={`min-w-0 ${FIELD}`}
         style={inputStyle}
       >
-        {Object.entries(FIELD_KEYS).map(([v, cle]) => (
+        {Object.entries(FIELD_KEYS).map(([v, key]) => (
           <option key={v} value={v}>
-            {t(cle)}
+            {t(key)}
           </option>
         ))}
       </select>
@@ -124,7 +124,7 @@ function ConditionRow({
       <button
         type="button"
         onClick={onRemove}
-        title="Retirer"
+        title={t("app.settings.rules.removeRow")}
         className="justify-self-center"
         style={{ color: "var(--ink-3)" }}
       >
@@ -145,10 +145,10 @@ export function ConditionsBuilder({
   name: string;
   label?: string;
   initial: Condition[];
-  /** Mode contrôlé (ST-05) : l'état vit chez le parent. */
+  /** Controlled mode (ST-05): the state lives in the parent. */
   rows?: Condition[];
   onChange?: (rows: Condition[]) => void;
-  /** Sans cadre fieldset — utilisé dans les blocs SI/ALORS de l'éditeur ST-05. */
+  /** Without the fieldset frame — used in the IF/THEN blocks of the ST-05 editor. */
   bare?: boolean;
 }) {
   const t = useT();
@@ -249,9 +249,9 @@ export function ActionsBuilder({
               className={FIELD}
               style={inputStyle}
             >
-              {Object.entries(ACTION_KEYS).map(([v, cle]) => (
+              {Object.entries(ACTION_KEYS).map(([v, key]) => (
                 <option key={v} value={v}>
-                  {t(cle)}
+                  {t(key)}
                 </option>
               ))}
             </select>
@@ -326,7 +326,7 @@ export function ActionsBuilder({
             {a.type === "email_contact" && (
               <textarea
                 rows={3}
-                placeholder="Corps de l'email — variables : {{contact.name}}, {{ticket.number}}, {{ticket.subject}}"
+                placeholder={t("app.settings.rules.emailBodyPlaceholder")}
                 value={String(a.value ?? "")}
                 onChange={(e) => update(i, { ...a, value: e.target.value })}
                 className={`w-full max-w-md ${FIELD}`}
@@ -336,7 +336,7 @@ export function ActionsBuilder({
             <button
               type="button"
               onClick={() => setRows(rows.filter((_, j) => j !== i))}
-              title="Retirer"
+              title={t("app.settings.rules.removeRow")}
               className="mt-2"
               style={{ color: "var(--ink-3)" }}
             >

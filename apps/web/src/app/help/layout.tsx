@@ -6,21 +6,21 @@ import { getT } from "@/i18n/server";
 import "./portal.css";
 
 /**
- * Shell minimal du portail client (PT) : palette maquette via .surface-portal,
- * accent du TENANT substitué à l'accent produit (tenant.branding.accentColor),
- * et dictionnaire de la langue du tenant posé pour les composants clients.
- * Le chrome (header/footer) vit dans (portal)/layout.tsx — /help/login et
- * /help/auth restent sans chrome (PT-07).
+ * Minimal shell of the customer portal (PT): mockup palette via .surface-portal,
+ * the TENANT accent substituted for the product accent (tenant.branding.accentColor),
+ * and the dictionary of the tenant's language set up for client components.
+ * The chrome (header/footer) lives in (portal)/layout.tsx — /help/login and
+ * /help/auth stay chrome-free (PT-07).
  */
 
-/** Accent par défaut du design system : dans ce cas on laisse les tokens
- * thème-conscients de .surface-portal faire foi (clair ET sombre). */
+/** Design system default accent: in that case we let the theme-aware tokens
+ * of .surface-portal prevail (light AND dark). */
 const DEFAULT_ACCENT = "#0b5f46";
 
 export default async function HelpLayout({ children }: { children: React.ReactNode }) {
   const tenant = await getPortalTenant();
-  // ST-09 : « Portail client activé ». Coupé, /help n'existe plus — connexion et
-  // suivi de demandes compris. Le réglage était enregistré sans être lu.
+  // ST-09: "Customer portal enabled". Turned off, /help no longer exists — sign-in
+  // and request tracking included. The setting used to be saved without being read.
   const { portalEnabled } = await getPortalSettings();
   if (!portalEnabled) notFound();
   const t = await getT();
@@ -35,8 +35,8 @@ export default async function HelpLayout({ children }: { children: React.ReactNo
         lineHeight: 1.55,
         background: "var(--canvas)",
         color: "var(--ink)",
-        // L'accent du tenant emporte aussi le dégradé des boutons pleins : sinon
-        // une marque personnalisée garderait le vert du design system en aplat.
+        // The tenant accent also carries the gradient of solid buttons: otherwise
+        // a custom brand would keep the design system green as a flat fill.
         ...(custom
           ? ({
               "--acc": accent,

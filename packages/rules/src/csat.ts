@@ -1,6 +1,6 @@
 /**
- * CSAT (ST-08) : enquête envoyée au demandeur à la résolution du ticket, une seule
- * fois par ticket (csat_sent_at). Liens signés HMAC — aucun état côté client.
+ * CSAT (ST-08): survey sent to the requester when the ticket is resolved, only
+ * once per ticket (csat_sent_at). HMAC-signed links — no state on the client side.
  */
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { contacts, db, tenants, tickets } from "@openhelpdesk/db";
@@ -23,7 +23,7 @@ export function verifyCsatSignature(ticketId: string, score: string, sig: string
 
 export type CsatConfig = { enabled?: boolean; question?: string };
 
-/** Envoie l'enquête si elle est activée et pas déjà partie pour ce ticket. */
+/** Sends the survey if it is enabled and has not already gone out for this ticket. */
 export async function maybeSendCsat(tenantId: string, ticketId: string): Promise<boolean> {
   const [ticket] = await db
     .select()
@@ -41,8 +41,12 @@ export async function maybeSendCsat(tenantId: string, ticketId: string): Promise
   const base = `${PROTOCOL}://${tenant.slug}.${BASE_DOMAIN}/api/csat`;
   const link = (score: "good" | "bad") =>
     `${base}?t=${ticket.id}&s=${score}&sig=${csatSignature(ticket.id, score)}`;
-  const question =
-    config.question ?? "Comment évaluez-vous la réponse apportée à votre demande ?";
+  // System emails sent from the rules engine cannot reach the dictionaries:
+  // this package has neither the request context nor the app's i18n. The
+  // wording therefore stays in the source language, and the question is the
+  // tenant's own as soon as ST-08 is configured. Localising these emails means
+  // moving their templating to a layer that knows the tenant locale.
+  const question = config.question ?? "How would you rate the answer to your request?";
 
   try {
     await sendTenantEmail({
@@ -50,17 +54,17 @@ export async function maybeSendCsat(tenantId: string, ticketId: string): Promise
       to: requester.email,
       kind: "csat",
       ticketId: ticket.id,
-      subject: `Votre avis sur la demande #${ticket.number}`,
+      subject: `Your feedback on request #${ticket.number}`,
       text:
-        `Bonjour${requester.name ? ` ${requester.name}` : ""},\n\n` +
-        `Votre demande « ${ticket.subject} » (#${ticket.number}) a été résolue.\n\n` +
+        `Hello${requester.name ? ` ${requester.name}` : ""},\n\n` +
+        `Your request "${ticket.subject}" (#${ticket.number}) has been resolved.\n\n` +
         `${question}\n\n` +
-        `Bonne réponse : ${link("good")}\n` +
-        `Mauvaise réponse : ${link("bad")}\n\n` +
+        `Good answer: ${link("good")}\n` +
+        `Poor answer: ${link("bad")}\n\n` +
         `${tenant.name}`,
     });
   } catch (err) {
-    console.error("[csat] échec d'envoi :", err);
+    console.error("[csat] send failed:", err);
     return false;
   }
 

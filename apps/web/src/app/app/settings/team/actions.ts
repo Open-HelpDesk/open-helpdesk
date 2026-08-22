@@ -9,7 +9,7 @@ import { sendAgentInvite } from "@/lib/agent-invite";
 import { requireManager } from "../guard";
 
 
-/** ST-02 — Invitation multi-emails (séparés par des virgules) avec un rôle commun. */
+/** ST-02 — Multi-email invitation (comma-separated) with a shared role. */
 export async function inviteAgents(formData: FormData) {
   const { tenant } = await requireManager();
   const emailsRaw = String(formData.get("emails") ?? "");
@@ -25,9 +25,9 @@ export async function inviteAgents(formData: FormData) {
     .filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
   if (emails.length === 0) return;
 
-  // Quota de sièges (cloud) : les invitations payantes ne dépassent pas la limite
-  // du plan. Les emails déjà connus ne consomment rien — l'insert ci-dessous est
-  // en onConflictDoNothing.
+  // Seat quota (cloud): paid invitations do not exceed the plan limit. Emails
+  // that are already known consume nothing — the insert below runs with
+  // onConflictDoNothing.
   const limit = seatLimitFor(tenant);
   if (limit !== null && safeRole !== "viewer") {
     const existing = await db
@@ -48,8 +48,8 @@ export async function inviteAgents(formData: FormData) {
       .filter(Boolean)
       .map((p) => p[0]!.toUpperCase() + p.slice(1))
       .join(" ");
-    // returning() ne rend que les lignes réellement insérées : une adresse
-    // déjà membre ne reçoit pas d'email.
+    // returning() only yields the rows actually inserted: an address that is
+    // already a member gets no email.
     const inserted = await db
       .insert(users)
       .values({ tenantId: tenant.id, email, name: name || email, role: safeRole, status: "invited" })
@@ -68,9 +68,9 @@ export async function updateAgentRole(formData: FormData) {
   const { tenant, agent: me } = await requireManager();
   const userId = String(formData.get("userId"));
   const role = String(formData.get("role"));
-  if (userId === me.id) return; // on ne modifie pas son propre rôle
+  if (userId === me.id) return; // you do not change your own role
   if (!["owner", "admin", "agent", "viewer"].includes(role)) return;
-  if (role === "owner" && me.role !== "owner") return; // seul un owner nomme un owner
+  if (role === "owner" && me.role !== "owner") return; // only an owner appoints an owner
 
   const [target] = await db
     .select()
@@ -79,7 +79,7 @@ export async function updateAgentRole(formData: FormData) {
   if (!target) return;
   if (target.role === "owner" && me.role !== "owner") return;
 
-  // Passage viewer → rôle payant : consomme un siège (cloud).
+  // Moving from viewer → a paid role: consumes a seat (cloud).
   if (target.role === "viewer" && role !== "viewer" && target.status !== "disabled") {
     const limit = seatLimitFor(tenant);
     if (limit !== null && (await occupiedSeats(tenant.id)) >= limit) {
@@ -94,11 +94,11 @@ export async function updateAgentRole(formData: FormData) {
   revalidatePath("/app/settings/team");
 }
 
-/** Désactivation : les tickets ouverts de l'agent repassent en non-assignés (ST-02). */
+/** Deactivation: the agent's open tickets go back to unassigned (ST-02). */
 export async function toggleAgentActive(formData: FormData) {
   const { tenant, agent: me } = await requireManager();
   const userId = String(formData.get("userId"));
-  if (userId === me.id) return; // on ne se désactive pas soi-même
+  if (userId === me.id) return; // you do not deactivate yourself
 
   const [target] = await db
     .select()
@@ -108,7 +108,7 @@ export async function toggleAgentActive(formData: FormData) {
   if (target.role === "owner" && me.role !== "owner") return;
 
   if (target.status === "disabled") {
-    // Réactivation : le siège doit être disponible (cloud).
+    // Reactivation: the seat must be available (cloud).
     const limit = seatLimitFor(tenant);
     if (limit !== null && target.role !== "viewer" && (await occupiedSeats(tenant.id)) >= limit) {
       redirect("/app/settings/team?error=seats");
@@ -130,7 +130,7 @@ export async function toggleAgentActive(formData: FormData) {
   revalidatePath("/app/settings/team");
 }
 
-/** Renvoi d'invitation : nouveau jeton, nouvel email. */
+/** Resending an invitation: new token, new email. */
 export async function resendInvite(formData: FormData) {
   const { tenant } = await requireManager();
   const userId = String(formData.get("userId"));
@@ -143,7 +143,7 @@ export async function resendInvite(formData: FormData) {
   revalidatePath("/app/settings/team");
 }
 
-/* ---------- Onglet Équipes — CRUD teams / teamMembers ---------- */
+/* ---------- Teams tab — CRUD teams / teamMembers ---------- */
 
 function memberIdsOf(formData: FormData): string[] {
   return formData.getAll("memberIds").map(String).filter(Boolean);
@@ -196,7 +196,7 @@ export async function updateTeam(formData: FormData) {
     .set({ name, businessHoursId: bhId || null })
     .where(eq(teams.id, team.id));
 
-  // Remplace la composition (membres cochés dans le drawer).
+  // Replaces the composition (members checked in the drawer).
   await db.delete(teamMembers).where(eq(teamMembers.teamId, team.id));
   const memberIds = memberIdsOf(formData);
   if (memberIds.length > 0) {
@@ -225,7 +225,7 @@ export async function deleteTeam(formData: FormData) {
     .where(and(eq(teams.tenantId, tenant.id), eq(teams.id, teamId)));
   if (!team) return;
 
-  // Détache les références non-cascade avant suppression.
+  // Detaches the non-cascading references before deletion.
   await db
     .update(tickets)
     .set({ teamId: null })

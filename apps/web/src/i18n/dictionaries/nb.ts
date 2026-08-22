@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const nb: Dictionary = {
   "chrome.defaultName": "Hjelpesenter",
@@ -148,6 +148,14 @@ export const nb: Dictionary = {
   "login.footer":
     "Ingen henvendelser ennå? Kontoen din opprettes automatisk ved den første.",
 
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Innloggingslenken din — {workspace}",
+  "login.emailBody":
+    "Hei,\n\nKlikk på denne lenken for å se henvendelsene dine (gyldig i 15 minutter):\n{url}\n\nHvis du ikke har bedt om dette, kan du se bort fra denne e-posten.\n\n{workspace}",
+
   "org.intro": {
     one: "Du er administrator for denne organisasjonen. Det du stiller inn her, gjelder personen hos {org} som bruker støtten fra {tenant}.",
     other:
@@ -256,7 +264,7 @@ export const nb: Dictionary = {
   "csatPage.doneTitle": "Takk!",
   "csatPage.doneBody": "Kommentaren din er sendt videre til teamet.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Arbeidsområde",
   "app.settingsNav.itemGeneral": "Generelt",
   "app.settingsNav.itemTeam": "Agenter og team",
@@ -289,7 +297,7 @@ export const nb: Dictionary = {
   "app.settingsNav.copied": "Kopiert",
   "app.settingsNav.copy": "Kopier",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
   "app.shell.inbox": "Innboks",
   "app.shell.search": "Søk (⌘K)",
   "app.shell.contacts": "Kontakter",
@@ -300,7 +308,7 @@ export const nb: Dictionary = {
   "app.shell.suspendedTitle": "Dette workspacet er suspendert",
   "app.shell.suspendedText": "Kontakt administratoren din for å gjenopprette tilgangen.",
   "app.shell.suspendedOwnerText":
-    "Velg en plan eller oppdater betalingsmetoden din for å reaktivere workspacet.",
+    "Gjør opp abonnementet eller oppdater betalingsmetoden din for å reaktivere workspacet.",
   "app.shell.suspendedBillingCta": "Åpne Abonnement & fakturering",
   "app.shell.myTickets": "Mine henvendelser",
   "app.shell.newTicket": "Ny henvendelse",
@@ -636,7 +644,7 @@ export const nb: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. svar",
   "app.reports.customReports": "Egendefinerte rapporter",
-  "app.reports.enterprisePlanBadge": "ENTERPRISE-PLAN",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Finn ut mer",
   "app.reports.chartDailyAria": "{labelA} og {labelB} per dag",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -654,8 +662,11 @@ export const nb: Dictionary = {
   "app.settings.shell.saved": "✓ Lagret",
   "app.settings.shell.cancel": "Avbryt",
   "app.settings.shell.save": "Lagre",
-  "app.settings.shell.planEnterprise": "ENTERPRISE-PLAN",
-  "app.settings.shell.upgradeToEnterprise": "Oppgrader til Enterprise-planen",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Lukk",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Administrer abonnementet",
   "app.settings.shell.eeSelfHostedTitle": "Funksjon i Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Denne funksjonen omfattes av den kommersielle lisensen (mappen ee/ i repositoriet) og inngår ikke i den selvhostede open source-utgaven.",
@@ -800,9 +811,9 @@ export const nb: Dictionary = {
   "app.settings.email.sendFailed": "Kunne ikke sende",
   "app.settings.sso.agentTitle": "Agent-SSO",
   "app.settings.sso.agentSubtitle": "Enkel pålogging med SAML 2.0 og SCIM-provisjonering for supportteamet ditt.",
-  "app.settings.sso.agentLockedTitle": "Agent-SSO er forbeholdt Enterprise-planen",
+  "app.settings.sso.agentLockedTitle": "Agent-SSO er en del av Enterprise Edition",
   "app.settings.sso.agentLockedText": "Koble til identitetsleverandøren din via SAML 2.0, provisjoner agentene dine med SCIM og krev enkel pålogging for hele teamet.",
-  "app.settings.sso.agentEnterpriseOnly": "Agent-SSO er forbeholdt Enterprise-planen.",
+  "app.settings.sso.agentEnterpriseOnly": "Agent-SSO er en del av Enterprise Edition.",
   "app.settings.sso.idpOther": "Annen (generisk SAML)",
   "app.settings.sso.samlToggleLabel": "Aktiver enkel pålogging med SAML 2.0",
   "app.settings.sso.samlHeading": "Enkel pålogging med SAML 2.0",
@@ -877,9 +888,11 @@ export const nb: Dictionary = {
   "app.settings.sso.addMapping": "+ Legg til en kobling",
   "app.settings.sso.customerTitle": "SSO for kundeorganisasjoner",
   "app.settings.sso.customerSubtitle": "Hver kundeorganisasjon kobler til sin egen identitetsleverandør fra portalen. Her har du oversikt over hele porteføljen.",
-  "app.settings.sso.customerLockedTitle": "SSO for kundeorganisasjoner er forbeholdt Enterprise-planen",
+  "app.settings.sso.customerLockedTitle":
+    "SSO for kundeorganisasjoner er en del av Enterprise Edition",
   "app.settings.sso.customerLockedText": "La hver kundeorganisasjon koble til sin egen identitetsleverandør (SAML eller OIDC), og følg med på hele porteføljen fra denne skjermen.",
-  "app.settings.sso.customerEnterpriseOnly": "SSO for kundeorganisasjoner er forbeholdt Enterprise-planen.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "SSO for kundeorganisasjoner er en del av Enterprise Edition.",
   "app.settings.sso.statusActive": "Aktiv",
   "app.settings.sso.statusPending": "Må verifiseres",
   "app.settings.sso.statusError": "Feil",
@@ -1014,7 +1027,7 @@ export const nb: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Kunnskapsbase publisert",
   "app.settings.portal.kbPublishedHint": "Publiserte artikler er synlige uten innlogging.",
   "app.settings.portal.hidePoweredByLabel": "Skjul «Levert av Open HelpDesk»",
-  "app.settings.portal.hidePoweredByHint": "Tilgjengelig fra Enterprise-planen.",
+  "app.settings.portal.hidePoweredByHint": "Tilgjengelig med Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Synlighet for kunnskapsbasen",
   "app.settings.portal.kbVisibilityPublic": "Offentlig",
   "app.settings.portal.kbVisibilityAuthenticated": "Krever innlogging",
@@ -1062,7 +1075,8 @@ export const nb: Dictionary = {
   "app.settings.portal.csatExclusionRemove": "Fjern {name}",
   "app.settings.workspace.generalTitle": "Generelt og merkevare",
   "app.settings.workspace.generalSubtitle": "Identiteten til arbeidsområdet, språk, tidssone og nummerering av henvendelser.",
-  "app.settings.workspace.generalDeleteCloudError": "Sletting avvist — planlagt sletting er bare tilgjengelig i skyen.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Sletting avvist — planlagt sletting krever et control plane.",
   "app.settings.workspace.generalIdentity": "Identitet",
   "app.settings.workspace.generalNameLabel": "Navn på arbeidsområdet",
   "app.settings.workspace.generalLogoLabel": "Logo",
@@ -1117,7 +1131,7 @@ export const nb: Dictionary = {
   "app.settings.workspace.seatsUsed": { one: "{count} / {quota} plass i bruk", other: "{count} / {quota} plasser i bruk" },
   "app.settings.workspace.seatsUsedFull": { one: "{count} / {quota} plass i bruk — grensen er nådd", other: "{count} / {quota} plasser i bruk — grensen er nådd" },
   "app.settings.workspace.seatsAddHint": "Legg til flere plasser for å invitere nye agenter.",
-  "app.settings.workspace.seatsFreeHint": "Viewer-roller er gratis og ubegrensede.",
+  "app.settings.workspace.seatsFreeHint": "Viewer-roller bruker ingen plass og er ubegrensede.",
   "app.settings.workspace.seatsAddAction": "Legg til plasser",
   "app.settings.workspace.seatsManage": "Administrer",
   "app.settings.workspace.seatLimitReached":
@@ -1191,15 +1205,16 @@ export const nb: Dictionary = {
   "app.settings.workspace.teamHoursHint": "Kalenderne administreres under SLA og arbeidstider.",
   "app.settings.workspace.save": "Lagre",
   "app.settings.workspace.billingTitle": "Abonnement og fakturering",
-  "app.settings.workspace.billingSubtitle": "Plan, plasser, kvoter, betalingsmåte og fakturahistorikk.",
-  "app.settings.workspace.selfHosted": "SELVHOSTET",
+  "app.settings.workspace.billingSubtitle":
+    "Abonnement, plasser, kvoter, betalingsmåte og fakturahistorikk.",
+  "app.settings.workspace.subscriptionNone": "Intet abonnement",
   "app.settings.workspace.trialBadge": "PRØVE",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": { one: "per måned · {count} plass à {price} €", other: "per måned · {count} plasser à {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "per måned · {count} plass inkludert", other: "per måned · {count} plasser inkludert" },
-  "app.settings.workspace.billingNoDue": "Ingen forfall på denne instansen — faktureringen håndteres i skytjenesten.",
-  "app.settings.workspace.cloudOnly": "Tilgjengelig i skytjenesten",
-  "app.settings.workspace.changePlan": "Bytt plan",
+  "app.settings.workspace.billingNoDue": "Ingenting forfaller nå.",
+  "app.settings.workspace.requiresControlPlane": "Krever et control plane",
+  "app.settings.workspace.changeSubscription": "Endre abonnement",
   "app.settings.workspace.manageSeats": "Administrer plasser",
   "app.settings.workspace.usageTitle": "Forbruk denne måneden",
   "app.settings.workspace.quotaSeats": "Plasser",
@@ -1211,7 +1226,7 @@ export const nb: Dictionary = {
   "app.settings.workspace.colNumber": "Nummer",
   "app.settings.workspace.colPeriod": "Periode",
   "app.settings.workspace.colAmount": "Beløp",
-  "app.settings.workspace.invoicesEmpty": "Ingen fakturaer — fakturaene vises her i skytjenesten.",
+  "app.settings.workspace.invoicesEmpty": "Ingen fakturaer ennå.",
   "app.settings.rules.saved": "✓ Lagret",
   "app.settings.rules.save": "Lagre",
   "app.settings.rules.delete": "Slett",
@@ -1275,23 +1290,23 @@ export const nb: Dictionary = {
   "app.settings.rules.typeLongText": "Lang tekst",
   "app.settings.rules.typeFile": "Fil",
   "app.settings.rules.typeSelectLong": "Nedtrekksliste",
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Il vivait en français dans lib/rule-labels.ts. Statuts, priorités et
-     canaux n'y sont pas : ils viennent des clés app.status.* / app.priority.* /
-     app.channel.*, plus bas, et les libellés condField* s'accordent avec elles. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     It lived in French in lib/rule-labels.ts. Statuses, priorities and
+     channels are not here: they come from the app.status.* / app.priority.* /
+     app.channel.* keys below, and the condField* labels agree with them. */
 
-  /* Types de champs personnalisés (ST-04) ; « Tekst » est typeText, au-dessus.
-     Les trois mots repris de fieldsEmpty : « liste », « tekst », « dato ». */
+  /* Custom field types (ST-04); “Tekst” is typeText, above. The three words
+     taken from fieldsEmpty: “liste”, “tekst”, “dato”. */
   "app.settings.rules.typeSelect": "Liste",
   "app.settings.rules.typeMultiSelect": "Flervalg",
   "app.settings.rules.typeDate": "Dato",
   "app.settings.rules.typeNumber": "Tall",
   "app.settings.rules.typeCheckbox": "Avkrysningsboks",
 
-  /* Champs sur lesquels une condition peut porter. Chaque libellé reprend le
-     mot déjà employé ailleurs : « Hendelse » de dev.colEvent, « Emne » de
-     previewSubject, « Tagger » de tickets.tags, « Tildelt » de
-     tickets.assignee, « Team » comme partout. */
+  /* Fields a condition can be built on. Each label reuses the word already
+     used elsewhere: “Hendelse” from dev.colEvent, “Emne” from previewSubject,
+     “Tagger” from tickets.tags, “Tildelt” from tickets.assignee, “Team” as
+     everywhere. */
   "app.settings.rules.condFieldEvent": "Hendelse",
   "app.settings.rules.condFieldStatus": "Status",
   "app.settings.rules.condFieldPriority": "Prioritet",
@@ -1305,8 +1320,8 @@ export const nb: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Timer siden opprettelsen",
   "app.settings.rules.condFieldHoursUpdated": "Timer siden oppdateringen",
 
-  /* Opérateurs. Les deux derniers restent des symboles : le norvégien les lit
-     comme le français. */
+  /* Operators. The last two stay symbols: Norwegian reads them the way
+     French does. */
   "app.settings.rules.opIs": "er",
   "app.settings.rules.opIsNot": "er ikke",
   "app.settings.rules.opContains": "inneholder",
@@ -1316,14 +1331,14 @@ export const nb: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs, dans l'ordre de ruleHintTrigger — opprettelse,
-     oppdatering, mottatt melding. */
+  /* Trigger events, in ruleHintTrigger's order — opprettelse, oppdatering,
+     mottatt melding. */
   "app.settings.rules.eventTicketCreated": "Henvendelse opprettet",
   "app.settings.rules.eventTicketUpdated": "Henvendelse oppdatert",
   "app.settings.rules.eventMessageCreated": "Melding mottatt",
 
-  /* Actions, telles que le menu du builder les nomme : impératif, comme les
-     autres boutons du fichier (« Tildel », « Legg til i skjemaet »). */
+  /* Actions, as the builder's menu names them: imperative, like the file's
+     other buttons (“Tildel”, “Legg til i skjemaet”). */
   "app.settings.rules.actSetStatus": "Sett status",
   "app.settings.rules.actSetPriority": "Sett prioritet",
   "app.settings.rules.actAssignUser": "Tildel til en agent",
@@ -1332,9 +1347,9 @@ export const nb: Dictionary = {
   "app.settings.rules.actAddTags": "Legg til tagger",
   "app.settings.rules.actEmailContact": "Send en e-post til kontakten",
 
-  /* Résumé d'une règle, en une ligne de liste. Le norvégien construit sa
-     subordonnée comme le français : « hvis … → … », le gabarit tient tel quel.
-     Les bribes restent en minuscules et sans point : elles s'enchaînent. */
+  /* One-line rule summary. Norwegian builds its subordinate clause the way
+     French does: “hvis … → …”, and the template holds as it is. The fragments
+     stay lower-case and without a full stop: they run on. */
   "app.settings.rules.summaryPattern": "Hvis {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "og",
   "app.settings.rules.summaryAlways": "alltid",
@@ -1343,10 +1358,10 @@ export const nb: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "ikke tildelt",
   "app.settings.rules.summaryAssigned": "tildelt",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. « i » est la préposition de durée du norvégien — « siden »
-     ne se construit pas avec une durée nue, et la bribe se recolle à celle qui
-     précède : « status = Venter i 2 j ». */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. “i” is Norwegian's duration preposition — “siden” does not
+     take a bare duration, and the fragment butts against the preceding one:
+     “status = Venter i 2 j”. */
   "app.settings.rules.summarySince": "i {duration}",
   "app.settings.rules.summarySetStatus": "sett til {value}",
   "app.settings.rules.summarySetPriority": "prioritet {value}",
@@ -1357,8 +1372,8 @@ export const nb: Dictionary = {
   "app.settings.rules.summaryAddTags": "legg til {tags}",
   "app.settings.rules.summaryEmailContact": "send en e-post til kontakten",
 
-  /* Résumé des actions d'une macro (ST-06) : celles-ci commencent une ligne,
-     donc majuscule initiale — journalNoAction reste en minuscules, lui. */
+  /* Summary of a macro's actions (ST-06): these start a line, hence the
+     initial capital — journalNoAction stays lower-case. */
   "app.settings.rules.macroSummaryStatus": "Status → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioritet → {value}",
   "app.settings.rules.macroSummaryTeam": "Team → {team}",
@@ -1450,7 +1465,7 @@ export const nb: Dictionary = {
   "app.settings.dev.dayYesterday": "I går {time}",
   "app.settings.dev.auditTitle": "Revisjonslogg",
   "app.settings.dev.auditSubtitle": "Fullstendig logg over administrasjonshandlinger. Oppbevares i 2 år.",
-  "app.settings.dev.auditLockedTitle": "Revisjonsloggen er forbeholdt Enterprise-planen",
+  "app.settings.dev.auditLockedTitle": "Revisjonsloggen er en del av Enterprise Edition",
   "app.settings.dev.auditLockedText": "Ta vare på sporet av hver administrasjonshandling i 2 år, med diff før/etter og eksport til CSV.",
   "app.settings.dev.filterActorAll": "Aktør: alle",
   "app.settings.dev.filterActionAll": "Handling: alle",
@@ -1467,9 +1482,9 @@ export const nb: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Ikke autorisert",
   "app.settings.dev.exportForbidden": "Forbeholdt rollene Owner og Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Revisjonsloggen er forbeholdt Enterprise-planen.",
+  "app.settings.dev.exportEnterpriseOnly": "Revisjonsloggen er en del av Enterprise Edition.",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Ny",
   "app.status.open": "Åpen",
   "app.status.waiting": "Venter",
@@ -1490,7 +1505,7 @@ export const nb: Dictionary = {
   "app.unit.kilobytes": "{count} kB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Mine henvendelser",
   "app.views.unassigned": "Ikke tildelt",
   "app.views.breaching": "Snart forsinket",
@@ -1498,14 +1513,14 @@ export const nb: Dictionary = {
   "app.views.urgent": "Haster denne uken",
   "app.views.escalation": "Eskaleringer",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Gi nytt navn",
   "app.kb.renameSave": "Lagre",
   "app.kb.deleteCategory": "Slett kategorien",
   "app.kb.managersOnly": "Bare Owner og Admin kan redigere kunnskapsbasen.",
   "app.kb.categoryNotEmpty": { one: "Kategorien inneholder fortsatt {count} element. Flytt det før du sletter kategorien.", other: "Kategorien inneholder fortsatt {count} elementer. Flytt dem før du sletter kategorien." },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-post",
   "app.login.emailPlaceholder": "du@bedrift.no",
   "app.login.password": "Passord",
@@ -1532,9 +1547,9 @@ export const nb: Dictionary = {
   "app.login.providerMissing": "Denne leverandøren er ikke konfigurert på denne instansen.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Quatre libellés viennent d'ailleurs : le titre du portail dans son propre
-     aperçu (home.title), le nom du workspace et la couleur d'accent (ST-01), et
-     les rôles Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+  /* Four labels come from elsewhere: the portal title in its own preview
+     (home.title), the workspace name and the accent colour (ST-01), and the
+     Owner / Admin / Agent / Viewer roles, which are not translated. */
 
   "app.onboarding.asideTitle": "Oppsett",
   "app.onboarding.asideFooter":
@@ -1560,8 +1575,8 @@ export const nb: Dictionary = {
   "app.onboarding.previewCaption": "Forhåndsvisning av kundeportalen din",
 
   "app.onboarding.emailTitle": "Motta e-postene dine",
-  /* « demande » et « ticket » sont le même mot en norvégien : la phrase dit
-     donc « e-poster » d'un côté et « henvendelser » de l'autre. */
+  /* “request” and “ticket” are the same word in Norwegian: the sentence
+     therefore says “e-poster” on one side and “henvendelser” on the other. */
   "app.onboarding.emailBody":
     "Alle e-poster som kommer inn til denne adressen, blir automatisk henvendelser.",
   "app.onboarding.or": "ELLER",
@@ -1575,7 +1590,7 @@ export const nb: Dictionary = {
 
   "app.onboarding.teamTitle": "Inviter teamet ditt",
   "app.onboarding.teamBody":
-    "Inviter agentene dine nå, eller del invitasjonslenken. Viewer-plasser er gratis.",
+    "Inviter agentene dine nå, eller del invitasjonslenken. Viewer-roller bruker ingen plass.",
   "app.onboarding.invitePlaceholder": "kollega@bedrift.no",
   "app.onboarding.addRow": "+ Legg til en rad",
   "app.onboarding.sendInvites": "Send invitasjonene",
@@ -1584,8 +1599,8 @@ export const nb: Dictionary = {
   "app.onboarding.testBody":
     "Kontroller hele kjeden før du åpner tjenesten for kundene dine.",
   "app.onboarding.readyTitle": "Arbeidsområdet ditt er klart",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Send en e-post til {address} for å opprette en testhenvendelse.",
   "app.onboarding.openInbox": "Åpne innboksen",
 
@@ -1595,36 +1610,46 @@ export const nb: Dictionary = {
   "app.onboarding.checklistTicket": "Første henvendelse er mottatt",
   "app.onboarding.checklistSla": "SLA-policyen er kontrollert",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
-     « alle / én eller flere » : les deux valeurs s'accordent avec le pluriel
-     indéfini « betingelser », qui suit le sélecteur. Le norvégien ne dit pas
-     « alle av betingelsene » — d'où le pluriel nu. « Oppfyller » reprend
-     testNoMatch, « betingelsene er ikke oppfylt ». */
+  /* ST-05 — the condition group header. The sentence wraps an
+     “alle / én eller flere” selector: both values agree with the indefinite
+     plural “betingelser”, which follows the selector. Norwegian does not say
+     “alle av betingelsene” — hence the bare plural. “Oppfyller” echoes
+     testNoMatch, “betingelsene er ikke oppfylt”. */
   "app.settings.rules.matchIf": "HVIS",
   "app.settings.rules.matchAllPattern": "Oppfyller {mode} betingelser",
   "app.settings.rules.matchAnyPattern": "Oppfyller {mode} betingelser",
   "app.settings.rules.matchAll": "alle",
   "app.settings.rules.matchAny": "én eller flere",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit ; « Pro-plan » comme dans auditLockedTitle. */
-  "app.settings.workspace.planFree": "Free-plan",
-  "app.settings.workspace.planTeam": "Team-plan",
-  "app.settings.workspace.planEnterprise": "Enterprise-plan",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "SÅ",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Test på en eksisterende henvendelse",
+  "app.settings.rules.testRunning": "Tester…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Fjern",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "E-postteksten — variabler: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française ; seul l'affichage est traduit. « Incident » ne peut pas être
-     « Hendelse » ici : ce mot est déjà l'événement (condFieldEvent,
-     dev.colEvent). « Feil » est le mot courant du support norvégien. */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string; only the display is translated. “Incident” cannot be “Hendelse”
+     here: that word is already the event (condFieldEvent, dev.colEvent).
+     “Feil” is the everyday word of Norwegian support. */
   "app.ticket.typeQuestion": "Spørsmål",
   "app.ticket.typeIncident": "Feil",
   "app.ticket.typeTask": "Oppgave",
   "app.ticket.typeOther": "Annet",
 
-  /* AG-09 — export CSV des rapports. Les libellés reprennent les KPI de
-     l'écran ; les secondes s'abrègent « sek. » en norvégien. */
+  /* AG-09 — CSV export of the reports. The labels echo the screen's KPIs;
+     seconds are abbreviated “sek.” in Norwegian. */
   "app.reports.csvIndicator": "Indikator",
   "app.reports.csvCurrentPeriod": "Gjeldende periode",
   "app.reports.csvPreviousPeriod": "Forrige periode",
@@ -1639,20 +1664,20 @@ export const nb: Dictionary = {
   "app.reports.csvResolvedShort": "Løst",
   "app.reports.csvAgent": "Agent",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Ny artikkel",
   "app.kb.fromTicketSymptomHeading": "Symptom",
   "app.kb.fromTicketSymptomPlaceholder": "[Beskriv hva kunden opplever.]",
   "app.kb.fromTicketSolutionHeading": "Løsning",
   "app.kb.fromTicketSolutionPlaceholder":
     "[Beskriv fremgangsmåten som løser problemet.]",
-  /* Les deux bribes se lisent dans « Mangler: {items}. » — minuscules. */
+  /* Both fragments read inside “Mangler: {items}.” — lower-case. */
   "app.kb.fromTicketMissingRequest": "den opprinnelige henvendelsen fra kunden",
   "app.kb.fromTicketMissingAnswer": "svaret fra agenten",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Trinnvis fremgangsmåte",
   "app.kb.tplProcedureHint": "En rekke nummererte trinn, med det forventede resultatet.",
   "app.kb.tplProcedureTitle": "Slik [utfører du handlingen]",

@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * AG-03 — Table de l'inbox (partie cliente) : navigation clavier j/k/↵/x, sélection
- * multiple avec barre flottante d'actions groupées branchée sur bulkUpdateTickets.
- * Grid exact : 34px 26px minmax(260px,1fr) 190px 108px 96px 120px 92px, min-width 940.
+ * AG-03 — Inbox table (client part): j/k/↵/x keyboard navigation, multi-selection
+ * with a floating bulk-actions bar wired to bulkUpdateTickets.
+ * Exact grid: 34px 26px minmax(260px,1fr) 190px 108px 96px 120px 92px, min-width 940.
  */
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -109,7 +109,7 @@ export function InboxTable({
     });
   }
 
-  // Barre flottante du design : fond --ink, texte --bg, actions padding 5px 9px / 12.5px.
+  // Floating bar from the design: --ink background, --bg text, actions padding 5px 9px / 12.5px.
   const bulkSelectStyle = {
     padding: "5px 9px",
     borderRadius: 6,
@@ -125,7 +125,7 @@ export function InboxTable({
   return (
     <div>
       <div style={{ minWidth: 940 }}>
-        {/* En-tête sticky h32 fond sunk */}
+        {/* Sticky header, h32, sunk background */}
         <div
           className="sticky top-0 z-10 grid items-center border-b font-semibold"
           style={{
@@ -310,7 +310,7 @@ export function InboxTable({
         })}
       </div>
 
-      {/* Barre flottante de sélection multiple */}
+      {/* Floating multi-selection bar */}
       {selected.size > 0 && (
         <div
           className="ohd-rise-fast fixed left-1/2 z-40 flex -translate-x-1/2 items-center"

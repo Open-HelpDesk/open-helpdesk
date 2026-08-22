@@ -2,8 +2,8 @@ import { expect, type Page } from "@playwright/test";
 import { BASE_URL, MAILPIT_URL } from "../playwright.config";
 
 /* ---------------------------------------------------------------------------
- * Comptes du jeu de démonstration (packages/db seed + pnpm db:seed:auth).
- * Le mot de passe est commun et volontairement trivial : dev uniquement.
+ * Demo data set accounts (packages/db seed + pnpm db:seed:auth).
+ * The password is shared and deliberately trivial: dev only.
  * ------------------------------------------------------------------------- */
 
 export const PASSWORD = "demo-openhelpdesk";
@@ -14,28 +14,28 @@ export const AGENTS = {
   agent: "thomas.roux@acme.example",
 } as const;
 
-/** Une adresse neuve à chaque exécution : le portail crée le contact au vol. */
+/** A fresh address on every run: the portal creates the contact on the fly. */
 export function uniqueEmail(prefix = "smoke"): string {
   return `${prefix}.${Date.now()}.${Math.floor(Math.random() * 1e4)}@nordfil.example`;
 }
 
-/** Un sujet reconnaissable, pour retrouver la demande côté agent. */
+/** A distinctive subject, so the request can be found again on the agent side. */
 export function uniqueSubject(label: string): string {
   return `[smoke ${new Date().toISOString().slice(11, 19)}] ${label}`;
 }
 
 /* ---------------------------------------------------------------------------
- * Connexion
+ * Sign-in
  * ------------------------------------------------------------------------- */
 
 /**
- * Connecte un agent par email + mot de passe et attend l'inbox.
+ * Signs an agent in with email + password and waits for the inbox.
  *
- * La tentative est rejouée : Better Auth plafonne /sign-in à trois appels par
- * dizaine de secondes et par IP, et une suite entière partage ce compteur. La
- * 429 est indiscernable d'un mauvais mot de passe à l'écran — l'application
- * affiche « Identifiants incorrects. » dans les deux cas — donc on ne peut pas
- * la reconnaître autrement qu'en réessayant après la fenêtre.
+ * The attempt is replayed: Better Auth caps /sign-in at three calls per ten
+ * seconds per IP, and a whole suite shares that counter. On screen the 429 is
+ * indistinguishable from a wrong password — the application shows “Incorrect
+ * credentials.” in both cases — so the only way to tell is to try again after
+ * the window.
  */
 export async function signInAgent(page: Page, email: string): Promise<void> {
   await expect(async () => {
@@ -53,16 +53,16 @@ export async function signOutAgent(page: Page): Promise<void> {
 }
 
 /* ---------------------------------------------------------------------------
- * Lien magique — la seule façon d'ouvrir une session client
+ * Magic link — the only way to open a customer session
  * ------------------------------------------------------------------------- */
 
 type MailpitMessage = { ID: string; Subject: string; To: { Address: string }[] };
 
 /**
- * Récupère le lien de connexion envoyé à cette adresse.
+ * Retrieves the sign-in link sent to this address.
  *
- * Mailpit est interrogé en boucle : l'envoi est asynchrone et un test qui lit
- * la boîte trop tôt échoue pour une raison qui n'a rien à voir avec le produit.
+ * Mailpit is polled in a loop: sending is asynchronous and a test that reads
+ * the mailbox too early fails for a reason unrelated to the product.
  */
 export async function magicLinkFor(email: string, timeoutMs = 15_000): Promise<string> {
   const deadline = Date.now() + timeoutMs;
@@ -84,12 +84,12 @@ export async function magicLinkFor(email: string, timeoutMs = 15_000): Promise<s
     await new Promise((r) => setTimeout(r, 500));
   }
   throw new Error(
-    `Aucun lien magique pour ${email} après ${timeoutMs} ms. ` +
-      `Mailpit répond-il sur ${MAILPIT_URL} ? Les réglages email du tenant pointent-ils vers son SMTP (localhost:1026) ?`,
+    `No magic link for ${email} after ${timeoutMs} ms. ` +
+      `Is Mailpit answering on ${MAILPIT_URL}? Do the tenant's email settings point at its SMTP (localhost:1026)?`,
   );
 }
 
-/** Ouvre une session client de bout en bout : formulaire → email → lien. */
+/** Opens a customer session end to end: form → email → link. */
 export async function signInContact(page: Page, email: string): Promise<void> {
   await page.goto("/help/login");
   await page.locator("#pt-login-email").fill(email);
@@ -97,27 +97,27 @@ export async function signInContact(page: Page, email: string): Promise<void> {
   await expect(page).toHaveURL(/sent=1/);
 
   const link = await magicLinkFor(email);
-  // Le lien DOIT porter le sous-domaine du tenant : c'est exactement ce qui
-  // était cassé (redirection vers un domaine nu, donc 404).
+  // The link MUST carry the tenant's subdomain: that is exactly what was
+  // broken (a redirect to a bare domain, hence 404).
   expect(link).toContain(new URL(BASE_URL).host);
   await page.goto(link);
   await expect(page).toHaveURL(/\/help\/requests/);
 }
 
 /* ---------------------------------------------------------------------------
- * Réglages du tenant, pilotés par l'interface d'administration
+ * Tenant settings, driven through the administration interface
  *
- * On passe par les écrans plutôt que par SQL : un smoke test qui écrirait en
- * base directement ne dirait rien de l'écran d'administration, et c'est
- * précisément là qu'un réglage peut être enregistré sans jamais être lu.
+ * We go through the screens rather than through SQL: a smoke test writing
+ * straight to the database would say nothing about the administration screen,
+ * and that is precisely where a setting can be saved without ever being read.
  * ------------------------------------------------------------------------- */
 
 /**
- * Bascule un interrupteur de ST-09 et enregistre. `on` = état voulu.
+ * Flips one of the ST-09 toggles and saves. `on` = wanted state.
  *
- * La case elle-même est masquée par le composant Toggle
- * (`.ohd-toggle input { opacity: 0; width: 0; height: 0 }`) : elle mesure 0×0 et
- * refuse le clic, même en `force`. C'est le curseur visible qu'il faut viser.
+ * The checkbox itself is hidden by the Toggle component
+ * (`.ohd-toggle input { opacity: 0; width: 0; height: 0 }`): it measures 0×0 and
+ * refuses the click, even with `force`. The visible knob is what to aim at.
  */
 export async function setPortalToggle(
   page: Page,
@@ -132,17 +132,17 @@ export async function setPortalToggle(
     await expect(box).toBeChecked({ checked: on });
   }
   await page.locator('form:has(input[name="portalEnabled"]) button[type=submit]').click();
-  // L'action serveur redirige avec ?saved=1 : sans cette attente, la navigation
-  // suivante est annulée par la redirection et on lit l'ancien état.
+  // The server action redirects with ?saved=1: without this wait, the next
+  // navigation is cancelled by the redirect and we read the old state.
   await expect(page).toHaveURL(/saved=1/, { timeout: 15_000 });
 }
 
 /**
- * Change la langue du logiciel (ST-01) et attend la confirmation du serveur.
+ * Changes the software language (ST-01) and waits for the server's confirmation.
  *
- * Attendre que le `<select>` porte la valeur ne prouve rien — il la porte dès le
- * clic, avant que l'action ait répondu. On attend l'accusé de réception, faute
- * de quoi la redirection tardive annule la navigation suivante.
+ * Waiting for the `<select>` to carry the value proves nothing — it carries it
+ * from the click on, before the action has answered. We wait for the
+ * acknowledgement, failing which the late redirect cancels the next navigation.
  */
 export async function setTenantLocale(page: Page, code: string): Promise<void> {
   await page.goto("/app/settings/general");
@@ -153,11 +153,11 @@ export async function setTenantLocale(page: Page, code: string): Promise<void> {
 }
 
 /* ---------------------------------------------------------------------------
- * Petites assertions partagées
+ * Small shared assertions
  * ------------------------------------------------------------------------- */
 
-/** Vérifie qu'une URL répond bien le statut attendu, sans naviguer. */
+/** Checks that a URL really answers the expected status, without navigating. */
 export async function expectStatus(page: Page, path: string, status: number): Promise<void> {
   const res = await page.request.get(path, { maxRedirects: 0, failOnStatusCode: false });
-  expect(res.status(), `${path} devrait répondre ${status}`).toBe(status);
+  expect(res.status(), `${path} should answer ${status}`).toBe(status);
 }

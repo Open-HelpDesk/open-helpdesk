@@ -1,13 +1,13 @@
 "use client";
 
 /**
- * ST-07, onglet Horaires ouvrés — semaine du design : grille 130px / 60px / 1fr,
- * interrupteur 34×20 par jour, plages « 09:00 → 18:00 » (h30 bordées), « + plage »,
- * « Fermé » quand le jour est décoché. Une seule soumission pour toute la semaine.
+ * ST-07, business hours tab — the design's week: 130px / 60px / 1fr grid,
+ * 34×20 switch per day, "09:00 → 18:00" ranges (h30, bordered), "+ range",
+ * "Closed" when the day is unchecked. A single submission for the whole week.
  */
 import { useState } from "react";
 import { useT } from "@/i18n/client";
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 
 const DAYS: [string, MessageKey][] = [
   ["mon", "app.settings.sla.dayMon"],
@@ -66,7 +66,7 @@ export function WeekEditor({ initial }: { initial: WeekValue }) {
 
   return (
     <>
-      {/* Valeur sérialisée lue par la server action */}
+      {/* Serialized value read by the server action */}
       <input type="hidden" name="week" value={JSON.stringify(week)} />
       <div
         style={{

@@ -13,10 +13,10 @@ import {
 } from "./actions";
 
 /**
- * AG-08 — Organisations (design espace-agent) : layout maître-détail — table grid
- * `minmax(180px,1fr) 260px 110px 120px` (tickets ouverts en rouge si > 8), panneau
- * détail 340 px avec domaines en chips ✕/+, toggle « Partage des demandes », onglets
- * Contacts / Tickets / Notes.
+ * AG-08 — Organizations (agent space design): master-detail layout — table grid
+ * `minmax(180px,1fr) 260px 110px 120px` (open tickets in red if > 8), 340 px detail
+ * panel with domains as ✕/+ chips, "Request sharing" toggle, Contacts / Tickets /
+ * Notes tabs.
  */
 
 const GRID = "minmax(180px,1fr) 260px 110px 120px";
@@ -49,7 +49,7 @@ export default async function OrganizationsPage({
 
   return (
     <div className="flex h-full">
-      {/* Colonne table */}
+      {/* Table column */}
       <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <div
           className="flex shrink-0 items-center gap-2 border-b px-4"
@@ -170,7 +170,7 @@ export default async function OrganizationsPage({
         </div>
       </section>
 
-      {/* Panneau détail — 340 px */}
+      {/* Detail panel — 340 px */}
       {detail && (
         <aside
           className="hidden w-[340px] shrink-0 flex-col overflow-y-auto border-l lg:flex"
@@ -201,7 +201,7 @@ export default async function OrganizationsPage({
               </div>
             </div>
 
-            {/* Domaines de rattachement */}
+            {/* Matching domains */}
             <p
               className="mb-1.5 mt-4 font-semibold uppercase tracking-wider"
               style={{ fontSize: 11, color: "var(--ink-3)" }}
@@ -256,7 +256,7 @@ export default async function OrganizationsPage({
               </p>
             )}
 
-            {/* Partage des demandes */}
+            {/* Request sharing */}
             <form
               action={toggleOrgSharedTickets}
               className="mt-4 flex items-start gap-2.5 rounded-lg border p-2.5"
@@ -281,7 +281,7 @@ export default async function OrganizationsPage({
             </form>
           </div>
 
-          {/* Onglets */}
+          {/* Tabs */}
           <div className="flex gap-1 border-b px-3 pt-2" style={{ borderColor: "var(--line)" }}>
             {(
               [

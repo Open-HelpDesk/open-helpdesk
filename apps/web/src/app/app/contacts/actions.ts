@@ -13,7 +13,7 @@ import { and, count, eq, not } from "drizzle-orm";
 import { requireAgent } from "@/lib/session";
 import { getT } from "@/i18n/server";
 
-/** Bloquer / débloquer un contact (spam) — ses emails entrants seront rejetés. */
+/** Block / unblock a contact (spam) — their inbound emails will be rejected. */
 export async function toggleContactBlocked(formData: FormData) {
   const { tenant } = await requireAgent();
   const contactId = String(formData.get("contactId"));
@@ -24,7 +24,7 @@ export async function toggleContactBlocked(formData: FormData) {
   revalidatePath("/app/contacts");
 }
 
-/** « + Contact » (AG-07) — création manuelle simple. */
+/** "+ Contact" (AG-07) — plain manual creation. */
 export async function createContact(formData: FormData) {
   const { tenant } = await requireAgent();
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
@@ -49,8 +49,8 @@ export async function createContact(formData: FormData) {
 }
 
 /**
- * « Fusionner deux contacts » (AG-07) : les tickets et rattachements du contact
- * source sont réassignés au contact conservé, puis la fiche source est supprimée.
+ * "Merge two contacts" (AG-07): the tickets and organization links of the source
+ * contact are reassigned to the contact we keep, then the source record is deleted.
  */
 export async function mergeContacts(formData: FormData) {
   const { tenant } = await requireAgent();
@@ -68,7 +68,7 @@ export async function mergeContacts(formData: FormData) {
     .where(and(eq(contacts.tenantId, tenant.id), eq(contacts.id, sourceId)));
   if (!keep || !source) return;
 
-  // Tickets et messages du contact source → contact conservé.
+  // Tickets and messages of the source contact → the contact we keep.
   await db
     .update(tickets)
     .set({ requesterId: keep.id })
@@ -83,7 +83,7 @@ export async function mergeContacts(formData: FormData) {
         eq(ticketMessages.authorId, source.id),
       ),
     );
-  // Rattachements d'organisation (doublons ignorés puis liens source purgés).
+  // Organization links (duplicates ignored, then the source links are purged).
   const links = await db
     .select()
     .from(contactOrganizations)
@@ -104,8 +104,8 @@ export async function mergeContacts(formData: FormData) {
 }
 
 /**
- * « Supprimer (RGPD) » (AG-07) : anonymise email/nom/téléphone ; la fiche est
- * supprimée définitivement si aucun ticket ne la référence.
+ * "Delete (GDPR)" (AG-07): anonymizes email/name/phone; the record is deleted
+ * for good if no ticket references it.
  */
 export async function deleteContactRgpd(formData: FormData) {
   const { tenant } = await requireAgent();

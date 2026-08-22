@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const lt: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const lt: Dictionary = {
     "Paslauga laikinai sustabdyta: peržiūra tebegalima, naujos užklausos išjungtos.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Pagalbos centras",
   "home.title": "Kaip galime jums padėti?",
   "home.subtitle":
@@ -30,7 +30,7 @@ export const lt: Dictionary = {
   "home.ctaTitle": "Neradote to, ko ieškote?",
   "home.ctaBody": "Darbo laiku mūsų komanda atsako vidutiniškai per 34 minutes.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Ieškoti pagalbos centre…",
   "search.emptyTitle": "Nėra rezultatų pagal „{query}“",
   "search.emptyBody":
@@ -38,7 +38,7 @@ export const lt: Dictionary = {
   "search.breadcrumb": "Paieška",
   "search.resultsTitle": "Rezultatai pagal „{query}“",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Pagalba",
   "category.otherCategories": "Kitos kategorijos",
   "category.otherArticles": "Kiti straipsniai",
@@ -67,7 +67,7 @@ export const lt: Dictionary = {
   "vote.prefill": "Sukurti iš anksto užpildytą užklausą",
   "vote.prefillSubject": "Dėl straipsnio „{title}“",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Pateikti užklausą",
   "newRequest.subtitle": "Aprašykite savo situaciją. Atsakome per 4 darbo valandas.",
   "newRequest.type": "Užklausos tipas",
@@ -109,7 +109,7 @@ export const lt: Dictionary = {
   "submitted.track": "Sekti užklausą",
   "submitted.backToHelp": "Atgal į pagalbos centrą",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "Mano užklausos",
   "requests.new": "Nauja užklausa",
   "requests.tabOpen": "Atviros",
@@ -121,13 +121,13 @@ export const lt: Dictionary = {
     "Čia bus rodomos jūsų pagalbos užklausos, jų būsena ir visa susirašinėjimo istorija.",
   "requests.awaitingReply": "Laukiama jūsų atsakymo",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "Vykdoma",
   "status.waiting": "Laukiama jūsų atsakymo",
   "status.resolved": "Išspręsta",
   "status.closed": "Uždaryta",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Išspręsta {when}",
   "activity.closed": "Uždaryta {when}",
   "activity.waiting": "Laukiama jūsų atsakymo {since}",
@@ -135,7 +135,7 @@ export const lt: Dictionary = {
   "activity.youReplied": "Jūs atsakėte {when}",
   "activity.created": "Sukurta {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": {
     one: "jau {count} min.",
     few: "jau {count} min.",
@@ -156,7 +156,7 @@ export const lt: Dictionary = {
   },
   "since.date": "nuo {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Jūs",
   "request.team": "Komanda",
   "request.agentAuthor": "{name} — {tenant}",
@@ -173,7 +173,7 @@ export const lt: Dictionary = {
   "request.markSolved": "Pažymėti kaip išspręstą",
   "request.reopen": "Vėl atverti užklausą",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Sekite savo užklausas",
   "login.magicIntro":
     "Įveskite savo el. pašto adresą — atsiųsime prisijungimo nuorodą. Nereikės jokio slaptažodžio.",
@@ -188,7 +188,15 @@ export const lt: Dictionary = {
   "login.expired": "Ši nuoroda nebegalioja arba yra klaidinga. Užsisakykite naują.",
   "login.footer": "Dar neturite užklausų? Paskyra sukuriama automatiškai pateikus pirmąją.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Jūsų prisijungimo nuoroda — {workspace}",
+  "login.emailBody":
+    "Sveiki,\n\nspustelėkite šią nuorodą, kad pamatytumėte savo užklausas (nuoroda galioja 15 minučių):\n{url}\n\nJei šios nuorodos neprašėte, ignoruokite šį laišką.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Jūs esate šios organizacijos administratorius. Čia atlikti nustatymai taikomi organizacijos „{org}“ darbuotojui ({count}), kuris naudojasi „{tenant}“ pagalbos tarnyba.",
     few: "Jūs esate šios organizacijos administratorius. Čia atlikti nustatymai taikomi organizacijos „{org}“ darbuotojams ({count}), kurie naudojasi „{tenant}“ pagalbos tarnyba.",
@@ -279,7 +287,7 @@ export const lt: Dictionary = {
   "members.note":
     "Darbuotojai atsiranda automatiškai po pirmojo prisijungimo arba pirmosios užklausos. Kad nebūtumėte vienintelis kontaktinis asmuo, galite paskirti antrą administratorių.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Reikia pagalbos?",
   "widget.close": "Užverti",
   "widget.messageLabel": "Jūsų pranešimas",
@@ -300,7 +308,7 @@ export const lt: Dictionary = {
   "csatPage.doneTitle": "Dėkojame!",
   "csatPage.doneBody": "Jūsų komentaras perduotas komandai.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Gautieji",
@@ -313,7 +321,7 @@ export const lt: Dictionary = {
   "app.shell.suspendedTitle": "Ši darbo erdvė sustabdyta",
   "app.shell.suspendedText": "Kreipkitės į savo administratorių, kad atkurtų prieigą.",
   "app.shell.suspendedOwnerText":
-    "Pasirinkite planą arba atnaujinkite mokėjimo būdą, kad vėl aktyvintumėte darbo erdvę.",
+    "Sutvarkykite prenumeratą arba atnaujinkite mokėjimo būdą, kad vėl aktyvintumėte darbo erdvę.",
   "app.shell.suspendedBillingCta": "Atidaryti Prenumeratą ir sąskaitas",
   "app.shell.myTickets": "Mano užklausos",
   "app.shell.newTicket": "Nauja užklausa",
@@ -761,7 +769,7 @@ export const lt: Dictionary = {
   "app.reports.columnAgent": "Agentas",
   "app.reports.columnFirstReply": "1-asis atsakymas",
   "app.reports.customReports": "Pasirinktinės ataskaitos",
-  "app.reports.enterprisePlanBadge": "ENTERPRISE PLANAS",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Sužinoti daugiau",
   "app.reports.chartDailyAria": "{labelA} ir {labelB} pagal dieną",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -786,8 +794,11 @@ export const lt: Dictionary = {
   "app.settings.shell.saved": "✓ Įrašyta",
   "app.settings.shell.cancel": "Atšaukti",
   "app.settings.shell.save": "Įrašyti",
-  "app.settings.shell.planEnterprise": "ENTERPRISE PLANAS",
-  "app.settings.shell.upgradeToEnterprise": "Pereiti prie Enterprise plano",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Užverti",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Tvarkyti prenumeratą",
   "app.settings.shell.eeSelfHostedTitle": "Leidimo „Enterprise Edition“ funkcija",
   "app.settings.shell.eeSelfHostedText":
     "Šiai funkcijai taikoma komercinė licencija (saugyklos katalogas ee/), ji neįtraukta į savarankiškai talpinamą atvirojo kodo leidimą.",
@@ -961,10 +972,10 @@ export const lt: Dictionary = {
   "app.settings.sso.agentTitle": "Agentų SSO",
   "app.settings.sso.agentSubtitle":
     "SAML 2.0 vieningas prisijungimas ir SCIM aprūpinimas jūsų pagalbos komandai.",
-  "app.settings.sso.agentLockedTitle": "Agentų SSO galimas tik su Enterprise planu",
+  "app.settings.sso.agentLockedTitle": "Agentų SSO yra leidimo Enterprise Edition dalis",
   "app.settings.sso.agentLockedText":
     "Prijunkite savo SAML 2.0 tapatybės teikėją, aprūpinkite agentus per SCIM ir įveskite vieningą prisijungimą visai komandai.",
-  "app.settings.sso.agentEnterpriseOnly": "Agentų SSO galimas tik su Enterprise planu.",
+  "app.settings.sso.agentEnterpriseOnly": "Agentų SSO yra leidimo Enterprise Edition dalis.",
   "app.settings.sso.idpOther": "Kita (bendrasis SAML)",
   "app.settings.sso.samlToggleLabel": "Įjungti SAML 2.0 vieningą prisijungimą",
   "app.settings.sso.samlHeading": "SAML 2.0 vieningas prisijungimas",
@@ -1057,10 +1068,12 @@ export const lt: Dictionary = {
   "app.settings.sso.customerTitle": "Klientų organizacijų SSO",
   "app.settings.sso.customerSubtitle":
     "Kiekviena kliento organizacija portale prijungia savo tapatybės teikėją. Čia jūs stebite visą jų parką.",
-  "app.settings.sso.customerLockedTitle": "Klientų organizacijų SSO galimas tik su Enterprise planu",
+  "app.settings.sso.customerLockedTitle":
+    "Klientų organizacijų SSO yra leidimo Enterprise Edition dalis",
   "app.settings.sso.customerLockedText":
     "Leiskite kiekvienai kliento organizacijai prijungti savo tapatybės teikėją (SAML arba OIDC) ir stebėkite visą parką šiame ekrane.",
-  "app.settings.sso.customerEnterpriseOnly": "Klientų organizacijų SSO galimas tik su Enterprise planu.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "Klientų organizacijų SSO yra leidimo Enterprise Edition dalis.",
   "app.settings.sso.statusActive": "Aktyvus",
   "app.settings.sso.statusPending": "Reikia patvirtinti",
   "app.settings.sso.statusError": "Klaida",
@@ -1259,7 +1272,7 @@ export const lt: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Žinių bazė paskelbta",
   "app.settings.portal.kbPublishedHint": "Paskelbti straipsniai matomi neprisijungus.",
   "app.settings.portal.hidePoweredByLabel": "Nerodyti „Veikia su Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Galima nuo Enterprise plano.",
+  "app.settings.portal.hidePoweredByHint": "Galima su leidimu Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Žinių bazės matomumas",
   "app.settings.portal.kbVisibilityPublic": "Vieša",
   "app.settings.portal.kbVisibilityAuthenticated": "Tik prisijungusiems",
@@ -1326,8 +1339,8 @@ export const lt: Dictionary = {
   "app.settings.workspace.generalTitle": "Bendrieji nustatymai ir prekės ženklas",
   "app.settings.workspace.generalSubtitle":
     "Darbo erdvės tapatybė, kalba, laiko zona ir užklausų numeravimas.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "Ištrinti atsisakyta — suplanuotas ištrynimas galimas debesies paslaugoje.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Ištrinti atsisakyta — suplanuotam ištrynimui reikia control plane.",
   "app.settings.workspace.generalIdentity": "Tapatybė",
   "app.settings.workspace.generalNameLabel": "Darbo erdvės pavadinimas",
   "app.settings.workspace.generalLogoLabel": "Logotipas",
@@ -1403,7 +1416,7 @@ export const lt: Dictionary = {
   },
   "app.settings.workspace.seatsAddHint":
     "Pridėkite vietų, kad galėtumėte pakviesti naujų agentų.",
-  "app.settings.workspace.seatsFreeHint": "Viewer vaidmenys nemokami ir neriboti.",
+  "app.settings.workspace.seatsFreeHint": "Viewer vaidmenys neužima vietos ir yra neriboti.",
   "app.settings.workspace.seatsAddAction": "Pridėti vietų",
   "app.settings.workspace.seatsManage": "Tvarkyti",
   "app.settings.workspace.seatLimitReached":
@@ -1488,8 +1501,8 @@ export const lt: Dictionary = {
   "app.settings.workspace.save": "Įrašyti",
   "app.settings.workspace.billingTitle": "Prenumerata ir atsiskaitymas",
   "app.settings.workspace.billingSubtitle":
-    "Planas, vietos, kvotos, mokėjimo būdas ir sąskaitų istorija.",
-  "app.settings.workspace.selfHosted": "SAVARANKIŠKAI TALPINAMA",
+    "Prenumerata, vietos, kvotos, mokėjimo būdas ir sąskaitų istorija.",
+  "app.settings.workspace.subscriptionNone": "Prenumeratos nėra",
   "app.settings.workspace.trialBadge": "BANDOMASIS",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
@@ -1504,10 +1517,9 @@ export const lt: Dictionary = {
     many: "per mėnesį · įskaičiuota {count} vietos",
     other: "per mėnesį · įskaičiuota {count} vietų",
   },
-  "app.settings.workspace.billingNoDue":
-    "Šiame serveryje mokėjimų nėra — atsiskaitymas tvarkomas debesies paslaugoje.",
-  "app.settings.workspace.cloudOnly": "Galima debesies paslaugoje",
-  "app.settings.workspace.changePlan": "Keisti planą",
+  "app.settings.workspace.billingNoDue": "Šiuo metu mokėjimų nėra.",
+  "app.settings.workspace.requiresControlPlane": "Reikia control plane",
+  "app.settings.workspace.changeSubscription": "Keisti prenumeratą",
   "app.settings.workspace.manageSeats": "Tvarkyti vietas",
   "app.settings.workspace.usageTitle": "Šio mėnesio naudojimas",
   "app.settings.workspace.quotaSeats": "Vietos",
@@ -1519,8 +1531,7 @@ export const lt: Dictionary = {
   "app.settings.workspace.colNumber": "Numeris",
   "app.settings.workspace.colPeriod": "Laikotarpis",
   "app.settings.workspace.colAmount": "Suma",
-  "app.settings.workspace.invoicesEmpty":
-    "Sąskaitų nėra — debesies paslaugoje sąskaitos bus rodomos čia.",
+  "app.settings.workspace.invoicesEmpty": "Sąskaitų dar nėra.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Įrašyta",
@@ -1593,18 +1604,18 @@ export const lt: Dictionary = {
   "app.settings.rules.typeFile": "Failas",
   "app.settings.rules.typeSelectLong": "Išskleidžiamasis sąrašas",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
-     tables partagées, celles de l'inbox et de ses filtres. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     Statuses, priorities and channels are NOT repeated here: they come from the
+     shared tables, the ones used by the inbox and its filters. */
 
-  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Texte” is typeText, above. */
   "app.settings.rules.typeSelect": "Sąrašas",
   "app.settings.rules.typeMultiSelect": "Kelių parinkčių sąrašas",
   "app.settings.rules.typeDate": "Data",
   "app.settings.rules.typeNumber": "Skaičius",
   "app.settings.rules.typeCheckbox": "Žymimasis langelis",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Įvykis",
   "app.settings.rules.condFieldStatus": "Būsena",
   "app.settings.rules.condFieldPriority": "Prioritetas",
@@ -1618,9 +1629,10 @@ export const lt: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Valandos nuo sukūrimo",
   "app.settings.rules.condFieldHoursUpdated": "Valandos nuo atnaujinimo",
 
-  /* Opérateurs. « Vide » et « non vide » passent par un groupe prépositionnel,
-     invariable : le lituanien accorderait son adjectif au genre du champ, et un
-     « yra tuščias » unique serait faux dès « Tema » ou « Žymos ». */
+  /* Operators. “Empty” and “not empty” go through an invariable
+     prepositional phrase: Lithuanian would agree its adjective with the
+     field's gender, and a single “yra tuščias” would be wrong as soon as
+     “Tema” or “Žymos”. */
   "app.settings.rules.opIs": "yra",
   "app.settings.rules.opIsNot": "nėra",
   "app.settings.rules.opContains": "turi",
@@ -1630,13 +1642,13 @@ export const lt: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. « Gautas pranešimas » reprend les mots de
-     ruleHintTrigger, plus haut. */
+  /* Trigger events. “Gautas pranešimas” echoes the words of
+     ruleHintTrigger, above. */
   "app.settings.rules.eventTicketCreated": "Užklausa sukurta",
   "app.settings.rules.eventTicketUpdated": "Užklausa atnaujinta",
   "app.settings.rules.eventMessageCreated": "Gautas pranešimas",
 
-  /* Actions, telles que le menu du builder les nomme. */
+  /* Actions, as the builder's menu names them. */
   "app.settings.rules.actSetStatus": "Nustatyti būseną",
   "app.settings.rules.actSetPriority": "Nustatyti prioritetą",
   "app.settings.rules.actAssignUser": "Priskirti agentui",
@@ -1645,13 +1657,13 @@ export const lt: Dictionary = {
   "app.settings.rules.actAddTags": "Pridėti žymų",
   "app.settings.rules.actEmailContact": "Išsiųsti kontaktui el. laišką",
 
-  /* Résumé d'une règle, en une ligne de liste. Les bribes s'enchaînent : verbe à
-     l'infinitif, sans majuscule ni point, comme le lituanien énumère. */
+  /* One-line rule summary. The fragments run on: verb in the infinitive,
+     with no capital and no full stop, the way Lithuanian enumerates. */
   "app.settings.rules.summaryPattern": "Jei {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "ir",
   "app.settings.rules.summaryAlways": "visada",
-  /* « iš » régit le génitif : singulier « sąlygos » au 1 et aux décimales,
-     pluriel « sąlygų » partout ailleurs. */
+  /* “iš” governs the genitive: singular “sąlygos” at 1 and for decimals,
+     plural “sąlygų” everywhere else. */
   "app.settings.rules.summaryAnyOf": {
     one: "bent viena iš {count} sąlygos",
     few: "bent viena iš {count} sąlygų",
@@ -1662,23 +1674,23 @@ export const lt: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "nepriskirta",
   "app.settings.rules.summaryAssigned": "priskirta",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. « depuis » se dit « jau », comme dans since.*. */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. “since” is said “jau”, as in since.*. */
   "app.settings.rules.summarySince": "jau {duration}",
   "app.settings.rules.summarySetStatus": "perkelti į {value}",
-  /* Les priorités sont des adjectifs qui s'accordent avec « prioritetas » :
-     « Aukštas prioritetas » se lit, « prioritetas Aukštas » non. */
+  /* Priorities are adjectives agreeing with “prioritetas”: “Aukštas
+     prioritetas” reads, “prioritetas Aukštas” does not. */
   "app.settings.rules.summarySetPriority": "{value} prioritetas",
   "app.settings.rules.summaryAssignTeam": "priskirti komandai {team}",
-  /* Repli quand l'équipe n'est plus connue : « une équipe » redoublerait le
-     « komandai » déjà présent dans le gabarit. */
+  /* Fallback when the team is no longer known: “a team” would double the
+     “komandai” already present in the template. */
   "app.settings.rules.summaryAnyTeam": "(nenurodyta)",
   "app.settings.rules.summaryAssignUser": "priskirti agentui",
   "app.settings.rules.summaryRoundRobin": "priskirti kitam agentui",
   "app.settings.rules.summaryAddTags": "pridėti {tags}",
   "app.settings.rules.summaryEmailContact": "išsiųsti kontaktui el. laišką",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Būsena → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioritetas → {value}",
   "app.settings.rules.macroSummaryTeam": "Komanda → {team}",
@@ -1789,7 +1801,7 @@ export const lt: Dictionary = {
   "app.settings.dev.dayYesterday": "Vakar {time}",
   "app.settings.dev.auditTitle": "Audito žurnalas",
   "app.settings.dev.auditSubtitle": "Visų administravimo veiksmų žurnalas. Saugoma 2 metus.",
-  "app.settings.dev.auditLockedTitle": "Audito žurnalas galimas tik su Enterprise planu",
+  "app.settings.dev.auditLockedTitle": "Audito žurnalas yra leidimo Enterprise Edition dalis",
   "app.settings.dev.auditLockedText":
     "Saugokite kiekvieno administravimo veiksmo įrašą 2 metus su „prieš / po“ palyginimu ir CSV eksportu.",
   "app.settings.dev.filterActorAll": "Vykdytojas: visi",
@@ -1813,9 +1825,9 @@ export const lt: Dictionary = {
   "app.settings.dev.actorContact": "Kontaktas",
   "app.settings.dev.exportUnauthorized": "Neautorizuota",
   "app.settings.dev.exportForbidden": "Skirta tik Owner ir Admin vaidmenims.",
-  "app.settings.dev.exportEnterpriseOnly": "Audito žurnalas galimas tik su Enterprise planu.",
+  "app.settings.dev.exportEnterpriseOnly": "Audito žurnalas yra leidimo Enterprise Edition dalis.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Darbo erdvė",
   "app.settingsNav.itemGeneral": "Bendrieji",
   "app.settingsNav.itemTeam": "Agentai ir komandos",
@@ -1849,7 +1861,7 @@ export const lt: Dictionary = {
   "app.settingsNav.copied": "Nukopijuota",
   "app.settingsNav.copy": "Kopijuoti",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nauja",
   "app.status.open": "Atvira",
   "app.status.waiting": "Laukiama",
@@ -1870,7 +1882,7 @@ export const lt: Dictionary = {
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Mano užklausos",
   "app.views.unassigned": "Nepriskirtos",
   "app.views.breaching": "Greitai vėluos",
@@ -1878,7 +1890,7 @@ export const lt: Dictionary = {
   "app.views.urgent": "Skubios šią savaitę",
   "app.views.escalation": "Eskalavimai",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Pervadinti",
   "app.kb.renameSave": "Įrašyti",
   "app.kb.deleteCategory": "Ištrinti kategoriją",
@@ -1890,7 +1902,7 @@ export const lt: Dictionary = {
     other: "Šioje kategorijoje dar yra {count} elementų. Prieš ją ištrindami, juos perkelkite.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "El. paštas",
   "app.login.emailPlaceholder": "jus@imone.lt",
   "app.login.password": "Slaptažodis",
@@ -1918,10 +1930,10 @@ export const lt: Dictionary = {
   "app.login.providerMissing": "Šis teikėjas šiame serveryje nesukonfigūruotas.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Quatre libellés viennent d'ailleurs : le titre du portail dans son propre
-     aperçu (home.title), le nom du workspace et la couleur d'accent (les mêmes
-     contrôles qu'en ST-01), et les rôles Owner / Admin / Agent / Viewer, qui ne
-     se traduisent pas. */
+  /* Four labels come from elsewhere: the portal title in its own preview
+     (home.title), the workspace name and the accent colour (the same controls
+     as in ST-01), and the Owner / Admin / Agent / Viewer roles, which are not
+     translated. */
 
   "app.onboarding.asideTitle": "Sąranka",
   "app.onboarding.asideFooter": "Visa tai vėliau galėsite pakeisti nustatymuose.",
@@ -1946,8 +1958,8 @@ export const lt: Dictionary = {
   "app.onboarding.previewCaption": "Jūsų klientų portalo peržiūra",
 
   "app.onboarding.emailTitle": "El. laiškų gavimas",
-  /* « demande » et « ticket » se disent tous deux « užklausa » : la phrase part
-     du courriel reçu pour ne pas se répéter. */
+  /* “request” and “ticket” are both said “užklausa”: the sentence starts
+     from the email received so as not to repeat itself. */
   "app.onboarding.emailBody":
     "Kiekvienas šiuo adresu gautas el. laiškas automatiškai tampa užklausa.",
   "app.onboarding.or": "ARBA",
@@ -1961,7 +1973,7 @@ export const lt: Dictionary = {
 
   "app.onboarding.teamTitle": "Pakvieskite savo komandą",
   "app.onboarding.teamBody":
-    "Pakvieskite agentus dabar arba pasidalykite pakvietimo nuoroda. Viewer vietos yra nemokamos.",
+    "Pakvieskite agentus dabar arba pasidalykite pakvietimo nuoroda. Viewer vaidmenys neužima vietos.",
   "app.onboarding.invitePlaceholder": "kolega@imone.lt",
   "app.onboarding.addRow": "+ Pridėti eilutę",
   "app.onboarding.sendInvites": "Išsiųsti pakvietimus",
@@ -1969,8 +1981,8 @@ export const lt: Dictionary = {
   "app.onboarding.testTitle": "Išsiųskite pirmąją užklausą",
   "app.onboarding.testBody": "Prieš atverdami paslaugą klientams patikrinkite visą kelią.",
   "app.onboarding.readyTitle": "Jūsų darbo erdvė paruošta",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody":
     "Išsiųskite el. laišką adresu {address}, kad sukurtumėte bandomąją užklausą.",
   "app.onboarding.openInbox": "Atverti gautuosius",
@@ -1982,35 +1994,43 @@ export const lt: Dictionary = {
   "app.onboarding.checklistSla": "SLA politika patikrinta",
 
 
-/* ===================== Reste du français codé en dur ===================== */
+/* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions, découpée autour de {mode}. En
-     lituanien le nom « sąlyga » change de NOMBRE et de CAS selon le
-     quantificateur : « visas sąlygas » au pluriel, « bent vieną sąlygą » au
-     singulier. Il part donc avec le sélecteur, et le gabarit se termine sur
-     {mode}. */
+  /* ST-05 — the condition group header, split around {mode}. In Lithuanian
+     the noun “sąlyga” changes NUMBER and CASE according to the quantifier:
+     “visas sąlygas” in the plural, “bent vieną sąlygą” in the singular. It
+     therefore travels with the selector, and the template ends on {mode}. */
   "app.settings.rules.matchIf": "JEI",
   "app.settings.rules.matchAllPattern": "Atitinka {mode}",
   "app.settings.rules.matchAnyPattern": "Atitinka {mode}",
   "app.settings.rules.matchAll": "visas sąlygas",
   "app.settings.rules.matchAny": "bent vieną sąlygą",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit et ne se traduisent pas ; seul « Plan » est du texte, et le
-     lituanien le place après le nom, comme upgradeToPro plus haut. */
-  "app.settings.workspace.planFree": "Free planas",
-  "app.settings.workspace.planTeam": "Team planas",
-  "app.settings.workspace.planEnterprise": "Enterprise planas",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "TADA",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Patikrinti su esama užklausa",
+  "app.settings.rules.testRunning": "Tikrinama…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Pašalinti",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "El. laiško tekstas — kintamieji: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française : seul l'affichage est traduit. */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string: only the display is translated. */
   "app.ticket.typeQuestion": "Klausimas",
   "app.ticket.typeIncident": "Incidentas",
   "app.ticket.typeTask": "Užduotis",
   "app.ticket.typeOther": "Kita",
 
-  /* AG-09 — export CSV des rapports. « s » est l'abréviation lituanienne des
-     secondes comme du SI, la même que dans draftSavedSeconds. */
+  /* AG-09 — CSV export of the reports. “s” is the Lithuanian abbreviation
+     for seconds as well as the SI one, the same as in draftSavedSeconds. */
   "app.reports.csvIndicator": "Rodiklis",
   "app.reports.csvCurrentPeriod": "Einamasis laikotarpis",
   "app.reports.csvPreviousPeriod": "Ankstesnis laikotarpis",
@@ -2025,8 +2045,8 @@ export const lt: Dictionary = {
   "app.reports.csvResolvedShort": "Išspręstos",
   "app.reports.csvAgent": "Agentas",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Naujas straipsnis",
   "app.kb.fromTicketSymptomHeading": "Simptomas",
   "app.kb.fromTicketSymptomPlaceholder": "[Aprašykite, ką pastebi klientas.]",
@@ -2036,8 +2056,8 @@ export const lt: Dictionary = {
   "app.kb.fromTicketMissingRequest": "pradinė kliento užklausa",
   "app.kb.fromTicketMissingAnswer": "agento atsakymas",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est une consigne à l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is an instruction to the author, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Instrukcija žingsnis po žingsnio",
   "app.kb.tplProcedureHint": "Numeruotų žingsnių seka su laukiamu rezultatu.",
   "app.kb.tplProcedureTitle": "Kaip [atlikti veiksmą]",

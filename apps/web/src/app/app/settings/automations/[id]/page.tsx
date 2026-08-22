@@ -8,7 +8,7 @@ import { Field, PageHeader, PageShell, SaveBar, TextInput, Toggle } from "@/comp
 import { getT, type Translate } from "@/i18n/server";
 import { saveRule, testRule } from "../actions";
 
-/** Modèles pré-remplis (état vide ST-05). */
+/** Pre-filled templates (ST-05 empty state). */
 function templates(
   t: Translate,
 ): Record<
@@ -50,8 +50,8 @@ function templates(
 }
 
 /**
- * ST-05 — Éditeur de règle (1000 px) : bloc SI (bordure --open), bloc ALORS (accent),
- * « Tester sur un ticket existant » fonctionnel (simulation, aucune écriture).
+ * ST-05 — Rule editor (1000 px): IF block (border --open), THEN block (accent),
+ * working "Test on an existing ticket" (simulation, no writes).
  */
 export default async function RuleEditorPage({
   params,

@@ -10,8 +10,8 @@ export async function GET(request: NextRequest) {
   if (q.length < 2) {
     return NextResponse.json({ tickets: [], contacts: [], organizations: [] });
   }
-  // Les brouillons ne remontent qu'à qui peut les ouvrir : la palette ⌘K est
-  // servie à tous les rôles, la frontière se pose donc ici, pas dans le composant.
+  // Drafts only surface to whoever can open them: the ⌘K palette is served to
+  // every role, so the boundary belongs here, not in the component.
   return NextResponse.json(
     await searchAll(current.tenant.id, q, isManager(current.agent.role)),
   );

@@ -1,4 +1,4 @@
-/** Requêtes des écrans Contacts (AG-07), Organisations (AG-08) et recherche (AG-06). */
+/** Queries for the Contacts (AG-07), Organizations (AG-08) and search (AG-06) screens. */
 import {
   contactOrganizations,
   contacts,
@@ -84,7 +84,7 @@ export async function getContact(tenantId: string, id: string) {
   return { contact, orgs, tickets: contactTickets };
 }
 
-/* ---------- Organisations ---------- */
+/* ---------- Organizations ---------- */
 
 export async function listOrganizations(tenantId: string, q?: string) {
   return db
@@ -154,7 +154,7 @@ export async function getOrganization(tenantId: string, id: string) {
   return { org, members, tickets: orgTickets };
 }
 
-/* ---------- Recherche globale (AG-06) ---------- */
+/* ---------- Global search (AG-06) ---------- */
 
 export type SearchResults = {
   tickets: { number: number; subject: string; status: string }[];
@@ -168,7 +168,7 @@ export type SearchResults = {
   articles: { id: string; title: string; status: string; viewCount: number }[];
 };
 
-/** ILIKE pour cette tranche ; bascule vers Postgres FTS avec la recherche avancée. */
+/** ILIKE for this slice; switches to Postgres FTS with advanced search. */
 export async function searchAll(tenantId: string, q: string, includeDrafts = false): Promise<SearchResults> {
   const like = `%${q}%`;
   const asNumber = Number(q.replace(/^#/, ""));
@@ -215,9 +215,9 @@ export async function searchAll(tenantId: string, q: string, includeDrafts = fal
         and(
           eq(kbArticles.tenantId, tenantId),
           ilike(kbArticles.title, like),
-          // Un brouillon n'existe que pour qui peut l'ouvrir. Le laisser remonter
-          // divulguerait à toute l'équipe le titre et l'audience d'un contenu non
-          // publié, sans qu'aucun écran ne permette de le lire.
+          // A draft only exists for whoever can open it. Letting it surface would
+          // disclose to the whole team the title and the audience of unpublished
+          // content, without any screen allowing it to be read.
           ...(includeDrafts ? [] : [eq(kbArticles.status, "published")]),
         ),
       )
@@ -225,7 +225,7 @@ export async function searchAll(tenantId: string, q: string, includeDrafts = fal
       .limit(4),
   ]);
 
-  // Organisation principale de chaque contact trouvé (pour la combobox AG-05 et ⌘K).
+  // Primary organization of each contact found (for the AG-05 combobox and ⌘K).
   let contactsWithOrg = contactRows.map((c) => ({
     ...c,
     organizationName: null as string | null,
@@ -256,9 +256,9 @@ export async function searchAll(tenantId: string, q: string, includeDrafts = fal
     tickets: ticketRows,
     contacts: contactsWithOrg,
     organizations: orgRows,
-    // La destination est calculée ici : la palette ⌘K est un composant client,
-    // elle ne connaît pas le rôle. Un gestionnaire va à l'éditeur, les autres à
-    // l'article publié sur le portail — le seul endroit où ils peuvent le lire.
+    // The destination is computed here: the ⌘K palette is a client component,
+    // it does not know the role. A manager goes to the editor, everyone else to
+    // the article published on the portal — the only place they can read it.
     articles: articleRows.map((a) => ({
       ...a,
       href: includeDrafts ? `/app/kb/${a.id}` : `/help/articles/${a.slug}`,

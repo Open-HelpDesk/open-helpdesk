@@ -2,125 +2,123 @@ import { expect, test } from "@playwright/test";
 import { dictionaryCodes, localeTags, pluralEntries, simpleEntries } from "./dict-source";
 
 /**
- * Contrôles statiques des dictionnaires — les seuls de ce dossier qui ne
- * lancent pas de navigateur : ils lisent les fichiers de traduction comme du
- * texte et n'ont donc besoin d'aucune instance.
+ * Static checks on the dictionaries — the only ones in this folder that do not
+ * launch a browser: they read the translation files as text and therefore need
+ * no instance at all.
  *
- * Elle est ici parce que le défaut qu'elle attrape est de la même famille que
- * les autres : invisible à la compilation, silencieux à l'exécution. Le type
- * `Message` n'exige qu'une forme `other` ; toutes les autres sont optionnelles,
- * parce qu'aucune langue n'en utilise le même jeu. Un dictionnaire polonais
- * privé de sa forme `many` compile donc parfaitement — et affiche
- * « 5 zgłoszenia » au lieu de « 5 zgłoszeń » pour tout nombre qui la
- * sélectionne, c'est-à-dire très souvent.
+ * This spec is here because the defect it catches is of the same family as the
+ * others: invisible at compile time, silent at run time. The `Message` type only
+ * requires an `other` form; all the others are optional, because no language
+ * uses the same set of them. So a Polish dictionary deprived of its `many` form
+ * compiles perfectly — and displays “5 zgłoszenia” instead of “5 zgłoszeń” for
+ * every number that selects it, which is to say very often.
  */
 
 /**
- * Les catégories qu'un dictionnaire doit fournir pour cette langue.
+ * The categories a dictionary must supply for this language.
  *
- * Ce n'est pas tout à fait `resolvedOptions().pluralCategories`, qui énumère
- * aussi des catégories qu'aucun effectif affiché par le produit ne
- * sélectionnera. On prend donc les catégories réellement atteintes sur les
- * nombres que le produit rend — des effectifs entiers, tous les compteurs d'ici
- * comptant des lignes — plus `other`, qui est le repli de `renderMessage` et
- * doit exister partout.
+ * This is not quite `resolvedOptions().pluralCategories`, which also enumerates
+ * categories that no count displayed by the product will ever select. So we take
+ * the categories actually reached on the numbers the product renders — whole
+ * counts, every counter here counting rows — plus `other`, which is
+ * `renderMessage`'s fallback and must exist everywhere.
  *
- * Deux exclusions, toutes deux assumées :
- *  - le `many` du tchèque, du slovaque et du lituanien ne concerne que les
- *    nombres décimaux. Aucun pluriel du produit n'en reçoit : `size()` passe
- *    « 1,2 Mo » en paramètre déjà formaté, jamais en `{count}`.
- *  - le `many` du français, de l'espagnol, de l'italien et du portugais ne se
- *    déclenche qu'au million exact — « un million DE tickets ». À ce nombre
- *    écrit en chiffres, `other` reste correct, et aucun tenant n'y arrivera.
- * Le `many` du polonais, lui, est exigé : il tombe sur 5, 6, 22… c'est-à-dire
- * en permanence.
+ * Two exclusions, both deliberate:
+ *  - the `many` of Czech, Slovak and Lithuanian only concerns decimal numbers.
+ *    No plural of the product ever receives one: `size()` passes “1,2 Mo” as an
+ *    already-formatted parameter, never as `{count}`.
+ *  - the `many` of French, Spanish, Italian and Portuguese only fires at exactly
+ *    one million — “un million DE tickets”. At that number written in digits,
+ *    `other` stays correct, and no tenant will ever get there.
+ * The `many` of Polish, on the other hand, is required: it falls on 5, 6, 22…
+ * which is to say permanently.
  */
-function categoriesAttendues(tag: string): string[] {
-  const regles = new Intl.PluralRules(tag);
-  const vues = new Set<string>(["other"]);
-  for (let n = 0; n <= 9_999; n++) vues.add(regles.select(n));
-  return [...vues].sort();
+function expectedCategories(tag: string): string[] {
+  const rules = new Intl.PluralRules(tag);
+  const seen = new Set<string>(["other"]);
+  for (let n = 0; n <= 9_999; n++) seen.add(rules.select(n));
+  return [...seen].sort();
 }
 
-const REFERENCE = pluralEntries("fr");
+const REFERENCE = pluralEntries("en");
 const CODES = dictionaryCodes();
 
-test.describe("Tables de pluriel", () => {
-  test("le français en déclare bien quelques dizaines", () => {
-    // Garde-fou du garde-fou : si l'analyse ne trouvait plus rien, tous les
-    // tests ci-dessous passeraient au vert sans rien vérifier.
+test.describe("Plural tables", () => {
+  test("French does declare a few dozen of them", () => {
+    // Guard rail for the guard rail: if the parsing found nothing any more,
+    // every test below would go green without verifying anything.
     expect(REFERENCE.size).toBeGreaterThan(40);
   });
 
-  test("chaque langue du registre a son dictionnaire", () => {
-    const attendus = [...localeTags().keys()].filter((c) => c !== "fr").sort();
-    expect(CODES).toEqual(attendus);
+  test("every language in the registry has its dictionary", () => {
+    const expected = [...localeTags().keys()].filter((c) => c !== "en").sort();
+    expect(CODES).toEqual(expected);
   });
 
   for (const code of CODES) {
 
-    test(`${code} : toutes les catégories que la langue peut sélectionner`, () => {
+    test(`${code}: every category the language can select`, () => {
       const tag = localeTags().get(code);
-      expect(tag, `${code} absent de locales.ts`).toBeTruthy();
-      const requises = categoriesAttendues(tag!);
-      const dico = pluralEntries(code);
+      expect(tag, `${code} missing from locales.ts`).toBeTruthy();
+      const required = expectedCategories(tag!);
+      const dict = pluralEntries(code);
 
-      // Même jeu de clés au pluriel que le français : une clé traduite en
-      // chaîne simple là où le français attend des formes ne planterait pas,
-      // elle rendrait juste la même phrase à tous les nombres.
-      expect([...dico.keys()].sort()).toEqual([...REFERENCE.keys()].sort());
+      // Same set of plural keys as French: a key translated as a plain string
+      // where French expects forms would not crash, it would just render the
+      // same sentence for every number.
+      expect([...dict.keys()].sort()).toEqual([...REFERENCE.keys()].sort());
 
-      const manquantes = [...dico].flatMap(([cle, formes]) =>
-        requises.filter((c) => !(c in formes)).map((c) => `${cle} → ${c}`),
+      const missing = [...dict].flatMap(([key, forms]) =>
+        required.filter((c) => !(c in forms)).map((c) => `${key} → ${c}`),
       );
-      expect(manquantes, `${code} (${requises.join(", ")})`).toEqual([]);
+      expect(missing, `${code} (${required.join(", ")})`).toEqual([]);
     });
   }
 });
 
 /**
- * Jeux de vocabulaire — statuts, priorités, urgences, canaux.
+ * Vocabulary sets — statuses, priorities, urgencies, channels.
  *
- * Ces libellés ne vivent pas dans les écrans mais dans des tables de
- * correspondance, à l'écart : un terme faux y survit longtemps. Le risque
- * particulier est la COLLISION. Si deux statuts d'un même jeu se traduisent par
- * le même mot, le filtre qui les liste affiche deux entrées identiques et
- * devient inutilisable — sans que rien ne plante, et sans qu'aucun typage ne
- * puisse le voir. Le français ne peut pas révéler le défaut : c'est lui la
- * source, ses valeurs sont distinctes par construction.
+ * These labels do not live in the screens but in lookup tables, off to one
+ * side: a wrong term survives there for a long time. The particular risk is
+ * COLLISION. If two statuses of the same set translate to the same word, the
+ * filter that lists them shows two identical entries and becomes unusable —
+ * without anything crashing, and without any typing being able to see it.
+ * English cannot reveal the defect: it is the source, its values are distinct
+ * by construction.
  */
-const JEUX: Record<string, RegExp> = {
-  "statuts du portail": /^status\./,
-  "statuts de l'espace agent": /^app\.status\./,
-  "priorités": /^app\.priority\./,
-  "urgences du formulaire client": /^newRequest\.urgency(?!Label)/,
-  "canaux": /^app\.channel\./,
+const SETS: Record<string, RegExp> = {
+  "portal statuses": /^status\./,
+  "agent workspace statuses": /^app\.status\./,
+  "priorities": /^app\.priority\./,
+  "customer form urgencies": /^newRequest\.urgency(?!Label)/,
+  "channels": /^app\.channel\./,
 };
 
-test.describe("Jeux de vocabulaire", () => {
-  test("les jeux du français comptent bien plusieurs valeurs chacun", () => {
-    // Garde-fou : si l'analyse ne trouvait plus les clés, les tests ci-dessous
-    // passeraient au vert en ne comparant rien.
-    const fr = simpleEntries("fr");
-    for (const [nom, re] of Object.entries(JEUX)) {
-      const n = [...fr.keys()].filter((k) => re.test(k)).length;
-      expect(n, `jeu « ${nom} »`).toBeGreaterThan(2);
+test.describe("Vocabulary sets", () => {
+  test("the source sets do count several values each", () => {
+    // Guard rail: if the parsing no longer found the keys, the tests below
+    // would go green while comparing nothing.
+    const source = simpleEntries("en");
+    for (const [name, re] of Object.entries(SETS)) {
+      const n = [...source.keys()].filter((k) => re.test(k)).length;
+      expect(n, `set “${name}”`).toBeGreaterThan(2);
     }
   });
 
   for (const code of CODES) {
-    test(`${code} : aucun libellé en double dans un même jeu`, () => {
+    test(`${code}: no duplicate label inside one set`, () => {
       const d = simpleEntries(code);
       const collisions: string[] = [];
-      for (const [nom, re] of Object.entries(JEUX)) {
-        const par = new Map<string, string[]>();
-        for (const cle of [...d.keys()].filter((k) => re.test(k))) {
-          const valeur = d.get(cle)!;
-          if (!par.has(valeur)) par.set(valeur, []);
-          par.get(valeur)!.push(cle.split(".").pop()!);
+      for (const [name, re] of Object.entries(SETS)) {
+        const byValue = new Map<string, string[]>();
+        for (const key of [...d.keys()].filter((k) => re.test(k))) {
+          const value = d.get(key)!;
+          if (!byValue.has(value)) byValue.set(value, []);
+          byValue.get(value)!.push(key.split(".").pop()!);
         }
-        for (const [valeur, cles] of par) {
-          if (cles.length > 1) collisions.push(`${nom} : « ${valeur} » ← ${cles.join(" = ")}`);
+        for (const [value, keys] of byValue) {
+          if (keys.length > 1) collisions.push(`${name}: “${value}” ← ${keys.join(" = ")}`);
         }
       }
       expect(collisions).toEqual([]);
@@ -129,60 +127,61 @@ test.describe("Jeux de vocabulaire", () => {
 });
 
 /**
- * Verbes d'action que la traduction ne doit pas confondre.
+ * Action verbs the translation must not conflate.
  *
- * Chaque paire ci-dessous porte deux libellés qui sont DISTINCTS en français et
- * dont la confusion a une conséquence : cliquer sur l'un en croyant l'autre.
- * Le cas qui a motivé ce test s'est produit sur quatre des quatorze dernières
- * langues livrées — bulgare, estonien, lituanien, slovène — où le mot naturel
- * de la révocation est aussi celui de l'annulation. Le lien rouge qui invalide
- * définitivement une clé d'API portait alors le même mot que le bouton Annuler
- * du formulaire juste en dessous.
+ * Each pair below carries two labels that are DISTINCT in French and whose
+ * confusion has a consequence: clicking one while believing it is the other.
+ * The case that motivated this test occurred in four of the fourteen most
+ * recently shipped languages — Bulgarian, Estonian, Lithuanian, Slovenian —
+ * where the natural word for revoking is also the word for cancelling. The red
+ * link that permanently invalidates an API key then carried the same word as
+ * the Cancel button of the form just below it.
  *
- * On ne compare que des libellés courts et nus, et seulement des paires qui se
- * rencontrent SUR LE MÊME ÉCRAN. Deux verbes identiques sur deux écrans qui ne
- * se croisent jamais ne trompent personne : beaucoup de langues n'ont qu'un mot
- * pour « supprimer » et « retirer », et c'est légitime — exiger la distinction
- * ferait échouer le finnois, le néerlandais et le polonais sur une différence
- * que le français fait sans que le produit en dépende.
+ * Only short, bare labels are compared, and only pairs that meet ON THE SAME
+ * SCREEN. Two identical verbs on two screens that never cross paths mislead
+ * nobody: many languages have only one word for “delete” and “remove”, and that
+ * is legitimate — demanding the distinction would fail Finnish, Dutch and
+ * Polish on a difference French makes without the product depending on it.
  */
-const PAIRES: [string, string, string][] = [
-  // Le défaut observé : le lien rouge de révocation et le bouton Annuler du
-  // formulaire cohabitent sur l'écran API & webhooks, `cancel` du shell étant
-  // rendu sur tous les écrans de réglages.
-  ["révoquer une clé", "app.settings.dev.revoke", "app.settings.shell.cancel"],
-  ["révoquer plutôt que supprimer", "app.settings.dev.revoke", "app.settings.dev.delete"],
-  ["révoquer plutôt que désactiver", "app.settings.dev.revoke", "app.settings.dev.disable"],
-  // Une règle d'automatisation se désactive ou se supprime depuis la même ligne.
-  ["supprimer plutôt que désactiver", "app.settings.rules.delete", "app.settings.rules.ruleDisable"],
-  // Zone de danger du workspace : désactiver un agent n'est pas supprimer.
-  ["supprimer plutôt que désactiver", "app.settings.workspace.delete", "app.settings.workspace.deactivate"],
+const PAIRS: [string, string, string][] = [
+  // The observed defect: the red revoke link and the form's Cancel button live
+  // side by side on the API & webhooks screen, the shell's `cancel` being
+  // rendered on every settings screen.
+  ["revoke a key", "app.settings.dev.revoke", "app.settings.shell.cancel"],
+  ["revoke rather than delete", "app.settings.dev.revoke", "app.settings.dev.delete"],
+  ["revoke rather than disable", "app.settings.dev.revoke", "app.settings.dev.disable"],
+  // An automation rule is disabled or deleted from the same row.
+  ["delete rather than disable", "app.settings.rules.delete", "app.settings.rules.ruleDisable"],
+  // Workspace danger zone: deactivating an agent is not deleting.
+  ["delete rather than disable", "app.settings.workspace.delete", "app.settings.workspace.deactivate"],
 ];
 
-test.describe("Verbes d'action", () => {
-  test("les paires sont bien distinctes en français", () => {
-    // Sans ce garde-fou, une paire dont une clé aurait disparu de fr.ts
-    // passerait au vert dans toutes les langues sans rien vérifier.
-    const fr = simpleEntries("fr");
-    for (const [nom, a, b] of PAIRES) {
-      expect(fr.get(a), `${nom} : ${a} absente de fr.ts`).toBeTruthy();
-      expect(fr.get(b), `${nom} : ${b} absente de fr.ts`).toBeTruthy();
-      expect(fr.get(a), `${nom} : la paire est déjà confondue en français`).not.toBe(fr.get(b));
+test.describe("Action verbs", () => {
+  test("the pairs really are distinct in the source", () => {
+    // Without this guard rail, a pair with a key that had vanished from en.ts
+    // would go green in every language without verifying anything.
+    const source = simpleEntries("en");
+    for (const [name, a, b] of PAIRS) {
+      expect(source.get(a), `${name}: ${a} missing from en.ts`).toBeTruthy();
+      expect(source.get(b), `${name}: ${b} missing from en.ts`).toBeTruthy();
+      expect(source.get(a), `${name}: the pair is already conflated in the source`).not.toBe(
+        source.get(b),
+      );
     }
   });
 
   for (const code of CODES) {
-    test(`${code} : aucune paire d'actions confondue`, () => {
+    test(`${code}: no conflated action pair`, () => {
       const d = simpleEntries(code);
-      // Comparaison insensible à la casse et à la ponctuation : « Odobrať: » et
-      // « Odobrať » sont le même mot pour l'utilisateur qui lit le bouton.
-      const nu = (v: string | undefined) =>
+      // Comparison insensitive to case and punctuation: “Odobrať:” and
+      // “Odobrať” are the same word for the user reading the button.
+      const bare = (v: string | undefined) =>
         (v ?? "").toLocaleLowerCase().replace(/[\s:.…—-]+$/u, "").trim();
-      const confusions = PAIRES.filter(([, a, b]) => {
-        const va = nu(d.get(a));
-        return va !== "" && va === nu(d.get(b));
-      }).map(([nom, a, b]) => `${nom} : « ${d.get(a)} » ← ${a} = ${b}`);
-      expect(confusions).toEqual([]);
+      const conflated = PAIRS.filter(([, a, b]) => {
+        const bareA = bare(d.get(a));
+        return bareA !== "" && bareA === bare(d.get(b));
+      }).map(([name, a, b]) => `${name}: “${d.get(a)}” ← ${a} = ${b}`);
+      expect(conflated).toEqual([]);
     });
   }
 });

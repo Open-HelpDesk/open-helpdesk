@@ -2,11 +2,11 @@ import type { ReactNode } from "react";
 import { parseInline, type ArticleBlock } from "@/lib/article-format";
 
 /**
- * Rendu d'un corps d'article (PT-03) — mesures de la maquette : 66ch, 17/1.75.
+ * Rendering of an article body (PT-03) — mockup measurements: 66ch, 17/1.75.
  *
- * Aucune directive « use client » : le portail le rend côté serveur, l'aperçu de
- * l'éditeur le rend côté client. Le même composant des deux côtés, c'est ce qui
- * garantit que l'aperçu ne ment pas.
+ * No "use client" directive: the portal renders it server-side, the editor's
+ * preview renders it client-side. The same component on both sides is what
+ * guarantees the preview does not lie.
  */
 
 function inline(text: string): ReactNode[] {
@@ -67,8 +67,8 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
               </h3>
             );
           case "callout":
-            // La maquette a troqué le filet latéral pour une carte teintée à icône :
-            // l'encadré se lit comme un aparté, plus comme une citation.
+            // The mockup traded the side rule for a tinted card with an icon:
+            // the box reads as an aside, no longer as a quotation.
             return (
               <div
                 key={i}
@@ -94,8 +94,8 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
               </div>
             );
           case "list":
-            // Les étapes numérotées portent une pastille : une procédure se suit
-            // du regard, elle ne se lit pas comme un paragraphe.
+            // Numbered steps carry a badge: a procedure is followed with the eye,
+            // it is not read like a paragraph.
             return block.ordered ? (
               <ol key={i} className="m-0 flex list-none flex-col gap-[11px] p-0">
                 {block.items.map((item, j) => (
@@ -126,7 +126,7 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
             );
           case "image":
             return (
-              // Dimensions inconnues à l'écriture : le ratio est porté par l'image.
+              // Dimensions unknown at authoring time: the ratio is carried by the image.
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={i}

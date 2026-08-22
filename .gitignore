@@ -9,6 +9,6 @@ dist/
 .DS_Store
 coverage/
 
-# Smoke test — artefacts d'exécution
+# Smoke test — run artefacts
 packages/smoke/test-results/
 packages/smoke/playwright-report/

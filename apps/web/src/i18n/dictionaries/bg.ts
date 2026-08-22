@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const bg: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const bg: Dictionary = {
     "Услугата е временно спряна: прегледът остава достъпен, новите запитвания са изключени.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Помощен център",
   "home.title": "Как можем да Ви помогнем?",
   "home.subtitle":
@@ -25,14 +25,14 @@ export const bg: Dictionary = {
   "home.ctaTitle": "Не намирате това, което търсите?",
   "home.ctaBody": "Нашият екип отговаря средно за 34 минути в работно време.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Търсене в помощния център…",
   "search.emptyTitle": "Няма резултати за „{query}“",
   "search.emptyBody": "Опитайте с по-общи думи или опишете случая си на нашия екип.",
   "search.breadcrumb": "Търсене",
   "search.resultsTitle": "Резултати за „{query}“",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Помощ",
   "category.otherCategories": "Други категории",
   "category.otherArticles": "Други статии",
@@ -54,7 +54,7 @@ export const bg: Dictionary = {
   "vote.prefill": "Създаване на предварително попълнена заявка",
   "vote.prefillSubject": "Относно статията „{title}“",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Подаване на заявка",
   "newRequest.subtitle": "Опишете случая си. Отговаряме в рамките на 4 работни часа.",
   "newRequest.type": "Тип заявка",
@@ -91,7 +91,7 @@ export const bg: Dictionary = {
   "submitted.track": "Проследяване на заявката",
   "submitted.backToHelp": "Назад към помощта",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "Моите заявки",
   "requests.new": "Нова заявка",
   "requests.tabOpen": "Отворени",
@@ -103,13 +103,13 @@ export const bg: Dictionary = {
     "Заявките Ви за поддръжка ще се появяват тук — със своя статус и историята на съобщенията.",
   "requests.awaitingReply": "Очаква се отговор",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "В обработка",
   "status.waiting": "Изчаква Вашия отговор",
   "status.resolved": "Решена",
   "status.closed": "Затворена",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Решена {when}",
   "activity.closed": "Затворена {when}",
   "activity.waiting": "Изчаква Вашия отговор {since}",
@@ -117,13 +117,13 @@ export const bg: Dictionary = {
   "activity.youReplied": "Отговорихте {when}",
   "activity.created": "Създадена {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": { one: "от {count} мин", other: "от {count} мин" },
   "since.hours": { one: "от {count} ч", other: "от {count} ч" },
   "since.days": { one: "от {count} ден", other: "от {count} дни" },
   "since.date": "от {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Вие",
   "request.team": "Екипът",
   "request.agentAuthor": "{name} — {tenant}",
@@ -140,7 +140,7 @@ export const bg: Dictionary = {
   "request.markSolved": "Отбелязване като решена",
   "request.reopen": "Повторно отваряне на заявката",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Проследяване на заявките Ви",
   "login.magicIntro":
     "Въведете имейла си и ще Ви изпратим линк за вход. Няма парола за помнене.",
@@ -153,7 +153,15 @@ export const bg: Dictionary = {
   "login.expired": "Този линк е изтекъл или е невалиден. Заявете нов.",
   "login.footer": "Още нямате заявки? Профилът Ви се създава автоматично при първата заявка.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Вашият линк за вход — {workspace}",
+  "login.emailBody":
+    "Здравейте,\n\nНатиснете този линк, за да отворите заявките си (валиден 15 минути):\n{url}\n\nАко не сте заявили това, игнорирайте този имейл.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Вие сте администратор на тази организация. Настройките, които правите тук, се прилагат за {count} служител от {org}, който използва поддръжката на {tenant}.",
     other: "Вие сте администратор на тази организация. Настройките, които правите тук, се прилагат за {count} служители от {org}, които използват поддръжката на {tenant}.",
@@ -236,7 +244,7 @@ export const bg: Dictionary = {
   "members.note":
     "Служителите се появяват автоматично при първия си вход или при първата си заявка. Може да определите втори администратор, за да не оставате единствената точка за контакт.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Нужна ли Ви е помощ?",
   "widget.close": "Затваряне",
   "widget.messageLabel": "Вашето съобщение",
@@ -257,7 +265,7 @@ export const bg: Dictionary = {
   "csatPage.doneTitle": "Благодарим!",
   "csatPage.doneBody": "Коментарът Ви беше предаден на екипа.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Входящи",
@@ -270,7 +278,7 @@ export const bg: Dictionary = {
   "app.shell.suspendedTitle": "Това работно пространство е спряно",
   "app.shell.suspendedText": "Свържете се с вашия администратор, за да възстановите достъпа.",
   "app.shell.suspendedOwnerText":
-    "Изберете план или актуализирайте начина си на плащане, за да активирате отново работното пространство.",
+    "Уредете абонамента или актуализирайте начина си на плащане, за да активирате отново работното пространство.",
   "app.shell.suspendedBillingCta": "Отваряне на Абонамент и фактуриране",
   "app.shell.myTickets": "Моите тикети",
   "app.shell.newTicket": "Нов тикет",
@@ -645,7 +653,7 @@ export const bg: Dictionary = {
   "app.reports.columnAgent": "Агент",
   "app.reports.columnFirstReply": "1-ви отговор",
   "app.reports.customReports": "Персонализирани отчети",
-  "app.reports.enterprisePlanBadge": "ПЛАН ENTERPRISE",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Научете повече",
   "app.reports.chartDailyAria": "{labelA} и {labelB} по дни",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -668,8 +676,11 @@ export const bg: Dictionary = {
   "app.settings.shell.saved": "✓ Запазено",
   "app.settings.shell.cancel": "Отказ",
   "app.settings.shell.save": "Запазване",
-  "app.settings.shell.planEnterprise": "ПЛАН ENTERPRISE",
-  "app.settings.shell.upgradeToEnterprise": "Преминаване към план Enterprise",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Затваряне",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Управление на абонамента",
   "app.settings.shell.eeSelfHostedTitle": "Функция от изданието Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Тази функция е предмет на търговския лиценз (директорията ee/ в хранилището) и не е включена в самостоятелно хостваното издание с отворен код.",
@@ -843,10 +854,10 @@ export const bg: Dictionary = {
   "app.settings.sso.agentTitle": "SSO за агенти",
   "app.settings.sso.agentSubtitle":
     "Единно влизане чрез SAML 2.0 и осигуряване чрез SCIM за Вашия екип по поддръжката.",
-  "app.settings.sso.agentLockedTitle": "SSO за агенти е достъпно само в план Enterprise",
+  "app.settings.sso.agentLockedTitle": "SSO за агенти е част от Enterprise Edition",
   "app.settings.sso.agentLockedText":
     "Свържете своя доставчик на идентичност по SAML 2.0, осигурявайте агентите си чрез SCIM и наложете единно влизане на целия екип.",
-  "app.settings.sso.agentEnterpriseOnly": "SSO за агенти е достъпно само в план Enterprise.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO за агенти е част от Enterprise Edition.",
   "app.settings.sso.idpOther": "Друг (общ SAML)",
   "app.settings.sso.samlToggleLabel": "Включване на единното влизане чрез SAML 2.0",
   "app.settings.sso.samlHeading": "Единно влизане чрез SAML 2.0",
@@ -935,11 +946,11 @@ export const bg: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Всяка клиентска организация свързва своя доставчик на идентичност от портала. Тук наблюдавате всички връзки.",
   "app.settings.sso.customerLockedTitle":
-    "SSO за клиентските организации е достъпно само в план Enterprise",
+    "SSO за клиентските организации е част от Enterprise Edition",
   "app.settings.sso.customerLockedText":
     "Позволете на всяка клиентска организация да включи своя доставчик на идентичност (SAML или OIDC) и наблюдавайте всички връзки от този екран.",
   "app.settings.sso.customerEnterpriseOnly":
-    "SSO за клиентските организации е достъпно само в план Enterprise.",
+    "SSO за клиентските организации е част от Enterprise Edition.",
   "app.settings.sso.statusActive": "Активна",
   "app.settings.sso.statusPending": "За потвърждаване",
   "app.settings.sso.statusError": "Грешка",
@@ -1096,7 +1107,7 @@ export const bg: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Базата знания е публикувана",
   "app.settings.portal.kbPublishedHint": "Публикуваните статии се виждат без вход.",
   "app.settings.portal.hidePoweredByLabel": "Скриване на „Задвижвано от Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Достъпно от план Enterprise нататък.",
+  "app.settings.portal.hidePoweredByHint": "Достъпно с Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Видимост на базата знания",
   "app.settings.portal.kbVisibilityPublic": "Публична",
   "app.settings.portal.kbVisibilityAuthenticated": "Само след вход",
@@ -1158,8 +1169,8 @@ export const bg: Dictionary = {
   "app.settings.workspace.generalTitle": "Общи настройки и брандиране",
   "app.settings.workspace.generalSubtitle":
     "Идентичност на работното пространство, език, часова зона и номериране на тикетите.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "Изтриването е отказано — планираното изтриване е достъпно в облака.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Изтриването е отказано — планираното изтриване изисква control plane.",
   "app.settings.workspace.generalIdentity": "Идентичност",
   "app.settings.workspace.generalNameLabel": "Име на работното пространство",
   "app.settings.workspace.generalLogoLabel": "Лого",
@@ -1224,7 +1235,7 @@ export const bg: Dictionary = {
     other: "{count} / {quota} използвани места — лимитът е достигнат",
   },
   "app.settings.workspace.seatsAddHint": "Добавете места, за да поканите нови агенти.",
-  "app.settings.workspace.seatsFreeHint": "Ролите Viewer са безплатни и неограничени.",
+  "app.settings.workspace.seatsFreeHint": "Ролите Viewer не заемат място и са неограничени.",
   "app.settings.workspace.seatsAddAction": "Добавяне на места",
   "app.settings.workspace.seatsManage": "Управление",
   "app.settings.workspace.seatLimitReached":
@@ -1304,8 +1315,8 @@ export const bg: Dictionary = {
   "app.settings.workspace.save": "Запазване",
   "app.settings.workspace.billingTitle": "Абонамент и фактуриране",
   "app.settings.workspace.billingSubtitle":
-    "План, места, квоти, начин на плащане и история на фактурите.",
-  "app.settings.workspace.selfHosted": "СОБСТВЕН ХОСТИНГ",
+    "Абонамент, места, квоти, начин на плащане и история на фактурите.",
+  "app.settings.workspace.subscriptionNone": "Няма абонамент",
   "app.settings.workspace.trialBadge": "ПРОБЕН",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
@@ -1316,10 +1327,9 @@ export const bg: Dictionary = {
     one: "на месец · {count} включено място",
     other: "на месец · {count} включени места",
   },
-  "app.settings.workspace.billingNoDue":
-    "Няма дължими суми в тази инстанция — фактурирането се управлява в облачния план.",
-  "app.settings.workspace.cloudOnly": "Достъпно в облачния план",
-  "app.settings.workspace.changePlan": "Смяна на плана",
+  "app.settings.workspace.billingNoDue": "В момента няма дължими суми.",
+  "app.settings.workspace.requiresControlPlane": "Изисква control plane",
+  "app.settings.workspace.changeSubscription": "Промяна на абонамента",
   "app.settings.workspace.manageSeats": "Управление на местата",
   "app.settings.workspace.usageTitle": "Потребление за месеца",
   "app.settings.workspace.quotaSeats": "Места",
@@ -1331,8 +1341,7 @@ export const bg: Dictionary = {
   "app.settings.workspace.colNumber": "Номер",
   "app.settings.workspace.colPeriod": "Период",
   "app.settings.workspace.colAmount": "Сума",
-  "app.settings.workspace.invoicesEmpty":
-    "Няма фактури — фактурите ще се появяват тук в облачния план.",
+  "app.settings.workspace.invoicesEmpty": "Все още няма фактури.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Запазено",
@@ -1406,7 +1415,7 @@ export const bg: Dictionary = {
   "app.settings.rules.typeFile": "Файл",
   "app.settings.rules.typeSelectLong": "Падащ списък",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) --- */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) --- */
   "app.settings.rules.typeSelect": "Списък",
   "app.settings.rules.typeMultiSelect": "Множествен избор",
   "app.settings.rules.typeDate": "Дата",
@@ -1578,7 +1587,7 @@ export const bg: Dictionary = {
   "app.settings.dev.auditTitle": "Одитен дневник",
   "app.settings.dev.auditSubtitle":
     "Пълен дневник на административните действия. Съхранение 2 години.",
-  "app.settings.dev.auditLockedTitle": "Одитният дневник е достъпен само в план Enterprise",
+  "app.settings.dev.auditLockedTitle": "Одитният дневник е част от Enterprise Edition",
   "app.settings.dev.auditLockedText":
     "Запазвайте следа от всяко административно действие в продължение на 2 години, с разлика преди/след и експорт в CSV.",
   "app.settings.dev.filterActorAll": "Извършител: всички",
@@ -1600,9 +1609,9 @@ export const bg: Dictionary = {
   "app.settings.dev.actorContact": "Контакт",
   "app.settings.dev.exportUnauthorized": "Неоторизиран",
   "app.settings.dev.exportForbidden": "Само за ролите Owner и Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Одитният дневник е достъпен само в план Enterprise.",
+  "app.settings.dev.exportEnterpriseOnly": "Одитният дневник е част от Enterprise Edition.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Работно пространство",
   "app.settingsNav.itemGeneral": "Общи",
   "app.settingsNav.itemTeam": "Агенти и екипи",
@@ -1636,7 +1645,7 @@ export const bg: Dictionary = {
   "app.settingsNav.copied": "Копирано",
   "app.settingsNav.copy": "Копиране",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Нов",
   "app.status.open": "Отворен",
   "app.status.waiting": "Изчакващ",
@@ -1657,7 +1666,7 @@ export const bg: Dictionary = {
   "app.unit.kilobytes": "{count} КБ",
   "app.unit.megabytes": "{value} МБ",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Моите тикети",
   "app.views.unassigned": "Без изпълнител",
   "app.views.breaching": "Скоро просрочени",
@@ -1665,7 +1674,7 @@ export const bg: Dictionary = {
   "app.views.urgent": "Спешни тази седмица",
   "app.views.escalation": "Ескалации",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Преименуване",
   "app.kb.renameSave": "Запазване",
   "app.kb.deleteCategory": "Изтриване на категорията",
@@ -1675,7 +1684,7 @@ export const bg: Dictionary = {
     other: "Тази категория все още съдържа {count} елемента. Преместете ги, преди да я изтриете.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "Имейл",
   "app.login.emailPlaceholder": "ivan@firma.bg",
   "app.login.password": "Парола",
@@ -1742,7 +1751,7 @@ export const bg: Dictionary = {
 
   "app.onboarding.teamTitle": "Поканване на Вашия екип",
   "app.onboarding.teamBody":
-    "Поканете агентите си сега или споделете линка за покана. Местата Viewer са безплатни.",
+    "Поканете агентите си сега или споделете линка за покана. Ролите Viewer не заемат място.",
   "app.onboarding.invitePlaceholder": "kolega@firma.bg",
   "app.onboarding.addRow": "+ Добавяне на ред",
   "app.onboarding.sendInvites": "Изпращане на поканите",
@@ -1760,7 +1769,7 @@ export const bg: Dictionary = {
   "app.onboarding.checklistTicket": "Първият тикет е получен",
   "app.onboarding.checklistSla": "SLA политиката е проверена",
 
-/* ===================== Reste du français codé en dur ===================== */
+/* ================= Text formerly hard-coded in French ================= */
 
   "app.settings.rules.matchIf": "АКО",
   "app.settings.rules.matchAllPattern": "Съответства на {mode} от условията",
@@ -1768,9 +1777,21 @@ export const bg: Dictionary = {
   "app.settings.rules.matchAll": "всички",
   "app.settings.rules.matchAny": "поне едно",
 
-  "app.settings.workspace.planFree": "План Free",
-  "app.settings.workspace.planTeam": "План Team",
-  "app.settings.workspace.planEnterprise": "План Enterprise",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "ТОГАВА",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Тест върху съществуващ тикет",
+  "app.settings.rules.testRunning": "Тестване…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Премахване",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Текст на имейла — променливи: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
   "app.ticket.typeQuestion": "Въпрос",
   "app.ticket.typeIncident": "Инцидент",

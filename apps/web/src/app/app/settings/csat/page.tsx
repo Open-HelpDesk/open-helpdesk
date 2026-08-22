@@ -27,9 +27,9 @@ const CONTROL: React.CSSProperties = {
 };
 
 /**
- * ST-08 — Satisfaction (900 px, 2 colonnes minmax(340px,1fr) gap 20) : panneau
- * d'activation encadré, moment d'envoi / rappel en grille minmax(300px,1fr),
- * question, exclusions en chips + aperçu de l'email 😊/😕 à droite.
+ * ST-08 — Satisfaction (900 px, 2 columns minmax(340px,1fr) gap 20): framed
+ * enablement panel, send time / reminder in a minmax(300px,1fr) grid,
+ * question, exclusions as chips + 😊/😕 email preview on the right.
  */
 export default async function CsatPage({
   searchParams,
@@ -56,7 +56,7 @@ export default async function CsatPage({
           className="st-rise grid items-start"
           style={{ gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: 20 }}
         >
-          {/* Colonne réglages */}
+          {/* Settings column */}
           <div className="flex flex-col" style={{ gap: 20 }}>
             <div
               className="border"
@@ -119,7 +119,7 @@ export default async function CsatPage({
             </div>
           </div>
 
-          {/* Colonne aperçu — aperçu de l'email envoyé au contact */}
+          {/* Preview column — preview of the email sent to the contact */}
           <div
             className="overflow-hidden border"
             style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}

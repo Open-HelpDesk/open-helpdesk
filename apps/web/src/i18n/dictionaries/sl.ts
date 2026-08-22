@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const sl: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const sl: Dictionary = {
     "Storitev je začasno zadržana: pregledovanje ostaja na voljo, nove zahteve so onemogočene.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Center za pomoč",
   "home.title": "Kako vam lahko pomagamo?",
   "home.subtitle":
@@ -30,14 +30,14 @@ export const sl: Dictionary = {
   "home.ctaTitle": "Ne najdete, kar iščete?",
   "home.ctaBody": "Naša ekipa v delovnem času odgovori povprečno v 34 minutah.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Iskanje po pomoči…",
   "search.emptyTitle": "Ni zadetkov za »{query}«",
   "search.emptyBody": "Poskusite s splošnejšimi izrazi ali svoj primer opišite naši ekipi.",
   "search.breadcrumb": "Iskanje",
   "search.resultsTitle": "Zadetki za »{query}«",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Pomoč",
   "category.otherCategories": "Druge kategorije",
   "category.otherArticles": "Drugi članki",
@@ -66,7 +66,7 @@ export const sl: Dictionary = {
   "vote.prefill": "Ustvari vnaprej izpolnjeno zahtevo",
   "vote.prefillSubject": "O članku »{title}«",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Oddaja zahteve",
   "newRequest.subtitle": "Opišite svoj primer. Odgovorimo v 4 delovnih urah.",
   "newRequest.type": "Vrsta zahteve",
@@ -109,7 +109,7 @@ export const sl: Dictionary = {
   "submitted.track": "Spremljaj mojo zahtevo",
   "submitted.backToHelp": "Nazaj na pomoč",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "Moje zahteve",
   "requests.new": "Nova zahteva",
   "requests.tabOpen": "Odprte",
@@ -121,13 +121,13 @@ export const sl: Dictionary = {
     "Tu se bodo prikazale vaše zahteve za podporo, z njihovim stanjem in celotno zgodovino pogovora.",
   "requests.awaitingReply": "Čaka vaš odgovor",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "V obdelavi",
   "status.waiting": "Čaka vaš odgovor",
   "status.resolved": "Rešena",
   "status.closed": "Zaprta",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Rešena {when}",
   "activity.closed": "Zaprta {when}",
   "activity.waiting": "Čaka vaš odgovor {since}",
@@ -135,7 +135,7 @@ export const sl: Dictionary = {
   "activity.youReplied": "Odgovorili ste {when}",
   "activity.created": "Ustvarjena {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": {
     one: "že {count} min",
     two: "že {count} min",
@@ -156,7 +156,7 @@ export const sl: Dictionary = {
   },
   "since.date": "že od {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Vi",
   "request.team": "Ekipa",
   "request.agentAuthor": "{name} — {tenant}",
@@ -173,7 +173,7 @@ export const sl: Dictionary = {
   "request.markSolved": "Označi kot rešeno",
   "request.reopen": "Znova odpri zahtevo",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Spremljajte svoje zahteve",
   "login.magicIntro":
     "Vnesite svoj e-poštni naslov in poslali vam bomo povezavo za prijavo. Nobenega gesla si ni treba zapomniti.",
@@ -186,7 +186,15 @@ export const sl: Dictionary = {
   "login.expired": "Ta povezava je potekla ali ni veljavna. Zahtevajte novo.",
   "login.footer": "Še nobene zahteve? Vaš račun se ustvari samodejno ob prvi oddaji.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Vaša povezava za prijavo — {workspace}",
+  "login.emailBody":
+    "Pozdravljeni,\n\nkliknite to povezavo za dostop do svojih zahtev (velja 15 minut):\n{url}\n\nČe te povezave niste zahtevali, to sporočilo prezrite.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Ste skrbnik te organizacije. Kar nastavite tukaj, velja za {count} osebo v organizaciji {org}, ki ji podporo zagotavlja {tenant}.",
     two: "Ste skrbnik te organizacije. Kar nastavite tukaj, velja za {count} osebi v organizaciji {org}, ki jima podporo zagotavlja {tenant}.",
@@ -276,7 +284,7 @@ export const sl: Dictionary = {
   "members.note":
     "Sodelavci se prikažejo samodejno ob prvi prijavi ali prvi zahtevi. Določite lahko drugega skrbnika, da niste edina kontaktna oseba.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Potrebujete pomoč?",
   "widget.close": "Zapri",
   "widget.messageLabel": "Vaše sporočilo",
@@ -297,7 +305,7 @@ export const sl: Dictionary = {
   "csatPage.doneTitle": "Hvala!",
   "csatPage.doneBody": "Vaš komentar smo posredovali ekipi.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Prejeto",
@@ -310,7 +318,7 @@ export const sl: Dictionary = {
   "app.shell.suspendedTitle": "Ta workspace je zadržan",
   "app.shell.suspendedText": "Obrnite se na svojega skrbnika za obnovitev dostopa.",
   "app.shell.suspendedOwnerText":
-    "Izberite paket ali posodobite način plačila, da workspace znova aktivirate.",
+    "Poravnajte naročnino ali posodobite način plačila, da workspace znova aktivirate.",
   "app.shell.suspendedBillingCta": "Odpri Naročnino in obračun",
   "app.shell.myTickets": "Moji zahtevki",
   "app.shell.newTicket": "Nov zahtevek",
@@ -757,7 +765,7 @@ export const sl: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. odgovor",
   "app.reports.customReports": "Poročila po meri",
-  "app.reports.enterprisePlanBadge": "PAKET ENTERPRISE",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Več o tem",
   "app.reports.chartDailyAria": "{labelA} in {labelB} po dnevih",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -782,8 +790,11 @@ export const sl: Dictionary = {
   "app.settings.shell.saved": "✓ Shranjeno",
   "app.settings.shell.cancel": "Prekliči",
   "app.settings.shell.save": "Shrani",
-  "app.settings.shell.planEnterprise": "PAKET ENTERPRISE",
-  "app.settings.shell.upgradeToEnterprise": "Nadgradi na paket Enterprise",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Zapri",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Upravljanje naročnine",
   "app.settings.shell.eeSelfHostedTitle": "Funkcija izdaje Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Ta funkcija je predmet komercialne licence (imenik ee/ v repozitoriju) in ni vključena v samostojno gostovano odprtokodno izdajo.",
@@ -957,10 +968,10 @@ export const sl: Dictionary = {
   "app.settings.sso.agentTitle": "SSO za agente",
   "app.settings.sso.agentSubtitle":
     "Enotna prijava SAML 2.0 in oskrbovanje SCIM za vašo ekipo podpore.",
-  "app.settings.sso.agentLockedTitle": "SSO za agente je na voljo samo v paketu Enterprise",
+  "app.settings.sso.agentLockedTitle": "SSO za agente je del izdaje Enterprise Edition",
   "app.settings.sso.agentLockedText":
     "Povežite svojega ponudnika identitete SAML 2.0, agente oskrbujte prek SCIM in enotno prijavo uveljavite za celotno ekipo.",
-  "app.settings.sso.agentEnterpriseOnly": "SSO za agente je na voljo samo v paketu Enterprise.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO za agente je del izdaje Enterprise Edition.",
   "app.settings.sso.idpOther": "Drugo (splošni SAML)",
   "app.settings.sso.samlToggleLabel": "Omogoči enotno prijavo SAML 2.0",
   "app.settings.sso.samlHeading": "Enotna prijava SAML 2.0",
@@ -1053,11 +1064,11 @@ export const sl: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Vsaka organizacija stranke prek portala poveže svojega ponudnika identitete. Tu nadzirate celotno okolje.",
   "app.settings.sso.customerLockedTitle":
-    "SSO za organizacije strank je na voljo samo v paketu Enterprise",
+    "SSO za organizacije strank je del izdaje Enterprise Edition",
   "app.settings.sso.customerLockedText":
     "Naj vsaka organizacija stranke priklopi svojega ponudnika identitete (SAML ali OIDC), celotno okolje pa nadzirajte s tega zaslona.",
   "app.settings.sso.customerEnterpriseOnly":
-    "SSO za organizacije strank je na voljo samo v paketu Enterprise.",
+    "SSO za organizacije strank je del izdaje Enterprise Edition.",
   "app.settings.sso.statusActive": "Aktivna",
   "app.settings.sso.statusPending": "Za preverjanje",
   "app.settings.sso.statusError": "Napaka",
@@ -1253,7 +1264,7 @@ export const sl: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Baza znanja je objavljena",
   "app.settings.portal.kbPublishedHint": "Objavljeni članki so vidni brez prijave.",
   "app.settings.portal.hidePoweredByLabel": "Skrij »Omogoča Open HelpDesk«",
-  "app.settings.portal.hidePoweredByHint": "Na voljo od paketa Enterprise naprej.",
+  "app.settings.portal.hidePoweredByHint": "Na voljo z izdajo Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Vidnost baze znanja",
   "app.settings.portal.kbVisibilityPublic": "Javna",
   "app.settings.portal.kbVisibilityAuthenticated": "Samo po prijavi",
@@ -1317,8 +1328,8 @@ export const sl: Dictionary = {
   "app.settings.workspace.generalTitle": "Splošno in blagovna znamka",
   "app.settings.workspace.generalSubtitle":
     "Identiteta delovnega prostora, jezik, časovni pas in številčenje zahtevkov.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "Brisanje je zavrnjeno — načrtovano brisanje je na voljo v ponudbi v oblaku.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Brisanje je zavrnjeno — načrtovano brisanje zahteva control plane.",
   "app.settings.workspace.generalIdentity": "Identiteta",
   "app.settings.workspace.generalNameLabel": "Ime delovnega prostora",
   "app.settings.workspace.generalLogoLabel": "Logotip",
@@ -1393,7 +1404,7 @@ export const sl: Dictionary = {
     other: "{count} / {quota} licenc v uporabi — omejitev je dosežena",
   },
   "app.settings.workspace.seatsAddHint": "Dodajte licence, da povabite nove agente.",
-  "app.settings.workspace.seatsFreeHint": "Vloge Viewer so brezplačne in neomejene.",
+  "app.settings.workspace.seatsFreeHint": "Vloge Viewer ne zasedejo licence in so neomejene.",
   "app.settings.workspace.seatsAddAction": "Dodaj licence",
   "app.settings.workspace.seatsManage": "Upravljaj",
   "app.settings.workspace.seatLimitReached":
@@ -1477,8 +1488,8 @@ export const sl: Dictionary = {
   "app.settings.workspace.save": "Shrani",
   "app.settings.workspace.billingTitle": "Naročnina in obračun",
   "app.settings.workspace.billingSubtitle":
-    "Paket, licence, kvote, način plačila in zgodovina računov.",
-  "app.settings.workspace.selfHosted": "LASTNO GOSTOVANJE",
+    "Naročnina, licence, kvote, način plačila in zgodovina računov.",
+  "app.settings.workspace.subscriptionNone": "Ni naročnine",
   "app.settings.workspace.trialBadge": "POSKUSNO",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
@@ -1493,10 +1504,9 @@ export const sl: Dictionary = {
     few: "na mesec · {count} licence so vključene",
     other: "na mesec · {count} licenc je vključenih",
   },
-  "app.settings.workspace.billingNoDue":
-    "Na tej instanci ni zapadlih zneskov — obračun se izvaja v ponudbi v oblaku.",
-  "app.settings.workspace.cloudOnly": "Na voljo v ponudbi v oblaku",
-  "app.settings.workspace.changePlan": "Zamenjaj paket",
+  "app.settings.workspace.billingNoDue": "Trenutno ni zapadlih zneskov.",
+  "app.settings.workspace.requiresControlPlane": "Zahteva control plane",
+  "app.settings.workspace.changeSubscription": "Spremeni naročnino",
   "app.settings.workspace.manageSeats": "Upravljaj licence",
   "app.settings.workspace.usageTitle": "Poraba tega meseca",
   "app.settings.workspace.quotaSeats": "Licence",
@@ -1508,8 +1518,7 @@ export const sl: Dictionary = {
   "app.settings.workspace.colNumber": "Številka",
   "app.settings.workspace.colPeriod": "Obdobje",
   "app.settings.workspace.colAmount": "Znesek",
-  "app.settings.workspace.invoicesEmpty":
-    "Ni računov — računi se bodo prikazali tukaj v ponudbi v oblaku.",
+  "app.settings.workspace.invoicesEmpty": "Računov še ni.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Shranjeno",
@@ -1581,19 +1590,19 @@ export const sl: Dictionary = {
   "app.settings.rules.typeFile": "Datoteka",
   "app.settings.rules.typeSelectLong": "Spustni seznam",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) : les tables et
-     les phrases assemblées de lib/rule-labels.ts. Statuts, priorités et canaux
-     n'y sont pas — ils viennent de app.status.* / app.priority.* /
-     app.channel.*, plus bas dans ce fichier. --- */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07): the tables and the
+     assembled sentences from lib/rule-labels.ts. Statuses, priorities and
+     channels are not here — they come from app.status.* / app.priority.* /
+     app.channel.*, further down this file. --- */
 
-  /* Types de champs personnalisés (ST-04) ; « Besedilo » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Besedilo” is typeText, above. */
   "app.settings.rules.typeSelect": "Seznam",
   "app.settings.rules.typeMultiSelect": "Večkratna izbira",
   "app.settings.rules.typeDate": "Datum",
   "app.settings.rules.typeNumber": "Število",
   "app.settings.rules.typeCheckbox": "Potrditveno polje",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Dogodek",
   "app.settings.rules.condFieldStatus": "Stanje",
   "app.settings.rules.condFieldPriority": "Prioriteta",
@@ -1607,10 +1616,10 @@ export const sl: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Ure od ustvarjanja",
   "app.settings.rules.condFieldHoursUpdated": "Ure od posodobitve",
 
-  /* Opérateurs. « Vide » et « non vide » passent par un groupe prépositionnel,
-     invariable : le slovène accorderait son adjectif au genre du champ, et
-     « Organizacija je prazno » serait faux. « vsebujejo » est au pluriel, seul
-     « Oznake » porte cet opérateur (OPERATORS_BY_FIELD). */
+  /* Operators. “Empty” and “not empty” go through an invariable
+     prepositional phrase: Slovenian would agree its adjective with the field's
+     gender, and “Organizacija je prazno” would be wrong. “vsebujejo” is
+     plural, only “Oznake” carries this operator (OPERATORS_BY_FIELD). */
   "app.settings.rules.opIs": "je",
   "app.settings.rules.opIsNot": "ni",
   "app.settings.rules.opContains": "vsebuje",
@@ -1620,13 +1629,13 @@ export const sl: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Zahtevek ustvarjen",
   "app.settings.rules.eventTicketUpdated": "Zahtevek posodobljen",
   "app.settings.rules.eventMessageCreated": "Sporočilo prejeto",
 
-  /* Actions, telles que le menu du builder les nomme — impératif, comme le
-     reste des commandes de ce fichier. */
+  /* Actions, as the builder's menu names them — imperative, like the rest of
+     the commands in this file. */
   "app.settings.rules.actSetStatus": "Nastavi stanje",
   "app.settings.rules.actSetPriority": "Nastavi prioriteto",
   "app.settings.rules.actAssignUser": "Dodeli agentu",
@@ -1635,13 +1644,13 @@ export const sl: Dictionary = {
   "app.settings.rules.actAddTags": "Dodaj oznake",
   "app.settings.rules.actEmailContact": "Pošlji e-pošto stiku",
 
-  /* Résumé d'une règle, en une ligne de liste : le slovène garde l'ordre
-     « če … → … », et les bribes s'enchaînent sans majuscule ni point. */
+  /* One-line rule summary: Slovenian keeps the “če … → …” order, and the
+     fragments run on without a capital or a full stop. */
   "app.settings.rules.summaryPattern": "Če {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "in",
   "app.settings.rules.summaryAlways": "vedno",
-  /* « pogoj » passe au génitif après « od » : génitif singulier « pogoja »,
-     génitif duel et pluriel « pogojev ». */
+  /* “pogoj” goes to the genitive after “od”: genitive singular “pogoja”,
+     genitive dual and plural “pogojev”. */
   "app.settings.rules.summaryAnyOf": {
     one: "vsaj eden od {count} pogoja",
     two: "vsaj eden od {count} pogojev",
@@ -1652,13 +1661,13 @@ export const sl: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "ni dodeljeno",
   "app.settings.rules.summaryAssigned": "je dodeljeno",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. */
   "app.settings.rules.summarySince": "že {duration}",
   "app.settings.rules.summarySetStatus": "nastavi stanje na {value}",
   "app.settings.rules.summarySetPriority": "prioriteta {value}",
-  /* {team} vaut un nom d'équipe, ou summaryAnyTeam quand il est inconnu :
-     « brez imena » complète « dodeli ekipi … » sans le répéter. */
+  /* {team} holds a team name, or summaryAnyTeam when it is unknown:
+     “brez imena” completes “dodeli ekipi …” without repeating it. */
   "app.settings.rules.summaryAssignTeam": "dodeli ekipi {team}",
   "app.settings.rules.summaryAnyTeam": "brez imena",
   "app.settings.rules.summaryAssignUser": "dodeli agentu",
@@ -1666,7 +1675,7 @@ export const sl: Dictionary = {
   "app.settings.rules.summaryAddTags": "dodaj oznake {tags}",
   "app.settings.rules.summaryEmailContact": "pošlji e-pošto stiku",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Stanje → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioriteta → {value}",
   "app.settings.rules.macroSummaryTeam": "Ekipa → {team}",
@@ -1778,7 +1787,7 @@ export const sl: Dictionary = {
   "app.settings.dev.dayYesterday": "Včeraj {time}",
   "app.settings.dev.auditTitle": "Revizijski dnevnik",
   "app.settings.dev.auditSubtitle": "Celoten dnevnik skrbniških dejanj. Hramba 2 leti.",
-  "app.settings.dev.auditLockedTitle": "Revizijski dnevnik je na voljo samo v paketu Enterprise",
+  "app.settings.dev.auditLockedTitle": "Revizijski dnevnik je del izdaje Enterprise Edition",
   "app.settings.dev.auditLockedText":
     "Ohranite zapis o vsakem skrbniškem dejanju za 2 leti, z razliko pred in po ter izvozom CSV.",
   "app.settings.dev.filterActorAll": "Izvajalec: vsi",
@@ -1802,9 +1811,9 @@ export const sl: Dictionary = {
   "app.settings.dev.actorContact": "Stik",
   "app.settings.dev.exportUnauthorized": "Ni pooblastila",
   "app.settings.dev.exportForbidden": "Na voljo samo vlogama Owner in Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Revizijski dnevnik je na voljo samo v paketu Enterprise.",
+  "app.settings.dev.exportEnterpriseOnly": "Revizijski dnevnik je del izdaje Enterprise Edition.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Delovni prostor",
   "app.settingsNav.itemGeneral": "Splošno",
   "app.settingsNav.itemTeam": "Agenti in ekipe",
@@ -1838,7 +1847,7 @@ export const sl: Dictionary = {
   "app.settingsNav.copied": "Kopirano",
   "app.settingsNav.copy": "Kopiraj",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nov",
   "app.status.open": "Odprt",
   "app.status.waiting": "Čaka",
@@ -1859,7 +1868,7 @@ export const sl: Dictionary = {
   "app.unit.kilobytes": "{count} kB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Moji zahtevki",
   "app.views.unassigned": "Nedodeljeni",
   "app.views.breaching": "Kmalu prekoračeni",
@@ -1867,7 +1876,7 @@ export const sl: Dictionary = {
   "app.views.urgent": "Nujni ta teden",
   "app.views.escalation": "Stopnjevanja",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Preimenuj",
   "app.kb.renameSave": "Shrani",
   "app.kb.deleteCategory": "Izbriši kategorijo",
@@ -1879,7 +1888,7 @@ export const sl: Dictionary = {
     other: "Ta kategorija vsebuje še {count} elementov. Pred brisanjem kategorije jih premaknite.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-pošta",
   "app.login.emailPlaceholder": "vi@podjetje.si",
   "app.login.password": "Geslo",
@@ -1907,12 +1916,12 @@ export const sl: Dictionary = {
   "app.login.providerMissing": "Ta ponudnik na tej instanci ni nastavljen.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Tout cet écran était en français dans le code : le premier écran qu'un
-     nouveau workspace rencontre, et le seul qui n'avait aucune traduction.
-     Quatre libellés viennent d'ailleurs et ne sont pas repris ici : le titre du
-     portail dans son propre aperçu (home.title), le nom du workspace et la
-     couleur d'accent (les mêmes contrôles qu'en ST-01), et les rôles du produit
-     Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+  /* This whole screen was French in the code: the first screen a new
+     workspace meets, and the only one with no translation at all. Four labels
+     come from elsewhere and are not repeated here: the portal title in its own
+     preview (home.title), the workspace name and the accent colour (the same
+     controls as in ST-01), and the product roles Owner / Admin / Agent /
+     Viewer, which are not translated. */
 
   "app.onboarding.asideTitle": "Nastavitev",
   "app.onboarding.asideFooter": "Vse te možnosti lahko pozneje spremenite v nastavitvah.",
@@ -1950,7 +1959,7 @@ export const sl: Dictionary = {
 
   "app.onboarding.teamTitle": "Povabite svojo ekipo",
   "app.onboarding.teamBody":
-    "Agente povabite zdaj ali delite povezavo za povabilo. Licence Viewer so brezplačne.",
+    "Agente povabite zdaj ali delite povezavo za povabilo. Vloge Viewer ne zasedejo licence.",
   "app.onboarding.invitePlaceholder": "sodelavec@podjetje.si",
   "app.onboarding.addRow": "+ Dodaj vrstico",
   "app.onboarding.sendInvites": "Pošlji povabila",
@@ -1959,8 +1968,8 @@ export const sl: Dictionary = {
   "app.onboarding.testBody":
     "Preverite celotno pot, preden storitev odprete svojim strankam.",
   "app.onboarding.readyTitle": "Vaš delovni prostor je pripravljen",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Pošljite e-pošto na {address} in ustvarite preizkusni zahtevek.",
   "app.onboarding.openInbox": "Odpri Prejeto",
 
@@ -1971,40 +1980,49 @@ export const sl: Dictionary = {
   "app.onboarding.checklistSla": "Pravilnik SLA je preverjen",
 
 
-/* ===================== Reste du français codé en dur ===================== */
+/* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
-     « vsi / vsaj eden » : elle est découpée autour de {mode}. */
+  /* ST-05 — the condition group header. The sentence wraps a
+     “vsi / vsaj eden” selector: it is split around {mode}. */
   "app.settings.rules.matchIf": "ČE",
-  /* Un gabarit par mode, et le slovène s'en sert : le nombre du verbe et du
-     nom suit le sélecteur. « vsi » gouverne un pluriel — « Izpolnjeni morajo
-     biti vsi pogoji » — et « vsaj eden » un singulier suivi du génitif
-     pluriel — « Izpolnjen mora biti vsaj eden od pogojev ». Les deux formes du
-     sélecteur restent des pronoms autonomes, ce que les deux boutons de la
-     bascule exigent : « vsaj en » serait la forme adjectivale, tronquée hors
-     de son nom. */
+  /* One template per mode, and Slovenian uses it: the number of the verb
+     and of the noun follows the selector. “vsi” governs a plural —
+     “Izpolnjeni morajo biti vsi pogoji” — and “vsaj eden” a singular followed
+     by the genitive plural — “Izpolnjen mora biti vsaj eden od pogojev”. Both
+     selector forms stay independent pronouns, which the toggle's two buttons
+     require: “vsaj en” would be the adjectival form, cut off from its noun. */
   "app.settings.rules.matchAllPattern": "Izpolnjeni morajo biti {mode} pogoji",
   "app.settings.rules.matchAnyPattern": "Izpolnjen mora biti {mode} od pogojev",
   "app.settings.rules.matchAll": "vsi",
   "app.settings.rules.matchAny": "vsaj eden",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
-  "app.settings.workspace.planFree": "Paket Free",
-  "app.settings.workspace.planTeam": "Paket Team",
-  "app.settings.workspace.planEnterprise": "Paket Enterprise",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "POTEM",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Preveri na obstoječem zahtevku",
+  "app.settings.rules.testRunning": "Preverjanje…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Odstrani",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Vsebina e-pošte — spremenljivke: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). Attention : la VALEUR enregistrée en base reste la
-     chaîne française — c'est ainsi que le produit la stocke. Seul l'affichage
-     est traduit, les tickets déjà créés continuent de correspondre. */
+  /* Ticket types (AG-05). Careful: the VALUE stored in the database stays
+     the French string — that is how the product stores it. Only the display is
+     translated, and tickets already created keep matching. */
   "app.ticket.typeQuestion": "Vprašanje",
   "app.ticket.typeIncident": "Incident",
   "app.ticket.typeTask": "Naloga",
   "app.ticket.typeOther": "Drugo",
 
-  /* AG-09 — export CSV des rapports. Un fichier téléchargé est du texte lu par
-     une personne : ses entêtes se traduisent comme le reste de l'écran. « s »
-     est le symbole slovène de la seconde. */
+  /* AG-09 — CSV export of the reports. A downloaded file is text read by a
+     person: its headers are translated like the rest of the screen. “s” is
+     the Slovenian symbol for the second. */
   "app.reports.csvIndicator": "Kazalnik",
   "app.reports.csvCurrentPeriod": "Trenutno obdobje",
   "app.reports.csvPreviousPeriod": "Prejšnje obdobje",
@@ -2019,8 +2037,8 @@ export const sl: Dictionary = {
   "app.reports.csvResolvedShort": "Rešeni",
   "app.reports.csvAgent": "Agent",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Nov članek",
   "app.kb.fromTicketSymptomHeading": "Simptom",
   "app.kb.fromTicketSymptomPlaceholder": "[Opišite, kaj stranka opaža.]",
@@ -2029,8 +2047,8 @@ export const sl: Dictionary = {
   "app.kb.fromTicketMissingRequest": "prvotna zahteva stranke",
   "app.kb.fromTicketMissingAnswer": "odgovor agenta",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Postopek po korakih",
   "app.kb.tplProcedureHint": "Zaporedje številčenih korakov s pričakovanim rezultatom.",
   "app.kb.tplProcedureTitle": "Kako [izvesti dejanje]",

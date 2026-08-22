@@ -23,12 +23,12 @@ import { PropsForm } from "./props-panel";
 import { ReplyEditor } from "./reply-editor";
 
 /**
- * AG-04 — Détail ticket (design espace-agent) : en-tête 2 rangées avec chips et
- * navigation ←/→, fil client/agent/note/événements, pièces jointes avec visionneuse,
- * composeur à onglets et split button, panneau propriétés 320 px.
+ * AG-04 — Ticket detail (agent space design): 2-row header with chips and
+ * ←/→ navigation, customer/agent/note/events thread, attachments with viewer,
+ * tabbed composer with split button, 320 px properties panel.
  */
 
-/** Titre de groupe du panneau propriétés — 11px/600 uppercase, letter-spacing .06em. */
+/** Group title of the properties panel — 11px/600 uppercase, letter-spacing .06em. */
 const PANEL_GROUP: React.CSSProperties = {
   fontSize: 11,
   fontWeight: 600,
@@ -139,7 +139,7 @@ export default async function TicketPage({
     return t("app.ticket.authorSystem");
   };
 
-  // Navigation ←/→ dans la vue courante.
+  // ←/→ navigation inside the current view.
   const idx = viewNumbers.indexOf(number);
   const prevNumber = idx > 0 ? viewNumbers[idx - 1] : null;
   const nextNumber = idx >= 0 && idx < viewNumbers.length - 1 ? viewNumbers[idx + 1] : null;
@@ -148,7 +148,7 @@ export default async function TicketPage({
       ? t("app.ticket.position", { index: idx + 1, total: viewNumbers.length })
       : t("app.ticket.positionUnknown", { number: String(number) });
 
-  // Badge SLA de l'en-tête.
+  // SLA badge of the header.
   const now = Date.now();
   const isOpen = ["new", "open", "waiting", "on_hold"].includes(ticket.status);
   const due =
@@ -182,16 +182,16 @@ export default async function TicketPage({
     }));
 
   return (
-    // En dessous de xl, les deux colonnes s'empilent au lieu de se juxtaposer :
-    // le panneau de propriétés était simplement absent du DOM, et l'agent
-    // perdait assigné, équipe, priorité, type, SLA et fiche contact sans aucun
-    // moyen de les atteindre — pas même un repli.
+    // Below xl, the two columns stack instead of sitting side by side: the
+    // properties panel was simply absent from the DOM, and the agent lost
+    // assignee, team, priority, type, SLA and contact record with no way at all
+    // to reach them — not even a fallback.
     <div className="flex h-full max-xl:flex-col max-xl:overflow-y-auto">
       <TopbarOverride title={t("app.ticket.topbarTitle")} subtitle={positionLabel} />
 
-      {/* Colonne conversation */}
+      {/* Conversation column */}
       <div className="flex min-w-0 flex-1 flex-col max-xl:min-h-0" style={{ background: "var(--bg)" }}>
-        {/* En-tête — 2 rangées, padding 12/18, gap 9 */}
+        {/* Header — 2 rows, padding 12/18, gap 9 */}
         <header
           className="flex shrink-0 flex-col border-b"
           style={{ padding: "12px 18px", gap: 9, borderColor: "var(--line)" }}
@@ -268,7 +268,7 @@ export default async function TicketPage({
             </div>
           </div>
 
-          {/* En-tête — rangée 2 */}
+          {/* Header — row 2 */}
           <div className="flex flex-wrap items-center" style={{ gap: 7 }}>
             <StatusChip status={ticket.status} t={t} />
             <span
@@ -327,7 +327,7 @@ export default async function TicketPage({
           </div>
         </header>
 
-        {/* Bannière fusion */}
+        {/* Merge banner */}
         {ticket.mergedIntoId && (
           <div
             className="flex shrink-0 items-center border-b"
@@ -352,7 +352,7 @@ export default async function TicketPage({
           </div>
         )}
 
-        {/* Fil */}
+        {/* Thread */}
         <div
           className="flex min-h-0 flex-1 flex-col overflow-y-auto"
           style={{ padding: "18px 22px", gap: 14 }}
@@ -454,7 +454,7 @@ export default async function TicketPage({
           })}
         </div>
 
-        {/* Composeur */}
+        {/* Composer */}
         {!ticket.mergedIntoId && (
           <ReplyEditor
             ticketId={ticket.id}
@@ -465,10 +465,10 @@ export default async function TicketPage({
         )}
       </div>
 
-      {/* Panneau propriétés — 320 px */}
+      {/* Properties panel — 320 px */}
       <aside
-        // La largeur passe par les classes et non par le style inline : un
-        // `width` inline l'emporterait sur la règle responsive.
+        // The width goes through the classes and not through the inline style: an
+        // inline `width` would win over the responsive rule.
         className="flex w-full shrink-0 flex-col overflow-y-auto border-l border-t xl:w-80 xl:border-t-0 max-xl:border-l-0"
         style={{
           padding: "14px 16px",
@@ -490,7 +490,7 @@ export default async function TicketPage({
           teams={teams}
         />
 
-        {/* Champs du formulaire */}
+        {/* Form fields */}
         <section className="flex flex-col" style={{ gap: 8 }}>
           <p style={PANEL_GROUP}>{t("app.ticket.formFieldsGroup")}</p>
           {fieldEntries.length === 0 ? (
@@ -517,7 +517,7 @@ export default async function TicketPage({
           )}
         </section>
 
-        {/* SLA — encadré, rangées séparées par --line-2 */}
+        {/* SLA — boxed, rows separated by --line-2 */}
         <section className="flex flex-col" style={{ gap: 8 }}>
           <p style={PANEL_GROUP}>{t("app.ticket.slaGroup")}</p>
           <div
@@ -590,14 +590,14 @@ export default async function TicketPage({
           </div>
         </section>
 
-        {/* Capitaliser une résolution — le savoir d'un ticket clos se perd sinon.
-            Réservé aux rôles qui peuvent écrire dans la base : le lien mène à
-            l'éditeur, qui les refuserait de toute façon. */}
+        {/* Capture a resolution — the knowledge of a closed ticket is otherwise
+            lost. Restricted to the roles that can write to the knowledge base: the link
+            leads to the editor, which would refuse them anyway. */}
         {!isOpen && isManager(agent.role) && (
           <section className="flex flex-col" style={{ gap: 8 }}>
             <p style={PANEL_GROUP}>{t("app.ticket.kbGroup")}</p>
             <Link
-              href={`/app/kb/new?depuis=${ticket.number}`}
+              href={`/app/kb/new?from=${ticket.number}`}
               className="ohd-hover-edge-ink inline-flex items-center justify-center rounded-md border font-medium"
               style={{
                 height: 30,

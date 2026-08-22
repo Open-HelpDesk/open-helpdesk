@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * AG-04 — Composeur : onglets Réponse / Note interne, brouillon localStorage horodaté,
- * toolbar markdown B I U S ≔ ⛓ ❝ ‹›, menu « / Macros », variables {{var}},
- * split button « Envoyer & {statut} | ▾ » (Résolu / En attente / Ouvert / sans changement).
+ * AG-04 — Composer: Reply / Internal note tabs, timestamped localStorage draft,
+ * markdown toolbar B I U S ≔ ⛓ ❝ ‹›, "/ Macros" menu, {{var}} variables,
+ * "Send & {status} | ▾" split button (Resolved / Waiting / Open / no change).
  */
 import { useEffect, useRef, useState } from "react";
 import { Paperclip } from "lucide-react";
@@ -59,7 +59,7 @@ export function ReplyEditor({
     { key: "{{ticket.number}}", label: t("app.ticket.varTicketNumber") },
   ];
 
-  // Brouillon : restauration au montage.
+  // Draft: restored on mount.
   useEffect(() => {
     try {
       const raw = localStorage.getItem(draftKey);
@@ -71,12 +71,12 @@ export function ReplyEditor({
         }
       }
     } catch {
-      /* brouillon illisible */
+      /* unreadable draft */
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketId]);
 
-  // Brouillon : enregistrement debouncé + horloge du libellé.
+  // Draft: debounced save + clock for the label.
   useEffect(() => {
     if (!body) return;
     const timer = setTimeout(() => {
@@ -85,7 +85,7 @@ export function ReplyEditor({
         localStorage.setItem(draftKey, JSON.stringify({ body, at }));
         setDraftSavedAt(at);
       } catch {
-        /* stockage plein */
+        /* storage full */
       }
     }, 800);
     return () => clearTimeout(timer);
@@ -104,7 +104,7 @@ export function ReplyEditor({
     return t("app.ticket.draftSavedMinutes", { count: Math.floor(sec / 60) });
   }
 
-  /** Insère du markdown autour de la sélection du textarea. */
+  /** Inserts markdown around the textarea selection. */
   function insertMd(before: string, after = "", placeholder = "") {
     const el = textareaRef.current;
     if (!el) return;
@@ -129,11 +129,11 @@ export function ReplyEditor({
   function applyMacro(macroId: string) {
     const macro = macros.find((m) => m.id === macroId);
     if (!macro) return;
-    const prenom = contactName.split(/\s+/)[0] ?? contactName;
+    const firstName = contactName.split(/\s+/)[0] ?? contactName;
     const rendered = macro.insertText
       .replaceAll("{{contact.name}}", contactName)
       .replaceAll("{{contact.nom}}", contactName)
-      .replaceAll("{{contact.prenom}}", prenom)
+      .replaceAll("{{contact.prenom}}", firstName)
       .replaceAll("{{ticket.number}}", String(ticketNumber));
     setBody((prev) => (prev ? `${prev}\n${rendered}` : rendered));
     setKind(macro.insertKind);
@@ -144,7 +144,7 @@ export function ReplyEditor({
 
   const isNote = kind === "internal_note";
 
-  // Design : boutons 26×26 radius 5, chips h26 padding 0 8px, tout en 12px ink-2.
+  // Design: 26×26 buttons radius 5, h26 chips padding 0 8px, everything in 12px ink-2.
   const toolBtn = {
     width: 26,
     height: 26,
@@ -205,7 +205,7 @@ export function ReplyEditor({
         try {
           localStorage.removeItem(draftKey);
         } catch {
-          /* ignoré */
+          /* ignored */
         }
       }}
       className="shrink-0 border-t"
@@ -216,7 +216,7 @@ export function ReplyEditor({
       <input type="hidden" name="macroId" value={appliedMacroId} />
       <input type="hidden" name="nextStatus" value={isNote ? "" : nextStatus} />
 
-      {/* Onglets + brouillon */}
+      {/* Tabs + draft */}
       <div className="flex" style={{ gap: 2, padding: "8px 18px 0" }}>
         <button type="button" onClick={() => setKind("public_reply")} style={tabStyle(!isNote, false)}>
           {t("app.ticket.tabReply")}
@@ -323,7 +323,7 @@ export function ReplyEditor({
           )}
         </div>
 
-        {/* Article KB */}
+        {/* KB article */}
         <a
           href="/app/kb"
           target="_blank"

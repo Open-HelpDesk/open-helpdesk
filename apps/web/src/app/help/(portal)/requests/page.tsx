@@ -18,7 +18,7 @@ const TABS = [
   ["all", "requests.tabAll"],
 ] as const;
 
-/** Couleurs de badge statut (vocabulaire client, PT-05). */
+/** Status badge colors (customer vocabulary, PT-05). */
 function statusBadgeStyle(status: string): React.CSSProperties {
   if (status === "waiting") return { background: "var(--wait-t)", color: "var(--wait)" };
   if (status === "resolved") return { background: "var(--ok-t)", color: "var(--ok)" };
@@ -26,9 +26,9 @@ function statusBadgeStyle(status: string): React.CSSProperties {
   return { background: "var(--open-t)", color: "var(--open)" };
 }
 
-/** « Réponse de Marie il y a 3 h », « En attente de votre réponse depuis hier »…
- *  La phrase entière est traduite ; seule la partie temporelle est composée, et
- *  elle l'est par Intl, pas à la main. */
+/** "Marie replied 3 h ago", "Waiting for your reply since yesterday"…
+ *  The whole sentence is translated; only the time part is composed, and it is
+ *  composed by Intl, not by hand. */
 function activityLabel(r: PortalRequestRow, t: Translate): string {
   const when = (d: Date) => t.fmt.relative(d);
   if (r.status === "resolved")
@@ -48,7 +48,7 @@ function activityLabel(r: PortalRequestRow, t: Translate): string {
   return t("activity.created", { when: when(r.createdAt) });
 }
 
-/** « depuis 3 jours » — aucune API Intl ne la produit, elle vit au dictionnaire. */
+/** "for 3 days" — no Intl API produces it, so it lives in the dictionary. */
 function sinceLabel(date: Date, t: Translate): string {
   const { unit, n } = t.fmt.elapsed(date);
   if (unit === "minute") return t("since.minutes", { count: n });
@@ -57,7 +57,7 @@ function sinceLabel(date: Date, t: Translate): string {
   return t("since.date", { date: t.fmt.dateShort(date) });
 }
 
-/** PT-05 — Mes demandes : onglets, lignes réf/sujet/activité/badges, état vide verbatim. */
+/** PT-05 — My requests: tabs, ref/subject/activity/badge rows, empty state verbatim. */
 export default async function RequestsPage({
   searchParams,
 }: {
@@ -177,7 +177,7 @@ export default async function RequestsPage({
                       {t("requests.awaitingReply")}
                     </span>
                   )}
-                  {/* Pastille + libellé : le statut se repère à la couleur avant d'être lu. */}
+                  {/* Dot + label: the status is spotted by its color before being read. */}
                   <span
                     className="inline-flex items-center gap-[7px] whitespace-nowrap rounded-full py-[5px] pl-2.5 pr-3 text-[12.5px] font-semibold"
                     style={badge}

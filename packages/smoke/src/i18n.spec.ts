@@ -3,43 +3,43 @@ import { AGENTS, setTenantLocale, signInAgent } from "./helpers";
 import { pluralEntries, simpleEntries } from "./dict-source";
 
 /**
- * La langue du logiciel (ST-01).
+ * The software language (ST-01).
  *
- * Un tenant porte UNE langue : elle vaut pour ses agents comme pour ses
- * clients, il n'y a ni préférence individuelle ni préfixe d'URL. Changer ce
- * réglage doit donc retraduire les deux espaces d'un coup — le portail et
- * l'inbox — et rien d'autre : ce que le tenant a écrit lui-même (titres
- * d'articles, sujets de demandes) reste tel quel.
+ * A tenant carries ONE language: it holds for its agents just as for its
+ * customers, there is neither an individual preference nor a URL prefix. So
+ * changing this setting must retranslate both spaces at once — the portal and
+ * the inbox — and nothing else: what the tenant wrote itself (article titles,
+ * request subjects) stays as it is.
  *
- * L'allemand sert de langue témoin parce qu'il éloigne assez le vocabulaire
- * pour qu'une chaîne oubliée saute aux yeux, et parce que son séparateur de
- * milliers est le point : « 4.182 » là où le français écrit « 4 182 ».
+ * German serves as the control language because it moves the vocabulary far
+ * enough away for a forgotten string to leap out, and because its thousands
+ * separator is the dot: “4.182” where English writes “4,182”.
  *
- * Le polonais sert de second témoin, pour une raison différente : il compte
- * quatre formes de pluriel là où le français et l'allemand en ont deux. Une
- * langue à deux formes ne peut pas révéler une sélection de pluriel cassée —
- * `other` y est juste presque partout. En polonais, non.
+ * Polish serves as a second control, for a different reason: it counts four
+ * plural forms where English and German have two. A two-form language cannot
+ * reveal a broken plural selection — `other` is simply right almost everywhere
+ * there. In Polish, it is not.
  */
 
 /**
- * L'article le plus consulté du jeu de démonstration. Son titre est du contenu
- * de tenant — il ne doit jamais changer avec la langue — et son compteur de
- * vues est le seul nombre à quatre chiffres visible sans se connecter.
+ * The most viewed article of the demo data set. Its title is tenant content —
+ * it must never change with the language — and its view counter is the only
+ * four-digit number visible without signing in.
  */
 const ARTICLE = {
-  slug: "comment-telecharger-vos-factures",
-  title: "Comment télécharger vos factures",
+  slug: "how-to-download-your-invoices",
+  title: "How to download your invoices",
 } as const;
 
-test.describe("Langue du logiciel", () => {
+test.describe("Software language", () => {
   /**
-   * Une seule session pour tout le fichier.
+   * A single session for the whole file.
    *
-   * L'authentification est limitée en fréquence (Better Auth refuse la
-   * quatrième tentative dans la même fenêtre de dix secondes), et le formulaire
-   * de connexion annonce alors « Identifiants incorrects. ». Se reconnecter à
-   * chaque test ferait donc échouer les suivants sur un message trompeur, sans
-   * aucun rapport avec la langue. On se connecte une fois, on garde la page.
+   * Authentication is rate-limited (Better Auth refuses the fourth attempt
+   * inside the same ten-second window), and the sign-in form then announces
+   * “Incorrect credentials.”. Signing in again on every test would therefore
+   * make the following ones fail on a misleading message, entirely unrelated to
+   * the language. We sign in once, we keep the page.
    */
   let context: BrowserContext;
   let page: Page;
@@ -48,9 +48,9 @@ test.describe("Langue du logiciel", () => {
     test.setTimeout(90_000);
     context = await browser.newContext();
     page = await context.newPage();
-    // Le quota de connexions est commun à toute l'instance : une autre spec en
-    // cours peut l'avoir épuisé. On réessaie jusqu'à ce que le produit accepte,
-    // plutôt que d'échouer sur une contention qui ne dit rien du produit.
+    // The sign-in quota is shared by the whole instance: another spec in flight
+    // may have exhausted it. We retry until the product accepts, rather than
+    // failing on a contention that says nothing about the product.
     await expect(async () => {
       await signInAgent(page, AGENTS.owner);
     }).toPass({ timeout: 60_000 });
@@ -61,76 +61,75 @@ test.describe("Langue du logiciel", () => {
   });
 
   test.afterEach(async () => {
-    // Le tenant est partagé par toutes les specs et ne porte qu'une langue :
-    // quoi qu'il soit arrivé au-dessus, il repart en français.
-    await switchLocale("fr");
+    // The tenant is shared by every spec and carries only one language:
+    // whatever happened above, it goes back to the baseline the others expect.
+    await switchLocale("en");
   });
 
   /**
-   * Bascule la langue du tenant et attend que l'enregistrement soit ACQUITTÉ.
+   * Switches the tenant's language and waits for the save to be ACKNOWLEDGED.
    *
-   * `setTenantLocale` rend la main dès que le `<select>` porte la valeur
-   * choisie, c'est-à-dire avant que l'action serveur ait répondu. Naviguer
-   * aussitôt après fait annuler la navigation par la redirection
-   * d'enregistrement qui arrive derrière : on se retrouve sur l'écran de
-   * réglages, dans l'ANCIENNE langue, et le test échoue pour une raison qui
-   * n'est pas la sienne. `?saved=1` est l'accusé de réception du produit — on
-   * l'attend avant d'aller voir ailleurs.
+   * `setTenantLocale` hands back control as soon as the `<select>` carries the
+   * chosen value, that is, before the server action has answered. Navigating
+   * right afterwards gets the navigation cancelled by the save redirect
+   * arriving behind it: we end up on the settings screen, in the OLD language,
+   * and the test fails for a reason that is not its own. `?saved=1` is the
+   * product's acknowledgement — we wait for it before going to look elsewhere.
    */
   async function switchLocale(code: string): Promise<void> {
     await setTenantLocale(page, code);
     await expect(page).toHaveURL(/saved=1/);
   }
 
-  /** La ligne de cet article dans le palmarès de l'accueil du portail. */
+  /** This article's row in the ranking on the portal home page. */
   function popularRow() {
     return page.locator(`a[href="/help/articles/${ARTICLE.slug}"]`).first();
   }
 
-  test("en allemand, le portail client s'affiche en allemand", async () => {
+  test("in German, the customer portal displays in German", async () => {
     await switchLocale("de");
     await page.goto("/help");
 
-    // `lang` sort de la même source que les traductions : s'il reste au
-    // français, c'est la mise en page racine qui n'a pas relu le tenant.
+    // `lang` comes from the same source as the translations: if it stays on
+    // French, it is the root layout that has not read the tenant again.
     await expect(page.locator("html")).toHaveAttribute("lang", "de");
 
-    // Le titre d'accueil traduit — le tenant n'a pas de texte d'accueil
-    // personnalisé, qui primerait sur la traduction (ST-09).
+    // The translated home heading — the tenant has no custom welcome text,
+    // which would take precedence over the translation (ST-09).
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Wie können wir Ihnen helfen?",
     );
 
-    // Le chrome du portail est rendu par une autre mise en page que la page :
-    // c'est le genre d'endroit qui reste en français quand le reste a basculé.
+    // The portal chrome is rendered by a different layout from the page: it is
+    // the kind of place that stays behind when the rest has switched over.
     await expect(page.getByRole("link", { name: "Anfrage stellen" }).first()).toBeVisible();
     await expect(page.getByRole("link", { name: "Meine Anfragen" }).first()).toBeVisible();
   });
 
-  test("en allemand, les nombres portent le séparateur de milliers allemand", async () => {
+  test("in German, numbers carry the German thousands separator", async () => {
     await switchLocale("de");
     await page.goto("/help");
 
-    // Traduire ne suffit pas : un nombre interpolé dans une phrase doit passer
-    // par le formateur de la langue. Sans cela il ressort brut — « 4182 » — et
-    // le défaut reste invisible tant qu'on ne relit que du texte.
-    // Le compteur n'est pas figé (chaque lecture d'article l'incrémente) : c'est
-    // la FORME qui est vérifiée, pas la valeur.
+    // Translating is not enough: a number interpolated into a sentence must go
+    // through the language's formatter. Without that it comes out raw — “4182” —
+    // and the defect stays invisible as long as only text is read back.
+    // The counter is not fixed (every article read increments it): it is the
+    // SHAPE that is verified, not the value.
     await expect(popularRow().locator("span.tabular-nums")).toHaveText(
       /^\d{1,3}\.\d{3} Aufrufe$/,
     );
   });
 
-  test("en allemand, l'espace agent et ses statuts s'affichent en allemand", async () => {
+  test("in German, the agent workspace and its statuses display in German", async () => {
     await switchLocale("de");
     await page.goto("/app/tickets");
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Meine Tickets");
 
-    // Les statuts vivent dans une table de correspondance à part, pas dans les
-    // écrans : c'est exactement le vocabulaire qui reste en français quand tout
-    // le reste est traduit. On les lit dans le filtre « Statut », seul endroit
-    // où les libellés sont rendus quelles que soient les données de l'inbox.
+    // The statuses live in a separate lookup table, not in the screens: this is
+    // exactly the vocabulary that stays untranslated when everything else has
+    // switched over. They are read in the “Status” filter, the only place where the
+    // labels are rendered whatever the inbox data holds.
     const statusFilter = page.locator('details:has(a[href="/app/tickets?status=open"])');
     await statusFilter.locator("summary").click();
     await expect(statusFilter.getByRole("link", { name: "Offen", exact: true })).toBeVisible();
@@ -138,97 +137,97 @@ test.describe("Langue du logiciel", () => {
     await expect(statusFilter.getByRole("link", { name: "Wartend", exact: true })).toBeVisible();
   });
 
-  test("en polonais, la forme de pluriel est celle que la langue sélectionne", async () => {
-    // Le vrai test de la couche de pluriels. Le polonais a quatre formes, et
-    // aucun nombre ENTIER n'y sélectionne `other` : le compteur de vues de
-    // l'accueil exerce donc forcément `one`, `few` ou `many`. Un rendu qui
-    // retomberait sur le repli — dictionnaire incomplet, ou sélection faite en
-    // « n > 1 » plutôt que par `Intl.PluralRules` — se voit ici, alors qu'il
-    // passe inaperçu dans les deux tests allemands ci-dessus.
+  test("in Polish, the plural form is the one the language selects", async () => {
+    // The real test of the plural layer. Polish has four forms, and no WHOLE
+    // number selects `other` there: so the home page's view counter necessarily
+    // exercises `one`, `few` or `many`. A rendering that fell back on the
+    // fallback — incomplete dictionary, or a selection made with “n > 1” rather
+    // than by `Intl.PluralRules` — shows up here, while it goes unnoticed in the
+    // two German tests above.
     await switchLocale("pl");
     await page.goto("/help");
     await expect(page.locator("html")).toHaveAttribute("lang", "pl");
 
-    const compteur = popularRow().locator("span.tabular-nums");
-    const rendu = (await compteur.innerText()).trim();
+    const counter = popularRow().locator("span.tabular-nums");
+    const rendered = (await counter.innerText()).trim();
 
-    // Le nombre affiché n'est pas figé : chaque lecture d'article l'incrémente.
-    // On lit donc celui que la page vient d'afficher, et on en déduit la forme
-    // attendue — le test suit le produit au lieu de parier sur une valeur.
-    const n = Number(rendu.replace(/\D/g, ""));
+    // The displayed number is not fixed: every article read increments it. So
+    // we read the one the page has just displayed and derive the expected form
+    // from it — the test follows the product instead of betting on a value.
+    const n = Number(rendered.replace(/\D/g, ""));
     expect(n).toBeGreaterThan(0);
 
-    const categorie = new Intl.PluralRules("pl-PL").select(n);
-    expect(categorie, "le polonais ne sélectionne jamais `other` sur un entier").not.toBe("other");
+    const category = new Intl.PluralRules("pl-PL").select(n);
+    expect(category, "Polish never selects `other` on a whole number").not.toBe("other");
 
-    const formes = pluralEntries("pl").get("home.views");
-    expect(formes, "home.views devrait porter des formes de pluriel en pl.ts").toBeTruthy();
-    const attendu = formes![categorie]!.replace(
+    const forms = pluralEntries("pl").get("home.views");
+    expect(forms, "home.views should carry plural forms in pl.ts").toBeTruthy();
+    const expected = forms![category]!.replace(
       "{count}",
       new Intl.NumberFormat("pl-PL").format(n),
     );
-    // L'égalité stricte couvre les deux moitiés d'un coup : la bonne forme, et
-    // le nombre passé par le formateur polonais (espace insécable étroite).
-    expect(rendu).toBe(attendu);
+    // Strict equality covers both halves at once: the right form, and the
+    // number passed through the Polish formatter (narrow no-break space).
+    expect(rendered).toBe(expected);
   });
 
-  test("les effectifs du modal de suppression déclinent chacun leur nom", async () => {
-    // L'avertissement le plus grave du produit comptait TROIS effectifs
-    // indépendants dans une phrase, là où une clé ne porte qu'une dimension de
-    // pluriel : les trois noms étaient figés au pluriel et, à un seul ticket, la
-    // phrase écrivait « Les 1 tickets » — dans toutes les langues. Les trois
-    // groupes nominaux sont sortis dans des clés comptées à part.
+  test("the counts in the deletion modal each inflect their own noun", async () => {
+    // The product's gravest warning counted THREE independent counts in one
+    // sentence, where a key carries only one plural dimension: the three nouns
+    // were frozen in the plural and, at a single ticket, the sentence wrote
+    // “Les 1 tickets” — in every language. The three noun phrases have been
+    // pulled out into keys counted separately.
     //
-    // Le polonais est le témoin : quatre formes, et aucun entier n'y sélectionne
-    // `other`. Une phrase figée s'y verrait immédiatement.
+    // Polish is the control: four forms, and no whole number selects `other`
+    // there. A frozen sentence would be seen there immediately.
     await switchLocale("pl");
     await page.goto("/app/settings/general");
 
-    // Ouvrir le modal de la zone de danger. Le libellé du déclencheur est lu
-    // dans le dictionnaire plutôt que codé en polonais : « Usuń » sert aussi
-    // aux boutons de retrait du logo et du favicon du même écran, et un
-    // `has-text` en attraperait un autre. On ne touche à rien dans le modal —
-    // le bouton de suppression reste verrouillé par la saisie du slug.
-    const declencheur = simpleEntries("pl").get("app.settings.workspace.delete")!;
-    await page.getByRole("button", { name: declencheur, exact: true }).click();
+    // Open the danger zone's modal. The trigger's label is read from the
+    // dictionary rather than hard-coded in Polish: “Usuń” also serves the logo
+    // and favicon removal buttons on the same screen, and a `has-text` would
+    // catch one of those. Nothing in the modal is touched — the delete button
+    // stays locked behind typing the slug.
+    const trigger = simpleEntries("pl").get("app.settings.workspace.delete")!;
+    await page.getByRole("button", { name: trigger, exact: true }).click();
     const modal = page.locator('[role="dialog"]');
     await expect(modal).toBeVisible();
 
-    // La phrase ne porte plus aucun paramètre.
-    const phrase = modal.locator("p").first();
-    await expect(phrase).not.toContainText("{");
+    // The sentence no longer carries any parameter.
+    const sentence = modal.locator("p").first();
+    await expect(sentence).not.toContainText("{");
 
-    // La ligne des effectifs : trois groupes nominaux séparés par « · ».
-    const ligne = modal.locator("p").nth(1);
-    const texte = (await ligne.innerText()).trim();
-    const groupes = texte.split("·").map((g) => g.trim());
-    expect(groupes, `« ${texte} » devrait porter trois effectifs`).toHaveLength(3);
+    // The line of counts: three noun phrases separated by “·”.
+    const line = modal.locator("p").nth(1);
+    const text = (await line.innerText()).trim();
+    const groups = text.split("·").map((g) => g.trim());
+    expect(groups, `“${text}” should carry three counts`).toHaveLength(3);
 
-    const regles = new Intl.PluralRules("pl-PL");
+    const rules = new Intl.PluralRules("pl-PL");
     const nf = new Intl.NumberFormat("pl-PL");
-    for (const [i, cle] of [
+    for (const [i, key] of [
       "app.settings.workspace.generalDeleteTicketCount",
       "app.settings.workspace.generalDeleteContactCount",
       "app.settings.workspace.generalDeleteArticleCount",
     ].entries()) {
-      const n = Number(groupes[i]!.replace(/[^0-9]/g, ""));
-      const categorie = regles.select(n);
-      expect(categorie, "le polonais ne sélectionne jamais `other` sur un entier").not.toBe(
+      const n = Number(groups[i]!.replace(/[^0-9]/g, ""));
+      const category = rules.select(n);
+      expect(category, "Polish never selects `other` on a whole number").not.toBe(
         "other",
       );
-      const formes = pluralEntries("pl").get(cle);
-      expect(formes, `${cle} devrait porter des formes de pluriel en pl.ts`).toBeTruthy();
-      expect(groupes[i]).toBe(formes![categorie]!.replace("{count}", nf.format(n)));
+      const forms = pluralEntries("pl").get(key);
+      expect(forms, `${key} should carry plural forms in pl.ts`).toBeTruthy();
+      expect(groups[i]).toBe(forms![category]!.replace("{count}", nf.format(n)));
     }
   });
 
-  test("le contenu du tenant n'est pas traduit avec l'interface", async () => {
-    // Le titre d'article appartient au tenant : il est écrit dans SA langue et
-    // aucun changement de réglage ne doit y toucher. Un dictionnaire qui
-    // déborderait sur les données se verrait ici, et nulle part ailleurs.
+  test("tenant content is not translated along with the interface", async () => {
+    // The article title belongs to the tenant: it is written in ITS language
+    // and no change of setting must touch it. A dictionary spilling over onto
+    // the data would be seen here, and nowhere else.
     const title = popularRow().locator("span.flex-1");
 
-    await switchLocale("fr");
+    await switchLocale("en");
     await page.goto("/help");
     await expect(title).toHaveText(ARTICLE.title);
 
@@ -237,19 +236,18 @@ test.describe("Langue du logiciel", () => {
     await expect(title).toHaveText(ARTICLE.title);
   });
 
-  test("revenir au français rétablit l'interface française", async () => {
-    // Un aller simple ne prouve rien : c'est le retour qui montre que la langue
-    // est relue à chaque rendu, et non figée au premier passage par un cache.
+  test("going back to English restores the English interface", async () => {
+    // A one-way trip proves nothing: it is the return that shows the language
+    // is read again on every render, and not frozen at the first pass by a
+    // cache.
     await switchLocale("de");
-    await switchLocale("fr");
+    await switchLocale("en");
 
     await page.goto("/help");
-    await expect(page.locator("html")).toHaveAttribute("lang", "fr");
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Comment pouvons-nous vous aider ?",
-    );
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("How can we help?");
 
     await page.goto("/app/tickets");
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Mes tickets");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("My tickets");
   });
 });

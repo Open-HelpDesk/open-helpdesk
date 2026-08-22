@@ -8,16 +8,16 @@ import { toggleContactBlocked } from "./actions";
 import { DeleteRgpdButton, MergeContactButton, NewContactButton } from "./contact-drawers";
 
 /**
- * AG-07 — Contacts (design espace-agent) : layout maître-détail — toolbar, table grid
- * `minmax(200px,1fr) 240px 200px 90px 120px`, panneau détail 340 px (sélection via
- * ?selected=, première ligne par défaut) avec chips Fusionner / Bloquer / Supprimer
- * (RGPD) et onglets Tickets / Infos / Activité.
+ * AG-07 — Contacts (agent space design): master-detail layout — toolbar, table grid
+ * `minmax(200px,1fr) 240px 200px 90px 120px`, 340 px detail panel (selection via
+ * ?selected=, first row by default) with Merge / Block / Delete
+ * (GDPR) chips and Tickets / Infos / Activity tabs.
  */
 
 const GRID = "minmax(200px,1fr) 240px 200px 90px 120px";
-type Tab = "tickets" | "infos" | "activite";
+type Tab = "tickets" | "infos" | "activity";
 
-/** Bouton de toolbar bordé — h30, padding 0 11px, 12.5px ink-2. */
+/** Bordered toolbar button — h30, padding 0 11px, 12.5px ink-2. */
 const TOOL_BTN: React.CSSProperties = {
   height: 30,
   padding: "0 11px",
@@ -27,7 +27,7 @@ const TOOL_BTN: React.CSSProperties = {
   color: "var(--ink-2)",
 };
 
-/** Chip du panneau détail — padding 4px 9px, radius 5, 12px ink-2. */
+/** Detail panel chip — padding 4px 9px, radius 5, 12px ink-2. */
 const PANEL_CHIP: React.CSSProperties = {
   padding: "4px 9px",
   border: "1px solid var(--line)",
@@ -58,11 +58,11 @@ export default async function ContactsPage({
 
   const selectedId = rows.find((c) => c.id === selectedParam)?.id ?? rows[0]?.id;
   const detail = selectedId ? await getContact(tenant.id, selectedId) : null;
-  const tab: Tab = tabParam === "infos" ? "infos" : tabParam === "activite" ? "activite" : "tickets";
+  const tab: Tab = tabParam === "infos" ? "infos" : tabParam === "activity" ? "activity" : "tickets";
 
   return (
     <div className="flex h-full" style={{ background: "var(--bg)" }}>
-      {/* Colonne table */}
+      {/* Table column */}
       <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
         {/* Toolbar */}
         <div
@@ -186,7 +186,7 @@ export default async function ContactsPage({
         </div>
       </section>
 
-      {/* Panneau détail — 340 px */}
+      {/* Detail panel — 340 px */}
       {detail && (
         <aside
           className="hidden shrink-0 flex-col overflow-y-auto border-l lg:flex"
@@ -251,7 +251,7 @@ export default async function ContactsPage({
             </div>
           </div>
 
-          {/* Onglets */}
+          {/* Tabs */}
           <div
             className="flex border-b"
             style={{ gap: 2, padding: "0 16px", borderColor: "var(--line)" }}
@@ -260,7 +260,7 @@ export default async function ContactsPage({
               [
                 ["tickets", t("app.contacts.tickets")],
                 ["infos", t("app.contacts.tabInfos")],
-                ["activite", t("app.contacts.tabActivity")],
+                ["activity", t("app.contacts.tabActivity")],
               ] as [Tab, string][]
             ).map(([key, label]) => (
               <Link
@@ -350,7 +350,7 @@ export default async function ContactsPage({
               </div>
             )}
 
-            {tab === "activite" &&
+            {tab === "activity" &&
               (detail.tickets.length === 0 ? (
                 <p style={{ fontSize: 13, color: "var(--ink-3)" }}>
                   {t("app.contacts.noActivity")}

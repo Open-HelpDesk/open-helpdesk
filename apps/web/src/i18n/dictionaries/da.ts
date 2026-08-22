@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const da: Dictionary = {
   "chrome.defaultName": "Hjælpecenter",
@@ -149,6 +149,14 @@ export const da: Dictionary = {
   "login.footer":
     "Ingen henvendelser endnu? Din konto oprettes automatisk ved den første.",
 
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Dit login-link — {workspace}",
+  "login.emailBody":
+    "Hej,\n\nKlik på dette link for at få adgang til dine henvendelser (gyldigt i 15 minutter):\n{url}\n\nHvis du ikke har bedt om dette, kan du ignorere denne e-mail.\n\n{workspace}",
+
   "org.intro": {
     one: "Du er administrator for denne organisation. Det, du indstiller her, gælder den person hos {org}, der bruger supporten fra {tenant}.",
     other:
@@ -257,7 +265,7 @@ export const da: Dictionary = {
   "csatPage.doneTitle": "Tak!",
   "csatPage.doneBody": "Din kommentar er sendt videre til teamet.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Arbejdsområde",
   "app.settingsNav.itemGeneral": "Generelt",
   "app.settingsNav.itemTeam": "Agenter og teams",
@@ -290,7 +298,7 @@ export const da: Dictionary = {
   "app.settingsNav.copied": "Kopieret",
   "app.settingsNav.copy": "Kopiér",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
   "app.shell.inbox": "Indbakke",
   "app.shell.search": "Søg (⌘K)",
   "app.shell.contacts": "Kontakter",
@@ -301,7 +309,7 @@ export const da: Dictionary = {
   "app.shell.suspendedTitle": "Dette workspace er suspenderet",
   "app.shell.suspendedText": "Kontakt din administrator for at genoprette adgangen.",
   "app.shell.suspendedOwnerText":
-    "Vælg en plan, eller opdater din betalingsmetode for at genaktivere dit workspace.",
+    "Bring dit abonnement i orden, eller opdater din betalingsmetode for at genaktivere dit workspace.",
   "app.shell.suspendedBillingCta": "Åbn Abonnement & fakturering",
   "app.shell.myTickets": "Mine sager",
   "app.shell.newTicket": "Ny sag",
@@ -637,7 +645,7 @@ export const da: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. svar",
   "app.reports.customReports": "Tilpassede rapporter",
-  "app.reports.enterprisePlanBadge": "ENTERPRISE-PLAN",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Se mere",
   "app.reports.chartDailyAria": "{labelA} og {labelB} pr. dag",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -655,8 +663,11 @@ export const da: Dictionary = {
   "app.settings.shell.saved": "✓ Gemt",
   "app.settings.shell.cancel": "Annuller",
   "app.settings.shell.save": "Gem",
-  "app.settings.shell.planEnterprise": "Enterprise-plan",
-  "app.settings.shell.upgradeToEnterprise": "Skift til Enterprise-planen",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Luk",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Administrér abonnementet",
   "app.settings.shell.eeSelfHostedTitle": "Funktion i Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Denne funktion er omfattet af den kommercielle licens (mappen ee/ i repositoriet) og indgår ikke i den selvhostede open source-udgave.",
@@ -801,9 +812,9 @@ export const da: Dictionary = {
   "app.settings.email.sendFailed": "Afsendelse ikke mulig",
   "app.settings.sso.agentTitle": "SSO for agenter",
   "app.settings.sso.agentSubtitle": "Single sign-on med SAML 2.0 og SCIM-provisionering til dit supportteam.",
-  "app.settings.sso.agentLockedTitle": "SSO for agenter er forbeholdt Enterprise-planen",
+  "app.settings.sso.agentLockedTitle": "SSO for agenter er en del af Enterprise Edition",
   "app.settings.sso.agentLockedText": "Forbind din SAML 2.0-identitetsudbyder, provisionér dine agenter via SCIM, og gør single sign-on obligatorisk for hele teamet.",
-  "app.settings.sso.agentEnterpriseOnly": "SSO for agenter er forbeholdt Enterprise-planen.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO for agenter er en del af Enterprise Edition.",
   "app.settings.sso.idpOther": "Anden (generisk SAML)",
   "app.settings.sso.samlToggleLabel": "Aktivér single sign-on med SAML 2.0",
   "app.settings.sso.samlHeading": "Single sign-on med SAML 2.0",
@@ -878,9 +889,11 @@ export const da: Dictionary = {
   "app.settings.sso.addMapping": "+ Tilføj en mapping",
   "app.settings.sso.customerTitle": "SSO for kundeorganisationer",
   "app.settings.sso.customerSubtitle": "Hver kundeorganisation forbinder sin egen identitetsudbyder fra portalen. Her fører du tilsyn med dem alle.",
-  "app.settings.sso.customerLockedTitle": "SSO for kundeorganisationer er forbeholdt Enterprise-planen",
+  "app.settings.sso.customerLockedTitle":
+    "SSO for kundeorganisationer er en del af Enterprise Edition",
   "app.settings.sso.customerLockedText": "Lad hver kundeorganisation tilslutte sin egen identitetsudbyder (SAML eller OIDC), og før tilsyn med dem alle fra denne skærm.",
-  "app.settings.sso.customerEnterpriseOnly": "SSO for kundeorganisationer er forbeholdt Enterprise-planen.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "SSO for kundeorganisationer er en del af Enterprise Edition.",
   "app.settings.sso.statusActive": "Aktiv",
   "app.settings.sso.statusPending": "Skal bekræftes",
   "app.settings.sso.statusError": "Fejl",
@@ -1015,7 +1028,7 @@ export const da: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Vidensbase publiceret",
   "app.settings.portal.kbPublishedHint": "Publicerede artikler er synlige uden login.",
   "app.settings.portal.hidePoweredByLabel": "Skjul »Leveret af Open HelpDesk«",
-  "app.settings.portal.hidePoweredByHint": "Tilgængelig fra Enterprise-planen.",
+  "app.settings.portal.hidePoweredByHint": "Tilgængelig med Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Vidensbasens synlighed",
   "app.settings.portal.kbVisibilityPublic": "Offentlig",
   "app.settings.portal.kbVisibilityAuthenticated": "Kun ved login",
@@ -1063,7 +1076,8 @@ export const da: Dictionary = {
   "app.settings.portal.csatExclusionRemove": "Fjern {name}",
   "app.settings.workspace.generalTitle": "Generelt og branding",
   "app.settings.workspace.generalSubtitle": "Arbejdsområdets identitet, sprog, tidszone og sagsnummerering.",
-  "app.settings.workspace.generalDeleteCloudError": "Sletning afvist — planlagt sletning er kun tilgængelig i cloud.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Sletning afvist — planlagt sletning kræver et control plane.",
   "app.settings.workspace.generalIdentity": "Identitet",
   "app.settings.workspace.generalNameLabel": "Arbejdsområdets navn",
   "app.settings.workspace.generalLogoLabel": "Logo",
@@ -1118,7 +1132,7 @@ export const da: Dictionary = {
   "app.settings.workspace.seatsUsed": { one: "{count} / {quota} plads i brug", other: "{count} / {quota} pladser i brug" },
   "app.settings.workspace.seatsUsedFull": { one: "{count} / {quota} plads i brug — grænsen er nået", other: "{count} / {quota} pladser i brug — grænsen er nået" },
   "app.settings.workspace.seatsAddHint": "Tilføj pladser for at invitere nye agenter.",
-  "app.settings.workspace.seatsFreeHint": "Viewer-roller er gratis og ubegrænsede.",
+  "app.settings.workspace.seatsFreeHint": "Viewer-roller bruger ikke en plads og er ubegrænsede.",
   "app.settings.workspace.seatsAddAction": "Tilføj pladser",
   "app.settings.workspace.seatsManage": "Administrér",
   "app.settings.workspace.seatLimitReached":
@@ -1193,15 +1207,16 @@ export const da: Dictionary = {
   "app.settings.workspace.teamHoursHint": "Kalendere administreres under SLA og åbningstider.",
   "app.settings.workspace.save": "Gem",
   "app.settings.workspace.billingTitle": "Abonnement og fakturering",
-  "app.settings.workspace.billingSubtitle": "Plan, pladser, kvoter, betalingsmiddel og fakturahistorik.",
-  "app.settings.workspace.selfHosted": "SELVHOSTET",
+  "app.settings.workspace.billingSubtitle":
+    "Abonnement, pladser, kvoter, betalingsmiddel og fakturahistorik.",
+  "app.settings.workspace.subscriptionNone": "Intet abonnement",
   "app.settings.workspace.trialBadge": "PRØVE",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": { one: "pr. måned · {count} plads à {price} €", other: "pr. måned · {count} pladser à {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "pr. måned · {count} plads inkluderet", other: "pr. måned · {count} pladser inkluderet" },
-  "app.settings.workspace.billingNoDue": "Ingen betalingsfrist på denne instans — faktureringen håndteres i cloud-abonnementet.",
-  "app.settings.workspace.cloudOnly": "Tilgængelig i cloud-abonnementet",
-  "app.settings.workspace.changePlan": "Skift plan",
+  "app.settings.workspace.billingNoDue": "Der er intet at betale lige nu.",
+  "app.settings.workspace.requiresControlPlane": "Kræver et control plane",
+  "app.settings.workspace.changeSubscription": "Skift abonnement",
   "app.settings.workspace.manageSeats": "Administrér pladser",
   "app.settings.workspace.usageTitle": "Månedens forbrug",
   "app.settings.workspace.quotaSeats": "Pladser",
@@ -1213,7 +1228,7 @@ export const da: Dictionary = {
   "app.settings.workspace.colNumber": "Nummer",
   "app.settings.workspace.colPeriod": "Periode",
   "app.settings.workspace.colAmount": "Beløb",
-  "app.settings.workspace.invoicesEmpty": "Ingen fakturaer — fakturaer vises her i cloud-abonnementet.",
+  "app.settings.workspace.invoicesEmpty": "Ingen fakturaer endnu.",
   "app.settings.rules.saved": "✓ Gemt",
   "app.settings.rules.save": "Gem",
   "app.settings.rules.delete": "Slet",
@@ -1277,16 +1292,16 @@ export const da: Dictionary = {
   "app.settings.rules.typeLongText": "Lang tekst",
   "app.settings.rules.typeFile": "Fil",
   "app.settings.rules.typeSelectLong": "Rulleliste",
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) --- */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) --- */
 
-  /* Types de champs personnalisés (ST-04) ; « Tekst » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Tekst” is typeText, above. */
   "app.settings.rules.typeSelect": "Liste",
   "app.settings.rules.typeMultiSelect": "Flervalg",
   "app.settings.rules.typeDate": "Dato",
   "app.settings.rules.typeNumber": "Tal",
   "app.settings.rules.typeCheckbox": "Afkrydsningsfelt",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Hændelse",
   "app.settings.rules.condFieldStatus": "Status",
   "app.settings.rules.condFieldPriority": "Prioritet",
@@ -1300,7 +1315,7 @@ export const da: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Timer siden oprettelsen",
   "app.settings.rules.condFieldHoursUpdated": "Timer siden opdateringen",
 
-  /* Opérateurs. */
+  /* Operators. */
   "app.settings.rules.opIs": "er",
   "app.settings.rules.opIsNot": "er ikke",
   "app.settings.rules.opContains": "indeholder",
@@ -1310,12 +1325,12 @@ export const da: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Sag oprettet",
   "app.settings.rules.eventTicketUpdated": "Sag opdateret",
   "app.settings.rules.eventMessageCreated": "Besked modtaget",
 
-  /* Actions, telles que le menu du builder les nomme. */
+  /* Actions, as the builder's menu names them. */
   "app.settings.rules.actSetStatus": "Sæt status",
   "app.settings.rules.actSetPriority": "Sæt prioritet",
   "app.settings.rules.actAssignUser": "Tildel til en agent",
@@ -1324,8 +1339,8 @@ export const da: Dictionary = {
   "app.settings.rules.actAddTags": "Tilføj tags",
   "app.settings.rules.actEmailContact": "Send en e-mail til kontakten",
 
-  /* Résumé d'une règle : les bribes s'enchaînent, elles ne portent donc ni
-     majuscule initiale ni point final. */
+  /* Rule summary: the fragments run on, so they carry neither an initial
+     capital nor a final full stop. */
   "app.settings.rules.summaryPattern": "Hvis {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "og",
   "app.settings.rules.summaryAlways": "altid",
@@ -1334,9 +1349,9 @@ export const da: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "ikke tildelt",
   "app.settings.rules.summaryAssigned": "tildelt",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. « i » comme dans templateFollowUpDesc — « uden svar i 2
-     dage » ; « siden » ne se construit pas avec une durée en danois. */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. “i” as in templateFollowUpDesc — “uden svar i 2 dage”;
+     “siden” does not take a bare duration in Danish. */
   "app.settings.rules.summarySince": "i {duration}",
   "app.settings.rules.summarySetStatus": "skift til {value}",
   "app.settings.rules.summarySetPriority": "prioritet {value}",
@@ -1347,7 +1362,7 @@ export const da: Dictionary = {
   "app.settings.rules.summaryAddTags": "tilføj {tags}",
   "app.settings.rules.summaryEmailContact": "send en e-mail til kontakten",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Status → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioritet → {value}",
   "app.settings.rules.macroSummaryTeam": "Team → {team}",
@@ -1439,7 +1454,7 @@ export const da: Dictionary = {
   "app.settings.dev.dayYesterday": "I går {time}",
   "app.settings.dev.auditTitle": "Revisionslog",
   "app.settings.dev.auditSubtitle": "Fuldstændig log over administrationshandlinger. Opbevares i 2 år.",
-  "app.settings.dev.auditLockedTitle": "Revisionsloggen er forbeholdt Enterprise-planen",
+  "app.settings.dev.auditLockedTitle": "Revisionsloggen er en del af Enterprise Edition",
   "app.settings.dev.auditLockedText": "Bevar sporet af hver administrationshandling i 2 år, med diff før/efter og CSV-eksport.",
   "app.settings.dev.filterActorAll": "Aktør: alle",
   "app.settings.dev.filterActionAll": "Handling: alle",
@@ -1456,9 +1471,9 @@ export const da: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Ikke godkendt",
   "app.settings.dev.exportForbidden": "Forbeholdt rollerne Owner og Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Revisionsloggen er forbeholdt Enterprise-planen.",
+  "app.settings.dev.exportEnterpriseOnly": "Revisionsloggen er en del af Enterprise Edition.",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Ny",
   "app.status.open": "Åben",
   "app.status.waiting": "Afventer",
@@ -1479,7 +1494,7 @@ export const da: Dictionary = {
   "app.unit.kilobytes": "{count} kB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Mine sager",
   "app.views.unassigned": "Ikke tildelt",
   "app.views.breaching": "Snart forsinket",
@@ -1487,14 +1502,14 @@ export const da: Dictionary = {
   "app.views.urgent": "Akutte denne uge",
   "app.views.escalation": "Eskaleringer",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Omdøb",
   "app.kb.renameSave": "Gem",
   "app.kb.deleteCategory": "Slet kategorien",
   "app.kb.managersOnly": "Kun Owner og Admin kan redigere vidensbasen.",
   "app.kb.categoryNotEmpty": { one: "Kategorien indeholder stadig {count} element. Flyt det, før du sletter kategorien.", other: "Kategorien indeholder stadig {count} elementer. Flyt dem, før du sletter kategorien." },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-mail",
   "app.login.emailPlaceholder": "dig@virksomhed.dk",
   "app.login.password": "Adgangskode",
@@ -1554,7 +1569,8 @@ export const da: Dictionary = {
   "app.onboarding.forwardPlaceholder": "support@ditfirma.dk",
 
   "app.onboarding.teamTitle": "Invitér dit team",
-  "app.onboarding.teamBody": "Invitér dine agenter nu, eller del invitationslinket. Viewer-pladser er gratis.",
+  "app.onboarding.teamBody":
+    "Invitér dine agenter nu, eller del invitationslinket. Viewer-roller bruger ikke en plads.",
   "app.onboarding.invitePlaceholder": "kollega@virksomhed.dk",
   "app.onboarding.addRow": "+ Tilføj en linje",
   "app.onboarding.sendInvites": "Send invitationerne",
@@ -1562,8 +1578,8 @@ export const da: Dictionary = {
   "app.onboarding.testTitle": "Send en første sag",
   "app.onboarding.testBody": "Kontrollér hele kæden, før du åbner supporten for dine kunder.",
   "app.onboarding.readyTitle": "Dit arbejdsområde er klar",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Send en e-mail til {address} for at oprette en testsag.",
   "app.onboarding.openInbox": "Åbn indbakken",
 
@@ -1573,30 +1589,41 @@ export const da: Dictionary = {
   "app.onboarding.checklistTicket": "Første sag modtaget",
   "app.onboarding.checklistSla": "SLA-politikken er kontrolleret",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure le sélecteur
-     « alle / en eller flere » : les deux valeurs s'accordent avec le pluriel
-     indéfini « betingelser », qui suit le sélecteur. */
+  /* ST-05 — the condition group header. The sentence wraps the
+     “alle / en eller flere” selector: both values agree with the indefinite
+     plural “betingelser”, which follows the selector. */
   "app.settings.rules.matchIf": "HVIS",
   "app.settings.rules.matchAllPattern": "Opfylder {mode} betingelser",
   "app.settings.rules.matchAnyPattern": "Opfylder {mode} betingelser",
   "app.settings.rules.matchAll": "alle",
   "app.settings.rules.matchAny": "en eller flere",
 
-  /* ST-11 — noms des offres ; « Pro-plan » comme dans auditLockedTitle. */
-  "app.settings.workspace.planFree": "Free-plan",
-  "app.settings.workspace.planTeam": "Team-plan",
-  "app.settings.workspace.planEnterprise": "Enterprise-plan",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "SÅ",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Test på en eksisterende sag",
+  "app.settings.rules.testRunning": "Tester…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Fjern",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "E-mailens brødtekst — variabler: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05) ; « Incident » plutôt que « Hændelse », qui nomme
-     déjà l'événement dans le builder de règles. */
+  /* Ticket types (AG-05); “Incident” rather than “Hændelse”, which already
+     names the event in the rule builder. */
   "app.ticket.typeQuestion": "Spørgsmål",
   "app.ticket.typeIncident": "Incident",
   "app.ticket.typeTask": "Opgave",
   "app.ticket.typeOther": "Andet",
 
-  /* AG-09 — export CSV des rapports. */
+  /* AG-09 — CSV export of the reports. */
   "app.reports.csvIndicator": "Indikator",
   "app.reports.csvCurrentPeriod": "Nuværende periode",
   "app.reports.csvPreviousPeriod": "Foregående periode",
@@ -1611,7 +1638,7 @@ export const da: Dictionary = {
   "app.reports.csvResolvedShort": "Løste",
   "app.reports.csvAgent": "Agent",
 
-  /* AG-10 — conversion d'une demande résolue en article. */
+  /* AG-10 — turning a resolved request into an article. */
   "app.kb.fromTicketDefaultTitle": "Ny artikel",
   "app.kb.fromTicketSymptomHeading": "Symptom",
   "app.kb.fromTicketSymptomPlaceholder": "[Beskriv, hvad kunden oplever.]",
@@ -1620,8 +1647,8 @@ export const da: Dictionary = {
   "app.kb.fromTicketMissingRequest": "kundens oprindelige henvendelse",
   "app.kb.fromTicketMissingAnswer": "agentens svar",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Trin-for-trin-procedure",
   "app.kb.tplProcedureHint": "En række nummererede trin med det forventede resultat.",
   "app.kb.tplProcedureTitle": "Sådan [udfører du handlingen]",

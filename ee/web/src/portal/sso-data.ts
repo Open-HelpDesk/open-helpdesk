@@ -1,11 +1,11 @@
 /**
- * PT-08 (EE) — lecture de la connexion SSO d'une organisation cliente.
- * Voir ee/LICENSE : ce fichier n'est pas couvert par l'AGPL du dépôt.
+ * PT-08 (EE) — reads the SSO connection of a customer organization.
+ * See ee/LICENSE: this file is not covered by the repository's AGPL.
  */
 import { db, orgSsoConnections } from "@openhelpdesk/db";
 import { and, eq } from "drizzle-orm";
 
-/** Connexion SSO de l'organisation (au plus une). */
+/** SSO connection of the organization (at most one). */
 export async function getOrgSsoConnection(tenantId: string, organizationId: string) {
   const [row] = await db
     .select()

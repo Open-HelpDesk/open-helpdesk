@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const cs: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const cs: Dictionary = {
     "Služba je dočasně pozastavena: prohlížení zůstává dostupné, nové požadavky jsou vypnuty.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Centrum nápovědy",
   "home.title": "Jak vám můžeme pomoci?",
   "home.subtitle":
@@ -30,14 +30,14 @@ export const cs: Dictionary = {
   "home.ctaTitle": "Nenašli jste, co jste hledali?",
   "home.ctaBody": "Náš tým odpovídá v pracovní době v průměru do 34 minut.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Hledat v nápovědě…",
   "search.emptyTitle": "Žádné výsledky pro „{query}“",
   "search.emptyBody": "Zkuste obecnější výrazy nebo svou situaci popište našemu týmu.",
   "search.breadcrumb": "Hledání",
   "search.resultsTitle": "Výsledky pro „{query}“",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Nápověda",
   "category.otherCategories": "Další kategorie",
   "category.otherArticles": "Další články",
@@ -66,7 +66,7 @@ export const cs: Dictionary = {
   "vote.prefill": "Vytvořit předvyplněný požadavek",
   "vote.prefillSubject": "K článku „{title}“",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Odeslat požadavek",
   "newRequest.subtitle": "Popište svou situaci. Odpovídáme do 4 pracovních hodin.",
   "newRequest.type": "Typ požadavku",
@@ -107,7 +107,7 @@ export const cs: Dictionary = {
   "submitted.track": "Sledovat požadavek",
   "submitted.backToHelp": "Zpět do nápovědy",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "Moje požadavky",
   "requests.new": "Nový požadavek",
   "requests.tabOpen": "Otevřené",
@@ -119,13 +119,13 @@ export const cs: Dictionary = {
     "Vaše požadavky na podporu se zobrazí zde, včetně stavu a historie komunikace.",
   "requests.awaitingReply": "Čeká na odpověď",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "Řeší se",
   "status.waiting": "Čeká na vaši odpověď",
   "status.resolved": "Vyřešeno",
   "status.closed": "Uzavřeno",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Vyřešeno {when}",
   "activity.closed": "Uzavřeno {when}",
   "activity.waiting": "Čeká na vaši odpověď {since}",
@@ -133,7 +133,7 @@ export const cs: Dictionary = {
   "activity.youReplied": "Odpověděli jste {when}",
   "activity.created": "Vytvořeno {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": {
     one: "už {count} min",
     few: "už {count} min",
@@ -154,7 +154,7 @@ export const cs: Dictionary = {
   },
   "since.date": "od {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Vy",
   "request.team": "Tým",
   "request.agentAuthor": "{name} — {tenant}",
@@ -171,7 +171,7 @@ export const cs: Dictionary = {
   "request.markSolved": "Označit jako vyřešeno",
   "request.reopen": "Znovu otevřít požadavek",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Sledování požadavků",
   "login.magicIntro":
     "Zadejte svůj e-mail a pošleme vám přihlašovací odkaz. Žádné heslo si nemusíte pamatovat.",
@@ -184,7 +184,15 @@ export const cs: Dictionary = {
   "login.expired": "Tento odkaz vypršel nebo je neplatný. Vyžádejte si nový.",
   "login.footer": "Ještě žádný požadavek? Účet se vytvoří automaticky při prvním odeslání.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Váš přihlašovací odkaz — {workspace}",
+  "login.emailBody":
+    "Dobrý den,\n\nkliknutím na tento odkaz se dostanete ke svým požadavkům (odkaz platí 15 minut):\n{url}\n\nPokud jste o odkaz nežádali, tento e-mail ignorujte.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Jste administrátorem této organizace. Nastavení na této stránce platí pro {count} osobu z organizace {org}, která používá podporu {tenant}.",
     few: "Jste administrátorem této organizace. Nastavení na této stránce platí pro {count} osoby z organizace {org}, které používají podporu {tenant}.",
@@ -274,7 +282,7 @@ export const cs: Dictionary = {
   "members.note":
     "Členové se objeví automaticky při prvním přihlášení nebo prvním požadavku. Můžete určit druhého administrátora, abyste nezůstali jediným kontaktním místem.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Potřebujete pomoc?",
   "widget.close": "Zavřít",
   "widget.messageLabel": "Vaše zpráva",
@@ -295,7 +303,7 @@ export const cs: Dictionary = {
   "csatPage.doneTitle": "Děkujeme!",
   "csatPage.doneBody": "Váš komentář jsme předali týmu.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Doručené",
@@ -308,7 +316,7 @@ export const cs: Dictionary = {
   "app.shell.suspendedTitle": "Tento workspace je pozastaven",
   "app.shell.suspendedText": "Obraťte se na svého administrátora, aby obnovil přístup.",
   "app.shell.suspendedOwnerText":
-    "Vyberte tarif, nebo aktualizujte platební metodu, abyste workspace znovu aktivovali.",
+    "Vyrovnejte předplatné nebo aktualizujte platební metodu, abyste workspace znovu aktivovali.",
   "app.shell.suspendedBillingCta": "Otevřít Předplatné a fakturaci",
   "app.shell.myTickets": "Moje tikety",
   "app.shell.newTicket": "Nový tiket",
@@ -753,7 +761,7 @@ export const cs: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. odpověď",
   "app.reports.customReports": "Vlastní přehledy",
-  "app.reports.enterprisePlanBadge": "TARIF ENTERPRISE",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Zjistit více",
   "app.reports.chartDailyAria": "{labelA} a {labelB} po dnech",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -778,8 +786,11 @@ export const cs: Dictionary = {
   "app.settings.shell.saved": "✓ Uloženo",
   "app.settings.shell.cancel": "Zrušit",
   "app.settings.shell.save": "Uložit",
-  "app.settings.shell.planEnterprise": "TARIF ENTERPRISE",
-  "app.settings.shell.upgradeToEnterprise": "Přejít na tarif Enterprise",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Zavřít",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Správa předplatného",
   "app.settings.shell.eeSelfHostedTitle": "Funkce edice Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Tato funkce podléhá komerční licenci (adresář ee/ v repozitáři) a není součástí samostatně hostované open source edice.",
@@ -954,10 +965,10 @@ export const cs: Dictionary = {
   "app.settings.sso.agentTitle": "SSO agentů",
   "app.settings.sso.agentSubtitle":
     "Jednotné přihlášení SAML 2.0 a provisioning SCIM pro váš tým podpory.",
-  "app.settings.sso.agentLockedTitle": "SSO agentů je součástí pouze tarifu Enterprise",
+  "app.settings.sso.agentLockedTitle": "SSO agentů je součástí edice Enterprise Edition",
   "app.settings.sso.agentLockedText":
     "Připojte svého poskytovatele identit SAML 2.0, provisionujte agenty přes SCIM a vyžadujte jednotné přihlášení v celém týmu.",
-  "app.settings.sso.agentEnterpriseOnly": "SSO agentů je součástí pouze tarifu Enterprise.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO agentů je součástí edice Enterprise Edition.",
   "app.settings.sso.idpOther": "Jiný (obecný SAML)",
   "app.settings.sso.samlToggleLabel": "Zapnout jednotné přihlášení SAML 2.0",
   "app.settings.sso.samlHeading": "Jednotné přihlášení SAML 2.0",
@@ -1050,11 +1061,11 @@ export const cs: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Každá zákaznická organizace si z portálu připojí vlastního poskytovatele identit. Zde máte přehled o všech připojeních.",
   "app.settings.sso.customerLockedTitle":
-    "SSO zákaznických organizací je součástí pouze tarifu Enterprise",
+    "SSO zákaznických organizací je součástí edice Enterprise Edition",
   "app.settings.sso.customerLockedText":
     "Nechte každou zákaznickou organizaci připojit vlastního poskytovatele identit (SAML nebo OIDC) a mějte na této obrazovce přehled o všech připojeních.",
   "app.settings.sso.customerEnterpriseOnly":
-    "SSO zákaznických organizací je součástí pouze tarifu Enterprise.",
+    "SSO zákaznických organizací je součástí edice Enterprise Edition.",
   "app.settings.sso.statusActive": "Aktivní",
   "app.settings.sso.statusPending": "K ověření",
   "app.settings.sso.statusError": "Chyba",
@@ -1250,7 +1261,7 @@ export const cs: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Znalostní báze publikovaná",
   "app.settings.portal.kbPublishedHint": "Publikované články jsou viditelné bez přihlášení.",
   "app.settings.portal.hidePoweredByLabel": "Skrýt „Běží na Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Dostupné od tarifu Enterprise.",
+  "app.settings.portal.hidePoweredByHint": "Dostupné s edicí Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Viditelnost znalostní báze",
   "app.settings.portal.kbVisibilityPublic": "Veřejná",
   "app.settings.portal.kbVisibilityAuthenticated": "Po přihlášení",
@@ -1314,8 +1325,8 @@ export const cs: Dictionary = {
   "app.settings.workspace.generalTitle": "Obecné a branding",
   "app.settings.workspace.generalSubtitle":
     "Identita pracovního prostoru, jazyk, časové pásmo a číslování tiketů.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "Smazání odmítnuto — plánované smazání je dostupné v cloudové nabídce.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Smazání odmítnuto — plánované smazání vyžaduje control plane.",
   "app.settings.workspace.generalIdentity": "Identita",
   "app.settings.workspace.generalNameLabel": "Název pracovního prostoru",
   "app.settings.workspace.generalLogoLabel": "Logo",
@@ -1389,7 +1400,7 @@ export const cs: Dictionary = {
     other: "{count} / {quota} využitých licencí — limit vyčerpán",
   },
   "app.settings.workspace.seatsAddHint": "Přidejte licence, abyste mohli zvát nové agenty.",
-  "app.settings.workspace.seatsFreeHint": "Role Viewer jsou zdarma a bez omezení.",
+  "app.settings.workspace.seatsFreeHint": "Role Viewer nezabírají licenci a nejsou omezené.",
   "app.settings.workspace.seatsAddAction": "Přidat licence",
   "app.settings.workspace.seatsManage": "Spravovat",
   "app.settings.workspace.seatLimitReached":
@@ -1470,8 +1481,8 @@ export const cs: Dictionary = {
   "app.settings.workspace.save": "Uložit",
   "app.settings.workspace.billingTitle": "Předplatné a fakturace",
   "app.settings.workspace.billingSubtitle":
-    "Tarif, licence, kvóty, platební metoda a historie faktur.",
-  "app.settings.workspace.selfHosted": "VLASTNÍ HOSTING",
+    "Předplatné, licence, kvóty, platební metoda a historie faktur.",
+  "app.settings.workspace.subscriptionNone": "Žádné předplatné",
   "app.settings.workspace.trialBadge": "ZKUŠEBNÍ",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
@@ -1486,10 +1497,9 @@ export const cs: Dictionary = {
     many: "měsíčně · {count} licence v ceně",
     other: "měsíčně · {count} licencí v ceně",
   },
-  "app.settings.workspace.billingNoDue":
-    "Na této instanci není nic k úhradě — fakturace probíhá v cloudové nabídce.",
-  "app.settings.workspace.cloudOnly": "Dostupné v cloudové nabídce",
-  "app.settings.workspace.changePlan": "Změnit tarif",
+  "app.settings.workspace.billingNoDue": "Aktuálně není nic k úhradě.",
+  "app.settings.workspace.requiresControlPlane": "Vyžaduje control plane",
+  "app.settings.workspace.changeSubscription": "Změnit předplatné",
   "app.settings.workspace.manageSeats": "Spravovat licence",
   "app.settings.workspace.usageTitle": "Spotřeba za měsíc",
   "app.settings.workspace.quotaSeats": "Licence",
@@ -1501,8 +1511,7 @@ export const cs: Dictionary = {
   "app.settings.workspace.colNumber": "Číslo",
   "app.settings.workspace.colPeriod": "Období",
   "app.settings.workspace.colAmount": "Částka",
-  "app.settings.workspace.invoicesEmpty":
-    "Žádné faktury — v cloudové nabídce se faktury zobrazí zde.",
+  "app.settings.workspace.invoicesEmpty": "Zatím žádné faktury.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Uloženo",
@@ -1573,18 +1582,18 @@ export const cs: Dictionary = {
   "app.settings.rules.typeFile": "Soubor",
   "app.settings.rules.typeSelectLong": "Rozbalovací seznam",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
-     tables partagées, celles de l'inbox et de ses filtres. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     Statuses, priorities and channels are NOT repeated here: they come from the
+     shared tables, the ones used by the inbox and its filters. */
 
-  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Texte” is typeText, above. */
   "app.settings.rules.typeSelect": "Seznam",
   "app.settings.rules.typeMultiSelect": "Vícenásobný výběr",
   "app.settings.rules.typeDate": "Datum",
   "app.settings.rules.typeNumber": "Číslo",
   "app.settings.rules.typeCheckbox": "Zaškrtávací pole",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Událost",
   "app.settings.rules.condFieldStatus": "Stav",
   "app.settings.rules.condFieldPriority": "Priorita",
@@ -1598,9 +1607,9 @@ export const cs: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Hodiny od vytvoření",
   "app.settings.rules.condFieldHoursUpdated": "Hodiny od aktualizace",
 
-  /* Opérateurs. « Vide » et « non vide » sont rendus par un groupe
-     prépositionnel, invariable : le tchèque accorde son verbe et son adjectif
-     avec le champ, et « Štítky je prázdné » serait faux au pluriel. */
+  /* Operators. “Empty” and “not empty” are rendered as an invariable
+     prepositional phrase: Czech agrees its verb and its adjective with the
+     field, and “Štítky je prázdné” would be wrong in the plural. */
   "app.settings.rules.opIs": "je",
   "app.settings.rules.opIsNot": "není",
   "app.settings.rules.opContains": "obsahuje",
@@ -1610,12 +1619,12 @@ export const cs: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Tiket vytvořen",
   "app.settings.rules.eventTicketUpdated": "Tiket aktualizován",
   "app.settings.rules.eventMessageCreated": "Zpráva přijata",
 
-  /* Actions, telles que le menu du builder les nomme. */
+  /* Actions, as the builder's menu names them. */
   "app.settings.rules.actSetStatus": "Nastavit stav",
   "app.settings.rules.actSetPriority": "Nastavit prioritu",
   "app.settings.rules.actAssignUser": "Přiřadit agentovi",
@@ -1624,8 +1633,8 @@ export const cs: Dictionary = {
   "app.settings.rules.actAddTags": "Přidat štítky",
   "app.settings.rules.actEmailContact": "Odeslat e-mail kontaktu",
 
-  /* Résumé d'une règle, en une ligne de liste : le tchèque garde l'ordre
-     « když … → … », les bribes s'insèrent sans majuscule ni point. */
+  /* One-line rule summary: Czech keeps the “když … → …” order, and the
+     fragments slot in without an initial capital or a full stop. */
   "app.settings.rules.summaryPattern": "Když {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "a",
   "app.settings.rules.summaryAlways": "vždy",
@@ -1639,8 +1648,8 @@ export const cs: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "nepřiřazeno",
   "app.settings.rules.summaryAssigned": "přiřazeno",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. */
   "app.settings.rules.summarySince": "již {duration}",
   "app.settings.rules.summarySetStatus": "nastavit stav na {value}",
   "app.settings.rules.summarySetPriority": "priorita {value}",
@@ -1651,7 +1660,7 @@ export const cs: Dictionary = {
   "app.settings.rules.summaryAddTags": "přidat štítky {tags}",
   "app.settings.rules.summaryEmailContact": "odeslat e-mail kontaktu",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Stav → {value}",
   "app.settings.rules.macroSummaryPriority": "Priorita → {value}",
   "app.settings.rules.macroSummaryTeam": "Tým → {team}",
@@ -1762,7 +1771,7 @@ export const cs: Dictionary = {
   "app.settings.dev.auditTitle": "Audit log",
   "app.settings.dev.auditSubtitle":
     "Kompletní protokol administrátorských akcí. Uchování 2 roky.",
-  "app.settings.dev.auditLockedTitle": "Audit log je součástí pouze tarifu Enterprise",
+  "app.settings.dev.auditLockedTitle": "Audit log je součástí edice Enterprise Edition",
   "app.settings.dev.auditLockedText":
     "Uchovejte záznam o každé administrátorské akci po 2 roky, včetně rozdílu před/po a exportu do CSV.",
   "app.settings.dev.filterActorAll": "Aktér: všichni",
@@ -1786,9 +1795,9 @@ export const cs: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Neautorizováno",
   "app.settings.dev.exportForbidden": "Vyhrazeno rolím Owner a Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Audit log je součástí pouze tarifu Enterprise.",
+  "app.settings.dev.exportEnterpriseOnly": "Audit log je součástí edice Enterprise Edition.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Pracovní prostor",
   "app.settingsNav.itemGeneral": "Obecné",
   "app.settingsNav.itemTeam": "Agenti a týmy",
@@ -1822,7 +1831,7 @@ export const cs: Dictionary = {
   "app.settingsNav.copied": "Zkopírováno",
   "app.settingsNav.copy": "Kopírovat",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nový",
   "app.status.open": "Otevřený",
   "app.status.waiting": "Čeká",
@@ -1843,7 +1852,7 @@ export const cs: Dictionary = {
   "app.unit.kilobytes": "{count} kB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Moje tikety",
   "app.views.unassigned": "Nepřiřazené",
   "app.views.breaching": "Blíží se překročení",
@@ -1851,7 +1860,7 @@ export const cs: Dictionary = {
   "app.views.urgent": "Urgentní tento týden",
   "app.views.escalation": "Eskalace",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Přejmenovat",
   "app.kb.renameSave": "Uložit",
   "app.kb.deleteCategory": "Smazat kategorii",
@@ -1863,7 +1872,7 @@ export const cs: Dictionary = {
     other: "Tato kategorie stále obsahuje {count} položek. Před smazáním kategorie je přesuňte.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-mail",
   "app.login.emailPlaceholder": "vy@firma.cz",
   "app.login.password": "Heslo",
@@ -1928,7 +1937,7 @@ export const cs: Dictionary = {
 
   "app.onboarding.teamTitle": "Pozvěte svůj tým",
   "app.onboarding.teamBody":
-    "Pozvěte své agenty hned, nebo sdílejte odkaz s pozvánkou. Licence Viewer jsou zdarma.",
+    "Pozvěte své agenty hned, nebo sdílejte odkaz s pozvánkou. Role Viewer nezabírají licenci.",
   "app.onboarding.invitePlaceholder": "kolega@firma.cz",
   "app.onboarding.addRow": "+ Přidat řádek",
   "app.onboarding.sendInvites": "Odeslat pozvánky",
@@ -1937,8 +1946,8 @@ export const cs: Dictionary = {
   "app.onboarding.testBody":
     "Než službu otevřete zákazníkům, ověřte celý průběh.",
   "app.onboarding.readyTitle": "Váš pracovní prostor je připraven",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Pošlete e-mail na {address} a vytvořte tak testovací tiket.",
   "app.onboarding.openInbox": "Otevřít Doručené",
 
@@ -1948,32 +1957,42 @@ export const cs: Dictionary = {
   "app.onboarding.checklistTicket": "První tiket přijat",
   "app.onboarding.checklistSla": "Politika SLA zkontrolována",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase est découpée autour de
-     {mode} : le tchèque met son verbe avant le sélecteur et garde le nom au
-     génitif pluriel, invariable des deux côtés du choix. */
+  /* ST-05 — the condition group header. The sentence is split around
+     {mode}: Czech puts its verb before the selector and keeps the noun in the
+     genitive plural, invariable on either side of the choice. */
   "app.settings.rules.matchIf": "KDYŽ",
   "app.settings.rules.matchAllPattern": "Musí platit {mode} z podmínek",
   "app.settings.rules.matchAnyPattern": "Musí platit {mode} z podmínek",
   "app.settings.rules.matchAll": "všechny",
   "app.settings.rules.matchAny": "alespoň jedna",
 
-  /* ST-11 — noms des offres ; « Free », « Standard » et « Pro » ne se
-     traduisent pas. */
-  "app.settings.workspace.planFree": "Tarif Free",
-  "app.settings.workspace.planTeam": "Tarif Team",
-  "app.settings.workspace.planEnterprise": "Tarif Enterprise",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "TAK",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Otestovat na existujícím tiketu",
+  "app.settings.rules.testRunning": "Testování…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Odebrat",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Text e-mailu — proměnné: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05) : la valeur en base reste française, seul
-     l'affichage est traduit. */
+  /* Ticket types (AG-05): the value stored in the database stays French,
+     only the display is translated. */
   "app.ticket.typeQuestion": "Dotaz",
   "app.ticket.typeIncident": "Incident",
   "app.ticket.typeTask": "Úkol",
   "app.ticket.typeOther": "Jiné",
 
-  /* AG-09 — entêtes de l'export CSV des rapports. « s » est bien l'abréviation
-     tchèque de la seconde, comme « min » et « h » ailleurs dans ce fichier. */
+  /* AG-09 — CSV export headers for the reports. “s” really is the Czech
+     abbreviation for the second, like “min” and “h” elsewhere in this file. */
   "app.reports.csvIndicator": "Ukazatel",
   "app.reports.csvCurrentPeriod": "Aktuální období",
   "app.reports.csvPreviousPeriod": "Předchozí období",
@@ -1988,7 +2007,7 @@ export const cs: Dictionary = {
   "app.reports.csvResolvedShort": "Vyřešené",
   "app.reports.csvAgent": "Agent",
 
-  /* AG-10 — conversion d'une demande résolue en article ; les « ## » restent. */
+  /* AG-10 — turning a resolved request into an article; the “##” stay. */
   "app.kb.fromTicketDefaultTitle": "Nový článek",
   "app.kb.fromTicketSymptomHeading": "Příznak",
   "app.kb.fromTicketSymptomPlaceholder": "[Popište, co zákazník pozoruje.]",
@@ -1998,8 +2017,8 @@ export const cs: Dictionary = {
   "app.kb.fromTicketMissingRequest": "původní požadavek zákazníka",
   "app.kb.fromTicketMissingAnswer": "odpověď agenta",
 
-  /* Modèles de départ d'un article (AG-10) : markdown, le texte entre crochets
-     est à remplacer par l'auteur. */
+  /* Article starter templates (AG-10): markdown, and the bracketed text is
+     for the author to replace. */
   "app.kb.tplProcedureLabel": "Postup krok za krokem",
   "app.kb.tplProcedureHint": "Posloupnost číslovaných kroků s očekávaným výsledkem.",
   "app.kb.tplProcedureTitle": "Jak [provést akci]",

@@ -1,7 +1,7 @@
 /**
- * Authentification des webhooks d'ingestion email (/api/ingress/*) : secret
- * d'instance comparé en temps constant. Le tenant n'entre pas en jeu ici —
- * il est résolu par l'adresse destinataire (mailboxes.address, unique).
+ * Authentication of the email ingestion webhooks (/api/ingress/*): instance
+ * secret compared in constant time. The tenant does not come into play here —
+ * it is resolved from the recipient address (mailboxes.address, unique).
  */
 import { timingSafeEqual } from "node:crypto";
 import type { NextRequest } from "next/server";

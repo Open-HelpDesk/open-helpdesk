@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * AG-04 — Pièces jointes d'un message : vignettes 138 px pour les images (clic →
- * visionneuse overlay : zoom 60–160 %, précédente/suivante, Télécharger, ✕),
- * chips pour les autres fichiers.
+ * AG-04 — Attachments of a message: 138 px thumbnails for images (click →
+ * overlay viewer: zoom 60–160%, previous/next, Download, ✕),
+ * chips for the other files.
  */
 import { useEffect, useState, type CSSProperties } from "react";
 import { size } from "@/lib/format";
@@ -16,7 +16,7 @@ export type AttachmentData = {
   sizeBytes: number;
 };
 
-/** Bordures de la visionneuse — même palette claire que le design (overlay sombre). */
+/** Viewer borders — same light palette as the design (dark overlay). */
 const VIEWER_INK = "#F2FBF7";
 const VIEWER_LINE = "1px solid rgba(242,251,247,.24)";
 
@@ -27,7 +27,7 @@ export function MessageAttachments({
 }: {
   attachments: AttachmentData[];
   senderName: string;
-  /** Bordure de la carte porteuse — le design reprend la couleur du message. */
+  /** Border of the carrying card — the design reuses the color of the message. */
   borderColor?: string;
 }) {
   const t = useT();
@@ -70,9 +70,9 @@ export function MessageAttachments({
               style={{
                 width: 138,
                 borderRadius: 8,
-                // Le filet au repos passe par --edge et non par `border` : une
-                // couleur de bordure posée en inline battrait le :hover de la
-                // classe, et la vignette resterait inerte au survol.
+                // The resting rule goes through --edge and not through `border`: a
+                // border color set inline would beat the class's :hover, and the
+                // thumbnail would stay inert on hover.
                 "--edge": borderColor,
                 background: "var(--panel)",
                 cursor: "zoom-in",
@@ -146,14 +146,14 @@ export function MessageAttachments({
         </div>
       )}
 
-      {/* Visionneuse */}
+      {/* Viewer */}
       {current && viewerIndex !== null && (
         <div
           className="ohd-rise-viewer fixed inset-0 z-[80] flex flex-col"
           style={{ background: "var(--scrim-viewer)", color: VIEWER_INK }}
           onClick={() => setViewerIndex(null)}
         >
-          {/* En-tête : nom + méta, zoom, Télécharger, ✕ */}
+          {/* Header: name + meta, zoom, Download, ✕ */}
           <div
             className="flex shrink-0 items-center"
             style={{
@@ -262,7 +262,7 @@ export function MessageAttachments({
             />
           </div>
 
-          {/* Pied : « Pièce jointe 1 sur 2 » + ← / → */}
+          {/* Footer: "Attachment 1 of 2" + ← / → */}
           <div
             className="flex shrink-0 items-center"
             style={{

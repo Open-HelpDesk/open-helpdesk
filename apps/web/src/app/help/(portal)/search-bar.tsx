@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * PT-01 — barre de recherche du hero (h58, pilule, raccourci ⌘K) avec typeahead :
- * suggestions /api/portal/kb-suggest dès 2 caractères, état « Aucun résultat » avec CTA.
- * Entrée = recherche complète (/help/search).
+ * PT-01 — hero search bar (h58, pill, ⌘K shortcut) with typeahead:
+ * /api/portal/kb-suggest suggestions from 2 characters on, "No result" state with CTA.
+ * Enter = full search (/help/search).
  */
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -32,7 +32,7 @@ export function PortalSearchBar() {
         });
         if (res.ok) setSuggestions((await res.json()) as Suggestion[]);
       } catch {
-        /* requête annulée */
+        /* request aborted */
       }
     }, 200);
     return () => {
@@ -41,8 +41,8 @@ export function PortalSearchBar() {
     };
   }, [q]);
 
-  // ⌘K / Ctrl+K place le curseur dans la recherche : la maquette affiche le
-  // raccourci dans la barre, il doit donc faire quelque chose.
+  // ⌘K / Ctrl+K puts the cursor in the search field: the mockup shows the
+  // shortcut inside the bar, so it has to do something.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
@@ -138,7 +138,7 @@ export function PortalSearchBar() {
               </Link>
             ))
           ) : (
-            /* Même bloc que /help/search (maquette « sans résultat ») : titre serif, bouton h48. */
+            /* Same block as /help/search ("no result" mockup): serif title, h48 button. */
             <div className="flex flex-col items-center gap-[15px] px-6 py-9 text-center">
               <p className="pt-title text-[26px] tracking-[-0.015em]" style={{ color: "var(--ink)" }}>
                 {t("search.emptyTitle", { query: q.trim() })}

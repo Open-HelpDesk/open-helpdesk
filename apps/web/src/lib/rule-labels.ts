@@ -1,27 +1,27 @@
 /**
- * Vocabulaire du moteur de règles — partagé par le builder (ST-05), les résumés
- * lisibles des listes, l'éditeur SLA (ST-07) et les macros (ST-06).
+ * Rule engine vocabulary — shared by the builder (ST-05), the readable list
+ * summaries, the SLA editor (ST-07) and the macros (ST-06).
  *
- * Ce fichier ne portait que du français : des tables de libellés et deux
- * fabricants de phrases qui les assemblaient par concaténation. Tout l'écran des
- * automatisations restait donc en français dans un workspace réglé en bulgare.
+ * This file used to carry nothing but French: label tables and two sentence
+ * builders that assembled them by concatenation. The whole automations screen
+ * therefore stayed in French in a workspace set to Bulgarian.
  *
- * Il porte maintenant des CLÉS, comme `lib/format.ts` : le rendu passe par `t()`,
- * qui connaît la langue du tenant. Les deux fabricants de phrases reçoivent donc
- * `t`, et leurs gabarits sont eux-mêmes des clés — « Si {conditions} alors
- * {actions} » n'a pas le même ordre de mots partout.
+ * It now carries KEYS, like `lib/format.ts`: rendering goes through `t()`, which
+ * knows the tenant's language. The two sentence builders therefore receive `t`,
+ * and their templates are themselves keys — "If {conditions} then {actions}"
+ * does not have the same word order everywhere.
  *
- * Reste client-safe : rien ici n'importe de code serveur.
+ * Stays client-safe: nothing here imports server code.
  */
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 import { CHANNEL_KEYS, PRIORITY_KEYS, STATUS_KEYS } from "@/lib/format";
 
-/** Ce dont les fabricants de phrases ont besoin : traduire. */
+/** What the sentence builders need: translating. */
 type Tr = {
   (key: MessageKey, params?: Record<string, string | number>): string;
 };
 
-/** Champs sur lesquels une condition peut porter (ordre du menu de ST-05). */
+/** Fields a condition can bear on (order of the ST-05 menu). */
 export const FIELD_KEYS: Record<string, MessageKey> = {
   event: "app.settings.rules.condFieldEvent",
   status: "app.settings.rules.condFieldStatus",
@@ -38,10 +38,10 @@ export const FIELD_KEYS: Record<string, MessageKey> = {
 };
 
 /**
- * Opérateurs. Les deux comparaisons numériques valent un symbole en français,
- * mais elles passent par le dictionnaire comme les autres : une langue qui
- * préférerait un mot doit pouvoir le dire, et une table à deux régimes serait un
- * piège pour la prochaine.
+ * Operators. The two numeric comparisons come out as a symbol in French, but
+ * they go through the dictionary like the others: a language that would rather
+ * have a word must be able to say so, and a table with two regimes would be a
+ * pitfall for the next one.
  */
 export const OPERATOR_KEYS: Record<string, MessageKey> = {
   is: "app.settings.rules.opIs",
@@ -65,11 +65,12 @@ export const ACTION_KEYS: Record<string, MessageKey> = {
 };
 
 /**
- * Valeurs proposées par champ (select) ; les autres champs sont en saisie libre.
+ * Values offered per field (select); the other fields are free-form input.
  *
- * Statuts, priorités et canaux viennent des tables partagées de `lib/format.ts`
- * plutôt que d'un jeu de clés propre : ce sont les mêmes libellés que ceux de
- * l'inbox et de ses filtres, et deux jeux finiraient par diverger.
+ * Statuses, priorities and channels come from the shared tables in
+ * `lib/format.ts` rather than from a key set of their own: they are the same
+ * labels as those of the inbox and its filters, and two sets would end up
+ * diverging.
  */
 export const FIELD_VALUE_KEYS: Record<string, { value: string; key: MessageKey }[]> = {
   event: [
@@ -82,7 +83,7 @@ export const FIELD_VALUE_KEYS: Record<string, { value: string; key: MessageKey }
   channel: Object.entries(CHANNEL_KEYS).map(([value, key]) => ({ value, key })),
 };
 
-/** Types de champs personnalisés (ST-04). */
+/** Custom field types (ST-04). */
 export const FIELD_TYPE_KEYS: Record<string, MessageKey> = {
   text: "app.settings.rules.typeText",
   select: "app.settings.rules.typeSelect",
@@ -104,43 +105,43 @@ function valueLabel(t: Tr, c: ConditionLike): string {
 }
 
 /**
- * Une condition, en une bribe de phrase.
+ * A condition, as a sentence fragment.
  *
- * Un écart assumé par rapport à la maquette française : les noms de champ ne
- * sont plus mis en minuscules. `toLowerCase()` est faux dès qu'une langue
- * capitalise ses substantifs — l'allemand écrit « Priorität », pas
- * « priorität » — et fournir un second jeu de douze libellés en minuscules pour
- * une différence de casse aurait coûté plus que cela ne rapporte.
+ * One deliberate departure from the French mockup: field names are no longer
+ * lowercased. `toLowerCase()` is wrong as soon as a language capitalises its
+ * nouns — German writes "Priorität", not "priorität" — and providing a second
+ * set of twelve lowercase labels for a difference of case would have cost more
+ * than it brings.
  */
 function conditionText(t: Tr, c: ConditionLike, teamNames?: Map<string, string>): string {
-  // L'événement se lit seul, sans nom de champ.
+  // The event reads on its own, without a field name.
   if (c.field === "event") return valueLabel(t, c);
-  // « non assigné » plutôt que « Assigné est vide ».
+  // "unassigned" rather than "Assignee is empty".
   if (c.field === "assignee" && c.operator === "empty") {
     return t("app.settings.rules.summaryUnassigned");
   }
   if (c.field === "assignee" && c.operator === "not_empty") {
     return t("app.settings.rules.summaryAssigned");
   }
-  // Ancienneté. La durée reste dans les jetons du parseur : voir
-  // formatDurationTokens, en bas de ce fichier.
+  // Age. The duration stays in the parser's tokens: see formatDurationTokens,
+  // at the bottom of this file.
   if (DURATION_FIELDS.has(c.field)) {
     const hours = Number(c.value ?? 0);
     const duration = hours >= 24 && hours % 24 === 0 ? `${hours / 24} j` : `${hours} h`;
     return t("app.settings.rules.summarySince", { duration });
   }
-  const cleChamp = FIELD_KEYS[c.field];
-  const field = cleChamp ? t(cleChamp) : c.field;
-  const cleOp = OPERATOR_KEYS[c.operator];
+  const fieldKey = FIELD_KEYS[c.field];
+  const field = fieldKey ? t(fieldKey) : c.field;
+  const operatorKey = OPERATOR_KEYS[c.operator];
   if (VALUELESS_OPERATORS.has(c.operator)) {
     return t("app.settings.rules.summaryConditionNoValue", {
       field,
-      operator: cleOp ? t(cleOp) : c.operator,
+      operator: operatorKey ? t(operatorKey) : c.operator,
     });
   }
-  // Le résumé abrège « est » en signe égal : c'est un symbole, il ne se traduit
-  // pas, et il tient dans une ligne de liste là où le mot ne tiendrait pas.
-  const operator = c.operator === "is" ? "=" : cleOp ? t(cleOp) : c.operator;
+  // The summary shortens "is" to an equals sign: it is a symbol, it does not get
+  // translated, and it fits in a list row where the word would not.
+  const operator = c.operator === "is" ? "=" : operatorKey ? t(operatorKey) : c.operator;
   const value =
     c.field === "team" ? (teamNames?.get(String(c.value)) ?? valueLabel(t, c)) : valueLabel(t, c);
   return t("app.settings.rules.summaryCondition", { field, operator, value });
@@ -175,20 +176,20 @@ function actionText(t: Tr, a: ActionLike, teamNames?: Map<string, string>): stri
     case "email_contact":
       return t("app.settings.rules.summaryEmailContact");
     default: {
-      const cle = ACTION_KEYS[a.type];
-      return cle ? t(cle) : a.type;
+      const key = ACTION_KEYS[a.type];
+      return key ? t(key) : a.type;
     }
   }
 }
 
 /**
- * Les conditions d'une règle, sans les actions.
+ * A rule's conditions, without the actions.
  *
- * Exposé parce que l'éditeur SLA n'affiche que cette moitié : il fabriquait la
- * phrase entière puis en retirait le début et la fin — `.replace(/^Si /, "")`
- * suivi de `.replace(" → aucune action", "")`. Deux tournures françaises, qui ne
- * retiraient plus rien dès que le workspace changeait de langue et laissaient
- * la phrase complète dans une colonne de tableau.
+ * Exposed because the SLA editor only displays this half: it used to build the
+ * whole sentence then strip its beginning and its end — `.replace(/^Si /, "")`
+ * followed by `.replace(" → aucune action", "")`. Two French turns of phrase,
+ * which stripped nothing any more as soon as the workspace changed language and
+ * left the complete sentence in a table column.
  */
 export function conditionsSummary(
   t: Tr,
@@ -196,27 +197,27 @@ export function conditionsSummary(
   conditionsAny: ConditionLike[],
   teamNames?: Map<string, string>,
 ): string {
-  const bribes: { texte: string; duree: boolean }[] = conditionsAll.map((c) => ({
-    texte: conditionText(t, c, teamNames),
-    duree: DURATION_FIELDS.has(c.field),
+  const fragments: { text: string; duration: boolean }[] = conditionsAll.map((c) => ({
+    text: conditionText(t, c, teamNames),
+    duration: DURATION_FIELDS.has(c.field),
   }));
   if (conditionsAny.length > 0) {
-    bribes.push({
-      texte: t("app.settings.rules.summaryAnyOf", { count: conditionsAny.length }),
-      duree: false,
+    fragments.push({
+      text: t("app.settings.rules.summaryAnyOf", { count: conditionsAny.length }),
+      duration: false,
     });
   }
-  // Une ancienneté complète la condition qui la précède plutôt que de compter
-  // pour une condition de plus : « statut = En attente depuis 2 j ». Le
-  // rattachement se décide sur le CHAMP, pas sur le texte rendu — chercher un
-  // « depuis » dans la traduction supposerait que toutes les langues placent ce
-  // mot en tête, ce que le hongrois et le finnois ne font pas.
-  const parts = bribes.reduce<string[]>((acc, b) => {
-    if (b.duree && acc.length > 0) {
-      acc[acc.length - 1] = `${acc[acc.length - 1]} ${b.texte}`;
+  // An age completes the condition that precedes it rather than counting as one
+  // more condition: "status = Pending for 2 j". The attachment is decided on the
+  // FIELD, not on the rendered text — searching the translation for a "for"
+  // would assume that every language puts that word first, which Hungarian and
+  // Finnish do not.
+  const parts = fragments.reduce<string[]>((acc, b) => {
+    if (b.duration && acc.length > 0) {
+      acc[acc.length - 1] = `${acc[acc.length - 1]} ${b.text}`;
       return acc;
     }
-    acc.push(b.texte);
+    acc.push(b.text);
     return acc;
   }, []);
   return parts.join(` ${t("app.settings.rules.summaryAnd")} `) ||
@@ -224,13 +225,13 @@ export function conditionsSummary(
 }
 
 /**
- * Les actions d'une règle, sans les conditions.
+ * A rule's actions, without the conditions.
  *
- * Exposé parce que l'écran de test des règles n'a besoin que de cette moitié :
- * il fabriquait la phrase entière puis en retirait le début avec
- * `.replace(/^Si toujours → /, "")` — une expression française, qui ne retirait
- * plus rien dès que le workspace changeait de langue et laissait « Si toujours »
- * en tête du message de test.
+ * Exposed because the rule test screen only needs this half: it used to build
+ * the whole sentence then strip its beginning with
+ * `.replace(/^Si toujours → /, "")` — a French expression, which stripped
+ * nothing any more as soon as the workspace changed language and left "Si
+ * toujours" at the head of the test message.
  */
 export function actionsSummary(
   t: Tr,
@@ -242,8 +243,8 @@ export function actionsSummary(
 }
 
 /**
- * Résumé lisible d'une règle, au style du design : une ligne de liste, plus
- * courte que le formulaire du builder.
+ * Readable summary of a rule, in the style of the design: one list row, shorter
+ * than the builder's form.
  */
 export function ruleSummary(
   t: Tr,
@@ -258,7 +259,7 @@ export function ruleSummary(
   });
 }
 
-/** Résumé des actions d'une macro (ST-06), en une ligne de liste. */
+/** Summary of a macro's actions (ST-06), as one list row. */
 export function macroActionsSummary(
   t: Tr,
   actions: ActionLike[],
@@ -302,18 +303,18 @@ export function macroActionsSummary(
 }
 
 /* ---------------------------------------------------------------------------
- * Durées SLA — une SYNTAXE, pas un libellé
+ * SLA durations — a SYNTAX, not a label
  *
- * Ces deux fonctions s'appelaient `formatDurationFr` / `parseDurationFr`, ce qui
- * laissait croire à du français à traduire. C'est le contraire : la valeur
- * produite est réinjectée comme valeur par défaut du champ de saisie de ST-07,
- * et relue par le parseur au prochain enregistrement. Les jetons min, h et j
- * sont donc un format d'échange, identique dans toutes les langues — les
- * traduire empêcherait purement et simplement d'enregistrer. C'est pour cela que
- * l'aide du champ les cite et les glose au lieu de les remplacer.
+ * These two functions used to be called `formatDurationFr` / `parseDurationFr`,
+ * which made them look like French to translate. It is the opposite: the value
+ * produced is fed back as the default value of the ST-07 input field, and read
+ * again by the parser at the next save. The tokens min, h and j are therefore an
+ * exchange format, identical in every language — translating them would quite
+ * simply make saving impossible. That is why the field's help cites and glosses
+ * them instead of replacing them.
  * ------------------------------------------------------------------------- */
 
-/** « 15 min », « 4 h », « 2 j » — jetons du parseur, jamais traduits. */
+/** "15 min", "4 h", "2 j" — parser tokens, never translated. */
 export function formatDurationTokens(minutes?: number | null): string {
   if (!minutes || minutes <= 0) return "";
   if (minutes % (24 * 60) === 0) return `${minutes / (24 * 60)} j`;
@@ -321,7 +322,7 @@ export function formatDurationTokens(minutes?: number | null): string {
   return `${minutes} min`;
 }
 
-/** Parse « 15 min » / « 4 h » / « 2 j » (aussi « 90 » = minutes) vers des minutes. */
+/** Parses "15 min" / "4 h" / "2 j" (also "90" = minutes) into minutes. */
 export function parseDurationTokens(raw: string): number | null {
   const s = raw.trim().toLowerCase().replace(",", ".");
   if (!s) return null;

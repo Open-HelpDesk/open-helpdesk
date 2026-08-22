@@ -39,7 +39,7 @@ async function requirePro() {
   return current;
 }
 
-/** ST-13 — Formulaire SAML persistant dans tenants.agentSsoConfig (jsonb). */
+/** ST-13 — SAML form persisted in tenants.agentSsoConfig (jsonb). */
 export async function saveSamlConfig(formData: FormData) {
   const { tenant } = await requirePro();
   const config = ((tenant.agentSsoConfig as AgentSsoConfig) ?? {}) as AgentSsoConfig;
@@ -79,8 +79,8 @@ export async function saveSamlConfig(formData: FormData) {
 export type ScimTokenState = { token: string } | null;
 
 /**
- * ST-13 — Jeton SCIM : stocké haché (SHA-256), suffixe affichable. Le jeton en
- * clair n'est renvoyé qu'une seule fois ; le régénérer interrompt la synchro.
+ * ST-13 — SCIM token: stored hashed (SHA-256), with a displayable suffix. The
+ * clear token is returned only once; regenerating it interrupts the sync.
  */
 export async function regenerateScimToken(
   _prev: ScimTokenState,
@@ -105,7 +105,7 @@ export async function regenerateScimToken(
   return { token };
 }
 
-/** ST-13 — Activation SCIM + correspondance des groupes (éditable, jsonb). */
+/** ST-13 — SCIM enablement + group mapping (editable, jsonb). */
 export async function saveScimGroups(formData: FormData) {
   const { tenant } = await requirePro();
   const config = ((tenant.agentSsoConfig as AgentSsoConfig) ?? {}) as AgentSsoConfig;

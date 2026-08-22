@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const lv: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const lv: Dictionary = {
     "Pakalpojums ir īslaicīgi apturēts: pārlūkošana joprojām ir pieejama, jauni pieprasījumi ir atspējoti.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Palīdzības centrs",
   "home.title": "Kā varam palīdzēt?",
   "home.subtitle":
@@ -29,7 +29,7 @@ export const lv: Dictionary = {
   "home.ctaTitle": "Neatradāt to, ko meklējat?",
   "home.ctaBody": "Darba laikā mūsu komanda atbild vidēji 34 minūtēs.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Meklēt palīdzības centrā…",
   "search.emptyTitle": "Nav rezultātu vaicājumam „{query}“",
   "search.emptyBody":
@@ -37,7 +37,7 @@ export const lv: Dictionary = {
   "search.breadcrumb": "Meklēšana",
   "search.resultsTitle": "Rezultāti vaicājumam „{query}“",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Palīdzība",
   "category.otherCategories": "Citas kategorijas",
   "category.otherArticles": "Citi raksti",
@@ -64,7 +64,7 @@ export const lv: Dictionary = {
   "vote.prefill": "Izveidot iepriekš aizpildītu pieprasījumu",
   "vote.prefillSubject": "Par rakstu „{title}“",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Iesniegt pieprasījumu",
   "newRequest.subtitle": "Aprakstiet savu situāciju. Atbildam 4 darba stundu laikā.",
   "newRequest.type": "Pieprasījuma veids",
@@ -105,7 +105,7 @@ export const lv: Dictionary = {
   "submitted.track": "Sekot pieprasījumam",
   "submitted.backToHelp": "Atgriezties palīdzības centrā",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "Mani pieprasījumi",
   "requests.new": "Jauns pieprasījums",
   "requests.tabOpen": "Atvērtie",
@@ -117,13 +117,13 @@ export const lv: Dictionary = {
     "Šeit parādīsies jūsu atbalsta pieprasījumi ar to statusu un visu sarakstes vēsturi.",
   "requests.awaitingReply": "Gaida jūsu atbildi",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "Tiek risināts",
   "status.waiting": "Gaida jūsu atbildi",
   "status.resolved": "Atrisināts",
   "status.closed": "Slēgts",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Atrisināts {when}",
   "activity.closed": "Slēgts {when}",
   "activity.waiting": "Gaida jūsu atbildi {since}",
@@ -131,7 +131,7 @@ export const lv: Dictionary = {
   "activity.youReplied": "Jūs atbildējāt {when}",
   "activity.created": "Izveidots {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": {
     zero: "jau {count} min",
     one: "jau {count} min",
@@ -145,7 +145,7 @@ export const lv: Dictionary = {
   },
   "since.date": "kopš {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Jūs",
   "request.team": "Komanda",
   "request.agentAuthor": "{name} — {tenant}",
@@ -162,7 +162,7 @@ export const lv: Dictionary = {
   "request.markSolved": "Atzīmēt kā atrisinātu",
   "request.reopen": "Atkārtoti atvērt pieprasījumu",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Sekojiet saviem pieprasījumiem",
   "login.magicIntro":
     "Norādiet savu e-pasta adresi — nosūtīsim pieteikšanās saiti. Parole nav jāatceras.",
@@ -176,7 +176,15 @@ export const lv: Dictionary = {
   "login.footer":
     "Vēl nav neviena pieprasījuma? Konts tiek izveidots automātiski līdz ar pirmo pieprasījumu.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Jūsu pieteikšanās saite — {workspace}",
+  "login.emailBody":
+    "Sveicināti!\n\nNoklikšķiniet uz šīs saites, lai piekļūtu saviem pieprasījumiem (saite ir derīga 15 minūtes):\n{url}\n\nJa neesat šo saiti pieprasījis, ignorējiet šo e-pastu.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     zero: "Jums ir šīs organizācijas administratora tiesības. Atbalsta dienestu „{tenant}“ izmanto {count} organizācijas „{org}“ darbinieku, un šeit veiktie iestatījumi attiecas uz viņiem.",
     one: "Jums ir šīs organizācijas administratora tiesības. Atbalsta dienestu „{tenant}“ izmanto {count} organizācijas „{org}“ darbinieks, un šeit veiktie iestatījumi attiecas uz viņu.",
@@ -265,7 +273,7 @@ export const lv: Dictionary = {
   "members.note":
     "Darbinieki parādās automātiski pēc pirmās pieteikšanās vai pirmā pieprasījuma. Varat iecelt otru administratoru, lai nebūtu vienīgā kontaktpersona.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Vajadzīga palīdzība?",
   "widget.close": "Aizvērt",
   "widget.messageLabel": "Jūsu ziņojums",
@@ -286,7 +294,7 @@ export const lv: Dictionary = {
   "csatPage.doneTitle": "Paldies!",
   "csatPage.doneBody": "Jūsu komentārs ir nodots komandai.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Iesūtne",
@@ -299,7 +307,7 @@ export const lv: Dictionary = {
   "app.shell.suspendedTitle": "Šī darbvieta ir apturēta",
   "app.shell.suspendedText": "Sazinieties ar savu administratoru, lai atjaunotu piekļuvi.",
   "app.shell.suspendedOwnerText":
-    "Izvēlieties plānu vai atjauniniet maksājuma veidu, lai atkal aktivizētu darbvietu.",
+    "Nokārtojiet abonementu vai atjauniniet maksājuma veidu, lai atkal aktivizētu darbvietu.",
   "app.shell.suspendedBillingCta": "Atvērt Abonementu un rēķinus",
   "app.shell.myTickets": "Mani pieteikumi",
   "app.shell.newTicket": "Jauns pieteikums",
@@ -720,7 +728,7 @@ export const lv: Dictionary = {
   "app.reports.columnAgent": "Aģents",
   "app.reports.columnFirstReply": "1. atbilde",
   "app.reports.customReports": "Pielāgotas atskaites",
-  "app.reports.enterprisePlanBadge": "ENTERPRISE PLĀNS",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Uzzināt vairāk",
   "app.reports.chartDailyAria": "{labelA} un {labelB} pa dienām",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -744,8 +752,11 @@ export const lv: Dictionary = {
   "app.settings.shell.saved": "✓ Saglabāts",
   "app.settings.shell.cancel": "Atcelt",
   "app.settings.shell.save": "Saglabāt",
-  "app.settings.shell.planEnterprise": "ENTERPRISE PLĀNS",
-  "app.settings.shell.upgradeToEnterprise": "Pāriet uz Enterprise plānu",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Aizvērt",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Pārvaldīt abonementu",
   "app.settings.shell.eeSelfHostedTitle": "Izdevuma Enterprise Edition funkcija",
   "app.settings.shell.eeSelfHostedText":
     "Uz šo funkciju attiecas komerciālā licence (repozitorija katalogs ee/), un tā nav iekļauta pašizvietotajā atvērtā pirmkoda izdevumā.",
@@ -917,10 +928,10 @@ export const lv: Dictionary = {
   "app.settings.sso.agentTitle": "Aģentu SSO",
   "app.settings.sso.agentSubtitle":
     "SAML 2.0 vienotā pieteikšanās un SCIM nodrošināšana jūsu atbalsta komandai.",
-  "app.settings.sso.agentLockedTitle": "Aģentu SSO ir pieejams tikai Enterprise plānā",
+  "app.settings.sso.agentLockedTitle": "Aģentu SSO ir daļa no izdevuma Enterprise Edition",
   "app.settings.sso.agentLockedText":
     "Pievienojiet savu SAML 2.0 identitātes nodrošinātāju, nodrošiniet aģentu kontus ar SCIM un ieviesiet vienoto pieteikšanos visai komandai.",
-  "app.settings.sso.agentEnterpriseOnly": "Aģentu SSO ir pieejams tikai Enterprise plānā.",
+  "app.settings.sso.agentEnterpriseOnly": "Aģentu SSO ir daļa no izdevuma Enterprise Edition.",
   "app.settings.sso.idpOther": "Cits (universāls SAML)",
   "app.settings.sso.samlToggleLabel": "Iespējot SAML 2.0 vienoto pieteikšanos",
   "app.settings.sso.samlHeading": "SAML 2.0 vienotā pieteikšanās",
@@ -1013,10 +1024,11 @@ export const lv: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Katra klienta organizācija portālā pievieno savu identitātes nodrošinātāju. Šeit jūs pārraugāt visu kopumu.",
   "app.settings.sso.customerLockedTitle":
-    "Klientu organizāciju SSO ir pieejams tikai Enterprise plānā",
+    "Klientu organizāciju SSO ir daļa no izdevuma Enterprise Edition",
   "app.settings.sso.customerLockedText":
     "Ļaujiet katrai klienta organizācijai pievienot savu identitātes nodrošinātāju (SAML vai OIDC) un pārraugiet visu kopumu no šī ekrāna.",
-  "app.settings.sso.customerEnterpriseOnly": "Klientu organizāciju SSO ir pieejams tikai Enterprise plānā.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "Klientu organizāciju SSO ir daļa no izdevuma Enterprise Edition.",
   "app.settings.sso.statusActive": "Aktīvs",
   "app.settings.sso.statusPending": "Jāapstiprina",
   "app.settings.sso.statusError": "Kļūda",
@@ -1206,7 +1218,7 @@ export const lv: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Zināšanu bāze publicēta",
   "app.settings.portal.kbPublishedHint": "Publicētie raksti ir redzami bez pieteikšanās.",
   "app.settings.portal.hidePoweredByLabel": "Slēpt „Nodrošina Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Pieejams no Enterprise plāna.",
+  "app.settings.portal.hidePoweredByHint": "Pieejams ar izdevumu Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Zināšanu bāzes redzamība",
   "app.settings.portal.kbVisibilityPublic": "Publiska",
   "app.settings.portal.kbVisibilityAuthenticated": "Tikai pēc pieteikšanās",
@@ -1270,8 +1282,8 @@ export const lv: Dictionary = {
   "app.settings.workspace.generalTitle": "Vispārīgi un zīmols",
   "app.settings.workspace.generalSubtitle":
     "Darbvietas identitāte, valoda, laika josla un pieteikumu numerācija.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "Dzēšana atteikta — plānotā dzēšana ir pieejama mākoņa piedāvājumā.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Dzēšana atteikta — plānotajai dzēšanai nepieciešams control plane.",
   "app.settings.workspace.generalIdentity": "Identitāte",
   "app.settings.workspace.generalNameLabel": "Darbvietas nosaukums",
   "app.settings.workspace.generalLogoLabel": "Logotips",
@@ -1343,7 +1355,8 @@ export const lv: Dictionary = {
   },
   "app.settings.workspace.seatsAddHint":
     "Pievienojiet licences, lai uzaicinātu jaunus aģentus.",
-  "app.settings.workspace.seatsFreeHint": "Viewer lomas ir bez maksas un neierobežotā skaitā.",
+  "app.settings.workspace.seatsFreeHint":
+    "Viewer lomas neaizņem licenci un ir neierobežotā skaitā.",
   "app.settings.workspace.seatsAddAction": "Pievienot licences",
   "app.settings.workspace.seatsManage": "Pārvaldīt",
   "app.settings.workspace.seatLimitReached":
@@ -1425,8 +1438,8 @@ export const lv: Dictionary = {
   "app.settings.workspace.save": "Saglabāt",
   "app.settings.workspace.billingTitle": "Abonements un norēķini",
   "app.settings.workspace.billingSubtitle":
-    "Plāns, licences, kvotas, maksāšanas veids un rēķinu vēsture.",
-  "app.settings.workspace.selfHosted": "PAŠMITINĀTS",
+    "Abonements, licences, kvotas, maksāšanas veids un rēķinu vēsture.",
+  "app.settings.workspace.subscriptionNone": "Nav abonementa",
   "app.settings.workspace.trialBadge": "IZMĒĢINĀJUMS",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
@@ -1439,10 +1452,9 @@ export const lv: Dictionary = {
     one: "mēnesī · {count} iekļauta licence",
     other: "mēnesī · {count} iekļautas licences",
   },
-  "app.settings.workspace.billingNoDue":
-    "Šajā instancē nav maksājumu — norēķinus pārvalda mākoņa piedāvājumā.",
-  "app.settings.workspace.cloudOnly": "Pieejams mākoņa piedāvājumā",
-  "app.settings.workspace.changePlan": "Mainīt plānu",
+  "app.settings.workspace.billingNoDue": "Šobrīd nav maksājumu.",
+  "app.settings.workspace.requiresControlPlane": "Nepieciešams control plane",
+  "app.settings.workspace.changeSubscription": "Mainīt abonementu",
   "app.settings.workspace.manageSeats": "Pārvaldīt licences",
   "app.settings.workspace.usageTitle": "Šā mēneša patēriņš",
   "app.settings.workspace.quotaSeats": "Licences",
@@ -1454,8 +1466,7 @@ export const lv: Dictionary = {
   "app.settings.workspace.colNumber": "Numurs",
   "app.settings.workspace.colPeriod": "Periods",
   "app.settings.workspace.colAmount": "Summa",
-  "app.settings.workspace.invoicesEmpty":
-    "Nav rēķinu — mākoņa piedāvājumā rēķini parādīsies šeit.",
+  "app.settings.workspace.invoicesEmpty": "Rēķinu vēl nav.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Saglabāts",
@@ -1528,20 +1539,20 @@ export const lv: Dictionary = {
   "app.settings.rules.typeFile": "Fails",
   "app.settings.rules.typeSelectLong": "Nolaižamais saraksts",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Il vivait dans lib/rule-labels.ts, en français, tables et phrases
-     comprises. Les statuts, priorités et canaux ne sont PAS repris ici : ils
-     viennent des tables partagées de lib/format.ts, celles de l'inbox et de ses
-     filtres. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     It lived in lib/rule-labels.ts, in French, tables and sentences included.
+     Statuses, priorities and channels are NOT repeated here: they come from
+     the shared tables in lib/format.ts, the ones used by the inbox and its
+     filters. */
 
-  /* Types de champs personnalisés (ST-04) ; « Teksts » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Teksts” is typeText, above. */
   "app.settings.rules.typeSelect": "Saraksts",
   "app.settings.rules.typeMultiSelect": "Vairākizvēle",
   "app.settings.rules.typeDate": "Datums",
   "app.settings.rules.typeNumber": "Skaitlis",
   "app.settings.rules.typeCheckbox": "Izvēles rūtiņa",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Notikums",
   "app.settings.rules.condFieldStatus": "Statuss",
   "app.settings.rules.condFieldPriority": "Prioritāte",
@@ -1555,8 +1566,8 @@ export const lv: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Stundas kopš izveides",
   "app.settings.rules.condFieldHoursUpdated": "Stundas kopš atjaunināšanas",
 
-  /* Opérateurs. Les deux derniers restent des symboles : le letton n'a pas de
-     mot plus court, et le signe tient dans une ligne de liste. */
+  /* Operators. The last two stay symbols: Latvian has no shorter word, and
+     the sign fits on a single list line. */
   "app.settings.rules.opIs": "ir",
   "app.settings.rules.opIsNot": "nav",
   "app.settings.rules.opContains": "satur",
@@ -1566,13 +1577,13 @@ export const lv: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. « Saņemts ziņojums » reprend les mots de
-     ruleHintTrigger, qui énumère déjà les trois événements. */
+  /* Trigger events. “Saņemts ziņojums” echoes the words of
+     ruleHintTrigger, which already enumerates the three events. */
   "app.settings.rules.eventTicketCreated": "Pieteikums izveidots",
   "app.settings.rules.eventTicketUpdated": "Pieteikums atjaunināts",
   "app.settings.rules.eventMessageCreated": "Saņemts ziņojums",
 
-  /* Actions, telles que le menu du builder les nomme. */
+  /* Actions, as the builder's menu names them. */
   "app.settings.rules.actSetStatus": "Iestatīt statusu",
   "app.settings.rules.actSetPriority": "Iestatīt prioritāti",
   "app.settings.rules.actAssignUser": "Piešķirt aģentam",
@@ -1581,14 +1592,15 @@ export const lv: Dictionary = {
   "app.settings.rules.actAddTags": "Pievienot birkas",
   "app.settings.rules.actEmailContact": "Nosūtīt e-pastu kontaktpersonai",
 
-  /* Résumé d'une règle, en une ligne de liste. Le letton garde l'ordre
-     « ja … → … » de automationsSubtitle ; les bribes s'insèrent sans majuscule
-     ni point final. */
+  /* One-line rule summary. Latvian keeps automationsSubtitle's
+     “ja … → …” order; the fragments slot in without a capital or a final full
+     stop. */
   "app.settings.rules.summaryPattern": "Ja {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "un",
   "app.settings.rules.summaryAlways": "vienmēr",
-  /* « viens no {count} … » : le letton met le nom au datif pluriel après « no »,
-     mais au génitif singulier dès que le nombre finit par 1 (21 nosacījuma). */
+  /* “viens no {count} …”: Latvian puts the noun in the dative plural after
+     “no”, but in the genitive singular as soon as the number ends in 1
+     (21 nosacījuma). */
   "app.settings.rules.summaryAnyOf": {
     zero: "vismaz viens no {count} nosacījumiem",
     one: "vismaz viens no {count} nosacījuma",
@@ -1598,22 +1610,22 @@ export const lv: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "bez atbildīgā",
   "app.settings.rules.summaryAssigned": "ar atbildīgo",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : voir
-     formatDurationTokens, ils ne se traduisent pas. La bribe se colle à la
-     condition qui précède, elle doit donc se lire en suite de phrase. */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): see
+     formatDurationTokens, they are not translated. The fragment butts against
+     the preceding condition, so it must read as a continuation. */
   "app.settings.rules.summarySince": "jau {duration}",
   "app.settings.rules.summarySetStatus": "iestatīt statusu {value}",
   "app.settings.rules.summarySetPriority": "iestatīt prioritāti {value}",
   "app.settings.rules.summaryAssignTeam": "piešķirt komandai {team}",
-  /* Repli quand l'équipe n'est plus connue : « une équipe » redoublerait le mot
-     « komandai » déjà porté par le gabarit. */
+  /* Fallback when the team is no longer known: “a team” would double the
+     word “komandai” already carried by the template. */
   "app.settings.rules.summaryAnyTeam": "(nenorādīta)",
   "app.settings.rules.summaryAssignUser": "piešķirt aģentam",
   "app.settings.rules.summaryRoundRobin": "piešķirt nākamajam aģentam",
   "app.settings.rules.summaryAddTags": "pievienot {tags}",
   "app.settings.rules.summaryEmailContact": "nosūtīt e-pastu kontaktpersonai",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Statuss → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioritāte → {value}",
   "app.settings.rules.macroSummaryTeam": "Komanda → {team}",
@@ -1724,7 +1736,7 @@ export const lv: Dictionary = {
   "app.settings.dev.dayYesterday": "Vakar {time}",
   "app.settings.dev.auditTitle": "Audita žurnāls",
   "app.settings.dev.auditSubtitle": "Pilns administrēšanas darbību žurnāls. Glabāšana 2 gadi.",
-  "app.settings.dev.auditLockedTitle": "Audita žurnāls ir pieejams tikai Enterprise plānā",
+  "app.settings.dev.auditLockedTitle": "Audita žurnāls ir daļa no izdevuma Enterprise Edition",
   "app.settings.dev.auditLockedText":
     "Saglabājiet ierakstu par katru administrēšanas darbību 2 gadus, ar izmaiņu salīdzinājumu pirms/pēc un CSV eksportu.",
   "app.settings.dev.filterActorAll": "Izpildītājs: visi",
@@ -1747,9 +1759,9 @@ export const lv: Dictionary = {
   "app.settings.dev.actorContact": "Kontaktpersona",
   "app.settings.dev.exportUnauthorized": "Nav autorizēts",
   "app.settings.dev.exportForbidden": "Pieejams tikai Owner un Admin lomām.",
-  "app.settings.dev.exportEnterpriseOnly": "Audita žurnāls ir pieejams tikai Enterprise plānā.",
+  "app.settings.dev.exportEnterpriseOnly": "Audita žurnāls ir daļa no izdevuma Enterprise Edition.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Darbvieta",
   "app.settingsNav.itemGeneral": "Vispārīgi",
   "app.settingsNav.itemTeam": "Aģenti un komandas",
@@ -1783,7 +1795,7 @@ export const lv: Dictionary = {
   "app.settingsNav.copied": "Nokopēts",
   "app.settingsNav.copy": "Kopēt",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Jauns",
   "app.status.open": "Atvērts",
   "app.status.waiting": "Gaida",
@@ -1804,7 +1816,7 @@ export const lv: Dictionary = {
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Mani pieteikumi",
   "app.views.unassigned": "Bez atbildīgā",
   "app.views.breaching": "Drīz pārsniegs termiņu",
@@ -1812,7 +1824,7 @@ export const lv: Dictionary = {
   "app.views.urgent": "Steidzamie šonedēļ",
   "app.views.escalation": "Eskalācijas",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Pārsaukt",
   "app.kb.renameSave": "Saglabāt",
   "app.kb.deleteCategory": "Dzēst kategoriju",
@@ -1823,7 +1835,7 @@ export const lv: Dictionary = {
     other: "Šajā kategorijā vēl ir {count} vienības. Pārvietojiet tās, pirms dzēšat kategoriju.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-pasts",
   "app.login.emailPlaceholder": "jus@uznemums.lv",
   "app.login.password": "Parole",
@@ -1852,11 +1864,11 @@ export const lv: Dictionary = {
   "app.login.providerMissing": "Šis nodrošinātājs šajā instancē nav konfigurēts.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Tout cet écran était en français dans le code : le premier écran qu'un
-     nouveau workspace rencontre. Quatre libellés viennent d'ailleurs et ne sont
-     pas repris ici : le titre du portail dans son propre aperçu (home.title),
-     le nom du workspace et la couleur d'accent (les mêmes contrôles qu'en
-     ST-01), et les rôles Owner / Admin / Agent / Viewer. */
+  /* This whole screen was French in the code: the first screen a new
+     workspace meets. Four labels come from elsewhere and are not repeated
+     here: the portal title in its own preview (home.title), the workspace name
+     and the accent colour (the same controls as in ST-01), and the Owner /
+     Admin / Agent / Viewer roles. */
 
   "app.onboarding.asideTitle": "Iestatīšana",
   "app.onboarding.asideFooter":
@@ -1895,7 +1907,7 @@ export const lv: Dictionary = {
 
   "app.onboarding.teamTitle": "Uzaiciniet savu komandu",
   "app.onboarding.teamBody":
-    "Uzaiciniet savus aģentus tagad vai kopīgojiet uzaicinājuma saiti. Viewer licences ir bez maksas.",
+    "Uzaiciniet savus aģentus tagad vai kopīgojiet uzaicinājuma saiti. Viewer lomas neaizņem licenci.",
   "app.onboarding.invitePlaceholder": "kolegis@uznemums.lv",
   "app.onboarding.addRow": "+ Pievienot rindu",
   "app.onboarding.sendInvites": "Nosūtīt uzaicinājumus",
@@ -1904,8 +1916,8 @@ export const lv: Dictionary = {
   "app.onboarding.testBody":
     "Pārbaudiet visu ķēdi, pirms atverat pakalpojumu saviem klientiem.",
   "app.onboarding.readyTitle": "Jūsu darbvieta ir gatava",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Nosūtiet e-pastu uz {address}, lai izveidotu pārbaudes pieteikumu.",
   "app.onboarding.openInbox": "Atvērt iesūtni",
 
@@ -1916,12 +1928,12 @@ export const lv: Dictionary = {
   "app.onboarding.checklistSla": "SLA politika pārbaudīta",
 
 
-/* ===================== Reste du français codé en dur ===================== */
+/* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur :
-     elle est découpée autour de {mode}. Le letton demande le datif après
-     « atbilst », et « vismaz viens » y passe au singulier — le nom voyage donc
-     avec le sélecteur, sans quoi l'accord serait faux dans l'une des deux
+  /* ST-05 — the condition group header. The sentence wraps a selector: it
+     is split around {mode}. Latvian wants the dative after “atbilst”, and
+     “vismaz viens” goes singular there — so the noun travels with the
+     selector, without which the agreement would be wrong in one of the two
      positions. */
   "app.settings.rules.matchIf": "JA",
   "app.settings.rules.matchAllPattern": "Atbilst {mode}",
@@ -1929,23 +1941,33 @@ export const lv: Dictionary = {
   "app.settings.rules.matchAll": "visiem nosacījumiem",
   "app.settings.rules.matchAny": "vismaz vienam nosacījumam",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
-  "app.settings.workspace.planFree": "Free plāns",
-  "app.settings.workspace.planTeam": "Team plāns",
-  "app.settings.workspace.planEnterprise": "Enterprise plāns",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "TAD",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Pārbaudīt esošā pieteikumā",
+  "app.settings.rules.testRunning": "Notiek pārbaude…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Noņemt",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "E-pasta pamatteksts — mainīgie: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française ; seul l'affichage est traduit. */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string; only the display is translated. */
   "app.ticket.typeQuestion": "Jautājums",
   "app.ticket.typeIncident": "Incidents",
   "app.ticket.typeTask": "Uzdevums",
   "app.ticket.typeOther": "Cits",
 
-  /* AG-09 — export CSV des rapports. Un fichier téléchargé est du texte lu par
-     une personne : ses entêtes se traduisent comme le reste de l'écran. « s »
-     est l'abréviation lettonne de la seconde, celle que porte déjà
-     draftSavedSeconds. */
+  /* AG-09 — CSV export of the reports. A downloaded file is text read by a
+     person: its headers are translated like the rest of the screen. “s” is
+     the Latvian abbreviation for the second, the one draftSavedSeconds already
+     carries. */
   "app.reports.csvIndicator": "Rādītājs",
   "app.reports.csvCurrentPeriod": "Pašreizējais periods",
   "app.reports.csvPreviousPeriod": "Iepriekšējais periods",
@@ -1960,8 +1982,8 @@ export const lv: Dictionary = {
   "app.reports.csvResolvedShort": "Atrisinātie",
   "app.reports.csvAgent": "Aģents",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Jauns raksts",
   "app.kb.fromTicketSymptomHeading": "Simptoms",
   "app.kb.fromTicketSymptomPlaceholder": "[Aprakstiet, ko klients novēro.]",
@@ -1971,8 +1993,8 @@ export const lv: Dictionary = {
   "app.kb.fromTicketMissingRequest": "klienta sākotnējais pieprasījums",
   "app.kb.fromTicketMissingAnswer": "aģenta atbilde",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Procedūra soli pa solim",
   "app.kb.tplProcedureHint": "Numurētu soļu virkne ar gaidāmo rezultātu.",
   "app.kb.tplProcedureTitle": "Kā [veikt darbību]",

@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const hr: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const hr: Dictionary = {
     "Usluga je privremeno suspendirana: pregled ostaje dostupan, novi zahtjevi su onemogućeni.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Centar za pomoć",
   "home.title": "Kako vam možemo pomoći?",
   "home.subtitle":
@@ -25,7 +25,7 @@ export const hr: Dictionary = {
   "home.ctaTitle": "Ne možete naći ono što tražite?",
   "home.ctaBody": "Naš tim u radno vrijeme odgovara u prosjeku u 34 minute.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Traži u pomoći…",
   "search.emptyTitle": "Nema rezultata za „{query}“",
   "search.emptyBody":
@@ -33,7 +33,7 @@ export const hr: Dictionary = {
   "search.breadcrumb": "Pretraživanje",
   "search.resultsTitle": "Rezultati za „{query}“",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Pomoć",
   "category.otherCategories": "Ostale kategorije",
   "category.otherArticles": "Ostali članci",
@@ -60,7 +60,7 @@ export const hr: Dictionary = {
   "vote.prefill": "Kreiraj unaprijed ispunjen zahtjev",
   "vote.prefillSubject": "U vezi s člankom „{title}“",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Pošaljite zahtjev",
   "newRequest.subtitle": "Opišite svoju situaciju. Odgovaramo u roku od 4 radna sata.",
   "newRequest.type": "Vrsta zahtjeva",
@@ -101,7 +101,7 @@ export const hr: Dictionary = {
   "submitted.track": "Prati moj zahtjev",
   "submitted.backToHelp": "Natrag na pomoć",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "Moji zahtjevi",
   "requests.new": "Novi zahtjev",
   "requests.tabOpen": "Otvoreni",
@@ -113,13 +113,13 @@ export const hr: Dictionary = {
     "Vaši zahtjevi za podršku pojavit će se ovdje, sa statusom i povijesti komunikacije.",
   "requests.awaitingReply": "Čeka se odgovor",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "U obradi",
   "status.waiting": "Čeka vaš odgovor",
   "status.resolved": "Riješeno",
   "status.closed": "Zatvoreno",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Riješeno {when}",
   "activity.closed": "Zatvoreno {when}",
   "activity.waiting": "Čeka vaš odgovor {since}",
@@ -127,13 +127,13 @@ export const hr: Dictionary = {
   "activity.youReplied": "Odgovorili ste {when}",
   "activity.created": "Kreirano {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": { one: "već {count} min", few: "već {count} min", other: "već {count} min" },
   "since.hours": { one: "već {count} h", few: "već {count} h", other: "već {count} h" },
   "since.days": { one: "već {count} dan", few: "već {count} dana", other: "već {count} dana" },
   "since.date": "od {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Vi",
   "request.team": "Tim",
   "request.agentAuthor": "{name} — {tenant}",
@@ -150,7 +150,7 @@ export const hr: Dictionary = {
   "request.markSolved": "Označi kao riješeno",
   "request.reopen": "Ponovno otvori zahtjev",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Praćenje vaših zahtjeva",
   "login.magicIntro":
     "Unesite svoju e-poštu i poslat ćemo vam vezu za prijavu. Nema zaporke koju treba pamtiti.",
@@ -163,7 +163,15 @@ export const hr: Dictionary = {
   "login.expired": "Ova veza je istekla ili nije ispravna. Zatražite novu.",
   "login.footer": "Još nemate zahtjev? Vaš se račun automatski kreira pri prvom slanju.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Vaša veza za prijavu — {workspace}",
+  "login.emailBody":
+    "Poštovani,\n\nkliknite na ovu vezu za pristup svojim zahtjevima (vrijedi 15 minuta):\n{url}\n\nAko to niste vi zatražili, zanemarite ovu e-poruku.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Vi ste administrator ove organizacije. Ono što ovdje postavite primjenjuje se na {count} osobu iz organizacije {org} koja koristi podršku {tenant}.",
     few: "Vi ste administrator ove organizacije. Ono što ovdje postavite primjenjuje se na {count} osobe iz organizacije {org} koje koriste podršku {tenant}.",
@@ -250,7 +258,7 @@ export const hr: Dictionary = {
   "members.note":
     "Članovi se pojavljuju automatski pri prvoj prijavi ili prvom zahtjevu. Možete imenovati drugog administratora kako ne biste ostali jedina točka kontakta.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Potrebna vam je pomoć?",
   "widget.close": "Zatvori",
   "widget.messageLabel": "Vaša poruka",
@@ -271,7 +279,7 @@ export const hr: Dictionary = {
   "csatPage.doneTitle": "Hvala!",
   "csatPage.doneBody": "Vaš komentar je poslan timu.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Ulazni sandučić",
@@ -284,7 +292,7 @@ export const hr: Dictionary = {
   "app.shell.suspendedTitle": "Ovaj workspace je suspendiran",
   "app.shell.suspendedText": "Obratite se svojem administratoru za ponovni pristup.",
   "app.shell.suspendedOwnerText":
-    "Odaberite plan ili ažurirajte način plaćanja da biste ponovno aktivirali workspace.",
+    "Podmirite pretplatu ili ažurirajte način plaćanja da biste ponovno aktivirali workspace.",
   "app.shell.suspendedBillingCta": "Otvori Pretplatu i naplatu",
   "app.shell.myTickets": "Moji tiketi",
   "app.shell.newTicket": "Novi tiket",
@@ -705,7 +713,7 @@ export const hr: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1. odgovor",
   "app.reports.customReports": "Prilagođeni izvještaji",
-  "app.reports.enterprisePlanBadge": "ENTERPRISE PLAN",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Otkrij",
   "app.reports.chartDailyAria": "{labelA} i {labelB} po danu",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -729,8 +737,11 @@ export const hr: Dictionary = {
   "app.settings.shell.saved": "✓ Spremljeno",
   "app.settings.shell.cancel": "Odustani",
   "app.settings.shell.save": "Spremi",
-  "app.settings.shell.planEnterprise": "ENTERPRISE PLAN",
-  "app.settings.shell.upgradeToEnterprise": "Prijeđi na Enterprise plan",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Zatvori",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Upravljanje pretplatom",
   "app.settings.shell.eeSelfHostedTitle": "Značajka izdanja Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Ova značajka podliježe komercijalnoj licenci (direktorij ee/ u repozitoriju) i nije uključena u samostalno hostano izdanje otvorenog koda.",
@@ -905,10 +916,10 @@ export const hr: Dictionary = {
   "app.settings.sso.agentTitle": "SSO agenata",
   "app.settings.sso.agentSubtitle":
     "Jedinstvena prijava SAML 2.0 i SCIM provizioniranje za vaš tim podrške.",
-  "app.settings.sso.agentLockedTitle": "SSO agenata dostupan je samo u Enterprise planu",
+  "app.settings.sso.agentLockedTitle": "SSO agenata dio je izdanja Enterprise Edition",
   "app.settings.sso.agentLockedText":
     "Povežite svojeg SAML 2.0 davatelja identiteta, provizionirajte agente putem SCIM-a i uvedite obveznu jedinstvenu prijavu za cijeli tim.",
-  "app.settings.sso.agentEnterpriseOnly": "SSO agenata dostupan je samo u Enterprise planu.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO agenata dio je izdanja Enterprise Edition.",
   "app.settings.sso.idpOther": "Drugo (generički SAML)",
   "app.settings.sso.samlToggleLabel": "Uključi jedinstvenu prijavu SAML 2.0",
   "app.settings.sso.samlHeading": "Jedinstvena prijava SAML 2.0",
@@ -1000,11 +1011,11 @@ export const hr: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Svaka klijentska organizacija povezuje vlastitog davatelja identiteta s portala. Ovdje nadzirete sve njihove prijave.",
   "app.settings.sso.customerLockedTitle":
-    "SSO klijentskih organizacija dostupan je samo u Enterprise planu",
+    "SSO klijentskih organizacija dio je izdanja Enterprise Edition",
   "app.settings.sso.customerLockedText":
     "Dopustite svakoj klijentskoj organizaciji da poveže vlastitog davatelja identiteta (SAML ili OIDC) i nadzirite sve prijave s ovog zaslona.",
   "app.settings.sso.customerEnterpriseOnly":
-    "SSO klijentskih organizacija dostupan je samo u Enterprise planu.",
+    "SSO klijentskih organizacija dio je izdanja Enterprise Edition.",
   "app.settings.sso.statusActive": "Aktivna",
   "app.settings.sso.statusPending": "Za potvrdu",
   "app.settings.sso.statusError": "Greška",
@@ -1191,7 +1202,7 @@ export const hr: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Baza znanja objavljena",
   "app.settings.portal.kbPublishedHint": "Objavljeni članci vidljivi su bez prijave.",
   "app.settings.portal.hidePoweredByLabel": "Sakrij „Pokreće Open HelpDesk“",
-  "app.settings.portal.hidePoweredByHint": "Dostupno od Enterprise plana.",
+  "app.settings.portal.hidePoweredByHint": "Dostupno s izdanjem Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Vidljivost baze znanja",
   "app.settings.portal.kbVisibilityPublic": "Javna",
   "app.settings.portal.kbVisibilityAuthenticated": "Nakon prijave",
@@ -1255,8 +1266,8 @@ export const hr: Dictionary = {
   "app.settings.workspace.generalTitle": "Općenito i brendiranje",
   "app.settings.workspace.generalSubtitle":
     "Identitet radnog prostora, jezik, vremenska zona i numeriranje tiketa.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "Brisanje je odbijeno — zakazano brisanje dostupno je u cloudu.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Brisanje je odbijeno — zakazano brisanje zahtijeva control plane.",
   "app.settings.workspace.generalIdentity": "Identitet",
   "app.settings.workspace.generalNameLabel": "Naziv radnog prostora",
   "app.settings.workspace.generalLogoLabel": "Logotip",
@@ -1325,7 +1336,7 @@ export const hr: Dictionary = {
     other: "{count} / {quota} mjesta iskorišteno — dosegnuto ograničenje",
   },
   "app.settings.workspace.seatsAddHint": "Dodajte mjesta da pozovete nove agente.",
-  "app.settings.workspace.seatsFreeHint": "Uloge Viewer besplatne su i neograničene.",
+  "app.settings.workspace.seatsFreeHint": "Uloge Viewer ne zauzimaju mjesto i neograničene su.",
   "app.settings.workspace.seatsAddAction": "Dodaj mjesta",
   "app.settings.workspace.seatsManage": "Upravljaj",
   "app.settings.workspace.seatLimitReached":
@@ -1406,8 +1417,8 @@ export const hr: Dictionary = {
   "app.settings.workspace.save": "Spremi",
   "app.settings.workspace.billingTitle": "Pretplata i naplata",
   "app.settings.workspace.billingSubtitle":
-    "Plan, mjesta, kvote, način plaćanja i povijest računa.",
-  "app.settings.workspace.selfHosted": "SAMOSTALNO HOSTIRANO",
+    "Pretplata, mjesta, kvote, način plaćanja i povijest računa.",
+  "app.settings.workspace.subscriptionNone": "Nema pretplate",
   "app.settings.workspace.trialBadge": "PROBNO",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
@@ -1420,10 +1431,9 @@ export const hr: Dictionary = {
     few: "mjesečno · {count} mjesta uključena",
     other: "mjesečno · {count} mjesta uključeno",
   },
-  "app.settings.workspace.billingNoDue":
-    "Na ovoj instanci nema dospjelih obveza — naplatom se upravlja u cloud ponudi.",
-  "app.settings.workspace.cloudOnly": "Dostupno u cloud ponudi",
-  "app.settings.workspace.changePlan": "Promijeni plan",
+  "app.settings.workspace.billingNoDue": "Trenutačno nema dospjelih obveza.",
+  "app.settings.workspace.requiresControlPlane": "Zahtijeva control plane",
+  "app.settings.workspace.changeSubscription": "Promijeni pretplatu",
   "app.settings.workspace.manageSeats": "Upravljaj mjestima",
   "app.settings.workspace.usageTitle": "Potrošnja ovog mjeseca",
   "app.settings.workspace.quotaSeats": "Mjesta",
@@ -1435,8 +1445,7 @@ export const hr: Dictionary = {
   "app.settings.workspace.colNumber": "Broj",
   "app.settings.workspace.colPeriod": "Razdoblje",
   "app.settings.workspace.colAmount": "Iznos",
-  "app.settings.workspace.invoicesEmpty":
-    "Nema računa — računi će se pojaviti ovdje u cloud ponudi.",
+  "app.settings.workspace.invoicesEmpty": "Još nema računa.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Spremljeno",
@@ -1508,19 +1517,19 @@ export const hr: Dictionary = {
   "app.settings.rules.typeFile": "Datoteka",
   "app.settings.rules.typeSelectLong": "Padajući popis",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) : les tables et
-     les phrases assemblées de lib/rule-labels.ts. Statuts, priorités et canaux
-     n'y sont pas — ils viennent de app.status.* / app.priority.* /
-     app.channel.*, plus bas dans ce fichier. --- */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07): the tables and the
+     assembled sentences from lib/rule-labels.ts. Statuses, priorities and
+     channels are not here — they come from app.status.* / app.priority.* /
+     app.channel.*, further down this file. --- */
 
-  /* Types de champs personnalisés (ST-04) ; « Tekst » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Tekst” is typeText, above. */
   "app.settings.rules.typeSelect": "Popis",
   "app.settings.rules.typeMultiSelect": "Višestruki odabir",
   "app.settings.rules.typeDate": "Datum",
   "app.settings.rules.typeNumber": "Broj",
   "app.settings.rules.typeCheckbox": "Potvrdni okvir",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Događaj",
   "app.settings.rules.condFieldStatus": "Status",
   "app.settings.rules.condFieldPriority": "Prioritet",
@@ -1534,10 +1543,10 @@ export const hr: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Sati od kreiranja",
   "app.settings.rules.condFieldHoursUpdated": "Sati od ažuriranja",
 
-  /* Opérateurs. « Vide » et « non vide » passent par un groupe prépositionnel,
-     invariable : le croate accorderait son adjectif au genre du champ, et
-     « Organizacija je prazno » serait faux. « uključuju » est au pluriel, seul
-     « Oznake » porte cet opérateur (OPERATORS_BY_FIELD). */
+  /* Operators. “Empty” and “not empty” go through an invariable
+     prepositional phrase: Croatian would agree its adjective with the field's
+     gender, and “Organizacija je prazno” would be wrong. “uključuju” is
+     plural, only “Oznake” carries this operator (OPERATORS_BY_FIELD). */
   "app.settings.rules.opIs": "je",
   "app.settings.rules.opIsNot": "nije",
   "app.settings.rules.opContains": "sadrži",
@@ -1547,13 +1556,13 @@ export const hr: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Tiket kreiran",
   "app.settings.rules.eventTicketUpdated": "Tiket ažuriran",
   "app.settings.rules.eventMessageCreated": "Poruka primljena",
 
-  /* Actions, telles que le menu du builder les nomme — impératif, comme le
-     reste des commandes de ce fichier. */
+  /* Actions, as the builder's menu names them — imperative, like the rest of
+     the commands in this file. */
   "app.settings.rules.actSetStatus": "Postavi status",
   "app.settings.rules.actSetPriority": "Postavi prioritet",
   "app.settings.rules.actAssignUser": "Dodijeli agentu",
@@ -1562,13 +1571,13 @@ export const hr: Dictionary = {
   "app.settings.rules.actAddTags": "Dodaj oznake",
   "app.settings.rules.actEmailContact": "Pošalji e-poštu kontaktu",
 
-  /* Résumé d'une règle, en une ligne de liste : le croate garde l'ordre
-     « ako … → … », et les bribes s'enchaînent sans majuscule ni point. */
+  /* One-line rule summary: Croatian keeps the “ako … → …” order, and the
+     fragments run on without a capital or a full stop. */
   "app.settings.rules.summaryPattern": "Ako {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "i",
   "app.settings.rules.summaryAlways": "uvijek",
-  /* « uvjet » a le même génitif au singulier et au pluriel : les trois formes
-     coïncident, mais le croate les exige toutes les trois. */
+  /* “uvjet” has the same genitive in the singular and in the plural: all
+     three forms coincide, but Croatian requires all three. */
   "app.settings.rules.summaryAnyOf": {
     one: "barem jedan od {count} uvjeta",
     few: "barem jedan od {count} uvjeta",
@@ -1578,13 +1587,13 @@ export const hr: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "nedodijeljeno",
   "app.settings.rules.summaryAssigned": "dodijeljeno",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. */
   "app.settings.rules.summarySince": "već {duration}",
   "app.settings.rules.summarySetStatus": "prebaci u {value}",
   "app.settings.rules.summarySetPriority": "prioritet {value}",
-  /* {team} vaut un nom d'équipe, ou summaryAnyTeam quand il est inconnu :
-     « bez naziva » complète « dodijeli timu … » sans le répéter. */
+  /* {team} holds a team name, or summaryAnyTeam when it is unknown:
+     “bez naziva” completes “dodijeli timu …” without repeating it. */
   "app.settings.rules.summaryAssignTeam": "dodijeli timu {team}",
   "app.settings.rules.summaryAnyTeam": "bez naziva",
   "app.settings.rules.summaryAssignUser": "dodijeli agentu",
@@ -1592,7 +1601,7 @@ export const hr: Dictionary = {
   "app.settings.rules.summaryAddTags": "dodaj oznake {tags}",
   "app.settings.rules.summaryEmailContact": "pošalji e-poštu kontaktu",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Status → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioritet → {value}",
   "app.settings.rules.macroSummaryTeam": "Tim → {team}",
@@ -1702,7 +1711,7 @@ export const hr: Dictionary = {
   "app.settings.dev.auditTitle": "Audit log",
   "app.settings.dev.auditSubtitle":
     "Potpuni zapisnik administratorskih radnji. Zadržavanje 2 godine.",
-  "app.settings.dev.auditLockedTitle": "Audit log dostupan je samo u Enterprise planu",
+  "app.settings.dev.auditLockedTitle": "Audit log dio je izdanja Enterprise Edition",
   "app.settings.dev.auditLockedText":
     "Sačuvajte trag svake administratorske radnje 2 godine, s prikazom razlika prije i poslije te CSV izvozom.",
   "app.settings.dev.filterActorAll": "Izvršitelj: svi",
@@ -1725,9 +1734,9 @@ export const hr: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Nije ovlašteno",
   "app.settings.dev.exportForbidden": "Samo za uloge Owner i Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Audit log dostupan je samo u Enterprise planu.",
+  "app.settings.dev.exportEnterpriseOnly": "Audit log dio je izdanja Enterprise Edition.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Radni prostor",
   "app.settingsNav.itemGeneral": "Općenito",
   "app.settingsNav.itemTeam": "Agenti i timovi",
@@ -1761,7 +1770,7 @@ export const hr: Dictionary = {
   "app.settingsNav.copied": "Kopirano",
   "app.settingsNav.copy": "Kopiraj",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Novo",
   "app.status.open": "Otvoreno",
   "app.status.waiting": "Na čekanju",
@@ -1782,7 +1791,7 @@ export const hr: Dictionary = {
   "app.unit.kilobytes": "{count} kB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Moji tiketi",
   "app.views.unassigned": "Nedodijeljeni",
   "app.views.breaching": "Uskoro u prekoračenju",
@@ -1790,7 +1799,7 @@ export const hr: Dictionary = {
   "app.views.urgent": "Hitni ovaj tjedan",
   "app.views.escalation": "Eskalacije",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Preimenuj",
   "app.kb.renameSave": "Spremi",
   "app.kb.deleteCategory": "Izbriši kategoriju",
@@ -1801,7 +1810,7 @@ export const hr: Dictionary = {
     other: "Ova kategorija još sadrži {count} elemenata. Premjestite ih prije brisanja.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-pošta",
   "app.login.emailPlaceholder": "vi@firma.hr",
   "app.login.password": "Zaporka",
@@ -1829,10 +1838,10 @@ export const hr: Dictionary = {
   "app.login.providerMissing": "Ovaj davatelj usluge nije postavljen na ovoj instanci.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Quatre libellés de cet écran viennent d'ailleurs : le titre du portail dans
-     son propre aperçu (home.title), le nom du workspace et la couleur d'accent
-     (les contrôles de ST-01), et les rôles Owner / Admin / Agent / Viewer, qui
-     ne se traduisent pas. */
+  /* Four labels on this screen come from elsewhere: the portal title in its
+     own preview (home.title), the workspace name and the accent colour (the
+     ST-01 controls), and the Owner / Admin / Agent / Viewer roles, which are
+     not translated. */
 
   "app.onboarding.asideTitle": "Postavljanje",
   "app.onboarding.asideFooter": "Sve ovo možete kasnije promijeniti u postavkama.",
@@ -1870,7 +1879,7 @@ export const hr: Dictionary = {
 
   "app.onboarding.teamTitle": "Pozovite svoj tim",
   "app.onboarding.teamBody":
-    "Pozovite svoje agente sada ili podijelite vezu za pozivnicu. Mjesta za ulogu Viewer besplatna su.",
+    "Pozovite svoje agente sada ili podijelite vezu za pozivnicu. Uloge Viewer ne zauzimaju mjesto.",
   "app.onboarding.invitePlaceholder": "kolega@firma.hr",
   "app.onboarding.addRow": "+ Dodaj redak",
   "app.onboarding.sendInvites": "Pošalji pozivnice",
@@ -1879,8 +1888,8 @@ export const hr: Dictionary = {
   "app.onboarding.testBody":
     "Provjerite cijeli tok prije nego što uslugu otvorite svojim klijentima.",
   "app.onboarding.readyTitle": "Vaš radni prostor je spreman",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Pošaljite e-poštu na {address} da kreirate testni tiket.",
   "app.onboarding.openInbox": "Otvori ulazni sandučić",
 
@@ -1890,32 +1899,42 @@ export const hr: Dictionary = {
   "app.onboarding.checklistTicket": "Prvi tiket je primljen",
   "app.onboarding.checklistSla": "SLA politika je provjerena",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. Le croate ne peut pas accorder un
-     « uvjeti » figé avec « svi » ET « barem jedan » : le nom reste dans la
-     phrase et le sélecteur passe à la fin, en quantifieur nu. */
+  /* ST-05 — the condition group header. Croatian cannot agree a frozen
+     “uvjeti” with both “svi” AND “barem jedan”: the noun stays in the sentence
+     and the selector moves to the end, as a bare quantifier. */
   "app.settings.rules.matchIf": "AKO",
   "app.settings.rules.matchAllPattern": "Uvjeti koji moraju biti ispunjeni: {mode}",
   "app.settings.rules.matchAnyPattern": "Uvjeti koji moraju biti ispunjeni: {mode}",
   "app.settings.rules.matchAll": "svi",
   "app.settings.rules.matchAny": "barem jedan",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit ; seul « plan » est du texte, et le croate le place après. */
-  "app.settings.workspace.planFree": "Free plan",
-  "app.settings.workspace.planTeam": "Team plan",
-  "app.settings.workspace.planEnterprise": "Enterprise plan",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "ONDA",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Testiraj na postojećem tiketu",
+  "app.settings.rules.testRunning": "Testiranje…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Ukloni",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Tijelo e-poruke — varijable: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française : seul l'affichage est traduit. */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string: only the display is translated. */
   "app.ticket.typeQuestion": "Pitanje",
   "app.ticket.typeIncident": "Incident",
   "app.ticket.typeTask": "Zadatak",
   "app.ticket.typeOther": "Ostalo",
 
-  /* AG-09 — export CSV des rapports. « s » est déjà l'abréviation des secondes
-     ailleurs dans ce fichier (app.ticket.draftSavedSeconds). */
+  /* AG-09 — CSV export of the reports. “s” is already the abbreviation for
+     seconds elsewhere in this file (app.ticket.draftSavedSeconds). */
   "app.reports.csvIndicator": "Pokazatelj",
   "app.reports.csvCurrentPeriod": "Tekuće razdoblje",
   "app.reports.csvPreviousPeriod": "Prethodno razdoblje",
@@ -1930,8 +1949,8 @@ export const hr: Dictionary = {
   "app.reports.csvResolvedShort": "Riješeni",
   "app.reports.csvAgent": "Agent",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Novi članak",
   "app.kb.fromTicketSymptomHeading": "Simptom",
   "app.kb.fromTicketSymptomPlaceholder": "[Opišite što klijent primjećuje.]",
@@ -1940,8 +1959,8 @@ export const hr: Dictionary = {
   "app.kb.fromTicketMissingRequest": "početni zahtjev klijenta",
   "app.kb.fromTicketMissingAnswer": "odgovor agenta",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Postupak korak po korak",
   "app.kb.tplProcedureHint": "Niz numeriranih koraka s očekivanim rezultatom.",
   "app.kb.tplProcedureTitle": "Kako [obaviti radnju]",

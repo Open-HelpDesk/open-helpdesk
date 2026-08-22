@@ -1,20 +1,20 @@
 "use client";
 
 /**
- * Traduction dans les composants clients.
+ * Translation inside client components.
  *
- * Le portail compte cinq composants clients (recherche, vote, déflexion,
- * pièces jointes, bouton copier). Leur passer une à une les vingt chaînes dont
- * ils ont besoin encombrerait les signatures ; un contexte posé une fois par le
- * shell serveur suffit. Le dictionnaire est déjà chargé côté serveur, il
- * traverse donc la frontière comme une simple donnée sérialisable.
+ * The portal has five client components (search, vote, deflection,
+ * attachments, copy button). Passing them the twenty strings they need one by
+ * one would clutter the signatures; a context set once by the server shell is
+ * enough. The dictionary is already loaded server-side, so it crosses the
+ * boundary as plain serialisable data.
  */
 
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { renderMessage, splitAround, type Message, type MessageParams } from "./dictionary";
 import { LocaleFormat } from "./format";
 import type { LocaleDefinition } from "./locales";
-import type { Dictionary, MessageKey } from "./dictionaries/fr";
+import type { Dictionary, MessageKey } from "./dictionaries/en";
 
 type Bundle = { locale: LocaleDefinition; dict: Dictionary };
 
@@ -28,7 +28,7 @@ export function I18nProvider({ locale, dict, children }: Bundle & { children: Re
 export function useT() {
   const bundle = useContext(I18nContext);
   if (!bundle) {
-    throw new Error("useT() hors de <I18nProvider> — le shell doit le poser.");
+    throw new Error("useT() outside <I18nProvider> — the shell must set it up.");
   }
   const { locale, dict } = bundle;
   return useMemo(() => {

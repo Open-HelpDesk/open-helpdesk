@@ -1,9 +1,8 @@
 /**
- * Schéma `app` — cœur produit multi-tenant.
- * Référence : specs/01-produit-et-architecture.md § 5 et specs/15-sso-et-identite.md § 3.
+ * `app` schema — the multi-tenant product core.
  *
- * Toutes les tables (sauf `tenants`) portent `tenant_id` ; l'isolation est garantie par
- * les politiques RLS de sql/rls.sql, activées via `withTenant()` (client.ts).
+ * Every table (except `tenants`) carries `tenant_id`; isolation is guaranteed by the
+ * RLS policies of sql/rls.sql, activated via `withTenant()` (client.ts).
  */
 import {
   boolean,
@@ -84,28 +83,30 @@ export const ssoConnectionStatus = app.enum("sso_connection_status", [
 ]);
 export const ssoAuthResult = app.enum("sso_auth_result", ["success", "failure"]);
 
-/* ---------- Racine ---------- */
+/* ---------- Root ---------- */
 
 export const tenants = app.table("tenants", {
   id: uuid("id").primaryKey().defaultRandom(),
   slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
-  locale: text("locale").notNull().default("fr"),
+  locale: text("locale").notNull().default("en"),
   timezone: text("timezone").notNull().default("Europe/Paris"),
-  plan: text("plan").notNull().default("free"),
+  /** Identifier written by the control plane — opaque to the product, null without one. */
+  plan: text("plan"),
   /*
-   * Cycle de vie et facturation — colonnes DÉNORMALISÉES en édition cloud :
-   * le control plane privé les écrit (applyTenantBillingState), apps/web ne
-   * fait que les lire. En auto-hébergé elles restent à leurs défauts.
+   * Lifecycle and entitlement state — columns DENORMALISED by an external control
+   * plane, which the product does nothing but read. Standalone, they keep their
+   * defaults and serve no purpose.
    */
   /** active | trial | suspended | deleting. */
   status: text("status").notNull().default("active"),
   trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }),
-  /** PlanEntitlements résolu (plan + overrides) — null : défauts du plan. */
+  /** Resolved capabilities — null: the product falls back on the core ones. */
   entitlements: jsonb("entitlements"),
-  /** Libellé d'un plan privé négocié — null : clé i18n du plan public. */
+  /** Label to display, written by the control plane — null: nothing to display. */
   planName: text("plan_name"),
-  /** { seats, interval, seatPriceCents, currency, currentPeriodEnd, cancelAtPeriodEnd, dunningDeadline } */
+  /** Written by the control plane: { seats, includedSeats, interval, seatPriceCents,
+   * currency, currentPeriodEnd, cancelAtPeriodEnd, dunningDeadline } */
   billing: jsonb("billing"),
   featureFlags: jsonb("feature_flags").notNull().default({}),
   branding: jsonb("branding").notNull().default({}),
@@ -121,7 +122,7 @@ export const tenants = app.table("tenants", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-/* ---------- Personnes ---------- */
+/* ---------- People ---------- */
 
 export const users = app.table(
   "users",
@@ -173,9 +174,9 @@ export const organizations = app.table("organizations", {
     .notNull()
     .references(() => tenants.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
-  /** Domaines d'auto-rattachement — clé de la découverte par domaine (HRD, v1.1). */
+  /** Auto-attachment domains — the key to domain-based discovery (HRD, v1.1). */
   emailDomains: text("email_domains").array().notNull().default([]),
-  /** « Les contacts peuvent voir les tickets de leur organisation » (AG-08 / PT-08). */
+  /** "Contacts can see their organisation's tickets" (AG-08 / PT-08). */
   sharedTickets: boolean("shared_tickets").notNull().default(false),
   notes: text("notes"),
   customFields: jsonb("custom_fields").notNull().default({}),
@@ -197,7 +198,7 @@ export const contacts = app.table(
     blocked: boolean("blocked").notNull().default(false),
     // v1.1 — SSO
     authMethod: contactAuthMethod("auth_method").notNull().default("magic_link"),
-    /** sub OIDC ou NameID SAML. */
+    /** OIDC sub or SAML NameID. */
     externalId: text("external_id"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -220,7 +221,7 @@ export const contactOrganizations = app.table(
   (t) => [primaryKey({ columns: [t.contactId, t.organizationId] })],
 );
 
-/* ---------- Canal email (ST-03) ---------- */
+/* ---------- Email channel (ST-03) ---------- */
 
 export const mailboxKind = app.enum("mailbox_kind", ["provided", "forwarding", "imap"]);
 
@@ -231,17 +232,17 @@ export const mailboxes = app.table(
     tenantId: uuid("tenant_id")
       .notNull()
       .references(() => tenants.id, { onDelete: "cascade" }),
-    /** Une adresse appartient à exactement un tenant — clé de résolution à l'ingestion. */
+    /** An address belongs to exactly one tenant — the resolution key at ingestion. */
     address: text("address").notNull(),
     kind: mailboxKind("kind").notNull().default("provided"),
-    /** Transfert : passe à vrai au premier email reçu. IMAP : à la première connexion. */
+    /** Forwarding: turns true on the first email received. IMAP: on the first connection. */
     verified: boolean("verified").notNull().default(false),
     senderName: text("sender_name"),
     signatureHtml: text("signature_html"),
     defaultTeamId: uuid("default_team_id").references(() => teams.id),
-    /** Formulaire appliqué aux tickets créés depuis cette adresse (ST-03). */
+    /** Form applied to the tickets created from this address (ST-03). */
     formId: uuid("form_id").references(() => ticketForms.id),
-    /** Connexion IMAP (kind = imap) — le mot de passe vit dans encryptedSecrets. */
+    /** IMAP connection (kind = imap) — the password lives in encryptedSecrets. */
     imapHost: text("imap_host"),
     imapPort: integer("imap_port"),
     imapSecure: boolean("imap_secure").notNull().default(true),
@@ -254,12 +255,12 @@ export const mailboxes = app.table(
   (t) => [uniqueIndex("mailboxes_address").on(t.address)],
 );
 
-/* ---------- Envoi email : fournisseur par tenant (ST-03) ---------- */
+/* ---------- Email sending: per-tenant provider (ST-03) ---------- */
 
 export const mailProvider = app.enum("mail_provider", [
-  /** Journalise sans envoyer — défaut en développement. */
+  /** Logs without sending — the default in development. */
   "console",
-  /** Serveur SMTP quelconque : auto-hébergé, ou relais Brevo/Mailjet/SES/Postmark… */
+  /** Any SMTP server: self-hosted, or a Brevo/Mailjet/SES/Postmark relay… */
   "smtp",
   "resend",
   "brevo",
@@ -277,21 +278,21 @@ export const emailSettings = app.table(
       .unique()
       .references(() => tenants.id, { onDelete: "cascade" }),
     provider: mailProvider("provider").notNull().default("console"),
-    /** Identité d'expédition. */
+    /** Sending identity. */
     fromName: text("from_name"),
     fromAddress: text("from_address"),
     replyTo: text("reply_to"),
-    /** SMTP — le mot de passe vit dans encryptedSecrets. */
+    /** SMTP — the password lives in encryptedSecrets. */
     smtpHost: text("smtp_host"),
     smtpPort: integer("smtp_port"),
-    /** true = TLS implicite (465) ; false = STARTTLS (587/25). */
+    /** true = implicit TLS (465); false = STARTTLS (587/25). */
     smtpSecure: boolean("smtp_secure").notNull().default(false),
     smtpUser: text("smtp_user"),
-    /** Secrets chiffrés AES-256-GCM (@openhelpdesk/crypto) : { password, apiKey, apiSecret }. */
+    /** AES-256-GCM encrypted secrets (@openhelpdesk/crypto): { password, apiKey, apiSecret }. */
     encryptedSecrets: text("encrypted_secrets"),
-    /** Suffixe affichable du secret principal (« ••••••1a2b »). */
+    /** Displayable suffix of the main secret ("••••••1a2b"). */
     secretHint: text("secret_hint"),
-    /** Résultat du dernier test de connexion / d'envoi. */
+    /** Result of the last connection / send test. */
     testStatus: mailTestStatus("test_status").notNull().default("untested"),
     testError: text("test_error"),
     lastTestedAt: timestamp("last_tested_at", { withTimezone: true }),
@@ -307,7 +308,7 @@ export const emailDeliveryStatus = app.enum("email_delivery_status", [
   "failed",
 ]);
 
-/** Journal des envois — aucun email perdu, et alimente le suivi de ST-03. */
+/** Send log — no email is ever lost, and it feeds the ST-03 follow-up. */
 export const emailDeliveries = app.table(
   "email_deliveries",
   {
@@ -317,7 +318,7 @@ export const emailDeliveries = app.table(
       .references(() => tenants.id, { onDelete: "cascade" }),
     toAddress: text("to_address").notNull(),
     subject: text("subject").notNull(),
-    /** « ticket_reply », « csat », « magic_link », « rule », « test »… */
+    /** "ticket_reply", "csat", "magic_link", "rule", "test"… */
     kind: text("kind").notNull().default("other"),
     provider: mailProvider("provider").notNull(),
     status: emailDeliveryStatus("status").notNull().default("queued"),
@@ -331,7 +332,7 @@ export const emailDeliveries = app.table(
   (t) => [index("email_deliveries_tenant_created").on(t.tenantId, t.createdAt)],
 );
 
-/** Journal des emails entrants rejetés (ST-03) — rétention 30 jours (housekeeping). */
+/** Log of rejected inbound emails (ST-03) — 30-day retention (housekeeping). */
 export const rejectedEmails = app.table(
   "rejected_emails",
   {
@@ -343,14 +344,14 @@ export const rejectedEmails = app.table(
     subject: text("subject"),
     /** loop · bounce · auto_reply · blocked_sender · empty · spam */
     reason: text("reason").notNull(),
-    /** Précision affichée entre parenthèses — ex. « score 9,2 » pour le spam. */
+    /** Detail shown in parentheses — e.g. "score 9,2" for spam. */
     detail: text("detail"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("rejected_emails_tenant_created").on(t.tenantId, t.createdAt)],
 );
 
-/* ---------- SLA & horaires ---------- */
+/* ---------- SLA & business hours ---------- */
 
 export const businessHours = app.table("business_hours", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -358,7 +359,7 @@ export const businessHours = app.table("business_hours", {
     .notNull()
     .references(() => tenants.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
-  /** Ordre d'affichage des chips de calendriers (ST-07) — pas alphabétique. */
+  /** Display order of the calendar chips (ST-07) — not alphabetical. */
   position: integer("position").notNull().default(0),
   timezone: text("timezone").notNull().default("Europe/Paris"),
   /** { mon: [["09:00","18:00"]], … } */
@@ -373,7 +374,7 @@ export const slaPolicies = app.table("sla_policies", {
     .notNull()
     .references(() => tenants.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
-  /** Ordre d'évaluation : la première politique qui matche s'applique (ST-07). */
+  /** Evaluation order: the first policy that matches wins (ST-07). */
   position: integer("position").notNull().default(0),
   conditions: jsonb("conditions").notNull().default([]),
   /** { urgent: { firstReplyMin, nextReplyMin, resolveMin }, high: {…}, … } */
@@ -383,7 +384,7 @@ export const slaPolicies = app.table("sla_policies", {
   isDefault: boolean("is_default").notNull().default(false),
 });
 
-/* ---------- Champs & formulaires ---------- */
+/* ---------- Fields & forms ---------- */
 
 export const ticketFields = app.table("ticket_fields", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -393,7 +394,7 @@ export const ticketFields = app.table("ticket_fields", {
   key: text("key").notNull(),
   label: text("label").notNull(),
   type: fieldType("type").notNull(),
-  /** Options ordonnées pour select / multi_select. */
+  /** Ordered options for select / multi_select. */
   options: jsonb("options").notNull().default([]),
   portalVisible: boolean("portal_visible").notNull().default(false),
   required: boolean("required").notNull().default(false),
@@ -436,7 +437,7 @@ export const tickets = app.table(
     tenantId: uuid("tenant_id")
       .notNull()
       .references(() => tenants.id, { onDelete: "cascade" }),
-    /** Numéro séquentiel par tenant, attribué par l'application. */
+    /** Per-tenant sequential number, assigned by the application. */
     number: integer("number").notNull(),
     subject: text("subject").notNull(),
     status: ticketStatus("status").notNull().default("new"),
@@ -457,14 +458,14 @@ export const tickets = app.table(
     nextReplyDueAt: timestamp("next_reply_due_at", { withTimezone: true }),
     resolveDueAt: timestamp("resolve_due_at", { withTimezone: true }),
     firstRepliedAt: timestamp("first_replied_at", { withTimezone: true }),
-    /** Avertissement T-30 min et dépassement SLA — posés une seule fois par le worker. */
+    /** T-30 min warning and SLA breach — set exactly once by the worker. */
     slaWarnedAt: timestamp("sla_warned_at", { withTimezone: true }),
     slaBreachedAt: timestamp("sla_breached_at", { withTimezone: true }),
-    /** Enquête CSAT envoyée une seule fois par ticket (ST-08). */
+    /** CSAT survey sent only once per ticket (ST-08). */
     csatSentAt: timestamp("csat_sent_at", { withTimezone: true }),
     resolvedAt: timestamp("resolved_at", { withTimezone: true }),
     closedAt: timestamp("closed_at", { withTimezone: true }),
-    /** Ticket fusionné : lecture seule, bandeau vers la cible (AG-04). */
+    /** Merged ticket: read-only, banner pointing to the target (AG-04). */
     mergedIntoId: uuid("merged_into_id"),
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -490,12 +491,12 @@ export const ticketMessages = app.table(
       .references(() => tickets.id, { onDelete: "cascade" }),
     kind: messageKind("kind").notNull(),
     authorType: messageAuthorType("author_type").notNull(),
-    /** users.id ou contacts.id selon authorType ; null pour system. */
+    /** users.id or contacts.id depending on authorType; null for system. */
     authorId: uuid("author_id"),
     bodyHtml: text("body_html"),
     bodyText: text("body_text"),
     source: ticketChannel("source"),
-    /** En-têtes email d'origine (Message-ID, In-Reply-To…) pour le threading. */
+    /** Original email headers (Message-ID, In-Reply-To…) for threading. */
     emailMeta: jsonb("email_meta"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -517,7 +518,7 @@ export const attachments = app.table("attachments", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-/* ---------- Productivité ---------- */
+/* ---------- Productivity ---------- */
 
 export const views = app.table("views", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -555,7 +556,7 @@ export const automationRules = app.table("automation_rules", {
     .references(() => tenants.id, { onDelete: "cascade" }),
   kind: ruleKind("kind").notNull(),
   name: text("name").notNull(),
-  /** L'ordre d'exécution compte (ST-05). */
+  /** Execution order matters (ST-05). */
   position: integer("position").notNull().default(0),
   active: boolean("active").notNull().default(true),
   conditionsAll: jsonb("conditions_all").notNull().default([]),
@@ -582,14 +583,14 @@ export const automationRuns = app.table(
   (t) => [index("automation_runs_tenant_rule").on(t.tenantId, t.ruleId)],
 );
 
-/* ---------- Base de connaissances ---------- */
+/* ---------- Knowledge base ---------- */
 
 export const kbCategories = app.table("kb_categories", {
   id: uuid("id").primaryKey().defaultRandom(),
   tenantId: uuid("tenant_id")
     .notNull()
     .references(() => tenants.id, { onDelete: "cascade" }),
-  /** Arborescence 2 niveaux : parentId null = catégorie, sinon section. */
+  /** Two-level tree: parentId null = category, otherwise section. */
   parentId: uuid("parent_id"),
   name: text("name").notNull(),
   slug: text("slug").notNull(),
@@ -610,7 +611,7 @@ export const kbArticles = app.table(
     slug: text("slug").notNull(),
     bodyHtml: text("body_html"),
     status: articleStatus("status").notNull().default("draft"),
-    /** Brouillon en cours sur un article publié (AG-10). */
+    /** Draft in progress on a published article (AG-10). */
     draftBodyHtml: text("draft_body_html"),
     authorId: uuid("author_id").references(() => users.id),
     publishedAt: timestamp("published_at", { withTimezone: true }),
@@ -640,7 +641,7 @@ export const csatResponses = app.table("csat_responses", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-/* ---------- Développeurs ---------- */
+/* ---------- Developers ---------- */
 
 export const apiKeys = app.table("api_keys", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -648,7 +649,7 @@ export const apiKeys = app.table("api_keys", {
     .notNull()
     .references(() => tenants.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
-  /** Préfixe visible en clair ; la clé complète n'est jamais stockée. */
+  /** Prefix kept in clear text; the full key is never stored. */
   prefix: text("prefix").notNull(),
   hashedKey: text("hashed_key").notNull(),
   scopes: text("scopes").array().notNull().default([]),
@@ -666,7 +667,7 @@ export const webhooks = app.table("webhooks", {
   secret: text("secret").notNull(),
   events: text("events").array().notNull().default([]),
   active: boolean("active").notNull().default(true),
-  /** Désactivation auto après 7 jours d'échecs (ST-10). */
+  /** Auto-disabled after 7 days of failures (ST-10). */
   disabledAt: timestamp("disabled_at", { withTimezone: true }),
   failingSince: timestamp("failing_since", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -711,7 +712,7 @@ export const auditEvents = app.table(
   (t) => [index("audit_events_tenant_created").on(t.tenantId, t.createdAt)],
 );
 
-/* ---------- v1.1 — Identité & SSO (specs/15-sso-et-identite.md § 3) ---------- */
+/* ---------- v1.1 — Identity & SSO ---------- */
 
 export const verifiedDomains = app.table(
   "verified_domains",
@@ -724,16 +725,16 @@ export const verifiedDomains = app.table(
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
     domain: text("domain").notNull(),
-    /** Publié en TXT : ohd-verify=<token>. */
+    /** Published as TXT: ohd-verify=<token>. */
     verificationToken: text("verification_token").notNull(),
     status: domainStatus("status").notNull().default("pending"),
     lastCheckedAt: timestamp("last_checked_at", { withTimezone: true }),
-    /** 3 échecs consécutifs → SSO suspendu, domaine repasse en pending (15-sso § 2.2). */
+    /** 3 consecutive failures → SSO suspended, domain back to pending (15-sso § 2.2). */
     failCount: integer("fail_count").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
-    // Un domaine vérifié n'appartient qu'à UNE organisation par tenant (invariant n°2).
+    // A verified domain belongs to exactly ONE organization per tenant (invariant no. 2).
     uniqueIndex("verified_domains_tenant_domain").on(t.tenantId, t.domain),
   ],
 );
@@ -752,12 +753,12 @@ export const orgSsoConnections = app.table(
     provider: ssoProvider("provider").notNull(),
     status: ssoConnectionStatus("status").notNull().default("pending"),
     /**
-     * Config chiffrée au repos (client_id, client_secret, tenant_id OU metadata_url,
-     * certificat, entity_id). Jamais renvoyée en clair par l'API — suffixe masqué
-     * uniquement (invariant n°4).
+     * Config encrypted at rest (client_id, client_secret, tenant_id OR metadata_url,
+     * certificate, entity_id). Never returned in clear text by the API — masked
+     * suffix only (invariant no. 4).
      */
     encryptedConfig: text("encrypted_config").notNull(),
-    /** Suffixe affichable du secret (…x7Kq) et date d'expiration pour l'alerte J-30. */
+    /** Displayable suffix of the secret (…x7Kq) and expiry date for the D-30 alert. */
     secretHint: text("secret_hint"),
     secretExpiresAt: timestamp("secret_expires_at", { withTimezone: true }),
     strictMode: boolean("strict_mode").notNull().default(false),
@@ -783,7 +784,7 @@ export const orgAdminGrants = app.table(
     organizationId: uuid("organization_id")
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
-    /** "agent" (depuis AG-08) ou "org_admin" (depuis PT-08). */
+    /** "agent" (from AG-08) or "org_admin" (from PT-08). */
     grantedByType: text("granted_by_type").notNull(),
     grantedById: uuid("granted_by_id"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -805,7 +806,7 @@ export const ssoAuthEvents = app.table(
     result: ssoAuthResult("result").notNull(),
     failureReason: text("failure_reason"),
     ip: text("ip"),
-    /** Rétention 90 j — purge par le worker. */
+    /** 90-day retention — purged by the worker. */
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("sso_auth_events_tenant_org").on(t.tenantId, t.organizationId)],

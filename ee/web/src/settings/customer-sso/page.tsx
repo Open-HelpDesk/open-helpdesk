@@ -28,7 +28,7 @@ const PARK_GRID = "26px minmax(160px,1.2fr) minmax(150px,1fr) 130px 130px 100px 
 const PARK_MIN_WIDTH = 980;
 const DAY = 24 * 3600 * 1000;
 
-/** Libellé d'un statut de connexion — inconnu : la valeur brute, comme avant. */
+/** Label for a connection status — unknown: the raw value, as before. */
 function statusLabel(t: Translate, status: string): string {
   if (status === "active") return t("app.settings.sso.statusActive");
   if (status === "pending") return t("app.settings.sso.statusPending");
@@ -49,7 +49,7 @@ const STATUS_DOTS: Record<string, string> = {
   error: "var(--dang)",
   disabled: "var(--ink-3)",
 };
-/** Marques telles quelles ; seul « Générique » se traduit. */
+/** Brands as-is; only "Generic" is translated. */
 const PROVIDER_LABELS: Record<string, string> = {
   entra: "Entra ID",
   google: "Google",
@@ -61,7 +61,7 @@ function providerLabel(t: Translate, provider: string): string {
   return PROVIDER_LABELS[provider] ?? provider;
 }
 
-/** Chip de filtre / bouton de la barre : min-h 30, padding 5/11, radius 6, 12,5 px. */
+/** Filter chip / bar button: min-h 30, padding 5/11, radius 6, 12.5 px. */
 const CHIP: React.CSSProperties = {
   minHeight: 30,
   padding: "5px 11px",
@@ -70,7 +70,7 @@ const CHIP: React.CSSProperties = {
   whiteSpace: "nowrap",
 };
 
-/** « depuis 4 h », « depuis 12 j » — les unités viennent du dictionnaire. */
+/** "for 4 h", "for 12 d" — the units come from the dictionary. */
 function since(t: Translate, date: Date, now: Date = new Date()): string {
   const { unit, n } = t.fmt.elapsed(date, now);
   if (unit === "minute") return t("app.settings.sso.sinceMinutes", { count: n });
@@ -78,7 +78,7 @@ function since(t: Translate, date: Date, now: Date = new Date()): string {
   return t("app.settings.sso.sinceDays", { count: n });
 }
 
-/** « dans 11 j ». */
+/** "in 11 d". */
 function until(t: Translate, date: Date, now: Date = new Date()): string {
   const days = Math.max(0, Math.ceil((date.getTime() - now.getTime()) / DAY));
   return days <= 1
@@ -87,9 +87,9 @@ function until(t: Translate, date: Date, now: Date = new Date()): string {
 }
 
 /**
- * ST-14 — SSO des organisations clientes (1180 px, EE). Délégation réelle, 4
- * compteurs (bordure et valeur colorées quand non nuls), recherche + filtres,
- * table du parc (ligne cliquable → drawer lecture seule) puis « Attention requise ».
+ * ST-14 — Customer organizations SSO (1180 px, EE). Real delegation, 4 counters
+ * (border and value colored when non-zero), search + filters, fleet table
+ * (clickable row → read-only drawer) then "Needs attention".
  */
 export default async function CustomerSsoPage({
   searchParams,
@@ -211,7 +211,7 @@ export default async function CustomerSsoPage({
     },
   ];
 
-  // Parc : organisations ayant une connexion OU des domaines vérifiés.
+  // Fleet: organizations that have a connection OR verified domains.
   let parkOrgs = orgs.filter((o) => connectionByOrg.has(o.id) || domainsByOrg.has(o.id));
   if (filter === "error") {
     parkOrgs = parkOrgs.filter((o) => connectionByOrg.get(o.id)?.status === "error");
@@ -232,7 +232,7 @@ export default async function CustomerSsoPage({
     );
   }
 
-  // Attention requise : connexions en erreur, domaines non vérifiés, secrets expirant.
+  // Needs attention: connections in error, unverified domains, expiring secrets.
   const attention: {
     org: string;
     issue: string;
@@ -245,7 +245,7 @@ export default async function CustomerSsoPage({
     const org = orgById.get(c.organizationId);
     if (!org) continue;
     const blocked = failuresByOrg.get(org.id) ?? 0;
-    // `lastError` vient du tenant : jamais traduit, seul le repli l'est.
+    // `lastError` comes from the tenant: never translated, only the fallback is.
     const reason = c.lastError ?? t("app.settings.sso.attentionRepeatedFailures");
     attention.push({
       org: org.name,
@@ -295,7 +295,7 @@ export default async function CustomerSsoPage({
       {header}
 
       <div className="st-rise flex flex-col" style={{ gap: 20 }}>
-        {/* Délégation */}
+        {/* Delegation */}
         <div
           className="flex items-start border"
           style={{
@@ -332,7 +332,7 @@ export default async function CustomerSsoPage({
           </div>
         </div>
 
-        {/* 4 compteurs */}
+        {/* 4 counters */}
         <div
           className="grid"
           style={{ gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 11 }}
@@ -370,7 +370,7 @@ export default async function CustomerSsoPage({
           })}
         </div>
 
-        {/* Recherche + filtres */}
+        {/* Search + filters */}
         <div className="flex flex-wrap items-center" style={{ gap: 7 }}>
           <form
             className="flex min-w-0 flex-1"
@@ -429,7 +429,7 @@ export default async function CustomerSsoPage({
           </button>
         </div>
 
-        {/* Table du parc */}
+        {/* Fleet table */}
         <div
           className="overflow-x-auto border"
           style={{ borderRadius: 10, background: "var(--panel)", borderColor: "var(--line)" }}
@@ -529,7 +529,7 @@ export default async function CustomerSsoPage({
           </div>
         </div>
 
-        {/* Attention requise — masqué si aucune anomalie */}
+        {/* Needs attention — hidden when there is no anomaly */}
         {attention.length > 0 && (
           <section className="flex flex-col" style={{ gap: 11 }}>
             <h2 className="font-semibold" style={{ fontSize: 14.5, color: "var(--ink)" }}>
@@ -592,7 +592,7 @@ export default async function CustomerSsoPage({
   );
 }
 
-/** En-tête de la table du parc — 10,5 px/700, hauteur 34, collant. */
+/** Fleet table header — 10.5 px/700, height 34, sticky. */
 function ParkHead({ t }: { t: Translate }) {
   return (
     <div
@@ -621,7 +621,7 @@ function ParkHead({ t }: { t: Translate }) {
   );
 }
 
-/** Champ du drawer — libellé 12,5/600 + cadre bg --bg, hint 12 ink-3. */
+/** Drawer field — label 12.5/600 + frame bg --bg, hint 12 ink-3. */
 function DrawerField({
   label,
   value,
@@ -665,7 +665,7 @@ function DrawerField({
   );
 }
 
-/** Drawer de détail — lecture seule, seule action : Désactiver la connexion. */
+/** Detail drawer — read-only, only action: disable the connection. */
 function OrgDetail({
   t,
   org,
@@ -790,7 +790,7 @@ function OrgDetail({
   );
 }
 
-/** Table factice floutée derrière le voile de l'état verrouillé. */
+/** Dummy table blurred behind the locked-state veil. */
 function GhostPark({ t }: { t: Translate }) {
   return (
     <div

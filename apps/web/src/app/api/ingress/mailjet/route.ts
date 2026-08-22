@@ -1,7 +1,7 @@
 /**
- * Webhook de réception Mailjet (« Parse API », ST-03).
- * URL à configurer chez Mailjet : https://{slug}.{domaine}/api/ingress/mailjet?secret=…
- * Mailjet ne signe pas la Parse API : le secret dans l'URL fait autorité.
+ * Mailjet inbound webhook ("Parse API", ST-03).
+ * URL to configure at Mailjet: https://{slug}.{domain}/api/ingress/mailjet?secret=…
+ * Mailjet does not sign the Parse API: the secret in the URL is authoritative.
  */
 import { ingressAuthorized } from "@/lib/ingress-auth";
 import { NextResponse, type NextRequest } from "next/server";

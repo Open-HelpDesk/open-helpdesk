@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * AG-04 — Panneau propriétés (partie cliente) : groupes Affectation et Classification,
- * selects auto-appliqués via updateTicketProps (rangées 96px / 1fr).
+ * AG-04 — Properties panel (client part): Assignment and Classification groups,
+ * selects applied automatically through updateTicketProps (96px / 1fr rows).
  */
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -11,17 +11,18 @@ import { useT } from "@/i18n/client";
 import { updateTicketProps } from "../actions";
 
 /**
- * Types de ticket.
+ * Ticket types.
  *
- * La VALEUR enregistrée reste la chaîne française : c'est ainsi que le produit
- * la stocke, et les tickets déjà créés doivent continuer de correspondre. Seul
- * l'affichage passe par le dictionnaire.
+ * `tickets.type` is free text — the portal writes the label in the tenant's
+ * language, and agents edit it by hand. These four VALUES are the vocabulary the
+ * picker offers; the dictionary only translates how they are displayed, so a
+ * value coming from anywhere else still shows as it was written.
  */
 const TYPES = [
   { value: "Question", key: "app.ticket.typeQuestion" },
   { value: "Incident", key: "app.ticket.typeIncident" },
-  { value: "Tâche", key: "app.ticket.typeTask" },
-  { value: "Autre", key: "app.ticket.typeOther" },
+  { value: "Task", key: "app.ticket.typeTask" },
+  { value: "Other", key: "app.ticket.typeOther" },
 ] as const;
 
 export function PropsForm({

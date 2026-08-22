@@ -1,11 +1,11 @@
 "use client";
 
-/** AG-04 — Chips d'en-tête interactifs : Fusionner (modal réel) et Copier le lien. */
+/** AG-04 — Interactive header chips: Merge (real modal) and Copy link. */
 import { useState } from "react";
 import { useT } from "@/i18n/client";
 import { mergeTicket } from "../actions";
 
-/** Chip d'en-tête du design : h28, padding 0 9px, 12px, fond panel, bordure line. */
+/** Header chip from the design: h28, padding 0 9px, 12px, panel background, line border. */
 const chipStyle = {
   height: 28,
   borderRadius: 6,
@@ -38,7 +38,7 @@ export function CopyLinkChip() {
           setCopied(true);
           setTimeout(() => setCopied(false), 1500);
         } catch {
-          /* presse-papiers indisponible */
+          /* clipboard unavailable */
         }
       }}
     >

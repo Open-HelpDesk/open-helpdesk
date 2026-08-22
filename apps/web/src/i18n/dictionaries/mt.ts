@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const mt: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const mt: Dictionary = {
     "Is-servizz huwa sospiż temporanjament: il-konsultazzjoni tibqa' miftuħa, talbiet ġodda huma diżattivati.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Ċentru tal-Għajnuna",
   "home.title": "Kif nistgħu ngħinuk?",
   "home.subtitle":
@@ -31,7 +31,7 @@ export const mt: Dictionary = {
   "home.ctaTitle": "Ma sibtx dak li qed tfittex?",
   "home.ctaBody": "It-tim tagħna jwieġeb bi medja ta' 34 minuta matul il-ħinijiet tax-xogħol.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Fittex fl-għajnuna…",
   "search.emptyTitle": "L-ebda riżultat għal “{query}”",
   "search.emptyBody":
@@ -39,7 +39,7 @@ export const mt: Dictionary = {
   "search.breadcrumb": "Tiftix",
   "search.resultsTitle": "Riżultati għal “{query}”",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Għajnuna",
   "category.otherCategories": "Kategoriji oħra",
   "category.otherArticles": "Artikli oħra",
@@ -70,7 +70,7 @@ export const mt: Dictionary = {
   "vote.prefill": "Oħloq talba mimlija minn qabel",
   "vote.prefillSubject": "Dwar l-artiklu “{title}”",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Ibgħat talba",
   "newRequest.subtitle":
     "Iddeskrivi s-sitwazzjoni tiegħek. Inwieġbu fi żmien 4 sigħat ta' xogħol.",
@@ -115,7 +115,7 @@ export const mt: Dictionary = {
   "submitted.track": "Segwi t-talba tiegħi",
   "submitted.backToHelp": "Lura lejn l-għajnuna",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "It-talbiet tiegħi",
   "requests.new": "Talba ġdida",
   "requests.tabOpen": "Miftuħa",
@@ -127,13 +127,13 @@ export const mt: Dictionary = {
     "It-talbiet tas-support tiegħek jidhru hawn, bl-istatus tagħhom u l-istorja sħiħa tal-iskambji.",
   "requests.awaitingReply": "Tweġiba mistennija",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "Għaddejja",
   "status.waiting": "Nistennew it-tweġiba tiegħek",
   "status.resolved": "Solvuta",
   "status.closed": "Magħluqa",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Solvuta {when}",
   "activity.closed": "Magħluqa {when}",
   "activity.waiting": "Nistennew it-tweġiba tiegħek {since}",
@@ -141,7 +141,7 @@ export const mt: Dictionary = {
   "activity.youReplied": "Inti weġibt {when}",
   "activity.created": "Inħolqot {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": {
     one: "għal {count} min",
     two: "għal {count} min",
@@ -165,7 +165,7 @@ export const mt: Dictionary = {
   },
   "since.date": "minn {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Inti",
   "request.team": "It-tim",
   "request.agentAuthor": "{name} — {tenant}",
@@ -182,7 +182,7 @@ export const mt: Dictionary = {
   "request.markSolved": "Immarka bħala solvuta",
   "request.reopen": "Erġa' ftaħ it-talba",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Segwi t-talbiet tiegħek",
   "login.magicIntro":
     "Daħħal l-email tiegħek: nibgħatulek link biex tidħol. L-ebda password x'tiftakar.",
@@ -196,7 +196,15 @@ export const mt: Dictionary = {
   "login.footer":
     "Għadek ma bgħattx talba? Il-kont tiegħek jinħoloq awtomatikament mal-ewwel waħda.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Il-link tad-dħul tiegħek — {workspace}",
+  "login.emailBody":
+    "Bonġu,\n\nAgħfas dan il-link biex tara t-talbiet tiegħek (validu għal 15 minuta):\n{url}\n\nJekk ma tlabtx dan il-link, injora din l-email.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Inti amministratur ta' din l-organizzazzjoni. Dak li tikkonfigura hawn japplika għall-persuna tal-organizzazzjoni {org} li tuża s-support ta' {tenant}.",
     two: "Inti amministratur ta' din l-organizzazzjoni. Dak li tikkonfigura hawn japplika għal {count} persuni tal-organizzazzjoni {org} li jużaw is-support ta' {tenant}.",
@@ -289,7 +297,7 @@ export const mt: Dictionary = {
   "members.note":
     "Il-membri jidhru awtomatikament mal-ewwel dħul jew mal-ewwel talba tagħhom. Tista' taħtar amministratur ieħor biex ma tibqax l-uniku punt ta' kuntatt.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Għandek bżonn għajnuna?",
   "widget.close": "Agħlaq",
   "widget.messageLabel": "Il-messaġġ tiegħek",
@@ -310,7 +318,7 @@ export const mt: Dictionary = {
   "csatPage.doneTitle": "Grazzi!",
   "csatPage.doneBody": "Il-kumment tiegħek intbagħat lit-tim.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Inbox",
@@ -324,7 +332,7 @@ export const mt: Dictionary = {
   "app.shell.suspendedText":
     "Ikkuntattja lill-amministratur tiegħek biex jerġa' jingħata l-aċċess.",
   "app.shell.suspendedOwnerText":
-    "Agħżel pjan jew aġġorna l-metodu ta' ħlas biex terġa' tattiva l-workspace.",
+    "Irregola l-abbonament jew aġġorna l-metodu ta' ħlas biex terġa' tattiva l-workspace.",
   "app.shell.suspendedBillingCta": "Iftaħ Abbonament u fatturazzjoni",
   "app.shell.myTickets": "It-tickets tiegħi",
   "app.shell.newTicket": "Ticket ġdid",
@@ -790,7 +798,7 @@ export const mt: Dictionary = {
   "app.reports.columnAgent": "Aġent",
   "app.reports.columnFirstReply": "L-1 tweġiba",
   "app.reports.customReports": "Rapporti personalizzati",
-  "app.reports.enterprisePlanBadge": "PJAN ENTERPRISE",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Skopri",
   "app.reports.chartDailyAria": "{labelA} u {labelB} kuljum",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -817,8 +825,11 @@ export const mt: Dictionary = {
   "app.settings.shell.saved": "✓ Maħżun",
   "app.settings.shell.cancel": "Ikkanċella",
   "app.settings.shell.save": "Aħżen",
-  "app.settings.shell.planEnterprise": "PJAN ENTERPRISE",
-  "app.settings.shell.upgradeToEnterprise": "Aqbeż għall-pjan Enterprise",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Agħlaq",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Immexxi l-abbonament",
   "app.settings.shell.eeSelfHostedTitle": "Funzjonalità tal-edizzjoni Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Din il-funzjonalità hija koperta mil-liċenzja kummerċjali (id-direttorju ee/ tar-repożitorju) u mhijiex inkluża fl-edizzjoni open source ospitata minnek.",
@@ -991,10 +1002,12 @@ export const mt: Dictionary = {
   "app.settings.sso.agentTitle": "SSO tal-aġenti",
   "app.settings.sso.agentSubtitle":
     "Awtentikazzjoni unika SAML 2.0 u provvediment SCIM għat-tim tas-support tiegħek.",
-  "app.settings.sso.agentLockedTitle": "L-SSO tal-aġenti huwa riżervat għall-pjan Enterprise",
+  "app.settings.sso.agentLockedTitle":
+    "L-SSO tal-aġenti huwa parti mill-edizzjoni Enterprise Edition",
   "app.settings.sso.agentLockedText":
     "Qabbad il-fornitur tal-identità SAML 2.0 tiegħek, ipprovdi l-aġenti bis-SCIM u impona l-awtentikazzjoni unika fuq it-tim kollu.",
-  "app.settings.sso.agentEnterpriseOnly": "L-SSO tal-aġenti huwa riżervat għall-pjan Enterprise.",
+  "app.settings.sso.agentEnterpriseOnly":
+    "L-SSO tal-aġenti huwa parti mill-edizzjoni Enterprise Edition.",
   "app.settings.sso.idpOther": "Oħra (SAML ġeneriku)",
   "app.settings.sso.samlToggleLabel": "Attiva l-awtentikazzjoni unika SAML 2.0",
   "app.settings.sso.samlHeading": "Awtentikazzjoni unika SAML 2.0",
@@ -1088,11 +1101,11 @@ export const mt: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Kull organizzazzjoni klijenta tqabbad il-fornitur tal-identità tagħha mill-portal. Minn hawn int tissorvelja kollox.",
   "app.settings.sso.customerLockedTitle":
-    "L-SSO tal-organizzazzjonijiet klijenti huwa riżervat għall-pjan Enterprise",
+    "L-SSO tal-organizzazzjonijiet klijenti huwa parti mill-edizzjoni Enterprise Edition",
   "app.settings.sso.customerLockedText":
     "Ħalli kull organizzazzjoni klijenta tqabbad il-fornitur tal-identità tagħha (SAML jew OIDC) u ssorvelja kollox minn dan l-iskrin.",
   "app.settings.sso.customerEnterpriseOnly":
-    "L-SSO tal-organizzazzjonijiet klijenti huwa riżervat għall-pjan Enterprise.",
+    "L-SSO tal-organizzazzjonijiet klijenti huwa parti mill-edizzjoni Enterprise Edition.",
   "app.settings.sso.statusActive": "Attiva",
   "app.settings.sso.statusPending": "Għall-verifika",
   "app.settings.sso.statusError": "Errur",
@@ -1300,7 +1313,7 @@ export const mt: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Bażi tal-għarfien ippubblikata",
   "app.settings.portal.kbPublishedHint": "L-artikli ppubblikati jidhru mingħajr dħul.",
   "app.settings.portal.hidePoweredByLabel": "Aħbi “Imħaddem minn Open HelpDesk”",
-  "app.settings.portal.hidePoweredByHint": "Disponibbli mill-pjan Enterprise 'l fuq.",
+  "app.settings.portal.hidePoweredByHint": "Disponibbli mal-edizzjoni Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Viżibbiltà tal-bażi tal-għarfien",
   "app.settings.portal.kbVisibilityPublic": "Pubblika",
   "app.settings.portal.kbVisibilityAuthenticated": "Wara d-dħul",
@@ -1369,8 +1382,8 @@ export const mt: Dictionary = {
   "app.settings.workspace.generalTitle": "Ġenerali u branding",
   "app.settings.workspace.generalSubtitle":
     "Identità tal-ispazju tax-xogħol, lingwa, żona tal-ħin u numerazzjoni tat-tickets.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "It-tħassir ġie rifjutat — it-tħassir skedat huwa disponibbli fil-cloud.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "It-tħassir ġie rifjutat — it-tħassir skedat jeħtieġ control plane.",
   "app.settings.workspace.generalIdentity": "Identità",
   "app.settings.workspace.generalNameLabel": "Isem tal-ispazju tax-xogħol",
   "app.settings.workspace.generalLogoLabel": "Logo",
@@ -1450,7 +1463,7 @@ export const mt: Dictionary = {
     other: "{count} / {quota} post użat — il-limitu ntlaħaq",
   },
   "app.settings.workspace.seatsAddHint": "Żid postijiet biex tistieden aġenti ġodda.",
-  "app.settings.workspace.seatsFreeHint": "Ir-rwoli Viewer huma bla ħlas u bla limitu.",
+  "app.settings.workspace.seatsFreeHint": "Ir-rwoli Viewer ma jokkupawx post u huma bla limitu.",
   "app.settings.workspace.seatsAddAction": "Żid postijiet",
   "app.settings.workspace.seatsManage": "Immexxi",
   "app.settings.workspace.seatLimitReached":
@@ -1534,8 +1547,8 @@ export const mt: Dictionary = {
   "app.settings.workspace.save": "Aħżen",
   "app.settings.workspace.billingTitle": "Abbonament u fatturazzjoni",
   "app.settings.workspace.billingSubtitle":
-    "Pjan, postijiet, kwoti, metodu ta' pagament u storja tal-fatturi.",
-  "app.settings.workspace.selfHosted": "AWTO-OSPITAT",
+    "Abbonament, postijiet, kwoti, metodu ta' pagament u storja tal-fatturi.",
+  "app.settings.workspace.subscriptionNone": "L-ebda abbonament",
   "app.settings.workspace.trialBadge": "PROVA",
   "app.settings.workspace.priceMonthly": "€{amount}",
   "app.settings.workspace.seatPricing": {
@@ -1552,10 +1565,9 @@ export const mt: Dictionary = {
     many: "fix-xahar · {count} post inkluż",
     other: "fix-xahar · {count} post inkluż",
   },
-  "app.settings.workspace.billingNoDue":
-    "L-ebda ħlas dovut fuq din l-istanza — il-fatturazzjoni tiġi mmexxija fuq l-offerta cloud.",
-  "app.settings.workspace.cloudOnly": "Disponibbli fuq l-offerta cloud",
-  "app.settings.workspace.changePlan": "Ibdel il-pjan",
+  "app.settings.workspace.billingNoDue": "L-ebda ħlas dovut bħalissa.",
+  "app.settings.workspace.requiresControlPlane": "Jeħtieġ control plane",
+  "app.settings.workspace.changeSubscription": "Ibdel l-abbonament",
   "app.settings.workspace.manageSeats": "Immexxi l-postijiet",
   "app.settings.workspace.usageTitle": "Konsum tax-xahar",
   "app.settings.workspace.quotaSeats": "Postijiet",
@@ -1567,8 +1579,7 @@ export const mt: Dictionary = {
   "app.settings.workspace.colNumber": "Numru",
   "app.settings.workspace.colPeriod": "Perjodu",
   "app.settings.workspace.colAmount": "Ammont",
-  "app.settings.workspace.invoicesEmpty":
-    "L-ebda fattura — il-fatturi jidhru hawn fuq l-offerta cloud.",
+  "app.settings.workspace.invoicesEmpty": "Għad l-ebda fattura.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Maħżun",
@@ -1641,21 +1652,21 @@ export const mt: Dictionary = {
   "app.settings.rules.typeLongText": "Test twil",
   "app.settings.rules.typeFile": "Fajl",
   "app.settings.rules.typeSelectLong": "Lista li tinżel",
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Il vivait dans lib/rule-labels.ts, en français : l'écran des automatisations
-     restait français quelle que soit la langue du workspace. Les statuts,
-     priorités et canaux ne sont PAS repris ici — ils viennent des tables
-     partagées de lib/format.ts, celles de l'inbox et de ses filtres. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     It lived in lib/rule-labels.ts, in French: the automations screen stayed
+     French whatever the workspace language. Statuses, priorities and channels
+     are NOT repeated here — they come from the shared tables in lib/format.ts,
+     the ones used by the inbox and its filters. */
 
-  /* Types de champs personnalisés (ST-04) ; « Test » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Test” is typeText, above. */
   "app.settings.rules.typeSelect": "Lista",
   "app.settings.rules.typeMultiSelect": "Għażla multipla",
   "app.settings.rules.typeDate": "Data",
   "app.settings.rules.typeNumber": "Numru",
   "app.settings.rules.typeCheckbox": "Kaxxa tal-immarkar",
 
-  /* Champs sur lesquels une condition peut porter ; ils s'accordent avec les
-     tables app.status.*, app.priority.* et app.channel.*. */
+  /* Fields a condition can be built on; they agree with the app.status.*,
+     app.priority.* and app.channel.* tables. */
   "app.settings.rules.condFieldEvent": "Avveniment",
   "app.settings.rules.condFieldStatus": "Status",
   "app.settings.rules.condFieldPriority": "Prijorità",
@@ -1669,8 +1680,8 @@ export const mt: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Sigħat mill-ħolqien",
   "app.settings.rules.condFieldHoursUpdated": "Sigħat mill-aġġornament",
 
-  /* Opérateurs ; les deux derniers restent des symboles. Le maltais accorde au
-     masculin, comme le reste du dictionnaire (« vojt », « mhux assenjat »). */
+  /* Operators; the last two stay symbols. Maltese agrees in the masculine,
+     like the rest of the dictionary (“vojt”, “mhux assenjat”). */
   "app.settings.rules.opIs": "huwa",
   "app.settings.rules.opIsNot": "mhuwiex",
   "app.settings.rules.opContains": "fih",
@@ -1680,12 +1691,12 @@ export const mt: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Ticket maħluq",
   "app.settings.rules.eventTicketUpdated": "Ticket aġġornat",
   "app.settings.rules.eventMessageCreated": "Messaġġ irċevut",
 
-  /* Actions, telles que le menu du builder les nomme. */
+  /* Actions, as the builder's menu names them. */
   "app.settings.rules.actSetStatus": "Issettja l-istatus",
   "app.settings.rules.actSetPriority": "Issettja l-prijorità",
   "app.settings.rules.actAssignUser": "Assenja lil aġent",
@@ -1694,9 +1705,9 @@ export const mt: Dictionary = {
   "app.settings.rules.actAddTags": "Żid tags",
   "app.settings.rules.actEmailContact": "Ibgħat email lill-kuntatt",
 
-  /* Résumé d'une règle, en une ligne de liste : les bribes s'enchaînent dans le
-     gabarit, sans majuscule initiale ni point final. Le maltais garde l'ordre
-     « jekk … → … » du français. */
+  /* One-line rule summary: the fragments run on inside the template, with
+     no initial capital and no final full stop. Maltese keeps French's
+     “jekk … → …” order. */
   "app.settings.rules.summaryPattern": "Jekk {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "u",
   "app.settings.rules.summaryAlways": "dejjem",
@@ -1711,8 +1722,8 @@ export const mt: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "mhux assenjat",
   "app.settings.rules.summaryAssigned": "assenjat",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. « ilu » est le tour maltais de l'ancienneté. */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. “ilu” is the Maltese turn of phrase for elapsed time. */
   "app.settings.rules.summarySince": "ilu {duration}",
   "app.settings.rules.summarySetStatus": "ibdel għal {value}",
   "app.settings.rules.summarySetPriority": "prijorità {value}",
@@ -1723,7 +1734,7 @@ export const mt: Dictionary = {
   "app.settings.rules.summaryAddTags": "żid {tags}",
   "app.settings.rules.summaryEmailContact": "ibgħat email lill-kuntatt",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Status → {value}",
   "app.settings.rules.macroSummaryPriority": "Prijorità → {value}",
   "app.settings.rules.macroSummaryTeam": "Tim → {team}",
@@ -1840,7 +1851,7 @@ export const mt: Dictionary = {
   "app.settings.dev.auditTitle": "Audit log",
   "app.settings.dev.auditSubtitle":
     "Reġistru sħiħ tal-azzjonijiet ta' amministrazzjoni. Jinżamm sentejn.",
-  "app.settings.dev.auditLockedTitle": "L-audit log huwa riżervat għall-pjan Enterprise",
+  "app.settings.dev.auditLockedTitle": "L-audit log huwa parti mill-edizzjoni Enterprise Edition",
   "app.settings.dev.auditLockedText":
     "Żomm rekord ta' kull azzjoni ta' amministrazzjoni għal sentejn, bid-diff qabel/wara u esportazzjoni CSV.",
   "app.settings.dev.filterActorAll": "Attur: kollha",
@@ -1865,9 +1876,10 @@ export const mt: Dictionary = {
   "app.settings.dev.actorContact": "Kuntatt",
   "app.settings.dev.exportUnauthorized": "Mhux awtorizzat",
   "app.settings.dev.exportForbidden": "Riżervat għar-rwoli Owner u Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "L-audit log huwa riżervat għall-pjan Enterprise.",
+  "app.settings.dev.exportEnterpriseOnly":
+    "L-audit log huwa parti mill-edizzjoni Enterprise Edition.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Spazju tax-xogħol",
   "app.settingsNav.itemGeneral": "Ġenerali",
   "app.settingsNav.itemTeam": "Aġenti u timijiet",
@@ -1901,7 +1913,7 @@ export const mt: Dictionary = {
   "app.settingsNav.copied": "Ikkupjat",
   "app.settingsNav.copy": "Ikkopja",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Ġdid",
   "app.status.open": "Miftuħ",
   "app.status.waiting": "Fl-istennija",
@@ -1922,7 +1934,7 @@ export const mt: Dictionary = {
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "It-tickets tiegħi",
   "app.views.unassigned": "Mhux assenjati",
   "app.views.breaching": "Dalwaqt tard",
@@ -1930,7 +1942,7 @@ export const mt: Dictionary = {
   "app.views.urgent": "Urġenti din il-ġimgħa",
   "app.views.escalation": "Eskalazzjonijiet",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Ibdel l-isem",
   "app.kb.renameSave": "Aħżen",
   "app.kb.deleteCategory": "Ħassar il-kategorija",
@@ -1944,7 +1956,7 @@ export const mt: Dictionary = {
     other: "Din il-kategorija għad fiha {count} element. Mexxih qabel tħassarha.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "Email",
   "app.login.emailPlaceholder": "inti@kumpanija.com.mt",
   "app.login.password": "Password",
@@ -1972,10 +1984,10 @@ export const mt: Dictionary = {
   "app.login.providerMissing": "Dan il-fornitur mhux ikkonfigurat fuq din l-istanza.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Tout cet écran était en français dans le code. Quatre libellés viennent
-     d'ailleurs : le titre du portail dans son propre aperçu (home.title), le nom
-     du workspace et la couleur d'accent (les mêmes contrôles qu'en ST-01), et
-     les rôles Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+  /* This whole screen was French in the code. Four labels come from
+     elsewhere: the portal title in its own preview (home.title), the workspace
+     name and the accent colour (the same controls as in ST-01), and the
+     Owner / Admin / Agent / Viewer roles, which are not translated. */
 
   "app.onboarding.asideTitle": "Konfigurazzjoni",
   "app.onboarding.asideFooter":
@@ -2014,7 +2026,7 @@ export const mt: Dictionary = {
 
   "app.onboarding.teamTitle": "Stieden it-tim tiegħek",
   "app.onboarding.teamBody":
-    "Stieden l-aġenti tiegħek issa, jew aqsam il-link tal-istedina. Il-postijiet Viewer huma bla ħlas.",
+    "Stieden l-aġenti tiegħek issa, jew aqsam il-link tal-istedina. Ir-rwoli Viewer ma jokkupawx post.",
   "app.onboarding.invitePlaceholder": "kollega@kumpanija.com.mt",
   "app.onboarding.addRow": "+ Żid linja",
   "app.onboarding.sendInvites": "Ibgħat l-istediniet",
@@ -2023,8 +2035,8 @@ export const mt: Dictionary = {
   "app.onboarding.testBody":
     "Ivverifika l-katina sħiħa qabel tiftaħ is-servizz lill-klijenti tiegħek.",
   "app.onboarding.readyTitle": "L-ispazju tax-xogħol tiegħek huwa lest",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Ibgħat email lil {address} biex toħloq ticket ta' test.",
   "app.onboarding.openInbox": "Iftaħ l-inbox",
 
@@ -2034,31 +2046,41 @@ export const mt: Dictionary = {
   "app.onboarding.checklistTicket": "L-ewwel ticket irċevut",
   "app.onboarding.checklistSla": "Politika SLA verifikata",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase est découpée autour de
-     {mode} : le maltais met son quantificateur après le verbe, et referme la
-     phrase sur « mill-kundizzjonijiet ». */
+  /* ST-05 — the condition group header. The sentence is split around
+     {mode}: Maltese puts its quantifier after the verb, and closes the
+     sentence on “mill-kundizzjonijiet”. */
   "app.settings.rules.matchIf": "JEKK",
   "app.settings.rules.matchAllPattern": "Trid taqbel {mode} mill-kundizzjonijiet",
   "app.settings.rules.matchAnyPattern": "Trid taqbel {mode} mill-kundizzjonijiet",
   "app.settings.rules.matchAll": "kull waħda",
   "app.settings.rules.matchAny": "mill-inqas waħda",
 
-  /* ST-11 — noms des offres ; « Free », « Standard » et « Pro » ne se
-     traduisent pas. */
-  "app.settings.workspace.planFree": "Pjan Free",
-  "app.settings.workspace.planTeam": "Pjan Team",
-  "app.settings.workspace.planEnterprise": "Pjan Enterprise",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "ALLURA",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Ittestja fuq ticket eżistenti",
+  "app.settings.rules.testRunning": "Qed jiġi ttestjat…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Neħħi",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Korp tal-email — varjabbli: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05) : la valeur en base reste française, seul
-     l'affichage est traduit. */
+  /* Ticket types (AG-05): the value stored in the database stays French,
+     only the display is translated. */
   "app.ticket.typeQuestion": "Mistoqsija",
   "app.ticket.typeIncident": "Inċident",
   "app.ticket.typeTask": "Kompitu",
   "app.ticket.typeOther": "Oħra",
 
-  /* AG-09 — entêtes de l'export CSV des rapports ; « s » devient « sek ». */
+  /* AG-09 — CSV export headers for the reports; “s” becomes “sek”. */
   "app.reports.csvIndicator": "Indikatur",
   "app.reports.csvCurrentPeriod": "Perjodu attwali",
   "app.reports.csvPreviousPeriod": "Perjodu preċedenti",
@@ -2073,7 +2095,7 @@ export const mt: Dictionary = {
   "app.reports.csvResolvedShort": "Solvuti",
   "app.reports.csvAgent": "Aġent",
 
-  /* AG-10 — conversion d'une demande résolue en article ; les « ## » restent. */
+  /* AG-10 — turning a resolved request into an article; the “##” stay. */
   "app.kb.fromTicketDefaultTitle": "Artiklu ġdid",
   "app.kb.fromTicketSymptomHeading": "Sintomu",
   "app.kb.fromTicketSymptomPlaceholder": "[Iddeskrivi dak li jara l-klijent.]",
@@ -2083,8 +2105,8 @@ export const mt: Dictionary = {
   "app.kb.fromTicketMissingRequest": "it-talba oriġinali tal-klijent",
   "app.kb.fromTicketMissingAnswer": "it-tweġiba tal-aġent",
 
-  /* Modèles de départ d'un article (AG-10) : markdown, le texte entre crochets
-     est à remplacer par l'auteur. */
+  /* Article starter templates (AG-10): markdown, and the bracketed text is
+     for the author to replace. */
   "app.kb.tplProcedureLabel": "Proċedura pass pass",
   "app.kb.tplProcedureHint": "Sekwenza ta' passi nnumerati, bir-riżultat mistenni.",
   "app.kb.tplProcedureTitle": "Kif [tagħmel l-azzjoni]",

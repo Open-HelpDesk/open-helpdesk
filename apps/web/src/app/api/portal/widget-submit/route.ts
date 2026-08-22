@@ -1,7 +1,7 @@
 /**
- * Soumission du widget (ST-09) — multipart : email, subject, body, files.
- * Crée contact + ticket (canal widget) + message + pièces jointes, déclenche
- * triggers et SLA, puis redirige vers la confirmation de l'iframe.
+ * Widget submission (ST-09) — multipart: email, subject, body, files.
+ * Creates contact + ticket (widget channel) + message + attachments, fires
+ * triggers and SLA, then redirects to the iframe's confirmation.
  */
 import { NextResponse, type NextRequest } from "next/server";
 import {
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     .from(contacts)
     .where(and(eq(contacts.tenantId, tenant.id), eq(contacts.email, email)));
   if (contact?.blocked) {
-    // Même réponse que le succès — pas d'oracle.
+    // Same response as success — no oracle.
     return NextResponse.redirect(new URL("/widget?sent=1", requestOrigin(request)), 303);
   }
   const domain = email.split("@")[1] ?? "";

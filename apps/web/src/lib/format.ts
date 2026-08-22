@@ -1,15 +1,15 @@
 /**
- * Formats partagés par les écrans de l'espace agent.
+ * Formats shared by the agent workspace screens.
  *
- * Les libellés (statut, priorité, canal) et les unités ne sont plus des
- * constantes françaises mais des CLÉS : le rendu passe par `t()`, qui connaît la
- * langue du tenant. Les fonctions qui composent une durée reçoivent donc `t`.
- * Les couleurs et les tokens CSS, eux, ne dépendent pas de la langue et restent
- * de simples tables.
+ * The labels (status, priority, channel) and the units are no longer French
+ * constants but KEYS: rendering goes through `t()`, which knows the tenant's
+ * language. The functions that compose a duration therefore receive `t`.
+ * Colors and CSS tokens, for their part, do not depend on the language and
+ * remain plain tables.
  */
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 
-/** Ce dont ces fonctions ont besoin : traduire et mettre en forme un nombre. */
+/** What these functions need: translating and formatting a number. */
 type Tr = {
   (key: MessageKey, params?: Record<string, string | number>): string;
   fmt: { number: (n: number) => string };
@@ -19,7 +19,7 @@ const MIN = 60_000;
 const HOUR = 60 * MIN;
 const DAY = 24 * HOUR;
 
-/** « 2 h 30 », « 45 min » — durée restante positive, dans la langue du tenant. */
+/** "2 h 30", "45 min" — positive remaining duration, in the tenant's language. */
 export function duration(t: Tr, ms: number): string {
   if (ms < HOUR) return t("app.unit.minutes", { count: Math.max(1, Math.floor(ms / MIN)) });
   const h = Math.floor(ms / HOUR);
@@ -29,12 +29,12 @@ export function duration(t: Tr, ms: number): string {
     : t("app.unit.hours", { count: h });
 }
 
-/** « -12 min » si dépassé, « 24 min » sinon — format court des badges SLA (AG-03). */
+/** "-12 min" if overdue, "24 min" otherwise — short format of the SLA badges (AG-03). */
 export function slaShort(t: Tr, remainingMs: number): string {
   return remainingMs < 0 ? `-${duration(t, -remainingMs)}` : duration(t, remainingMs);
 }
 
-/** « 148 Ko », « 1,2 Mo » — le séparateur décimal vient de la langue. */
+/** "148 KB", "1.2 MB" — the decimal separator comes from the language. */
 export function size(t: Tr, bytes: number): string {
   if (bytes < 1024 * 1024)
     return t("app.unit.kilobytes", { count: Math.max(1, Math.round(bytes / 1024)) });
@@ -59,7 +59,7 @@ export const STATUS_KEYS: Record<string, MessageKey> = {
   closed: "app.status.closed",
 };
 
-/** Statut → clé de token CSS (--new, --open, --wait, --pause, --ok, --closed). */
+/** Status → CSS token key (--new, --open, --wait, --pause, --ok, --closed). */
 export const STATUS_TOKEN: Record<string, string> = {
   new: "new",
   open: "open",
@@ -76,7 +76,7 @@ export const PRIORITY_KEYS: Record<string, MessageKey> = {
   urgent: "app.priority.urgent",
 };
 
-/** Couleurs de priorité — design espace agent (fixes, jamais de fond plein). */
+/** Priority colors — agent space design (fixed, never a solid fill). */
 export const PRIORITY_COLORS: Record<string, string> = {
   low: "#8A9993",
   normal: "#1D4ED8",

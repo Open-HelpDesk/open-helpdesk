@@ -1,13 +1,13 @@
--- Row-Level Security — isolation des tenants sur le schéma app.
--- À exécuter après chaque migration qui crée une table (ou l'intégrer aux migrations).
+-- Row-Level Security — tenant isolation on the app schema.
+-- To be run after every migration that creates a table (or folded into the migrations).
 --
--- Prérequis : l'application se connecte avec un rôle NON propriétaire des tables
--- (le propriétaire contourne la RLS). Créer par exemple :
+-- Prerequisite: the application connects with a role that does NOT own the tables
+-- (the owner bypasses RLS). For example, create:
 --   create role app_user login password '…';
 --   grant usage on schema app to app_user;
 --   grant select, insert, update, delete on all tables in schema app to app_user;
 --
--- Le contexte tenant est posé par withTenant() :
+-- The tenant context is set by withTenant():
 --   select set_config('app.tenant_id', '<uuid>', true);
 
 do $$
@@ -19,7 +19,7 @@ begin
     where schemaname = 'app' and tablename <> 'tenants'
   loop
     execute format('alter table app.%I enable row level security', t);
-    -- idempotent : supprime puis recrée
+    -- idempotent: drop, then recreate
     execute format('drop policy if exists tenant_isolation on app.%I', t);
     execute format(
       $f$create policy tenant_isolation on app.%I
@@ -30,13 +30,13 @@ begin
   end loop;
 end $$;
 
--- La table tenants elle-même : visible uniquement la ligne du tenant courant.
+-- The tenants table itself: only the current tenant's row is visible.
 alter table app.tenants enable row level security;
 drop policy if exists tenant_isolation on app.tenants;
 create policy tenant_isolation on app.tenants
   using (id = current_setting('app.tenant_id', true)::uuid)
   with check (id = current_setting('app.tenant_id', true)::uuid);
 
--- Le worker et la console utilisent un rôle distinct avec bypassrls
--- (résolution du tenant par slug, provisioning, agrégats cross-tenant) :
+-- The worker uses a distinct role with bypassrls (tenant resolution by slug,
+-- provisioning, cross-tenant aggregates):
 --   create role platform_user login password '…' bypassrls;

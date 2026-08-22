@@ -8,16 +8,16 @@ import {
 } from "@/lib/format";
 import type { Translate } from "@/i18n/server";
 import type { MessageParams } from "@/i18n/dictionary";
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 
 /**
- * Traduire suffit à ces pastilles. Le type est volontairement plus étroit que
- * `Translate` : elles sont rendues aussi bien depuis un composant serveur que
- * depuis la table cliente de l'inbox, dont le `t` n'embarque pas le dictionnaire.
+ * Translating is all these pills need. The type is deliberately narrower than
+ * `Translate`: they are rendered both from a server component and from the
+ * client inbox table, whose `t` does not carry the dictionary.
  */
 type Tr = (key: MessageKey, params?: MessageParams) => string;
 
-/** Pilule statut — design espace agent : padding 2px 8px, radius 20, 11.5px/600. */
+/** Status pill — agent space design: padding 2px 8px, radius 20, 11.5px/600. */
 export function StatusChip({ status, t }: { status: string; t: Tr }) {
   const key = STATUS_TOKEN[status] ?? "closed";
   const labelKey = STATUS_KEYS[status];
@@ -38,7 +38,7 @@ export function StatusChip({ status, t }: { status: string; t: Tr }) {
   );
 }
 
-/** Priorité — pastille 7×7 colorée + libellé optionnel, jamais de fond plein (specs/02). */
+/** Priority — colored 7×7 dot + optional label, never a solid background. */
 export function PriorityDot({
   priority,
   t,
@@ -65,9 +65,9 @@ export function PriorityDot({
 }
 
 /**
- * Badge SLA — neutre (> 30 min) → ambre (< 30 min) → rouge (dépassé, persistant
- * jusqu'à réponse). L'échéance affichée : 1ʳᵉ réponse tant qu'elle est due, sinon résolution.
- * Design : horloge 11×11 + valeur, padding 2px 7px, radius 5, 11.5px/600, bordé.
+ * SLA badge — neutral (> 30 min) → amber (< 30 min) → red (overdue, persistent
+ * until a reply). The due date shown: 1st reply while it is due, otherwise resolution.
+ * Design: 11×11 clock + value, padding 2px 7px, radius 5, 11.5px/600, bordered.
  */
 export function SlaBadge({
   firstRepliedAt,
@@ -108,7 +108,7 @@ export function SlaBadge({
   );
 }
 
-/** Horloge 11×11 des badges SLA (design AG-03). */
+/** 11×11 clock of the SLA badges (AG-03 design). */
 export function SlaClock() {
   return (
     <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -118,7 +118,7 @@ export function SlaClock() {
   );
 }
 
-/** Rotation de teintes des avatars du design (open, new, acc, wait, pause). */
+/** Tone rotation of the design's avatars (open, new, acc, wait, pause). */
 const AVATAR_TONES = [
   ["var(--open-t)", "var(--open)"],
   ["var(--new-t)", "var(--new)"],
@@ -127,7 +127,7 @@ const AVATAR_TONES = [
   ["var(--pause-t)", "var(--pause)"],
 ] as const;
 
-/** Avatar initiales — `tone` applique la rotation de teintes du design (index de ligne). */
+/** Initials avatar — `tone` applies the design's tone rotation (row index). */
 export function Avatar({
   name,
   size = 24,
@@ -143,7 +143,7 @@ export function Avatar({
 }) {
   const toneIndex =
     tone === undefined
-      ? 2 // teinte accent par défaut
+      ? 2 // accent tone by default
       : ((tone % AVATAR_TONES.length) + AVATAR_TONES.length) % AVATAR_TONES.length;
   const [bg, ink] = AVATAR_TONES[toneIndex] ?? AVATAR_TONES[2];
   return (

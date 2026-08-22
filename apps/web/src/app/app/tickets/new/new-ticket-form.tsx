@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * AG-05 — Formulaire « Nouveau ticket » : combobox contact réelle (recherche
- * /api/search, « + Créer le contact »), grille Sujet/Formulaire, description avec
- * toolbar, 4 selects, encart email, pied sunk.
+ * AG-05 — "New ticket" form: real contact combobox (/api/search lookup,
+ * "+ Create the contact"), Subject/Form grid, description with
+ * toolbar, 4 selects, email callout, sunk footer.
  */
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -19,7 +19,7 @@ type ContactHit = {
   organizationName?: string | null;
 };
 
-/** Champ pleine largeur du design : h36, padding 0 10px, 13.5px. */
+/** Full-width field from the design: h36, padding 0 10px, 13.5px. */
 const inputStyle = {
   height: 36,
   borderRadius: 6,
@@ -31,10 +31,10 @@ const inputStyle = {
   width: "100%",
 } as const;
 
-/** Selects de la grille 4 colonnes : h34, padding 0 9px, 13px. */
+/** Selects of the 4-column grid: h34, padding 0 9px, 13px. */
 const selectStyle = { ...inputStyle, height: 34, fontSize: 13, padding: "0 9px" } as const;
 
-/** Libellé de champ : 12px/600 ink-2. */
+/** Field label: 12px/600 ink-2. */
 const labelStyle = { fontSize: 12, fontWeight: 600, color: "var(--ink-2)" } as const;
 
 function Req() {
@@ -79,7 +79,7 @@ export function NewTicketForm({
           setOpen(true);
         }
       } catch {
-        /* requête annulée */
+        /* request cancelled */
       }
     }, 180);
     return () => {
@@ -257,7 +257,7 @@ export function NewTicketForm({
           {!createMode && <input type="hidden" name="email" value={emailValue} />}
         </div>
 
-        {/* Sujet / Formulaire — grille 1fr 220px */}
+        {/* Subject / Form — 1fr 220px grid */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 220px", gap: 12 }}>
           <label className="flex flex-col" style={{ gap: 6 }}>
             <span style={labelStyle}>
@@ -278,7 +278,7 @@ export function NewTicketForm({
           </label>
         </div>
 
-        {/* Description : toolbar + corps dans une seule boîte bordée */}
+        {/* Description: toolbar + body in a single bordered box */}
         <div className="flex flex-col" style={{ gap: 6 }}>
           <label style={labelStyle}>{t("app.newTicket.description")}</label>
           <div
@@ -382,7 +382,7 @@ export function NewTicketForm({
           </label>
         </div>
 
-        {/* Encart email */}
+        {/* Email callout */}
         <label
           className="flex cursor-pointer items-center"
           style={{
@@ -404,7 +404,7 @@ export function NewTicketForm({
         </label>
       </div>
 
-      {/* Pied sunk */}
+      {/* Sunk footer */}
       <div
         className="flex justify-end border-t"
         style={{

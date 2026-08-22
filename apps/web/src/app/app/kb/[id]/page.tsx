@@ -10,30 +10,30 @@ import { ARTICLE_TEMPLATES, templateById } from "@/lib/article-templates";
 import { articleFromTicket } from "@/lib/article-from-ticket";
 
 /**
- * AG-10 — Éditeur d'article (design espace-agent) : badge « MODIFICATIONS NON
- * PUBLIÉES » si brouillon en cours, corps max 68ch, rail droit 280 px (Brouillon /
- * Publier, slug mono, titre SEO, catégorie, historique).
+ * AG-10 — Article editor (agent space design): "UNPUBLISHED CHANGES" badge
+ * when a draft is in progress, body max 68ch, 280 px right rail (Draft /
+ * Publish, mono slug, SEO title, category, history).
  */
 export default async function KbEditorPage({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ cat?: string; modele?: string; depuis?: string }>;
+  searchParams: Promise<{ cat?: string; template?: string; from?: string }>;
 }) {
   const { tenant, agent } = await requireAgent();
-  // Cet écran EST l'éditeur : il n'a pas de version consultable. Un rôle qui n'a
-  // pas le droit d'écrire est renvoyé vers la liste, qu'il peut lire.
+  // This screen IS the editor: it has no read-only version. A role with no write
+  // permission is sent back to the list, which it is allowed to read.
   if (!isManager(agent.role)) redirect("/app/kb");
   const t = await getT();
   const { id } = await params;
-  const { cat, modele, depuis } = await searchParams;
+  const { cat, template: templateParam, from } = await searchParams;
   const isNew = id === "new";
 
 
-  // Page blanche ou structure de départ : le choix précède l'éditeur (aucune
-  // création en base tant que rien n'est enregistré).
-  if (isNew && !modele && !depuis) {
+  // Blank page or starting structure: the choice comes before the editor (nothing
+  // is created in the database as long as nothing is saved).
+  if (isNew && !templateParam && !from) {
     return (
       <div className="h-full overflow-y-auto" style={{ background: "var(--canvas)" }}>
         <div className="mx-auto flex flex-col" style={{ maxWidth: 780, padding: "48px 28px" }}>
@@ -48,10 +48,10 @@ export default async function KbEditorPage({
             className="mt-6 grid gap-3"
             style={{ gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))" }}
           >
-            {ARTICLE_TEMPLATES.map((gabarit) => (
+            {ARTICLE_TEMPLATES.map((template) => (
               <Link
-                key={gabarit.id}
-                href={`/app/kb/new?modele=${gabarit.id}${cat ? `&cat=${cat}` : ""}`}
+                key={template.id}
+                href={`/app/kb/new?template=${template.id}${cat ? `&cat=${cat}` : ""}`}
                 className="ohd-hover-edge-fill flex flex-col rounded-[10px] border"
                 style={{ padding: "14px 15px", gap: 8, background: "var(--panel)", borderColor: "var(--line)" }}
               >
@@ -60,20 +60,20 @@ export default async function KbEditorPage({
                   className="grid place-items-center rounded-md font-mono font-bold"
                   style={{ width: 28, height: 28, fontSize: 12.5, background: "var(--acc-t)", color: "var(--acc)" }}
                 >
-                  {gabarit.glyph}
+                  {template.glyph}
                 </span>
                 <span className="font-semibold" style={{ fontSize: 14, color: "var(--ink)" }}>
-                  {t(gabarit.labelKey)}
+                  {t(template.labelKey)}
                 </span>
                 <span style={{ fontSize: 12.5, lineHeight: 1.45, color: "var(--ink-3)", textWrap: "pretty" }}>
-                  {t(gabarit.hintKey)}
+                  {t(template.hintKey)}
                 </span>
               </Link>
             ))}
           </div>
 
           <Link
-            href={`/app/kb/new?modele=vierge${cat ? `&cat=${cat}` : ""}`}
+            href={`/app/kb/new?template=blank${cat ? `&cat=${cat}` : ""}`}
             className="mt-4 self-start"
             style={{ fontSize: 13, color: "var(--acc-2)", fontWeight: 500 }}
           >
@@ -103,10 +103,10 @@ export default async function KbEditorPage({
 
   const seo = (article?.seo ?? {}) as { title?: string };
   const hasDraft = Boolean(article?.status === "published" && article?.draftBodyHtml);
-  // « Transformer en article » : le brouillon reprend la question du client et la
-  // réponse de l'agent. Rien n'est écrit avant que l'agent n'enregistre.
-  const sourceNumber = isNew && depuis ? Number(depuis) : null;
-  let depuisTicket: { number: number; title: string; body: string; missing: string[] } | null =
+  // "Turn into an article": the draft picks up the customer's question and the
+  // agent's answer. Nothing is written before the agent saves.
+  const sourceNumber = isNew && from ? Number(from) : null;
+  let sourceTicket: { number: number; title: string; body: string; missing: string[] } | null =
     null;
   if (sourceNumber && Number.isFinite(sourceNumber)) {
     const [source] = await db
@@ -114,7 +114,7 @@ export default async function KbEditorPage({
       .from(tickets)
       .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.number, sourceNumber)));
     if (source) {
-      const fil = await db
+      const thread = await db
         .select({
           authorType: ticketMessages.authorType,
           kind: ticketMessages.kind,
@@ -123,20 +123,20 @@ export default async function KbEditorPage({
         .from(ticketMessages)
         .where(eq(ticketMessages.ticketId, source.id))
         .orderBy(asc(ticketMessages.createdAt));
-      const brouillon = articleFromTicket(t, source.subject, fil);
-      depuisTicket = { number: source.number, ...brouillon };
+      const draft = articleFromTicket(t, source.subject, thread);
+      sourceTicket = { number: source.number, ...draft };
     }
   }
 
-  const modeleChoisi = isNew ? templateById(modele) : undefined;
+  const chosenTemplate = isNew ? templateById(templateParam) : undefined;
   const bodyValue = article
     ? (article.draftBodyHtml ?? article.bodyHtml ?? "")
-    : (depuisTicket?.body ?? (modeleChoisi ? t(modeleChoisi.bodyKey) : ""));
-  const titleValue = article?.title ?? depuisTicket?.title ?? (modeleChoisi ? t(modeleChoisi.titleKey) : "");
+    : (sourceTicket?.body ?? (chosenTemplate ? t(chosenTemplate.bodyKey) : ""));
+  const titleValue = article?.title ?? sourceTicket?.title ?? (chosenTemplate ? t(chosenTemplate.titleKey) : "");
 
-  // Phrase qui enveloppe le lien vers la demande source : une seule clé, coupée
-  // autour du paramètre.
-  const [reprisAvant, reprisApres] = t.parts("app.kb.fromTicket", "ticket");
+  // Sentence wrapping the link to the source request: a single key, split
+  // around the parameter.
+  const [fromTicketBefore, fromTicketAfter] = t.parts("app.kb.fromTicket", "ticket");
 
   const inputStyle = {
     height: 30,
@@ -153,7 +153,7 @@ export default async function KbEditorPage({
     <form action={saveArticle} className="flex h-full flex-col overflow-hidden">
       <input type="hidden" name="articleId" value={isNew ? "" : article!.id} />
 
-      {/* Barre d'état */}
+      {/* Status bar */}
       <div
         className="flex shrink-0 items-center gap-3 border-b px-4"
         style={{ height: 44, background: "var(--panel)", borderColor: "var(--line)" }}
@@ -216,22 +216,22 @@ export default async function KbEditorPage({
 
       <div className="flex min-h-0 flex-1">
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-          {depuisTicket && (
+          {sourceTicket && (
             <div
               className="flex shrink-0 flex-wrap items-center gap-2 border-b px-8 py-2.5"
               style={{ background: "var(--open-t)", borderColor: "var(--line-2)" }}
             >
               <span style={{ fontSize: 12.5, color: "var(--open)" }}>
-                {reprisAvant}
-                <Link href={`/app/tickets/${depuisTicket.number}`} style={{ fontWeight: 600 }}>
-                  #{depuisTicket.number}
+                {fromTicketBefore}
+                <Link href={`/app/tickets/${sourceTicket.number}`} style={{ fontWeight: 600 }}>
+                  #{sourceTicket.number}
                 </Link>
-                {reprisApres}
+                {fromTicketAfter}
               </span>
-              {depuisTicket.missing.length > 0 && (
+              {sourceTicket.missing.length > 0 && (
                 <span style={{ fontSize: 12, color: "var(--ink-2)" }}>
                   {t("app.kb.missingFields", {
-                    items: new Intl.ListFormat(t.locale.tag).format(depuisTicket.missing),
+                    items: new Intl.ListFormat(t.locale.tag).format(sourceTicket.missing),
                   })}
                 </span>
               )}
@@ -240,7 +240,7 @@ export default async function KbEditorPage({
           <ArticleEditor defaultTitle={titleValue} defaultBody={bodyValue} />
         </div>
 
-        {/* Rail droit — 280 px */}
+        {/* Right rail — 280 px */}
         <aside
           className="hidden w-[280px] shrink-0 flex-col gap-5 overflow-y-auto border-l p-4 lg:flex"
           style={{ background: "var(--panel)", borderColor: "var(--line)" }}
@@ -313,7 +313,7 @@ export default async function KbEditorPage({
             </select>
           </label>
 
-          {/* Historique — visuel */}
+          {/* History — visual */}
           <section>
             <p
               className="mb-2 font-semibold uppercase tracking-wider"

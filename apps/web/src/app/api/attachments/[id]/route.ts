@@ -1,6 +1,6 @@
 /**
- * Téléchargement d'une pièce jointe — accès : agent du tenant, OU contact du portail
- * ayant accès au ticket du message (demandeur ou organisation partagée).
+ * Attachment download — access: tenant agent, OR portal contact with access to
+ * the message's ticket (requester or shared organization).
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { attachments, db, tickets, ticketMessages } from "@openhelpdesk/db";
@@ -18,11 +18,11 @@ export async function GET(
   const [attachment] = await db.select().from(attachments).where(eq(attachments.id, id));
   if (!attachment) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
-  // 1. Agent du tenant ?
+  // 1. Tenant agent?
   const agentSession = await apiAgent();
   let allowed = agentSession?.tenant.id === attachment.tenantId;
 
-  // 2. Sinon, contact du portail avec accès au ticket du message.
+  // 2. Otherwise, portal contact with access to the message's ticket.
   if (!allowed && attachment.messageId) {
     const portalSession = await getPortalContact();
     if (portalSession && portalSession.tenant.id === attachment.tenantId) {

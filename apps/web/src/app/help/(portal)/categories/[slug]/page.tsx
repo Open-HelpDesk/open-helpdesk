@@ -8,7 +8,7 @@ import { getT, type Translate } from "@/i18n/server";
 
 type ArticleItem = { title: string; slug: string; bodyHtml: string | null };
 
-/** Item d'accordéon : titre 15/500 acc-2 + extrait 14 ink-2 (maquette PT-02). */
+/** Accordion item: 15/500 acc-2 title + 14 ink-2 excerpt (PT-02 mockup). */
 function ArticleRow({ article }: { article: ArticleItem }) {
   const summary = excerpt(article.bodyHtml);
   return (
@@ -32,7 +32,7 @@ function ArticleRow({ article }: { article: ArticleItem }) {
   );
 }
 
-/** Accordéon de section : en-tête canvas et bordure accent quand ouvert, caret ▼/▶. */
+/** Section accordion: canvas header and accent border when open, ▼/▶ caret. */
 function SectionAccordion({
   name,
   articles,
@@ -69,10 +69,10 @@ function SectionAccordion({
   );
 }
 
-/** PT-02 — Catégorie : fil d'Ariane, accordéons par section, sidebar « Autres catégories ». */
+/** PT-02 — Category: breadcrumb, one accordion per section, "Other categories" sidebar. */
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const t = await getT();
-  // ST-09 : base non publiée, ou réservée aux personnes connectées.
+  // ST-09: knowledge base not published, or restricted to signed-in people.
   if (!(await canReadKb(Boolean(await getPortalContact())))) notFound();
   const tenant = await getPortalTenant();
   const { slug } = await params;
@@ -109,7 +109,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           </header>
 
           {withArticles.length === 0 && directArticles.length > 0 ? (
-            /* Pas de sections : liste simple dans une carte (accordéon implicite ouvert). */
+            /* No sections: plain list inside a card (implicit accordion, open). */
             <div
               className="overflow-hidden rounded-2xl border"
               style={{

@@ -1,8 +1,8 @@
 /**
- * Webhook de réception Brevo (« Inbound parsing », ST-03).
- * URL à configurer chez Brevo : https://{slug}.{domaine}/api/ingress/brevo?secret=…
- * Brevo ne signe pas ses webhooks entrants : le secret dans l'URL fait autorité.
- * Toujours 200 sur un payload compris : un 5xx serait rejoué en boucle.
+ * Brevo inbound webhook ("Inbound parsing", ST-03).
+ * URL to configure at Brevo: https://{slug}.{domain}/api/ingress/brevo?secret=…
+ * Brevo does not sign its inbound webhooks: the secret in the URL is authoritative.
+ * Always 200 on an understood payload: a 5xx would be replayed in a loop.
  */
 import { ingressAuthorized } from "@/lib/ingress-auth";
 import { NextResponse, type NextRequest } from "next/server";

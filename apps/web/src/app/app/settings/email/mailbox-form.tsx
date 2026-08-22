@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * ST-03 — Formulaire d'adresse de réception (drawer) : méthode Transfert ou IMAP,
- * champs adaptés. Le mot de passe IMAP n'est jamais réaffiché (indice « ••••1a2b »).
+ * ST-03 — Receiving address form (drawer): Forwarding or IMAP method, with the
+ * matching fields. The IMAP password is never displayed again (hint "••••1a2b").
  */
 import { useState } from "react";
 import { Field, Select, TextInput } from "@/components/settings-page";

@@ -1,14 +1,14 @@
 "use client";
 
-/** Morceaux interactifs de AG-02 — Onboarding. */
+/** Interactive pieces of AG-02 — Onboarding. */
 import { useState } from "react";
 import { useT } from "@/i18n/client";
 import { saveIdentity, inviteTeam } from "./actions";
 
-/** Pastilles de couleur d'accent du design (étape 1). */
+/** Accent color swatches from the design (step 1). */
 export const ACCENT_SWATCHES = ["#0B5F46", "#1D4ED8", "#6D28D9", "#C0342B", "#B45309"];
 
-/* ---------- Étape 1 — Identité ---------- */
+/* ---------- Step 1 — Identity ---------- */
 
 export function IdentityForm({
   initialName,
@@ -45,7 +45,7 @@ export function IdentityForm({
         />
       </label>
 
-      {/* Logo — dropzone informative */}
+      {/* Logo — informational dropzone */}
       <div className="flex items-center gap-3">
         <div
           className="flex items-center justify-center font-bold text-white"
@@ -68,7 +68,7 @@ export function IdentityForm({
         </div>
       </div>
 
-      {/* Pastilles accent */}
+      {/* Accent swatches */}
       <div>
         <p className="mb-2 text-[13px] font-medium">
           {t("app.settings.workspace.generalAccentLabel")}
@@ -95,7 +95,7 @@ export function IdentityForm({
         </div>
       </div>
 
-      {/* Aperçu portail factice */}
+      {/* Mock portal preview */}
       <div
         className="overflow-hidden border"
         style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--bg)" }}
@@ -104,7 +104,7 @@ export function IdentityForm({
           className="flex flex-col items-center gap-2.5 px-6 py-7 text-center"
           style={{ background: accent }}
         >
-          {/* L'aperçu montre le portail : c'est bien son titre, pas un doublon. */}
+          {/* The preview shows the portal: this really is its title, not a duplicate. */}
           <p className="text-[15px] font-semibold text-white">{t("home.title")}</p>
           <div
             className="w-full rounded-md bg-white px-3 py-2 text-left text-[12.5px]"
@@ -134,7 +134,7 @@ export function IdentityForm({
   );
 }
 
-/* ---------- Étape 2 — Copier l'adresse ---------- */
+/* ---------- Step 2 — Copy the address ---------- */
 
 export function CopyButton({ value, label }: { value: string; label?: string }) {
   const t = useT();
@@ -148,7 +148,7 @@ export function CopyButton({ value, label }: { value: string; label?: string }) 
           setCopied(true);
           setTimeout(() => setCopied(false), 1600);
         } catch {
-          /* presse-papiers indisponible */
+          /* clipboard unavailable */
         }
       }}
       className="shrink-0 rounded-md border px-3 text-[12.5px] font-medium"
@@ -164,7 +164,7 @@ export function CopyButton({ value, label }: { value: string; label?: string }) 
   );
 }
 
-/* ---------- Étape 3 — Équipe ---------- */
+/* ---------- Step 3 — Team ---------- */
 
 export function TeamInviteForm() {
   const t = useT();

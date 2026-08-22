@@ -17,7 +17,7 @@ type PortalConfig = {
   widget?: { enabled?: boolean; color?: string; position?: "right" | "left"; title?: string };
 };
 
-/** ST-09 — Deux formulaires (onglets Portail / Widget), fusionnés dans portalConfig. */
+/** ST-09 — Two forms (Portal / Widget tabs), merged into portalConfig. */
 export async function savePortalConfig(formData: FormData) {
   const { tenant } = await requireManager();
   const section = formData.get("section") === "widget" ? "widget" : "portal";
@@ -30,7 +30,7 @@ export async function savePortalConfig(formData: FormData) {
       ...config,
       portalEnabled: formData.get("portalEnabled") === "on",
       kbPublished: formData.get("kbPublished") === "on",
-      // « Masquer Propulsé par » — disponible à partir du plan Pro uniquement.
+      // "Hide Powered by" — available from the Pro plan only.
       hidePoweredBy: ent.multiBrand ? formData.get("hidePoweredBy") === "on" : false,
       kbVisibility: formData.get("kbVisibility") === "authenticated" ? "authenticated" : "public",
       contactAuth: formData.get("contactAuth") === "sso" ? "sso" : "magic_link",

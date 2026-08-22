@@ -3,7 +3,7 @@ import { Card, StatusPill } from "@/components/settings-page";
 import { getT, type Translate } from "@/i18n/server";
 import { runDiagnostics, type ProbeId, type ProbeStatus } from "@/lib/diagnostics";
 
-/** Pastille du design : warn s'affiche en attente, fail en danger (specs/02 § santé). */
+/** Design-system pill: warn shows as wait, fail as danger. */
 const PILL_TONE: Record<ProbeStatus, "ok" | "wait" | "dang"> = {
   ok: "ok",
   warn: "wait",
@@ -41,10 +41,10 @@ function RunButton({ label }: { label: string }) {
 }
 
 /**
- * ST-01 — carte « Santé de l'installation » : six sondes (base, email sortant
- * et entrant, stockage, files, chiffrement) exécutées au rendu quand `?diag=1`.
- * Éphémère : relancer = recharger la page. Owner/Admin uniquement (la page
- * filtre), détails d'erreur bruts assumés — ils décrivent l'infrastructure.
+ * ST-01 — "Installation health" card: six probes (database, outbound and
+ * inbound email, storage, queues, encryption) run at render time when `?diag=1`.
+ * Ephemeral: re-run = reload the page. Owner/Admin only (the page filters),
+ * raw error details are deliberate — they describe the infrastructure.
  */
 export async function DiagnosticsCard({ tenantId, run }: { tenantId: string; run: boolean }) {
   const t = await getT();

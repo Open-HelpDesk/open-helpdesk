@@ -9,7 +9,7 @@ import { getT, type Translate } from "@/i18n/server";
 
 const AUDIT_GRID = "160px 170px minmax(220px,1fr) 200px 120px";
 
-/** Actions destructives — affichées en --dang (l'action est stockée en français). */
+/** Destructive actions — rendered in --dang (the action is stored in French). */
 const DESTRUCTIVE =
   /supprim|révoqu|revoqu|désactiv|desactiv|purg|delete|remove|revoke|disable/i;
 
@@ -23,7 +23,7 @@ function actorTypeLabel(t: Translate, actorType: string): string {
   return labels[actorType] ?? actorType;
 }
 
-/** Chip de filtre / bouton du bandeau : h30, bordure --line, radius 6, 12.5 px. */
+/** Filter chip / banner button: h30, --line border, radius 6, 12.5 px. */
 const CHIP: React.CSSProperties = {
   height: 30,
   padding: "0 11px",
@@ -34,7 +34,7 @@ const CHIP: React.CSSProperties = {
   color: "var(--ink-2)",
 };
 
-/** « Aujourd'hui 14:02 », « Hier 17:48 », « 14 août 10:24 ». */
+/** "Today 14:02", "Yesterday 17:48", "14 Aug 10:24". */
 function dayTime(t: Translate, date: Date, now: Date = new Date()): string {
   const time = date.toLocaleTimeString(t.locale.tag, { hour: "2-digit", minute: "2-digit" });
   const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
@@ -44,7 +44,7 @@ function dayTime(t: Translate, date: Date, now: Date = new Date()): string {
   return `${t.fmt.dateShort(date)} ${time}`;
 }
 
-/** En-tête de table 11 px/700 sur fond --sunk, hauteur 34. */
+/** Table header 11 px/700 on a --sunk background, height 34. */
 function TableHead({ t }: { t: Translate }) {
   const columns = [
     t("app.settings.dev.colDate"),
@@ -74,9 +74,9 @@ function TableHead({ t }: { t: Translate }) {
 }
 
 /**
- * ST-12 — Audit log (1040 px). Verrouillé hors plan Pro (voile blur + carte PLAN
- * PRO, textes verbatim). Déverrouillé : filtres + table auditEvents réels, actions
- * destructives en rouge, état vide.
+ * ST-12 — Audit log (1040 px). Locked without the entitlement (blur veil + locked
+ * card, verbatim copy). Unlocked: filters + real auditEvents table, destructive
+ * actions in red, empty state.
  */
 export default async function AuditPage({
   searchParams,
@@ -150,7 +150,7 @@ export default async function AuditPage({
       {header}
 
       <div className="st-rise flex flex-col" style={{ gap: 14 }}>
-        {/* Filtres */}
+        {/* Filters */}
         <form className="flex flex-wrap items-center" style={{ gap: 7 }}>
           <AutoSubmitSelect
             name="actor"
@@ -249,7 +249,7 @@ export default async function AuditPage({
   );
 }
 
-/** Filtres + table factices floutés derrière le voile de l'état verrouillé. */
+/** Dummy filters + table blurred behind the locked-state veil. */
 function GhostTable({ t }: { t: Translate }) {
   return (
     <div className="flex flex-col" style={{ gap: 14 }}>

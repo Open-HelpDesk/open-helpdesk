@@ -5,14 +5,14 @@ import { canReadKb } from "@/lib/portal-config";
 import { searchArticles } from "@/lib/portal-data";
 import { getT } from "@/i18n/server";
 
-/** Résultats de recherche du centre d'aide (PT-01) — état vide verbatim de la maquette. */
+/** Help center search results (PT-01) — empty state verbatim from the mockup. */
 export default async function HelpSearchPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
   const t = await getT();
-  // ST-09 : base non publiée, ou réservée aux personnes connectées.
+  // ST-09: knowledge base not published, or restricted to signed-in people.
   if (!(await canReadKb(Boolean(await getPortalContact())))) notFound();
   const tenant = await getPortalTenant();
   const { q = "" } = await searchParams;

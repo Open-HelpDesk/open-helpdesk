@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * ST-10 — Encadré « Nouvelle clé créée — copiez-la maintenant » (bordure --acc-b,
- * fond --acc-t, clé complète en mono + bouton Copier accent) suivi de la barre de
- * création « + Créer une clé ». La clé complète n'est renvoyée qu'une seule fois
- * par la server action.
+ * ST-10 — "New key created — copy it now" callout (border --acc-b, background
+ * --acc-t, full key in mono + accented Copy button) followed by the
+ * "+ Create a key" creation bar. The full key is returned only once by the
+ * server action.
  */
 import { useActionState } from "react";
 import { CopyButton } from "@/components/settings-overlays";

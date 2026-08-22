@@ -10,7 +10,7 @@ import { sendTenantEmail, transportFor, verifyImapMailbox } from "@openhelpdesk/
 import { getT } from "@/i18n/server";
 import { requireManager } from "../guard";
 
-/** ST-03 — Ajout d'une adresse de réception (transfert ou IMAP, jamais « fournie »). */
+/** ST-03 — Adding a receiving address (forwarding or IMAP, never "provided"). */
 export async function addMailbox(formData: FormData) {
   const { tenant } = await requireManager();
   const address = String(formData.get("address") ?? "").trim().toLowerCase();
@@ -40,7 +40,7 @@ export async function addMailbox(formData: FormData) {
 export async function deleteMailbox(formData: FormData) {
   const { tenant } = await requireManager();
   const mailboxId = String(formData.get("mailboxId") ?? "");
-  // L'adresse fournie du workspace n'est pas supprimable.
+  // The workspace's provided address cannot be deleted.
   await db
     .delete(mailboxes)
     .where(
@@ -54,8 +54,8 @@ export async function deleteMailbox(formData: FormData) {
 }
 
 /**
- * ST-03 — Section Envoi : nom d'expéditeur + signature globale, persistés sur la
- * mailbox principale (adresse fournie, sinon la plus ancienne ; créée au besoin).
+ * ST-03 — Sending section: sender name + global signature, persisted on the
+ * primary mailbox (provided address, otherwise the oldest; created if needed).
  */
 export async function saveSending(formData: FormData) {
   const { tenant } = await requireManager();
@@ -67,13 +67,13 @@ export async function saveSending(formData: FormData) {
     .from(mailboxes)
     .where(eq(mailboxes.tenantId, tenant.id))
     .orderBy(asc(mailboxes.createdAt));
-  const principal = rows.find((m) => m.kind === "provided") ?? rows[0];
+  const primary = rows.find((m) => m.kind === "provided") ?? rows[0];
 
-  if (principal) {
+  if (primary) {
     await db
       .update(mailboxes)
       .set({ senderName, signatureHtml })
-      .where(eq(mailboxes.id, principal.id));
+      .where(eq(mailboxes.id, primary.id));
   } else {
     await db.insert(mailboxes).values({
       tenantId: tenant.id,
@@ -89,17 +89,17 @@ export async function saveSending(formData: FormData) {
   redirect("/app/settings/email?saved=2");
 }
 
-/** « Revérifier » — la vérification DNS réelle arrive avec le canal email managé. */
+/** "Recheck" — real DNS verification comes with the managed email channel. */
 export async function recheckDns() {
   await requireManager();
   revalidatePath("/app/settings/email");
 }
 
-/* ---------- Configuration du fournisseur d'envoi (par workspace) ---------- */
+/* ---------- Sending provider configuration (per workspace) ---------- */
 
 const PROVIDERS = new Set(["console", "smtp", "resend", "brevo", "mailjet"]);
 
-/** Enregistre le fournisseur et ses identifiants (secrets chiffrés au repos). */
+/** Saves the provider and its credentials (secrets encrypted at rest). */
 export async function saveEmailProvider(formData: FormData) {
   const { tenant, agent } = await requireManager();
   const t = await getT();
@@ -114,7 +114,7 @@ export async function saveEmailProvider(formData: FormData) {
     .from(emailSettings)
     .where(eq(emailSettings.tenantId, tenant.id));
 
-  // Secrets : conservés si les champs sont laissés vides (ils ne sont jamais réaffichés).
+  // Secrets: kept if the fields are left empty (they are never displayed again).
   let encryptedSecrets = existing?.encryptedSecrets ?? null;
   let hint = existing?.secretHint ?? null;
   if (secret) {
@@ -127,7 +127,7 @@ export async function saveEmailProvider(formData: FormData) {
     encryptedSecrets = encryptSecrets(secrets);
     hint = secretHint(secret);
   } else if (provider === "mailjet" && secret2 && encryptedSecrets) {
-    // Seule la clé privée change.
+    // Only the private key changes.
     const current = decryptSecrets(encryptedSecrets);
     encryptedSecrets = encryptSecrets({ ...current, apiSecret: secret2 });
   }
@@ -144,7 +144,7 @@ export async function saveEmailProvider(formData: FormData) {
     smtpUser: String(formData.get("smtpUser") ?? "").trim() || null,
     encryptedSecrets,
     secretHint: hint,
-    // Toute modification de configuration invalide le dernier test.
+    // Any configuration change invalidates the last test.
     testStatus: "untested" as const,
     testError: null,
     updatedAt: new Date(),
@@ -168,7 +168,7 @@ export async function saveEmailProvider(formData: FormData) {
   redirect("/app/settings/email?saved=1");
 }
 
-/** Test de connexion : vérifie la configuration enregistrée sans envoyer d'email. */
+/** Connection test: checks the saved configuration without sending an email. */
 export async function testEmailConnection() {
   const { tenant } = await requireManager();
   const t = await getT();
@@ -204,7 +204,7 @@ export async function testEmailConnection() {
   revalidatePath("/app/settings/email");
 }
 
-/** Envoi réel d'un email de test à l'agent connecté — apparaît dans le journal. */
+/** Real test email sent to the signed-in agent — shows up in the log. */
 export async function sendEmailTest() {
   const { tenant, agent } = await requireManager();
   const t = await getT();
@@ -242,9 +242,9 @@ export async function sendEmailTest() {
 }
 
 
-/* ---------- Adresses : création/édition unifiée (transfert + IMAP) ---------- */
+/* ---------- Addresses: unified create/edit (forwarding + IMAP) ---------- */
 
-/** Crée ou met à jour une adresse de réception. Le mot de passe IMAP est chiffré. */
+/** Creates or updates a receiving address. The IMAP password is encrypted. */
 export async function saveMailbox(formData: FormData) {
   const { tenant } = await requireManager();
   const mailboxId = String(formData.get("mailboxId") ?? "");
@@ -259,7 +259,7 @@ export async function saveMailbox(formData: FormData) {
         .where(and(eq(mailboxes.tenantId, tenant.id), eq(mailboxes.id, mailboxId)))
     : [];
   if (mailboxId && !existing) return;
-  if (existing?.kind === "provided") return; // l'adresse fournie ne se modifie pas ici
+  if (existing?.kind === "provided") return; // the provided address is not edited here
 
   const teamRaw = String(formData.get("defaultTeamId") ?? "");
   let defaultTeamId: string | null = null;
@@ -307,7 +307,7 @@ export async function saveMailbox(formData: FormData) {
     defaultTeamId,
     formId,
     ...imap,
-    // Un changement de configuration remet la vérification à zéro.
+    // A configuration change resets the verification.
     verified: false,
     syncError: null,
   };
@@ -325,7 +325,7 @@ export async function saveMailbox(formData: FormData) {
   redirect("/app/settings/email?tab=reception&saved=1");
 }
 
-/** Bouton « Tester » d'une adresse IMAP : connexion réelle, statut mis à jour. */
+/** "Test" button on an IMAP address: real connection, status updated. */
 export async function verifyMailbox(formData: FormData) {
   const { tenant } = await requireManager();
   const mailboxId = String(formData.get("mailboxId") ?? "");

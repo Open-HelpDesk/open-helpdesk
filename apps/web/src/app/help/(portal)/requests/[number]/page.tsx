@@ -17,8 +17,8 @@ function statusInk(status: string): string {
 }
 
 /**
- * PT-06 — Détail d'une demande : fil à rail d'avatars (client panel / agent teinté),
- * zone de réponse, bloc CSAT si résolue, sidebar méta + résoudre/rouvrir.
+ * PT-06 — Request detail: thread with an avatar rail (customer panel / tinted agent),
+ * reply area, CSAT block when resolved, meta sidebar + resolve/reopen.
  */
 export default async function RequestPage({ params }: { params: Promise<{ number: string }> }) {
   const t = await getT();
@@ -57,9 +57,9 @@ export default async function RequestPage({ params }: { params: Promise<{ number
             {ticket.subject}
           </h1>
 
-          {/* Fil — messages publics uniquement. L'avatar sort de la carte et se
-              relie au message suivant par un rail : la conversation se suit
-              verticalement au lieu d'empiler des cartes indépendantes. */}
+          {/* Thread — public messages only. The avatar sits outside the card and
+              is linked to the next message by a rail: the conversation is followed
+              vertically instead of stacking independent cards. */}
           <div className="flex flex-col">
             {messages.map((m) => {
               const isAgent = m.authorType === "agent";
@@ -147,7 +147,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
             })}
           </div>
 
-          {/* Bloc CSAT après résolution */}
+          {/* CSAT block after resolution */}
           {showCsat && (
             <div
               className="flex flex-col gap-3.5 rounded-2xl border p-[22px]"
@@ -195,7 +195,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
             </div>
           )}
 
-          {/* Zone de réponse */}
+          {/* Reply area */}
           {canReply && (
             <form action={replyToRequest}>
               <input type="hidden" name="number" value={ticket.number} />
@@ -233,7 +233,7 @@ export default async function RequestPage({ params }: { params: Promise<{ number
           )}
         </div>
 
-        {/* Sidebar méta */}
+        {/* Meta sidebar */}
         <aside className="flex flex-col gap-3.5 self-start">
           <div
             className="overflow-hidden rounded-2xl border"

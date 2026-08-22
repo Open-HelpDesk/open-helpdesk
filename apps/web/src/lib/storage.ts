@@ -1,7 +1,7 @@
 /**
- * Stockage S3-compatible (MinIO en local, specs/01 § 3) : pièces jointes,
- * images d'articles, logo et favicon du workspace.
- * Limite 10 Mo par fichier (specs PT-04). Clés : {tenantId}/{messageId}/{uuid}-{nom}.
+ * S3-compatible storage (MinIO locally): attachments, article
+ * images, workspace logo and favicon.
+ * 10 MB limit per file (specs PT-04). Keys: {tenantId}/{messageId}/{uuid}-{name}.
  */
 import { randomUUID } from "node:crypto";
 import {
@@ -37,25 +37,25 @@ async function ensureBucket() {
     try {
       await s3.send(new CreateBucketCommand({ Bucket: BUCKET }));
     } catch {
-      /* course avec une autre instance — HeadBucket revalidera */
+      /* race with another instance — HeadBucket will revalidate */
     }
   }
   bucketReady = true;
 }
 
 /**
- * Sonde du diagnostic (ST-01) : HeadBucket frais (sans le cache bucketReady),
- * création du bucket s'il n'existe pas encore — sur une installation vierge,
- * l'app ne le crée qu'au premier téléversement —, puis écriture et suppression
- * d'un objet témoin d'un octet, hors préfixes métier. Toute exception remonte
- * au diagnostic, qui l'affiche.
+ * Diagnostics probe (ST-01): fresh HeadBucket (without the bucketReady cache),
+ * creation of the bucket if it does not exist yet — on a blank install, the app
+ * only creates it on the first upload —, then writing and deleting a one-byte
+ * witness object, outside the business prefixes. Any exception bubbles up to the
+ * diagnostics, which displays it.
  */
 export async function probeStorage(): Promise<{ bucket: string }> {
   try {
     await s3.send(new HeadBucketCommand({ Bucket: BUCKET }));
   } catch {
-    // Bucket absent ou injoignable : CreateBucket tranche — il réussit sur une
-    // instance vierge et échoue avec la vraie erreur si S3 est en panne.
+    // Bucket missing or unreachable: CreateBucket settles it — it succeeds on a
+    // blank instance and fails with the real error if S3 is down.
     await s3.send(new CreateBucketCommand({ Bucket: BUCKET }));
   }
   const key = `diagnostics/probe-${randomUUID()}`;
@@ -65,12 +65,12 @@ export async function probeStorage(): Promise<{ bucket: string }> {
 }
 
 function sanitizeFilename(name: string): string {
-  return name.replace(/[^\w.\-àâäéèêëîïôöùûüç ]/gi, "_").slice(0, 120) || "fichier";
+  return name.replace(/[^\w.\-àâäéèêëîïôöùûüç ]/gi, "_").slice(0, 120) || "file";
 }
 
 /**
- * Enregistre les fichiers d'un FormData (champ `files`) : objet S3 + ligne attachments.
- * Les fichiers vides ou trop lourds sont ignorés silencieusement (l'UI affiche la limite).
+ * Saves the files of a FormData (`files` field): S3 object + attachments row.
+ * Empty or oversized files are silently ignored (the UI displays the limit).
  */
 export async function saveUploadedFiles(
   tenantId: string,
@@ -112,14 +112,14 @@ export async function getAttachmentBody(storageKey: string) {
   return result.Body;
 }
 
-/* ---------- Images des articles de la base de connaissances ---------- */
+/* ---------- Knowledge base article images ---------- */
 
 const KB_PREFIX = "kb";
 
 /**
- * Range une image d'article et renvoie son URL de lecture. La clé porte le
- * tenant : c'est ce qui permet à la route publique de refuser une image
- * appartenant à un autre workspace.
+ * Stores an article image and returns its read URL. The key carries the tenant:
+ * that is what lets the public route refuse an image belonging to another
+ * workspace.
  */
 export async function saveKbImage(tenantId: string, file: File): Promise<string> {
   await ensureBucket();
@@ -148,29 +148,29 @@ export async function getKbImageBody(relativeKey: string) {
   }
 }
 
-/* ---------- Logo et favicon du workspace (ST-01) ---------- */
+/* ---------- Workspace logo and favicon (ST-01) ---------- */
 
 const BRAND_PREFIX = "brand";
 
 /**
- * Un logo tient en quelques dizaines de kilo-octets et un favicon en quelques
- * centaines d'octets : deux mégaoctets sont déjà larges, et une limite basse
- * évite qu'une photo déposée par erreur devienne l'en-tête du portail.
+ * A logo fits in a few tens of kilobytes and a favicon in a few hundred bytes:
+ * two megabytes is already ample, and a low cap keeps a photo dropped by
+ * mistake from becoming the portal's header.
  */
 export const MAX_BRAND_BYTES = 2 * 1024 * 1024;
 
 export type BrandAssetKind = "logo" | "favicon";
 
 /**
- * Range un logo ou un favicon et renvoie son URL de lecture.
+ * Stores a logo or a favicon and returns its read URL.
  *
- * Ces objets ne passent pas par le préfixe des images d'articles, parce qu'ils
- * n'ont pas la même règle de visibilité : le logo du portail doit se charger
- * même quand la base de connaissances n'est pas publiée, et le favicon même
- * dans l'espace agent, qui n'a rien à voir avec la base.
+ * These objects do not go through the article images prefix, because they do not
+ * have the same visibility rule: the portal logo must load even when the
+ * knowledge base is not published, and the favicon even in the agent space,
+ * which has nothing to do with the knowledge base.
  *
- * Le nom du fichier déposé est conservé après l'UUID : c'est lui qui porte
- * l'extension, dont la route de lecture déduit le type MIME.
+ * The name of the uploaded file is kept after the UUID: it is the part carrying
+ * the extension, from which the read route infers the MIME type.
  */
 export async function saveBrandAsset(
   tenantId: string,
@@ -204,11 +204,11 @@ export async function getBrandAssetBody(relativeKey: string) {
 }
 
 /**
- * Supprime l'objet derrière une URL `/api/brand/…`.
+ * Deletes the object behind an `/api/brand/…` URL.
  *
- * Appelée quand on retire un logo : sans elle, chaque remplacement laisserait
- * un objet orphelin dans le bucket, que plus aucune URL ne désigne. L'échec est
- * avalé — un objet resté en trop ne doit pas empêcher le réglage d'être retiré.
+ * Called when a logo is removed: without it, every replacement would leave an
+ * orphan object in the bucket that no URL points to any more. The failure is
+ * swallowed — a leftover object must not prevent the setting from being removed.
  */
 export async function deleteBrandAsset(url: string): Promise<void> {
   const relative = url.startsWith("/api/brand/") ? url.slice("/api/brand/".length) : null;
@@ -219,6 +219,6 @@ export async function deleteBrandAsset(url: string): Promise<void> {
       new DeleteObjectCommand({ Bucket: BUCKET, Key: `${BRAND_PREFIX}/${relative}` }),
     );
   } catch {
-    /* orphelin toléré : le réglage compte plus que le ménage */
+    /* orphan tolerated: the setting matters more than the housekeeping */
   }
 }

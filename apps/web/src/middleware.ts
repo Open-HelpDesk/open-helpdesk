@@ -1,12 +1,12 @@
 /**
- * Résolution multi-tenant par sous-domaine — specs/01 § 4.
+ * Multi-tenant resolution by subdomain.
  *
- * {slug}.$BASE_DOMAIN            → espace agent + admin + portail du tenant "slug"
- * $BASE_DOMAIN (domaine nu)      → DEFAULT_TENANT_SLUG (auto-hébergé mono-tenant), sinon 404
- * sous-domaine réservé           → 404 (www, console, api, status, docs)
- * domaine custom (EE)            → résolution en base, hors Lot 0
+ * {slug}.$BASE_DOMAIN            → agent space + admin + portal of tenant "slug"
+ * $BASE_DOMAIN (bare domain)     → DEFAULT_TENANT_SLUG (single-tenant self-hosted), otherwise 404
+ * reserved subdomain             → 404 (www, console, api, status, docs)
+ * custom domain (EE)             → resolution in the database, outside Lot 0
  *
- * En dev : acme.localhost:3000 fonctionne sans configuration DNS.
+ * In dev: acme.localhost:3000 works with no DNS configuration.
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { RESERVED_SUBDOMAINS } from "@openhelpdesk/config";
@@ -19,7 +19,7 @@ function resolveTenantSlug(host: string): string | null {
     return process.env.DEFAULT_TENANT_SLUG ?? null;
   }
   if (!h.endsWith(`.${BASE_DOMAIN}`)) {
-    // Domaine custom (fonctionnalité EE) : nécessitera une résolution en base.
+    // Custom domain (EE feature): will require a resolution in the database.
     return null;
   }
   const slug = h.slice(0, -(BASE_DOMAIN.length + 1));
@@ -29,8 +29,8 @@ function resolveTenantSlug(host: string): string | null {
 }
 
 export function middleware(request: NextRequest) {
-  // Les webhooks d'ingestion ne portent pas de tenant dans l'hôte : le tenant
-  // est résolu par l'adresse destinataire. Ne pas exiger un sous-domaine ici.
+  // Ingestion webhooks carry no tenant in the host: the tenant is resolved from
+  // the recipient address. Do not require a subdomain here.
   if (request.nextUrl.pathname.startsWith("/api/ingress/")) {
     return NextResponse.next();
   }
@@ -39,12 +39,12 @@ export function middleware(request: NextRequest) {
   const slug = resolveTenantSlug(host);
 
   if (!slug) {
-    // Le seul message du produit qui ne peut PAS être traduit, et ce n'est pas
-    // un oubli : la langue vient du tenant, et c'est précisément le tenant qu'on
-    // n'a pas su résoudre. Il s'adresse d'ailleurs à qui héberge l'instance, pas
-    // à un utilisateur — d'où la mention de la variable d'environnement.
-    // En cloud (SIGNUP_URL défini), la page invite à créer son workspace ;
-    // le texte reste en anglais : la langue vient du tenant, non résolu ici.
+    // The only product message that CANNOT be translated, and it is not an
+    // oversight: the language comes from the tenant, and the tenant is precisely
+    // what could not be resolved. Besides, it addresses whoever hosts the
+    // instance, not a user — hence the mention of the environment variable.
+    // In cloud (SIGNUP_URL defined), the page invites creating a workspace;
+    // the text stays in English: the language comes from the tenant, unresolved here.
     const signupUrl = process.env.SIGNUP_URL;
     if (signupUrl) {
       return new NextResponse(
@@ -57,14 +57,14 @@ export function middleware(request: NextRequest) {
       );
     }
     return new NextResponse(
-      "Workspace introuvable. Vérifiez l'adresse, ou définissez DEFAULT_TENANT_SLUG en auto-hébergé.",
+      "Workspace not found. Check the address, or set DEFAULT_TENANT_SLUG when self-hosting.",
       { status: 404 },
     );
   }
 
   const headers = new Headers(request.headers);
   headers.set("x-tenant-slug", slug);
-  // Les layouts serveur n'ont pas accès au chemin : la suspension (ST-11) en a besoin.
+  // Server layouts have no access to the path: suspension (ST-11) needs it.
   headers.set("x-pathname", request.nextUrl.pathname);
   return NextResponse.next({ request: { headers } });
 }

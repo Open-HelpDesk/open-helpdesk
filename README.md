@@ -1,16 +1,16 @@
 # Open HelpDesk
 
 **Open-core helpdesk you can actually self-host.** Ticketing, email channel,
-automations, SLA, CSAT, knowledge base and customer portal — AGPL-3.0 core,
-commercial features in [`ee/`](ee/), and a managed cloud on the way.
+automations, SLA, CSAT, knowledge base and customer portal — an AGPL-3.0 core,
+with commercially licensed features in [`ee/`](ee/).
 
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 [![CI](https://github.com/open-helpdesk/open-helpdesk/actions/workflows/ci.yml/badge.svg)](https://github.com/open-helpdesk/open-helpdesk/actions/workflows/ci.yml)
 [![Status: Alpha](https://img.shields.io/badge/status-alpha-orange)](CHANGELOG.md)
 
-> **Alpha.** The core product (roadmap lots 0–3) works end-to-end and is
-> covered by a Playwright smoke suite, but APIs, schema and screens still move
-> fast. Not production-advice yet — perfect time to try it and open issues.
+> **Alpha.** The core product (roadmap milestones 0–3) works end-to-end and
+> is covered by a Playwright smoke suite, but APIs, schema and screens still
+> move fast. Not production-ready yet — a good time to try it and open issues.
 
 ![Ticket view](.github/assets/ticket.png)
 
@@ -59,18 +59,17 @@ pnpm dev
 
 Then open http://acme.localhost:3000. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Editions & licensing
+## Licensing
 
-| | Self-hosted (AGPL-3.0) | Cloud / Enterprise |
-|---|---|---|
-| Ticketing, email, automations, SLA, CSAT, KB, portal, reports, API | ✔ unlimited seats | ✔ |
-| Agent SSO (SAML/SCIM), customer-organization SSO, audit log | — | `ee/`, commercial license |
-| AI triage & reply suggestions, custom domains, multi-brand | — | planned |
-| Hosting, backups, support | your infra | managed |
+Open HelpDesk is open-core, and the licence boundary is the `ee/` directory:
 
-Everything outside [`ee/`](ee/) is [AGPL-3.0](LICENSE). The `ee/` directory is
-source-visible but requires a commercial agreement for production use — see
-[`ee/LICENSE`](ee/LICENSE).
+- **Core — [AGPL-3.0](LICENSE).** Everything outside [`ee/`](ee/): ticketing,
+  email channel, automations, SLA, CSAT, knowledge base, customer portal,
+  reports and API, with unlimited seats.
+- **`ee/` — commercial licence.** Agent SSO (SAML/SCIM), delegated
+  customer-organization SSO and the advanced audit log. The source is visible
+  and free to use in development and testing, but production use requires a
+  commercial agreement — see [`ee/LICENSE`](ee/LICENSE).
 
 ## Documentation
 
@@ -78,16 +77,14 @@ English documentation is planned. In the meantime, [CONTRIBUTING.md](CONTRIBUTIN
 covers the development setup, and the diagnostics card (Settings → General)
 covers the installation.
 
-Une version française de ce README est disponible : [README.fr.md](README.fr.md).
-
 ## Roadmap
 
 | | |
 |---|---|
-| ✅ Lots 0–3 | Core ticketing, email, automations/SLA/CSAT, portal & KB — this release |
-| 🔜 Lot 4 | Managed cloud (signup, provisioning, billing) |
-| 🔜 Lot 5 | Enterprise identity (SAML/SCIM runtime, delegated customer SSO), AI |
-| 🔜 Lot 6 | Public website & docs |
+| ✅ Milestones 0–3 | Core ticketing, email, automations/SLA/CSAT, portal & KB — this release |
+| 🔜 Next | Enterprise identity — SAML/SCIM runtime, delegated customer-organization SSO |
+| 🔜 Next | AI — triage, reply suggestions, thread summaries |
+| 🔜 Later | Custom domains, multi-brand, public documentation |
 
 ## Security
 

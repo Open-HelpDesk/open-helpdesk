@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const hu: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const hu: Dictionary = {
     "A szolgáltatás átmenetileg szünetel: a böngészés továbbra is elérhető, új kérések nem adhatók be.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Súgóközpont",
   "home.title": "Miben segíthetünk?",
   "home.subtitle":
@@ -25,7 +25,7 @@ export const hu: Dictionary = {
   "home.ctaTitle": "Nem találja, amit keres?",
   "home.ctaBody": "Csapatunk munkaidőben átlagosan 34 perc alatt válaszol.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Keresés a súgóban…",
   "search.emptyTitle": "Nincs találat a következőre: „{query}”",
   "search.emptyBody":
@@ -33,7 +33,7 @@ export const hu: Dictionary = {
   "search.breadcrumb": "Keresés",
   "search.resultsTitle": "Találatok a következőre: „{query}”",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Súgó",
   "category.otherCategories": "További kategóriák",
   "category.otherArticles": "További cikkek",
@@ -55,7 +55,7 @@ export const hu: Dictionary = {
   "vote.prefill": "Előre kitöltött kérés létrehozása",
   "vote.prefillSubject": "A(z) „{title}” cikkel kapcsolatban",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Kérés beküldése",
   "newRequest.subtitle": "Írja le a helyzetét. 4 munkaórán belül válaszolunk.",
   "newRequest.type": "A kérés típusa",
@@ -92,7 +92,7 @@ export const hu: Dictionary = {
   "submitted.track": "Kérésem követése",
   "submitted.backToHelp": "Vissza a súgóba",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "Kéréseim",
   "requests.new": "Új kérés",
   "requests.tabOpen": "Nyitott",
@@ -104,13 +104,13 @@ export const hu: Dictionary = {
     "Támogatási kérései itt jelennek meg, az állapotukkal és a levelezés előzményeivel együtt.",
   "requests.awaitingReply": "Válaszra várunk",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "Folyamatban",
   "status.waiting": "Az Ön válaszára várunk",
   "status.resolved": "Megoldva",
   "status.closed": "Lezárva",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Megoldva {when}",
   "activity.closed": "Lezárva {when}",
   "activity.waiting": "Már {since} várunk a válaszára",
@@ -118,13 +118,13 @@ export const hu: Dictionary = {
   "activity.youReplied": "Ön válaszolt {when}",
   "activity.created": "Létrehozva {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": { one: "{count} perce", other: "{count} perce" },
   "since.hours": { one: "{count} órája", other: "{count} órája" },
   "since.days": { one: "{count} napja", other: "{count} napja" },
   "since.date": "{date} óta",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Ön",
   "request.team": "A csapat",
   "request.agentAuthor": "{name} — {tenant}",
@@ -141,7 +141,7 @@ export const hu: Dictionary = {
   "request.markSolved": "Megjelölés megoldottként",
   "request.reopen": "Kérés újranyitása",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Kérései követése",
   "login.magicIntro":
     "Adja meg az e-mail-címét: küldünk egy bejelentkezési hivatkozást. Nem kell jelszót megjegyeznie.",
@@ -156,7 +156,15 @@ export const hu: Dictionary = {
   "login.expired": "Ez a hivatkozás lejárt vagy érvénytelen. Kérjen újat.",
   "login.footer": "Még nincs kérése? A fiókja automatikusan létrejön az első beküldéskor.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Bejelentkezési hivatkozása — {workspace}",
+  "login.emailBody":
+    "Tisztelt Ügyfelünk!\n\nA kéréseit az alábbi hivatkozásra kattintva érheti el (15 percig érvényes):\n{url}\n\nHa nem Ön kérte ezt a hivatkozást, hagyja figyelmen kívül ezt az e-mailt.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Ön ennek a szervezetnek az adminisztrátora. Az itt megadott beállítások a(z) {org} azon munkatársára érvényesek, aki a(z) {tenant} támogatását használja.",
     other: "Ön ennek a szervezetnek az adminisztrátora. Az itt megadott beállítások a(z) {org} azon {count} munkatársára érvényesek, akik a(z) {tenant} támogatását használják.",
@@ -241,7 +249,7 @@ export const hu: Dictionary = {
   "members.note":
     "A munkatársak automatikusan megjelennek az első bejelentkezésükkor vagy az első kérésükkor. Kijelölhet egy második adminisztrátort is, hogy ne Ön legyen az egyetlen kapcsolattartó.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Segítségre van szüksége?",
   "widget.close": "Bezárás",
   "widget.messageLabel": "Az Ön üzenete",
@@ -262,7 +270,7 @@ export const hu: Dictionary = {
   "csatPage.doneTitle": "Köszönjük!",
   "csatPage.doneBody": "Megjegyzését továbbítottuk a csapatnak.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Beérkezett",
@@ -275,7 +283,7 @@ export const hu: Dictionary = {
   "app.shell.suspendedTitle": "Ez a workspace fel van függesztve",
   "app.shell.suspendedText": "Forduljon a rendszergazdához a hozzáférés visszaállításához.",
   "app.shell.suspendedOwnerText":
-    "Válasszon csomagot, vagy frissítse fizetési módját a workspace újraaktiválásához.",
+    "Rendezze az előfizetést, vagy frissítse fizetési módját a workspace újraaktiválásához.",
   "app.shell.suspendedBillingCta": "Előfizetés és számlázás megnyitása",
   "app.shell.myTickets": "Jegyeim",
   "app.shell.newTicket": "Új jegy",
@@ -658,7 +666,7 @@ export const hu: Dictionary = {
   "app.reports.columnAgent": "Ügyintéző",
   "app.reports.columnFirstReply": "Első válasz",
   "app.reports.customReports": "Egyéni jelentések",
-  "app.reports.enterprisePlanBadge": "ENTERPRISE CSOMAG",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Felfedezés",
   "app.reports.chartDailyAria": "{labelA} és {labelB} naponta",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -682,8 +690,11 @@ export const hu: Dictionary = {
   "app.settings.shell.saved": "✓ Mentve",
   "app.settings.shell.cancel": "Mégse",
   "app.settings.shell.save": "Mentés",
-  "app.settings.shell.planEnterprise": "ENTERPRISE CSOMAG",
-  "app.settings.shell.upgradeToEnterprise": "Váltás a Enterprise csomagra",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Bezárás",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Előfizetés kezelése",
   "app.settings.shell.eeSelfHostedTitle": "Az Enterprise Edition funkciója",
   "app.settings.shell.eeSelfHostedText":
     "Ez a funkció a kereskedelmi licenc hatálya alá tartozik (a tároló ee/ könyvtára), és nem része a saját üzemeltetésű nyílt forráskódú kiadásnak.",
@@ -857,10 +868,11 @@ export const hu: Dictionary = {
   "app.settings.sso.agentTitle": "Ügyintézők SSO-ja",
   "app.settings.sso.agentSubtitle":
     "SAML 2.0 egyszeri bejelentkezés és SCIM-alapú kiosztás a támogatási csapat számára.",
-  "app.settings.sso.agentLockedTitle": "Az ügyintézők SSO-ja csak a Enterprise csomagban érhető el",
+  "app.settings.sso.agentLockedTitle": "Az ügyintézők SSO-ja az Enterprise Edition kiadás része",
   "app.settings.sso.agentLockedText":
     "Kapcsolja össze SAML 2.0 identitásszolgáltatóját, ossza ki ügyintézőit SCIM-en keresztül, és tegye kötelezővé az egyszeri bejelentkezést az egész csapatnak.",
-  "app.settings.sso.agentEnterpriseOnly": "Az ügyintézők SSO-ja csak a Enterprise csomagban érhető el.",
+  "app.settings.sso.agentEnterpriseOnly":
+    "Az ügyintézők SSO-ja az Enterprise Edition kiadás része.",
   "app.settings.sso.idpOther": "Egyéb (általános SAML)",
   "app.settings.sso.samlToggleLabel": "SAML 2.0 egyszeri bejelentkezés bekapcsolása",
   "app.settings.sso.samlHeading": "SAML 2.0 egyszeri bejelentkezés",
@@ -949,11 +961,11 @@ export const hu: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Minden ügyfélszervezet a portálról kapcsolja össze a saját identitásszolgáltatóját. Itt Ön az egész állományt felügyeli.",
   "app.settings.sso.customerLockedTitle":
-    "Az ügyfélszervezetek SSO-ja csak a Enterprise csomagban érhető el",
+    "Az ügyfélszervezetek SSO-ja az Enterprise Edition kiadás része",
   "app.settings.sso.customerLockedText":
     "Hagyja, hogy minden ügyfélszervezet a saját identitásszolgáltatóját (SAML vagy OIDC) kapcsolja be, az egész állományt pedig erről a képernyőről felügyelje.",
   "app.settings.sso.customerEnterpriseOnly":
-    "Az ügyfélszervezetek SSO-ja csak a Enterprise csomagban érhető el.",
+    "Az ügyfélszervezetek SSO-ja az Enterprise Edition kiadás része.",
   "app.settings.sso.statusActive": "Aktív",
   "app.settings.sso.statusPending": "Ellenőrzésre vár",
   "app.settings.sso.statusError": "Hiba",
@@ -1112,7 +1124,7 @@ export const hu: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "A tudásbázis közzétéve",
   "app.settings.portal.kbPublishedHint": "A közzétett cikkek bejelentkezés nélkül is láthatók.",
   "app.settings.portal.hidePoweredByLabel": "A „Működteti: Open HelpDesk” felirat elrejtése",
-  "app.settings.portal.hidePoweredByHint": "A Enterprise csomagtól érhető el.",
+  "app.settings.portal.hidePoweredByHint": "Az Enterprise Edition kiadással érhető el.",
   "app.settings.portal.kbVisibilityLabel": "A tudásbázis láthatósága",
   "app.settings.portal.kbVisibilityPublic": "Nyilvános",
   "app.settings.portal.kbVisibilityAuthenticated": "Bejelentkezés után",
@@ -1173,8 +1185,8 @@ export const hu: Dictionary = {
   "app.settings.workspace.generalTitle": "Általános és arculat",
   "app.settings.workspace.generalSubtitle":
     "A munkaterület azonossága, nyelve, időzónája és a jegyek számozása.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "A törlést elutasítottuk — az ütemezett törlés a cloud változatban érhető el.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "A törlést elutasítottuk — az ütemezett törléshez control plane szükséges.",
   "app.settings.workspace.generalIdentity": "Azonosság",
   "app.settings.workspace.generalNameLabel": "A munkaterület neve",
   "app.settings.workspace.generalLogoLabel": "Logó",
@@ -1239,7 +1251,7 @@ export const hu: Dictionary = {
     other: "{count} / {quota} licenc használatban — elérte a korlátot",
   },
   "app.settings.workspace.seatsAddHint": "Adjon hozzá licenceket új ügyintézők meghívásához.",
-  "app.settings.workspace.seatsFreeHint": "A Viewer szerepkör ingyenes és korlátlan.",
+  "app.settings.workspace.seatsFreeHint": "A Viewer szerepkör nem foglal licencet és korlátlan.",
   "app.settings.workspace.seatsAddAction": "Licencek hozzáadása",
   "app.settings.workspace.seatsManage": "Kezelés",
   "app.settings.workspace.seatLimitReached":
@@ -1321,8 +1333,8 @@ export const hu: Dictionary = {
   "app.settings.workspace.save": "Mentés",
   "app.settings.workspace.billingTitle": "Előfizetés és számlázás",
   "app.settings.workspace.billingSubtitle":
-    "Csomag, licencek, kvóták, fizetési mód és számlatörténet.",
-  "app.settings.workspace.selfHosted": "SAJÁT ÜZEMELTETÉS",
+    "Előfizetés, licencek, kvóták, fizetési mód és számlatörténet.",
+  "app.settings.workspace.subscriptionNone": "Nincs előfizetés",
   "app.settings.workspace.trialBadge": "PRÓBA",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
@@ -1333,10 +1345,9 @@ export const hu: Dictionary = {
     one: "havonta · {count} licenc benne van",
     other: "havonta · {count} licenc benne van",
   },
-  "app.settings.workspace.billingNoDue":
-    "Ezen a példányon nincs fizetési kötelezettség — a számlázást a cloud változat kezeli.",
-  "app.settings.workspace.cloudOnly": "A cloud változatban érhető el",
-  "app.settings.workspace.changePlan": "Csomagváltás",
+  "app.settings.workspace.billingNoDue": "Jelenleg nincs fizetési kötelezettség.",
+  "app.settings.workspace.requiresControlPlane": "Control plane szükséges",
+  "app.settings.workspace.changeSubscription": "Előfizetés módosítása",
   "app.settings.workspace.manageSeats": "Licencek kezelése",
   "app.settings.workspace.usageTitle": "A hónap felhasználása",
   "app.settings.workspace.quotaSeats": "Licencek",
@@ -1348,8 +1359,7 @@ export const hu: Dictionary = {
   "app.settings.workspace.colNumber": "Sorszám",
   "app.settings.workspace.colPeriod": "Időszak",
   "app.settings.workspace.colAmount": "Összeg",
-  "app.settings.workspace.invoicesEmpty":
-    "Nincs számla — a számlák a cloud változatban jelennek meg itt.",
+  "app.settings.workspace.invoicesEmpty": "Még nincs számla.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Mentve",
@@ -1422,19 +1432,19 @@ export const hu: Dictionary = {
   "app.settings.rules.typeFile": "Fájl",
   "app.settings.rules.typeSelectLong": "Legördülő lista",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
-     tables partagées de lib/format.ts (app.status.*, app.priority.*,
-     app.channel.*), et les libellés condField* s'accordent avec elles. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     Statuses, priorities and channels are NOT repeated here: they come from the
+     shared tables in lib/format.ts (app.status.*, app.priority.*,
+     app.channel.*), and the condField* labels agree with them. */
 
-  /* Types de champs personnalisés (ST-04) ; « Szöveg » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Szöveg” is typeText, above. */
   "app.settings.rules.typeSelect": "Lista",
   "app.settings.rules.typeMultiSelect": "Többszörös választás",
   "app.settings.rules.typeDate": "Dátum",
   "app.settings.rules.typeNumber": "Szám",
   "app.settings.rules.typeCheckbox": "Jelölőnégyzet",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Esemény",
   "app.settings.rules.condFieldStatus": "Állapot",
   "app.settings.rules.condFieldPriority": "Prioritás",
@@ -1448,10 +1458,10 @@ export const hu: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Létrehozás óta eltelt órák",
   "app.settings.rules.condFieldHoursUpdated": "Frissítés óta eltelt órák",
 
-  /* Opérateurs ; les deux derniers restent des symboles. Le hongrois distingue
-     le contenu d'un texte (« tartalmazza », pour le sujet) de l'appartenance à
-     une liste (« között van », pour les étiquettes) : les deux opérateurs ne se
-     rencontrent jamais dans le même menu. */
+  /* Operators; the last two stay symbols. Hungarian distinguishes the
+     content of a text (“tartalmazza”, for the subject) from membership of a
+     list (“között van”, for tags): the two operators never meet in the same
+     menu. */
   "app.settings.rules.opIs": "egyenlő",
   "app.settings.rules.opIsNot": "nem egyenlő",
   "app.settings.rules.opContains": "tartalmazza",
@@ -1461,12 +1471,12 @@ export const hu: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Jegy létrehozva",
   "app.settings.rules.eventTicketUpdated": "Jegy frissítve",
   "app.settings.rules.eventMessageCreated": "Üzenet érkezett",
 
-  /* Actions, telles que le menu du builder les nomme. */
+  /* Actions, as the builder's menu names them. */
   "app.settings.rules.actSetStatus": "Állapot beállítása",
   "app.settings.rules.actSetPriority": "Prioritás beállítása",
   "app.settings.rules.actAssignUser": "Hozzárendelés ügyintézőhöz",
@@ -1476,15 +1486,15 @@ export const hu: Dictionary = {
   "app.settings.rules.actAddTags": "Címkék hozzáadása",
   "app.settings.rules.actEmailContact": "E-mail küldése a kapcsolattartónak",
 
-  /* Résumé d'une règle, en une ligne de liste. Le hongrois ouvre par sa
-     conjonction « Ha » et laisse la flèche tenir le « akkor ». Les bribes
-     s'enchaînent sans majuscule initiale ni point final ; celles qui commencent
-     par {value} héritent de la majuscule de la donnée. */
+  /* One-line rule summary. Hungarian opens with its conjunction “Ha” and
+     lets the arrow carry the “akkor”. The fragments run on with no initial
+     capital and no final full stop; those starting with {value} inherit the
+     capital of the data. */
   "app.settings.rules.summaryPattern": "Ha {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "és",
   "app.settings.rules.summaryAlways": "mindig",
-  /* Après un nombre, le hongrois garde le singulier : les deux formes sont
-     identiques, mais les deux catégories du pluriel hongrois sont présentes. */
+  /* After a number, Hungarian keeps the singular: the two forms are
+     identical, but both Hungarian plural categories are present. */
   "app.settings.rules.summaryAnyOf": {
     one: "{count} feltétel közül legalább egy",
     other: "{count} feltétel közül legalább egy",
@@ -1493,15 +1503,15 @@ export const hu: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "nincs felelős",
   "app.settings.rules.summaryAssigned": "van felelős",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. Le hongrois postpose son « depuis » — « 2 j óta » — et la
-     bribe se colle à la condition précédente : « Állapot = Várakozó 2 j óta ». */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. Hungarian postposes its “since” — “2 j óta” — and the fragment
+     butts against the preceding condition: “Állapot = Várakozó 2 j óta”. */
   "app.settings.rules.summarySince": "{duration} óta",
   "app.settings.rules.summarySetStatus": "{value} állapotra állítás",
   "app.settings.rules.summarySetPriority": "{value} prioritás",
-  /* {team} et {tags} arrivent tels quels — un nom d'équipe, une liste d'étiquettes
-     jointes par des virgules : le hongrois ne peut pas leur coller son suffixe
-     casuel, d'où la tournure à deux-points. */
+  /* {team} and {tags} arrive as they are — a team name, a comma-joined list
+     of tags: Hungarian cannot attach its case suffix to them, hence the
+     colon-based turn of phrase. */
   "app.settings.rules.summaryAssignTeam": "csapat hozzárendelése: {team}",
   "app.settings.rules.summaryAnyTeam": "(nincs megadva)",
   "app.settings.rules.summaryAssignUser": "ügyintéző hozzárendelése",
@@ -1509,7 +1519,7 @@ export const hu: Dictionary = {
   "app.settings.rules.summaryAddTags": "címkék hozzáadása: {tags}",
   "app.settings.rules.summaryEmailContact": "e-mail küldése a kapcsolattartónak",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Állapot → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioritás → {value}",
   "app.settings.rules.macroSummaryTeam": "Csapat → {team}",
@@ -1619,7 +1629,7 @@ export const hu: Dictionary = {
   "app.settings.dev.auditTitle": "Auditnapló",
   "app.settings.dev.auditSubtitle":
     "Az adminisztrációs műveletek teljes naplója. Megőrzés 2 évig.",
-  "app.settings.dev.auditLockedTitle": "Az auditnapló csak a Enterprise csomagban érhető el",
+  "app.settings.dev.auditLockedTitle": "Az auditnapló az Enterprise Edition kiadás része",
   "app.settings.dev.auditLockedText":
     "Őrizze meg minden adminisztrációs művelet nyomát 2 évig, előtte-utána összehasonlítással és CSV-exporttal.",
   "app.settings.dev.filterActorAll": "Végrehajtó: összes",
@@ -1638,9 +1648,9 @@ export const hu: Dictionary = {
   "app.settings.dev.actorContact": "Kapcsolattartó",
   "app.settings.dev.exportUnauthorized": "Nincs hitelesítve",
   "app.settings.dev.exportForbidden": "Csak az Owner és az Admin szerepkör számára.",
-  "app.settings.dev.exportEnterpriseOnly": "Az auditnapló csak a Enterprise csomagban érhető el.",
+  "app.settings.dev.exportEnterpriseOnly": "Az auditnapló az Enterprise Edition kiadás része.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Munkaterület",
   "app.settingsNav.itemGeneral": "Általános",
   "app.settingsNav.itemTeam": "Ügyintézők és csapatok",
@@ -1673,7 +1683,7 @@ export const hu: Dictionary = {
   "app.settingsNav.copied": "Másolva",
   "app.settingsNav.copy": "Másolás",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Új",
   "app.status.open": "Nyitott",
   "app.status.waiting": "Várakozó",
@@ -1694,7 +1704,7 @@ export const hu: Dictionary = {
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Jegyeim",
   "app.views.unassigned": "Felelős nélkül",
   "app.views.breaching": "Hamarosan lejár",
@@ -1702,7 +1712,7 @@ export const hu: Dictionary = {
   "app.views.urgent": "Sürgős jegyek a héten",
   "app.views.escalation": "Eszkalálások",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Átnevezés",
   "app.kb.renameSave": "Mentés",
   "app.kb.deleteCategory": "A kategória törlése",
@@ -1712,7 +1722,7 @@ export const hu: Dictionary = {
     other: "Ez a kategória még {count} elemet tartalmaz. Helyezze át őket a törlés előtt.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-mail",
   "app.login.emailPlaceholder": "nev@cegnev.hu",
   "app.login.password": "Jelszó",
@@ -1742,9 +1752,9 @@ export const hu: Dictionary = {
   "app.login.providerMissing": "Ez a szolgáltató nincs beállítva ezen a példányon.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Le titre du portail dans son propre aperçu (home.title), le nom du
-     workspace et la couleur d'accent viennent d'ailleurs ; les rôles Owner /
-     Admin / Agent / Viewer ne se traduisent pas. */
+  /* The portal title in its own preview (home.title), the workspace name
+     and the accent colour come from elsewhere; the Owner / Admin / Agent /
+     Viewer roles are not translated. */
 
   "app.onboarding.asideTitle": "Beállítás",
   "app.onboarding.asideFooter": "Mindezt később bármikor módosíthatja a beállításokban.",
@@ -1782,7 +1792,7 @@ export const hu: Dictionary = {
 
   "app.onboarding.teamTitle": "A csapat meghívása",
   "app.onboarding.teamBody":
-    "Hívja meg most az ügyintézőit, vagy ossza meg a meghívó hivatkozást. A Viewer licencek ingyenesek.",
+    "Hívja meg most az ügyintézőit, vagy ossza meg a meghívó hivatkozást. A Viewer szerepkör nem foglal licencet.",
   "app.onboarding.invitePlaceholder": "kollega@cegnev.hu",
   "app.onboarding.addRow": "+ Sor hozzáadása",
   "app.onboarding.sendInvites": "Meghívók elküldése",
@@ -1791,10 +1801,10 @@ export const hu: Dictionary = {
   "app.onboarding.testBody":
     "Ellenőrizze a teljes folyamatot, mielőtt megnyitja a szolgáltatást az ügyfelei előtt.",
   "app.onboarding.readyTitle": "A munkaterület készen áll",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. Le hongrois
-     suffixe son complément de lieu : la phrase amène l'adresse par
-     « a következő címre: », qui laisse le paramètre intact. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. Hungarian
+     suffixes its place complement: the sentence introduces the address with
+     “a következő címre:”, which leaves the parameter intact. */
   "app.onboarding.readyBody":
     "Tesztjegy létrehozásához küldjön egy e-mailt a következő címre: {address}.",
   "app.onboarding.openInbox": "A beérkezettek megnyitása",
@@ -1805,34 +1815,44 @@ export const hu: Dictionary = {
   "app.onboarding.checklistTicket": "Első jegy beérkezett",
   "app.onboarding.checklistSla": "SLA-szabályzat ellenőrizve",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
-     « minden / legalább egy » : le hongrois place son verbe à la fin et fait
-     suivre le quantifieur d'un singulier, d'où « {mode} feltétel teljesül ».
-     Le morceau qui précède {mode} est donc vide, et tout le texte passe après. */
+  /* ST-05 — the condition group header. The sentence wraps a
+     “minden / legalább egy” selector: Hungarian puts its verb at the end and
+     follows the quantifier with a singular, hence “{mode} feltétel teljesül”.
+     The part before {mode} is therefore empty, and all the text goes after. */
   "app.settings.rules.matchIf": "HA",
   "app.settings.rules.matchAllPattern": "{mode} feltétel teljesül",
   "app.settings.rules.matchAnyPattern": "{mode} feltétel teljesül",
   "app.settings.rules.matchAll": "minden",
   "app.settings.rules.matchAny": "legalább egy",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
-  "app.settings.workspace.planFree": "Free csomag",
-  "app.settings.workspace.planTeam": "Team csomag",
-  "app.settings.workspace.planEnterprise": "Enterprise csomag",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "AKKOR",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Tesztelés meglévő jegyen",
+  "app.settings.rules.testRunning": "Tesztelés…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Eltávolítás",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Az e-mail törzse — változók: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française ; seul l'affichage est traduit. */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string; only the display is translated. */
   "app.ticket.typeQuestion": "Kérdés",
   "app.ticket.typeIncident": "Incidens",
   "app.ticket.typeTask": "Feladat",
   "app.ticket.typeOther": "Egyéb",
 
-  /* AG-09 — export CSV des rapports. Les entêtes reprennent les libellés des
-     KPI de l'écran ; « (s) » devient « (mp) », l'abréviation hongroise de la
-     seconde. */
+  /* AG-09 — CSV export of the reports. The headers echo the labels of the
+     screen's KPIs; “(s)” becomes “(mp)”, the Hungarian abbreviation for the
+     second. */
   "app.reports.csvIndicator": "Mutató",
   "app.reports.csvCurrentPeriod": "Jelenlegi időszak",
   "app.reports.csvPreviousPeriod": "Előző időszak",
@@ -1847,8 +1867,8 @@ export const hu: Dictionary = {
   "app.reports.csvResolvedShort": "Megoldott",
   "app.reports.csvAgent": "Ügyintéző",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Új cikk",
   "app.kb.fromTicketSymptomHeading": "Tünet",
   "app.kb.fromTicketSymptomPlaceholder": "[Írja le, mit tapasztal az ügyfél.]",
@@ -1858,11 +1878,11 @@ export const hu: Dictionary = {
   "app.kb.fromTicketMissingRequest": "az ügyfél eredeti kérése",
   "app.kb.fromTicketMissingAnswer": "az ügyintéző válasza",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste.
-     Les suffixes casuels du hongrois restent HORS des crochets — « a **[gomb
-     neve]** gombra », « [a mező] értékét » — pour que l'auteur n'ait qu'un nom
-     à écrire, sans avoir à le décliner. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest.
+     Hungarian case suffixes stay OUTSIDE the brackets — “a **[gomb neve]**
+     gombra”, “[a mező] értékét” — so that the author has only one noun to
+     write, with no declining to do. */
   "app.kb.tplProcedureLabel": "Lépésenkénti útmutató",
   "app.kb.tplProcedureHint": "Számozott lépések sorozata, a várt eredménnyel.",
   "app.kb.tplProcedureTitle": "Hogyan [végezze el a műveletet]",
@@ -1876,8 +1896,8 @@ export const hu: Dictionary = {
   "app.kb.tplFaqLabel": "Gyakori kérdés",
   "app.kb.tplFaqHint": "Rövid, közvetlen válasz, majd a részletek.",
   "app.kb.tplFaqTitle": "[A kérdés úgy, ahogyan az ügyfelek felteszik]",
-  /* « Situation A / B » devient « 1. / 2. helyzet » : en hongrois, un « A »
-     initial se lirait comme l'article défini. */
+  /* “Situation A / B” becomes “1. / 2. helyzet”: in Hungarian an initial
+     “A” would read as the definite article. */
   "app.kb.tplFaqBody":
     "**Rövid válasz:** [a válasz egy mondatban].\n\n## Részletesen\n\n[A hasznos háttér és a fontos részletek.]\n\n## Különleges esetek\n\n- **[1. helyzet]** — [ami változik].\n- **[2. helyzet]** — [ami változik].\n\n## További információ\n\n[Hivatkozás a kapcsolódó cikkre vagy a hozzá tartozó folyamatra.]\n",
   "app.kb.tplReleaseLabel": "Kiadási megjegyzés",

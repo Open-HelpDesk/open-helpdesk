@@ -1,7 +1,7 @@
 /*
- * Portail client (PT) — animations et états interactifs de la maquette.
- * Couleurs UNIQUEMENT via les tokens de .surface-portal (jamais de valeurs en dur,
- * hormis le pommeau blanc des interrupteurs, blanc dans les deux thèmes du design).
+ * Customer portal (PT) — the mockup's animations and interactive states.
+ * Colours ONLY through the .surface-portal tokens (never hardcoded values,
+ * except the switches' white knob, white in both themes of the design).
  */
 
 @keyframes pt-rise {
@@ -29,15 +29,15 @@
   animation: pt-rise 0.28s ease both;
 }
 
-/* Titres en serif (logo, hero, titres de page, h2 d'article, titres de carte).
-   Newsreader n'est pas embarqué : la pile retombe sur Iowan Old Style puis Georgia,
-   comme --font-ui retombe sur system-ui. */
+/* Serif headings (logo, hero, page titles, article h2, card titles).
+   Newsreader is not bundled: the stack falls back to Iowan Old Style then
+   Georgia, the way --font-ui falls back to system-ui. */
 .pt-title {
   font-family: var(--font-title);
   font-weight: 500;
 }
 
-/* Liens de navigation du chrome : ink-2, hover acc-2 (maquette). */
+/* Chrome navigation links: ink-2, hover acc-2 (mockup). */
 .pt-navlink {
   color: var(--ink-2);
 }
@@ -52,12 +52,12 @@
   text-decoration: underline;
 }
 
-/* Lignes cliquables (listes, suggestions, items d'accordéon). */
+/* Clickable rows (lists, suggestions, accordion items). */
 .pt-row:hover {
   background: var(--sunk);
 }
 
-/* Cartes catégorie (PT-01) : au survol la carte se soulève, elle ne se teinte plus. */
+/* Category cards (PT-01): on hover the card lifts, it no longer tints. */
 .pt-card-cat {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -73,7 +73,7 @@
   transform: translateY(-3px);
 }
 
-/* Cartes « Articles liés » (PT-03) : glissent vers leur chevron au survol. */
+/* "Related articles" cards (PT-03): they slide towards their chevron on hover. */
 .pt-related {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -89,7 +89,7 @@
   text-decoration: none;
 }
 
-/* Intertitres de section (PT-01, PT-03, PT-08) : petites capitales espacées. */
+/* Section eyebrows (PT-01, PT-03, PT-08): spaced small caps. */
 .pt-eyebrow {
   font-size: 11.5px;
   font-weight: 600;
@@ -98,7 +98,7 @@
   color: var(--ink-3);
 }
 
-/* Libellés de champ (PT-04) : petites capitales de la maquette. */
+/* Field labels (PT-04): the mockup's small caps. */
 .pt-label {
   font-size: 13px;
   font-weight: 600;
@@ -107,9 +107,9 @@
   color: var(--ink-3);
 }
 
-/* Champs de formulaire : au focus, bordure accent + halo teinté de la maquette.
-   Le halo passe par box-shadow, pas par une bordure épaissie — sinon le champ
-   se décale d'un demi-pixel à la prise de focus. */
+/* Form fields: on focus, accent border + the mockup's tinted halo.
+   The halo goes through box-shadow, not through a thickened border — otherwise
+   the field shifts by half a pixel when it takes focus. */
 .pt-input {
   border: 1px solid var(--line);
   background: var(--bg);
@@ -129,7 +129,7 @@
   box-shadow: 0 0 0 4px var(--acc-t);
 }
 
-/* Accordéons de catégorie (PT-02) : en-tête sunk quand ouvert, caret ▼/▶. */
+/* Category accordions (PT-02): sunk header when open, ▼/▶ caret. */
 details.pt-acc > summary {
   list-style: none;
   cursor: pointer;
@@ -140,10 +140,10 @@ details.pt-acc > summary::-webkit-details-marker {
 details.pt-acc[open] > summary {
   background: var(--canvas);
 }
-/* Accordéons de la page catégorie : bordure accentuée quand la section est
-   ouverte. La bordure de base vit ici, pas en style inline — sinon la règle
-   [open] ne pourrait pas l'emporter. Classe distincte de .pt-acc, qui sert
-   aussi au bloc « + Ajouter un domaine » (PT-08), lui en tirets. */
+/* Category page accordions: accented border when the section is open. The base
+   border lives here, not in inline style — otherwise the [open] rule could not
+   win. A class distinct from .pt-acc, which also serves the "+ Add a domain"
+   block (PT-08), that one dashed. */
 .pt-acc-card {
   border: 1px solid var(--line);
 }
@@ -157,8 +157,8 @@ details.pt-acc:not([open]) > summary .pt-caret-o {
   display: none;
 }
 
-/* Pilule utilisateur du chrome : la bordure prend l'accent au survol.
-   Bordure de base ici, pas en style inline, sinon :hover ne l'emporte pas. */
+/* Chrome user pill: the border takes the accent on hover.
+   Base border here, not in inline style, otherwise :hover does not win. */
 .pt-pill {
   border: 1px solid var(--line);
   transition: border-color 0.16s ease;
@@ -167,7 +167,7 @@ details.pt-acc:not([open]) > summary .pt-caret-o {
   border-color: var(--acc-b);
 }
 
-/* Menu de la pilule utilisateur (chrome). */
+/* User pill menu (chrome). */
 details.pt-menu > summary {
   list-style: none;
   cursor: pointer;
@@ -182,7 +182,7 @@ details.pt-menu > summary::-webkit-details-marker {
   background: var(--sunk);
 }
 
-/* Cartes-radio (« Type de demande », PT-04) — sélection sans JavaScript. */
+/* Radio cards ("Request type", PT-04) — selection without JavaScript. */
 .pt-choice {
   border: 1px solid var(--line);
   background: var(--bg);
@@ -201,8 +201,8 @@ details.pt-menu > summary::-webkit-details-marker {
   color: var(--acc);
 }
 
-/* Interrupteurs 40×23 de la maquette (PT-08). Deux usages :
-   bouton serveur (data-on) ou case à cocher dans un label (.pt-switch-label). */
+/* The mockup's 40×23 switches (PT-08). Two uses:
+   a server button (data-on) or a checkbox inside a label (.pt-switch-label). */
 .pt-switch {
   width: 40px;
   height: 23px;
@@ -239,7 +239,7 @@ details.pt-menu > summary::-webkit-details-marker {
   pointer-events: none;
 }
 
-/* Avertissement du mode strict (PT-08) : visible quand le toggle est coché. */
+/* Strict mode warning (PT-08): visible when the toggle is checked. */
 [data-sso-toggles] .pt-strict-warning {
   display: none;
 }
@@ -247,7 +247,7 @@ details.pt-menu > summary::-webkit-details-marker {
   display: block;
 }
 
-/* Bouton secondaire à bordure (résoudre / rouvrir, PT-06). */
+/* Bordered secondary button (resolve / reopen, PT-06). */
 .pt-outline {
   border: 1px solid var(--line);
   background: var(--panel);
@@ -261,12 +261,12 @@ details.pt-menu > summary::-webkit-details-marker {
   color: var(--acc);
 }
 
-/* Ancres de la TOC d'article (PT-03). */
+/* Article TOC anchors (PT-03). */
 .pt-h2 {
   scroll-margin-top: 24px;
 }
 
-/* Dropzone de pièces jointes (PT-04) et bloc « + Ajouter un domaine » (PT-08). */
+/* Attachment dropzone (PT-04) and "+ Add a domain" block (PT-08). */
 .pt-dashed {
   border: 1.5px dashed var(--line);
   transition: border-color 0.16s ease;
@@ -275,9 +275,9 @@ details.pt-menu > summary::-webkit-details-marker {
   border-color: var(--acc-b);
 }
 
-/* Rail du fil de discussion (PT-06) : le trait qui relie deux avatars s'arrête
-   au dernier message. La couleur de base est posée ici, pas en style inline —
-   sinon la règle :last-child ne pourrait pas l'emporter. */
+/* Thread rail (PT-06): the line joining two avatars stops at the last message.
+   The base colour is set here, not in inline style — otherwise the :last-child
+   rule could not win. */
 .pt-thread-rail {
   background: var(--line);
 }

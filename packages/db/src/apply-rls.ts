@@ -1,7 +1,7 @@
 /**
- * Applique sql/rls.sql sur la base pointée par DATABASE_URL — équivalent de
- * `psql "$DATABASE_URL" -f packages/db/sql/rls.sql` sans dépendre de psql
- * (les images Docker n'embarquent que Node). Idempotent, comme le SQL lui-même.
+ * Applies sql/rls.sql to the database pointed at by DATABASE_URL — the equivalent
+ * of `psql "$DATABASE_URL" -f packages/db/sql/rls.sql` without depending on psql
+ * (the Docker images only ship Node). Idempotent, like the SQL itself.
  */
 import { readFileSync } from "node:fs";
 import postgres from "postgres";
@@ -14,7 +14,7 @@ const ddl = readFileSync(new URL("../sql/rls.sql", import.meta.url), "utf8");
 
 try {
   await sql.unsafe(ddl);
-  console.log("RLS appliquée sur le schéma app.");
+  console.log("RLS applied on the app schema.");
 } finally {
   await sql.end();
 }

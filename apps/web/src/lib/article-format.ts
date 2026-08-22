@@ -1,15 +1,15 @@
 /**
- * Format des articles de la base de connaissances — analyseur partagé.
+ * Knowledge base article format — shared parser.
  *
- * C'est LE contrat entre l'éditeur (agent) et le portail (client) : les deux
- * importent ce module, donc l'aperçu montre exactement ce que le client verra.
- * Un balisage léger, volontairement limité à ce qu'un article de support demande.
+ * This is THE contract between the editor (agent) and the portal (customer): both
+ * import this module, so the preview shows exactly what the customer will see.
+ * A light markup, deliberately limited to what a support article needs.
  *
- * Blocs   : « ## » titre · « ### » sous-titre · « > » encadré · ``` bloc de code
- *           (le texte après les backticks devient l'en-tête) · « - » liste à puces
- *           · « 1. » étapes numérotées · ligne vide = nouveau paragraphe.
- * En ligne : **gras** · *italique* · `code` · [texte](https://lien).
- * Image   : ![description](url) seule sur sa ligne.
+ * Blocks: "##" heading · "###" subheading · ">" callout · ``` code block
+ *         (the text after the backticks becomes the header) · "-" bullet list
+ *         · "1." numbered steps · empty line = new paragraph.
+ * Inline: **bold** · *italic* · `code` · [text](https://link).
+ * Image:  ![description](url) alone on its line.
  */
 
 export type InlineToken =
@@ -64,7 +64,7 @@ export function parseArticle(body: string): ArticleBlock[] {
         code.push(lines[i]!);
         i += 1;
       }
-      i += 1; // fence de fermeture
+      i += 1; // closing fence
       blocks.push({ type: "code", title, body: code.join("\n") });
       continue;
     }
@@ -105,7 +105,7 @@ export function parseArticle(body: string): ArticleBlock[] {
       continue;
     }
 
-    // Listes : les lignes consécutives du même type forment un seul bloc.
+    // Lists: consecutive lines of the same kind form a single block.
     const numbered = line.match(NUMBERED);
     const bullet = numbered ? null : line.match(BULLET);
     if (numbered || bullet) {
@@ -137,11 +137,11 @@ export function parseArticle(body: string): ArticleBlock[] {
   return blocks;
 }
 
-// L'ordre compte : **gras** avant *italique*, sinon les deux astérisques se coupent.
+// Order matters: **bold** before *italic*, otherwise the two asterisks cut each other off.
 const INLINE =
   /\*\*([^*]+)\*\*|\*([^*\n]+)\*|`([^`\n]+)`|\[([^\]\n]+)\]\(([^)\s]+)\)/g;
 
-/** Découpe un texte en fragments stylés — sans React, donc testable et partageable. */
+/** Splits a text into styled fragments — no React, hence testable and shareable. */
 export function parseInline(text: string): InlineToken[] {
   const tokens: InlineToken[] = [];
   let last = 0;
@@ -160,7 +160,7 @@ export function parseInline(text: string): InlineToken[] {
   return tokens;
 }
 
-/** Texte brut d'un article — extraits de liste et temps de lecture. */
+/** Plain text of an article — list excerpts and reading time. */
 export function plainText(body: string): string {
   return parseArticle(body)
     .map((b) => {

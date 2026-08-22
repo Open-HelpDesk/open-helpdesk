@@ -2,19 +2,19 @@ import { getPortalTenant } from "@/lib/portal-auth";
 import { notFound } from "next/navigation";
 import { getPortalSettings } from "@/lib/portal-config";
 import { getT } from "@/i18n/server";
-// Le widget vit hors du groupe /help : il charge lui-même les styles .pt-* du portail.
+// The widget lives outside the /help group: it loads the portal's .pt-* styles itself.
 import "../help/portal.css";
 
 /**
- * Widget embarquable (aperçu ST-09 « Portail & widget ») — rendu dans l'iframe,
- * hors chrome du portail : bandeau d'accent portant le titre du widget, formulaire
- * compact (email / sujet / message / pièce jointe), bouton d'accent pleine largeur.
- * Palette du portail (.surface-portal), accent = couleur du widget puis du tenant.
- * POST multipart vers /api/portal/widget-submit (noms de champs inchangés).
+ * Embeddable widget (ST-09 "Portal & widget" preview) — rendered inside the
+ * iframe, outside the portal chrome: accent banner carrying the widget title,
+ * compact form (email / subject / message / attachment), full-width accent button.
+ * Portal palette (.surface-portal), accent = widget color then tenant color.
+ * Multipart POST to /api/portal/widget-submit (field names unchanged).
  */
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
-/** Accent du design system : on laisse alors les tokens de .surface-portal faire foi. */
+/** Design system accent: the .surface-portal tokens are then left to prevail. */
 const DEFAULT_ACCENT = "#0b5f46";
 
 export default async function WidgetPage({
@@ -24,7 +24,7 @@ export default async function WidgetPage({
 }) {
   const t = await getT();
   const settings = await getPortalSettings();
-  // Le widget dépend du portail : il soumet des demandes au même endroit.
+  // The widget depends on the portal: it submits requests to the same place.
   if (!settings.portalEnabled || !settings.widget.enabled) notFound();
   const tenant = await getPortalTenant();
   const { sent } = await searchParams;
@@ -40,9 +40,9 @@ export default async function WidgetPage({
     : ((tenant.branding as { accentColor?: string } | null)?.accentColor ?? "");
   const accent =
     HEX.test(candidate) && candidate.toLowerCase() !== DEFAULT_ACCENT ? candidate : null;
-  // Mêmes replis que l'accueil du portail : le texte réglé dans ST-09 prime,
-  // sinon la traduction. C'est ici que le widget divergeait — il retombait sur
-  // du français en dur pendant que /help retombait sur t("home.title").
+  // Same fallbacks as the portal home: the text configured in ST-09 wins,
+  // otherwise the translation. This is where the widget diverged — it fell back
+  // to hardcoded French while /help fell back to t("home.title").
   const title = widget.title?.trim() || t("widget.defaultTitle");
   const intro = config.welcomeText?.trim() || t("home.title");
 

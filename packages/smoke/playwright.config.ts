@@ -1,39 +1,40 @@
 import { defineConfig } from "@playwright/test";
 
 /**
- * Smoke test de bout en bout d'Open HelpDesk.
+ * Open HelpDesk end-to-end smoke test.
  *
- * Il ne teste pas des fonctions : il rejoue les parcours du produit sur une
- * instance qui tourne vraiment, avec sa base, son SMTP et ses sessions. C'est ce
- * qui permet d'attraper la classe de défaut qui nous a le plus coûté ici — un
- * réglage enregistré que personne ne lit, une redirection qui perd le
- * sous-domaine, une garde de rôle qui n'existe que dans l'interface.
+ * It does not test functions: it replays the product's journeys against an
+ * instance that really runs, with its database, its SMTP and its sessions. That
+ * is what catches the class of defect that has cost us the most here — a saved
+ * setting nobody reads, a redirect that loses the subdomain, a role guard that
+ * only exists in the interface.
  *
- * TROIS CHOSES DOIVENT ÊTRE VRAIES AVANT DE LANCER :
+ * THREE THINGS MUST BE TRUE BEFORE RUNNING:
  *  1. docker compose -f docker/docker-compose.yml up -d   (Postgres, Mailpit, MinIO)
- *  2. la base est migrée et remplie   (pnpm db:migrate && pnpm db:seed && pnpm db:seed:auth)
- *  3. le serveur tourne avec un BASE_DOMAIN qui CORRESPOND à son port :
+ *  2. the database is migrated and seeded   (pnpm db:migrate && pnpm db:seed && pnpm db:seed:auth)
+ *  3. the server runs with a BASE_DOMAIN that MATCHES its port:
  *       BASE_DOMAIN=localhost:3006 pnpm --filter @openhelpdesk/web exec next start --port 3006
- *     Sans cette correspondance, le middleware ne résout aucun tenant et tout
- *     répond 404 — c'est le premier piège de l'environnement local.
+ *     Without that match, the middleware resolves no tenant and everything
+ *     answers 404 — the first pitfall of the local environment.
  *
- * Le navigateur est le Chrome installé sur la machine (`channel: "chrome"`) :
- * pas de binaire à télécharger, et c'est le même moteur que celui des captures.
+ * The browser is the Chrome installed on the machine (`channel: "chrome"`):
+ * no binary to download, and it is the same engine as the screenshots use.
  */
 
 const PORT = process.env.SMOKE_PORT ?? "3006";
 const TENANT = process.env.SMOKE_TENANT ?? "acme";
 
-/** L'app se sert par sous-domaine : le tenant fait partie de l'adresse. */
+/** The app is served by subdomain: the tenant is part of the address. */
 export const BASE_URL = process.env.SMOKE_BASE_URL ?? `http://${TENANT}.localhost:${PORT}`;
-/** Interface web de Mailpit — c'est par là que les liens magiques arrivent. */
+/** Mailpit's web interface — this is where the magic links arrive. */
 export const MAILPIT_URL = process.env.SMOKE_MAILPIT_URL ?? "http://localhost:8026";
 
 export default defineConfig({
   testDir: "./src",
-  // Les parcours partagent un tenant unique : deux specs qui basculent la langue
-  // ou coupent le portail en même temps se marcheraient dessus. Le parallélisme
-  // se gagnerait en donnant un tenant par worker, pas en forçant ici.
+  // The journeys share a single tenant: two specs switching the language or
+  // shutting the portal down at the same time would step on each other.
+  // Parallelism would be won by giving one tenant per worker, not by forcing it
+  // here.
   fullyParallel: false,
   workers: 1,
   forbidOnly: Boolean(process.env.CI),
@@ -46,8 +47,8 @@ export default defineConfig({
     channel: "chrome",
     headless: !process.env.SMOKE_HEADED,
     locale: "fr-FR",
-    // Une capture et une trace uniquement sur échec : un smoke test qui passe
-    // ne doit rien laisser derrière lui.
+    // A screenshot and a trace on failure only: a smoke test that passes must
+    // leave nothing behind.
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
     video: "off",

@@ -23,7 +23,7 @@ import {
 import { regenerateScimToken, saveSamlConfig, saveScimGroups, type AgentSsoConfig } from "./actions";
 import { getT, type Translate } from "@/i18n/server";
 
-/** Libellés verbatim du design (les valeurs persistées restent inchangées). */
+/** Labels verbatim from the design (the persisted values stay unchanged). */
 function idpOptions(t: Translate): { value: string; label: string }[] {
   return [
     { value: "okta", label: "Okta" },
@@ -37,7 +37,7 @@ function idpOptions(t: Translate): { value: string; label: string }[] {
 const ATTR_GRID = "minmax(150px,1fr) 34px minmax(180px,1.2fr) 110px";
 const SP_GRID = "170px 1fr 80px";
 
-/** Contrôle de formulaire — hauteur 36, padding 7/11, radius 6, 13,5 px. */
+/** Form control — height 36, padding 7/11, radius 6, 13.5 px. */
 const CONTROL: React.CSSProperties = {
   minHeight: 36,
   padding: "7px 11px",
@@ -45,7 +45,7 @@ const CONTROL: React.CSSProperties = {
   fontSize: 13.5,
 };
 
-/** Cadre encadrant un toggle (padding 13/14, radius 9). */
+/** Frame wrapping a toggle (padding 13/14, radius 9). */
 function Panel({
   children,
   accent,
@@ -72,7 +72,7 @@ function Panel({
   );
 }
 
-/** Titre de section — 14,5 px/600, avec complément optionnel aligné sur la ligne de base. */
+/** Section title — 14.5 px/600, with an optional aside aligned on the baseline. */
 function Section({
   title,
   aside,
@@ -98,9 +98,9 @@ function Section({
 }
 
 /**
- * Phrase du mapping des rôles : deux noms de groupe en mono dans une même
- * phrase. `t.parts` ne découpe qu'un emplacement, on marque donc les deux
- * bornes et on redécoupe — l'ordre des mots peut changer d'une langue à l'autre.
+ * Role mapping sentence: two group names in mono inside a single sentence.
+ * `t.parts` only splits on one placeholder, so we mark both boundaries and
+ * split again — word order can change from one language to another.
  */
 function RolesHint({ t }: { t: Translate }) {
   const mark = "\u0000";
@@ -123,7 +123,7 @@ function RolesHint({ t }: { t: Translate }) {
   );
 }
 
-/** En-tête de table 11 px/700 sur fond --sunk, hauteur 34. */
+/** Table header 11 px/700 on a --sunk background, height 34. */
 function TableHead({
   template,
   columns,
@@ -157,10 +157,10 @@ function TableHead({
 }
 
 /**
- * ST-13 — SSO des agents (1000 px, EE). Verrouillé hors plan Pro. Onglet SAML 2.0 :
- * activation, fournisseur d'identité, valeurs SP réelles (slug), correspondance des
- * attributs, application & sessions, test de connexion. Onglet SCIM : point de
- * terminaison, correspondance des groupes, journal de synchronisation.
+ * ST-13 — Agent SSO (1000 px, EE). Locked without the entitlement. SAML 2.0 tab:
+ * enablement, identity provider, real SP values (slug), attribute mapping,
+ * enforcement & sessions, connection test. SCIM tab: endpoint, group mapping,
+ * sync log.
  */
 export default async function AgentSsoPage({
   searchParams,
@@ -219,7 +219,7 @@ export default async function AgentSsoPage({
       .where(and(eq(users.tenantId, tenant.id), ne(users.status, "disabled"))),
   ]);
 
-  // Domaines des comptes agents — aucune table de domaines vérifiés au niveau workspace.
+  // Domains of the agent accounts — no verified-domain table at workspace level.
   const agentDomains = [
     ...new Set(
       agentRows
@@ -252,7 +252,7 @@ export default async function AgentSsoPage({
 
   return (
     <PageShell maxWidth={1000}>
-      {/* Chips de fournisseur d'identité : état sélectionné en CSS (radio caché). */}
+      {/* Identity provider chips: selected state in CSS (hidden radio). */}
       <style>{`
         .sso-chip { position: relative; min-height: 38px; padding: 8px 14px; display: flex;
           align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 8px;
@@ -268,7 +268,7 @@ export default async function AgentSsoPage({
 
       {activeTab === "saml" ? (
         <form action={saveSamlConfig} className="st-rise flex flex-col" style={{ gap: 24 }}>
-          {/* Activation */}
+          {/* Enablement */}
           <Panel accent={saml.enabled === true}>
             <label className="ohd-toggle flex items-start" style={{ gap: 12 }}>
               <input type="checkbox" name="enabled" defaultChecked={saml.enabled === true} />
@@ -293,7 +293,7 @@ export default async function AgentSsoPage({
             </div>
           </Panel>
 
-          {/* Fournisseur d'identité */}
+          {/* Identity provider */}
           <Section title={t("app.settings.sso.idpSection")}>
             <div className="flex flex-wrap" style={{ gap: 8 }}>
               {idpOptions(t).map((idp) => (
@@ -393,7 +393,7 @@ export default async function AgentSsoPage({
             </div>
           </Section>
 
-          {/* Valeurs à renseigner côté IdP */}
+          {/* Values to fill in on the IdP side */}
           <Section title={t("app.settings.sso.spSection")}>
             <div
               className="overflow-hidden border"
@@ -427,7 +427,7 @@ export default async function AgentSsoPage({
             </div>
           </Section>
 
-          {/* Correspondance des attributs */}
+          {/* Attribute mapping */}
           <Section title={t("app.settings.sso.attrSection")}>
             <div
               className="overflow-x-auto border"
@@ -507,7 +507,7 @@ export default async function AgentSsoPage({
             </Panel>
           </Section>
 
-          {/* Application et sessions */}
+          {/* Enforcement and sessions */}
           <Section title={t("app.settings.sso.enforcementSection")}>
             <EnforcementRadios initial={saml.enforcement ?? "verified_domains"} />
             <div
@@ -578,7 +578,7 @@ export default async function AgentSsoPage({
             </div>
           </Section>
 
-          {/* Test de connexion */}
+          {/* Connection test */}
           <Section title={t("app.settings.sso.testSection")} gap={11}>
             <div
               className="overflow-hidden border"
@@ -618,7 +618,7 @@ export default async function AgentSsoPage({
         </form>
       ) : (
         <div className="st-rise flex flex-col" style={{ gap: 24 }}>
-          {/* Activation SCIM — associée au formulaire « scim-config » ci-dessous */}
+          {/* SCIM enablement — bound to the "scim-config" form below */}
           <Panel accent={scimEnabled}>
             <label className="ohd-toggle flex items-start" style={{ gap: 12 }}>
               <input
@@ -643,7 +643,7 @@ export default async function AgentSsoPage({
             </div>
           </Panel>
 
-          {/* Point de terminaison */}
+          {/* Endpoint */}
           <Section title={t("app.settings.sso.endpointSection")}>
             <ScimEndpoint
               url={`${host}/api/scim/v2`}
@@ -652,7 +652,7 @@ export default async function AgentSsoPage({
             />
           </Section>
 
-          {/* Correspondance des groupes */}
+          {/* Group mapping */}
           <Section title={t("app.settings.sso.groupsSection")}>
             <ScimGroupsField
               formId="scim-config"
@@ -665,7 +665,7 @@ export default async function AgentSsoPage({
             />
           </Section>
 
-          {/* Journal de synchronisation */}
+          {/* Sync log */}
           <Section title={t("app.settings.sso.syncLogSection")}>
             <div
               className="overflow-x-auto border"
@@ -696,7 +696,7 @@ export default async function AgentSsoPage({
   );
 }
 
-/** Formulaire factice flouté derrière le voile de l'état verrouillé. */
+/** Dummy form blurred behind the locked-state veil. */
 function GhostForm() {
   return (
     <div className="flex flex-col gap-3">

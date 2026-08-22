@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * PT-03 — « Cet article vous a-t-il aidé ? » : états votés (👍 ok / 👎 wait),
- * panneau « Créer une demande pré-remplie » après un 👎. Le vote est compté
- * côté serveur par l'action voteArticle (une fois par session de page).
+ * PT-03 — "Did this article help you?": voted states (👍 ok / 👎 wait),
+ * "Create a pre-filled request" panel after a 👎. The vote is counted
+ * server-side by the voteArticle action (once per page session).
  */
 import Link from "next/link";
 import { useState, useTransition } from "react";
@@ -27,8 +27,8 @@ export function VoteBlock({ slug, title }: { slug: string; title: string }) {
   const subject = t("vote.prefillSubject", { title });
   const prefill = `/help/requests/new?subject=${encodeURIComponent(subject)}`;
 
-  // La maquette n'encadre plus le bloc : un filet horizontal le sépare du corps,
-  // et la question tient sur la même ligne que les deux boutons en pilule.
+  // The mockup no longer boxes the block: a horizontal rule separates it from the
+  // body, and the question sits on the same line as the two pill buttons.
   return (
     <div
       className="mt-2.5 flex flex-col gap-[15px] border-t pt-6"

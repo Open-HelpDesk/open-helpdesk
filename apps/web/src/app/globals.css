@@ -5,32 +5,32 @@ body {
   background: var(--canvas);
   color: var(--ink);
   font-family: var(--font-ui);
-  /* Densité app agent : 14 px (specs/02) */
+  /* Agent app density: 14 px */
   font-size: 14px;
   line-height: 1.45;
-  /* Les maquettes lissent le texte : à cette densité Inter 600 s'épaissit
-     visiblement sans, et les libellés 11–12,5 px ne tiennent plus le même poids
-     que dans le design. */
+  /* The mockups smooth the text: at this density Inter 600 visibly thickens
+     without it, and the 11–12.5 px labels no longer hold the same weight as
+     they do in the design. */
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- Surfaces produit — ce que les maquettes posent sur le document ----------
- * `.ohd` est la classe racine des maquettes espace agent et administration.
- * Ce qu'elles déclarent globalement vit ici, scopé à cette classe : le portail
- * client a sa propre convention de liens (soulignés au repos) et sa propre
- * typographie, et ne doit pas hériter de celle-ci. */
+/* ---------- Product surfaces — what the mockups put on the document ----------
+ * `.ohd` is the root class of the agent workspace and administration mockups.
+ * What they declare globally lives here, scoped to that class: the customer
+ * portal has its own link convention (underlined at rest) and its own
+ * typography, and must not inherit this one. */
 
-/* Lien de texte : accent, jamais souligné au repos ; au survol la teinte se
-   rapproche du fond opposé — plus sombre en clair, plus claire en sombre — et le
-   soulignement apparaît. Le survol sombre est en dur : la maquette y vise une
-   teinte plus claire qu'--acc-2, qui n'a pas de token.
+/* Text link: accent, never underlined at rest; on hover the tint moves closer
+   to the opposite background — darker in light, lighter in dark — and the
+   underline appears. The dark hover is hardcoded: the mockup aims there for a
+   tint lighter than --acc-2, which has no token.
  *
- * Classe explicite, et non `.ohd a`. Les maquettes peuvent poser la règle sur la
- * balise parce que chez elles TOUT contrôle est un <div> : le seul <a> d'un écran
- * est un vrai lien dans une phrase. Ici les lignes de table, la navigation et les
- * boutons d'icône sont des <Link>, donc des <a> — 37 sur l'inbox, contre trois
- * liens de texte dans tout l'espace produit. Sur la balise, la règle soulignait
- * les libellés de navigation au survol : un défaut que la maquette n'a pas. */
+ * An explicit class, not `.ohd a`. The mockups can put the rule on the tag
+ * because over there EVERY control is a <div>: the only <a> on a screen is a
+ * real link inside a sentence. Here table rows, navigation and icon buttons are
+ * <Link>, hence <a> — 37 of them on the inbox, against three text links in the
+ * whole product space. On the tag, the rule underlined navigation labels on
+ * hover: a flaw the mockup does not have. */
 .ohd-link {
   color: var(--acc-2);
   text-decoration: none;
@@ -49,8 +49,8 @@ body {
   color: #5bd3a8;
 }
 
-/* Ascenseurs : filet discret, jamais de gouttière grise. Le liseré transparent
-   en `content-box` amincit le pouce sans réduire la zone d'accroche. */
+/* Scrollbars: a discreet hairline, never a grey gutter. The transparent border
+   in `content-box` thins the thumb without shrinking the grab area. */
 .ohd ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -63,32 +63,30 @@ body {
   background-clip: content-box;
 }
 
-/* ---------- Survol : le vocabulaire complet des maquettes ----------
- * Les maquettes n'emploient que ces réactions, et AUCUNE n'est animée — pas de
- * `transition` sur un survol. Les deux seules transitions du design sont celles
- * de l'interrupteur (.ohd-toggle). Un `transition-colors` ajouté ici suffirait à
- * faire sentir la différence sur une liste dense.
+/* ---------- Hover: the mockups' complete vocabulary ----------
+ * The mockups use only these reactions, and NONE of them is animated — no
+ * `transition` on a hover. The design's only two transitions are the switch's
+ * (.ohd-toggle). A `transition-colors` added here would be enough to make the
+ * difference felt on a dense list.
  *
- * `!important` n'est pas de la paresse, c'est ce qui rend ces classes fiables.
- * Comme les maquettes, cet écran s'écrit en `style` inline : la quasi-totalité
- * des boutons bordés y posent leur `borderColor`, et une déclaration inline bat
- * toujours un `:hover` de feuille de style. Sans `!important`, poser la classe
- * ne produit rien — un survol muet, qui ne se voit qu'à l'usage. La contrainte
- * se retournerait contre le prochain bouton écrit dans le style de la maison.
- * Les éléments qui doivent AUSSI peindre leur état au repos (ligne
- * sélectionnée, vignette bordée) passent, eux, par une variable : --row-bg,
- * --edge. */
+ * `!important` is not laziness, it is what makes these classes reliable.
+ * Like the mockups, this screen is written with inline `style`: nearly every
+ * bordered button sets its `borderColor` there, and an inline declaration always
+ * beats a stylesheet `:hover`. Without `!important`, adding the class produces
+ * nothing — a mute hover, only noticed in use. The constraint would turn against
+ * the next button written in the house style.
+ * Elements that must ALSO paint their rest state (selected row, bordered
+ * thumbnail) go through a variable instead: --row-bg, --edge. */
 
-/* Le survol par défaut : ligne de tableau, élément de liste, bouton fantôme,
-   pastille, bouton d'icône. */
+/* The default hover: table row, list item, ghost button, pill, icon button. */
 .ohd-hover:hover {
   background: var(--sunk) !important;
 }
 
-/* Ligne de table et élément de navigation : mêmes réactions, mais l'élément
-   porte déjà un fond au repos (--acc-t quand il est sélectionné). Ce fond passe
-   par --row-bg et non par `style`, sinon la déclaration inline battrait toujours
-   le :hover de la feuille de style et la ligne resterait inerte. */
+/* Table row and navigation item: same reactions, but the element already
+   carries a rest background (--acc-t when selected). That background goes
+   through --row-bg and not through `style`, otherwise the inline declaration
+   would always beat the stylesheet's :hover and the row would stay inert. */
 .ohd-row {
   background: var(--row-bg, transparent);
 }
@@ -97,25 +95,25 @@ body {
   background: var(--sunk) !important;
 }
 
-/* Boîte bordée — champ, carte : seul le filet réagit. */
+/* Bordered box — field, card: only the hairline reacts. */
 .ohd-hover-edge:hover {
   border-color: var(--acc-b) !important;
 }
 
-/* Bouton secondaire bordé : le filet et le libellé passent à l'accent. */
+/* Bordered secondary button: hairline and label both go to the accent. */
 .ohd-hover-edge-ink:hover {
   border-color: var(--acc-b) !important;
   color: var(--acc-2) !important;
 }
 
-/* Carte sélectionnable (administration) : le filet et le fond passent à l'accent. */
+/* Selectable card (administration): hairline and background both go to the accent. */
 .ohd-hover-edge-fill:hover {
   border-color: var(--acc-b) !important;
   background: var(--acc-t) !important;
 }
 
-/* Vignette de pièce jointe (curseur zoom-in) : filet à l'accent plein. Le filet
-   au repos arrive par --edge, pour la même raison que --row-bg plus haut. */
+/* Attachment thumbnail (zoom-in cursor): hairline to the full accent. The rest
+   hairline comes through --edge, for the same reason as --row-bg above. */
 .ohd-hover-acc {
   border: 1px solid var(--edge, var(--line));
 }
@@ -124,23 +122,23 @@ body {
   border-color: var(--acc) !important;
 }
 
-/* Focus clavier : le liseré des maquettes — 2px d'accent, décalé de 2px.
-   `:has()` couvre la boîte dont le champ réel est masqué à l'intérieur (dépôt de
-   fichier) : c'est la boîte qu'on doit voir prendre le focus, pas le champ. */
+/* Keyboard focus: the mockups' ring — 2px of accent, offset by 2px.
+   `:has()` covers the box whose real field is hidden inside it (file drop): it
+   is the box we must see take focus, not the field. */
 .ohd-focus:focus-visible,
 .ohd-focus:has(:focus-visible) {
   outline: 2px solid var(--acc);
   outline-offset: 2px;
 }
 
-/* ---------- Interrupteur 34×20 ----------
- * Piste 34×20 radius 11, pastille 16 blanche de left 2 à left 16, ombre portée
- * 0 1px 3px. Les deux seules transitions du design : la piste sur `background`,
- * la pastille sur `left`, toutes deux en .15s.
+/* ---------- 34×20 switch ----------
+ * Track 34×20 radius 11, white 16 knob from left 2 to left 16, drop shadow
+ * 0 1px 3px. The design's only two transitions: the track on `background`, the
+ * knob on `left`, both at .15s.
  *
- * Attendu : <label class="ohd-toggle"><input type="checkbox"><span class="ohd-knob"/>…
- * Le `input` reste dans le flux (masqué, taille nulle) pour garder le focus
- * clavier et l'étiquetage natifs. */
+ * Expected: <label class="ohd-toggle"><input type="checkbox"><span class="ohd-knob"/>…
+ * The `input` stays in the flow (hidden, zero-sized) to keep native keyboard
+ * focus and labelling. */
 .ohd-toggle input {
   position: absolute;
   width: 0;
@@ -153,9 +151,9 @@ body {
   flex: none;
   width: 34px;
   height: 20px;
-  /* Comme dans la maquette : l'interrupteur borde toujours un libellé sur deux
-     lignes, aligné en haut. Le décalage d'1px le centre sur la hauteur de
-     capitale de la première ligne plutôt que sur son interligne. */
+  /* As in the mockup: the switch always sits beside a label on two lines,
+     top-aligned. The 1px offset centres it on the first line's cap height
+     rather than on its leading. */
   margin-top: 1px;
   border-radius: 11px;
   background: var(--line);
@@ -188,11 +186,11 @@ body {
   outline-offset: 2px;
 }
 
-/* Même interrupteur, piloté par `aria-checked` : les écrans dont l'état part en
-   server action soumettent un <button role="switch">, pas une case à cocher.
-   La géométrie ne doit pas pour autant être recopiée à chaque appel — c'est
-   comme cela que les cinq interrupteurs de l'app avaient fini par différer
-   (ombre portée absente ici, transition sur la piste là). */
+/* The same switch, driven by `aria-checked`: screens whose state leaves through
+   a server action submit a <button role="switch">, not a checkbox.
+   The geometry must not be copied again at every call site for all that — that
+   is how the app's five switches had ended up differing (drop shadow missing
+   here, track transition missing there). */
 .ohd-switch {
   position: relative;
   flex: none;
@@ -227,7 +225,7 @@ body {
   left: 16px;
 }
 
-/* ---------- Animations du design espace agent ---------- */
+/* ---------- Agent space design animations ---------- */
 @keyframes ohd-rise {
   from {
     opacity: 0;
@@ -239,9 +237,9 @@ body {
   }
 }
 
-/* La maquette fait retomber un fond --hi vers transparent, en alternance : la
-   ligne qui vient de changer s'éclaire puis s'éteint. Une pulsation d'opacité
-   ferait clignoter le texte, ce qui n'est pas la même chose du tout. */
+/* The mockup fades a --hi background back to transparent, alternating: the row
+   that just changed lights up then goes out. An opacity pulse would make the
+   text blink, which is not the same thing at all. */
 @keyframes ohd-flash {
   from {
     background: var(--hi);
@@ -257,8 +255,8 @@ body {
   }
 }
 
-/* Cinq durées, une par profondeur de surface — de la visionneuse (.14s, elle
-   couvre déjà tout l'écran) à l'écran complet (.25s). */
+/* Five durations, one per surface depth — from the viewer (.14s, it already
+   covers the whole screen) to the full screen (.25s). */
 .ohd-rise-viewer {
   animation: ohd-rise 0.14s ease both;
 }
@@ -283,7 +281,7 @@ body {
   animation: ohd-spin 0.8s linear infinite;
 }
 
-/* Touche clavier (⌘K, j, k, ↵…) */
+/* Keyboard key (⌘K, j, k, ↵…) */
 .ohd-kbd {
   display: inline-flex;
   align-items: center;
@@ -300,7 +298,7 @@ body {
   line-height: 1.3;
 }
 
-/* ---------- Éditeur d'article : le texte s'affiche comme il sera publié ---------- */
+/* ---------- Article editor: the text renders as it will be published ---------- */
 .kb-prose {
   display: flex;
   flex-direction: column;
@@ -329,7 +327,7 @@ body {
   font-weight: 600;
 }
 
-/* Puces et étapes : mêmes repères que sur le portail (pastille numérotée). */
+/* Bullets and steps: the same markers as on the portal (numbered pill). */
 .kb-prose ul,
 .kb-prose ol {
   list-style: none;
@@ -340,7 +338,7 @@ body {
 }
 
 .kb-prose ol {
-  counter-reset: kb-etape;
+  counter-reset: kb-step;
   gap: 11px;
 }
 
@@ -365,11 +363,11 @@ body {
 }
 
 .kb-prose ol > li {
-  counter-increment: kb-etape;
+  counter-increment: kb-step;
 }
 
 .kb-prose ol > li::before {
-  content: counter(kb-etape);
+  content: counter(kb-step);
   position: absolute;
   left: 0;
   top: 3px;
@@ -435,9 +433,9 @@ body {
   outline-offset: 2px;
 }
 
-/* Invite affichée tant que l'article est vide. */
+/* Prompt shown while the article is empty. */
 .kb-prose p.is-editor-empty:first-child::before {
-  content: "Rédigez votre article…";
+  content: "Write your article…";
   float: left;
   height: 0;
   color: var(--ink-3);

@@ -61,7 +61,7 @@ function evaluateOne(ctx: EvalContext, c: Condition): boolean {
   }
 }
 
-/** Bloc SI : « toutes » les conditions ET « au moins une » (specs ST-05). */
+/** IF block: "all" the conditions AND "at least one" (ST-05 specs). */
 export function evaluateConditions(
   ctx: EvalContext,
   conditionsAll: Condition[],

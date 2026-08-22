@@ -1,16 +1,15 @@
 /*
- * Tokens Open HelpDesk — extraits des maquettes validées (design/*.html).
- * Trois jeux :
- *  1. Produit (espace agent, administration, portail) — accent vert profond #0B5F46.
- *     Le portail substitue l'accent du tenant à --acc au runtime.
- *  2. Console cloud — accent cuivre, neutres chauds. Appliquer .surface-console.
- *  3. Site public — fond sombre #08281E (voir specs/14 § direction artistique).
+ * Open HelpDesk tokens.
+ * Three sets:
+ *  1. Product (agent space, administration, portal) — deep green accent #0B5F46.
+ *     The portal substitutes the tenant accent for --acc at runtime.
+ *  2. Cloud console — copper accent, warm neutrals. Apply .surface-console.
+ *  3. Public site — dark background #08281E.
  *
- * Thème sombre : stamp [data-theme="dark"] sur <html>.
- * Conventions statuts/priorités : specs/02-design-system.md.
+ * Dark theme: stamp [data-theme="dark"] on <html>.
  */
 
-/* ---------- 1. Produit — clair ---------- */
+/* ---------- 1. Product — light ---------- */
 :root {
   --acc: #0b5f46;
   --acc-t: #e7f1ec;
@@ -27,10 +26,10 @@
   --line: #e2e7e4;
   --line-2: #edf1ef;
   --acc-2: #0e7a58;
-  /* Notes internes — toujours jaune pâle + cadenas (jamais ambigu) */
+  /* Internal notes — always pale yellow + padlock (never ambiguous) */
   --note: #fffbeb;
   --note-line: #f5dfa0;
-  /* Statuts ticket : nouveau / ouvert / en attente / en pause / résolu / clos */
+  /* Ticket statuses: new / open / waiting / on hold / solved / closed */
   --new: #6d28d9;
   --new-t: #f1eafd;
   --open: #1d4ed8;
@@ -45,28 +44,28 @@
   --closed-t: #f0f1f3;
   --dang: #c0342b;
   --dang-t: #fdecea;
-  /* Séries graphiques (AG-09) — validées CVD sur surface claire (dataviz) */
+  /* Chart series (AG-09) — CVD-validated on a light surface (dataviz) */
   --chart-1: #0e8a5f;
   --chart-2: #2563eb;
-  /* Site public */
+  /* Public site */
   --site-dark: #08281e;
-  /* Typographie */
+  /* Typography */
   --font-ui: "Inter", Inter, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
-  /* Voiles — relevés dans les maquettes agent et administration. Quatre densités,
-     une par type de surface posée par-dessus l'écran ; les maquettes les écrivent
-     en dur, donc identiques dans les deux thèmes (elles sont déjà quasi opaques).
-     Le voile de panneau verrouillé, lui, suit le thème : voir --veil. */
-  --scrim-palette: rgba(8, 14, 12, 42%); /* palette ⌘K — + blur 2px, padding-top 11vh */
-  --scrim-drawer: rgba(8, 14, 12, 34%); /* tiroir latéral */
-  --scrim-modal: rgba(8, 14, 12, 44%); /* modale centrée — padding 24 */
-  --scrim-viewer: rgba(6, 12, 10, 86%); /* visionneuse de pièce jointe */
-  /* Panneau désactivé/verrouillé : un voile de la couleur du fond, pas un
-     assombrissement — le contenu reste lisible sous le blur 3px. */
+  /* Scrims — read off the agent and administration mockups. Four densities, one
+     per kind of surface laid over the screen; the mockups hardcode them, hence
+     identical in both themes (they are already near opaque).
+     The locked-panel veil, by contrast, follows the theme: see --veil. */
+  --scrim-palette: rgba(8, 14, 12, 42%); /* ⌘K palette — plus blur 2px, padding-top 11vh */
+  --scrim-drawer: rgba(8, 14, 12, 34%); /* side drawer */
+  --scrim-modal: rgba(8, 14, 12, 44%); /* centered modal — padding 24 */
+  --scrim-viewer: rgba(6, 12, 10, 86%); /* attachment viewer */
+  /* Disabled/locked panel: a veil in the color of the background, not a
+     darkening — the content stays readable under the 3px blur. */
   --veil: rgba(246, 248, 247, 60%);
 }
 
-/* ---------- 1bis. Produit — sombre ---------- */
+/* ---------- 1bis. Product — dark ---------- */
 [data-theme="dark"] {
   --acc: #34c08d;
   --acc-t: #12291f;
@@ -100,12 +99,12 @@
   --closed-t: #1b1f1e;
   --dang: #f0736a;
   --dang-t: #2e1614;
-  /* Séries graphiques — validées CVD sur surface sombre (dataviz) */
+  /* Chart series — CVD-validated on a dark surface (dataviz) */
   --chart-1: #2ea47c;
   --chart-2: #5a87e8;
 }
 
-/* ---------- 1ter. Portail client (.surface-portal) — palette maquette PT ---------- */
+/* ---------- 1ter. Customer portal (.surface-portal) — PT mockup palette ---------- */
 .surface-portal {
   --canvas: #f6f9f7;
   --bg: #ffffff;
@@ -121,22 +120,22 @@
   --acc-2: #0e7a58;
   --acc-t: #eaf3ee;
   --acc-b: #c7ddd3;
-  /* Statuts : le portail décale légèrement les fonds teintés du produit. */
+  /* Statuses: the portal shifts the product's tinted backgrounds slightly. */
   --wait-t: #fdf2e3;
   --ok-t: #e5f1ea;
   --open-t: #e9eefc;
-  /* Aplat des boutons pleins et de la carte CTA : dégradé --cta-a → --cta-b.
-     Distinct de --acc, qui reste substituable par l'accent du tenant. */
+  /* Flat fill of the solid buttons and of the CTA card: gradient --cta-a → --cta-b.
+     Distinct from --acc, which stays substitutable by the tenant accent. */
   --cta-a: #0b5f46;
   --cta-b: #073e2d;
-  /* Échelle d'ombres : 1 posé (cartes), 2 flottant (recherche, boutons pleins),
-     3 détaché (dropdown, carte CTA, carte de connexion). */
+  /* Shadow scale: 1 resting (cards), 2 floating (search, solid buttons),
+     3 detached (dropdown, CTA card, sign-in card). */
   --sh-1: 0 1px 2px rgb(13 28 23 / 4%);
   --sh-2:
     0 1px 2px rgb(13 28 23 / 4%), 0 10px 26px -14px rgb(13 28 23 / 16%);
   --sh-3:
     0 2px 4px rgb(13 28 23 / 5%), 0 26px 54px -22px rgb(11 95 70 / 34%);
-  /* Titres en serif : logo, hero, titres de page, h2 d'article. */
+  /* Serif titles: logo, hero, page titles, article h2. */
   --font-title: Newsreader, "Iowan Old Style", Georgia, serif;
 }
 [data-theme="dark"] .surface-portal,
@@ -165,9 +164,9 @@
   --sh-3: 0 2px 6px rgb(0 0 0 / 40%), 0 28px 56px -24px rgb(0 0 0 / 80%);
 }
 
-/* ---------- 2. Console cloud — clair ----------
- * Esthétique volontairement distincte du produit (accent cuivre, bandeau CONSOLE) :
- * aucune capture ne doit être confondue avec l'app client. */
+/* ---------- 2. Cloud console — light ----------
+ * Aesthetics deliberately distinct from the product (copper accent, CONSOLE banner):
+ * no screenshot should ever be mistaken for the customer app. */
 .surface-console {
   --cu: #a2521c;
   --cu-t: #faefe6;
@@ -190,13 +189,13 @@
   --vio: #6d28d9;
   --vio-t: #f1eafd;
   --scrim: rgba(31, 24, 19, 0.42);
-  /* La console n'utilise jamais l'accent produit */
+  /* The console never uses the product accent */
   --acc: var(--cu);
   --acc-t: var(--cu-t);
   --acc-b: var(--cu-b);
 }
 
-/* ---------- 2bis. Console cloud — sombre ---------- */
+/* ---------- 2bis. Cloud console — dark ---------- */
 [data-theme="dark"] .surface-console,
 .surface-console[data-theme="dark"] {
   --cu: #e09a5e;

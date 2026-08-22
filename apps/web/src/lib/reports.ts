@@ -1,6 +1,6 @@
 /**
- * Requêtes de AG-09 — Rapports. Fenêtre courante + fenêtre précédente pour les deltas,
- * filtre équipe optionnel, heatmap heure × jour, borne des données pour la bannière 7 j.
+ * AG-09 queries — Reports. Current window + previous window for the deltas,
+ * optional team filter, hour × day heatmap, data boundary for the 7-day banner.
  */
 import { db } from "@openhelpdesk/db";
 import { sql, type SQL } from "drizzle-orm";
@@ -83,11 +83,11 @@ export async function getReportData(tenantId: string, days: number, teamId?: str
     group by channel order by count desc
   `)) as unknown as Row[];
 
-  // Les deux agrégats sont calculés SÉPARÉMENT : joindre tickets et réponses CSAT
-  // dans la même requête multiplie les lignes (N tickets × M réponses) et gonfle
-  // le nombre de tickets résolus par agent.
+  // The two aggregates are computed SEPARATELY: joining tickets and CSAT responses
+  // in the same query multiplies the rows (N tickets × M responses) and inflates
+  // the number of tickets resolved per agent.
   const agents = (await db.execute(sql`
-    with par_ticket as (
+    with per_ticket as (
       select t.assignee_id as agent_id,
         count(*) filter (where t.resolved_at >= now() - make_interval(days => ${days})) as resolved,
         percentile_cont(0.5) within group (order by extract(epoch from (t.first_replied_at - t.created_at)))
@@ -97,7 +97,7 @@ export async function getReportData(tenantId: string, days: number, teamId?: str
         and t.deleted_at is null and t.merged_into_id is null${teamFilterT}
       group by t.assignee_id
     ),
-    par_csat as (
+    per_csat as (
       select c.agent_id,
         count(*) filter (where c.score = 'good') as csat_good,
         count(*) as csat_total
@@ -112,21 +112,21 @@ export async function getReportData(tenantId: string, days: number, teamId?: str
       coalesce(pc.csat_good, 0) as csat_good,
       coalesce(pc.csat_total, 0) as csat_total
     from app.users u
-    left join par_ticket pt on pt.agent_id = u.id
-    left join par_csat pc on pc.agent_id = u.id
+    left join per_ticket pt on pt.agent_id = u.id
+    left join per_csat pc on pc.agent_id = u.id
     where u.tenant_id = ${tenantId} and u.status != 'disabled'
       and (pt.agent_id is not null or pc.agent_id is not null)
     order by resolved desc, u.name
   `)) as unknown as Row[];
 
-  // Heatmap « Volume par heure et jour » — dow Postgres (0 = dimanche) × heures 7–18.
+  // "Volume by hour and day" heatmap — Postgres dow (0 = Sunday) × hours 7–18.
   const heatRows = (await db.execute(sql`
     select extract(dow from created_at) as dow, extract(hour from created_at) as hour, count(*) as n
     from app.tickets
     where tenant_id = ${tenantId} and created_at >= now() - make_interval(days => ${days})${teamFilter}
     group by 1, 2
   `)) as unknown as Row[];
-  // Lignes lundi→dimanche, colonnes 7 h → 18 h (12 cases).
+  // Rows Monday→Sunday, columns hour 7 → hour 18 (12 cells).
   const HOURS = Array.from({ length: 12 }, (_, i) => 7 + i);
   const DOW_ORDER = [1, 2, 3, 4, 5, 6, 0];
   const heatmap = DOW_ORDER.map((dow) =>

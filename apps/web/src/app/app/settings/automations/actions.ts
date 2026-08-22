@@ -137,14 +137,14 @@ export async function duplicateRule(formData: FormData) {
   revalidatePath("/app/settings/automations");
 }
 
-/** L'ordre d'exécution compte : échange de positions avec la règle voisine. */
+/** Execution order matters: swaps positions with the neighboring rule. */
 export async function moveRule(formData: FormData) {
   const { tenant } = await requireManager();
   const ruleId = String(formData.get("ruleId"));
   const direction = formData.get("direction") === "up" ? "up" : "down";
 
-  // Même tri que la liste ST-05 : position, puis kind et nom (createdAt ne
-  // discrimine pas les lignes insérées dans une même transaction de seed).
+  // Same sort as the ST-05 list: position, then kind and name (createdAt does
+  // not discriminate between rows inserted in a single seed transaction).
   const siblings = await db
     .select()
     .from(automationRules)
@@ -156,7 +156,7 @@ export async function moveRule(formData: FormData) {
   const swapIndex = direction === "up" ? index - 1 : index + 1;
   if (swapIndex < 0 || swapIndex >= siblings.length) return;
 
-  // Positions normalisées à l'index pour éviter les doublons hérités.
+  // Positions normalized to the index to avoid inherited duplicates.
   const reordered = [...siblings];
   [reordered[index], reordered[swapIndex]] = [reordered[swapIndex]!, reordered[index]!];
   for (let i = 0; i < reordered.length; i++) {
@@ -169,8 +169,8 @@ export async function moveRule(formData: FormData) {
 }
 
 /**
- * « Tester sur un ticket existant » (ST-05) : simulation sur le ticket le plus
- * récent via evaluateConditions — AUCUNE modification appliquée.
+ * "Test on an existing ticket" (ST-05): simulation on the most recent ticket
+ * via evaluateConditions — NO modification applied.
  */
 export async function testRule(payload: {
   conditionsAll: unknown;
@@ -194,7 +194,7 @@ export async function testRule(payload: {
     return { ok: false, text: t("app.settings.rules.testNoTicket") };
   }
 
-  // L'événement simulé suit la condition « Événement » si elle est posée.
+  // The simulated event follows the "Event" condition when one is set.
   const eventCondition = conditionsAll.find((c) => c.field === "event" && c.operator === "is");
   const event = (eventCondition?.value as RuleEvent) ?? "ticket.updated";
 

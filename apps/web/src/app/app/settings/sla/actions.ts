@@ -10,7 +10,7 @@ import { requireManager } from "../guard";
 const PRIORITIES = ["urgent", "high", "normal", "low"] as const;
 const COLUMNS = ["firstReplyMin", "nextReplyMin", "resolveMin"] as const;
 
-/** Calendrier du tenant, ou null (24/7). */
+/** The tenant's calendar, or null (24/7). */
 async function resolveCalendarId(tenantId: string, raw: string): Promise<string | null> {
   if (!raw) return null;
   const [row] = await db
@@ -30,8 +30,8 @@ function parseConditions(raw: unknown): unknown[] {
 }
 
 /**
- * ST-07 — Cibles de la politique sélectionnée (édition en place sous la liste) :
- * saisies « 15 min » / « 4 h » / « 2 j », calendrier appliqué et rappel avant échéance.
+ * ST-07 — Targets of the selected policy (edited in place under the list):
+ * "15 min" / "4 h" / "2 j" inputs, applied calendar and reminder before the due date.
  */
 export async function saveSlaTargets(formData: FormData) {
   const { tenant } = await requireManager();
@@ -69,7 +69,7 @@ export async function saveSlaTargets(formData: FormData) {
   redirect(`/app/settings/sla?policy=${existing.id}&saved=1`);
 }
 
-/** Nom et conditions d'application (drawer) — la politique par défaut garde ses conditions vides. */
+/** Name and matching conditions (drawer) — the default policy keeps its conditions empty. */
 export async function savePolicyMeta(formData: FormData) {
   const { tenant } = await requireManager();
   const policyId = String(formData.get("policyId") ?? "");
@@ -94,7 +94,7 @@ export async function savePolicyMeta(formData: FormData) {
   redirect(`/app/settings/sla?policy=${existing.id}&saved=1`);
 }
 
-/** Création : la nouvelle politique se place avant la politique par défaut. */
+/** Creation: the new policy is placed before the default policy. */
 export async function createSlaPolicy(formData: FormData) {
   const { tenant } = await requireManager();
   const name = String(formData.get("name") ?? "").trim().slice(0, 120);
@@ -113,7 +113,7 @@ export async function createSlaPolicy(formData: FormData) {
         ? Math.max(...rows.map((p) => p.position)) + 1
         : 0;
 
-  // Cibles de départ : celles de la politique par défaut, pour ne pas partir d'une grille vide.
+  // Starting targets: those of the default policy, so as not to start from an empty grid.
   const seedTargets = rows.find((p) => p.isDefault)?.targets ?? {};
 
   const [created] = await db
@@ -131,7 +131,7 @@ export async function createSlaPolicy(formData: FormData) {
     })
     .returning();
 
-  // Décale la politique par défaut (et les suivantes) pour qu'elle reste la dernière.
+  // Shifts the default policy (and the following ones) so it stays last.
   if (defaultPosition !== undefined) {
     for (const p of rows.filter((r) => r.position >= defaultPosition)) {
       await db
@@ -145,7 +145,7 @@ export async function createSlaPolicy(formData: FormData) {
   redirect(`/app/settings/sla?policy=${created?.id ?? ""}&saved=1`);
 }
 
-/** Réordonnancement par glisser-déposer : positions normalisées à l'index. */
+/** Drag-and-drop reordering: positions normalized to the index. */
 export async function reorderSlaPolicies(ids: string[]) {
   const { tenant } = await requireManager();
   const rows = await db
@@ -162,7 +162,7 @@ export async function reorderSlaPolicies(ids: string[]) {
   revalidatePath("/app/settings/sla");
 }
 
-/** La politique par défaut n'est pas supprimable (ST-07). */
+/** The default policy cannot be deleted (ST-07). */
 export async function deleteSlaPolicy(formData: FormData) {
   const { tenant } = await requireManager();
   const policyId = String(formData.get("policyId"));
@@ -178,7 +178,7 @@ export async function deleteSlaPolicy(formData: FormData) {
   revalidatePath("/app/settings/sla");
 }
 
-/* ---------- Onglet Horaires ouvrés — CRUD businessHours ---------- */
+/* ---------- Business hours tab — businessHours CRUD ---------- */
 
 const DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 
@@ -186,7 +186,7 @@ function isTime(v: string): boolean {
   return /^([01]\d|2[0-3]):[0-5]\d$/.test(v);
 }
 
-/** Fuseau IANA valide ? (l'API Intl est la source de vérité). */
+/** Valid IANA time zone? (the Intl API is the source of truth). */
 function isTimezone(value: string): boolean {
   if (!value) return false;
   try {
@@ -225,7 +225,7 @@ export async function createCalendar(formData: FormData) {
   redirect(`/app/settings/sla?tab=hours${calendar ? `&cal=${calendar.id}` : ""}`);
 }
 
-/** Édition de la semaine : toggle par jour + plage « 09:00 → 18:00 ». */
+/** Week editing: per-day toggle + "09:00 → 18:00" range. */
 export async function saveCalendar(formData: FormData) {
   const { tenant } = await requireManager();
   const calendarId = String(formData.get("calendarId") ?? "");
@@ -237,13 +237,13 @@ export async function saveCalendar(formData: FormData) {
     .where(and(eq(businessHours.tenantId, tenant.id), eq(businessHours.id, calendarId)));
   if (!calendar) return;
 
-  // Charge utile de WeekEditor : { mon: [["09:00","18:00"], …], … }
+  // WeekEditor payload: { mon: [["09:00","18:00"], …], … }
   let submitted: Record<string, unknown> = {};
   try {
     const parsed = JSON.parse(String(formData.get("week") ?? "{}"));
     if (parsed && typeof parsed === "object") submitted = parsed as Record<string, unknown>;
   } catch {
-    /* semaine illisible → calendrier fermé, l'utilisateur voit le résultat */
+    /* unreadable week → closed calendar, the user sees the result */
   }
 
   const weeklyHours: Record<string, [string, string][]> = {};
@@ -331,7 +331,7 @@ export async function deleteCalendar(formData: FormData) {
     .where(and(eq(businessHours.tenantId, tenant.id), eq(businessHours.id, calendarId)));
   if (!calendar) return;
 
-  // Détache les politiques et équipes avant suppression (retour au 24/7).
+  // Detaches policies and teams before deletion (back to 24/7).
   await db
     .update(slaPolicies)
     .set({ businessHoursId: null })

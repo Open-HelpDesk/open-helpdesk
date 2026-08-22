@@ -1,9 +1,9 @@
 "use server";
 
 /**
- * PT-08 (EE) — actions SSO de l'administration d'organisation : persistance
- * minimale de la connexion (le flux OIDC/SAML réel arrive au Lot 5b).
- * Voir ee/LICENSE : ce fichier n'est pas couvert par l'AGPL du dépôt.
+ * PT-08 (EE) — SSO actions for the organization admin area: minimal persistence
+ * of the connection (the real OIDC/SAML flow lands in Lot 5b).
+ * See ee/LICENSE: this file is not covered by the repository's AGPL.
  */
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -21,9 +21,9 @@ const PROVIDER_PROTOCOLS = {
 type SsoProviderKey = keyof typeof PROVIDER_PROTOCOLS;
 
 /**
- * « Tester la connexion » (PT-08) : persistance minimale — la connexion est
- * enregistrée en statut "pending", rien n'est activé tant que le test réel
- * (Lot 5b) n'a pas abouti.
+ * "Test the connection" (PT-08): minimal persistence — the connection is saved
+ * with status "pending", nothing is enabled as long as the real test (Lot 5b)
+ * has not succeeded.
  */
 export async function saveSsoConnection(formData: FormData) {
   const { session, org } = await requireOrgAdmin();
@@ -48,7 +48,7 @@ export async function saveSsoConnection(formData: FormData) {
   const config =
     protocol === "oidc"
       ? {
-          // TODO chiffrement KMS (Lot 5b) — en attendant, JSON encodé base64, jamais renvoyé en clair.
+          // TODO KMS encryption (Lot 5b) — meanwhile base64-encoded JSON, never returned in clear.
           _todo: "chiffrement KMS",
           clientId: String(formData.get("clientId") ?? "").trim() || previous.clientId || "",
           clientSecret: clientSecret || previous.clientSecret || "",
@@ -92,7 +92,7 @@ export async function saveSsoConnection(formData: FormData) {
   redirect(`/help/organization?tab=sso&provider=${provider}`);
 }
 
-/** Bandeau d'activation : bascule pending ↔ disabled (l'activation réelle attend le test, Lot 5b). */
+/** Enablement banner: toggles pending ↔ disabled (real activation waits for the test, Lot 5b). */
 export async function toggleSsoEnabled() {
   const { session, org } = await requireOrgAdmin();
   const existing = await getOrgSsoConnection(session.tenant.id, org.id);

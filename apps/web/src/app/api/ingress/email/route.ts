@@ -1,7 +1,7 @@
 /**
- * Webhook email entrant — reçoit un InboundEmail normalisé (JSON).
- * Les adaptateurs de format fournisseur (Resend, SES) normaliseront vers ce contrat.
- * Protégé par en-tête x-ingress-secret (MAIL_INGRESS_SECRET).
+ * Inbound email webhook — receives a normalized InboundEmail (JSON).
+ * Provider-format adapters (Resend, SES) will normalize to this contract.
+ * Protected by the x-ingress-secret header (MAIL_INGRESS_SECRET).
  */
 import { ingressAuthorized } from "@/lib/ingress-auth";
 import { NextResponse, type NextRequest } from "next/server";
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
   const result = await ingestEmail(payload);
 
-  // L'ingestion reste pure ; l'orchestration (triggers puis SLA) se fait ici.
+  // Ingestion stays pure; orchestration (triggers then SLA) happens here.
   if (result.outcome === "created") {
     await onTicketCreated(result.tenantId, result.ticketId);
   } else if (result.outcome === "appended") {

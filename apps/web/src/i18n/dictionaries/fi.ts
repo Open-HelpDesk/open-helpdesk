@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const fi: Dictionary = {
   "chrome.defaultName": "Ohjekeskus",
@@ -148,6 +148,14 @@ export const fi: Dictionary = {
   "login.footer":
     "Ei vielä pyyntöjä? Tilisi luodaan automaattisesti ensimmäisen pyynnön yhteydessä.",
 
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Kirjautumislinkkisi — {workspace}",
+  "login.emailBody":
+    "Hei,\n\nAvaa tämä linkki, niin näet pyyntösi (linkki on voimassa 15 minuuttia):\n{url}\n\nJos et pyytänyt tätä linkkiä, jätä viesti huomiotta.\n\n{workspace}",
+
   "org.intro": {
     one: "Olet tämän organisaation järjestelmänvalvoja. Tässä tekemäsi asetukset koskevat sitä {org}-organisaation henkilöä, joka käyttää {tenant}-tukea.",
     other:
@@ -256,7 +264,7 @@ export const fi: Dictionary = {
   "csatPage.doneTitle": "Kiitos!",
   "csatPage.doneBody": "Kommenttisi on välitetty tiimille.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Työtila",
   "app.settingsNav.itemGeneral": "Yleiset",
   "app.settingsNav.itemTeam": "Asiakaspalvelijat ja tiimit",
@@ -289,7 +297,7 @@ export const fi: Dictionary = {
   "app.settingsNav.copied": "Kopioitu",
   "app.settingsNav.copy": "Kopioi",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
   "app.shell.inbox": "Saapuneet",
   "app.shell.search": "Haku (⌘K)",
   "app.shell.contacts": "Yhteyshenkilöt",
@@ -300,7 +308,7 @@ export const fi: Dictionary = {
   "app.shell.suspendedTitle": "Tämä työtila on jäädytetty",
   "app.shell.suspendedText": "Ota yhteyttä ylläpitäjääsi palauttaaksesi pääsyn.",
   "app.shell.suspendedOwnerText":
-    "Valitse tilaus tai päivitä maksutapasi aktivoidaksesi työtilan uudelleen.",
+    "Maksa tilaus tai päivitä maksutapasi aktivoidaksesi työtilan uudelleen.",
   "app.shell.suspendedBillingCta": "Avaa Tilaus ja laskutus",
   "app.shell.myTickets": "Omat pyyntöni",
   "app.shell.newTicket": "Uusi pyyntö",
@@ -636,7 +644,7 @@ export const fi: Dictionary = {
   "app.reports.columnAgent": "Agentti",
   "app.reports.columnFirstReply": "1. vastaus",
   "app.reports.customReports": "Mukautetut raportit",
-  "app.reports.enterprisePlanBadge": "ENTERPRISE-PAKETTI",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Tutustu",
   "app.reports.chartDailyAria": "{labelA} ja {labelB} päivittäin",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -654,8 +662,11 @@ export const fi: Dictionary = {
   "app.settings.shell.saved": "✓ Tallennettu",
   "app.settings.shell.cancel": "Peruuta",
   "app.settings.shell.save": "Tallenna",
-  "app.settings.shell.planEnterprise": "ENTERPRISE-PAKETTI",
-  "app.settings.shell.upgradeToEnterprise": "Siirry Enterprise-pakettiin",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Sulje",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Hallitse tilausta",
   "app.settings.shell.eeSelfHostedTitle": "Enterprise Edition -ominaisuus",
   "app.settings.shell.eeSelfHostedText":
     "Tämä ominaisuus kuuluu kaupallisen lisenssin piiriin (repositorion ee/-hakemisto) eikä sisälly itse isännöityyn avoimen lähdekoodin versioon.",
@@ -800,9 +811,9 @@ export const fi: Dictionary = {
   "app.settings.email.sendFailed": "Lähetys ei onnistunut",
   "app.settings.sso.agentTitle": "Agenttien SSO",
   "app.settings.sso.agentSubtitle": "SAML 2.0 -kertakirjautuminen ja SCIM-provisiointi tukitiimillesi.",
-  "app.settings.sso.agentLockedTitle": "Agenttien SSO on käytettävissä vain Enterprise-paketissa",
+  "app.settings.sso.agentLockedTitle": "Agenttien SSO on osa Enterprise Edition -versiota",
   "app.settings.sso.agentLockedText": "Yhdistä SAML 2.0 -identiteetintarjoajasi, provisioi agentit SCIM:llä ja pakota kertakirjautuminen koko tiimille.",
-  "app.settings.sso.agentEnterpriseOnly": "Agenttien SSO on käytettävissä vain Enterprise-paketissa.",
+  "app.settings.sso.agentEnterpriseOnly": "Agenttien SSO on osa Enterprise Edition -versiota.",
   "app.settings.sso.idpOther": "Muu (yleinen SAML)",
   "app.settings.sso.samlToggleLabel": "Ota käyttöön SAML 2.0 -kertakirjautuminen",
   "app.settings.sso.samlHeading": "SAML 2.0 -kertakirjautuminen",
@@ -877,9 +888,11 @@ export const fi: Dictionary = {
   "app.settings.sso.addMapping": "+ Lisää vastaavuus",
   "app.settings.sso.customerTitle": "Asiakasorganisaatioiden SSO",
   "app.settings.sso.customerSubtitle": "Jokainen asiakasorganisaatio yhdistää oman identiteetintarjoajansa portaalista. Täällä valvot koko kokonaisuutta.",
-  "app.settings.sso.customerLockedTitle": "Asiakasorganisaatioiden SSO on käytettävissä vain Enterprise-paketissa",
+  "app.settings.sso.customerLockedTitle":
+    "Asiakasorganisaatioiden SSO on osa Enterprise Edition -versiota",
   "app.settings.sso.customerLockedText": "Anna jokaisen asiakasorganisaation liittää oma identiteetintarjoajansa (SAML tai OIDC) ja valvo koko kokonaisuutta tästä näkymästä.",
-  "app.settings.sso.customerEnterpriseOnly": "Asiakasorganisaatioiden SSO on käytettävissä vain Enterprise-paketissa.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "Asiakasorganisaatioiden SSO on osa Enterprise Edition -versiota.",
   "app.settings.sso.statusActive": "Aktiivinen",
   "app.settings.sso.statusPending": "Vahvistettava",
   "app.settings.sso.statusError": "Virhe",
@@ -1014,7 +1027,7 @@ export const fi: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Tietopankki julkaistu",
   "app.settings.portal.kbPublishedHint": "Julkaistut artikkelit näkyvät ilman kirjautumista.",
   "app.settings.portal.hidePoweredByLabel": "Piilota ”Palvelun tarjoaa Open HelpDesk”",
-  "app.settings.portal.hidePoweredByHint": "Saatavilla Enterprise-paketista alkaen.",
+  "app.settings.portal.hidePoweredByHint": "Saatavilla Enterprise Edition -versiossa.",
   "app.settings.portal.kbVisibilityLabel": "Tietopankin näkyvyys",
   "app.settings.portal.kbVisibilityPublic": "Julkinen",
   "app.settings.portal.kbVisibilityAuthenticated": "Kirjautuneille",
@@ -1062,7 +1075,8 @@ export const fi: Dictionary = {
   "app.settings.portal.csatExclusionRemove": "Poista {name}",
   "app.settings.workspace.generalTitle": "Yleiset ja brändäys",
   "app.settings.workspace.generalSubtitle": "Työtilan identiteetti, kieli, aikavyöhyke ja pyyntöjen numerointi.",
-  "app.settings.workspace.generalDeleteCloudError": "Poisto hylätty — ajastettu poisto on käytettävissä pilvipalvelussa.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Poisto hylätty — ajastettu poisto vaatii control plane -palvelun.",
   "app.settings.workspace.generalIdentity": "Identiteetti",
   "app.settings.workspace.generalNameLabel": "Työtilan nimi",
   "app.settings.workspace.generalLogoLabel": "Logo",
@@ -1117,7 +1131,8 @@ export const fi: Dictionary = {
   "app.settings.workspace.seatsUsed": { one: "{count} / {quota} paikka käytössä", other: "{count} / {quota} paikkaa käytössä" },
   "app.settings.workspace.seatsUsedFull": { one: "{count} / {quota} paikka käytössä — raja saavutettu", other: "{count} / {quota} paikkaa käytössä — raja saavutettu" },
   "app.settings.workspace.seatsAddHint": "Lisää paikkoja kutsuaksesi uusia agentteja.",
-  "app.settings.workspace.seatsFreeHint": "Viewer-roolit ovat maksuttomia ja rajattomia.",
+  "app.settings.workspace.seatsFreeHint":
+    "Viewer-roolit eivät vie paikkaa ja niitä on rajattomasti.",
   "app.settings.workspace.seatsAddAction": "Lisää paikkoja",
   "app.settings.workspace.seatsManage": "Hallitse",
   "app.settings.workspace.seatLimitReached":
@@ -1193,15 +1208,15 @@ export const fi: Dictionary = {
   "app.settings.workspace.teamHoursHint": "Kalentereita hallitaan näkymässä SLA ja palveluajat.",
   "app.settings.workspace.save": "Tallenna",
   "app.settings.workspace.billingTitle": "Tilaus ja laskutus",
-  "app.settings.workspace.billingSubtitle": "Paketti, paikat, kiintiöt, maksutapa ja laskuhistoria.",
-  "app.settings.workspace.selfHosted": "ITSE ISÄNNÖITY",
+  "app.settings.workspace.billingSubtitle": "Tilaus, paikat, kiintiöt, maksutapa ja laskuhistoria.",
+  "app.settings.workspace.subscriptionNone": "Ei tilausta",
   "app.settings.workspace.trialBadge": "KOKEILU",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": { one: "kuukaudessa · {count} paikka hintaan {price} €", other: "kuukaudessa · {count} paikkaa hintaan {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "kuukaudessa · {count} paikka sisältyy", other: "kuukaudessa · {count} paikkaa sisältyy" },
-  "app.settings.workspace.billingNoDue": "Tällä instanssilla ei ole maksuja — laskutus hoidetaan pilvipalvelussa.",
-  "app.settings.workspace.cloudOnly": "Saatavilla pilvipalvelussa",
-  "app.settings.workspace.changePlan": "Vaihda pakettia",
+  "app.settings.workspace.billingNoDue": "Tällä hetkellä ei ole maksuja.",
+  "app.settings.workspace.requiresControlPlane": "Vaatii control plane -palvelun",
+  "app.settings.workspace.changeSubscription": "Muuta tilausta",
   "app.settings.workspace.manageSeats": "Hallitse paikkoja",
   "app.settings.workspace.usageTitle": "Kuukauden kulutus",
   "app.settings.workspace.quotaSeats": "Paikat",
@@ -1213,7 +1228,7 @@ export const fi: Dictionary = {
   "app.settings.workspace.colNumber": "Numero",
   "app.settings.workspace.colPeriod": "Jakso",
   "app.settings.workspace.colAmount": "Summa",
-  "app.settings.workspace.invoicesEmpty": "Ei laskuja — laskut näkyvät tässä pilvipalvelussa.",
+  "app.settings.workspace.invoicesEmpty": "Ei vielä laskuja.",
   "app.settings.rules.saved": "✓ Tallennettu",
   "app.settings.rules.save": "Tallenna",
   "app.settings.rules.delete": "Poista",
@@ -1277,18 +1292,18 @@ export const fi: Dictionary = {
   "app.settings.rules.typeLongText": "Pitkä teksti",
   "app.settings.rules.typeFile": "Tiedosto",
   "app.settings.rules.typeSelectLong": "Pudotusvalikko",
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) : les statuts,
-     priorités et canaux n'y sont pas — ils viennent de app.status.* /
-     app.priority.* / app.channel.*, plus bas dans ce fichier. --- */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07): statuses, priorities
+     and channels are not here — they come from app.status.* /
+     app.priority.* / app.channel.*, further down this file. --- */
 
-  /* Types de champs personnalisés (ST-04) ; « Teksti » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Teksti” is typeText, above. */
   "app.settings.rules.typeSelect": "Luettelo",
   "app.settings.rules.typeMultiSelect": "Monivalinta",
   "app.settings.rules.typeDate": "Päivämäärä",
   "app.settings.rules.typeNumber": "Numero",
   "app.settings.rules.typeCheckbox": "Valintaruutu",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Tapahtuma",
   "app.settings.rules.condFieldStatus": "Tila",
   "app.settings.rules.condFieldPriority": "Prioriteetti",
@@ -1302,8 +1317,8 @@ export const fi: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Tunteja luonnista",
   "app.settings.rules.condFieldHoursUpdated": "Tunteja päivityksestä",
 
-  /* Opérateurs. « sisältävät » est au pluriel : seul le champ Tunnisteet porte
-     cet opérateur (OPERATORS_BY_FIELD), et le résumé s'accorde avec lui. */
+  /* Operators. “sisältävät” is plural: only the Tunnisteet field carries
+     this operator (OPERATORS_BY_FIELD), and the summary agrees with it. */
   "app.settings.rules.opIs": "on",
   "app.settings.rules.opIsNot": "ei ole",
   "app.settings.rules.opContains": "sisältää",
@@ -1313,13 +1328,13 @@ export const fi: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Pyyntö luotu",
   "app.settings.rules.eventTicketUpdated": "Pyyntö päivitetty",
   "app.settings.rules.eventMessageCreated": "Viesti saapunut",
 
-  /* Actions, telles que le menu du builder les nomme — à l'impératif, comme le
-     reste des commandes de ce fichier. */
+  /* Actions, as the builder's menu names them — in the imperative, like the
+     rest of the commands in this file. */
   "app.settings.rules.actSetStatus": "Aseta tila",
   "app.settings.rules.actSetPriority": "Aseta prioriteetti",
   "app.settings.rules.actAssignUser": "Osoita agentille",
@@ -1328,13 +1343,13 @@ export const fi: Dictionary = {
   "app.settings.rules.actAddTags": "Lisää tunnisteita",
   "app.settings.rules.actEmailContact": "Lähetä sähköposti yhteyshenkilölle",
 
-  /* Résumé d'une règle, en une ligne de liste : le finnois garde l'ordre
-     « jos … → … », et les bribes s'enchaînent sans majuscule ni point. */
+  /* One-line rule summary: Finnish keeps the “jos … → …” order, and the
+     fragments run on without a capital or a full stop. */
   "app.settings.rules.summaryPattern": "Jos {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "ja",
   "app.settings.rules.summaryAlways": "aina",
-  /* Après un numéral, le finnois met son substantif à l'élatif singulier : les
-     deux formes coïncident, mais la langue les exige toutes les deux. */
+  /* After a numeral, Finnish puts its noun in the singular elative: the two
+     forms coincide, but the language requires both of them. */
   "app.settings.rules.summaryAnyOf": {
     one: "vähintään yksi {count} ehdosta",
     other: "vähintään yksi {count} ehdosta",
@@ -1343,13 +1358,13 @@ export const fi: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "ei käsittelijää",
   "app.settings.rules.summaryAssigned": "on käsittelijä",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas, et le finnois pose son mot APRÈS la durée. */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated, and Finnish puts its word AFTER the duration. */
   "app.settings.rules.summarySince": "{duration} ajan",
   "app.settings.rules.summarySetStatus": "siirrä tilaan {value}",
   "app.settings.rules.summarySetPriority": "aseta prioriteetiksi {value}",
-  /* {team} vaut un nom d'équipe, ou summaryAnyTeam quand il reste inconnu : le
-     deux-points évite d'avoir à décliner le nom propre. */
+  /* {team} holds a team name, or summaryAnyTeam when it stays unknown: the
+     colon avoids having to decline the proper noun. */
   "app.settings.rules.summaryAssignTeam": "osoita tiimille: {team}",
   "app.settings.rules.summaryAnyTeam": "jokin tiimi",
   "app.settings.rules.summaryAssignUser": "osoita agentille",
@@ -1357,7 +1372,7 @@ export const fi: Dictionary = {
   "app.settings.rules.summaryAddTags": "lisää {tags}",
   "app.settings.rules.summaryEmailContact": "lähetä sähköposti yhteyshenkilölle",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Tila → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioriteetti → {value}",
   "app.settings.rules.macroSummaryTeam": "Tiimi → {team}",
@@ -1449,7 +1464,7 @@ export const fi: Dictionary = {
   "app.settings.dev.dayYesterday": "Eilen {time}",
   "app.settings.dev.auditTitle": "Auditointiloki",
   "app.settings.dev.auditSubtitle": "Täydellinen loki ylläpitotoimista. Säilytys 2 vuotta.",
-  "app.settings.dev.auditLockedTitle": "Auditointiloki on käytettävissä vain Enterprise-paketissa",
+  "app.settings.dev.auditLockedTitle": "Auditointiloki on osa Enterprise Edition -versiota",
   "app.settings.dev.auditLockedText": "Säilytä jälki jokaisesta ylläpitotoimesta 2 vuoden ajan, mukaan lukien ennen/jälkeen-vertailu ja CSV-vienti.",
   "app.settings.dev.filterActorAll": "Tekijä: kaikki",
   "app.settings.dev.filterActionAll": "Toiminto: kaikki",
@@ -1466,9 +1481,9 @@ export const fi: Dictionary = {
   "app.settings.dev.actorContact": "Yhteyshenkilö",
   "app.settings.dev.exportUnauthorized": "Ei valtuutusta",
   "app.settings.dev.exportForbidden": "Vain Owner- ja Admin-rooleille.",
-  "app.settings.dev.exportEnterpriseOnly": "Auditointiloki on käytettävissä vain Enterprise-paketissa.",
+  "app.settings.dev.exportEnterpriseOnly": "Auditointiloki on osa Enterprise Edition -versiota.",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Uusi",
   "app.status.open": "Avoin",
   "app.status.waiting": "Odottaa",
@@ -1489,7 +1504,7 @@ export const fi: Dictionary = {
   "app.unit.kilobytes": "{count} kt",
   "app.unit.megabytes": "{value} Mt",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Omat pyyntöni",
   "app.views.unassigned": "Ei käsittelijää",
   "app.views.breaching": "Pian myöhässä",
@@ -1497,14 +1512,14 @@ export const fi: Dictionary = {
   "app.views.urgent": "Kiireelliset tällä viikolla",
   "app.views.escalation": "Eskalaatiot",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Nimeä uudelleen",
   "app.kb.renameSave": "Tallenna",
   "app.kb.deleteCategory": "Poista luokka",
   "app.kb.managersOnly": "Vain Owner ja Admin voivat muokata tietopankkia.",
   "app.kb.categoryNotEmpty": { one: "Luokassa on vielä {count} kohde. Siirrä se ennen luokan poistamista.", other: "Luokassa on vielä {count} kohdetta. Siirrä ne ennen luokan poistamista." },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "Sähköposti",
   "app.login.emailPlaceholder": "sina@yritys.fi",
   "app.login.password": "Salasana",
@@ -1531,9 +1546,9 @@ export const fi: Dictionary = {
   "app.login.providerMissing": "Tätä tarjoajaa ei ole määritetty tässä instanssissa.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Le titre du portail dans son propre aperçu (home.title), le nom du
-     workspace et la couleur d'accent viennent d'ailleurs ; les rôles Owner /
-     Admin / Agent / Viewer ne se traduisent pas. */
+  /* The portal title in its own preview (home.title), the workspace name
+     and the accent colour come from elsewhere; the Owner / Admin / Agent /
+     Viewer roles are not translated. */
 
   "app.onboarding.asideTitle": "Käyttöönotto",
   "app.onboarding.asideFooter":
@@ -1572,7 +1587,7 @@ export const fi: Dictionary = {
 
   "app.onboarding.teamTitle": "Kutsu tiimisi",
   "app.onboarding.teamBody":
-    "Kutsu agenttisi nyt tai jaa kutsulinkki. Viewer-paikat ovat maksuttomia.",
+    "Kutsu agenttisi nyt tai jaa kutsulinkki. Viewer-roolit eivät vie paikkaa.",
   "app.onboarding.invitePlaceholder": "kollega@yritys.fi",
   "app.onboarding.addRow": "+ Lisää rivi",
   "app.onboarding.sendInvites": "Lähetä kutsut",
@@ -1581,8 +1596,8 @@ export const fi: Dictionary = {
   "app.onboarding.testBody":
     "Testaa koko ketju, ennen kuin avaat palvelun asiakkaillesi.",
   "app.onboarding.readyTitle": "Työtilasi on valmis",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Luo testipyyntö lähettämällä sähköposti osoitteeseen {address}.",
   "app.onboarding.openInbox": "Avaa saapuneet",
 
@@ -1592,30 +1607,40 @@ export const fi: Dictionary = {
   "app.onboarding.checklistTicket": "Ensimmäinen pyyntö vastaanotettu",
   "app.onboarding.checklistSla": "SLA-käytäntö tarkistettu",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. Le sélecteur ouvre la phrase en
-     finnois : « JOS [jokainen | vähintään yksi] ehdoista täsmää ». */
+  /* ST-05 — the condition group header. The selector opens the sentence in
+     Finnish: “JOS [jokainen | vähintään yksi] ehdoista täsmää”. */
   "app.settings.rules.matchIf": "JOS",
   "app.settings.rules.matchAllPattern": "{mode} ehdoista täsmää",
   "app.settings.rules.matchAnyPattern": "{mode} ehdoista täsmää",
   "app.settings.rules.matchAll": "jokainen",
   "app.settings.rules.matchAny": "vähintään yksi",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
-  "app.settings.workspace.planFree": "Free-paketti",
-  "app.settings.workspace.planTeam": "Team-paketti",
-  "app.settings.workspace.planEnterprise": "Enterprise-paketti",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "SITTEN",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Testaa olemassa olevalla pyynnöllä",
+  "app.settings.rules.testRunning": "Testataan…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Poista",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Sähköpostin sisältö — muuttujat: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française ; seul l'affichage est traduit. */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string; only the display is translated. */
   "app.ticket.typeQuestion": "Kysymys",
   "app.ticket.typeIncident": "Häiriö",
   "app.ticket.typeTask": "Tehtävä",
   "app.ticket.typeOther": "Muu",
 
-  /* AG-09 — export CSV des rapports. */
+  /* AG-09 — CSV export of the reports. */
   "app.reports.csvIndicator": "Mittari",
   "app.reports.csvCurrentPeriod": "Nykyinen jakso",
   "app.reports.csvPreviousPeriod": "Edellinen jakso",
@@ -1630,8 +1655,8 @@ export const fi: Dictionary = {
   "app.reports.csvResolvedShort": "Ratkaistut",
   "app.reports.csvAgent": "Agentti",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Uusi artikkeli",
   "app.kb.fromTicketSymptomHeading": "Oire",
   "app.kb.fromTicketSymptomPlaceholder": "[Kuvaa, mitä asiakas havaitsee.]",
@@ -1641,8 +1666,8 @@ export const fi: Dictionary = {
   "app.kb.fromTicketMissingRequest": "asiakkaan alkuperäinen pyyntö",
   "app.kb.fromTicketMissingAnswer": "agentin vastaus",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Vaiheittainen ohje",
   "app.kb.tplProcedureHint": "Numeroidut vaiheet ja odotettu lopputulos.",
   "app.kb.tplProcedureTitle": "Miten [teet toimenpiteen]",

@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const nl: Dictionary = {
   "chrome.defaultName": "Helpcentrum",
@@ -150,6 +150,14 @@ export const nl: Dictionary = {
   "login.footer":
     "Nog geen verzoek? Uw account wordt automatisch aangemaakt bij het eerste verzoek.",
 
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Uw inloglink — {workspace}",
+  "login.emailBody":
+    "Beste,\n\nKlik op deze link om uw verzoeken te bekijken (15 minuten geldig):\n{url}\n\nHebt u hier niet om gevraagd, negeer dan deze e-mail.\n\n{workspace}",
+
   "org.intro": {
     one: "U bent beheerder van deze organisatie. Wat u hier instelt, geldt voor de persoon bij {org} die de support van {tenant} gebruikt.",
     other:
@@ -258,7 +266,7 @@ export const nl: Dictionary = {
   "csatPage.doneTitle": "Bedankt!",
   "csatPage.doneBody": "Uw opmerking is doorgegeven aan het team.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Werkruimte",
   "app.settingsNav.itemGeneral": "Algemeen",
   "app.settingsNav.itemTeam": "Agents & teams",
@@ -291,7 +299,7 @@ export const nl: Dictionary = {
   "app.settingsNav.copied": "Gekopieerd",
   "app.settingsNav.copy": "Kopiëren",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
   "app.shell.inbox": "Inbox",
   "app.shell.search": "Zoeken (⌘K)",
   "app.shell.contacts": "Contacten",
@@ -302,7 +310,7 @@ export const nl: Dictionary = {
   "app.shell.suspendedTitle": "Deze workspace is opgeschort",
   "app.shell.suspendedText": "Neem contact op met uw beheerder om de toegang te herstellen.",
   "app.shell.suspendedOwnerText":
-    "Kies een abonnement of werk uw betaalmethode bij om de workspace te heractiveren.",
+    "Breng uw abonnement in orde of werk uw betaalmethode bij om de workspace te heractiveren.",
   "app.shell.suspendedBillingCta": "Abonnement & facturatie openen",
   "app.shell.myTickets": "Mijn tickets",
   "app.shell.newTicket": "Nieuw ticket",
@@ -638,7 +646,7 @@ export const nl: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1e antwoord",
   "app.reports.customReports": "Aangepaste rapporten",
-  "app.reports.enterprisePlanBadge": "ENTERPRISE-PLAN",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Ontdekken",
   "app.reports.chartDailyAria": "{labelA} en {labelB} per dag",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -656,8 +664,11 @@ export const nl: Dictionary = {
   "app.settings.shell.saved": "✓ Opgeslagen",
   "app.settings.shell.cancel": "Annuleren",
   "app.settings.shell.save": "Opslaan",
-  "app.settings.shell.planEnterprise": "Enterprise-plan",
-  "app.settings.shell.upgradeToEnterprise": "Overstappen naar Enterprise",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Sluiten",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Abonnement beheren",
   "app.settings.shell.eeSelfHostedTitle": "Functie van de Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Deze functie valt onder de commerciële licentie (de map ee/ in de repository) en is niet inbegrepen in de zelfgehoste opensource-editie.",
@@ -802,9 +813,9 @@ export const nl: Dictionary = {
   "app.settings.email.sendFailed": "Verzenden niet mogelijk",
   "app.settings.sso.agentTitle": "SSO voor agents",
   "app.settings.sso.agentSubtitle": "Eenmalige aanmelding met SAML 2.0 en SCIM-provisioning voor uw supportteam.",
-  "app.settings.sso.agentLockedTitle": "SSO voor agents is alleen beschikbaar in het Enterprise-plan",
+  "app.settings.sso.agentLockedTitle": "SSO voor agents maakt deel uit van Enterprise Edition",
   "app.settings.sso.agentLockedText": "Koppel uw SAML 2.0-identiteitsprovider, voorzie uw agents via SCIM van accounts en verplicht eenmalige aanmelding voor het hele team.",
-  "app.settings.sso.agentEnterpriseOnly": "SSO voor agents is alleen beschikbaar in het Enterprise-plan.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO voor agents maakt deel uit van Enterprise Edition.",
   "app.settings.sso.idpOther": "Andere (generieke SAML)",
   "app.settings.sso.samlToggleLabel": "Eenmalige aanmelding met SAML 2.0 inschakelen",
   "app.settings.sso.samlHeading": "Eenmalige aanmelding SAML 2.0",
@@ -879,9 +890,11 @@ export const nl: Dictionary = {
   "app.settings.sso.addMapping": "+ Koppeling toevoegen",
   "app.settings.sso.customerTitle": "SSO voor klantorganisaties",
   "app.settings.sso.customerSubtitle": "Elke klantorganisatie koppelt vanuit het portaal haar eigen identiteitsprovider. Hier houdt u het geheel in de gaten.",
-  "app.settings.sso.customerLockedTitle": "SSO voor klantorganisaties is alleen beschikbaar in het Enterprise-plan",
+  "app.settings.sso.customerLockedTitle":
+    "SSO voor klantorganisaties maakt deel uit van Enterprise Edition",
   "app.settings.sso.customerLockedText": "Laat elke klantorganisatie haar eigen identiteitsprovider (SAML of OIDC) aansluiten en houd vanaf dit scherm het geheel in de gaten.",
-  "app.settings.sso.customerEnterpriseOnly": "SSO voor klantorganisaties is alleen beschikbaar in het Enterprise-plan.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "SSO voor klantorganisaties maakt deel uit van Enterprise Edition.",
   "app.settings.sso.statusActive": "Actief",
   "app.settings.sso.statusPending": "Te verifiëren",
   "app.settings.sso.statusError": "Fout",
@@ -1016,7 +1029,7 @@ export const nl: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Kennisbank gepubliceerd",
   "app.settings.portal.kbPublishedHint": "Gepubliceerde artikelen zijn zichtbaar zonder aan te melden.",
   "app.settings.portal.hidePoweredByLabel": "‘Mogelijk gemaakt door Open HelpDesk’ verbergen",
-  "app.settings.portal.hidePoweredByHint": "Beschikbaar vanaf het Enterprise-plan.",
+  "app.settings.portal.hidePoweredByHint": "Beschikbaar met Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Zichtbaarheid van de kennisbank",
   "app.settings.portal.kbVisibilityPublic": "Openbaar",
   "app.settings.portal.kbVisibilityAuthenticated": "Na aanmelden",
@@ -1064,7 +1077,8 @@ export const nl: Dictionary = {
   "app.settings.portal.csatExclusionRemove": "{name} verwijderen",
   "app.settings.workspace.generalTitle": "Algemeen & branding",
   "app.settings.workspace.generalSubtitle": "Identiteit van de werkruimte, taal, tijdzone en ticketnummering.",
-  "app.settings.workspace.generalDeleteCloudError": "Verwijderen geweigerd — geplande verwijdering is beschikbaar in de cloud.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Verwijderen geweigerd — geplande verwijdering vereist een control plane.",
   "app.settings.workspace.generalIdentity": "Identiteit",
   "app.settings.workspace.generalNameLabel": "Naam van de werkruimte",
   "app.settings.workspace.generalLogoLabel": "Logo",
@@ -1119,7 +1133,8 @@ export const nl: Dictionary = {
   "app.settings.workspace.seatsUsed": { one: "{count} / {quota} licentie gebruikt", other: "{count} / {quota} licenties gebruikt" },
   "app.settings.workspace.seatsUsedFull": { one: "{count} / {quota} licentie gebruikt — limiet bereikt", other: "{count} / {quota} licenties gebruikt — limiet bereikt" },
   "app.settings.workspace.seatsAddHint": "Voeg licenties toe om nieuwe agents uit te nodigen.",
-  "app.settings.workspace.seatsFreeHint": "Viewer-rollen zijn gratis en onbeperkt.",
+  "app.settings.workspace.seatsFreeHint":
+    "Viewer-rollen nemen geen licentie in beslag en zijn onbeperkt.",
   "app.settings.workspace.seatsAddAction": "Licenties toevoegen",
   "app.settings.workspace.seatsManage": "Beheren",
   "app.settings.workspace.seatLimitReached":
@@ -1194,15 +1209,16 @@ export const nl: Dictionary = {
   "app.settings.workspace.teamHoursHint": "Kalenders beheert u in SLA & werktijden.",
   "app.settings.workspace.save": "Opslaan",
   "app.settings.workspace.billingTitle": "Abonnement & facturatie",
-  "app.settings.workspace.billingSubtitle": "Plan, licenties, quota's, betaalmethode en factuurgeschiedenis.",
-  "app.settings.workspace.selfHosted": "ZELF GEHOST",
+  "app.settings.workspace.billingSubtitle":
+    "Abonnement, licenties, quota's, betaalmethode en factuurgeschiedenis.",
+  "app.settings.workspace.subscriptionNone": "Geen abonnement",
   "app.settings.workspace.trialBadge": "PROEF",
   "app.settings.workspace.priceMonthly": "€ {amount}",
   "app.settings.workspace.seatPricing": { one: "per maand · {count} licentie à € {price}", other: "per maand · {count} licenties à € {price}" },
   "app.settings.workspace.seatsIncluded": { one: "per maand · {count} licentie inbegrepen", other: "per maand · {count} licenties inbegrepen" },
-  "app.settings.workspace.billingNoDue": "Geen vervaldatum op deze instantie — de facturatie wordt beheerd in het cloudaanbod.",
-  "app.settings.workspace.cloudOnly": "Beschikbaar in het cloudaanbod",
-  "app.settings.workspace.changePlan": "Plan wijzigen",
+  "app.settings.workspace.billingNoDue": "Er is nu niets te betalen.",
+  "app.settings.workspace.requiresControlPlane": "Vereist een control plane",
+  "app.settings.workspace.changeSubscription": "Abonnement wijzigen",
   "app.settings.workspace.manageSeats": "Licenties beheren",
   "app.settings.workspace.usageTitle": "Verbruik deze maand",
   "app.settings.workspace.quotaSeats": "Licenties",
@@ -1214,7 +1230,7 @@ export const nl: Dictionary = {
   "app.settings.workspace.colNumber": "Nummer",
   "app.settings.workspace.colPeriod": "Periode",
   "app.settings.workspace.colAmount": "Bedrag",
-  "app.settings.workspace.invoicesEmpty": "Geen facturen — facturen verschijnen hier in het cloudaanbod.",
+  "app.settings.workspace.invoicesEmpty": "Nog geen facturen.",
   "app.settings.rules.saved": "✓ Opgeslagen",
   "app.settings.rules.save": "Opslaan",
   "app.settings.rules.delete": "Verwijderen",
@@ -1279,17 +1295,17 @@ export const nl: Dictionary = {
   "app.settings.rules.typeFile": "Bestand",
   "app.settings.rules.typeSelectLong": "Keuzelijst",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) --- */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) --- */
 
-  /* Types de champs personnalisés (ST-04) ; « Tekst » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Tekst” is typeText, above. */
   "app.settings.rules.typeSelect": "Lijst",
   "app.settings.rules.typeMultiSelect": "Meerkeuzelijst",
   "app.settings.rules.typeDate": "Datum",
   "app.settings.rules.typeNumber": "Getal",
   "app.settings.rules.typeCheckbox": "Selectievakje",
 
-  /* Champs sur lesquels une condition peut porter ; ils s'accordent avec
-     app.status.* / app.priority.* / app.channel.*, qui fournissent les valeurs. */
+  /* Fields a condition can be built on; they agree with app.status.* /
+     app.priority.* / app.channel.*, which supply the values. */
   "app.settings.rules.condFieldEvent": "Gebeurtenis",
   "app.settings.rules.condFieldStatus": "Status",
   "app.settings.rules.condFieldPriority": "Prioriteit",
@@ -1303,7 +1319,7 @@ export const nl: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Uren sinds aanmaak",
   "app.settings.rules.condFieldHoursUpdated": "Uren sinds laatste wijziging",
 
-  /* Opérateurs ; les deux derniers restent des symboles en néerlandais. */
+  /* Operators; the last two stay symbols in Dutch. */
   "app.settings.rules.opIs": "is",
   "app.settings.rules.opIsNot": "is niet",
   "app.settings.rules.opContains": "bevat",
@@ -1313,13 +1329,13 @@ export const nl: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Ticket aangemaakt",
   "app.settings.rules.eventTicketUpdated": "Ticket bijgewerkt",
   "app.settings.rules.eventMessageCreated": "Bericht ontvangen",
 
-  /* Actions, telles que le menu du builder les nomme. Le néerlandais met son
-     verbe en fin de proposition, comme « Aan het formulier toevoegen ». */
+  /* Actions, as the builder's menu names them. Dutch puts its verb at the
+     end of the clause, as in “Aan het formulier toevoegen”. */
   "app.settings.rules.actSetStatus": "Status instellen",
   "app.settings.rules.actSetPriority": "Prioriteit instellen",
   "app.settings.rules.actAssignUser": "Aan een agent toewijzen",
@@ -1328,8 +1344,8 @@ export const nl: Dictionary = {
   "app.settings.rules.actAddTags": "Tags toevoegen",
   "app.settings.rules.actEmailContact": "Een e-mail naar het contact sturen",
 
-  /* Résumé d'une règle, en une ligne de liste. Les bribes s'enchaînent sans
-     majuscule ni point ; le verbe reste en fin de bribe. */
+  /* One-line rule summary. The fragments run on without a capital or a full
+     stop; the verb stays at the end of the fragment. */
   "app.settings.rules.summaryPattern": "Als {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "en",
   "app.settings.rules.summaryAlways": "altijd",
@@ -1341,8 +1357,8 @@ export const nl: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "niet toegewezen",
   "app.settings.rules.summaryAssigned": "toegewezen",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. */
   "app.settings.rules.summarySince": "sinds {duration}",
   "app.settings.rules.summarySetStatus": "op {value} zetten",
   "app.settings.rules.summarySetPriority": "prioriteit {value}",
@@ -1353,7 +1369,7 @@ export const nl: Dictionary = {
   "app.settings.rules.summaryAddTags": "{tags} toevoegen",
   "app.settings.rules.summaryEmailContact": "een e-mail naar het contact sturen",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Status → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioriteit → {value}",
   "app.settings.rules.macroSummaryTeam": "Team → {team}",
@@ -1444,7 +1460,7 @@ export const nl: Dictionary = {
   "app.settings.dev.dayYesterday": "Gisteren {time}",
   "app.settings.dev.auditTitle": "Auditlogboek",
   "app.settings.dev.auditSubtitle": "Volledig logboek van alle beheeracties. Bewaartermijn 2 jaar.",
-  "app.settings.dev.auditLockedTitle": "Het auditlogboek is alleen beschikbaar in het Enterprise-plan",
+  "app.settings.dev.auditLockedTitle": "Het auditlogboek maakt deel uit van Enterprise Edition",
   "app.settings.dev.auditLockedText": "Bewaar 2 jaar lang het spoor van elke beheeractie, met een vergelijking voor/na en CSV-export.",
   "app.settings.dev.filterActorAll": "Uitvoerder: alle",
   "app.settings.dev.filterActionAll": "Actie: alle",
@@ -1461,9 +1477,10 @@ export const nl: Dictionary = {
   "app.settings.dev.actorContact": "Contact",
   "app.settings.dev.exportUnauthorized": "Niet geautoriseerd",
   "app.settings.dev.exportForbidden": "Alleen voor de rollen Owner en Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Het auditlogboek is alleen beschikbaar in het Enterprise-plan.",
+  "app.settings.dev.exportEnterpriseOnly":
+    "Het auditlogboek maakt deel uit van Enterprise Edition.",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nieuw",
   "app.status.open": "Open",
   "app.status.waiting": "In afwachting",
@@ -1484,7 +1501,7 @@ export const nl: Dictionary = {
   "app.unit.kilobytes": "{count} kB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Mijn tickets",
   "app.views.unassigned": "Niet toegewezen",
   "app.views.breaching": "Binnenkort te laat",
@@ -1492,14 +1509,14 @@ export const nl: Dictionary = {
   "app.views.urgent": "Urgent deze week",
   "app.views.escalation": "Escalaties",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Naam wijzigen",
   "app.kb.renameSave": "Opslaan",
   "app.kb.deleteCategory": "Categorie verwijderen",
   "app.kb.managersOnly": "Alleen Owner en Admin kunnen de kennisbank bewerken.",
   "app.kb.categoryNotEmpty": { one: "Deze categorie bevat nog {count} item. Verplaats het voordat u de categorie verwijdert.", other: "Deze categorie bevat nog {count} items. Verplaats ze voordat u de categorie verwijdert." },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-mail",
   "app.login.emailPlaceholder": "u@bedrijf.nl",
   "app.login.password": "Wachtwoord",
@@ -1528,10 +1545,10 @@ export const nl: Dictionary = {
   "app.login.providerMissing": "Deze provider is niet geconfigureerd op deze instantie.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Tout cet écran était en français dans le code. Quatre libellés viennent
-     d'ailleurs et ne sont pas repris ici : le titre du portail dans son propre
-     aperçu (home.title), le nom du workspace et la couleur d'accent (les mêmes
-     contrôles qu'en ST-01), et les rôles Owner / Admin / Agent / Viewer. */
+  /* This whole screen was French in the code. Four labels come from
+     elsewhere and are not repeated here: the portal title in its own preview
+     (home.title), the workspace name and the accent colour (the same controls
+     as in ST-01), and the Owner / Admin / Agent / Viewer roles. */
 
   "app.onboarding.asideTitle": "Configuratie",
   "app.onboarding.asideFooter":
@@ -1570,7 +1587,7 @@ export const nl: Dictionary = {
 
   "app.onboarding.teamTitle": "Uw team uitnodigen",
   "app.onboarding.teamBody":
-    "Nodig uw agents nu uit, of deel de uitnodigingslink. Viewer-licenties zijn gratis.",
+    "Nodig uw agents nu uit, of deel de uitnodigingslink. Viewer-rollen nemen geen licentie in beslag.",
   "app.onboarding.invitePlaceholder": "collega@bedrijf.nl",
   "app.onboarding.addRow": "+ Rij toevoegen",
   "app.onboarding.sendInvites": "Uitnodigingen versturen",
@@ -1579,8 +1596,8 @@ export const nl: Dictionary = {
   "app.onboarding.testBody":
     "Controleer de volledige keten voordat u de dienst voor uw klanten opent.",
   "app.onboarding.readyTitle": "Uw werkruimte is klaar",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Stuur een e-mail naar {address} om een testticket aan te maken.",
   "app.onboarding.openInbox": "Inbox openen",
 
@@ -1590,32 +1607,42 @@ export const nl: Dictionary = {
   "app.onboarding.checklistTicket": "Eerste ticket ontvangen",
   "app.onboarding.checklistSla": "SLA-beleid gecontroleerd",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase est découpée autour de
-     {mode} ; c'est le sélecteur qui porte l'article, faute de quoi l'option
-     « au moins une » ne s'accorderait pas avec le pluriel « voorwaarden ». */
+  /* ST-05 — the condition group header. The sentence is split around
+     {mode}; it is the selector that carries the article, without which the
+     “at least one” option would not agree with the plural “voorwaarden”. */
   "app.settings.rules.matchIf": "ALS",
   "app.settings.rules.matchAllPattern": "Voldoet aan {mode} voorwaarden",
   "app.settings.rules.matchAnyPattern": "Voldoet aan {mode} voorwaarden",
   "app.settings.rules.matchAll": "alle",
   "app.settings.rules.matchAny": "minstens één van de",
 
-  /* ST-11 — noms des offres ; « Free », « Standard » et « Pro » ne se
-     traduisent pas, et « plan » suit app.settings.shell.planPro. */
-  "app.settings.workspace.planFree": "Free-plan",
-  "app.settings.workspace.planTeam": "Team-plan",
-  "app.settings.workspace.planEnterprise": "Enterprise-plan",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "DAN",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Testen op een bestaand ticket",
+  "app.settings.rules.testRunning": "Testen…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Verwijderen",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Hoofdtekst van de e-mail — variabelen: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05) : la valeur en base reste française, seul
-     l'affichage est traduit. */
+  /* Ticket types (AG-05): the value stored in the database stays French,
+     only the display is translated. */
   "app.ticket.typeQuestion": "Vraag",
   "app.ticket.typeIncident": "Incident",
   "app.ticket.typeTask": "Taak",
   "app.ticket.typeOther": "Overig",
 
-  /* AG-09 — entêtes de l'export CSV des rapports ; « s » est bien l'abréviation
-     néerlandaise des secondes, comme dans app.ticket.draftSavedSeconds. */
+  /* AG-09 — CSV export headers for the reports; “s” really is the Dutch
+     abbreviation for seconds, as in app.ticket.draftSavedSeconds. */
   "app.reports.csvIndicator": "Indicator",
   "app.reports.csvCurrentPeriod": "Huidige periode",
   "app.reports.csvPreviousPeriod": "Vorige periode",
@@ -1630,7 +1657,7 @@ export const nl: Dictionary = {
   "app.reports.csvResolvedShort": "Opgelost",
   "app.reports.csvAgent": "Agent",
 
-  /* AG-10 — conversion d'une demande résolue en article ; les « ## » restent. */
+  /* AG-10 — turning a resolved request into an article; the “##” stay. */
   "app.kb.fromTicketDefaultTitle": "Nieuw artikel",
   "app.kb.fromTicketSymptomHeading": "Symptoom",
   "app.kb.fromTicketSymptomPlaceholder": "[Beschrijf wat de klant ziet.]",
@@ -1640,8 +1667,8 @@ export const nl: Dictionary = {
   "app.kb.fromTicketMissingRequest": "het oorspronkelijke verzoek van de klant",
   "app.kb.fromTicketMissingAnswer": "het antwoord van de agent",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Procedure stap voor stap",
   "app.kb.tplProcedureHint": "Een reeks genummerde stappen, met het verwachte resultaat.",
   "app.kb.tplProcedureTitle": "Hoe u [de handeling uitvoert]",

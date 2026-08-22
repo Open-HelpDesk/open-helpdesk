@@ -8,8 +8,8 @@ import type { Condition, RuleAction, RuleEvent } from "./types";
 type TicketRow = typeof tickets.$inferSelect;
 
 /**
- * Déclencheurs (ST-05) : évalués dans l'ordre à chaque événement, en une seule passe —
- * les actions d'une règle ne redéclenchent pas les règles (pas de boucle possible).
+ * Triggers (ST-05): evaluated in order on each event, in a single pass —
+ * a rule's actions do not re-trigger the rules (no loop possible).
  */
 export async function runTriggers(
   event: RuleEvent,
@@ -54,21 +54,21 @@ export async function runTriggers(
   return appliedCount;
 }
 
-/** Orchestration après création d'un ticket : triggers d'abord (ils peuvent changer la priorité), SLA ensuite. */
+/** Orchestration after a ticket is created: triggers first (they can change the priority), SLA next. */
 export async function onTicketCreated(tenantId: string, ticketId: string): Promise<void> {
   await runTriggers("ticket.created", tenantId, ticketId);
   await applySlaOnCreate(tenantId, ticketId);
 }
 
-/** Orchestration après réponse d'un contact (portail ou email). */
+/** Orchestration after a contact reply (portal or email). */
 export async function onContactMessage(tenantId: string, ticketId: string): Promise<void> {
   await runTriggers("message.created", tenantId, ticketId);
   await onContactReplySla(tenantId, ticketId);
 }
 
 /**
- * Règles horaires (ST-05) : balayage périodique — conditions temporelles
- * (hours_since_updated…) évaluées sur les tickets non clos et les résolus récents.
+ * Scheduled rules (ST-05): periodic sweep — time conditions
+ * (hours_since_updated…) evaluated on the non-closed tickets and the recently resolved ones.
  */
 export async function runScheduledRules(now: Date = new Date()): Promise<number> {
   const rules = await db

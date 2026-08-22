@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * AG-06 — Palette ⌘K (design espace-agent) : overlay rgba(8,14,12,.42) + blur 2 px,
- * panneau 620 px, groupes uppercase 10.5/700, icônes-tags 22×22 colorées par type,
- * méta à droite (« #4821 · Ouvert », vues, raccourci), section Actions, pied
- * « Filtres : from: status: #tag » + « ↑↓ naviguer · ↵ ouvrir ».
+ * AG-06 — ⌘K palette (agent space design): rgba(8,14,12,.42) overlay + 2 px blur,
+ * 620 px panel, uppercase 10.5/700 groups, 22×22 tag icons colored by type,
+ * meta on the right ("#4821 · Open", views, shortcut), Actions section, footer
+ * "Filters: from: status: #tag" + "↑↓ navigate · ↵ open".
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -88,7 +88,7 @@ export function CommandPalette({ edition }: { edition: Edition }) {
           setActive(0);
         }
       } catch {
-        /* requête annulée */
+        /* request aborted */
       }
     }, 180);
     return () => {
@@ -115,7 +115,7 @@ export function CommandPalette({ edition }: { edition: Edition }) {
     })),
     ...results.articles.map((a) => ({
       key: `a-${a.id}`,
-      // Fournie par le serveur : lui seul sait si l'utilisateur peut éditer.
+      // Provided by the server: only it knows whether the user can edit.
       href: a.href,
       group: t("app.shell.paletteGroupArticles"),
       label: a.title,
@@ -156,7 +156,7 @@ export function CommandPalette({ edition }: { edition: Edition }) {
       tagBg: "var(--sunk)",
       tagColor: "var(--ink-2)",
     },
-    // ST-11 est cloud uniquement : pas d'entrée Abonnement en auto-hébergé.
+    // ST-11 is cloud only: no Billing entry when self-hosted.
     ...(edition === "cloud"
       ? [
           {

@@ -8,7 +8,7 @@ import { PageHeader, PageShell } from "@/components/settings-page";
 import { Drawer } from "@/components/settings-overlays";
 import { deleteRule, duplicateRule, moveRule, toggleRule } from "./actions";
 
-/** Modèles de l'état vide — verbatim design (ST-05). */
+/** Empty-state templates — design verbatim (ST-05). */
 function templates(t: Translate): { key: string; name: string; description: string }[] {
   return [
     {
@@ -34,15 +34,15 @@ function templates(t: Translate): { key: string; name: string; description: stri
   ];
 }
 
-/** « 0 exécution / 7 j » · « 312 exécutions / 7 j » (verbatim design). */
+/** "0 run / 7 d" · "312 runs / 7 d" (design verbatim). */
 function runsLabel(n: number, t: Translate): string {
   return t("app.settings.rules.runsPerWeek", { count: n });
 }
 
 /**
- * ST-05 — Automatisations (1000 px) : liste ordonnée dans une seule carte
- * (poignée ⠿ + numéro mono 18 px, résumé, exécutions 7 j réelles, toggle 34×20,
- * journal en drawer), « + Nouvelle règle » sous la liste. État vide avec 4 modèles.
+ * ST-05 — Automations (1000 px): ordered list in a single card
+ * (⠿ handle + 18 px mono number, summary, real 7-day run counts, 34×20 toggle,
+ * log in a drawer), "+ New rule" below the list. Empty state with 4 templates.
  */
 export default async function AutomationsPage({
   searchParams,
@@ -53,15 +53,15 @@ export default async function AutomationsPage({
   const { tenant } = await requireAgent();
   const { saved } = await searchParams;
 
-  // Tri déterministe : position, puis kind (trigger avant scheduled) et nom.
-  // `createdAt` ne discrimine pas les lignes insérées dans une même transaction.
+  // Deterministic sort: position, then kind (trigger before scheduled) and name.
+  // `createdAt` does not discriminate between rows inserted in one transaction.
   const rules = await db
     .select()
     .from(automationRules)
     .where(eq(automationRules.tenantId, tenant.id))
     .orderBy(asc(automationRules.position), asc(automationRules.kind), asc(automationRules.name));
 
-  // Noms d'équipe : le résumé du design lit « assigner à Escalade », pas un identifiant.
+  // Team names: the summary reads "assign to Escalation", not an id.
   const teamRows = await db
     .select({ id: teams.id, name: teams.name })
     .from(teams)
@@ -76,7 +76,7 @@ export default async function AutomationsPage({
     .groupBy(automationRuns.ruleId);
   const runs7d = new Map(runCounts.map((r) => [r.ruleId, r.n]));
 
-  // Journal par règle (drawer) — 20 dernières exécutions avec le n° de ticket.
+  // Per-rule log (drawer) — last 20 runs with the ticket number.
   const journals = new Map<
     string,
     { createdAt: Date; ticketNumber: number | null; actionsApplied: unknown }[]
@@ -319,11 +319,12 @@ function RuleJournal({
             }}
           >
             {r.ticketNumber != null ? `#${r.ticketNumber} → ` : ""}
+            {/* The engine records applied actions as ready-to-read labels
+                (packages/rules/src/apply.ts). Reading them as objects made the
+                journal claim "no action" on every run that did something. */}
             {Array.isArray(r.actionsApplied)
-              ? (r.actionsApplied as { type?: string }[])
-                  .map((a) => a?.type ?? "")
-                  .filter(Boolean)
-                  .join(", ") || t("app.settings.rules.journalNoAction")
+              ? (r.actionsApplied as string[]).filter(Boolean).join(", ") ||
+                t("app.settings.rules.journalNoAction")
               : t("app.settings.rules.journalNoAction")}
           </span>
         </li>

@@ -1,7 +1,7 @@
 /**
- * Widget embarquable (ST-09) : script servi depuis le sous-domaine du tenant.
- * Snippet client : <script src="https://{slug}.open-helpdesk.com/api/widget" async></script>
- * Bouton flottant configurable → iframe vers /widget (formulaire compact).
+ * Embeddable widget (ST-09): script served from the tenant's subdomain.
+ * Client snippet: <script src="https://{slug}.open-helpdesk.com/api/widget" async></script>
+ * Configurable floating button → iframe to /widget (compact form).
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { getPortalTenant } from "@/lib/portal-auth";
@@ -10,14 +10,14 @@ import { getT } from "@/i18n/server";
 export async function GET(request: NextRequest) {
   const t = await getT();
   const tenant = await getPortalTenant();
-  if (!tenant) return new NextResponse("// tenant introuvable", { status: 404 });
+  if (!tenant) return new NextResponse("// tenant not found", { status: 404 });
 
   const config = (tenant.portalConfig ?? {}) as {
     widget?: { enabled?: boolean; color?: string; position?: string; title?: string };
   };
   const widget = config.widget ?? {};
   if (widget.enabled === false) {
-    return new NextResponse("// widget désactivé", {
+    return new NextResponse("// widget disabled", {
       headers: { "content-type": "application/javascript; charset=utf-8" },
     });
   }
@@ -25,11 +25,11 @@ export async function GET(request: NextRequest) {
     widget.color ??
     ((tenant.branding as { accentColor?: string } | null)?.accentColor ?? "#0B5F46");
   const position = widget.position === "left" ? "left" : "right";
-  // JSON.stringify échappe pour le contexte JS ; on retire seulement <> par défense.
+  // JSON.stringify escapes for the JS context; we strip only <> as a defence.
   const title = (widget.title ?? t("widget.defaultTitle")).replace(/[<>]/g, "");
   const origin = `${request.nextUrl.protocol}//${request.headers.get("host")}`;
 
-  // Pastille flottante + panneau 12 px d'angle, ombre 0 8px 24px — aperçu ST-09.
+  // Floating pill + panel with 12 px corners, 0 8px 24px shadow — ST-09 preview.
   const js = `(function(){
   if (window.__ohdWidget) return; window.__ohdWidget = true;
   var label = ${JSON.stringify(`💬 ${title}`)};

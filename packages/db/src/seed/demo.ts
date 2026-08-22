@@ -1,10 +1,10 @@
 /**
- * Seed « demo » — jeu de données de démonstration FIGÉ (specs/03 § 4) + défauts design.
- * Workspace « Acme Support » (slug acme, accent #0B5F46), ticket de référence #4821.
- * Les défauts produit (macros, SLA, règles, équipes, champs) viennent de defaults.ts —
- * les mêmes que pour tout nouveau workspace.
+ * "demo" seed — FROZEN demonstration data set + the install defaults.
+ * Workspace "Acme Support" (slug acme, accent #0B5F46), reference ticket #4821.
+ * The product defaults (macros, SLA, rules, teams, fields) come from defaults.ts —
+ * the same ones as for any new workspace.
  *
- * Usage : pnpm db:seed (rejouable — met à niveau une base déjà seedée).
+ * Usage: pnpm db:seed (replayable — upgrades an already seeded database).
  */
 import { and, eq, inArray, isNull } from "drizzle-orm";
 import { db } from "../client";
@@ -37,7 +37,7 @@ import { installDefaults } from "./defaults";
 
 const HOUR = 3600 * 1000;
 
-/* ---------- Boîte email ---------- */
+/* ---------- Mailbox ---------- */
 async function ensureMailbox(tenantId: string) {
   await db
     .insert(mailboxes)
@@ -51,15 +51,15 @@ async function ensureMailbox(tenantId: string) {
     .onConflictDoNothing();
 }
 
-/* ---------- Défauts design : purge de l'ancien seed ad hoc puis installation ---------- */
+/* ---------- Design defaults: purge the old ad hoc seed, then install ---------- */
 async function resetAndInstallDefaults(tenantId: string) {
   const [marker] = await db
     .select({ id: slaPolicies.id })
     .from(slaPolicies)
-    .where(and(eq(slaPolicies.tenantId, tenantId), eq(slaPolicies.name, "Clients Premium")));
-  if (marker) return; // défauts design déjà en place
+    .where(and(eq(slaPolicies.tenantId, tenantId), eq(slaPolicies.name, "Premium customers")));
+  if (marker) return; // defaults already in place
 
-  // Détacher les tickets des anciennes politiques/équipes/formulaires avant purge.
+  // Detach the tickets from the old policies/teams/forms before the purge.
   await db
     .update(tickets)
     .set({ slaPolicyId: null, teamId: null, formId: null })
@@ -77,7 +77,7 @@ async function resetAndInstallDefaults(tenantId: string) {
   await installDefaults(tenantId);
 }
 
-/* ---------- Appartenances aux équipes (design ST-02) ---------- */
+/* ---------- Team memberships (ST-02 design) ---------- */
 async function ensureMemberships(tenantId: string) {
   const agentRows = await db.select().from(users).where(eq(users.tenantId, tenantId));
   const teamRows = await db.select().from(teams).where(eq(teams.tenantId, tenantId));
@@ -85,13 +85,13 @@ async function ensureMemberships(tenantId: string) {
   const team = (name: string) => teamRows.find((t) => t.name === name)?.id;
 
   const wanted: Array<[string, string]> = [
-    ["Marie Dupont", "Support N1"],
-    ["Marie Dupont", "Escalade"],
-    ["Thomas Roux", "Support N1"],
-    ["Claire Bonnet", "Commercial"],
-    ["Sofiane Amrani", "Support N1"],
-    ["Sofiane Amrani", "Produit"],
-    ["Élise Chabot", "Escalade"],
+    ["Marie Dupont", "Tier 1"],
+    ["Marie Dupont", "Escalation"],
+    ["Thomas Roux", "Tier 1"],
+    ["Claire Bonnet", "Sales"],
+    ["Sofiane Amrani", "Tier 1"],
+    ["Sofiane Amrani", "Product"],
+    ["Élise Chabot", "Escalation"],
   ];
   for (const [agentName, teamName] of wanted) {
     const userId = agent(agentName);
@@ -107,14 +107,14 @@ async function ensureMemberships(tenantId: string) {
 
 /* ---------- CSAT (ST-08) ---------- */
 /**
- * Journal des emails rejetés du jeu de démonstration (ST-03 du design) : montre les
- * quatre motifs que le pipeline sait produire, avec des dates échelonnées.
+ * Rejected-email log of the demonstration data set (ST-03 of the design): shows the
+ * four reasons the pipeline is able to produce, with staggered dates.
  */
 /**
- * Les cinq demandes du portail de démonstration (PT-05 du design) et le fil complet
- * du ticket #4821 (PT-06 : quatre messages publics alternés). Sans elles, l'onglet
- * « Résolues » tombe sur l'état vide et la bulle agent teintée n'apparaît jamais.
- * Rejouable : chaque ticket n'est créé que s'il manque.
+ * The five demonstration portal requests (PT-05 of the design) and the complete thread
+ * of ticket #4821 (PT-06: four alternating public messages). Without them, the
+ * "Solved" tab falls back to the empty state and the tinted agent bubble never shows.
+ * Replayable: each ticket is only created if it is missing.
  */
 async function ensureDemoRequests(tenantId: string) {
   const [julien] = await db
@@ -134,14 +134,14 @@ async function ensureDemoRequests(tenantId: string) {
   const DAY = 24 * HOUR;
   const now = Date.now();
 
-  // 1. Le fil public complet de #4821 (le seed n'avait que le premier message).
+  // 1. The complete public thread of #4821 (the seed only had the first message).
   const [ref] = await db
     .select()
     .from(tickets)
     .where(and(eq(tickets.tenantId, tenantId), eq(tickets.number, 4821)));
   if (ref) {
     const base = ref.createdAt.getTime();
-    // Idempotent message par message : le fil peut déjà contenir d'autres réponses.
+    // Idempotent message by message: the thread may already contain other replies.
     const present = await db
       .select({ body: ticketMessages.bodyText })
       .from(ticketMessages)
@@ -156,9 +156,9 @@ async function ensureDemoRequests(tenantId: string) {
         authorType: "agent" as const,
         authorId: marie.id,
         bodyText:
-          "Bonjour Julien, merci pour le signalement. Je reproduis bien l'erreur sur " +
-          "les factures de plus de 50 lignes. Je remonte à l'équipe technique et je " +
-          "reviens vers vous avant midi.",
+          "Hello Julien, thank you for the report. I do reproduce the error on " +
+          "invoices with more than 50 lines. I am passing it to the engineering team " +
+          "and will get back to you before noon.",
         createdAt: new Date(base + 29 * 60 * 1000),
       },
       {
@@ -169,8 +169,8 @@ async function ensureDemoRequests(tenantId: string) {
         authorId: julien.id,
         source: "email" as const,
         bodyText:
-          "Merci pour le retour rapide. Avez-vous une estimation ? Notre direction " +
-          "financière attend l'export pour vendredi 17 h au plus tard.",
+          "Thank you for the quick answer. Do you have an estimate? Our finance " +
+          "department needs the export by Friday 5 pm at the latest.",
         createdAt: new Date(base + 166 * 60 * 1000),
       },
       {
@@ -180,8 +180,8 @@ async function ensureDemoRequests(tenantId: string) {
         authorType: "agent" as const,
         authorId: marie.id,
         bodyText:
-          "Le correctif est déployé depuis 14 h. L'export fonctionne à nouveau, y " +
-          "compris sur les factures volumineuses. Pouvez-vous confirmer de votre côté ?",
+          "The fix has been deployed since 2 pm. The export works again, large " +
+          "invoices included. Could you confirm on your side?",
         createdAt: new Date(base + 308 * 60 * 1000),
       },
     ];
@@ -190,57 +190,57 @@ async function ensureDemoRequests(tenantId: string) {
     if (missing.length > 0) await db.insert(ticketMessages).values(missing);
   }
 
-  // 2. Les quatre autres demandes listées par le design.
+  // 2. The four other requests of the demo inbox.
   const others = [
     {
       number: 4817,
-      subject: "Question sur la facturation annuelle",
+      subject: "Question about annual billing",
       status: "waiting" as const,
       priority: "normal" as const,
       createdAt: new Date(now - 2 * DAY),
       body:
-        "Bonjour, nous souhaitons passer à la facturation annuelle. Pouvez-vous nous " +
-        "confirmer le prorata appliqué sur le mois en cours ?",
+        "Hello, we would like to move to annual billing. Could you confirm how the " +
+        "current month is prorated?",
       reply:
-        "Bonjour, c'est possible à tout moment. Pouvez-vous me confirmer le nombre de " +
-        "sièges à facturer pour l'année à venir ?",
+        "Hello, that is possible at any time. Could you confirm how many seats to " +
+        "bill for the coming year?",
     },
     {
       number: 4790,
-      subject: "Ajouter deux utilisateurs au compte",
+      subject: "Adding two users to the account",
       status: "resolved" as const,
       priority: "normal" as const,
       createdAt: new Date(now - 6 * DAY),
       resolvedAt: new Date(now - 4 * DAY),
-      body: "Nous aimerions ajouter deux collaborateurs à notre espace. Quelle est la marche à suivre ?",
+      body: "We would like to add two colleagues to our workspace. What is the procedure?",
       reply:
-        "C'est fait : les deux comptes sont créés et ont reçu leur invitation. " +
-        "N'hésitez pas si un accès manque.",
+        "Done: both accounts are created and have received their invitation. Do let " +
+        "us know if an access is missing.",
     },
     {
       number: 4756,
-      subject: "Question sur les relances automatiques",
+      subject: "Question about automatic reminders",
       status: "resolved" as const,
       priority: "low" as const,
       createdAt: new Date(now - 17 * DAY),
       resolvedAt: new Date(now - 14 * DAY),
-      body: "Est-il possible de désactiver les relances automatiques pour notre organisation ?",
+      body: "Can automatic reminders be turned off for our organization?",
       reply:
-        "Oui, le réglage se trouve dans les préférences de votre organisation. " +
-        "Je l'ai désactivé pour vous.",
+        "Yes, the setting lives in your organization's preferences. I have turned " +
+        "it off for you.",
     },
     {
       number: 4702,
-      subject: "Erreur au premier import CSV",
+      subject: "Error on the first CSV import",
       status: "closed" as const,
       priority: "normal" as const,
       createdAt: new Date(now - 34 * DAY),
       resolvedAt: new Date(now - 31 * DAY),
       closedAt: new Date(now - 30 * DAY),
-      body: "L'import de notre fichier clients échoue avec une erreur de format à la ligne 42.",
+      body: "Importing our customer file fails with a format error on line 42.",
       reply:
-        "Le fichier utilisait des points-virgules comme séparateurs. Après conversion en " +
-        "virgules, l'import passe. Je clos la demande.",
+        "The file used semicolons as separators. Once converted to commas, the import " +
+        "goes through. I am closing the request.",
     },
   ];
 
@@ -297,13 +297,13 @@ async function ensureDemoRequests(tenantId: string) {
 }
 
 /**
- * Les deux agents invités du design (ST-02) : ils rendent visibles l'état « Invité »
- * et l'action « Renvoyer », inatteignables avec cinq agents tous actifs.
- * Nicolas est Viewer (siège gratuit), Amina est Agent de l'équipe Produit.
+ * The two invited agents of the design (ST-02): they make the "Invited" state and the
+ * "Resend" action visible, both unreachable with five agents all active.
+ * Nicolas is a Viewer (seat not counted), Amina is an Agent of the Produit team.
  */
 /**
- * Dernier accès des agents actifs (ST-02 du design : « il y a 4 min » → « il y a 3 j »).
- * Sans ces dates la colonne affiche « — » partout et l'écran paraît inachevé.
+ * Last seen of the active agents (ST-02 of the design: "4 min ago" → "3 d ago").
+ * Without these dates the column shows "—" everywhere and the screen looks unfinished.
  */
 async function ensureLastSeen(tenantId: string) {
   const MIN = 60 * 1000;
@@ -323,9 +323,9 @@ async function ensureLastSeen(tenantId: string) {
 }
 
 /**
- * Un contact nommé par organisation cliente : les listes et les fils affichent un nom,
- * pas une adresse. Les contacts créés par l'ingestion email restent anonymes tant
- * qu'aucun nom n'a été transmis — ici on complète ceux du jeu de démonstration.
+ * One named contact per customer organization: the lists and the threads show a name,
+ * not an address. Contacts created by email ingestion stay anonymous as long as no
+ * name has been transmitted — here we complete those of the demonstration data set.
  */
 async function ensureNamedContacts(tenantId: string) {
   const wanted = [
@@ -343,7 +343,7 @@ async function ensureNamedContacts(tenantId: string) {
       (
         await db
           .insert(contacts)
-          .values({ tenantId, name: person.name, email: person.email, locale: "fr" })
+          .values({ tenantId, name: person.name, email: person.email, locale: "en" })
           .returning()
       )[0]?.id;
     if (!contactId) continue;
@@ -367,7 +367,7 @@ async function ensureNamedContacts(tenantId: string) {
 async function ensureInvitedAgents(tenantId: string) {
   const invited = [
     { name: "Nicolas Fabre", email: "nicolas.fabre@acme.example", role: "viewer" as const, team: null },
-    { name: "Amina Traoré", email: "amina.traore@acme.example", role: "agent" as const, team: "Produit" },
+    { name: "Amina Traoré", email: "amina.traore@acme.example", role: "agent" as const, team: "Product" },
   ];
 
   for (const person of invited) {
@@ -452,32 +452,32 @@ async function ensureCsat(tenantId: string) {
       .set({
         csatConfig: {
           enabled: true,
-          question: "Comment évaluez-vous la réponse apportée à votre demande ?",
+          question: "How would you rate the answer you received?",
         },
       })
       .where(eq(tenants.id, tenantId));
   }
 }
 
-/* ---------- Base de connaissances (contenu du design, PT-01/PT-02/AG-10) ---------- */
+/* ---------- Knowledge base (PT-01/PT-02/AG-10) ---------- */
 async function ensureKb(tenantId: string) {
   const [migrated] = await db
     .select({ id: kbCategories.id })
     .from(kbCategories)
-    .where(and(eq(kbCategories.tenantId, tenantId), eq(kbCategories.slug, "demarrage")));
+    .where(and(eq(kbCategories.tenantId, tenantId), eq(kbCategories.slug, "getting-started")));
   if (migrated) return;
 
-  // Purge de l'ancien contenu ad hoc.
+  // Purge of the old ad hoc content.
   await db.delete(kbArticles).where(eq(kbArticles.tenantId, tenantId));
   await db.delete(kbCategories).where(eq(kbCategories.tenantId, tenantId));
 
   const topCategories = [
-    ["Démarrage", "demarrage", "◷", "Créer votre compte, inviter votre équipe et configurer vos premiers accès."],
-    ["Facturation", "facturation", "€", "Factures, moyens de paiement, changements de plan et remboursements."],
-    ["Utilisation quotidienne", "utilisation-quotidienne", "◈", "Les gestes du quotidien, des raccourcis aux vues personnalisées."],
-    ["Intégrations", "integrations", "⇄", "Connecter vos outils : Slack, Jira, Salesforce et l'API publique."],
-    ["Sécurité & conformité", "securite-conformite", "⛨", "Authentification, RGPD, hébergement des données et journaux."],
-    ["Dépannage", "depannage", "⚙", "Résoudre les erreurs les plus fréquentes en quelques étapes."],
+    ["Getting started", "getting-started", "◷", "Create your account, invite your team and set up your first accesses."],
+    ["Billing", "billing", "€", "Invoices, payment methods, subscription changes and refunds."],
+    ["Day-to-day use", "day-to-day-use", "◈", "The everyday gestures, from shortcuts to custom views."],
+    ["Integrations", "integrations", "⇄", "Connect your tools: Slack, Jira, Salesforce and the public API."],
+    ["Security & compliance", "security-compliance", "⛨", "Authentication, GDPR, data hosting and logs."],
+    ["Troubleshooting", "troubleshooting", "⚙", "Solve the most frequent errors in a few steps."],
   ] as const;
   const catIds = new Map<string, string>();
   let position = 0;
@@ -489,11 +489,11 @@ async function ensureKb(tenantId: string) {
     catIds.set(slug, row!.id);
   }
 
-  // Sections de la catégorie Facturation (accordéons PT-02, arbre AG-10).
+  // Sections of the Billing category (PT-02 accordions, AG-10 tree).
   const sections = [
-    ["Factures et paiements", "factures-et-paiements"],
-    ["Changer de plan", "changer-de-plan"],
-    ["Remboursements", "remboursements"],
+    ["Invoices and payments", "invoices-and-payments"],
+    ["Subscription changes", "subscription-changes"],
+    ["Refunds", "refunds"],
   ] as const;
   position = 0;
   for (const [name, slug] of sections) {
@@ -501,7 +501,7 @@ async function ensureKb(tenantId: string) {
       .insert(kbCategories)
       .values({
         tenantId,
-        parentId: catIds.get("facturation"),
+        parentId: catIds.get("billing"),
         name,
         slug,
         position: position++,
@@ -525,206 +525,201 @@ async function ensureKb(tenantId: string) {
   };
   const articles: Article[] = [
     {
-      cat: "factures-et-paiements",
-      title: "Comment télécharger vos factures",
-      slug: "comment-telecharger-vos-factures",
+      cat: "invoices-and-payments",
+      title: "How to download your invoices",
+      slug: "how-to-download-your-invoices",
       views: 4128,
       up: 96,
       author: "Claire Bonnet",
       body:
-        "Vos factures sont disponibles à tout moment depuis votre espace client. Elles " +
-        "sont générées le premier jour de chaque mois pour la période écoulée, et " +
-        "restent accessibles pendant dix ans.\n\n" +
-        "## Depuis l'espace client\n\n" +
-        "Ouvrez **Paramètres → Abonnement**, puis faites défiler jusqu'à la section " +
-        "« Historique des factures ». Chaque ligne propose un téléchargement au format PDF.\n\n" +
-        "> Seuls les utilisateurs avec le rôle Propriétaire ont accès à la section facturation.\n\n" +
-        "## Recevoir les factures par email\n\n" +
-        "Vous pouvez ajouter jusqu'à trois adresses de facturation qui recevront " +
-        "automatiquement chaque facture émise, depuis **Abonnement → Adresse de facturation**.\n\n" +
-        "```Format du nom de fichier\nACME-2026-08-FR12345.pdf\n```",
+        "Your invoices are available at any time from your customer area. They are " +
+        "generated on the first day of each month for the period just ended, and stay " +
+        "accessible for ten years.\n\n" +
+        "## From the customer area\n\n" +
+        "Open **Settings → Subscription**, then scroll down to the “Invoice history” " +
+        "section. Every line offers a download in PDF format.\n\n" +
+        "> Only users with the Owner role can reach the billing section.\n\n" +
+        "## Receiving invoices by email\n\n" +
+        "You can add up to three billing addresses that will automatically receive " +
+        "every invoice issued, from **Subscription → Billing address**.\n\n" +
+        "```File name format\nACME-2026-08-GB12345.pdf\n```",
     },
     {
-      cat: "factures-et-paiements",
-      title: "Ajouter un moyen de paiement",
-      slug: "ajouter-un-moyen-de-paiement",
+      cat: "invoices-and-payments",
+      title: "Adding a payment method",
+      slug: "adding-a-payment-method",
       views: 1844,
       up: 52,
       author: "Thomas Roux",
       body:
-        "Carte bancaire, prélèvement SEPA ou virement : comment enregistrer un moyen de " +
-        "paiement.\n\n## Carte bancaire\n\nDepuis **Abonnement → Moyen de paiement**, " +
-        "cliquez sur « Ajouter une carte ». La carte est vérifiée par une empreinte de " +
-        "0 €.\n\n## Prélèvement SEPA\n\nRenseignez l'IBAN du compte à débiter ; un mandat " +
-        "vous est envoyé pour signature électronique.",
+        "Card, SEPA direct debit or bank transfer: how to register a payment " +
+        "method.\n\n## Card\n\nFrom **Subscription → Payment method**, click “Add a " +
+        "card”. The card is verified with a €0 authorisation.\n\n## SEPA direct " +
+        "debit\n\nEnter the IBAN of the account to debit; a mandate is sent to you for " +
+        "electronic signature.",
     },
     {
-      cat: "factures-et-paiements",
-      title: "Que faire en cas d'échec de paiement",
-      slug: "echec-de-paiement",
+      cat: "invoices-and-payments",
+      title: "What to do when a payment fails",
+      slug: "failed-payment",
       views: 1205,
       up: 44,
       author: "Marie Dupont",
       body:
-        "Les relances automatiques et la marche à suivre pour régulariser.\n\n" +
-        "## Le calendrier des relances\n\nTrois tentatives sont effectuées : le jour de " +
-        "l'échéance, à J+7 et à J+14. Passé ce délai, le compte est suspendu jusqu'à " +
-        "régularisation.\n\n> Vos données restent conservées pendant toute la période de " +
-        "suspension.\n\n## Régulariser\n\nMettez à jour votre moyen de paiement depuis " +
-        "**Abonnement → Moyen de paiement** : la facture en attente est représentée " +
-        "immédiatement.",
+        "The automatic retries, and how to settle an outstanding invoice.\n\n" +
+        "## The retry schedule\n\nThree attempts are made: on the due date, then after " +
+        "7 and 14 days. Past that, the account is suspended until the invoice is " +
+        "settled.\n\n> Your data is kept for the whole suspension period.\n\n" +
+        "## Settling\n\nUpdate your payment method from **Subscription → Payment " +
+        "method**: the outstanding invoice is charged again straight away.",
     },
     {
-      cat: "changer-de-plan",
-      title: "Passer d'un plan mensuel à annuel",
-      slug: "passer-plan-mensuel-annuel",
+      cat: "subscription-changes",
+      title: "Switching from monthly to annual billing",
+      slug: "monthly-to-annual-billing",
       views: 2901,
       up: 71,
       author: "Claire Bonnet",
       body:
-        "Économisez 20 % en basculant sur la facturation annuelle.\n\n## Comment basculer\n\n" +
-        "Depuis **Abonnement → Changer de plan**, activez la bascule « Annuel ». Le " +
-        "montant restant de votre période mensuelle en cours est déduit au prorata.",
+        "Save 20% by moving to annual billing.\n\n## How to switch\n\n" +
+        "From **Subscription → Change plan**, turn on the “Annual” switch. What is left " +
+        "of your current monthly period is deducted pro rata.",
     },
     {
-      cat: "changer-de-plan",
-      title: "Ajouter ou retirer des sièges",
-      slug: "ajouter-retirer-sieges",
+      cat: "subscription-changes",
+      title: "Adding or removing seats",
+      slug: "adding-removing-seats",
       views: 640,
       up: 22,
       author: "Claire Bonnet",
       body:
-        "La facturation est ajustée au prorata dès la modification.\n\n## Ajouter des " +
-        "sièges\n\nDepuis **Abonnement → Gérer les sièges**, augmentez le nombre de " +
-        "sièges : les nouveaux agents peuvent être invités immédiatement.\n\n## Retirer " +
-        "des sièges\n\nDésactivez d'abord les agents concernés ; le retrait prend effet " +
-        "à la prochaine échéance.",
+        "Billing is adjusted pro rata as soon as the change is made.\n\n## Adding " +
+        "seats\n\nFrom **Subscription → Manage seats**, raise the number of seats: the " +
+        "new agents can be invited immediately.\n\n## Removing seats\n\nDeactivate the " +
+        "agents concerned first; the removal takes effect on the next renewal.",
     },
     {
-      cat: "remboursements",
-      title: "Demander un remboursement",
-      slug: "demander-un-remboursement",
+      cat: "refunds",
+      title: "Requesting a refund",
+      slug: "requesting-a-refund",
       views: 983,
       up: 18,
       author: "Claire Bonnet",
       body:
-        "Conditions et délais de traitement des demandes de remboursement.\n\n## " +
-        "Conditions\n\nLes remboursements sont acceptés dans les 30 jours suivant la " +
-        "facturation, sur demande motivée.\n\n## Délais\n\nUne fois accepté, le montant " +
-        "est recrédité sous 5 à 10 jours ouvrés sur le moyen de paiement d'origine.",
+        "Conditions and processing times for refund requests.\n\n## " +
+        "Conditions\n\nRefunds are accepted within 30 days of the invoice, on a " +
+        "motivated request.\n\n## Processing time\n\nOnce accepted, the amount is " +
+        "credited back within 5 to 10 business days to the original payment method.",
     },
     {
-      cat: "remboursements",
-      title: "TVA et facturation intracommunautaire",
-      slug: "tva-facturation-intracommunautaire",
+      cat: "refunds",
+      title: "VAT and cross-border invoicing",
+      slug: "vat-and-cross-border-invoicing",
       views: 742,
       up: 11,
       author: "Sofiane Amrani",
       body:
-        "Numéro de TVA, autoliquidation et mentions obligatoires.\n\n## Renseigner votre " +
-        "numéro de TVA\n\nDepuis **Abonnement → Adresse de facturation**, ajoutez votre " +
-        "numéro de TVA intracommunautaire : il apparaîtra sur toutes les factures " +
-        "suivantes.\n\n> Pour les clients établis hors de France dans l'UE, " +
-        "l'autoliquidation s'applique dès que le numéro est validé.",
+        "VAT number, reverse charge and mandatory statements.\n\n## Entering your VAT " +
+        "number\n\nFrom **Subscription → Billing address**, add your intra-EU VAT " +
+        "number: it will appear on every invoice issued from then on.\n\n> For " +
+        "customers established in another EU country, the reverse charge applies as " +
+        "soon as the number is validated.",
     },
     {
-      cat: "facturation",
-      title: "Comprendre la facturation au prorata",
-      slug: "comprendre-facturation-prorata",
+      cat: "billing",
+      title: "Understanding prorated billing",
+      slug: "understanding-prorated-billing",
       views: 0,
       up: 0,
       author: "Marie Dupont",
       draft: true,
       body:
-        "Brouillon — expliquer le calcul au prorata lors des changements de plan et de " +
-        "sièges en cours de période.",
+        "Draft — explain how the pro rata is computed when the plan or the number of " +
+        "seats changes mid-period.",
     },
     {
-      cat: "facturation",
-      title: "Historique des factures : export CSV",
-      slug: "historique-factures-export-csv",
+      cat: "billing",
+      title: "Invoice history: CSV export",
+      slug: "invoice-history-csv-export",
       views: 0,
       up: 0,
       author: "Thomas Roux",
       draft: true,
-      body: "Brouillon — documenter l'export CSV de l'historique des factures.",
+      body: "Draft — document the CSV export of the invoice history.",
     },
     {
-      cat: "demarrage",
-      title: "Réinitialiser votre mot de passe",
-      slug: "reinitialiser-votre-mot-de-passe",
+      cat: "getting-started",
+      title: "Resetting your password",
+      slug: "resetting-your-password",
       views: 3902,
       up: 64,
       author: "Marie Dupont",
       body:
-        "## Depuis l'écran de connexion\n\nCliquez sur « Mot de passe oublié ? » et " +
-        "saisissez votre email : un lien de réinitialisation valable 15 minutes vous est " +
-        "envoyé.\n\n> Si votre organisation utilise la connexion par compte d'entreprise " +
-        "(SSO), la réinitialisation se fait chez votre fournisseur d'identité.",
+        "## From the sign-in screen\n\nClick “Forgot your password?” and enter your " +
+        "email: a reset link valid for 15 minutes is sent to you.\n\n> If your " +
+        "organization signs in with a company account (SSO), the reset happens at your " +
+        "identity provider.",
     },
     {
-      cat: "demarrage",
-      title: "Connecter votre boîte email",
-      slug: "connecter-votre-boite-email",
+      cat: "getting-started",
+      title: "Connecting your mailbox",
+      slug: "connecting-your-mailbox",
       views: 2210,
       up: 41,
       author: "Thomas Roux",
       body:
-        "## Le transfert automatique\n\nTransférez votre adresse de support vers " +
-        "l'adresse fournie : chaque email devient un ticket, et les réponses de vos " +
-        "agents partent de votre propre adresse.\n\n## Vérifier la configuration\n\n" +
-        "Envoyez-vous un email de test : il doit apparaître dans l'inbox en moins " +
-        "d'une minute.",
+        "## Automatic forwarding\n\nForward your support address to the address " +
+        "provided: every email becomes a ticket, and your agents' replies leave from " +
+        "your own address.\n\n## Checking the setup\n\nSend yourself a test email: it " +
+        "must show up in the inbox in under a minute.",
     },
     {
-      cat: "utilisation-quotidienne",
-      title: "Raccourcis clavier de l'inbox",
-      slug: "raccourcis-clavier-inbox",
+      cat: "day-to-day-use",
+      title: "Inbox keyboard shortcuts",
+      slug: "inbox-keyboard-shortcuts",
       views: 512,
       up: 19,
       author: "Sofiane Amrani",
       body:
-        "## Navigation\n\n« j » et « k » pour se déplacer, « ↵ » pour ouvrir, « x » " +
-        "pour sélectionner. La palette « ⌘K » cherche tickets, contacts et articles.",
+        "## Navigation\n\n“j” and “k” to move, “↵” to open, “x” to select. The " +
+        "“⌘K” palette searches tickets, contacts and articles.",
     },
     {
       cat: "integrations",
-      title: "Créer une clé API",
-      slug: "creer-une-cle-api",
+      title: "Creating an API key",
+      slug: "creating-an-api-key",
       views: 388,
       up: 9,
       author: "Sofiane Amrani",
       body:
-        "## Depuis les paramètres\n\nOuvrez **Paramètres → API & webhooks** et créez une " +
-        "clé scoppée. La clé complète ne s'affiche qu'une seule fois : copiez-la " +
-        "immédiatement.\n\n> Préférez une clé « Lecture seule » pour les intégrations de " +
-        "reporting.",
+        "## From the settings\n\nOpen **Settings → API & webhooks** and create a " +
+        "scoped key. The full key is shown only once: copy it straight away.\n\n> " +
+        "Prefer a “Read only” key for reporting integrations.",
     },
     {
-      cat: "securite-conformite",
-      title: "Exercer un droit RGPD (suppression)",
-      slug: "exercer-droit-rgpd",
+      cat: "security-compliance",
+      title: "Exercising a GDPR right (deletion)",
+      slug: "exercising-a-gdpr-right",
       views: 154,
       up: 6,
       author: "Marie Dupont",
       body:
-        "## Suppression d'un contact\n\nDepuis la fiche contact, l'action « Supprimer " +
-        "(RGPD) » anonymise les tickets et supprime les données personnelles. " +
-        "L'opération est journalisée dans l'audit log.",
+        "## Deleting a contact\n\nFrom the contact page, the “Delete (GDPR)” action " +
+        "anonymises the tickets and removes the personal data. The operation is " +
+        "recorded in the audit log.",
     },
     {
-      cat: "depannage",
-      title: "Les emails n'arrivent plus dans l'inbox",
-      slug: "emails-narrivent-plus",
+      cat: "troubleshooting",
+      title: "Emails no longer reach the inbox",
+      slug: "emails-no-longer-arrive",
       views: 890,
       up: 31,
       author: "Thomas Roux",
       body:
-        "## Vérifier le transfert\n\nDans **Paramètres → Canal email**, l'adresse doit " +
-        "être « Vérifiée ». Si elle est en échec, renvoyez un email de test après avoir " +
-        "contrôlé la redirection chez votre fournisseur.\n\n> Le journal des emails " +
-        "rejetés indique la raison exacte de chaque rejet (spam, boucle, expéditeur " +
-        "bloqué).",
+        "## Checking the forwarding\n\nUnder **Settings → Email channel**, the address " +
+        "must read “Verified”. If it is failing, send a test email again after checking " +
+        "the redirection at your provider.\n\n> The rejected-email log gives the exact " +
+        "reason for every rejection (spam, loop, blocked sender).",
     },
   ];
 
@@ -744,7 +739,7 @@ async function ensureKb(tenantId: string) {
   }
 }
 
-/* ---------- PT-08 : Julien = administrateur d'organisation de Nordfil ---------- */
+/* ---------- PT-08: Julien = organization admin of Nordfil ---------- */
 async function ensureOrgAdmin(tenantId: string) {
   const [julien] = await db
     .select()
@@ -777,17 +772,19 @@ async function ensureOrgAdmin(tenantId: string) {
     .onConflictDoNothing();
 }
 
-/* ---------- Seed principal ---------- */
+/* ---------- Main seed ---------- */
 async function seed() {
-  console.log("Seed demo : workspace Acme Support…");
+  console.log("Demo seed: Acme Support workspace…");
 
   let [tenant] = await db
     .insert(tenants)
     .values({
       slug: "acme",
       name: "Acme Support",
+      // Explicit, even though it is the default: the demo is a frozen reference,
+      // and the smoke suite asserts the wording of the screens it renders.
+      locale: "en",
       branding: { accentColor: "#0B5F46" },
-      plan: "enterprise",
     })
     .onConflictDoNothing({ target: tenants.slug })
     .returning();
@@ -796,7 +793,7 @@ async function seed() {
   if (!tenant) {
     [tenant] = await db.select().from(tenants).where(eq(tenants.slug, "acme"));
   }
-  if (!tenant) throw new Error("Impossible de créer ou retrouver le tenant acme");
+  if (!tenant) throw new Error("Could not create or find the acme tenant");
 
   if (isFresh) {
     const agents = await db
@@ -844,7 +841,7 @@ async function seed() {
         tenantId: tenant.id,
         name: "Julien Lambert",
         email: "julien.lambert@nordfil.example",
-        locale: "fr",
+        locale: "en",
       })
       .returning();
     await db.insert(contactOrganizations).values({
@@ -853,14 +850,14 @@ async function seed() {
       organizationId: nordfil.id,
     });
 
-    // Ticket de référence #4821 — SLA dépassé (les captures montrent le badge rouge).
+    // Reference ticket #4821 — SLA breached, so the red badge has something to show.
     const createdAt = new Date(Date.now() - 26 * HOUR);
     const [ticket] = await db
       .insert(tickets)
       .values({
         tenantId: tenant.id,
         number: 4821,
-        subject: "Impossible d'exporter les factures en PDF",
+        subject: "Cannot export invoices to PDF",
         status: "open",
         priority: "high",
         channel: "email",
@@ -868,7 +865,7 @@ async function seed() {
         requesterId: julien!.id,
         organizationId: nordfil.id,
         assigneeId: marie.id,
-        tags: ["export", "facturation"],
+        tags: ["export", "billing"],
         createdAt,
         firstReplyDueAt: new Date(createdAt.getTime() + 4 * HOUR),
         resolveDueAt: new Date(createdAt.getTime() + 24 * HOUR),
@@ -884,10 +881,9 @@ async function seed() {
         authorId: julien!.id,
         source: "email",
         bodyText:
-          "Bonjour, depuis la mise à jour de mardi, le bouton « Exporter en PDF » de " +
-          "l'écran Factures ne répond plus. Rien ne se passe au clic, et la console du " +
-          "navigateur affiche une erreur 500. C'est bloquant pour notre clôture " +
-          "mensuelle, prévue vendredi.",
+          "Hello, since Tuesday's update the “Export to PDF” button on the Invoices " +
+          "screen no longer responds. Nothing happens on click, and the browser console " +
+          "shows a 500 error. This is blocking our monthly close, due on Friday.",
         createdAt,
       },
       {
@@ -897,9 +893,8 @@ async function seed() {
         authorType: "agent",
         authorId: marie.id,
         bodyText:
-          "Reproduit en préproduction : le générateur PDF sature au-delà de 50 lignes. " +
-          "Ticket JIRA OPS-2214 ouvert. Ne pas promettre de correctif avant le " +
-          "déploiement de jeudi.",
+          "Reproduced on staging: the PDF generator saturates beyond 50 lines. JIRA " +
+          "ticket OPS-2214 opened. Do not promise a fix before Thursday's deployment.",
         createdAt: new Date(createdAt.getTime() + 2 * HOUR),
       },
     ]);
@@ -915,12 +910,12 @@ async function seed() {
   await ensureDemoRequests(tenant.id);
   await ensureRejectedEmails(tenant.id);
   const historyCount = await installDemoHistory(tenant.id);
-  if (historyCount > 0) console.log(`OK — ${historyCount} tickets d'historique (90 jours) générés.`);
+  if (historyCount > 0) console.log(`OK — ${historyCount} history tickets (90 days) generated.`);
   await ensureKb(tenant.id);
   await ensureOrgAdmin(tenant.id);
 
   console.log(
-    `OK — tenant ${tenant.slug} : défauts design (SLA, macros, règles, équipes, champs) + KB installés.`,
+    `OK — tenant ${tenant.slug}: defaults (SLA, macros, rules, teams, fields) + KB installed.`,
   );
 }
 

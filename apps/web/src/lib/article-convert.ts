@@ -1,16 +1,16 @@
 /**
- * Pont entre l'éditeur visuel et le format stocké.
+ * Bridge between the visual editor and the stored format.
  *
- * L'agent ne voit jamais de balisage : il met en forme, et la conversion se fait
- * ici. Le format de stockage reste celui du portail, donc les articles déjà
- * publiés s'ouvrent sans migration et le rendu client ne change pas.
+ * The agent never sees markup: they apply formatting, and the conversion happens
+ * here. The storage format stays the portal's, so articles already published
+ * open without migration and the client-side rendering does not change.
  *
- *   markupToHtml : format stocké → HTML de départ de l'éditeur
- *   docToMarkup  : document de l'éditeur → format stocké
+ *   markupToHtml: stored format → the editor's starting HTML
+ *   docToMarkup:  editor document → stored format
  */
 import { parseArticle, parseInline } from "./article-format";
 
-/* ---------- Format stocké → HTML (chargement de l'éditeur) ---------- */
+/* ---------- Stored format → HTML (editor loading) ---------- */
 
 function escapeHtml(text: string): string {
   return text
@@ -23,18 +23,18 @@ function escapeHtml(text: string): string {
 function inlineToHtml(text: string): string {
   return parseInline(text)
     .map((token) => {
-      const contenu = escapeHtml(token.text);
+      const content = escapeHtml(token.text);
       switch (token.kind) {
         case "bold":
-          return `<strong>${contenu}</strong>`;
+          return `<strong>${content}</strong>`;
         case "italic":
-          return `<em>${contenu}</em>`;
+          return `<em>${content}</em>`;
         case "code":
-          return `<code>${contenu}</code>`;
+          return `<code>${content}</code>`;
         case "link":
-          return `<a href="${escapeHtml(token.href)}">${contenu}</a>`;
+          return `<a href="${escapeHtml(token.href)}">${content}</a>`;
         default:
-          return contenu;
+          return content;
       }
     })
     .join("");
@@ -52,9 +52,9 @@ export function markupToHtml(markup: string): string {
         case "callout":
           return `<blockquote><p>${inlineToHtml(block.text)}</p></blockquote>`;
         case "code": {
-          // Attribut dédié : la classe « language-… » se couperait au premier espace.
-          const titre = block.title ? ` data-titre="${escapeHtml(block.title)}"` : "";
-          return `<pre${titre}><code>${escapeHtml(block.body)}</code></pre>`;
+          // Dedicated attribute: a "language-…" class would be cut at the first space.
+          const titleAttr = block.title ? ` data-titre="${escapeHtml(block.title)}"` : "";
+          return `<pre${titleAttr}><code>${escapeHtml(block.body)}</code></pre>`;
         }
         case "list": {
           const items = block.items.map((i) => `<li><p>${inlineToHtml(i)}</p></li>`).join("");
@@ -69,7 +69,7 @@ export function markupToHtml(markup: string): string {
     .join("");
 }
 
-/* ---------- Document de l'éditeur → format stocké (enregistrement) ---------- */
+/* ---------- Editor document → stored format (saving) ---------- */
 
 type Mark = { type: string; attrs?: Record<string, unknown> };
 export type EditorNode = {
@@ -80,19 +80,19 @@ export type EditorNode = {
   content?: EditorNode[];
 };
 
-/** Applique les marques d'un fragment de texte. L'ordre reproduit le format. */
+/** Applies the marks of a text fragment. The order reproduces the format. */
 function textToMarkup(node: EditorNode): string {
   let out = node.text ?? "";
   if (!out) return "";
   const marks = node.marks ?? [];
   const has = (type: string) => marks.some((m) => m.type === type);
 
-  // Le code littéral ne se combine pas avec l'emphase : il l'absorberait.
+  // Literal code does not combine with emphasis: it would absorb it.
   if (has("code")) return `\`${out}\``;
   if (has("bold")) out = `**${out}**`;
   if (has("italic")) out = `*${out}*`;
-  const lien = marks.find((m) => m.type === "link");
-  if (lien?.attrs?.href) out = `[${out}](${String(lien.attrs.href)})`;
+  const link = marks.find((m) => m.type === "link");
+  if (link?.attrs?.href) out = `[${out}](${String(link.attrs.href)})`;
   return out;
 }
 
@@ -107,90 +107,90 @@ function inlineContent(node: EditorNode): string {
     .trim();
 }
 
-/** Texte d'un élément de liste : ses paragraphes, aplatis sur une ligne. */
+/** Text of a list item: its paragraphs, flattened onto one line. */
 function listItemText(item: EditorNode): string {
   return (item.content ?? [])
-    .map((bloc) => inlineContent(bloc))
+    .map((block) => inlineContent(block))
     .filter(Boolean)
     .join(" ");
 }
 
 /**
- * Sort les images de leurs parents : déposée dans une étape de liste, une image
- * reste un bloc à part entière dans le format stocké. Sans cela elle serait
- * simplement perdue à l'enregistrement.
+ * Lifts images out of their parents: dropped inside a list step, an image stays a
+ * block in its own right in the stored format. Without this it would simply be
+ * lost on saving.
  */
-function hoisterImages(nodes: EditorNode[]): EditorNode[] {
-  const sortie: EditorNode[] = [];
+function hoistImages(nodes: EditorNode[]): EditorNode[] {
+  const out: EditorNode[] = [];
   for (const node of nodes) {
     if (node.type === "image") {
-      sortie.push(node);
+      out.push(node);
       continue;
     }
-    const imagesInternes: EditorNode[] = [];
-    const collecter = (n: EditorNode): EditorNode => ({
+    const innerImages: EditorNode[] = [];
+    const collect = (n: EditorNode): EditorNode => ({
       ...n,
       content: (n.content ?? []).flatMap((child) => {
         if (child.type === "image") {
-          imagesInternes.push(child);
+          innerImages.push(child);
           return [];
         }
-        return [collecter(child)];
+        return [collect(child)];
       }),
     });
-    const nettoye = collecter(node);
-    if ((nettoye.content ?? []).length > 0 || node.type === "codeBlock") sortie.push(nettoye);
-    sortie.push(...imagesInternes);
+    const cleaned = collect(node);
+    if ((cleaned.content ?? []).length > 0 || node.type === "codeBlock") out.push(cleaned);
+    out.push(...innerImages);
   }
-  return sortie;
+  return out;
 }
 
 export function docToMarkup(doc: EditorNode): string {
-  const lignes: string[] = [];
+  const lines: string[] = [];
 
-  for (const node of hoisterImages(doc.content ?? [])) {
+  for (const node of hoistImages(doc.content ?? [])) {
     switch (node.type) {
       case "heading": {
-        const niveau = Number(node.attrs?.level ?? 2);
-        lignes.push(`${niveau >= 3 ? "###" : "##"} ${inlineContent(node)}`, "");
+        const level = Number(node.attrs?.level ?? 2);
+        lines.push(`${level >= 3 ? "###" : "##"} ${inlineContent(node)}`, "");
         break;
       }
       case "blockquote": {
-        for (const bloc of node.content ?? []) {
-          const texte = inlineContent(bloc);
-          if (texte) lignes.push(`> ${texte}`);
+        for (const block of node.content ?? []) {
+          const text = inlineContent(block);
+          if (text) lines.push(`> ${text}`);
         }
-        lignes.push("");
+        lines.push("");
         break;
       }
       case "codeBlock": {
-        const titre = String(node.attrs?.titre ?? "").trim();
-        lignes.push(`\`\`\`${titre}`);
-        lignes.push(...(node.content ?? []).map((c) => c.text ?? "").join("").split("\n"));
-        lignes.push("```", "");
+        const title = String(node.attrs?.titre ?? "").trim();
+        lines.push(`\`\`\`${title}`);
+        lines.push(...(node.content ?? []).map((c) => c.text ?? "").join("").split("\n"));
+        lines.push("```", "");
         break;
       }
       case "bulletList":
       case "orderedList": {
-        const ordonnee = node.type === "orderedList";
+        const ordered = node.type === "orderedList";
         (node.content ?? []).forEach((item, i) => {
-          const texte = listItemText(item);
-          if (texte) lignes.push(ordonnee ? `${i + 1}. ${texte}` : `- ${texte}`);
+          const text = listItemText(item);
+          if (text) lines.push(ordered ? `${i + 1}. ${text}` : `- ${text}`);
         });
-        lignes.push("");
+        lines.push("");
         break;
       }
       case "image": {
         const src = String(node.attrs?.src ?? "");
-        if (src) lignes.push(`![${String(node.attrs?.alt ?? "")}](${src})`, "");
+        if (src) lines.push(`![${String(node.attrs?.alt ?? "")}](${src})`, "");
         break;
       }
       default: {
-        const texte = inlineContent(node);
-        if (texte) lignes.push(texte, "");
+        const text = inlineContent(node);
+        if (text) lines.push(text, "");
       }
     }
   }
 
-  return lignes.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+  return lines.join("\n").replace(/\n{3,}/g, "\n\n").trim();
 }

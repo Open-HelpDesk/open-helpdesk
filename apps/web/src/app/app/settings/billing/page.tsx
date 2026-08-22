@@ -8,29 +8,22 @@ import {
   billingOf,
   entitlementsFor,
   occupiedSeats,
-  planDisplayName,
-  planIdOf,
   seatLimitFor,
+  subscriptionLabel,
 } from "@/lib/entitlements";
 import { PageHeader, PageShell } from "@/components/settings-page";
-import { gatewayConfigured } from "@/lib/cloud-gateway";
+import { gatewayConfigured } from "@/lib/control-plane";
 import { goCheckout, goPortal } from "./actions";
 
 const INVOICE_GRID = "150px minmax(180px,1fr) 130px 130px 110px";
 
-/**
- * Prix mensuel de repli par siège quand l'abonnement n'est pas encore
- * dénormalisé (essai) — Team se facture à partir du 4ᵉ agent (paliers Stripe).
- */
-const SEAT_PRICE: Record<string, number> = { free: 0, team: 9, enterprise: 19 };
-
-/** Volume en gigaoctets, arrondi au dixieme. */
+/** Volume in gigabytes, rounded to the nearest tenth. */
 function gbLabel(t: Translate, bytes: number): string {
   const gb = Math.round((bytes / (1024 * 1024 * 1024)) * 10) / 10;
   return t("app.settings.workspace.gigabytes", { value: gb });
 }
 
-/** Ligne de consommation : libellé + valeur + jauge 7 px (orange au-delà de 85 %). */
+/** Usage row: label + value + 7 px gauge (orange above 85%). */
 function QuotaRow({ label, value, pct }: { label: string; value: string; pct: number }) {
   const warn = pct > 85;
   return (
@@ -62,17 +55,16 @@ function QuotaRow({ label, value, pct }: { label: string; value: string; pct: nu
 }
 
 /**
- * ST-11 — Abonnement & facturation (1040 px) : carte plan accentuée (prix mensuel,
- * sièges), carte « Consommation du mois » (3 jauges réelles) et historique des
- * factures (état vide — la facturation vit sur l'offre cloud).
+ * ST-11 — Subscription & billing (1040 px): accented plan card (monthly price,
+ * seats), "Usage this month" card (3 real gauges) and invoice history
+ * (empty state — billing lives on the cloud plan).
  */
 export default async function BillingPage() {
-  // ST-11 est cloud uniquement : invisible en auto-hébergé (specs/11 § ST-11).
+  // ST-11 needs a control plane: invisible when self-hosted.
   if (isSelfHosted()) notFound();
 
   const t = await getT();
   const { tenant } = await requireAgent();
-  const planId = planIdOf(tenant.plan);
   const ent = entitlementsFor(tenant);
   const billing = billingOf(tenant);
   const seatLimit = seatLimitFor(tenant);
@@ -102,14 +94,13 @@ export default async function BillingPage() {
   const monthTickets = ticketRow?.n ?? 0;
   const storageBytes = Number(storageRow?.total ?? 0);
 
-  const planName = planDisplayName(tenant, t);
-  // Abonnement dénormalisé par le control plane ; repli sur la grille publique
-  // (essai ou tenant pas encore facturé). Team : 3 premiers sièges INCLUS —
-  // le prix Stripe est en paliers gradués, l'affichage doit suivre.
-  const seatPrice = billing.seatPriceCents != null ? billing.seatPriceCents / 100 : (SEAT_PRICE[planId] ?? 0);
-  const includedSeats = planId === "team" ? 3 : 0;
-  const billedSeats = Math.max(0, (billing.seats ?? seats) - includedSeats);
-  const monthly = planId === "free" ? 0 : seatPrice * billedSeats;
+  // Everything comes from the control plane: the product has no price grid and no
+  // calculation rule. Included seats are subtracted from the amount due — without
+  // that information nothing is billable, and the screen shows it as such.
+  const label = subscriptionLabel(tenant);
+  const seatPrice = (billing.seatPriceCents ?? 0) / 100;
+  const billedSeats = Math.max(0, (billing.seats ?? 0) - (billing.includedSeats ?? 0));
+  const monthly = seatPrice * billedSeats;
   const seatLine =
     monthly > 0
       ? t("app.settings.workspace.seatPricing", { count: billedSeats, price: seatPrice })
@@ -127,7 +118,7 @@ export default async function BillingPage() {
           className="grid"
           style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 14 }}
         >
-          {/* Carte plan */}
+          {/* Plan card */}
           <div
             className="flex flex-col border"
             style={{
@@ -143,7 +134,7 @@ export default async function BillingPage() {
                 className="font-bold"
                 style={{ fontSize: 18, letterSpacing: "-0.02em", color: "var(--ink)" }}
               >
-                {planName}
+                {label ?? t("app.settings.workspace.subscriptionNone")}
               </span>
               {tenant.status === "trial" && (
                 <span
@@ -171,13 +162,13 @@ export default async function BillingPage() {
             <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
               {t("app.settings.workspace.billingNoDue")}
             </p>
-            {/* Les sessions Stripe viennent de la gateway privée : sans elle
-                (dev, control plane éteint), les boutons restent inertes. */}
+            {/* Stripe sessions come from the private gateway: without it
+                (dev, control plane off), the buttons stay inert. */}
             <div className="flex" style={{ gap: 8, marginTop: 2 }}>
               <form action={goCheckout}>
                 <button
                   disabled={!gatewayConfigured()}
-                  title={gatewayConfigured() ? undefined : t("app.settings.workspace.cloudOnly")}
+                  title={gatewayConfigured() ? undefined : t("app.settings.workspace.requiresControlPlane")}
                   className="grid place-items-center font-semibold text-white disabled:opacity-50"
                   style={{
                     height: 34,
@@ -188,13 +179,13 @@ export default async function BillingPage() {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {t("app.settings.workspace.changePlan")}
+                  {t("app.settings.workspace.changeSubscription")}
                 </button>
               </form>
               <form action={goPortal}>
                 <button
                   disabled={!gatewayConfigured()}
-                  title={gatewayConfigured() ? undefined : t("app.settings.workspace.cloudOnly")}
+                  title={gatewayConfigured() ? undefined : t("app.settings.workspace.requiresControlPlane")}
                   className="ohd-hover-edge-ink grid place-items-center border font-semibold disabled:opacity-50"
                   style={{
                     height: 34,
@@ -213,7 +204,7 @@ export default async function BillingPage() {
             </div>
           </div>
 
-          {/* Consommation du mois */}
+          {/* Usage this month */}
           <div
             className="flex flex-col border"
             style={{
@@ -249,7 +240,7 @@ export default async function BillingPage() {
           </div>
         </div>
 
-        {/* Historique des factures */}
+        {/* Invoice history */}
         <div className="flex flex-col" style={{ gap: 11 }}>
           <p className="font-semibold" style={{ fontSize: 14.5, color: "var(--ink)" }}>
             {t("app.settings.workspace.invoicesTitle")}

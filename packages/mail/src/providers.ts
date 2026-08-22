@@ -1,10 +1,15 @@
 /**
- * Transports d'envoi — un par fournisseur (ST-03).
+ * Sending transports — one per provider (ST-03).
  *
- * Le SMTP couvre l'auto-hébergement ET la plupart des acteurs du marché via leur relais
- * (Brevo, Mailjet, Mailgun, SES, Postmark, Scaleway…). Les transports d'API natives
- * apportent en plus les identifiants de message des fournisseurs et de meilleurs messages
- * d'erreur.
+ * SMTP covers self-hosting AND most of the players on the market through their relay
+ * (Brevo, Mailjet, Mailgun, SES, Postmark, Scaleway…). The native API transports
+ * additionally bring the providers' message identifiers and better error
+ * messages.
+ *
+ * The `detail` strings returned by verify() are displayed to the user (ST-03
+ * "Test the connection" and the ST-01 diagnostics card). They stay in English:
+ * a package has no access to the i18n dictionaries, which live in
+ * apps/web/src/i18n — so nothing here is localizable today.
  */
 import type { MailTransport, OutgoingEmail } from "./types";
 
@@ -15,7 +20,7 @@ import type { MailProvider } from "./provider-meta";
 export type SmtpConfig = {
   host: string;
   port: number;
-  /** true = TLS implicite (465) ; false = STARTTLS (587/25). */
+  /** true = implicit TLS (465); false = STARTTLS (587/25). */
   secure: boolean;
   user?: string;
   password?: string;
@@ -27,20 +32,20 @@ export const consoleTransport: MailTransport = {
   async send(mail) {
     const messageId = `<dev-${Date.now()}-${Math.random().toString(36).slice(2)}@open-helpdesk.local>`;
     console.log(
-      `[mail:console] à: ${mail.to} | de: ${mail.from} | sujet: ${mail.subject} | id: ${messageId}\n${mail.text.slice(0, 800)}`,
+      `[mail:console] to: ${mail.to} | from: ${mail.from} | subject: ${mail.subject} | id: ${messageId}\n${mail.text.slice(0, 800)}`,
     );
     return { messageId };
   },
   async verify() {
-    return { ok: true, detail: "Transport de développement : aucun envoi réel." };
+    return { ok: true, detail: "Development transport: nothing is actually sent." };
   },
 };
 
 /* ---------- SMTP (nodemailer) ---------- */
 
 export function smtpTransport(config: SmtpConfig): MailTransport {
-  // Import paresseux : le worker et le web n'ont pas besoin de nodemailer sur les
-  // chemins qui n'envoient pas d'email.
+  // Lazy import: the worker and the web app do not need nodemailer on the paths
+  // that do not send email.
   async function createTransporter() {
     const nodemailer = await import("nodemailer");
     return nodemailer.createTransport({
@@ -73,7 +78,7 @@ export function smtpTransport(config: SmtpConfig): MailTransport {
         await transporter.verify();
         return {
           ok: true,
-          detail: `Connexion établie sur ${config.host}:${config.port} (${config.secure ? "TLS" : "STARTTLS"}).`,
+          detail: `Connection established on ${config.host}:${config.port} (${config.secure ? "TLS" : "STARTTLS"}).`,
         };
       } catch (err) {
         return { ok: false, detail: err instanceof Error ? err.message : String(err) };
@@ -99,7 +104,7 @@ export function resendTransport(apiKey: string): MailTransport {
           headers: mail.headers,
         }),
       });
-      if (!res.ok) throw new Error(`Resend ${res.status} : ${await res.text()}`);
+      if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
       const data = (await res.json()) as { id?: string };
       return { messageId: data.id };
     },
@@ -107,9 +112,9 @@ export function resendTransport(apiKey: string): MailTransport {
       const res = await fetch("https://api.resend.com/domains", {
         headers: { Authorization: `Bearer ${apiKey}` },
       });
-      if (res.ok) return { ok: true, detail: "Clé d'API Resend valide." };
-      if (res.status === 401) return { ok: false, detail: "Clé d'API refusée par Resend (401)." };
-      return { ok: false, detail: `Resend a répondu ${res.status}.` };
+      if (res.ok) return { ok: true, detail: "Resend API key is valid." };
+      if (res.status === 401) return { ok: false, detail: "API key rejected by Resend (401)." };
+      return { ok: false, detail: `Resend answered ${res.status}.` };
     },
   };
 }
@@ -138,7 +143,7 @@ export function brevoTransport(apiKey: string): MailTransport {
           headers: mail.headers,
         }),
       });
-      if (!res.ok) throw new Error(`Brevo ${res.status} : ${await res.text()}`);
+      if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
       const data = (await res.json()) as { messageId?: string };
       return { messageId: data.messageId };
     },
@@ -150,11 +155,11 @@ export function brevoTransport(apiKey: string): MailTransport {
         const data = (await res.json()) as { email?: string; companyName?: string };
         return {
           ok: true,
-          detail: `Compte Brevo reconnu${data.email ? ` (${data.email})` : ""}.`,
+          detail: `Brevo account recognized${data.email ? ` (${data.email})` : ""}.`,
         };
       }
-      if (res.status === 401) return { ok: false, detail: "Clé d'API refusée par Brevo (401)." };
-      return { ok: false, detail: `Brevo a répondu ${res.status}.` };
+      if (res.status === 401) return { ok: false, detail: "API key rejected by Brevo (401)." };
+      return { ok: false, detail: `Brevo answered ${res.status}.` };
     },
   };
 }
@@ -182,13 +187,13 @@ export function mailjetTransport(apiKey: string, apiSecret: string): MailTranspo
           ],
         }),
       });
-      if (!res.ok) throw new Error(`Mailjet ${res.status} : ${await res.text()}`);
+      if (!res.ok) throw new Error(`Mailjet ${res.status}: ${await res.text()}`);
       const data = (await res.json()) as {
         Messages?: { Status?: string; To?: { MessageID?: string; MessageUUID?: string }[] }[];
       };
       const first = data.Messages?.[0];
       if (first?.Status && first.Status !== "success") {
-        throw new Error(`Mailjet a refusé l'envoi : ${JSON.stringify(first)}`);
+        throw new Error(`Mailjet refused the send: ${JSON.stringify(first)}`);
       }
       return { messageId: first?.To?.[0]?.MessageUUID ?? first?.To?.[0]?.MessageID };
     },
@@ -196,9 +201,9 @@ export function mailjetTransport(apiKey: string, apiSecret: string): MailTranspo
       const res = await fetch("https://api.mailjet.com/v3/REST/sender?Limit=1", {
         headers: { Authorization: `Basic ${basic}` },
       });
-      if (res.ok) return { ok: true, detail: "Clés Mailjet valides." };
-      if (res.status === 401) return { ok: false, detail: "Clés refusées par Mailjet (401)." };
-      return { ok: false, detail: `Mailjet a répondu ${res.status}.` };
+      if (res.ok) return { ok: true, detail: "Mailjet keys are valid." };
+      if (res.status === 401) return { ok: false, detail: "Keys rejected by Mailjet (401)." };
+      return { ok: false, detail: `Mailjet answered ${res.status}.` };
     },
   };
 }

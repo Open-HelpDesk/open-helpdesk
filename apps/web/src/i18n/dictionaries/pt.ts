@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const pt: Dictionary = {
   "chrome.defaultName": "Centro de ajuda",
@@ -150,6 +150,14 @@ export const pt: Dictionary = {
   "login.footer":
     "Ainda sem pedidos? A sua conta é criada automaticamente com o primeiro envio.",
 
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "A sua ligação de acesso — {workspace}",
+  "login.emailBody":
+    "Olá,\n\nClique nesta ligação para aceder aos seus pedidos (válida durante 15 minutos):\n{url}\n\nSe não pediu esta ligação, ignore este e-mail.\n\n{workspace}",
+
   "org.intro": {
     one: "É administrador desta organização. O que definir aqui aplica-se à pessoa da {org} que utiliza o apoio da {tenant}.",
     other:
@@ -259,7 +267,7 @@ export const pt: Dictionary = {
   "csatPage.doneTitle": "Obrigado!",
   "csatPage.doneBody": "O seu comentário foi transmitido à equipa.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Espaço de trabalho",
   "app.settingsNav.itemGeneral": "Geral",
   "app.settingsNav.itemTeam": "Agentes e equipas",
@@ -292,7 +300,7 @@ export const pt: Dictionary = {
   "app.settingsNav.copied": "Copiado",
   "app.settingsNav.copy": "Copiar",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
   "app.shell.inbox": "Caixa de entrada",
   "app.shell.search": "Pesquisa (⌘K)",
   "app.shell.contacts": "Contactos",
@@ -303,7 +311,7 @@ export const pt: Dictionary = {
   "app.shell.suspendedTitle": "Este workspace está suspenso",
   "app.shell.suspendedText": "Contacte o seu administrador para restabelecer o acesso.",
   "app.shell.suspendedOwnerText":
-    "Escolha um plano ou atualize o seu método de pagamento para reativar o workspace.",
+    "Regularize a subscrição ou atualize o seu método de pagamento para reativar o workspace.",
   "app.shell.suspendedBillingCta": "Abrir Subscrição e faturação",
   "app.shell.myTickets": "Os meus pedidos",
   "app.shell.newTicket": "Novo pedido",
@@ -639,7 +647,7 @@ export const pt: Dictionary = {
   "app.reports.columnAgent": "Agente",
   "app.reports.columnFirstReply": "1.ª resposta",
   "app.reports.customReports": "Relatórios personalizados",
-  "app.reports.enterprisePlanBadge": "PLANO ENTERPRISE",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Descobrir",
   "app.reports.chartDailyAria": "{labelA} e {labelB} por dia",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -657,8 +665,11 @@ export const pt: Dictionary = {
   "app.settings.shell.saved": "✓ Guardado",
   "app.settings.shell.cancel": "Cancelar",
   "app.settings.shell.save": "Guardar",
-  "app.settings.shell.planEnterprise": "PLANO ENTERPRISE",
-  "app.settings.shell.upgradeToEnterprise": "Mudar para o plano Enterprise",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Fechar",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Gerir a subscrição",
   "app.settings.shell.eeSelfHostedTitle": "Funcionalidade da Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Esta funcionalidade está sujeita à licença comercial (diretório ee/ do repositório) e não está incluída na edição open source auto-hospedada.",
@@ -803,9 +814,9 @@ export const pt: Dictionary = {
   "app.settings.email.sendFailed": "Não foi possível enviar",
   "app.settings.sso.agentTitle": "SSO dos agentes",
   "app.settings.sso.agentSubtitle": "Autenticação única SAML 2.0 e aprovisionamento SCIM para a sua equipa de apoio.",
-  "app.settings.sso.agentLockedTitle": "O SSO dos agentes está reservado ao plano Enterprise",
+  "app.settings.sso.agentLockedTitle": "O SSO dos agentes faz parte da Enterprise Edition",
   "app.settings.sso.agentLockedText": "Ligue o seu fornecedor de identidade SAML 2.0, aprovisione os seus agentes por SCIM e imponha a autenticação única a toda a equipa.",
-  "app.settings.sso.agentEnterpriseOnly": "O SSO dos agentes está reservado ao plano Enterprise.",
+  "app.settings.sso.agentEnterpriseOnly": "O SSO dos agentes faz parte da Enterprise Edition.",
   "app.settings.sso.idpOther": "Outro (SAML genérico)",
   "app.settings.sso.samlToggleLabel": "Ativar a autenticação única SAML 2.0",
   "app.settings.sso.samlHeading": "Autenticação única SAML 2.0",
@@ -880,9 +891,11 @@ export const pt: Dictionary = {
   "app.settings.sso.addMapping": "+ Adicionar uma correspondência",
   "app.settings.sso.customerTitle": "SSO das organizações clientes",
   "app.settings.sso.customerSubtitle": "Cada organização cliente liga o seu próprio fornecedor de identidade a partir do portal. Aqui supervisiona o conjunto de todas elas.",
-  "app.settings.sso.customerLockedTitle": "O SSO das organizações clientes está reservado ao plano Enterprise",
+  "app.settings.sso.customerLockedTitle":
+    "O SSO das organizações clientes faz parte da Enterprise Edition",
   "app.settings.sso.customerLockedText": "Deixe cada organização cliente ligar o seu próprio fornecedor de identidade (SAML ou OIDC) e supervisione o conjunto a partir deste ecrã.",
-  "app.settings.sso.customerEnterpriseOnly": "O SSO das organizações clientes está reservado ao plano Enterprise.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "O SSO das organizações clientes faz parte da Enterprise Edition.",
   "app.settings.sso.statusActive": "Ativa",
   "app.settings.sso.statusPending": "Por verificar",
   "app.settings.sso.statusError": "Erro",
@@ -1017,7 +1030,7 @@ export const pt: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Base de conhecimento publicada",
   "app.settings.portal.kbPublishedHint": "Os artigos publicados são visíveis sem iniciar sessão.",
   "app.settings.portal.hidePoweredByLabel": "Ocultar «Com tecnologia Open HelpDesk»",
-  "app.settings.portal.hidePoweredByHint": "Disponível a partir do plano Enterprise.",
+  "app.settings.portal.hidePoweredByHint": "Disponível com a Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Visibilidade da base de conhecimento",
   "app.settings.portal.kbVisibilityPublic": "Pública",
   "app.settings.portal.kbVisibilityAuthenticated": "Após iniciar sessão",
@@ -1065,7 +1078,8 @@ export const pt: Dictionary = {
   "app.settings.portal.csatExclusionRemove": "Remover {name}",
   "app.settings.workspace.generalTitle": "Geral e imagem de marca",
   "app.settings.workspace.generalSubtitle": "Identidade do espaço de trabalho, idioma, fuso e numeração dos pedidos.",
-  "app.settings.workspace.generalDeleteCloudError": "Eliminação recusada — a eliminação programada está disponível na cloud.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Eliminação recusada — a eliminação programada requer um control plane.",
   "app.settings.workspace.generalIdentity": "Identidade",
   "app.settings.workspace.generalNameLabel": "Nome do espaço de trabalho",
   "app.settings.workspace.generalLogoLabel": "Logótipo",
@@ -1120,7 +1134,7 @@ export const pt: Dictionary = {
   "app.settings.workspace.seatsUsed": { one: "{count} / {quota} lugar utilizado", other: "{count} / {quota} lugares utilizados" },
   "app.settings.workspace.seatsUsedFull": { one: "{count} / {quota} lugar utilizado — limite atingido", other: "{count} / {quota} lugares utilizados — limite atingido" },
   "app.settings.workspace.seatsAddHint": "Adicione lugares para convidar novos agentes.",
-  "app.settings.workspace.seatsFreeHint": "As funções Viewer são gratuitas e ilimitadas.",
+  "app.settings.workspace.seatsFreeHint": "As funções Viewer não ocupam lugar e são ilimitadas.",
   "app.settings.workspace.seatsAddAction": "Adicionar lugares",
   "app.settings.workspace.seatsManage": "Gerir",
   "app.settings.workspace.seatLimitReached":
@@ -1195,15 +1209,16 @@ export const pt: Dictionary = {
   "app.settings.workspace.teamHoursHint": "Os calendários são geridos em SLA e horário de expediente.",
   "app.settings.workspace.save": "Guardar",
   "app.settings.workspace.billingTitle": "Subscrição e faturação",
-  "app.settings.workspace.billingSubtitle": "Plano, lugares, quotas, meio de pagamento e histórico das faturas.",
-  "app.settings.workspace.selfHosted": "AUTO-ALOJADO",
+  "app.settings.workspace.billingSubtitle":
+    "Subscrição, lugares, quotas, meio de pagamento e histórico das faturas.",
+  "app.settings.workspace.subscriptionNone": "Sem subscrição",
   "app.settings.workspace.trialBadge": "AVALIAÇÃO",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": { one: "por mês · {count} lugar a {price} €", other: "por mês · {count} lugares a {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "por mês · {count} lugar incluído", other: "por mês · {count} lugares incluídos" },
-  "app.settings.workspace.billingNoDue": "Nenhum valor a pagar nesta instância — a faturação é gerida na oferta cloud.",
-  "app.settings.workspace.cloudOnly": "Disponível na oferta cloud",
-  "app.settings.workspace.changePlan": "Mudar de plano",
+  "app.settings.workspace.billingNoDue": "Nada a pagar neste momento.",
+  "app.settings.workspace.requiresControlPlane": "Requer um control plane",
+  "app.settings.workspace.changeSubscription": "Alterar a subscrição",
   "app.settings.workspace.manageSeats": "Gerir os lugares",
   "app.settings.workspace.usageTitle": "Consumo do mês",
   "app.settings.workspace.quotaSeats": "Lugares",
@@ -1215,7 +1230,7 @@ export const pt: Dictionary = {
   "app.settings.workspace.colNumber": "Número",
   "app.settings.workspace.colPeriod": "Período",
   "app.settings.workspace.colAmount": "Montante",
-  "app.settings.workspace.invoicesEmpty": "Nenhuma fatura — as faturas aparecerão aqui na oferta cloud.",
+  "app.settings.workspace.invoicesEmpty": "Ainda não há faturas.",
   "app.settings.rules.saved": "✓ Guardado",
   "app.settings.rules.save": "Guardar",
   "app.settings.rules.delete": "Eliminar",
@@ -1280,18 +1295,18 @@ export const pt: Dictionary = {
   "app.settings.rules.typeFile": "Ficheiro",
   "app.settings.rules.typeSelectLong": "Lista pendente",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
-     tables partagées, celles de l'inbox et de ses filtres. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     Statuses, priorities and channels are NOT repeated here: they come from the
+     shared tables, the ones used by the inbox and its filters. */
 
-  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Texte” is typeText, above. */
   "app.settings.rules.typeSelect": "Lista",
   "app.settings.rules.typeMultiSelect": "Seleção múltipla",
   "app.settings.rules.typeDate": "Data",
   "app.settings.rules.typeNumber": "Número",
   "app.settings.rules.typeCheckbox": "Caixa de verificação",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Evento",
   "app.settings.rules.condFieldStatus": "Estado",
   "app.settings.rules.condFieldPriority": "Prioridade",
@@ -1305,10 +1320,10 @@ export const pt: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Horas desde a criação",
   "app.settings.rules.condFieldHoursUpdated": "Horas desde a atualização",
 
-  /* Opérateurs. « está vazio » accorderait son adjectif avec le nom du champ, et
-     « Etiquetas está vazio » est faux deux fois — genre et nombre. « sem valor /
-     com valor » est invariable et se lit après n'importe lequel des douze
-     champs. Les deux derniers restent des symboles. */
+  /* Operators. “está vazio” would agree its adjective with the field's
+     noun, and “Etiquetas está vazio” is wrong twice over — gender and number.
+     “sem valor / com valor” is invariable and reads after any of the twelve
+     fields. The last two stay symbols. */
   "app.settings.rules.opIs": "é",
   "app.settings.rules.opIsNot": "não é",
   "app.settings.rules.opContains": "contém",
@@ -1318,12 +1333,12 @@ export const pt: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Pedido criado",
   "app.settings.rules.eventTicketUpdated": "Pedido atualizado",
   "app.settings.rules.eventMessageCreated": "Mensagem recebida",
 
-  /* Actions, telles que le menu du builder les nomme. */
+  /* Actions, as the builder's menu names them. */
   "app.settings.rules.actSetStatus": "Definir o estado",
   "app.settings.rules.actSetPriority": "Definir a prioridade",
   "app.settings.rules.actAssignUser": "Atribuir a um agente",
@@ -1332,9 +1347,8 @@ export const pt: Dictionary = {
   "app.settings.rules.actAddTags": "Adicionar etiquetas",
   "app.settings.rules.actEmailContact": "Enviar um e-mail ao contacto",
 
-  /* Résumé d'une règle, en une ligne de liste. Le portugais garde l'ordre
-     « se … alors … » du français ; les bribes s'y insèrent sans majuscule
-     initiale ni point final. */
+  /* One-line rule summary. Portuguese keeps French's “se … então …” order;
+     the fragments slot in without an initial capital or a final full stop. */
   "app.settings.rules.summaryPattern": "Se {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "e",
   "app.settings.rules.summaryAlways": "sempre",
@@ -1346,9 +1360,9 @@ export const pt: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "não atribuído",
   "app.settings.rules.summaryAssigned": "atribuído",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. La bribe se colle à la condition qui précède —
-     « Estado = A aguardar há 2 j ». */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. The fragment butts against the preceding condition —
+     “Estado = A aguardar há 2 j”. */
   "app.settings.rules.summarySince": "há {duration}",
   "app.settings.rules.summarySetStatus": "passar a {value}",
   "app.settings.rules.summarySetPriority": "prioridade {value}",
@@ -1359,7 +1373,7 @@ export const pt: Dictionary = {
   "app.settings.rules.summaryAddTags": "adicionar {tags}",
   "app.settings.rules.summaryEmailContact": "enviar um e-mail ao contacto",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Estado → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioridade → {value}",
   "app.settings.rules.macroSummaryTeam": "Equipa → {team}",
@@ -1450,7 +1464,7 @@ export const pt: Dictionary = {
   "app.settings.dev.dayYesterday": "Ontem {time}",
   "app.settings.dev.auditTitle": "Registo de auditoria",
   "app.settings.dev.auditSubtitle": "Registo completo das ações de administração. Retenção de 2 anos.",
-  "app.settings.dev.auditLockedTitle": "O registo de auditoria está reservado ao plano Enterprise",
+  "app.settings.dev.auditLockedTitle": "O registo de auditoria faz parte da Enterprise Edition",
   "app.settings.dev.auditLockedText": "Guarde o rasto de cada ação de administração durante 2 anos, com comparação antes/depois e exportação CSV.",
   "app.settings.dev.filterActorAll": "Autor: todos",
   "app.settings.dev.filterActionAll": "Ação: todas",
@@ -1467,9 +1481,10 @@ export const pt: Dictionary = {
   "app.settings.dev.actorContact": "Contacto",
   "app.settings.dev.exportUnauthorized": "Não autorizado",
   "app.settings.dev.exportForbidden": "Reservado às funções Owner e Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "O registo de auditoria está reservado ao plano Enterprise.",
+  "app.settings.dev.exportEnterpriseOnly":
+    "O registo de auditoria faz parte da Enterprise Edition.",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Novo",
   "app.status.open": "Aberto",
   "app.status.waiting": "A aguardar",
@@ -1490,7 +1505,7 @@ export const pt: Dictionary = {
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Os meus pedidos",
   "app.views.unassigned": "Sem atribuição",
   "app.views.breaching": "A expirar em breve",
@@ -1498,14 +1513,14 @@ export const pt: Dictionary = {
   "app.views.urgent": "Urgentes esta semana",
   "app.views.escalation": "Escalados",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Mudar o nome",
   "app.kb.renameSave": "Guardar",
   "app.kb.deleteCategory": "Eliminar a categoria",
   "app.kb.managersOnly": "Apenas Owner e Admin podem editar a base de conhecimento.",
   "app.kb.categoryNotEmpty": { one: "Esta categoria ainda contém {count} elemento. Mova-o antes de a eliminar.", other: "Esta categoria ainda contém {count} elementos. Mova-os antes de a eliminar." },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-mail",
   "app.login.emailPlaceholder": "voce@empresa.pt",
   "app.login.password": "Palavra-passe",
@@ -1533,11 +1548,11 @@ export const pt: Dictionary = {
   "app.login.providerMissing": "Este fornecedor não está configurado nesta instância.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Tout cet écran était en français dans le code. Quatre libellés viennent
-     d'ailleurs et ne sont pas repris ici : le titre du portail dans son propre
-     aperçu (home.title), le nom du workspace et la couleur d'accent (les mêmes
-     contrôles qu'en ST-01), et les rôles Owner / Admin / Agent / Viewer, qui ne
-     se traduisent pas. */
+  /* This whole screen was French in the code. Four labels come from
+     elsewhere and are not repeated here: the portal title in its own preview
+     (home.title), the workspace name and the accent colour (the same controls
+     as in ST-01), and the Owner / Admin / Agent / Viewer roles, which are not
+     translated. */
 
   "app.onboarding.asideTitle": "Configuração",
   "app.onboarding.asideFooter":
@@ -1563,8 +1578,8 @@ export const pt: Dictionary = {
   "app.onboarding.previewCaption": "Pré-visualização do seu portal do cliente",
 
   "app.onboarding.emailTitle": "Receber os seus e-mails",
-  /* « demandes » et « tickets » se disent tous deux « pedidos » : la phrase part
-     des messages reçus pour ne pas dire le mot deux fois. */
+  /* “requests” and “tickets” are both said “pedidos”: the sentence starts
+     from the messages received so as not to say the word twice. */
   "app.onboarding.emailBody":
     "Todas as mensagens recebidas neste endereço tornam-se automaticamente pedidos.",
   "app.onboarding.or": "OU",
@@ -1578,7 +1593,7 @@ export const pt: Dictionary = {
 
   "app.onboarding.teamTitle": "Convidar a sua equipa",
   "app.onboarding.teamBody":
-    "Convide os seus agentes agora ou partilhe a ligação de convite. Os lugares Viewer são gratuitos.",
+    "Convide os seus agentes agora ou partilhe a ligação de convite. As funções Viewer não ocupam lugar.",
   "app.onboarding.invitePlaceholder": "colega@empresa.pt",
   "app.onboarding.addRow": "+ Adicionar uma linha",
   "app.onboarding.sendInvites": "Enviar os convites",
@@ -1587,8 +1602,8 @@ export const pt: Dictionary = {
   "app.onboarding.testBody":
     "Verifique toda a cadeia antes de abrir o serviço aos seus clientes.",
   "app.onboarding.readyTitle": "O seu espaço de trabalho está pronto",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Envie um e-mail para {address} para criar um pedido de teste.",
   "app.onboarding.openInbox": "Abrir a caixa de entrada",
 
@@ -1599,37 +1614,47 @@ export const pt: Dictionary = {
   "app.onboarding.checklistSla": "Política de SLA verificada",
 
 
-/* ===================== Reste du français codé en dur ===================== */
+/* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
-     « todas / pelo menos uma » : elle est découpée autour de {mode}. Le
-     portugais place ici le sélecteur en FIN de phrase, comme l'espagnol : les
-     deux modes ne réclament pas le même déterminant — « todas AS condições »
-     mais « pelo menos uma DAS condições » —, et aucun cadre unique ne peut
-     satisfaire les deux. « Condições a cumprir : … » se lit juste dans les deux
-     cas, la seconde moitié est donc vide. */
+  /* ST-05 — the condition group header. The sentence wraps a
+     “todas / pelo menos uma” selector: it is split around {mode}. Portuguese
+     puts the selector at the END of the sentence here, like Spanish: the two
+     modes do not call for the same determiner — “todas AS condições” but
+     “pelo menos uma DAS condições” — and no single frame can satisfy both.
+     “Condições a cumprir: …” reads right in both cases, so the second half is
+     empty. */
   "app.settings.rules.matchIf": "SE",
   "app.settings.rules.matchAllPattern": "Condições a cumprir: {mode}",
   "app.settings.rules.matchAnyPattern": "Condições a cumprir: {mode}",
   "app.settings.rules.matchAll": "todas",
   "app.settings.rules.matchAny": "pelo menos uma",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
-  "app.settings.workspace.planFree": "Plano Free",
-  "app.settings.workspace.planTeam": "Plano Team",
-  "app.settings.workspace.planEnterprise": "Plano Enterprise",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "ENTÃO",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Testar num pedido existente",
+  "app.settings.rules.testRunning": "A testar…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Remover",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Corpo do e-mail — variáveis: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française ; seul l'affichage est traduit. */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string; only the display is translated. */
   "app.ticket.typeQuestion": "Pergunta",
   "app.ticket.typeIncident": "Incidente",
   "app.ticket.typeTask": "Tarefa",
   "app.ticket.typeOther": "Outro",
 
-  /* AG-09 — export CSV des rapports. Un fichier téléchargé est du texte lu par
-     une personne : ses entêtes se traduisent comme le reste de l'écran. Les
-     secondes s'abrègent « s » en portugais aussi. */
+  /* AG-09 — CSV export of the reports. A downloaded file is text read by a
+     person: its headers are translated like the rest of the screen. Seconds
+     are abbreviated “s” in Portuguese too. */
   "app.reports.csvIndicator": "Indicador",
   "app.reports.csvCurrentPeriod": "Período atual",
   "app.reports.csvPreviousPeriod": "Período anterior",
@@ -1644,8 +1669,8 @@ export const pt: Dictionary = {
   "app.reports.csvResolvedShort": "Resolvidos",
   "app.reports.csvAgent": "Agente",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Novo artigo",
   "app.kb.fromTicketSymptomHeading": "Sintoma",
   "app.kb.fromTicketSymptomPlaceholder": "[Descreva o que o cliente observa.]",
@@ -1655,8 +1680,8 @@ export const pt: Dictionary = {
   "app.kb.fromTicketMissingRequest": "o pedido inicial do cliente",
   "app.kb.fromTicketMissingAnswer": "a resposta do agente",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Procedimento passo a passo",
   "app.kb.tplProcedureHint": "Uma sequência de passos numerados, com o resultado esperado.",
   "app.kb.tplProcedureTitle": "Como [realizar a ação]",

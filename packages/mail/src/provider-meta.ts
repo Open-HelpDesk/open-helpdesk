@@ -1,8 +1,12 @@
 /**
- * Métadonnées des fournisseurs d'envoi — données pures, sans aucune dépendance.
+ * Metadata of the sending providers — pure data, without any dependency.
  *
- * Module séparé exprès : l'écran de configuration est un composant client, il ne doit
- * pas embarquer les transports (nodemailer, BullMQ, accès base) dans le bundle navigateur.
+ * A deliberately separate module: the configuration screen is a client component, it must
+ * not bundle the transports (nodemailer, BullMQ, database access) into the browser bundle.
+ *
+ * The labels and hints below are displayed in ST-03 and stay in English: a package
+ * has no access to the i18n dictionaries (apps/web/src/i18n), so they are not
+ * localizable today. Provider names and key formats (re_…, xkeysib-…) never translate.
  */
 
 export type MailProvider = "console" | "smtp" | "resend" | "brevo" | "mailjet";
@@ -12,35 +16,35 @@ export const PROVIDER_META: Record<
   { label: string; hint: string; secretLabel?: string; docsHost?: string }
 > = {
   console: {
-    label: "Mode développement",
-    hint: "Aucun envoi réel : les emails sont écrits dans les journaux du serveur.",
+    label: "Development mode",
+    hint: "Nothing is actually sent: the emails are written to the server logs.",
   },
   smtp: {
-    label: "Serveur SMTP",
-    hint: "Votre propre serveur, ou le relais SMTP de n'importe quel fournisseur.",
-    secretLabel: "Mot de passe SMTP",
+    label: "SMTP server",
+    hint: "Your own server, or the SMTP relay of any provider.",
+    secretLabel: "SMTP password",
   },
   resend: {
     label: "Resend",
-    hint: "API HTTP. Clé au format re_… depuis resend.com/api-keys.",
-    secretLabel: "Clé d'API",
+    hint: "HTTP API. Key in the re_… format, from resend.com/api-keys.",
+    secretLabel: "API key",
     docsHost: "resend.com",
   },
   brevo: {
     label: "Brevo",
-    hint: "API HTTP v3. Clé xkeysib-… depuis Brevo → SMTP & API.",
-    secretLabel: "Clé d'API",
+    hint: "HTTP API v3. xkeysib-… key, from Brevo → SMTP & API.",
+    secretLabel: "API key",
     docsHost: "brevo.com",
   },
   mailjet: {
     label: "Mailjet",
-    hint: "API HTTP v3.1. Clé publique et clé privée depuis Mailjet → Clés API.",
-    secretLabel: "Clé d'API (publique)",
+    hint: "HTTP API v3.1. Public key and secret key, from Mailjet → API Keys.",
+    secretLabel: "API key (public)",
     docsHost: "mailjet.com",
   },
 };
 
-/** Relais SMTP préremplis proposés dans l'écran de configuration. */
+/** Prefilled SMTP relays offered on the configuration screen. */
 export const SMTP_PRESETS: {
   id: string;
   label: string;
@@ -48,9 +52,9 @@ export const SMTP_PRESETS: {
   port: number;
   secure: boolean;
 }[] = [
-  { id: "custom", label: "Serveur personnalisé", host: "", port: 587, secure: false },
-  { id: "brevo", label: "Brevo (relais SMTP)", host: "smtp-relay.brevo.com", port: 587, secure: false },
-  { id: "mailjet", label: "Mailjet (relais SMTP)", host: "in-v3.mailjet.com", port: 587, secure: false },
+  { id: "custom", label: "Custom server", host: "", port: 587, secure: false },
+  { id: "brevo", label: "Brevo (SMTP relay)", host: "smtp-relay.brevo.com", port: 587, secure: false },
+  { id: "mailjet", label: "Mailjet (SMTP relay)", host: "in-v3.mailjet.com", port: 587, secure: false },
   { id: "mailgun", label: "Mailgun", host: "smtp.mailgun.org", port: 587, secure: false },
   { id: "postmark", label: "Postmark", host: "smtp.postmarkapp.com", port: 587, secure: false },
   {
@@ -62,5 +66,5 @@ export const SMTP_PRESETS: {
   },
   { id: "scaleway", label: "Scaleway TEM", host: "smtp.tem.scw.cloud", port: 587, secure: false },
   { id: "gmail", label: "Gmail / Google Workspace", host: "smtp.gmail.com", port: 465, secure: true },
-  { id: "mailpit", label: "Mailpit (développement local)", host: "localhost", port: 1026, secure: false },
+  { id: "mailpit", label: "Mailpit (local development)", host: "localhost", port: 1026, secure: false },
 ];

@@ -1,4 +1,4 @@
-/** Requêtes du portail client (PT) et de la KB publique. */
+/** Queries for the customer portal (PT) and the public KB. */
 import {
   attachments,
   contactOrganizations,
@@ -17,10 +17,10 @@ import {
 import { and, asc, count, desc, eq, ilike, inArray, isNull, ne, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
-/** Libellés client — jamais le vocabulaire interne (PT-05). */
+/** Customer-facing labels — never the internal vocabulary (PT-05). */
 /* ---------- KB (PT-01/02/03) ---------- */
 
-/** Catégories racines avec compteur d'articles (sections incluses). */
+/** Root categories with an article count (sections included). */
 export async function listPublishedCategories(tenantId: string) {
   const all = await db
     .select()
@@ -33,7 +33,7 @@ export async function listPublishedCategories(tenantId: string) {
     .where(and(eq(kbArticles.tenantId, tenantId), eq(kbArticles.status, "published")))
     .groupBy(kbArticles.categoryId);
 
-  // Les articles d'une section comptent pour sa catégorie racine.
+  // A section's articles count towards its root category.
   const parentOf = new Map(all.map((c) => [c.id, c.parentId]));
   const totals = new Map<string, number>();
   for (const c of counts) {
@@ -46,7 +46,7 @@ export async function listPublishedCategories(tenantId: string) {
     .map((c) => ({ ...c, articleCount: totals.get(c.id) ?? 0 }));
 }
 
-/** PT-02 — catégorie + sections (accordéons) + articles + autres catégories (sidebar). */
+/** PT-02 — category + sections (accordions) + articles + other categories (sidebar). */
 export async function getCategoryWithSections(tenantId: string, slug: string) {
   const all = await db
     .select()
@@ -84,7 +84,7 @@ export async function getCategoryWithSections(tenantId: string, slug: string) {
   };
 }
 
-/** PT-03 — article publié + fil d'Ariane (racine/section) + articles liés. */
+/** PT-03 — published article + breadcrumb (root/section) + related articles. */
 export async function getPublishedArticle(tenantId: string, slug: string) {
   const [article] = await db
     .select()
@@ -134,9 +134,9 @@ export async function getPublishedArticle(tenantId: string, slug: string) {
   return { article, related, section, root };
 }
 
-/** Recherche plein-texte simple avec catégorie racine (typeahead PT-01, déflexion PT-04). */
+/** Simple full-text search with root category (PT-01 typeahead, PT-04 deflection). */
 export async function searchArticles(tenantId: string, q: string, limit = 8) {
-  // Chaque terme doit apparaître (titre ou corps) — bascule vers Postgres FTS ensuite.
+  // Every term must appear (title or body) — switch to Postgres FTS later on.
   const terms = q.split(/\s+/).filter((t) => t.length >= 2).slice(0, 6);
   if (terms.length === 0) return [];
   const parent = alias(kbCategories, "parent");
@@ -176,7 +176,7 @@ export async function popularArticles(tenantId: string, limit = 5) {
     .limit(limit);
 }
 
-/** Options réelles du champ « Module concerné » (ticketFields key=module) — PT-04. */
+/** Real options of the "Related module" field (ticketFields key=module) — PT-04. */
 export async function getModuleOptions(tenantId: string): Promise<string[]> {
   const [field] = await db
     .select({ options: ticketFields.options })
@@ -187,7 +187,7 @@ export async function getModuleOptions(tenantId: string): Promise<string[]> {
     : [];
 }
 
-/* ---------- Demandes (PT-05/06) ---------- */
+/* ---------- Requests (PT-05/06) ---------- */
 
 export type PortalRequestRow = {
   number: number;
@@ -201,7 +201,7 @@ export type PortalRequestRow = {
   messageCount: number;
 };
 
-/** Demandes du contact + celles de son organisation si le partage est accordé (PT-05). */
+/** The contact's requests + those of their organization if sharing is granted (PT-05). */
 export async function listContactRequests(
   tenantId: string,
   contactId: string,
@@ -237,7 +237,7 @@ export async function listContactRequests(
       .orderBy(desc(tickets.updatedAt))
       .limit(50);
   } else {
-    // Organisations du contact avec partage activé
+    // The contact's organizations with sharing enabled
     const orgs = await db
       .select({ id: organizations.id })
       .from(contactOrganizations)
@@ -259,7 +259,7 @@ export async function listContactRequests(
   }
   if (rows.length === 0) return [];
 
-  // Dernier message public par demande + auteur (« Réponse de Marie il y a 3 h »).
+  // Last public message per request + author ("Marie replied 3 hrs ago").
   const messages = await db
     .select({
       ticketId: ticketMessages.ticketId,
@@ -314,7 +314,7 @@ export async function listContactRequests(
   });
 }
 
-/** Le contact a-t-il accès à l'onglet organisation ? */
+/** Does the contact have access to the organization tab? */
 export async function hasSharedOrganization(contactId: string): Promise<boolean> {
   const [row] = await db
     .select({ id: organizations.id })
@@ -325,7 +325,7 @@ export async function hasSharedOrganization(contactId: string): Promise<boolean>
   return Boolean(row);
 }
 
-/** Détail d'une demande — messages PUBLICS uniquement, jamais les notes internes (PT-06). */
+/** Request detail — PUBLIC messages only, never the internal notes (PT-06). */
 export async function getContactRequest(tenantId: string, contactId: string, number: number) {
   const [ticket] = await db
     .select()
@@ -333,7 +333,7 @@ export async function getContactRequest(tenantId: string, contactId: string, num
     .where(and(eq(tickets.tenantId, tenantId), eq(tickets.number, number), isNull(tickets.deletedAt)));
   if (!ticket) return null;
 
-  // Accès : demandeur, ou membre d'une organisation partagée propriétaire du ticket.
+  // Access: the requester, or a member of a shared organization that owns the ticket.
   let allowed = ticket.requesterId === contactId;
   if (!allowed && ticket.organizationId) {
     const [link] = await db
@@ -386,7 +386,7 @@ export async function getContactRequest(tenantId: string, contactId: string, num
     attachmentsByMessage.set(a.messageId, [...(attachmentsByMessage.get(a.messageId) ?? []), a]);
   }
 
-  // Noms des agents du fil (« Marie — Acme Support ») + demandeur (vue organisation).
+  // Names of the agents in the thread ("Marie — Acme Support") + requester (organization view).
   const agentIds = [
     ...new Set(
       messages.filter((m) => m.authorType === "agent" && m.authorId).map((m) => m.authorId!),
@@ -407,9 +407,9 @@ export async function getContactRequest(tenantId: string, contactId: string, num
   return { ticket, messages, attachmentsByMessage, agentsById, requester: requester ?? null };
 }
 
-/* ---------- Administration d'organisation (PT-08) ---------- */
+/* ---------- Organization administration (PT-08) ---------- */
 
-/** Organisation dont le contact est administrateur (orgAdminGrant), ou null. */
+/** The organization the contact administers (orgAdminGrant), or null. */
 export async function getOrgAdminOrg(tenantId: string, contactId: string) {
   const [row] = await db
     .select({ org: organizations })
@@ -428,7 +428,7 @@ export type OrgMemberRow = {
   requestCount: number;
 };
 
-/** Collaborateurs de l'organisation, grants admin et nombre de demandes réels. */
+/** The organization's collaborators, admin grants and real request counts. */
 export async function listOrgMembers(tenantId: string, organizationId: string): Promise<OrgMemberRow[]> {
   const members = await db
     .select({ id: contacts.id, name: contacts.name, email: contacts.email })
@@ -471,7 +471,7 @@ export async function listOrgMembers(tenantId: string, organizationId: string): 
   }));
 }
 
-/** Domaines déclarés de l'organisation (vérifiés ou en attente). */
+/** The organization's declared domains (verified or pending). */
 export async function listOrgDomains(tenantId: string, organizationId: string) {
   return db
     .select()

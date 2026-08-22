@@ -4,9 +4,9 @@ import { requestMagicLink } from "../actions";
 import { getT } from "@/i18n/server";
 
 /**
- * PT-07 — Connexion portail : une seule saisie, l'email — lien magique par défaut,
- * sans chrome. Reste à venir (v1.1) : découverte par domaine → redirection SSO (Lot 5b),
- * mode mot de passe optionnel (ST-09).
+ * PT-07 — Portal sign-in: a single field, the email — magic link by default,
+ * chrome-free. Still to come (v1.1): domain discovery → SSO redirect (Lot 5b),
+ * optional password mode (ST-09).
  */
 export default async function PortalLoginPage({
   searchParams,

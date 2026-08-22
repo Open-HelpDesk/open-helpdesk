@@ -16,7 +16,7 @@ import {
 const KEYS_GRID = "minmax(180px,1fr) 220px 180px 140px 90px";
 const DELIVERY_GRID = "150px 110px 90px 90px 1fr 90px";
 
-/** Bouton d'action en texte seul (Révoquer, Renvoyer…) — 12 px, sans cadre. */
+/** Text-only action button (Revoke, Resend…) — 12 px, no frame. */
 const LINK_BTN = (color: string): React.CSSProperties => ({ fontSize: 12, color });
 
 function scopesLabel(t: Translate, scopes: string[]): string {
@@ -25,7 +25,7 @@ function scopesLabel(t: Translate, scopes: string[]): string {
   return t("app.settings.dev.scopeRead");
 }
 
-/** Réponse lisible d'une livraison — phrase canonique du code HTTP. */
+/** Human-readable delivery response — the canonical phrase for the HTTP code. */
 const HTTP_REASON: Record<number, string> = {
   200: "OK",
   201: "Created",
@@ -44,7 +44,7 @@ const HTTP_REASON: Record<number, string> = {
   504: "Gateway Timeout",
 };
 
-/** « Aujourd'hui 14:02 », « Hier 22:11 », « 14 août 09:03 ». */
+/** "Today 14:02", "Yesterday 22:11", "Aug 14 09:03". */
 function dayTime(t: Translate, date: Date, now: Date = new Date()): string {
   const time = date.toLocaleTimeString(t.locale.tag, { hour: "2-digit", minute: "2-digit" });
   const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
@@ -55,9 +55,9 @@ function dayTime(t: Translate, date: Date, now: Date = new Date()): string {
 }
 
 /**
- * ST-10 — API & webhooks (1040 px). Clés API réelles (création avec affichage
- * unique, hash SHA-256, révocation) ; webhooks CRUD avec livraisons réelles et
- * bandeau rouge en cas de désactivation automatique.
+ * ST-10 — API & webhooks (1040 px). Real API keys (creation with a single
+ * display, SHA-256 hash, revocation); webhook CRUD with real deliveries and a
+ * red banner when one is disabled automatically.
  */
 export default async function ApiSettingsPage({
   searchParams,
@@ -372,7 +372,7 @@ export default async function ApiSettingsPage({
             );
           })}
 
-          {/* Ajout d'un endpoint — bouton en pied, aligné à gauche */}
+          {/* Adding an endpoint — button at the bottom, left-aligned */}
           <form
             action={createWebhook}
             className="flex flex-wrap items-center self-start"

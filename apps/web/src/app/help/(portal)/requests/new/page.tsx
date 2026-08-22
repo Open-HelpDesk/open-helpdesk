@@ -5,8 +5,8 @@ import { DropZone } from "../attach";
 import { SubjectWithDeflection } from "./subject-field";
 import { getT } from "@/i18n/server";
 
-/* Le libellé traduit est ce que voit le client ; la valeur envoyée au serveur
-   reste la clé, pour qu'un ticket créé en suédois soit lisible côté agent. */
+/* The translated label is what the customer sees; the value sent to the server
+   stays the key, so that a ticket created in Swedish is readable on the agent side. */
 const REQUEST_TYPES = [
   ["technical", "newRequest.typeTechnical", "newRequest.typeTechnicalDesc"],
   ["billing", "newRequest.typeBilling", "newRequest.typeBillingDesc"],
@@ -20,9 +20,9 @@ const URGENCIES = [
 ] as const;
 
 /**
- * PT-04 — Soumettre une demande : type de demande (cartes), email (lecture seule si
- * connecté), sujet avec déflexion KB, module réel (ticketFields key=module), urgence,
- * description, dropzone, bouton pleine largeur.
+ * PT-04 — Submit a request: request type (cards), email (read-only when signed
+ * in), subject with KB deflection, real module (ticketFields key=module), urgency,
+ * description, dropzone, full-width button.
  */
 export default async function NewRequestPage({
   searchParams,
@@ -51,7 +51,7 @@ export default async function NewRequestPage({
         </header>
 
         <form action={submitRequest} className="flex flex-col gap-5">
-          {/* Type de demande */}
+          {/* Request type */}
           <fieldset className="flex flex-col gap-[9px]">
             <legend className="pt-label pb-[9px]">{t("newRequest.type")}</legend>
             <div className="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
@@ -97,10 +97,10 @@ export default async function NewRequestPage({
             )}
           </div>
 
-          {/* Sujet + déflexion */}
+          {/* Subject + deflection */}
           <SubjectWithDeflection defaultSubject={subject ?? ""} />
 
-          {/* Module concerné / Urgence — une seule colonne si le tenant n'a pas de modules. */}
+          {/* Related module / Urgency — a single column when the tenant has no modules. */}
           <div
             className={`grid gap-3.5 max-sm:grid-cols-1 ${modules.length > 0 ? "grid-cols-2" : "grid-cols-1"}`}
           >
@@ -164,7 +164,7 @@ export default async function NewRequestPage({
             />
           </div>
 
-          {/* Pièces jointes */}
+          {/* Attachments */}
           <DropZone />
 
           <button

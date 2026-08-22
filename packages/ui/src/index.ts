@@ -1,11 +1,11 @@
 /**
- * Design system Open HelpDesk — point d'entrée.
- * Les tokens CSS (extraits des maquettes design/) sont dans ./tokens.css.
- * Les composants (DataTable, Drawer, CommandPalette, TuileKPI, BuilderConditions…)
- * arrivent avec le Lot 1 — voir specs/02-design-system.md.
+ * Open HelpDesk design system — entry point.
+ * The CSS tokens (extracted from the design/ mockups) live in ./tokens.css.
+ * The components (DataTable, Drawer, CommandPalette, TuileKPI, BuilderConditions…)
+ * land with Lot 1.
  */
 
-/** Concatène des classes conditionnelles sans dépendance. */
+/** Joins conditional class names together, with no dependency. */
 export function cn(...classes: Array<string | false | null | undefined>): string {
   return classes.filter(Boolean).join(" ");
 }

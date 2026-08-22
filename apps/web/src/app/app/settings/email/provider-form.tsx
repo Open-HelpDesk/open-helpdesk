@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * ST-03 — Configuration du fournisseur d'envoi, par workspace.
- * Cartes-radio des fournisseurs (pattern du design system), champs adaptés au choix,
- * préréglages SMTP du marché. Les secrets ne sont jamais renvoyés au navigateur :
- * champ vide + indice « ••••1a2b » quand un secret est déjà enregistré.
+ * ST-03 — Sending provider configuration, per workspace.
+ * Provider radio cards (design system pattern), fields matching the choice,
+ * off-the-shelf SMTP presets. Secrets are never sent back to the browser:
+ * empty field + hint "••••1a2b" when a secret is already saved.
  */
 import { useState } from "react";
 import {
@@ -17,7 +17,7 @@ import { useT } from "@/i18n/client";
 
 const PROVIDERS: MailProvider[] = ["smtp", "resend", "brevo", "mailjet", "console"];
 
-/** Monogramme décoratif de chaque fournisseur (teintes du design system). */
+/** Decorative monogram for each provider (design system tints). */
 const MONOGRAMS: Record<MailProvider, { glyph: string; bg: string; color: string }> = {
   smtp: { glyph: "@", bg: "var(--open-t)", color: "var(--open)" },
   resend: { glyph: "R", bg: "var(--new-t)", color: "var(--new)" },
@@ -57,7 +57,7 @@ export function ProviderForm({
   }
 
   const meta = PROVIDER_META[provider];
-  // Un secret déjà enregistré n'est jamais réaffiché : l'indice le rappelle.
+  // A secret already saved is never displayed again: the hint is the reminder.
   const keptPasswordHint = secretHint
     ? t("app.settings.email.secretKeptPassword", { hint: secretHint })
     : undefined;
@@ -69,7 +69,7 @@ export function ProviderForm({
     <div className="flex flex-col gap-4">
       <input type="hidden" name="provider" value={provider} />
 
-      {/* Cartes-radio des fournisseurs */}
+      {/* Provider radio cards */}
       <div
         role="radiogroup"
         aria-label={t("app.settings.email.providerTitle")}
@@ -156,7 +156,7 @@ export function ProviderForm({
         </p>
       ) : (
         <>
-          {/* Identité d'expédition */}
+          {/* Sending identity */}
           <div
             className="grid gap-3"
             style={{ gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))" }}
@@ -189,7 +189,7 @@ export function ProviderForm({
             </Field>
           </div>
 
-          {/* Champs propres au fournisseur */}
+          {/* Provider-specific fields */}
           {provider === "smtp" && (
             <div className="flex flex-col gap-3">
               <Field

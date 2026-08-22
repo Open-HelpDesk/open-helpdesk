@@ -7,15 +7,15 @@ import { and, count, eq, isNull, ne } from "drizzle-orm";
 import { requireManager } from "@/lib/session";
 
 /**
- * Écrire dans la base de connaissances est réservé à Owner et Admin (AG-10).
+ * Writing to the knowledge base is restricted to Owner and Admin (AG-10).
  *
- * Un article publié est du contenu public, servi sur le portail client : le
- * modifier ou le supprimer engage la marque du tenant. Consulter reste ouvert à
- * toute l'équipe — les agents citent les articles dans leurs réponses.
+ * A published article is public content, served on the customer portal: editing
+ * or deleting it puts the tenant's brand on the line. Reading stays open to the
+ * whole team — agents quote articles in their replies.
  *
- * Chaque action refait le contrôle. L'interface masque déjà les commandes à qui
- * n'y a pas droit, mais une server action est une URL : elle ne peut pas
- * s'appuyer sur ce que l'écran affiche.
+ * Every action re-runs the check. The interface already hides the commands from
+ * whoever is not entitled to them, but a server action is a URL: it cannot rely
+ * on what the screen displays.
  */
 
 function slugify(text: string): string {
@@ -41,9 +41,9 @@ export async function createCategory(formData: FormData) {
 }
 
 /**
- * AG-10 — Enregistrer un article.
- * « Brouillon » sur un article publié → draftBodyHtml (badge « MODIFICATIONS NON
- * PUBLIÉES ») ; « Publier » → bodyHtml remplacé et brouillon effacé.
+ * AG-10 — Save an article.
+ * "Draft" on a published article → draftBodyHtml (badge "UNPUBLISHED
+ * CHANGES"); "Publish" → bodyHtml replaced and draft cleared.
  */
 export async function saveArticle(formData: FormData) {
   const { tenant, agent } = await requireManager();
@@ -99,7 +99,7 @@ export async function saveArticle(formData: FormData) {
       patch.status = "published";
       patch.publishedAt = existing.publishedAt ?? new Date();
     } else if (existing.status === "published") {
-      // Brouillon en cours sur un article publié.
+      // Draft in progress on a published article.
       patch.draftBodyHtml = body;
     } else {
       patch.bodyHtml = body;
@@ -113,7 +113,7 @@ export async function saveArticle(formData: FormData) {
     redirect(`/app/kb/${articleId}`);
   }
 
-  // Slug unique par tenant : suffixe numérique en cas de collision.
+  // Slug unique per tenant: numeric suffix on collision.
   const base = slugify(slugInput.replace(/^\//, "") || title) || `article-${Date.now()}`;
   let slug = base;
   for (let i = 2; i < 20; i++) {
@@ -154,7 +154,7 @@ export async function deleteArticle(formData: FormData) {
   redirect("/app/kb");
 }
 
-/** Renomme une catégorie ou une section. Le slug suit, l'identifiant ne bouge pas. */
+/** Renames a category or a section. The slug follows, the id does not move. */
 export async function renameCategory(formData: FormData) {
   const { tenant } = await requireManager();
   const id = String(formData.get("categoryId") ?? "");
@@ -169,13 +169,13 @@ export async function renameCategory(formData: FormData) {
 }
 
 /**
- * Supprime une catégorie — seulement si elle est vide.
+ * Deletes a category — only if it is empty.
  *
- * Rien n'est supprimé en cascade : `kb_articles.category_id` référence la
- * catégorie sans `ON DELETE`, si bien qu'une suppression forcée échouerait sur
- * une erreur Postgres brute. Surtout, effacer une catégorie ne doit pas emporter
- * des articles publiés que personne n'a demandé à retirer du portail. On refuse
- * donc en disant ce qui bloque, et l'écran renvoie vers le contenu à déplacer.
+ * Nothing is deleted in cascade: `kb_articles.category_id` references the
+ * category without `ON DELETE`, so a forced deletion would fail on a raw
+ * Postgres error. Above all, erasing a category must not carry away published
+ * articles nobody asked to pull from the portal. So we refuse, saying what is
+ * blocking, and the screen points to the content that has to be moved.
  */
 export async function deleteCategory(formData: FormData) {
   const { tenant } = await requireManager();
@@ -193,7 +193,7 @@ export async function deleteCategory(formData: FormData) {
 
   const blocking = (articles?.n ?? 0) + (sections?.n ?? 0);
   if (blocking > 0) {
-    redirect(`/app/kb?cat=${id}&erreur=categorie-non-vide&n=${blocking}`);
+    redirect(`/app/kb?cat=${id}&error=category-not-empty&n=${blocking}`);
   }
 
   await db

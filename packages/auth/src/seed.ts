@@ -1,7 +1,7 @@
 /**
- * Crée les identités Better Auth des 5 agents du seed démo (Acme Support).
- * Mot de passe commun de démo : « demo-openhelpdesk » — dev uniquement.
- * Usage : pnpm db:seed:auth (après pnpm db:seed).
+ * Creates the Better Auth identities of the 5 agents of the demo seed (Acme Support).
+ * Shared demo password: "demo-openhelpdesk" — development only.
+ * Usage: pnpm db:seed:auth (after pnpm db:seed).
  */
 import { auth } from "./index";
 
@@ -22,12 +22,12 @@ for (const [name, email] of agents) {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     if (/exist/i.test(message)) {
-      console.log(`déjà présent  ${email}`);
+      console.log(`already there  ${email}`);
     } else {
       throw err;
     }
   }
 }
 
-console.log(`\nConnexion démo : <agent>@acme.example / ${DEMO_PASSWORD}`);
+console.log(`\nDemo sign-in: <agent>@acme.example / ${DEMO_PASSWORD}`);
 process.exit(0);

@@ -11,7 +11,7 @@ const AVATARS = [
 
 const GRID = "minmax(190px,1.3fr) 150px 130px 110px";
 
-/** PT-08 · onglet Collaborateurs — partage des demandes + table réelle. */
+/** PT-08 · Members tab — request sharing + real table. */
 export async function MembersSection({
   members,
   orgDomains,
@@ -31,7 +31,7 @@ export async function MembersSection({
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Partage des demandes (organizations.sharedTickets) */}
+      {/* Request sharing (organizations.sharedTickets) */}
       <div
         className="flex items-start gap-3.5 rounded-[14px] border px-[18px] py-4"
         style={{
@@ -59,7 +59,7 @@ export async function MembersSection({
         </div>
       </div>
 
-      {/* Table Collaborateur / Rôle / Connexion / Demandes */}
+      {/* Member / Role / Sign-in / Requests table */}
       <div
         className="overflow-x-auto rounded-[14px] border"
         style={{
@@ -122,7 +122,7 @@ export async function MembersSection({
                   {role}
                 </span>
               </div>
-              {/* Maquette : ink-2 quand la connexion passe par le SSO, ink-3 sinon. */}
+              {/* Mockup: ink-2 when the sign-in goes through SSO, ink-3 otherwise. */}
               <div className="text-[13px]" style={{ color: viaSso ? "var(--ink-2)" : "var(--ink-3)" }}>
                 {connection}
               </div>

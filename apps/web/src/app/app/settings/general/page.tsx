@@ -18,17 +18,17 @@ import { AccentPicker } from "@/components/settings-accent";
 import { BrandAssetField } from "@/components/settings-brand";
 import { deleteWorkspace, saveGeneral, transferOwnership } from "./actions";
 
-/** Champ de saisie du design : min-height 36, padding 7/11, 13.5px. */
+/** Design-system input field: min-height 36, padding 7/11, 13.5px. */
 const CONTROL = { minHeight: 36, padding: "7px 11px", fontSize: 13.5 } as const;
 
 /**
- * Fuseaux proposés : un par heure légale de l'Union, plus les voisins utiles.
+ * Time zones offered: one per legal time in the Union, plus useful neighbours.
  *
- * La liste suit le registre des langues — un tenant qui règle son logiciel en
- * bulgare doit pouvoir dire qu'il vit à l'heure de Sofia, sans quoi tous ses
- * horodatages et ses horaires ouvrés sont décalés de deux heures. Les
- * identifiants IANA ne se traduisent pas : ce sont des clés, et c'est sous ce
- * nom qu'on les retrouve partout ailleurs.
+ * The list follows the language registry — a tenant setting their software to
+ * Bulgarian must be able to say they live on Sofia time, without which all
+ * their timestamps and business hours are two hours off. IANA identifiers are
+ * not translated: they are keys, and that is the name under which they are
+ * found everywhere else.
  */
 const TIMEZONES = [
   "Europe/Lisbon", "Europe/Dublin", "Europe/London",
@@ -43,25 +43,25 @@ const TIMEZONES = [
 ] as const;
 
 /**
- * Décalage du fuseau à cet instant — « UTC+2 ».
+ * The time zone's offset at this instant — "UTC+2".
  *
- * Il est calculé, pas écrit : l'heure d'été le décale de soixante minutes deux
- * fois par an, et une étiquette figée est donc fausse la moitié de l'année.
+ * It is computed, not written down: daylight saving time shifts it by sixty
+ * minutes twice a year, so a frozen label is wrong half the year.
  */
 function utcOffset(timeZone: string): string {
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone,
     timeZoneName: "shortOffset",
   }).formatToParts(new Date());
-  // `shortOffset` dit « GMT+2 » ; l'écran disait « UTC+2 » et c'est le terme
-  // que le produit emploie partout ailleurs.
-  const brut = parts.find((p) => p.type === "timeZoneName")?.value ?? "UTC";
-  return brut.replace("GMT", "UTC");
+  // `shortOffset` says "GMT+2"; the screen said "UTC+2" and that is the term
+  // the product uses everywhere else.
+  const raw = parts.find((p) => p.type === "timeZoneName")?.value ?? "UTC";
+  return raw.replace("GMT", "UTC");
 }
 
 /**
- * ST-01 — Général & branding (860 px) : identité du workspace, régionalisation,
- * zone de danger (transfert de propriété, suppression avec confirmation par slug).
+ * ST-01 — General & branding (860 px): workspace identity, regional settings,
+ * danger zone (ownership transfer, deletion with slug confirmation).
  */
 export default async function GeneralSettingsPage({
   searchParams,
@@ -106,10 +106,9 @@ export default async function GeneralSettingsPage({
         subtitle={t("app.settings.workspace.generalSubtitle")}
       />
 
-      {/* Un dépôt refusé le dit. Le format et le poids sont vérifiés côté
-          serveur, et l'enregistrement est interrompu AVANT d'écrire : rien
-          d'autre n'a été enregistré non plus, et le message ne mentirait pas
-          en laissant croire le contraire. */}
+      {/* A rejected upload says so. Format and size are checked server-side,
+          and the save is interrupted BEFORE writing: nothing else was saved
+          either, so the message would not lie by suggesting otherwise. */}
       {(error === "delete-cloud" ||
         error === "logo-format" ||
         error === "favicon-format" ||
@@ -125,7 +124,7 @@ export default async function GeneralSettingsPage({
           }}
         >
           {error === "delete-cloud"
-            ? t("app.settings.workspace.generalDeleteCloudError")
+            ? t("app.settings.workspace.generalDeleteControlPlaneError")
             : error.endsWith("-size")
               ? t("app.settings.workspace.generalAssetSizeError")
               : t("app.settings.workspace.generalAssetFormatError")}
@@ -183,9 +182,10 @@ export default async function GeneralSettingsPage({
             style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 13 }}
           >
             <Field label={t("app.settings.workspace.generalLocaleLabel")}>
-              {/* Une langue par tenant : agents et clients lisent la même.
-                  Chaque langue s'affiche dans sa propre langue — un menu de
-                  langues traduit est illisible pour qui cherche la sienne. */}
+              {/* One language per tenant: agents and customers read the same
+                  one. Each language shows in its own language — a menu of
+                  translated language names is unreadable to whoever is
+                  looking for theirs. */}
               <Select name="locale" defaultValue={tenant.locale} style={CONTROL}>
                 {LOCALES.map((l) => (
                   <option key={l.code} value={l.code}>
@@ -195,9 +195,9 @@ export default async function GeneralSettingsPage({
               </Select>
             </Field>
             <Field label={t("app.settings.workspace.generalTimezoneLabel")}>
-              {/* Le fuseau du tenant est ajouté s'il sort de la liste : sans
-                  cela le menu afficherait la première option et le premier
-                  enregistrement déplacerait le workspace à son insu. */}
+              {/* The tenant's time zone is added if it falls outside the
+                  list: without that the menu would show the first option and
+                  the first save would move the workspace unnoticed. */}
               <Select name="timezone" defaultValue={tenant.timezone} style={CONTROL}>
                 {(TIMEZONES.includes(tenant.timezone as (typeof TIMEZONES)[number])
                   ? TIMEZONES
@@ -234,11 +234,11 @@ export default async function GeneralSettingsPage({
         <SaveBar saved={saved === "1"} cancelHref="/app/settings/general" />
       </form>
 
-      {/* Santé de l'installation — sondes exécutées au rendu quand ?diag=1.
-          Le layout settings filtre déjà owner|admin. */}
+      {/* Installation health — probes run at render time when ?diag=1.
+          The settings layout already filters owner|admin. */}
       <DiagnosticsCard tenantId={tenant.id} run={diag === "1"} />
 
-      {/* Zone de danger — cadre --dang, 2 lignes (panel puis --dang-t) */}
+      {/* Danger zone — --dang frame, 2 rows (panel then --dang-t) */}
       <Card title={t("app.settings.workspace.dangerZone")} danger style={{ padding: 0 }}>
         <div
           className="flex flex-wrap items-center"
@@ -328,11 +328,11 @@ export default async function GeneralSettingsPage({
               <p style={{ fontSize: 13.5, color: "var(--ink-2)" }}>
                 {t("app.settings.workspace.deleteWorkspaceConfirm")}
               </p>
-              {/* Les trois effectifs sont sortis de la phrase : elle en comptait
-                  trois, indépendants, là où une clé ne porte qu'une dimension de
-                  pluriel — à un ticket, elle écrivait « Les 1 tickets ». Chacun
-                  décline maintenant son nom, et rien ne les relie qu'un
-                  séparateur typographique, qui n'a de cas dans aucune langue. */}
+              {/* The three counts were pulled out of the sentence: it held
+                  three of them, independent, where a key carries only one
+                  plural dimension — with one ticket it wrote "Les 1 tickets".
+                  Each now inflects its own noun, and nothing links them but a
+                  typographic separator, which has no case in any language. */}
               <p className="font-semibold" style={{ fontSize: 13.5, color: "var(--dang)" }}>
                 {[
                   t("app.settings.workspace.generalDeleteTicketCount", { count: nTickets }),

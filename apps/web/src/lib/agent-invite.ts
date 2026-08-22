@@ -1,6 +1,6 @@
 /**
- * Envoi de l'email d'invitation d'un agent (ST-02, AG-02) — dans la langue du
- * tenant, via son transport email (cascade tenant → instance → console).
+ * Sending an agent's invitation email (ST-02, AG-02) — in the tenant's language,
+ * through its email transport (tenant → instance → console cascade).
  */
 import { headers } from "next/headers";
 import { sendTenantEmail } from "@openhelpdesk/mail";

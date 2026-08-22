@@ -1,22 +1,22 @@
 /**
- * Modèles de départ d'un article (base de connaissances).
+ * Starter templates for an article (knowledge base).
  *
- * Une page blanche est le premier obstacle à la rédaction : ces quatre
- * structures couvrent l'essentiel de ce qu'écrit une équipe support, et sont
- * écrites dans le format que le portail sait rendre. Le texte entre crochets est
- * à remplacer par l'auteur.
+ * A blank page is the first obstacle to writing: these four structures cover
+ * the essentials of what a support team writes, and are written in the format
+ * the portal knows how to render. The text between brackets is for the author
+ * to replace.
  *
- * Les textes étaient ici, en français : une équipe support bulgare se voyait donc
- * proposer des squelettes d'articles français. Ce fichier ne porte plus que des
- * CLÉS et le glyphe décoratif de la carte de choix, qui n'est pas du texte.
+ * The texts used to live here, in French: a Bulgarian support team was therefore
+ * offered French article skeletons. This file now carries only KEYS and the
+ * decorative glyph of the choice card, which is not text.
  */
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 
 export type ArticleTemplate = {
   id: string;
   labelKey: MessageKey;
   hintKey: MessageKey;
-  /** Glyphe décoratif de la carte de choix — pas du texte, pas traduit. */
+  /** Decorative glyph of the choice card — not text, not translated. */
   glyph: string;
   titleKey: MessageKey;
   bodyKey: MessageKey;

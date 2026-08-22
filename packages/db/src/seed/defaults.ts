@@ -1,8 +1,8 @@
 /**
- * Défauts installés dans TOUT nouveau workspace — contenus imaginés par le design
- * (design-notes/administration.md) : horaires ouvrés, équipes, politiques SLA,
- * macros, règles d'automatisation, champs & formulaires.
- * Idempotent : ne réinstalle pas si des horaires ouvrés existent déjà pour le tenant.
+ * Defaults installed in EVERY new workspace: business hours, teams, SLA
+ * policies, macros, automation rules, fields & forms. Example content, meant to
+ * be edited — it exists so a fresh install has something to look at.
+ * Idempotent: does not reinstall if business hours already exist for the tenant.
  */
 import { eq } from "drizzle-orm";
 import { db } from "../client";
@@ -25,13 +25,16 @@ const WEEK_9_18 = {
   fri: [["09:00", "18:00"]],
 };
 
-const FRENCH_HOLIDAYS = [
-  { date: "2026-01-01", label: "Jour de l'An" },
-  { date: "2026-04-06", label: "Lundi de Pâques" },
-  { date: "2026-05-01", label: "Fête du Travail" },
-  { date: "2026-05-08", label: "Victoire 1945" },
-  { date: "2026-07-14", label: "Fête nationale" },
-  { date: "2026-12-25", label: "Noël" },
+/**
+ * An example calendar, deliberately not a country's own: enough days to show
+ * the feature, each of them observed across most of Europe. An administrator
+ * replaces them with the ones their team actually takes (ST-07).
+ */
+const EXAMPLE_HOLIDAYS = [
+  { date: "2026-01-01", label: "New Year's Day" },
+  { date: "2026-04-06", label: "Easter Monday" },
+  { date: "2026-05-01", label: "Labour Day" },
+  { date: "2026-12-25", label: "Christmas Day" },
 ];
 
 export async function installDefaults(tenantId: string): Promise<boolean> {
@@ -42,32 +45,32 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     .limit(1);
   if (existing) return false;
 
-  /* ---------- Horaires ouvrés ---------- */
-  const [bureauFrance] = await db
+  /* ---------- Business hours ---------- */
+  const [mainOffice] = await db
     .insert(businessHours)
     .values({
       tenantId,
-      name: "Bureau France 9h–18h",
+      name: "Main office 9–18",
       position: 0,
-      timezone: "Europe/Paris",
+      timezone: "UTC",
       weeklyHours: WEEK_9_18,
-      holidays: FRENCH_HOLIDAYS,
+      holidays: EXAMPLE_HOLIDAYS,
     })
     .returning();
-  const [astreinte] = await db
+  const [onCall] = await db
     .insert(businessHours)
     .values({
       tenantId,
-      name: "Astreinte 24/7",
+      name: "On-call 24/7",
       position: 1,
-      timezone: "Europe/Paris",
+      timezone: "UTC",
       weeklyHours: {},
       holidays: [],
     })
     .returning();
   await db.insert(businessHours).values({
     tenantId,
-    name: "Support Benelux",
+    name: "European office 9–17:30",
     position: 2,
     timezone: "Europe/Brussels",
     weeklyHours: {
@@ -80,26 +83,25 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     holidays: [],
   });
 
-  /* ---------- Équipes ---------- */
+  /* ---------- Teams ---------- */
   const teamRows = await db
     .insert(teams)
     .values([
-      { tenantId, name: "Support N1", businessHoursId: bureauFrance!.id },
-      { tenantId, name: "Escalade", businessHoursId: astreinte!.id },
-      { tenantId, name: "Commercial", businessHoursId: bureauFrance!.id },
-      { tenantId, name: "Produit", businessHoursId: bureauFrance!.id },
+      { tenantId, name: "Tier 1", businessHoursId: mainOffice!.id },
+      { tenantId, name: "Escalation", businessHoursId: onCall!.id },
+      { tenantId, name: "Sales", businessHoursId: mainOffice!.id },
+      { tenantId, name: "Product", businessHoursId: mainOffice!.id },
     ])
     .returning();
   const teamId = (name: string) => teamRows.find((t) => t.name === name)!.id;
 
-  /* ---------- Politiques SLA (l'ordre compte — la première qui matche s'applique) ---------- */
+  /* ---------- SLA policies (order matters — the first match wins) ---------- */
   await db.insert(slaPolicies).values([
     {
       tenantId,
-      name: "Clients Premium",
+      name: "Premium customers",
       position: 0,
-      // Adaptation : le design cible « Organisation a le tag premium » ; porté par le
-      // tag de ticket « premium » tant que les organisations n'ont pas de tags.
+      // Carried by the "premium" ticket tag as long as organizations have no tags.
       conditions: [{ field: "tags", operator: "includes", value: "premium" }],
       targets: {
         urgent: { firstReplyMin: 15, nextReplyMin: 30, resolveMin: 240 },
@@ -107,11 +109,11 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
         normal: { firstReplyMin: 240, nextReplyMin: 480, resolveMin: 2880 },
         low: { firstReplyMin: 1440, nextReplyMin: 2880, resolveMin: 7200 },
       },
-      businessHoursId: astreinte!.id,
+      businessHoursId: onCall!.id,
     },
     {
       tenantId,
-      name: "Incidents production",
+      name: "Production incidents",
       position: 1,
       conditions: [{ field: "type", operator: "is", value: "Incident" }],
       targets: {
@@ -120,11 +122,11 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
         normal: { firstReplyMin: 480, nextReplyMin: 960, resolveMin: 4320 },
         low: { firstReplyMin: 1440, nextReplyMin: 2880, resolveMin: 7200 },
       },
-      businessHoursId: astreinte!.id,
+      businessHoursId: onCall!.id,
     },
     {
       tenantId,
-      name: "Politique par défaut",
+      name: "Default policy",
       position: 2,
       isDefault: true,
       conditions: [],
@@ -134,88 +136,88 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
         normal: { firstReplyMin: 480, nextReplyMin: 960, resolveMin: 4320 },
         low: { firstReplyMin: 1440, nextReplyMin: 2880, resolveMin: 7200 },
       },
-      businessHoursId: bureauFrance!.id,
+      businessHoursId: mainOffice!.id,
     },
   ]);
 
-  /* ---------- Macros (7, en 3 catégories — textes du design) ---------- */
+  /* ---------- Macros (7, in 3 categories) ---------- */
   await db.insert(macros).values([
     {
       tenantId,
-      name: "Accusé de réception",
-      category: "Réponses courantes",
+      name: "Acknowledgement",
+      category: "Common replies",
       availability: "everyone",
       actions: [
         {
           type: "insert_text",
           value:
-            "Bonjour {{contact.prenom}}, nous avons bien reçu votre demande et " +
-            "revenons vers vous sous 4 heures ouvrées.",
+            "Hello {{contact.name}}, we have received your request and will get " +
+            "back to you within 4 business hours.",
         },
         { type: "set_status", value: "open" },
       ],
     },
     {
       tenantId,
-      name: "Demande de précisions",
-      category: "Réponses courantes",
+      name: "Request for details",
+      category: "Common replies",
       availability: "everyone",
       actions: [
         {
           type: "insert_text",
           value:
-            "Bonjour {{contact.prenom}}, pour avancer sur votre demande, pourriez-vous " +
-            "préciser les étapes exactes qui mènent au problème, et joindre une capture " +
-            "d'écran si possible ? Merci !",
+            "Hello {{contact.name}}, to move your request forward, could you spell out " +
+            "the exact steps that lead to the problem, and attach a screenshot if you " +
+            "have one? Thank you!",
         },
         { type: "set_status", value: "waiting" },
       ],
     },
     {
       tenantId,
-      name: "Résolution confirmée",
-      category: "Réponses courantes",
+      name: "Resolution confirmed",
+      category: "Common replies",
       availability: "everyone",
       actions: [
         {
           type: "insert_text",
           value:
-            "Bonjour {{contact.prenom}}, le problème est résolu de notre côté. " +
-            "N'hésitez pas à répondre à cet email si quelque chose ne fonctionne pas " +
-            "comme attendu — la demande sera rouverte automatiquement.",
+            "Hello {{contact.name}}, the problem is fixed on our side. Do reply to " +
+            "this email if anything still does not work as expected — the request " +
+            "will be reopened automatically.",
         },
         { type: "set_status", value: "resolved" },
       ],
     },
     {
       tenantId,
-      name: "Transfert niveau 2",
-      category: "Escalade",
+      name: "Escalate to tier 2",
+      category: "Escalation",
       availability: "team",
-      teamId: teamId("Support N1"),
+      teamId: teamId("Tier 1"),
       actions: [
         {
           type: "insert_note",
           value:
-            "Transfert au niveau 2 : diagnostic N1 effectué, voir les échanges " +
-            "ci-dessus. Merci de reprendre la main.",
+            "Escalated to tier 2: tier 1 diagnosis done, see the exchanges above. " +
+            "Please take over.",
         },
-        { type: "assign_team", value: teamId("Escalade") },
+        { type: "assign_team", value: teamId("Escalation") },
         { type: "set_priority", value: "high" },
       ],
     },
     {
       tenantId,
-      name: "Incident majeur",
-      category: "Escalade",
+      name: "Major incident",
+      category: "Escalation",
       availability: "team",
-      teamId: teamId("Escalade"),
+      teamId: teamId("Escalation"),
       actions: [
         {
           type: "insert_note",
           value:
-            "Incident majeur déclaré : impact multi-clients suspecté. Prévenir le " +
-            "responsable d'astreinte et ouvrir un canal dédié.",
+            "Major incident declared: several customers are likely affected. Alert " +
+            "the on-call lead and open a dedicated channel.",
         },
         { type: "set_priority", value: "urgent" },
         { type: "add_tags", value: ["incident"] },
@@ -223,46 +225,44 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     },
     {
       tenantId,
-      name: "Envoi de facture",
-      category: "Facturation",
+      name: "Send an invoice",
+      category: "Billing",
       availability: "team",
-      teamId: teamId("Commercial"),
+      teamId: teamId("Sales"),
       actions: [
         {
           type: "insert_text",
           value:
-            "Bonjour {{contact.nom}}, vous trouverez la facture demandée en pièce " +
-            "jointe. Elle reste disponible à tout moment depuis votre espace client, " +
-            "rubrique Abonnement.",
+            "Hello {{contact.name}}, the invoice you asked for is attached. It also " +
+            "stays available at any time from your customer area.",
         },
-        { type: "add_tags", value: ["facturation"] },
+        { type: "add_tags", value: ["billing"] },
       ],
     },
     {
       tenantId,
-      name: "Remboursement accordé",
-      category: "Facturation",
+      name: "Refund approved",
+      category: "Billing",
       availability: "team",
-      teamId: teamId("Commercial"),
+      teamId: teamId("Sales"),
       actions: [
         {
           type: "insert_text",
           value:
-            "Bonjour {{contact.prenom}}, votre demande de remboursement est acceptée. " +
-            "Le montant sera recrédité sur votre moyen de paiement sous 5 à 10 jours " +
-            "ouvrés.",
+            "Hello {{contact.name}}, your refund request is approved. The amount will " +
+            "be credited back to your payment method within 5 to 10 business days.",
         },
         { type: "set_status", value: "resolved" },
       ],
     },
   ]);
 
-  /* ---------- Automatisations (5 — Round-robin livrée désactivée, comme le design) ---------- */
+  /* ---------- Automations (5 — round-robin ships disabled) ---------- */
   await db.insert(automationRules).values([
     {
       tenantId,
       kind: "trigger",
-      name: "Accusé de réception",
+      name: "Acknowledge receipt",
       position: 0,
       active: true,
       conditionsAll: [{ field: "event", operator: "is", value: "ticket.created" }],
@@ -270,29 +270,29 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
         {
           type: "email_contact",
           value:
-            "Bonjour {{contact.name}},\n\nNous avons bien reçu votre demande " +
-            "« {{ticket.subject}} » (ticket #{{ticket.number}}) et revenons vers vous " +
-            "sous 4 heures ouvrées.\n\nL'équipe support",
+            "Hello {{contact.name}},\n\nWe have received your request " +
+            "“{{ticket.subject}}” (ticket #{{ticket.number}}) and will get back to " +
+            "you within 4 business hours.\n\nThe support team",
         },
       ],
     },
     {
       tenantId,
       kind: "trigger",
-      name: "Escalade urgente",
+      name: "Urgent escalation",
       position: 1,
       active: true,
       conditionsAll: [{ field: "priority", operator: "is", value: "urgent" }],
-      actions: [{ type: "assign_team", value: teamId("Escalade") }],
+      actions: [{ type: "assign_team", value: teamId("Escalation") }],
     },
     {
       tenantId,
       kind: "trigger",
-      name: "Round-robin Support N1",
+      name: "Round-robin tier 1",
       position: 2,
       active: false,
       conditionsAll: [
-        { field: "team", operator: "is", value: teamId("Support N1") },
+        { field: "team", operator: "is", value: teamId("Tier 1") },
         { field: "assignee", operator: "empty" },
       ],
       actions: [{ type: "assign_round_robin" }],
@@ -300,7 +300,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     {
       tenantId,
       kind: "scheduled",
-      name: "Relance client à 48 h",
+      name: "Customer reminder after 48 h",
       position: 3,
       active: true,
       conditionsAll: [
@@ -311,16 +311,16 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
         {
           type: "email_contact",
           value:
-            "Bonjour {{contact.name}},\n\nNous attendons votre retour sur la demande " +
-            "« {{ticket.subject}} » (#{{ticket.number}}). Sans réponse de votre part, " +
-            "elle sera résolue automatiquement dans quelques jours.\n\nL'équipe support",
+            "Hello {{contact.name}},\n\nWe are still waiting for your reply on the " +
+            "request “{{ticket.subject}}” (#{{ticket.number}}). Without an answer from " +
+            "you, it will be resolved automatically in a few days.\n\nThe support team",
         },
       ],
     },
     {
       tenantId,
       kind: "scheduled",
-      name: "Clôture automatique J+4",
+      name: "Auto-close after 4 days",
       position: 4,
       active: true,
       conditionsAll: [
@@ -331,26 +331,26 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     },
   ]);
 
-  /* ---------- Champs & formulaires ---------- */
+  /* ---------- Fields & forms ---------- */
   const fieldRows = await db
     .insert(ticketFields)
     .values([
       {
         tenantId,
         key: "module",
-        label: "Module concerné",
+        label: "Module concerned",
         type: "select",
-        options: ["Facturation", "Compte & accès", "Exports", "Intégrations", "Autre"],
+        options: ["Billing", "Account & access", "Exports", "Integrations", "Other"],
         portalVisible: true,
         required: true,
         position: 0,
       },
       {
         tenantId,
-        key: "urgence",
-        label: "Urgence",
+        key: "urgency",
+        label: "Urgency",
         type: "select",
-        options: ["Basse", "Normale", "Haute"],
+        options: ["Low", "Normal", "High"],
         portalVisible: true,
         required: false,
         position: 1,
@@ -358,40 +358,40 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
       {
         tenantId,
         key: "version",
-        label: "Version du produit",
+        label: "Product version",
         type: "text",
         portalVisible: false,
         position: 2,
       },
       {
         tenantId,
-        key: "numero_commande",
-        label: "Numéro de commande",
+        key: "order_number",
+        label: "Order number",
         type: "number",
         portalVisible: true,
         position: 3,
       },
       {
         tenantId,
-        key: "date_souhaitee",
-        label: "Date souhaitée",
+        key: "preferred_date",
+        label: "Preferred date",
         type: "date",
         portalVisible: true,
         position: 4,
       },
       {
         tenantId,
-        key: "environnement",
-        label: "Environnement",
+        key: "environment",
+        label: "Environment",
         type: "multi_select",
-        options: ["Production", "Préproduction", "Développement"],
+        options: ["Production", "Staging", "Development"],
         portalVisible: false,
         position: 5,
       },
       {
         tenantId,
-        key: "contrat_support",
-        label: "Contrat de support",
+        key: "support_contract",
+        label: "Support contract",
         type: "checkbox",
         portalVisible: false,
         position: 6,
@@ -403,24 +403,24 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
   const formRows = await db
     .insert(ticketForms)
     .values([
-      { tenantId, name: "Support général", portalVisible: true, position: 0 },
-      { tenantId, name: "Facturation", portalVisible: true, position: 1 },
-      { tenantId, name: "Commercial", portalVisible: false, position: 2 },
+      { tenantId, name: "General support", portalVisible: true, position: 0 },
+      { tenantId, name: "Billing", portalVisible: true, position: 1 },
+      { tenantId, name: "Sales", portalVisible: false, position: 2 },
     ])
     .returning();
   const formId = (name: string) => formRows.find((f) => f.name === name)!.id;
 
   await db.insert(formFields).values([
-    { tenantId, formId: formId("Support général"), fieldId: fieldId("module"), position: 0 },
-    { tenantId, formId: formId("Support général"), fieldId: fieldId("urgence"), position: 1 },
-    { tenantId, formId: formId("Support général"), fieldId: fieldId("version"), position: 2 },
-    { tenantId, formId: formId("Support général"), fieldId: fieldId("environnement"), position: 3 },
-    { tenantId, formId: formId("Facturation"), fieldId: fieldId("module"), position: 0 },
-    { tenantId, formId: formId("Facturation"), fieldId: fieldId("numero_commande"), position: 1 },
-    { tenantId, formId: formId("Facturation"), fieldId: fieldId("urgence"), position: 2 },
-    { tenantId, formId: formId("Commercial"), fieldId: fieldId("module"), position: 0 },
-    { tenantId, formId: formId("Commercial"), fieldId: fieldId("date_souhaitee"), position: 1 },
-    { tenantId, formId: formId("Commercial"), fieldId: fieldId("contrat_support"), position: 2 },
+    { tenantId, formId: formId("General support"), fieldId: fieldId("module"), position: 0 },
+    { tenantId, formId: formId("General support"), fieldId: fieldId("urgency"), position: 1 },
+    { tenantId, formId: formId("General support"), fieldId: fieldId("version"), position: 2 },
+    { tenantId, formId: formId("General support"), fieldId: fieldId("environment"), position: 3 },
+    { tenantId, formId: formId("Billing"), fieldId: fieldId("module"), position: 0 },
+    { tenantId, formId: formId("Billing"), fieldId: fieldId("order_number"), position: 1 },
+    { tenantId, formId: formId("Billing"), fieldId: fieldId("urgency"), position: 2 },
+    { tenantId, formId: formId("Sales"), fieldId: fieldId("module"), position: 0 },
+    { tenantId, formId: formId("Sales"), fieldId: fieldId("preferred_date"), position: 1 },
+    { tenantId, formId: formId("Sales"), fieldId: fieldId("support_contract"), position: 2 },
   ]);
 
   return true;

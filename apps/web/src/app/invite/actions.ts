@@ -1,10 +1,10 @@
 "use server";
 
 /**
- * Acceptation d'une invitation d'agent (ST-02) : le jeton HMAC prouve le
- * contrôle de l'adresse — l'identité Better Auth est créée avec l'email déjà
- * marqué vérifié, puis la ligne app.users passe invited → active. C'est la
- * SEULE transition invited → active du produit.
+ * Accepting an agent invitation (ST-02): the HMAC token proves control of the
+ * address — the Better Auth identity is created with the email already marked
+ * verified, then the app.users row moves invited → active. This is the ONLY
+ * invited → active transition in the product.
  */
 import { redirect } from "next/navigation";
 import { APIError } from "better-auth/api";
@@ -39,16 +39,16 @@ export async function acceptInvite(formData: FormData) {
       body: { email: invited.email, password, name },
     });
   } catch (err) {
-    // Identité déjà existante (agent d'un autre workspace) : l'invitation
-    // reste valable, l'activation suffit — il se connectera avec son mot de
-    // passe habituel. Toute autre erreur est réelle.
+    // Identity already exists (an agent from another workspace): the invitation
+    // stays valid, activation is enough — they will sign in with their usual
+    // password. Any other error is a real one.
     if (!(err instanceof APIError && err.status === "UNPROCESSABLE_ENTITY")) {
-      console.error("[invite] création d'identité impossible :", err);
+      console.error("[invite] could not create identity:", err);
       redirect(`/invite/${encodeURIComponent(token)}?error=failed`);
     }
   }
 
-  // Le clic sur le lien d'invitation vaut vérification de l'adresse.
+  // Clicking the invitation link counts as verification of the address.
   await db
     .update(authUsers)
     .set({ emailVerified: true })
@@ -61,7 +61,7 @@ export async function acceptInvite(formData: FormData) {
   redirect("/login?accepted=1");
 }
 
-/** Session OAuth déjà ouverte sur la bonne adresse : activation directe. */
+/** OAuth session already open on the right address: direct activation. */
 export async function activateFromSession(token: string): Promise<void> {
   const tenant = await getTenantFromHeaders();
   if (!tenant) return;

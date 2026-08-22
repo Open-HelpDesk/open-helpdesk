@@ -2,7 +2,7 @@ import Link from "next/link";
 import { saveSsoConnection, toggleSsoEnabled } from "./sso-actions";
 import { CopyButton } from "@/app/help/(portal)/organization/copy-button";
 import { getT, type Translate } from "@/i18n/server";
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 
 const BASE_DOMAIN = process.env.BASE_DOMAIN ?? "localhost:3000";
 const PROTOCOL = BASE_DOMAIN.includes("localhost") ? "http" : "https";
@@ -75,8 +75,8 @@ function Field({
 }
 
 /**
- * PT-08 · onglet Connexion SSO — UI fidèle à la maquette, persistance minimale
- * dans orgSsoConnections (statut "pending"). Le flux OIDC réel arrive au Lot 5b.
+ * PT-08 · SSO connection tab — UI faithful to the mockup, minimal persistence
+ * in orgSsoConnections (status "pending"). The real OIDC flow lands in Lot 5b.
  */
 export async function SsoSection({
   tenantSlug,
@@ -114,7 +114,7 @@ export async function SsoSection({
 
   return (
     <div className="flex flex-col gap-7">
-      {/* Bandeau d'activation */}
+      {/* Enablement banner */}
       <div
         className="flex items-start gap-[15px] rounded-2xl border px-5 py-[18px]"
         style={{
@@ -158,7 +158,7 @@ export async function SsoSection({
         </div>
       </div>
 
-      {/* Fournisseur d'identité */}
+      {/* Identity provider */}
       <div className="flex flex-col gap-3.5">
         <p className="pt-eyebrow">{t("sso.provider")}</p>
         <div className="grid grid-cols-2 gap-2.5 max-sm:grid-cols-1">
@@ -194,7 +194,7 @@ export async function SsoSection({
       <form action={saveSsoConnection} className="flex flex-col gap-7">
         <input type="hidden" name="provider" value={provider} />
 
-        {/* Paramètres de connexion */}
+        {/* Connection settings */}
         <div className="flex flex-col gap-3.5">
           <div className="flex flex-wrap items-center gap-2.5">
             <p className="pt-eyebrow">{t("sso.settings")}</p>
@@ -251,7 +251,7 @@ export async function SsoSection({
           )}
         </div>
 
-        {/* À copier dans votre fournisseur */}
+        {/* To be copied into your provider */}
         <div className="flex flex-col gap-3">
           <p className="pt-eyebrow">{t("sso.copyToProvider")}</p>
           <div
@@ -288,7 +288,7 @@ export async function SsoSection({
           </div>
         </div>
 
-        {/* Mode strict + JIT */}
+        {/* Strict mode + JIT */}
         <div className="flex flex-col gap-[11px]" data-sso-toggles>
           <label
             className="pt-switch-label relative flex items-start gap-3.5 rounded-[14px] border px-[18px] py-4"
@@ -345,7 +345,7 @@ export async function SsoSection({
           </label>
         </div>
 
-        {/* Test de connexion — seul état idle (le flux réel arrive au Lot 5b) */}
+        {/* Connection test — idle state only (the real flow lands in Lot 5b) */}
         <div
           className="flex flex-wrap items-center gap-4 rounded-2xl border px-5 py-[18px]"
           style={{ background: "var(--panel)", borderColor: "var(--line)" }}

@@ -1,6 +1,6 @@
 /**
- * Moteur d'automatisations (ST-05) et politiques SLA (ST-07) — types partagés.
- * Les conditions et actions sont stockées en jsonb ; ces types sont le contrat.
+ * Automation engine (ST-05) and SLA policies (ST-07) — shared types.
+ * Conditions and actions are stored as jsonb; these types are the contract.
  */
 
 export type RuleEvent = "ticket.created" | "ticket.updated" | "message.created";
@@ -40,13 +40,13 @@ export type RuleAction =
   | { type: "set_priority"; value: "low" | "normal" | "high" | "urgent" }
   | { type: "assign_user"; value: string }
   | { type: "assign_team"; value: string }
-  /** Round-robin : assigne à l'agent actif de l'équipe du ticket le moins chargé. */
+  /** Round-robin: assigns to the least loaded active agent of the ticket's team. */
   | { type: "assign_round_robin" }
   | { type: "add_tags"; value: string[] }
-  /** Corps avec variables : {{ticket.number}}, {{ticket.subject}}, {{contact.name}}. */
+  /** Body with variables: {{ticket.number}}, {{ticket.subject}}, {{contact.name}}. */
   | { type: "email_contact"; value: string };
 
-/** Cibles SLA par priorité, en minutes ouvrées (24/7 tant que businessHoursId est null). */
+/** SLA targets per priority, in business minutes (24/7 as long as businessHoursId is null). */
 export type SlaTargets = Partial<
   Record<
     "low" | "normal" | "high" | "urgent",

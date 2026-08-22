@@ -2,8 +2,8 @@ import Link from "next/link";
 import { getT } from "@/i18n/server";
 
 /**
- * PT-04 (confirmation) — visiteur non connecté : ✓, référence mono, bandeau
- * « lien de vérification », boutons « Suivre ma demande » / « Retour à l'aide ».
+ * PT-04 (confirmation) — visitor not signed in: ✓, monospace reference,
+ * "verification link" banner, "Track my request" / "Back to help" buttons.
  */
 export default async function SubmittedPage({
   searchParams,
@@ -29,8 +29,8 @@ export default async function SubmittedPage({
           className="max-w-[46ch] text-[16.5px] leading-[1.6]"
           style={{ color: "var(--ink-2)", textWrap: "pretty" }}
         >
-          {/* La référence est en gras : la phrase est découpée autour d'elle
-              plutôt que recomposée, sinon l'ordre des mots serait figé. */}
+          {/* The reference is in bold: the sentence is split around it rather
+              than recomposed, otherwise the word order would be frozen. */}
           {n ? (
             <>
               {refBefore}

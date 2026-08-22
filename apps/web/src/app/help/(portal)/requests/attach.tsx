@@ -1,13 +1,13 @@
 "use client";
 
 /**
- * Pièces jointes du portail (PT-04/PT-06) : dropzone dashed de la maquette et
- * bouton « 📎 Joindre un fichier », avec retour visuel des fichiers choisis.
+ * Portal attachments (PT-04/PT-06): the mockup's dashed dropzone and the
+ * "📎 Attach a file" button, with visual feedback on the chosen files.
  */
 import { useRef, useState } from "react";
 import { useT } from "@/i18n/client";
 
-/** Un seul fichier : son nom, plus parlant qu'un décompte. Sinon, le décompte. */
+/** A single file: its name, more telling than a count. Otherwise, the count. */
 function useFileLabel() {
   const t = useT();
   return (files: File[]): string => {
@@ -17,7 +17,7 @@ function useFileLabel() {
   };
 }
 
-/** Dropzone dashed (PT-04) : « Déposez vos fichiers ici » + input file caché. */
+/** Dashed dropzone (PT-04): "Drop your files here" + hidden file input. */
 export function DropZone() {
   const t = useT();
   const fileLabel = useFileLabel();
@@ -70,7 +70,7 @@ export function DropZone() {
   );
 }
 
-/** Bouton discret « 📎 Joindre un fichier » de la barre de réponse (PT-06). */
+/** Discreet "📎 Attach a file" button in the reply bar (PT-06). */
 export function AttachButton() {
   const t = useT();
   const fileLabel = useFileLabel();

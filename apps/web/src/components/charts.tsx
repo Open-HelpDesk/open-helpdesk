@@ -1,16 +1,16 @@
 /**
- * Composants graphiques de AG-09 — rendus serveur, tokens du design system.
- * Fidèles à la maquette « Espace agent » : tuiles KPI (label 11.5 min-h 30, valeur 24px/600,
- * ligne delta + sparkline 56×20), « Créés vs résolus » en aires + lignes 640×190 (pad 22),
- * barres par canal h7, heatmap 7 × 12 en grille `16px repeat(12,1fr)` gap 3.
+ * AG-09 chart components — server-rendered, design system tokens.
+ * Faithful to the "Agent workspace" mockup: KPI tiles (label 11.5 min-h 30, value 24px/600,
+ * delta line + 56×20 sparkline), "Created vs resolved" as areas + lines 640×190 (pad 22),
+ * per-channel bars h7, 7 × 12 heatmap on a `16px repeat(12,1fr)` grid, gap 3.
  *
- * Rendus serveur mais synchrones : la fonction de traduction leur est passée en
- * prop par la page appelante plutôt que résolue ici avec `await getT()`.
+ * Server-rendered but synchronous: the translation function is passed to them as a
+ * prop by the calling page rather than resolved here with `await getT()`.
  */
 
 import type { Translate } from "@/i18n/server";
 
-/** Sparkline 56×20 du design : normalisée min→max, polyline 1.6, sans point terminal. */
+/** 56×20 sparkline from the design: normalized min→max, polyline 1.6, no end point. */
 export function Sparkline({
   values,
   color = "var(--acc-2)",
@@ -61,7 +61,7 @@ const DELTA_INK: Record<KpiDelta["tone"], string> = {
   neutral: "var(--ink-2)",
 };
 
-/** Tuile KPI : label (min-h 30) · valeur 24px/600 · ligne « delta ↔ sparkline ». */
+/** KPI tile: label (min-h 30) · value 24px/600 · "delta ↔ sparkline" row. */
 export function KpiTile({
   label,
   value,
@@ -120,7 +120,7 @@ export function KpiTile({
   );
 }
 
-/** Légende « ■ Créés ■ Résolus » — carrés 8×8, 11.5px ink-3, en ligne avec le titre. */
+/** "■ Created ■ Resolved" legend — 8×8 squares, 11.5px ink-3, inline with the title. */
 export function ChartLegend({ items }: { items: { label: string; color: string }[] }) {
   return (
     <div className="flex" style={{ gap: 11, fontSize: 11.5, color: "var(--ink-3)" }}>
@@ -137,8 +137,8 @@ export function ChartLegend({ items }: { items: { label: string; color: string }
 }
 
 /**
- * « Créés vs résolus » — aires + lignes, viewBox 640×190, pad 22, 5 lignes de grille.
- * Le conteneur parent impose la hauteur (190px dans le design).
+ * "Created vs resolved" — areas + lines, viewBox 640×190, pad 22, 5 grid lines.
+ * The parent container sets the height (190px in the design).
  */
 export function AreaLines({
   data,
@@ -155,7 +155,7 @@ export function AreaLines({
   const H = 190;
   const PAD = 22;
   const peak = Math.max(...data.map((d) => Math.max(d.created, d.resolved)), 1);
-  // Plafond « rond » pour que les 4 quarts de grille tombent sur des valeurs lisibles.
+  // "Round" cap so that the 4 grid quarters land on readable values.
   const step = Math.max(1, Math.pow(10, Math.floor(Math.log10(peak))) / 2);
   const max = Math.ceil(peak / (step * 4)) * step * 4;
   const x = (i: number) => PAD + (data.length > 1 ? (i / (data.length - 1)) * (W - PAD - 8) : 0);
@@ -226,7 +226,7 @@ export function AreaLines({
   );
 }
 
-/** « Répartition par canal » — barres h7, largeur = part du total, valeur brute à droite. */
+/** "Breakdown by channel" — h7 bars, width = share of the total, raw value on the right. */
 export function ChannelBars({
   items,
   t,
@@ -275,7 +275,7 @@ export function ChannelBars({
   );
 }
 
-/** Initiales des jours, du lundi au dimanche — une clé par jour, la langue décide. */
+/** Day initials, Monday to Sunday — one key per day, the language decides. */
 const DAY_KEYS = [
   "app.reports.dayMon",
   "app.reports.dayTue",
@@ -286,7 +286,7 @@ const DAY_KEYS = [
   "app.reports.daySun",
 ] as const;
 
-/** « Volume par heure et jour » — 7 lignes × 12 heures, grille `16px repeat(12,1fr)` gap 3. */
+/** "Volume by hour and day" — 7 rows × 12 hours, `16px repeat(12,1fr)` grid, gap 3. */
 export function Heatmap({
   grid,
   hours,

@@ -24,8 +24,8 @@ import {
 } from "@/lib/portal-auth";
 import { saveUploadedFiles } from "@/lib/storage";
 
-import { getT } from "@/i18n/server";
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import { getT, type Translate } from "@/i18n/server";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 
 const BASE_DOMAIN = process.env.BASE_DOMAIN ?? "localhost:3000";
 const PROTOCOL = BASE_DOMAIN.includes("localhost") ? "http" : "https";
@@ -60,7 +60,13 @@ async function findOrCreateContact(tenantId: string, email: string, name?: strin
   return contact!;
 }
 
+/**
+ * PT-07 — the sign-in email. Subject and body come from the dictionary: the
+ * workspace's language is the customer's language too, and this message used to
+ * leave in French whatever the tenant was set to.
+ */
 async function sendMagicLinkEmail(
+  t: Translate,
   tenant: { id: string; slug: string; name: string },
   contact: { id: string; email: string },
   redirectTo: string,
@@ -71,14 +77,12 @@ async function sendMagicLinkEmail(
     tenantId: tenant.id,
     to: contact.email,
     kind: "magic_link",
-    subject: `Votre lien de connexion — ${tenant.name}`,
-    text:
-      `Bonjour,\n\nCliquez sur ce lien pour accéder à vos demandes (valable 15 minutes) :\n` +
-      `${url}\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez cet email.\n\n${tenant.name}`,
+    subject: t("login.emailSubject", { workspace: tenant.name }),
+    text: t("login.emailBody", { url, workspace: tenant.name }),
   });
 }
 
-/** PT-07 — envoi du lien magique. Le compte est créé implicitement. */
+/** PT-07 — magic link dispatch. The account is created implicitly. */
 export async function requestMagicLink(formData: FormData) {
   const tenant = await getPortalTenant();
   if (!tenant) return;
@@ -87,9 +91,10 @@ export async function requestMagicLink(formData: FormData) {
   const sentUrl = `/help/login?sent=1&e=${encodeURIComponent(email)}`;
   const contact = await findOrCreateContact(tenant.id, email);
   if (contact.blocked) {
-    redirect(sentUrl); // même réponse — pas d'oracle sur les comptes bloqués
+    redirect(sentUrl); // same response — no oracle on blocked accounts
   }
-  await sendMagicLinkEmail(tenant, contact, "/help/requests");
+  const t = await getT();
+  await sendMagicLinkEmail(t, tenant, contact, "/help/requests");
   redirect(sentUrl);
 }
 
@@ -100,30 +105,30 @@ export async function portalSignOut() {
 }
 
 /**
- * Types de demande de PT-04. Le formulaire poste une clé stable ; `tickets.type`
- * reçoit le libellé dans la langue du tenant.
+ * PT-04 request types. The form posts a stable key; `tickets.type`
+ * receives the label in the tenant's language.
  *
- * C'est un champ libre, que les agents éditent aussi à la main et que le seed
- * remplit avec « Incident » : y écrire la clé afficherait « technical » dans
- * l'espace agent. Le libellé y est donc du contenu, au même titre que le sujet.
+ * It is a free-text field, which agents also edit by hand and which the seed
+ * fills with "Incident": writing the key there would display "technical" in
+ * the agent workspace. The label is therefore content, just like the subject.
  */
 const REQUEST_TYPE_KEYS: Record<string, MessageKey> = {
   technical: "newRequest.typeTechnical",
   billing: "newRequest.typeBilling",
   feature: "newRequest.typeFeature",
 };
-/** « Urgence » client → priorité interne. */
+/** Customer-facing "urgency" → internal priority. */
 const URGENCY_TO_PRIORITY: Record<string, "low" | "normal" | "high"> = {
   low: "low",
   normal: "normal",
   high: "high",
 };
 
-/** PT-04 — soumission d'une demande. */
+/** PT-04 — request submission. */
 export async function submitRequest(formData: FormData) {
   const tenant = await getPortalTenant();
   if (!tenant) return;
-  // Workspace suspendu : consultation ouverte, création coupée (bandeau côté layout).
+  // Suspended workspace: browsing stays open, creation cut off (banner in the layout).
   if (tenant.status === "suspended" || tenant.status === "deleting") return;
   const session = await getPortalContact();
 
@@ -182,8 +187,8 @@ export async function submitRequest(formData: FormData) {
   await onTicketCreated(tenant.id, ticket!.id);
 
   if (!session) {
-    // Non connecté : lien magique de suivi vers la demande (specs PT-04).
-    await sendMagicLinkEmail(tenant, contact, `/help/requests/${number}`);
+    // Not signed in: magic link to follow up on the request (PT-04 specs).
+    await sendMagicLinkEmail(t, tenant, contact, `/help/requests/${number}`);
   }
   redirect(
     session
@@ -192,7 +197,7 @@ export async function submitRequest(formData: FormData) {
   );
 }
 
-/** PT-06 — répondre sur sa demande (rouvre si résolue, côté moteur). */
+/** PT-06 — reply on one's own request (reopens it if resolved, on the engine side). */
 export async function replyToRequest(formData: FormData) {
   {
     const tenant = await getPortalTenant();
@@ -235,7 +240,7 @@ export async function replyToRequest(formData: FormData) {
   revalidatePath(`/help/requests/${number}`);
 }
 
-/** PT-06 — « Marquer comme résolue » / « Rouvrir ». */
+/** PT-06 — "Mark as resolved" / "Reopen". */
 export async function toggleRequestResolved(formData: FormData) {
   const session = await getPortalContact();
   if (!session) redirect("/help/login");
@@ -261,8 +266,8 @@ export async function toggleRequestResolved(formData: FormData) {
 }
 
 /**
- * PT-03 — « Cet article vous a-t-il aidé ? ». Le 👎 n'entraîne plus de redirection :
- * le bloc de vote client affiche le panneau « Créer une demande pré-remplie ».
+ * PT-03 — "Did this article help you?". The 👎 no longer triggers a redirect:
+ * the client-side vote block shows the "Create a pre-filled request" panel.
  */
 export async function voteArticle(formData: FormData) {
   const tenant = await getPortalTenant();

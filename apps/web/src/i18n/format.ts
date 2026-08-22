@@ -1,16 +1,16 @@
 /**
- * Formats localisés — remplace les helpers `*Fr` du portail.
+ * Localised formats — replaces the portal's `*Fr` helpers.
  *
- * Tout ce qui peut être délégué à `Intl` l'est : dates, heures, nombres,
- * pluriels, temps relatif. Ce qui reste (« depuis 3 jours ») dépend de la
- * grammaire et vit donc dans les dictionnaires, pas ici.
+ * Everything that can be delegated to `Intl` is: dates, times, numbers,
+ * plurals, relative time. What is left ("for 3 days") depends on grammar and
+ * therefore lives in the dictionaries, not here.
  *
- * Deux pièges que ce module referme :
- *  - `Intl.RelativeTimeFormat(..., { numeric: "auto" })` rend « hier » / « demain »
- *    tout seul ; les écrire à la main obligeait à un cas particulier par langue.
- *  - le pluriel n'est pas « n > 1 » partout. Le français met 0 au singulier,
- *    l'anglais au pluriel, et le gallois compte six catégories. `Intl.PluralRules`
- *    choisit la bonne forme ; les dictionnaires les fournissent toutes.
+ * Two pitfalls this module closes:
+ *  - `Intl.RelativeTimeFormat(..., { numeric: "auto" })` renders "yesterday" / "tomorrow"
+ *    on its own; writing them by hand meant a special case per language.
+ *  - plurals are not "n > 1" everywhere. French puts 0 in the singular, English
+ *    in the plural, and Welsh has six categories. `Intl.PluralRules` picks the
+ *    right form; the dictionaries supply them all.
  */
 
 import type { LocaleDefinition } from "./locales";
@@ -33,19 +33,19 @@ export class LocaleFormat {
     this.#tag = locale.tag;
   }
 
-  /** Catégorie de pluriel pour ce nombre dans cette langue (one, other, many…). */
+  /** Plural category for this number in this language (one, other, many…). */
   plural(n: number): PluralCategory {
     this.#plural ??= new Intl.PluralRules(this.#tag);
     return this.#plural.select(n);
   }
 
-  /** « 4 128 » / « 4,128 » / « 4.128 » selon la langue. */
+  /** "4 128" / "4,128" / "4.128" depending on the language. */
   number(n: number): string {
     this.#number ??= new Intl.NumberFormat(this.#tag);
     return this.#number.format(n);
   }
 
-  /** « il y a 3 h », « hier », « il y a 2 semaines ». Bascule en date au-delà d'un an. */
+  /** "3 hours ago", "yesterday", "2 weeks ago". Switches to a date beyond one year. */
   relative(date: Date, now: Date = new Date()): string {
     this.#relative ??= new Intl.RelativeTimeFormat(this.#tag, { numeric: "auto" });
     const diff = Math.max(0, now.getTime() - date.getTime());
@@ -60,7 +60,7 @@ export class LocaleFormat {
     return this.dateLong(date);
   }
 
-  /** Écart en unités entières, pour les formulations « depuis … » des dictionnaires. */
+  /** Gap in whole units, for the dictionaries' "for …" phrasings. */
   elapsed(date: Date, now: Date = new Date()): { unit: "minute" | "hour" | "day" | "date"; n: number } {
     const diff = Math.max(0, now.getTime() - date.getTime());
     if (diff < HOUR) return { unit: "minute", n: Math.max(1, Math.floor(diff / MIN)) };
@@ -71,28 +71,28 @@ export class LocaleFormat {
   }
 
   /**
-   * Nom propre précédé de sa préposition de génitif quand celle-ci dépend de la
-   * phonétique du mot suivant. Le français élide (« le support d'Acme », « le
-   * support de Nordfil ») : aucune donnée CLDR ne couvre ce cas, il doit être
-   * traité par langue.
+   * Proper noun preceded by its genitive preposition, when that preposition
+   * depends on the phonetics of the word that follows. French elides ("le
+   * support d'Acme", "le support de Nordfil"): no CLDR data covers this case, it
+   * has to be handled per language.
    *
-   * Toutes les autres langues reçoivent le nom TEL QUEL, et c'est un contrat que
-   * leurs dictionnaires respectent chacun à leur façon : préposition invariable
-   * (« ó {org}» en irlandais), nom commun inséré devant pour que le nom propre
-   * reste au nominatif (« Kontakty organizace {org} » en tchèque, « του
-   * οργανισμού {org} » en grec), article à double forme (« A(z) {org} » en
-   * hongrois), ou phrase retournée pour éviter le cas entièrement (letton).
+   * Every other language receives the name AS IS, and that is a contract their
+   * dictionaries each honour in their own way: an invariable preposition
+   * ("ó {org}" in Irish), a common noun inserted in front so that the proper
+   * noun stays in the nominative ("Kontakty organizace {org}" in Czech, "του
+   * οργανισμού {org}" in Greek), a two-form article ("A(z) {org}" in
+   * Hungarian), or a reworded sentence that avoids the case entirely (Latvian).
    *
-   * Ce qu'aucune langue ne peut faire, c'est décliner le nom : le produit
-   * insère « Acme » brut, sans savoir en fabriquer le génitif. Une traduction
-   * qui l'exigerait produirait une phrase fautive à chaque affichage.
+   * What no language can do is decline the name: the product inserts a raw
+   * "Acme", with no way to build its genitive. A translation requiring one would
+   * produce a faulty sentence on every display.
    */
   of(name: string): string {
     if (this.locale.code !== "fr") return name;
     return /^[aeiouyàâäéèêëîïôöùûüh]/i.test(name) ? `d'${name}` : `de ${name}`;
   }
 
-  /** « 14 août 2026 » / « 14 August 2026 » / « 14. August 2026 ». */
+  /** "14 August 2026" / "14. August 2026" / "14 de agosto de 2026". */
   dateLong(date: Date): string {
     return date.toLocaleDateString(this.#tag, {
       day: "numeric",
@@ -101,12 +101,12 @@ export class LocaleFormat {
     });
   }
 
-  /** « 14 août » — sans l'année. */
+  /** "14 August" — without the year. */
   dateShort(date: Date): string {
     return date.toLocaleDateString(this.#tag, { day: "numeric", month: "long" });
   }
 
-  /** « 09:12 » si le message est du jour, sinon « 14 août, 09:12 ». */
+  /** "09:12" if the message is from today, otherwise "14 Aug, 09:12". */
   messageTime(date: Date, now: Date = new Date()): string {
     const hm = date.toLocaleTimeString(this.#tag, { hour: "2-digit", minute: "2-digit" });
     if (date.toDateString() === now.toDateString()) return hm;
@@ -115,12 +115,12 @@ export class LocaleFormat {
   }
 }
 
-/* ---------- Helpers indépendants de la langue ----------
- * Initiales, nom court, prénom : ils manipulent le nom saisi par la personne,
- * pas du texte traduisible. Ils étaient suffixés `Fr` par habitude ; ils ne
- * doivent surtout pas être traduits. */
+/* ---------- Language-independent helpers ----------
+ * Initials, short name, first name: they handle the name a person typed in, not
+ * translatable text. They used to carry an `Fr` suffix out of habit; they must
+ * above all not be translated. */
 
-/** « Julien Lambert » → JL. */
+/** "Julien Lambert" → JL. */
 export function initials(nameOrEmail: string): string {
   const base = nameOrEmail.split("@")[0] ?? nameOrEmail;
   const parts = base.split(/[\s._-]+/).filter(Boolean);
@@ -135,7 +135,7 @@ export function displayName(name: string | null, email: string): string {
   return name?.trim() || email.split("@")[0]!;
 }
 
-/** « Julien L. » — pilule utilisateur du chrome. */
+/** "Julien L." — user pill in the chrome. */
 export function shortName(name: string | null, email: string): string {
   const dn = displayName(name, email);
   const parts = dn.split(/\s+/).filter(Boolean);
@@ -143,12 +143,12 @@ export function shortName(name: string | null, email: string): string {
   return `${parts[0]} ${parts[parts.length - 1]![0]!.toUpperCase()}.`;
 }
 
-/** Prénom seul — « Réponse de Marie ». */
+/** First name alone — "Reply from Marie". */
 export function firstName(name: string): string {
   return name.split(/\s+/).filter(Boolean)[0] ?? name;
 }
 
-/** Temps de lecture ≈ 200 mots/min, minimum 1. */
+/** Reading time ≈ 200 words/min, minimum 1. */
 export function readingMinutes(text: string): number {
   const words = text.split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));

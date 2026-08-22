@@ -19,18 +19,18 @@ import { deleteMacro, saveMacro } from "./actions";
 type MacroRow = typeof macros.$inferSelect;
 
 /**
- * Ordre des catégories du design ; les autres suivent, alphabétiquement.
+ * Category order from the design; the others follow, alphabetically.
  *
- * Ces trois valeurs ne sont PAS des libellés à traduire : ce sont les noms de
- * catégorie que le tenant a saisis, comparés tels quels. Les traduire ferait
- * échouer la correspondance et renverrait tout le monde au tri alphabétique.
+ * These three values are NOT labels to translate: they are the category names
+ * the tenant typed, compared as-is. Translating them would break the match and
+ * send everyone back to the alphabetical sort.
  */
-const CATEGORY_ORDER = ["Réponses courantes", "Escalade", "Facturation"];
+const CATEGORY_ORDER = ["Common replies", "Escalation", "Billing"];
 
 /**
- * ST-06 — Macros (1000 px) : barre de recherche + « + Nouvelle macro », groupes par
- * catégorie (titre 11px/700 uppercase) dans une carte par groupe, résumé d'actions
- * généré, pastille de périmètre, usage 30 j, éditeur en drawer 420 px.
+ * ST-06 — Macros (1000 px): search bar + "+ New macro", groups by category
+ * (11px/700 uppercase title) in one card per group, generated action summary,
+ * scope pill, 30-day usage, editor in a 420 px drawer.
  */
 export default async function MacrosPage({
   searchParams,
@@ -70,8 +70,8 @@ export default async function MacrosPage({
     const ia = CATEGORY_ORDER.indexOf(a);
     const ib = CATEGORY_ORDER.indexOf(b);
     if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
-    // Le tri suit la langue du workspace : la collation française ne classe
-    // correctement ni le cyrillique, ni les diacritiques du tchèque.
+    // The sort follows the workspace language: French collation orders neither
+    // Cyrillic nor Czech diacritics correctly.
     return a.localeCompare(b, t.locale.tag);
   });
 
@@ -87,7 +87,7 @@ export default async function MacrosPage({
       )}
 
       <div className="st-rise flex flex-col" style={{ gap: 20 }}>
-        {/* Recherche + création */}
+        {/* Search + creation */}
         <div className="flex flex-wrap items-center" style={{ gap: 9 }}>
           <form action="/app/settings/macros" className="min-w-0 flex-1" style={{ maxWidth: 300 }}>
             <TextInput
@@ -181,7 +181,7 @@ export default async function MacrosPage({
   );
 }
 
-/** Drawer d'édition 420 px : nom, catégorie, texte inséré, statut appliqué, disponibilité. */
+/** 420 px edit drawer: name, category, inserted text, applied status, availability. */
 function MacroForm({
   macro,
   teams,

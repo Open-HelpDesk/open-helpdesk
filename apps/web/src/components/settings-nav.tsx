@@ -1,16 +1,16 @@
 "use client";
 
 /**
- * Navigation secondaire 220 px de l'administration (gabarit commun) :
- * titre « Paramètres » 15px/600, groupes 10.5px/700 uppercase, items 13px avec
- * badges EE sur les écrans réservés au plan Pro.
+ * 220 px secondary navigation of the admin area (shared template):
+ * "Settings" title 15px/600, 10.5px/700 uppercase groups, 13px items with EE
+ * badges on the screens reserved for the Pro plan.
  */
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useT } from "@/i18n/client";
 import type { Edition } from "@openhelpdesk/config";
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 
 type NavItem = { labelKey: MessageKey; href: string; ee?: boolean };
 type NavGroup = { titleKey: MessageKey; items: NavItem[] };
@@ -62,7 +62,7 @@ export function SettingsNav({ edition }: { edition: Edition }) {
   const t = useT();
   const pathname = usePathname();
 
-  // Self-hosted : pas d'abonnement (ST-11 est invisible en auto-hébergé, specs/11).
+  // Self-hosted: no billing, so ST-11 has nothing to show.
   const groups =
     edition === "cloud"
       ? NAV_GROUPS

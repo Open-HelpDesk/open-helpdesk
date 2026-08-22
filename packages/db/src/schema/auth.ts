@@ -1,8 +1,8 @@
 /**
- * Schéma `auth` — tables Better Auth (globales, non tenantées).
- * L'appartenance à un workspace reste portée par app.users (rapprochement par email) :
- * une même identité peut être agent de plusieurs tenants.
- * Structure attendue par better-auth ^1.x (adapter Drizzle).
+ * `auth` schema — Better Auth tables (global, not tenant-scoped).
+ * Workspace membership stays carried by app.users (matched on email): one and the
+ * same identity can be an agent of several tenants.
+ * Structure expected by better-auth ^1.x (Drizzle adapter).
  */
 import { boolean, pgSchema, text, timestamp } from "drizzle-orm/pg-core";
 

@@ -1,10 +1,10 @@
 /**
- * Dépôt d'une image d'article (glisser-déposer dans l'éditeur).
+ * Upload of an article image (drag-and-drop in the editor).
  *
- * Réservé à Owner et Admin, comme l'écriture d'articles. L'objet est rangé sous
- * « kb/{tenantId}/… » :
- * la clé porte le tenant, ce qui permet à la lecture publique de vérifier qu'une
- * image appartient bien au workspace du domaine consulté.
+ * Restricted to Owner and Admin, like writing articles. The object is stored under
+ * "kb/{tenantId}/…":
+ * the key carries the tenant, which lets the public read check that an image
+ * really belongs to the workspace of the domain being visited.
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { apiAgent, isManager } from "@/lib/session";
@@ -15,8 +15,8 @@ const TYPES = new Set(["image/png", "image/jpeg", "image/gif", "image/webp", "im
 export async function POST(request: NextRequest) {
   const session = await apiAgent();
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  // Déposer une image, c'est écrire dans la base de connaissances : même
-  // frontière de rôle que l'éditeur qui appelle cette route.
+  // Uploading an image means writing to the knowledge base: same role
+  // boundary as the editor that calls this route.
   if (!isManager(session.agent.role)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
@@ -24,17 +24,17 @@ export async function POST(request: NextRequest) {
   const form = await request.formData();
   const file = form.get("file");
   if (!(file instanceof File) || file.size === 0) {
-    return NextResponse.json({ error: "fichier_manquant" }, { status: 400 });
+    return NextResponse.json({ error: "missing_file" }, { status: 400 });
   }
   if (!TYPES.has(file.type)) {
     return NextResponse.json(
-      { error: "format_non_supporte", detail: "PNG, JPEG, GIF, WebP ou SVG." },
+      { error: "unsupported_format", detail: "PNG, JPEG, GIF, WebP ou SVG." },
       { status: 415 },
     );
   }
   if (file.size > MAX_ATTACHMENT_BYTES) {
     return NextResponse.json(
-      { error: "fichier_trop_lourd", detail: "10 Mo maximum." },
+      { error: "file_too_large", detail: "10 Mo maximum." },
       { status: 413 },
     );
   }

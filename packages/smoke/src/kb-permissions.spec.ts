@@ -2,23 +2,23 @@ import { expect, test, type APIRequestContext, type BrowserContext, type Page } 
 import { AGENTS, signInAgent } from "./helpers";
 
 /**
- * La frontière de rôle sur la base de connaissances.
+ * The role boundary on the knowledge base.
  *
- * Règle du produit : toute l'équipe LIT la base — un agent y puise ses réponses —
- * mais seuls Owner et Admin y ÉCRIVENT. Le risque n'est pas de mal cacher un
- * bouton, c'est de ne cacher QUE le bouton : une garde qui ne vit que dans
- * l'interface laisse l'URL et l'API grandes ouvertes. Chaque interdiction est
- * donc vérifiée deux fois — l'écran, puis la porte de service.
+ * Product rule: the whole team READS the base — an agent draws their answers
+ * from it — but only Owner and Admin WRITE to it. The risk is not hiding a
+ * button badly, it is hiding ONLY the button: a guard that lives in the
+ * interface alone leaves the URL and the API wide open. Each prohibition is
+ * therefore verified twice — the screen, then the service door.
  */
 
-/** Une image minuscule mais authentique : la route filtre le type MIME. */
+/** A tiny but genuine image: the route filters on the MIME type. */
 const PIXEL_PNG = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
   "base64",
 );
 
-/** Dépose une image d'article comme le fait l'éditeur : multipart, champ `file`. */
-function deposerUneImage(request: APIRequestContext) {
+/** Uploads an article image the way the editor does: multipart, `file` field. */
+function uploadImage(request: APIRequestContext) {
   return request.post("/api/kb/images", {
     multipart: { file: { name: "pixel.png", mimeType: "image/png", buffer: PIXEL_PNG } },
     failOnStatusCode: false,
@@ -26,34 +26,34 @@ function deposerUneImage(request: APIRequestContext) {
 }
 
 /**
- * Better Auth plafonne /sign-in à trois tentatives par tranche de dix secondes
- * et par IP. C'est une protection légitime, mais c'est le smoke test qui la
- * déclenche : au-delà, la connexion échoue en affichant « Identifiants
- * incorrects » alors que les identifiants sont bons. On réessaie donc jusqu'à ce
- * que la session s'ouvre — un signal du produit, pas une attente en aveugle.
+ * Better Auth caps /sign-in at three attempts per ten-second window per IP. It
+ * is a legitimate protection, but the smoke test is what trips it: past that,
+ * signing in fails showing “Incorrect credentials” while the credentials are
+ * good. So we retry until the session opens — a signal from the product, not a
+ * blind wait.
  */
-async function connexion(page: Page, email: string): Promise<void> {
+async function signIn(page: Page, email: string): Promise<void> {
   await expect(async () => {
     await signInAgent(page, email);
   }).toPass({ timeout: 90_000, intervals: [1_000] });
 }
 
 /*
- * Les deux sessions sont ouvertes une seule fois pour tout le fichier. Ce n'est
- * pas une optimisation : sept connexions à la suite se feraient plafonner par la
- * limite ci-dessus et le fichier échouerait sur l'authentification, jamais sur
- * ce qu'il prétend vérifier. Aucun de ces tests n'écrit quoi que ce soit, les
- * pages peuvent donc être partagées sans qu'un test en salisse un autre.
+ * Both sessions are opened once for the whole file. This is not an
+ * optimisation: seven sign-ins in a row would be capped by the limit above and
+ * the file would fail on authentication, never on what it claims to verify.
+ * None of these tests writes anything, so the pages can be shared without one
+ * test soiling another.
  */
 let adminContext: BrowserContext;
 let adminPage: Page;
 let agentContext: BrowserContext;
 let agentPage: Page;
 /**
- * L'identifiant d'un article existant. Un agent ne peut pas le découvrir depuis
- * ses écrans — ses lignes pointent vers le portail, jamais vers l'éditeur — et
- * c'est précisément pour cela qu'il faut le lui fournir de l'extérieur pour
- * éprouver l'accès direct par URL.
+ * The id of an existing article. An agent cannot discover it from their own
+ * screens — their rows point at the portal, never at the editor — and that is
+ * precisely why it has to be supplied from the outside in order to exercise
+ * direct access by URL.
  */
 let articleId: string;
 
@@ -62,18 +62,18 @@ test.beforeAll(async ({ browser }) => {
 
   adminContext = await browser.newContext();
   adminPage = await adminContext.newPage();
-  await connexion(adminPage, AGENTS.admin);
+  await signIn(adminPage, AGENTS.admin);
 
   agentContext = await browser.newContext();
   agentPage = await agentContext.newPage();
-  await connexion(agentPage, AGENTS.agent);
+  await signIn(agentPage, AGENTS.agent);
 
-  const res = await adminPage.request.get("/api/search?q=factures");
-  expect(res.ok(), "la recherche doit répondre à un Admin").toBeTruthy();
+  const res = await adminPage.request.get("/api/search?q=invoice");
+  expect(res.ok(), "search must answer an Admin").toBeTruthy();
   const { articles } = (await res.json()) as { articles: { id: string }[] };
   expect(
     articles.length,
-    "le jeu de démonstration doit porter des articles « factures »",
+    "the demo data set must carry “invoice” articles",
   ).toBeGreaterThan(0);
   articleId = articles[0]!.id;
 });
@@ -83,38 +83,38 @@ test.afterAll(async () => {
   await adminContext?.close();
 });
 
-test.describe("Base de connaissances : écriture réservée aux gestionnaires", () => {
-  test("un agent lit la base de connaissances", async () => {
+test.describe("Knowledge base: writing reserved for managers", () => {
+  test("an agent reads the knowledge base", async () => {
     await agentPage.goto("/app/kb");
 
-    // Lire est le droit qui reste : l'arbre s'affiche et une catégorie du jeu de
-    // démonstration livre bien ses articles.
-    const facturation = agentPage
+    // Reading is the right that remains: the tree shows and a category of the
+    // demo data set does deliver its articles.
+    const billingCategory = agentPage
       .locator('a[href^="/app/kb?cat="]')
-      .filter({ hasText: "Facturation" });
-    await expect(facturation).toBeVisible();
-    await facturation.click();
-    await expect(agentPage.getByText("Comment télécharger vos factures")).toBeVisible();
+      .filter({ hasText: "Billing" });
+    await expect(billingCategory).toBeVisible();
+    await billingCategory.click();
+    await expect(agentPage.getByText("How to download your invoices")).toBeVisible();
   });
 
-  test("un agent ne voit aucune commande d'écriture", async () => {
+  test("an agent sees no write control", async () => {
     await agentPage.goto("/app/kb");
 
-    // Une preuve que l'écran est rendu, d'abord : sans elle, les quatre absences
-    // qui suivent passeraient au vert sur une page blanche ou une redirection.
-    await expect(agentPage.getByText("Catégories", { exact: true })).toBeVisible();
+    // Proof that the screen is rendered, first: without it the four absences
+    // that follow would go green on a blank page or on a redirect.
+    await expect(agentPage.getByText("Categories", { exact: true })).toBeVisible();
 
     await expect(agentPage.getByRole("link", { name: "+ Article" })).toHaveCount(0);
-    await expect(agentPage.locator("summary").filter({ hasText: "Renommer" })).toHaveCount(0);
+    await expect(agentPage.locator("summary").filter({ hasText: "Rename" })).toHaveCount(0);
     await expect(
-      agentPage.getByRole("button", { name: "Supprimer la catégorie" }),
+      agentPage.getByRole("button", { name: "Delete category" }),
     ).toHaveCount(0);
-    await expect(agentPage.getByPlaceholder("Nouvelle catégorie")).toHaveCount(0);
+    await expect(agentPage.getByPlaceholder("New category")).toHaveCount(0);
   });
 
-  test("un agent qui vise l'éditeur par l'URL est renvoyé vers la liste", async () => {
-    // Cet écran EST l'éditeur : il n'a pas de version consultable. Masquer le
-    // lien ne suffirait pas, une URL se tape.
+  test("an agent aiming at the editor by URL is sent back to the list", async () => {
+    // This screen IS the editor: it has no read-only version. Hiding the link
+    // would not be enough, a URL can be typed.
     await agentPage.goto("/app/kb/new");
     await expect(agentPage).toHaveURL(/\/app\/kb$/);
 
@@ -122,96 +122,96 @@ test.describe("Base de connaissances : écriture réservée aux gestionnaires", 
     await expect(agentPage).toHaveURL(/\/app\/kb$/);
   });
 
-  test("un agent ne peut pas déposer d'image d'article", async () => {
-    // La route que l'éditeur appelle au glisser-déposer. C'est la seule écriture
-    // de la base qui ne passe pas par une server action : si la garde manquait
-    // ici, aucun écran ne le dirait.
-    const res = await deposerUneImage(agentPage.request);
-    expect(res.status(), "POST /api/kb/images doit être refusé à un Agent").toBe(403);
+  test("an agent cannot upload an article image", async () => {
+    // The route the editor calls on drag and drop. It is the only write to the
+    // base that does not go through a server action: if the guard were missing
+    // here, no screen would say so.
+    const res = await uploadImage(agentPage.request);
+    expect(res.status(), "POST /api/kb/images must be refused to an Agent").toBe(403);
   });
 
-  test("un administrateur dispose des commandes d'écriture", async () => {
+  test("an Admin has the write controls", async () => {
     await adminPage.goto("/app/kb");
 
     await expect(adminPage.getByRole("link", { name: "+ Article" })).toBeVisible();
-    await expect(adminPage.locator("summary").filter({ hasText: "Renommer" })).toBeVisible();
+    await expect(adminPage.locator("summary").filter({ hasText: "Rename" })).toBeVisible();
     await expect(
-      adminPage.getByRole("button", { name: "Supprimer la catégorie" }),
+      adminPage.getByRole("button", { name: "Delete category" }),
     ).toBeVisible();
-    await expect(adminPage.getByPlaceholder("Nouvelle catégorie")).toBeVisible();
+    await expect(adminPage.getByPlaceholder("New category")).toBeVisible();
   });
 
-  test("un administrateur ouvre l'éditeur d'article", async () => {
+  test("an Admin opens the article editor", async () => {
     await adminPage.goto("/app/kb/new");
 
-    // On reste sur /app/kb/new — là même où l'Agent était renvoyé — et l'écran
-    // de démarrage s'affiche. Rien n'est écrit en base tant qu'on n'enregistre
-    // pas : ce test ne laisse aucun article derrière lui.
+    // We stay on /app/kb/new — the very place the Agent was sent away from —
+    // and the start screen shows. Nothing is written to the database as long as
+    // nothing is saved: this test leaves no article behind.
     await expect(adminPage).toHaveURL(/\/app\/kb\/new$/);
-    await expect(adminPage.getByText("Par où commencer ?")).toBeVisible();
+    await expect(adminPage.getByText("Where would you like to start?")).toBeVisible();
   });
 
-  test("un administrateur peut déposer une image d'article", async () => {
-    const res = await deposerUneImage(adminPage.request);
-    // Ce n'est pas le stockage objet qu'on éprouve, seulement la frontière de
-    // rôle : 401 est exclu au même titre que 403, sinon une session perdue
-    // ferait passer ce test pour la mauvaise raison. Le pixel déposé reste dans
-    // le magasin d'objets — il n'existe pas de route pour le reprendre — mais il
-    // n'est rattaché à aucun article et n'apparaît sur aucun écran.
-    expect([401, 403], "POST /api/kb/images doit être ouvert à un Admin").not.toContain(
+  test("an Admin can upload an article image", async () => {
+    const res = await uploadImage(adminPage.request);
+    // It is not the object storage that is exercised here, only the role
+    // boundary: 401 is excluded just as much as 403, otherwise a lost session
+    // would make this test pass for the wrong reason. The uploaded pixel stays
+    // in the object store — there is no route to take it back — but it is
+    // attached to no article and appears on no screen.
+    expect([401, 403], "POST /api/kb/images must be open to an Admin").not.toContain(
       res.status(),
     );
   });
 
   /*
-   * Les deux écrans ne posent pas la même frontière, et c'est le seul point où
-   * ce fichier a trouvé le produit en désaccord avec lui-même : /api/search
-   * retient les brouillons parce qu'« un titre non publié est déjà une
-   * information ». La liste /app/kb les servait encore à tout le monde, badge
-   * « Brouillon » compris, en se contentant de rendre la ligne non cliquable :
-   * les deux écrans se contredisaient. La liste et ses compteurs filtrent
-   * désormais comme la recherche, et ce test l'épingle.
+   * The two screens do not draw the same boundary, and this is the only point
+   * where this file found the product at odds with itself: /api/search holds
+   * drafts back because “an unpublished title is already information”. The
+   * /app/kb list still served them to everybody, “Draft” badge included, merely
+   * rendering the row non-clickable: the two screens contradicted each other.
+   * The list and its counters now filter the way search does, and this test
+   * pins it down.
    */
-  test("un agent ne voit aucun brouillon dans la liste des articles", async () => {
+  test("an agent sees no draft in the article list", async () => {
     await agentPage.goto("/app/kb");
     await agentPage
       .locator('a[href^="/app/kb?cat="]')
-      .filter({ hasText: "Facturation" })
+      .filter({ hasText: "Billing" })
       .click();
-    // La catégorie doit rester peuplée : sans cette ligne, l'absence de badge
-    // serait satisfaite par une liste vide.
-    await expect(agentPage.getByText("Comment télécharger vos factures")).toBeVisible();
+    // The category must stay populated: without this line, the absence of a
+    // badge would be satisfied by an empty list.
+    await expect(agentPage.getByText("How to download your invoices")).toBeVisible();
     await expect(agentPage.getByText("Brouillon", { exact: true })).toHaveCount(0);
   });
 
-  test("la recherche ne révèle aucun brouillon à un agent", async () => {
+  test("search reveals no draft to an agent", async () => {
     type Article = { id: string; title: string; status: string };
-    const requete = "/api/search?q=factures";
+    const searchUrl = "/api/search?q=invoice";
 
-    const { articles: vusParLAdmin } = (await (
-      await adminPage.request.get(requete)
+    const { articles: seenByAdmin } = (await (
+      await adminPage.request.get(searchUrl)
     ).json()) as { articles: Article[] };
-    const { articles: vusParLAgent } = (await (
-      await agentPage.request.get(requete)
+    const { articles: seenByAgent } = (await (
+      await agentPage.request.get(searchUrl)
     ).json()) as { articles: Article[] };
 
-    // Le jeu de démonstration porte des brouillons « factures » : sans eux, la
-    // comparaison ci-dessous ne prouverait rien.
+    // The demo data set carries “invoice” drafts: without them, the comparison
+    // below would prove nothing.
     expect(
-      vusParLAdmin.filter((a) => a.status === "draft").length,
-      "un Admin doit voir les brouillons dans la recherche",
+      seenByAdmin.filter((a) => a.status === "draft").length,
+      "an Admin must see the drafts in search",
     ).toBeGreaterThan(0);
 
-    // Un titre de brouillon divulgue à lui seul un contenu non publié, et l'agent
-    // n'a aucun écran pour l'ouvrir. La frontière tient donc dans la requête, pas
-    // dans le composant qui affiche la palette ⌘K.
+    // A draft's title on its own discloses unpublished content, and the agent
+    // has no screen to open it. So the boundary holds in the query, not in the
+    // component that displays the ⌘K palette.
     expect(
-      vusParLAgent.map((a) => a.status),
-      "aucun brouillon ne doit remonter à un Agent",
+      seenByAgent.map((a) => a.status),
+      "no draft must come back to an Agent",
     ).not.toContain("draft");
     expect(
-      vusParLAgent.length,
-      "un Agent doit tout de même voir les articles publiés",
+      seenByAgent.length,
+      "an Agent must still see the published articles",
     ).toBeGreaterThan(0);
   });
 });

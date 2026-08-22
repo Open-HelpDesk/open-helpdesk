@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * ST-13 — Composants client : lien « Copier » en texte accent, radios d'application
- * en cartes (avertissement rouge sur « Imposé à tous »), point de terminaison SCIM
- * (jeton affiché une seule fois) et correspondance des groupes éditable.
+ * ST-13 — Client components: "Copy" link as accent text, enforcement radios as
+ * cards (red warning on "Enforced for everyone"), SCIM endpoint (token shown
+ * only once) and editable group mapping.
  */
 import { useActionState, useRef, useState } from "react";
 import { useT } from "@/i18n/client";
@@ -15,7 +15,7 @@ const inputStyle = {
   color: "var(--ink)",
 } as const;
 
-/** Contrôle de table — hauteur 32, padding 6/10, radius 6, 12,5 px. */
+/** Table control — height 32, padding 6/10, radius 6, 12.5 px. */
 const CELL: React.CSSProperties = {
   minHeight: 32,
   padding: "6px 10px",
@@ -24,7 +24,7 @@ const CELL: React.CSSProperties = {
   ...inputStyle,
 };
 
-/** « Copier » en texte accent (12,5 px/600) — pas de cadre, comme le design. */
+/** "Copy" as accent text (12.5 px/600) — no frame, as in the design. */
 export function CopyLink({ text, label }: { text: string; label?: string }) {
   const t = useT();
   const [copied, setCopied] = useState(false);
@@ -152,8 +152,8 @@ export function EnforcementRadios({
 }
 
 /**
- * Point de terminaison SCIM : URL de base (copiable) + jeton porteur régénérable.
- * Le jeton en clair n'est affiché qu'une seule fois, au retour de la server action.
+ * SCIM endpoint: base URL (copyable) + regeneratable bearer token. The clear
+ * token is shown only once, when the server action returns.
  */
 export function ScimEndpoint({
   url,
@@ -254,7 +254,7 @@ export function ScimGroupsField({
 }: {
   initial: GroupRow[];
   teams: { id: string; name: string }[];
-  /** Formulaire d'accueil (attribut `form=`) — la barre de sauvegarde vit ailleurs. */
+  /** Host form (`form=` attribute) — the save bar lives elsewhere. */
   formId?: string;
 }) {
   const t = useT();

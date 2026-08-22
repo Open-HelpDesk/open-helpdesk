@@ -3,8 +3,8 @@ import { db } from "./client";
 import { tickets } from "./schema";
 
 /**
- * Numéro séquentiel par tenant — l'index unique (tenant_id, number) protège les
- * courses : en cas de collision, l'appelant retente.
+ * Per-tenant sequential number — the unique index (tenant_id, number) guards
+ * against races: on a collision, the caller retries.
  */
 export async function nextTicketNumber(tenantId: string): Promise<number> {
   const [row] = await db

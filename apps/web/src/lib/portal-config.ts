@@ -1,25 +1,25 @@
 /**
- * Réglages ST-09 du portail client, lus depuis `tenants.portal_config`.
+ * ST-09 settings of the customer portal, read from `tenants.portal_config`.
  *
- * Ces interrupteurs étaient enregistrés par l'écran d'administration mais aucun
- * n'était lu : couper « Portail client activé » ne coupait rien. Ce module est le
- * seul endroit qui les interprète, pour que la valeur par défaut et la
- * signification de chaque clé ne se réinventent pas d'un appelant à l'autre.
+ * These switches were saved by the administration screen but none of them was
+ * read: turning off "Customer portal enabled" turned nothing off. This module is
+ * the only place that interprets them, so that the default value and the meaning
+ * of each key are not reinvented from one caller to the next.
  *
- * Défauts : tout est ACTIF quand la clé est absente. Un tenant créé avant ces
- * réglages, ou dont la configuration est vide, doit continuer de servir son
- * portail — l'absence de réglage n'est pas une extinction.
+ * Defaults: everything is ON when the key is absent. A tenant created before
+ * these settings, or whose configuration is empty, must keep serving its
+ * portal — the absence of a setting is not a shutdown.
  */
 
 import { cache } from "react";
 import { getPortalTenant } from "./portal-auth";
 
 export type PortalSettings = {
-  /** Le portail /help répond-il ? */
+  /** Does the /help portal respond? */
   portalEnabled: boolean;
-  /** La base de connaissances est-elle servie sur le portail ? */
+  /** Is the knowledge base served on the portal? */
   kbPublished: boolean;
-  /** « authenticated » : les articles exigent une session client. */
+  /** "authenticated": articles require a customer session. */
   kbVisibility: "public" | "authenticated";
   hidePoweredBy: boolean;
   welcomeText?: string;
@@ -52,18 +52,18 @@ export function readPortalSettings(portalConfig: unknown): PortalSettings {
   };
 }
 
-/** Réglages du tenant courant. Mémoïsé par requête, comme la langue. */
+/** Settings of the current tenant. Memoized per request, like the language. */
 export const getPortalSettings = cache(async (): Promise<PortalSettings> => {
   const tenant = await getPortalTenant();
   return readPortalSettings(tenant?.portalConfig);
 });
 
 /**
- * La base de connaissances est-elle consultable par CE visiteur ?
+ * Is the knowledge base readable by THIS visitor?
  *
- * Deux conditions distinctes : elle doit être publiée, et si elle est réservée
- * aux personnes connectées, le visiteur doit l'être. Les demandes, elles,
- * restent accessibles — couper la base ne ferme pas le support.
+ * Two distinct conditions: it must be published, and if it is restricted to
+ * logged-in people, the visitor must be logged in. Requests, for their part,
+ * stay accessible — turning off the knowledge base does not close support.
  */
 export async function canReadKb(hasSession: boolean): Promise<boolean> {
   const settings = await getPortalSettings();

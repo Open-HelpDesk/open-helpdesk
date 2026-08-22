@@ -29,7 +29,7 @@ const CONTROL: React.CSSProperties = {
   fontSize: 13.5,
 };
 
-/** Panneau encadré autour d'un toggle (padding 13/14, radius 9). */
+/** Framed panel around a toggle (padding 13/14, radius 9). */
 function TogglePanel({ children }: { children: React.ReactNode }) {
   return (
     <div
@@ -46,7 +46,7 @@ function TogglePanel({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Cadre d'aperçu à droite (en-tête --sunk 11.5px + contenu). */
+/** Preview frame on the right (--sunk 11.5px header + content). */
 function PreviewPanel({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div
@@ -71,9 +71,9 @@ function PreviewPanel({ label, children }: { label: string; children: React.Reac
 }
 
 /**
- * ST-09 — Portail client & widget (1100 px, onglets Portail / Widget) : colonne de
- * réglages (toggles encadrés, selects, texte d'accueil, domaine personnalisé
- * [PLAN PRO]) + colonne d'aperçu (portail ou widget + snippet).
+ * ST-09 — Customer portal & widget (1100 px, Portal / Widget tabs): settings
+ * column (framed toggles, selects, welcome text, custom domain
+ * [PRO PLAN]) + preview column (portal or widget + snippet).
  */
 export default async function PortalSettingsPage({
   searchParams,
@@ -264,7 +264,7 @@ export default async function PortalSettingsPage({
               </div>
             </div>
 
-            {/* Aperçu du portail */}
+            {/* Portal preview */}
             <PreviewPanel label={t("app.settings.portal.previewPortal")}>
               <div
                 className="flex flex-col items-center"
@@ -387,7 +387,7 @@ export default async function PortalSettingsPage({
               </Field>
             </div>
 
-            {/* Aperçu du widget */}
+            {/* Widget preview */}
             <PreviewPanel label={t("app.settings.portal.previewWidget")}>
               <div className="flex flex-col" style={{ padding: 18, gap: 14 }}>
                 <div

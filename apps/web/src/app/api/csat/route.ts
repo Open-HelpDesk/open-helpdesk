@@ -1,7 +1,7 @@
 /**
- * Endpoint public CSAT (ST-08) — liens signés HMAC depuis l'email d'enquête.
- * GET enregistre la note et affiche la page de remerciement (+ commentaire optionnel) ;
- * POST enregistre le commentaire. Une réponse par ticket, la dernière note gagne.
+ * Public CSAT endpoint (ST-08) — HMAC-signed links from the survey email.
+ * GET records the score and renders the thank-you page (+ optional comment);
+ * POST records the comment. One response per ticket, the last score wins.
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { csatResponses, db, tickets } from "@openhelpdesk/db";
@@ -10,7 +10,7 @@ import { verifyCsatSignature } from "@openhelpdesk/rules";
 import { getT, type Translate } from "@/i18n/server";
 import { getTenantFromHeaders } from "@/lib/tenant";
 
-/** Échappe le texte traduit : il finit dans du HTML assemblé à la main. */
+/** Escapes translated text: it ends up in hand-assembled HTML. */
 function esc(text: string): string {
   return text.replace(/[&<>"]/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!,
@@ -18,21 +18,21 @@ function esc(text: string): string {
 }
 
 /**
- * Identité visuelle du tenant, revalidée ici.
+ * The tenant's visual identity, revalidated here.
  *
- * Ces valeurs partent dans du HTML et dans une feuille de style assemblés à la
- * main : une couleur est interpolée dans du CSS, deux URL dans des attributs.
- * Elles sont déjà validées à l'enregistrement (ST-01), mais une valeur arrivée
- * par un autre chemin — import, migration, écriture directe en base — ne doit
- * pas pouvoir fermer une déclaration CSS ni un attribut. Ce qui ne correspond
- * pas exactement à la forme attendue est ignoré, et la page reprend son
- * apparence par défaut.
+ * These values go into HTML and into a stylesheet that are assembled by hand:
+ * a color is interpolated into CSS, two URLs into attributes. They are already
+ * validated when saved (ST-01), but a value that arrived by another path —
+ * import, migration, direct write in the database — must not be able to close
+ * a CSS declaration or an attribute. Anything that does not match the expected
+ * shape exactly is ignored, and the page falls back to its default
+ * appearance.
  */
-type Marque = { accent: string; logo: string | null; favicon: string | null; nom: string | null };
+type Brand = { accent: string; logo: string | null; favicon: string | null; name: string | null };
 
-const ACCENT_DEFAUT = "#0b5f46";
+const DEFAULT_ACCENT = "#0b5f46";
 
-async function marque(): Promise<Marque> {
+async function brand(): Promise<Brand> {
   const tenant = await getTenantFromHeaders().catch(() => null);
   const b = (tenant?.branding ?? {}) as {
     accentColor?: unknown;
@@ -46,21 +46,21 @@ async function marque(): Promise<Marque> {
       ? v
       : null;
   return {
-    accent: hex(b.accentColor) ?? ACCENT_DEFAUT,
+    accent: hex(b.accentColor) ?? DEFAULT_ACCENT,
     logo: asset(b.logoUrl),
     favicon: asset(b.faviconUrl),
-    nom: tenant?.name ?? null,
+    name: tenant?.name ?? null,
   };
 }
 
-function page(t: Translate, m: Marque, body: string): NextResponse {
-  // L'entête n'apparaît que s'il y a quelque chose à montrer : sans logo ni nom,
-  // une bande vide au-dessus de la carte ne dirait rien.
-  const entete =
-    m.logo || m.nom
+function page(t: Translate, m: Brand, body: string): NextResponse {
+  // The header only appears if there is something to show: with neither logo
+  // nor name, an empty strip above the card would say nothing.
+  const header =
+    m.logo || m.name
       ? `<div class="brand">${
           m.logo ? `<img src="${esc(m.logo)}" alt="">` : ""
-        }${m.nom ? `<span>${esc(m.nom)}</span>` : ""}</div>`
+        }${m.name ? `<span>${esc(m.name)}</span>` : ""}</div>`
       : "";
   return new NextResponse(
     `<!doctype html><html lang="${t.locale.code}" dir="${t.locale.dir}"><head><meta charset="utf-8">
@@ -79,7 +79,7 @@ ${m.favicon ? `<link rel="icon" href="${esc(m.favicon)}">` : ""}
            padding:10px;font:inherit;font-size:14px;min-height:90px}
   button{margin-top:10px;background:${m.accent};color:#fff;border:0;border-radius:8px;
          padding:9px 16px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
-</style></head><body>${entete}<div class="card">${body}</div></body></html>`,
+</style></head><body>${header}<div class="card">${body}</div></body></html>`,
     { headers: { "content-type": "text/html; charset=utf-8" } },
   );
 }
@@ -87,7 +87,7 @@ ${m.favicon ? `<link rel="icon" href="${esc(m.favicon)}">` : ""}
 async function recordScore(ticketId: string, score: "good" | "bad") {
   const [ticket] = await db.select().from(tickets).where(eq(tickets.id, ticketId));
   if (!ticket) return null;
-  // Une réponse par ticket — la dernière note remplace la précédente.
+  // One response per ticket — the last score replaces the previous one.
   await db
     .delete(csatResponses)
     .where(and(eq(csatResponses.tenantId, ticket.tenantId), eq(csatResponses.ticketId, ticket.id)));
@@ -102,7 +102,7 @@ async function recordScore(ticketId: string, score: "good" | "bad") {
 
 export async function GET(request: NextRequest) {
   const tr = await getT();
-  const m = await marque();
+  const m = await brand();
   const params = request.nextUrl.searchParams;
   const t = params.get("t") ?? "";
   const s = params.get("s") === "bad" ? "bad" : "good";
@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const tr = await getT();
-  const m = await marque();
+  const m = await brand();
   const form = await request.formData();
   const t = String(form.get("t") ?? "");
   const s = form.get("s") === "bad" ? "bad" : "good";

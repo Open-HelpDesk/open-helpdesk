@@ -1,10 +1,10 @@
 /**
- * Résolution de la configuration d'envoi (ST-03) : réglages du tenant, sinon repli sur
- * la configuration d'instance (variables d'environnement), sinon transport console.
+ * Resolution of the sending configuration (ST-03): tenant settings, otherwise fall back
+ * to the instance configuration (environment variables), otherwise the console transport.
  *
- * Le repli d'instance sert deux cas : l'auto-hébergement mono-tenant (une seule config
- * pour tout le monde) et le cloud, où Open HelpDesk envoie par défaut depuis son propre
- * domaine tant que le client n'a pas branché le sien.
+ * The instance fallback serves two cases: single-tenant self-hosting (a single config for
+ * everyone) and control-plane deployments, where Open HelpDesk sends by default from its
+ * own domain as long as the customer has not plugged in theirs.
  */
 import { db, emailSettings, mailboxes, tenants } from "@openhelpdesk/db";
 import { decryptSecrets } from "@openhelpdesk/crypto";
@@ -24,7 +24,7 @@ export type ResolvedMailConfig = {
   transport: MailTransport;
   from: string;
   replyTo?: string;
-  /** D'où vient la configuration — affiché dans l'écran de réglages. */
+  /** Where the configuration comes from — displayed on the settings screen. */
   source: "tenant" | "instance" | "default";
 };
 
@@ -38,7 +38,7 @@ export async function getEmailSettings(tenantId: string): Promise<EmailSettingsR
   return row ?? null;
 }
 
-/** Transport d'un jeu de réglages (secrets déchiffrés à la demande). */
+/** Transport of a set of settings (secrets decrypted on demand). */
 export function transportFor(row: EmailSettingsRow): MailTransport {
   const secrets = decryptSecrets(row.encryptedSecrets);
   switch (row.provider) {
@@ -66,8 +66,8 @@ export function transportFor(row: EmailSettingsRow): MailTransport {
 }
 
 /**
- * Envoi transactionnel PRÉ-tenant (vérification d'email au signup, invitation
- * avant première connexion…) : transport d'instance, repli console en dev.
+ * PRE-tenant transactional send (email verification at signup, invitation
+ * before the first sign-in…): instance transport, console fallback in dev.
  */
 export async function sendInstanceEmail(input: {
   to: string;
@@ -86,7 +86,7 @@ export async function sendInstanceEmail(input: {
   }
 }
 
-/** Configuration d'instance (auto-hébergement / cloud) depuis l'environnement. */
+/** Instance configuration (self-hosted / control-plane deployment) from the environment. */
 function instanceConfig(): { provider: MailProvider; transport: MailTransport } | null {
   if (process.env.RESEND_API_KEY) {
     return { provider: "resend", transport: resendTransport(process.env.RESEND_API_KEY) };
@@ -115,7 +115,7 @@ function instanceConfig(): { provider: MailProvider; transport: MailTransport } 
   return null;
 }
 
-/** Adresse d'expédition : réglages du tenant, sinon boîte de réception, sinon instance. */
+/** Sending address: tenant settings, otherwise the inbound mailbox, otherwise the instance. */
 async function resolveFrom(
   tenantId: string,
   row: EmailSettingsRow | null,

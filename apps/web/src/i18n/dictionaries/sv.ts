@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const sv: Dictionary = {
   "chrome.defaultName": "Hjälpcenter",
@@ -148,6 +148,14 @@ export const sv: Dictionary = {
   "login.footer":
     "Inga ärenden än? Ditt konto skapas automatiskt vid första förfrågan.",
 
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Din inloggningslänk — {workspace}",
+  "login.emailBody":
+    "Hej,\n\nKlicka på den här länken för att se dina ärenden (giltig i 15 minuter):\n{url}\n\nOm du inte har begärt detta kan du ignorera det här meddelandet.\n\n{workspace}",
+
   "org.intro": {
     one: "Du är administratör för den här organisationen. Det du ställer in här gäller den person på {org} som använder supporten från {tenant}.",
     other:
@@ -256,7 +264,7 @@ export const sv: Dictionary = {
   "csatPage.doneTitle": "Tack!",
   "csatPage.doneBody": "Din kommentar har vidarebefordrats till teamet.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Arbetsyta",
   "app.settingsNav.itemGeneral": "Allmänt",
   "app.settingsNav.itemTeam": "Agenter och team",
@@ -289,7 +297,7 @@ export const sv: Dictionary = {
   "app.settingsNav.copied": "Kopierat",
   "app.settingsNav.copy": "Kopiera",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
   "app.shell.inbox": "Inkorg",
   "app.shell.search": "Sök (⌘K)",
   "app.shell.contacts": "Kontakter",
@@ -300,7 +308,7 @@ export const sv: Dictionary = {
   "app.shell.suspendedTitle": "Den här arbetsytan är avstängd",
   "app.shell.suspendedText": "Kontakta din administratör för att återställa åtkomsten.",
   "app.shell.suspendedOwnerText":
-    "Välj en plan eller uppdatera din betalningsmetod för att återaktivera arbetsytan.",
+    "Reglera abonnemanget eller uppdatera din betalningsmetod för att återaktivera arbetsytan.",
   "app.shell.suspendedBillingCta": "Öppna Prenumeration & fakturering",
   "app.shell.myTickets": "Mina ärenden",
   "app.shell.newTicket": "Nytt ärende",
@@ -636,7 +644,7 @@ export const sv: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "1:a svar",
   "app.reports.customReports": "Anpassade rapporter",
-  "app.reports.enterprisePlanBadge": "ENTERPRISE-PLAN",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Upptäck",
   "app.reports.chartDailyAria": "{labelA} och {labelB} per dag",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -654,8 +662,11 @@ export const sv: Dictionary = {
   "app.settings.shell.saved": "✓ Sparat",
   "app.settings.shell.cancel": "Avbryt",
   "app.settings.shell.save": "Spara",
-  "app.settings.shell.planEnterprise": "Enterprise-plan",
-  "app.settings.shell.upgradeToEnterprise": "Uppgradera till Enterprise-planen",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Stäng",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Hantera abonnemanget",
   "app.settings.shell.eeSelfHostedTitle": "Funktion i Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Den här funktionen omfattas av den kommersiella licensen (katalogen ee/ i repositoriet) och ingår inte i den självhostade open source-utgåvan.",
@@ -800,9 +811,9 @@ export const sv: Dictionary = {
   "app.settings.email.sendFailed": "Det gick inte att skicka",
   "app.settings.sso.agentTitle": "SSO för agenter",
   "app.settings.sso.agentSubtitle": "Enkel inloggning med SAML 2.0 och SCIM-provisionering för ditt supportteam.",
-  "app.settings.sso.agentLockedTitle": "SSO för agenter ingår bara i Enterprise-planen",
+  "app.settings.sso.agentLockedTitle": "SSO för agenter ingår i Enterprise Edition",
   "app.settings.sso.agentLockedText": "Anslut din SAML 2.0-identitetsleverantör, provisionera dina agenter med SCIM och kräv enkel inloggning för hela teamet.",
-  "app.settings.sso.agentEnterpriseOnly": "SSO för agenter ingår bara i Enterprise-planen.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO för agenter ingår i Enterprise Edition.",
   "app.settings.sso.idpOther": "Annan (generisk SAML)",
   "app.settings.sso.samlToggleLabel": "Aktivera enkel inloggning med SAML 2.0",
   "app.settings.sso.samlHeading": "Enkel inloggning med SAML 2.0",
@@ -877,9 +888,10 @@ export const sv: Dictionary = {
   "app.settings.sso.addMapping": "+ Lägg till en mappning",
   "app.settings.sso.customerTitle": "SSO för kundorganisationer",
   "app.settings.sso.customerSubtitle": "Varje kundorganisation ansluter sin egen identitetsleverantör från portalen. Här överblickar du hela beståndet.",
-  "app.settings.sso.customerLockedTitle": "SSO för kundorganisationer ingår bara i Enterprise-planen",
+  "app.settings.sso.customerLockedTitle": "SSO för kundorganisationer ingår i Enterprise Edition",
   "app.settings.sso.customerLockedText": "Låt varje kundorganisation koppla in sin egen identitetsleverantör (SAML eller OIDC) och överblicka hela beståndet från den här sidan.",
-  "app.settings.sso.customerEnterpriseOnly": "SSO för kundorganisationer ingår bara i Enterprise-planen.",
+  "app.settings.sso.customerEnterpriseOnly":
+    "SSO för kundorganisationer ingår i Enterprise Edition.",
   "app.settings.sso.statusActive": "Aktiv",
   "app.settings.sso.statusPending": "Att verifiera",
   "app.settings.sso.statusError": "Fel",
@@ -1014,7 +1026,7 @@ export const sv: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Kunskapsbasen publicerad",
   "app.settings.portal.kbPublishedHint": "Publicerade artiklar är synliga utan inloggning.",
   "app.settings.portal.hidePoweredByLabel": "Dölj ”Drivs av Open HelpDesk”",
-  "app.settings.portal.hidePoweredByHint": "Tillgängligt från Enterprise-planen.",
+  "app.settings.portal.hidePoweredByHint": "Tillgängligt med Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Kunskapsbasens synlighet",
   "app.settings.portal.kbVisibilityPublic": "Publik",
   "app.settings.portal.kbVisibilityAuthenticated": "Efter inloggning",
@@ -1062,7 +1074,8 @@ export const sv: Dictionary = {
   "app.settings.portal.csatExclusionRemove": "Ta bort {name}",
   "app.settings.workspace.generalTitle": "Allmänt och varumärke",
   "app.settings.workspace.generalSubtitle": "Arbetsytans identitet, språk, tidszon och ärendenumrering.",
-  "app.settings.workspace.generalDeleteCloudError": "Borttagning nekad — schemalagd borttagning finns i molnversionen.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Borttagning nekad — schemalagd borttagning kräver ett control plane.",
   "app.settings.workspace.generalIdentity": "Identitet",
   "app.settings.workspace.generalNameLabel": "Arbetsytans namn",
   "app.settings.workspace.generalLogoLabel": "Logotyp",
@@ -1117,7 +1130,7 @@ export const sv: Dictionary = {
   "app.settings.workspace.seatsUsed": { one: "{count} / {quota} plats använd", other: "{count} / {quota} platser använda" },
   "app.settings.workspace.seatsUsedFull": { one: "{count} / {quota} plats använd — gränsen nådd", other: "{count} / {quota} platser använda — gränsen nådd" },
   "app.settings.workspace.seatsAddHint": "Lägg till platser för att bjuda in nya agenter.",
-  "app.settings.workspace.seatsFreeHint": "Viewer-roller är gratis och obegränsade.",
+  "app.settings.workspace.seatsFreeHint": "Viewer-roller tar ingen plats och är obegränsade.",
   "app.settings.workspace.seatsAddAction": "Lägg till platser",
   "app.settings.workspace.seatsManage": "Hantera",
   "app.settings.workspace.seatLimitReached":
@@ -1191,15 +1204,16 @@ export const sv: Dictionary = {
   "app.settings.workspace.teamHoursHint": "Kalendrarna hanteras under SLA och öppettider.",
   "app.settings.workspace.save": "Spara",
   "app.settings.workspace.billingTitle": "Abonnemang och fakturering",
-  "app.settings.workspace.billingSubtitle": "Plan, platser, kvoter, betalsätt och fakturahistorik.",
-  "app.settings.workspace.selfHosted": "SJÄLVHOSTAD",
+  "app.settings.workspace.billingSubtitle":
+    "Abonnemang, platser, kvoter, betalsätt och fakturahistorik.",
+  "app.settings.workspace.subscriptionNone": "Inget abonnemang",
   "app.settings.workspace.trialBadge": "PROV",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": { one: "per månad · {count} plats à {price} €", other: "per månad · {count} platser à {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "per månad · {count} plats ingår", other: "per månad · {count} platser ingår" },
-  "app.settings.workspace.billingNoDue": "Inget att betala på den här instansen — faktureringen sköts i molnerbjudandet.",
-  "app.settings.workspace.cloudOnly": "Tillgängligt i molnerbjudandet",
-  "app.settings.workspace.changePlan": "Byt plan",
+  "app.settings.workspace.billingNoDue": "Inget att betala just nu.",
+  "app.settings.workspace.requiresControlPlane": "Kräver ett control plane",
+  "app.settings.workspace.changeSubscription": "Ändra abonnemang",
   "app.settings.workspace.manageSeats": "Hantera platser",
   "app.settings.workspace.usageTitle": "Månadens förbrukning",
   "app.settings.workspace.quotaSeats": "Platser",
@@ -1211,7 +1225,7 @@ export const sv: Dictionary = {
   "app.settings.workspace.colNumber": "Nummer",
   "app.settings.workspace.colPeriod": "Period",
   "app.settings.workspace.colAmount": "Belopp",
-  "app.settings.workspace.invoicesEmpty": "Inga fakturor — fakturorna visas här i molnerbjudandet.",
+  "app.settings.workspace.invoicesEmpty": "Inga fakturor än.",
   "app.settings.rules.saved": "✓ Sparat",
   "app.settings.rules.save": "Spara",
   "app.settings.rules.delete": "Ta bort",
@@ -1275,24 +1289,24 @@ export const sv: Dictionary = {
   "app.settings.rules.typeLongText": "Lång text",
   "app.settings.rules.typeFile": "Fil",
   "app.settings.rules.typeSelectLong": "Rullgardinslista",
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Il vivait en français dans lib/rule-labels.ts, tables et phrases comprises.
-     Statuts, priorités et canaux n'y sont pas : ils viennent des clés
-     app.status.* / app.priority.* / app.channel.*, plus bas, et les libellés
-     condField* s'accordent avec elles. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     It lived in French in lib/rule-labels.ts, tables and sentences included.
+     Statuses, priorities and channels are not here: they come from the
+     app.status.* / app.priority.* / app.channel.* keys below, and the
+     condField* labels agree with them. */
 
-  /* Types de champs personnalisés (ST-04) ; « Text » est typeText, au-dessus.
-     Les trois mots repris de fieldsEmpty : « lista », « text », « datum ». */
+  /* Custom field types (ST-04); “Text” is typeText, above. The three words
+     taken from fieldsEmpty: “lista”, “text”, “datum”. */
   "app.settings.rules.typeSelect": "Lista",
   "app.settings.rules.typeMultiSelect": "Flerval",
   "app.settings.rules.typeDate": "Datum",
   "app.settings.rules.typeNumber": "Tal",
   "app.settings.rules.typeCheckbox": "Kryssruta",
 
-  /* Champs sur lesquels une condition peut porter. Chaque libellé reprend le
-     mot déjà employé ailleurs : « Händelse » de dev.colEvent, « Ämne » de
-     previewSubject, « Taggar » de tickets.tags, « Tilldelad » de
-     tickets.assignee, « Team » comme partout. */
+  /* Fields a condition can be built on. Each label reuses the word already
+     used elsewhere: “Händelse” from dev.colEvent, “Ämne” from previewSubject,
+     “Taggar” from tickets.tags, “Tilldelad” from tickets.assignee, “Team” as
+     everywhere. */
   "app.settings.rules.condFieldEvent": "Händelse",
   "app.settings.rules.condFieldStatus": "Status",
   "app.settings.rules.condFieldPriority": "Prioritet",
@@ -1306,9 +1320,9 @@ export const sv: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Timmar sedan skapandet",
   "app.settings.rules.condFieldHoursUpdated": "Timmar sedan uppdateringen",
 
-  /* Opérateurs. Les deux derniers restent des symboles : le suédois les lit
-     comme le français. « tomt » est au neutre — le sujet implicite est
-     « fältet », un ett-ord, et c'est aussi l'accord par défaut du suédois. */
+  /* Operators. The last two stay symbols: Swedish reads them the way French
+     does. “tomt” is neuter — the implied subject is “fältet”, an ett-word, and
+     that is also Swedish's default agreement. */
   "app.settings.rules.opIs": "är",
   "app.settings.rules.opIsNot": "är inte",
   "app.settings.rules.opContains": "innehåller",
@@ -1318,16 +1332,16 @@ export const sv: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs, dans l'ordre de ruleHintTrigger — skapande,
-     uppdatering, mottaget meddelande. « Ärende » est un ett-ord : le participe
-     prend le neutre (skapat, uppdaterat). */
+  /* Trigger events, in ruleHintTrigger's order — skapande, uppdatering,
+     mottaget meddelande. “Ärende” is an ett-word: the participle takes the
+     neuter (skapat, uppdaterat). */
   "app.settings.rules.eventTicketCreated": "Ärende skapat",
   "app.settings.rules.eventTicketUpdated": "Ärende uppdaterat",
   "app.settings.rules.eventMessageCreated": "Meddelande mottaget",
 
-  /* Actions, telles que le menu du builder les nomme : impératif, comme les
-     autres boutons du fichier (« Tilldela », « Lägg till »). Le « till » de
-     tilldela suit templateEscalationDesc, « Tilldelar … till teamet ». */
+  /* Actions, as the builder's menu names them: imperative, like the file's
+     other buttons (“Tilldela”, “Lägg till”). The “till” of tilldela follows
+     templateEscalationDesc, “Tilldelar … till teamet”. */
   "app.settings.rules.actSetStatus": "Sätt status",
   "app.settings.rules.actSetPriority": "Sätt prioritet",
   "app.settings.rules.actAssignUser": "Tilldela till en agent",
@@ -1336,15 +1350,15 @@ export const sv: Dictionary = {
   "app.settings.rules.actAddTags": "Lägg till taggar",
   "app.settings.rules.actEmailContact": "Skicka e-post till kontakten",
 
-  /* Résumé d'une règle, en une ligne de liste. Le suédois construit sa
-     subordonnée comme le français : « om … → … », et « om / så » est déjà la
-     paire du fichier (settingsNav.thenActions dit « SÅ »). Les bribes restent
-     en minuscules et sans point final : elles s'enchaînent. */
+  /* One-line rule summary. Swedish builds its subordinate clause the way
+     French does: “om … → …”, and “om / så” is already the file's pair
+     (settingsNav.thenActions says “SÅ”). The fragments stay lower-case and
+     without a final full stop: they run on. */
   "app.settings.rules.summaryPattern": "Om {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "och",
   "app.settings.rules.summaryAlways": "alltid",
-  /* « villkor » est invariable au pluriel indéfini : les deux formes se lisent
-     pareil, mais les deux catégories du suédois doivent être là. */
+  /* “villkor” is invariable in the indefinite plural: the two forms read
+     the same, but both Swedish categories have to be there. */
   "app.settings.rules.summaryAnyOf": {
     one: "minst ett av {count} villkor",
     other: "minst ett av {count} villkor",
@@ -1353,11 +1367,11 @@ export const sv: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "ej tilldelad",
   "app.settings.rules.summaryAssigned": "tilldelad",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. « sedan » est la préposition déjà employée pour une durée
-     écoulée — since.days, « sedan {count} dagar », et templateFollowUpDesc,
-     « utan svar sedan 2 dagar » ; la bribe se recolle à celle qui précède :
-     « status = Väntande sedan 2 j ». */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. “sedan” is the preposition already used for an elapsed
+     duration — since.days, “sedan {count} dagar”, and templateFollowUpDesc,
+     “utan svar sedan 2 dagar”; the fragment butts against the preceding one:
+     “status = Väntande sedan 2 j”. */
   "app.settings.rules.summarySince": "sedan {duration}",
   "app.settings.rules.summarySetStatus": "ändra till {value}",
   "app.settings.rules.summarySetPriority": "prioritet {value}",
@@ -1368,7 +1382,7 @@ export const sv: Dictionary = {
   "app.settings.rules.summaryAddTags": "lägg till {tags}",
   "app.settings.rules.summaryEmailContact": "skicka e-post till kontakten",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Status → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioritet → {value}",
   "app.settings.rules.macroSummaryTeam": "Team → {team}",
@@ -1460,7 +1474,7 @@ export const sv: Dictionary = {
   "app.settings.dev.dayYesterday": "I går {time}",
   "app.settings.dev.auditTitle": "Granskningslogg",
   "app.settings.dev.auditSubtitle": "Fullständig logg över administrationsåtgärder. Lagras i 2 år.",
-  "app.settings.dev.auditLockedTitle": "Granskningsloggen ingår bara i Enterprise-planen",
+  "app.settings.dev.auditLockedTitle": "Granskningsloggen ingår i Enterprise Edition",
   "app.settings.dev.auditLockedText": "Spara spåret av varje administrationsåtgärd i 2 år, med diff före/efter och CSV-export.",
   "app.settings.dev.filterActorAll": "Aktör: alla",
   "app.settings.dev.filterActionAll": "Åtgärd: alla",
@@ -1477,9 +1491,9 @@ export const sv: Dictionary = {
   "app.settings.dev.actorContact": "Kontakt",
   "app.settings.dev.exportUnauthorized": "Ej behörig",
   "app.settings.dev.exportForbidden": "Förbehållet rollerna Owner och Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Granskningsloggen ingår bara i Enterprise-planen.",
+  "app.settings.dev.exportEnterpriseOnly": "Granskningsloggen ingår i Enterprise Edition.",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nytt",
   "app.status.open": "Öppet",
   "app.status.waiting": "Väntande",
@@ -1500,7 +1514,7 @@ export const sv: Dictionary = {
   "app.unit.kilobytes": "{count} kB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Mina ärenden",
   "app.views.unassigned": "Ej tilldelade",
   "app.views.breaching": "Snart försenade",
@@ -1508,14 +1522,14 @@ export const sv: Dictionary = {
   "app.views.urgent": "Brådskande denna vecka",
   "app.views.escalation": "Eskaleringar",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Byt namn",
   "app.kb.renameSave": "Spara",
   "app.kb.deleteCategory": "Ta bort kategorin",
   "app.kb.managersOnly": "Endast Owner och Admin kan redigera kunskapsbasen.",
   "app.kb.categoryNotEmpty": { one: "Kategorin innehåller fortfarande {count} objekt. Flytta det innan du tar bort kategorin.", other: "Kategorin innehåller fortfarande {count} objekt. Flytta dem innan du tar bort kategorin." },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "E-post",
   "app.login.emailPlaceholder": "du@foretag.se",
   "app.login.password": "Lösenord",
@@ -1542,9 +1556,9 @@ export const sv: Dictionary = {
   "app.login.providerMissing": "Den här leverantören är inte konfigurerad på den här instansen.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Le titre du portail dans son propre aperçu (home.title), le nom du
-     workspace et la couleur d'accent viennent d'ailleurs ; les rôles Owner /
-     Admin / Agent / Viewer ne se traduisent pas. */
+  /* The portal title in its own preview (home.title), the workspace name
+     and the accent colour come from elsewhere; the Owner / Admin / Agent /
+     Viewer roles are not translated. */
 
   "app.onboarding.asideTitle": "Konfiguration",
   "app.onboarding.asideFooter":
@@ -1583,7 +1597,7 @@ export const sv: Dictionary = {
 
   "app.onboarding.teamTitle": "Bjud in ditt team",
   "app.onboarding.teamBody":
-    "Bjud in dina agenter nu, eller dela inbjudningslänken. Viewer-platser är gratis.",
+    "Bjud in dina agenter nu, eller dela inbjudningslänken. Viewer-roller tar ingen plats.",
   "app.onboarding.invitePlaceholder": "kollega@foretag.se",
   "app.onboarding.addRow": "+ Lägg till en rad",
   "app.onboarding.sendInvites": "Skicka inbjudningarna",
@@ -1592,8 +1606,8 @@ export const sv: Dictionary = {
   "app.onboarding.testBody":
     "Kontrollera hela kedjan innan du öppnar tjänsten för dina kunder.",
   "app.onboarding.readyTitle": "Din arbetsyta är klar",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Skicka ett e-postmeddelande till {address} för att skapa ett testärende.",
   "app.onboarding.openInbox": "Öppna inkorgen",
 
@@ -1603,37 +1617,47 @@ export const sv: Dictionary = {
   "app.onboarding.checklistTicket": "Första ärendet är mottaget",
   "app.onboarding.checklistSla": "SLA-policyn är kontrollerad",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
-     « alla / minst ett » : le suédois dit « uppfylla villkor », le verbe déjà
-     employé par testNoMatch (« villkoren är inte uppfyllda »). Le pluriel
-     indéfini « villkor » est identique au singulier, si bien que les deux
-     valeurs du sélecteur tombent juste : « Uppfyller alla villkor » et
-     « Uppfyller minst ett villkor ». */
+  /* ST-05 — the condition group header. The sentence wraps an
+     “alla / minst ett” selector: Swedish says “uppfylla villkor”, the verb
+     already used by testNoMatch (“villkoren är inte uppfyllda”). The
+     indefinite plural “villkor” is identical to the singular, so both selector
+     values come out right: “Uppfyller alla villkor” and “Uppfyller minst ett
+     villkor”. */
   "app.settings.rules.matchIf": "OM",
   "app.settings.rules.matchAllPattern": "Uppfyller {mode} villkor",
   "app.settings.rules.matchAnyPattern": "Uppfyller {mode} villkor",
   "app.settings.rules.matchAll": "alla",
   "app.settings.rules.matchAny": "minst ett",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit ; « Pro-plan » comme dans shell.planPro et auditLockedTitle. */
-  "app.settings.workspace.planFree": "Free-plan",
-  "app.settings.workspace.planTeam": "Team-plan",
-  "app.settings.workspace.planEnterprise": "Enterprise-plan",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "SÅ",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Testa på ett befintligt ärende",
+  "app.settings.rules.testRunning": "Testar…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Ta bort",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "E-postens brödtext — variabler: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française ; seul l'affichage est traduit. « Incident » reste le terme du
-     support suédois : « Händelse » est déjà l'événement (condFieldEvent,
-     dev.colEvent) et « Fel » l'erreur (email.statusError). */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string; only the display is translated. “Incident” remains the term of
+     Swedish support: “Händelse” is already the event (condFieldEvent,
+     dev.colEvent) and “Fel” the error (email.statusError). */
   "app.ticket.typeQuestion": "Fråga",
   "app.ticket.typeIncident": "Incident",
   "app.ticket.typeTask": "Uppgift",
   "app.ticket.typeOther": "Övrigt",
 
-  /* AG-09 — export CSV des rapports. Les libellés reprennent les KPI de
-     l'écran ; les secondes s'abrègent « s », comme dans draftSavedSeconds. */
+  /* AG-09 — CSV export of the reports. The labels echo the screen's KPIs;
+     seconds are abbreviated “s”, as in draftSavedSeconds. */
   "app.reports.csvIndicator": "Nyckeltal",
   "app.reports.csvCurrentPeriod": "Aktuell period",
   "app.reports.csvPreviousPeriod": "Föregående period",
@@ -1648,20 +1672,20 @@ export const sv: Dictionary = {
   "app.reports.csvResolvedShort": "Lösta",
   "app.reports.csvAgent": "Agent",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Ny artikel",
   "app.kb.fromTicketSymptomHeading": "Symtom",
   "app.kb.fromTicketSymptomPlaceholder": "[Beskriv vad kunden ser.]",
   "app.kb.fromTicketSolutionHeading": "Lösning",
   "app.kb.fromTicketSolutionPlaceholder":
     "[Beskriv det tillvägagångssätt som löser problemet.]",
-  /* Les deux bribes se lisent dans « Saknas: {items}. » — minuscules. */
+  /* Both fragments read inside “Saknas: {items}.” — lower-case. */
   "app.kb.fromTicketMissingRequest": "kundens ursprungliga förfrågan",
   "app.kb.fromTicketMissingAnswer": "agentens svar",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Steg-för-steg-guide",
   "app.kb.tplProcedureHint": "En följd av numrerade steg, med det förväntade resultatet.",
   "app.kb.tplProcedureTitle": "Så här [utför du åtgärden]",

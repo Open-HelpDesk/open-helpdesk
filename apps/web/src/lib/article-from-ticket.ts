@@ -1,33 +1,48 @@
 
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 
-/** Ce dont la conversion a besoin : traduire. */
+/** What the conversion needs: translating. */
 type Tr = { (key: MessageKey, params?: Record<string, string | number>): string };
 /**
- * Conversion d'une demande résolue en brouillon d'article.
+ * Conversion of a resolved request into an article draft.
  *
- * Le savoir d'une équipe support se perd dans les tickets clos : cette fonction
- * reprend la question du client et la réponse de l'agent pour poser la structure
- * « Symptôme / Solution ». Le texte reste celui des messages — c'est un point de
- * départ à relire, pas une publication automatique.
+ * A support team's knowledge gets lost in closed tickets: this function takes the
+ * customer's question and the agent's answer to lay out the "Symptom / Solution"
+ * structure. The text stays that of the messages — it is a starting point to
+ * review, not an automatic publication.
  */
 
-/** Un message d'un fil, réduit à ce dont la conversion a besoin. */
+/** A message from a thread, reduced to what the conversion needs. */
 export type SourceMessage = {
   authorType: string;
   kind: string;
   bodyText: string | null;
 };
 
+/**
+ * Courtesy formulas, English and French.
+ *
+ * A per-language list is a losing game — twenty-five languages, and a customer
+ * writes in whichever they like whatever the workspace is set to. These two
+ * cover the openings and closings the product actually receives today; a
+ * formula that slips through leaves one line to delete in a draft that is meant
+ * to be reviewed anyway, which is why this stays a heuristic and not a promise.
+ */
 const GREETINGS =
-  /^(bonjour|bonsoir|madame|monsieur|cher|chère|salut|hello)\b[^\n]*\n+/i;
+  /^(hello|hi|hey|dear|good morning|good afternoon|good evening|bonjour|bonsoir|madame|monsieur|cher|chère|salut)\b[^\n]*\n+/i;
+/**
+ * A closing only counts as one when it sits at the END, followed by nothing but
+ * a signature: “Thank you for the details, here is the fix…” opens a paragraph
+ * in the middle of many replies, and cutting there would throw the answer away.
+ * Hence the tail constraint — at most a few short lines after the formula.
+ */
 const SIGNOFFS =
-  /\n+(cordialement|bien cordialement|merci d'avance|merci beaucoup|bonne journée|bien à vous|sincères salutations)\b[\s\S]*$/i;
+  /\n+(regards|best regards|kind regards|best|thanks|thanks in advance|many thanks|thank you|sincerely|yours sincerely|yours faithfully|cheers|cordialement|bien cordialement|merci d'avance|merci beaucoup|bonne journée|bien à vous|sincères salutations)\b[^\n]{0,20}(\n[^\n]{0,60}){0,3}\s*$/i;
 
 /**
- * Nettoie un message avant reprise : les citations « > » deviendraient des
- * encadrés dans le format d'article, et les formules d'usage n'ont rien à faire
- * dans une base de connaissances.
+ * Cleans up a message before reuse: ">" quotes would become callouts in the
+ * article format, and courtesy formulas have no business in a knowledge
+ * base.
  */
 export function cleanMessage(text: string): string {
   return text
@@ -44,7 +59,7 @@ export function cleanMessage(text: string): string {
 export type TicketDraft = {
   title: string;
   body: string;
-  /** Ce que la conversion n'a pas trouvé — affiché à l'agent, pas au client. */
+  /** What the conversion did not find — shown to the agent, not to the customer. */
   missing: string[];
 };
 
@@ -56,20 +71,20 @@ export function articleFromTicket(
   const publics = messages.filter((m) => m.kind === "public_reply" && m.bodyText?.trim());
 
   const question = publics.find((m) => m.authorType === "contact");
-  // La dernière réponse d'agent est celle qui a résolu la demande.
+  // The last agent reply is the one that resolved the request.
   const answers = publics.filter((m) => m.authorType === "agent");
   const answer = answers[answers.length - 1];
 
   const missing: string[] = [];
-  const symptome = question ? cleanMessage(question.bodyText!) : "";
+  const symptom = question ? cleanMessage(question.bodyText!) : "";
   const solution = answer ? cleanMessage(answer.bodyText!) : "";
-  if (!symptome) missing.push(t("app.kb.fromTicketMissingRequest"));
+  if (!symptom) missing.push(t("app.kb.fromTicketMissingRequest"));
   if (!solution) missing.push(t("app.kb.fromTicketMissingAnswer"));
 
   const body = [
     `## ${t("app.kb.fromTicketSymptomHeading")}`,
     "",
-    symptome || t("app.kb.fromTicketSymptomPlaceholder"),
+    symptom || t("app.kb.fromTicketSymptomPlaceholder"),
     "",
     `## ${t("app.kb.fromTicketSolutionHeading")}`,
     "",

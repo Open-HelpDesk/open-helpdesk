@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-/** Ancienne fiche organisation — remplacée par le maître-détail AG-08 (?selected=). */
+/** Old organization record page — replaced by the AG-08 master-detail view (?selected=). */
 export default async function OrganizationPage({
   params,
 }: {

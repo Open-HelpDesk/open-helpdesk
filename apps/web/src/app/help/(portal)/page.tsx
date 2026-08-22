@@ -5,25 +5,25 @@ import { listPublishedCategories, popularArticles } from "@/lib/portal-data";
 import { getT } from "@/i18n/server";
 import { PortalSearchBar } from "./search-bar";
 
-/** PT-01 — Accueil : hero dégradé, recherche typeahead, catégories, top articles, carte CTA. */
+/** PT-01 — Home: gradient hero, typeahead search, categories, top articles, CTA card. */
 export default async function HelpHome() {
   const t = await getT();
   const tenant = await getPortalTenant();
   if (!tenant) return null;
-  // Base coupée ou réservée : l'accueil garde son hero et sa carte de contact,
-  // mais cesse d'annoncer des catégories que les pages refuseraient d'ouvrir.
+  // Knowledge base turned off or restricted: the home page keeps its hero and its
+  // contact card, but stops advertising categories the pages would refuse to open.
   const showKb = await canReadKb(Boolean(await getPortalContact()));
   const [categories, popular] = showKb
     ? await Promise.all([listPublishedCategories(tenant.id), popularArticles(tenant.id, 5)])
     : [[], []];
-  // Le texte d'accueil réglé dans ST-09 prime sur la traduction : c'est la voix
-  // du tenant, il l'a écrit dans sa langue.
+  // The welcome text set in ST-09 takes precedence over the translation: it is the
+  // tenant's voice, written in their own language.
   const welcome =
     (tenant.portalConfig as { welcomeText?: string } | null)?.welcomeText || t("home.title");
 
   return (
     <div className="pt-rise-hero">
-      {/* Hero — le fond teinté se dissout vers --bg, sans trait de séparation dur. */}
+      {/* Hero — the tinted background dissolves into --bg, with no hard separator line. */}
       <div
         className="border-b px-9 py-[68px] max-sm:px-[18px] max-sm:py-[38px]"
         style={{
@@ -56,7 +56,7 @@ export default async function HelpHome() {
         </div>
       </div>
 
-      {/* Contenu */}
+      {/* Content */}
       <div className="mx-auto flex w-full max-w-[1060px] flex-col gap-[46px] px-9 pb-14 pt-12 max-sm:px-[18px] max-sm:py-[30px]">
         {showKb && (
         <section className="flex flex-col gap-4">

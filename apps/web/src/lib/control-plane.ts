@@ -1,7 +1,8 @@
 /**
- * Client de la gateway billing PRIVÉE (console cloud) — apps/web ne porte ni
- * SDK Stripe ni clé : il demande une URL de session et redirige. Inactif sans
- * CLOUD_GATEWAY_URL (auto-hébergé, dev sans control plane).
+ * Control plane client — the product talks to no payment provider and carries
+ * none of its keys: it asks its control plane for a session URL and redirects
+ * the user there. Inert without CLOUD_GATEWAY_URL, that is, in every
+ * standalone install.
  */
 export function gatewayConfigured(): boolean {
   return Boolean(process.env.CLOUD_GATEWAY_URL && process.env.CLOUD_GATEWAY_SECRET);
@@ -30,10 +31,13 @@ async function call<T>(path: string, body: unknown): Promise<T | null> {
   }
 }
 
+/**
+ * Subscription session: the product passes the workspace and its occupied seat
+ * count, nothing more — what is subscribed to, and at what price, belongs to
+ * the control plane.
+ */
 export async function checkoutUrl(input: {
   tenantSlug: string;
-  planId: string;
-  interval: "month" | "year";
   seats: number;
 }): Promise<string | null> {
   const res = await call<{ url: string }>("/api/gateway/checkout-session", input);

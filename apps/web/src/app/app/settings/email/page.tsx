@@ -44,7 +44,7 @@ const DNS_GRID = "96px 76px 170px 1fr 130px";
 const SEND_GRID = "minmax(190px,1fr) minmax(190px,1.4fr) 130px 100px 90px";
 const REJECT_GRID = "minmax(200px,1fr) minmax(180px,1.2fr) 150px 110px";
 
-/** Méthode d'une adresse de réception (Fournie / Transfert / IMAP). */
+/** Method of a receiving address (Provided / Forwarding / IMAP). */
 function kindLabel(kind: string, t: Translate): string {
   switch (kind) {
     case "provided":
@@ -58,7 +58,7 @@ function kindLabel(kind: string, t: Translate): string {
   }
 }
 
-/** Nature d'un email dans le journal des envois. */
+/** Nature of an email in the delivery log. */
 function deliveryKindLabel(kind: string, t: Translate): string {
   switch (kind) {
     case "ticket_reply":
@@ -89,7 +89,7 @@ const REJECT_TONES: Record<string, "wait" | "dang" | "closed"> = {
   spam: "dang",
 };
 
-/** Motif de rejet d'un email entrant. */
+/** Rejection reason for an inbound email. */
 function rejectLabel(reason: string, t: Translate): string {
   switch (reason) {
     case "loop":
@@ -109,7 +109,7 @@ function rejectLabel(reason: string, t: Translate): string {
   }
 }
 
-/** Chip neutre pour la méthode d'une adresse (Fournie / Transfert / IMAP). */
+/** Neutral chip for an address's method (Provided / Forwarding / IMAP). */
 function KindChip({ kind, t }: { kind: string; t: Translate }) {
   return (
     <span
@@ -127,7 +127,7 @@ function KindChip({ kind, t }: { kind: string; t: Translate }) {
   );
 }
 
-/** Statut d'une adresse de réception, au format pilule du design system. */
+/** Status of a receiving address, in the design system pill format. */
 function mailboxStatus(m: typeof mailboxes.$inferSelect, t: Translate) {
   if (m.kind === "provided")
     return <StatusPill tone="ok">{t("app.settings.email.statusVerified")}</StatusPill>;
@@ -163,9 +163,9 @@ const SMALL_BTN = {
 } as const;
 
 /**
- * ST-03 — Canal email (1040 px), deux onglets. Envoi (par défaut) : fournisseur du
- * workspace, tests, DNS, journal des envois. Réception : adresses transfert/IMAP,
- * webhooks Brevo/Mailjet, journal des emails rejetés (rétention 30 j).
+ * ST-03 — Email channel (1040 px), two tabs. Sending (default): workspace
+ * provider, tests, DNS, delivery log. Reception: forwarding/IMAP addresses,
+ * Brevo/Mailjet webhooks, rejected email log (30-day retention).
  */
 export default async function EmailSettingsPage({
   searchParams,
@@ -175,7 +175,7 @@ export default async function EmailSettingsPage({
   const t = await getT();
   const { tenant } = await requireAgent();
   const { tab, saved } = await searchParams;
-  const activeTab = tab === "reception" ? "reception" : "envoi";
+  const activeTab = tab === "reception" ? "reception" : "sending";
 
   const [boxes, teamRows, forms, settingsRow, resolved, deliveries, rejected] =
     await Promise.all([
@@ -214,7 +214,7 @@ export default async function EmailSettingsPage({
   const formNameById = new Map(forms.map((f) => [f.id, f.name]));
   const providedAddress =
     boxes.find((m) => m.kind === "provided")?.address ?? providedMailboxAddress(tenant.slug);
-  const principal = boxes.find((m) => m.kind === "provided") ?? boxes[0];
+  const primary = boxes.find((m) => m.kind === "provided") ?? boxes[0];
 
   const sendingDomain = domainOf(settingsRow?.fromAddress ?? resolved.from);
   const dnsRecords = dnsRecordsFor({
@@ -223,7 +223,7 @@ export default async function EmailSettingsPage({
     smtpHost: settingsRow?.smtpHost,
   });
 
-  // Webhooks de réception : URL affichée avec le secret masqué, copiée avec le vrai.
+  // Inbound webhooks: URL displayed with the secret masked, copied with the real one.
   const baseDomain = process.env.BASE_DOMAIN ?? "localhost:3000";
   const protocol = baseDomain.includes("localhost") ? "http" : "https";
   const ingressBase = `${protocol}://${tenant.slug}.${baseDomain}/api/ingress`;
@@ -250,7 +250,7 @@ export default async function EmailSettingsPage({
     {
       label: t("app.settings.email.tabSending"),
       href: "/app/settings/email",
-      active: activeTab === "envoi",
+      active: activeTab === "sending",
     },
     {
       label: t("app.settings.email.tabReception"),
@@ -259,7 +259,7 @@ export default async function EmailSettingsPage({
     },
   ];
 
-  // Bandeau d'état de l'envoi — la couleur porte le diagnostic.
+  // Sending status banner — the color carries the diagnosis.
   const banner =
     resolved.source === "tenant"
       ? { bg: "var(--ok-t)", color: "var(--ok)" }
@@ -267,7 +267,7 @@ export default async function EmailSettingsPage({
         ? { bg: "var(--open-t)", color: "var(--open)" }
         : { bg: "var(--wait-t)", color: "var(--wait)" };
 
-  // Deux phrases enveloppent une valeur en JSX : on découpe autour de l'adresse.
+  // Two sentences wrap a value in JSX: we split around the address.
   const [bannerBefore, bannerAfter] = t.parts(
     resolved.source === "tenant"
       ? "app.settings.email.bannerTenant"
@@ -287,7 +287,7 @@ export default async function EmailSettingsPage({
 
       {activeTab === "reception" ? (
         <>
-          {/* Adresses de réception */}
+          {/* Receiving addresses */}
           <Card
             title={t("app.settings.email.addressesTitle")}
             style={{ padding: 0 }}
@@ -416,7 +416,7 @@ export default async function EmailSettingsPage({
             </div>
           </Card>
 
-          {/* Webhooks de réception fournisseurs */}
+          {/* Provider inbound webhooks */}
           <Card title={t("app.settings.email.providerReceiveTitle")}>
             <p className="mb-1" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
               {t("app.settings.email.providerReceiveIntro")}
@@ -460,7 +460,7 @@ export default async function EmailSettingsPage({
             </div>
           </Card>
 
-          {/* Emails rejetés */}
+          {/* Rejected emails */}
           <Card title={t("app.settings.email.rejectedTitle")} style={{ padding: 0 }}>
             <div className="overflow-x-auto">
               <div style={{ minWidth: 700 }}>
@@ -535,7 +535,7 @@ export default async function EmailSettingsPage({
         </>
       ) : (
         <>
-          {/* Fournisseur d'envoi */}
+          {/* Sending provider */}
           <Card
             title={t("app.settings.email.providerTitle")}
             action={
@@ -582,7 +582,7 @@ export default async function EmailSettingsPage({
                   secretHint={settingsRow?.secretHint ?? null}
                   initial={{
                     provider: settingsRow?.provider ?? "console",
-                    fromName: settingsRow?.fromName ?? principal?.senderName ?? "",
+                    fromName: settingsRow?.fromName ?? primary?.senderName ?? "",
                     fromAddress: settingsRow?.fromAddress ?? "",
                     replyTo: settingsRow?.replyTo ?? "",
                     smtpHost: settingsRow?.smtpHost ?? "",
@@ -659,7 +659,7 @@ export default async function EmailSettingsPage({
                 >
                   <TextInput
                     name="senderName"
-                    defaultValue={principal?.senderName ?? ""}
+                    defaultValue={primary?.senderName ?? ""}
                     placeholder={t("app.settings.email.senderNamePlaceholder", {
                       name: tenant.name,
                     })}
@@ -669,7 +669,7 @@ export default async function EmailSettingsPage({
                   <textarea
                     name="signatureHtml"
                     rows={3}
-                    defaultValue={principal?.signatureHtml ?? ""}
+                    defaultValue={primary?.signatureHtml ?? ""}
                     placeholder={t("app.settings.email.signaturePlaceholder", {
                       name: tenant.name,
                     })}
@@ -771,7 +771,7 @@ export default async function EmailSettingsPage({
             )}
           </Card>
 
-          {/* Journal */}
+          {/* Log */}
           <Card title={t("app.settings.email.deliveriesTitle")}>
             {deliveries.length === 0 ? (
               <p style={{ fontSize: 13, color: "var(--ink-2)" }}>

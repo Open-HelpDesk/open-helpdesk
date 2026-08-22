@@ -21,7 +21,7 @@ async function resolveAgent(): Promise<Resolution> {
   if (!session) return { status: "anonymous" };
 
   const slug = h.get("x-tenant-slug");
-  if (!slug) throw new Error("Tenant non résolu par le middleware.");
+  if (!slug) throw new Error("Tenant not resolved by the middleware.");
 
   const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug));
   if (!tenant) return { status: "anonymous" };
@@ -36,7 +36,7 @@ async function resolveAgent(): Promise<Resolution> {
   return { status: "ok", value: { tenant, agent, sessionEmail: session.user.email } };
 }
 
-/** Pages : session + appartenance au workspace, sinon redirection vers /login. */
+/** Pages: session + workspace membership, otherwise a redirect to /login. */
 export async function requireAgent(): Promise<CurrentAgent> {
   const res = await resolveAgent();
   if (res.status === "anonymous") redirect("/login");
@@ -44,28 +44,28 @@ export async function requireAgent(): Promise<CurrentAgent> {
   return res.value;
 }
 
-/** Routes API : même résolution, mais null (→ 401) au lieu d'une redirection. */
+/** API routes: same resolution, but null (→ 401) instead of a redirect. */
 export async function apiAgent(): Promise<CurrentAgent | null> {
   const res = await resolveAgent();
   return res.status === "ok" ? res.value : null;
 }
 
 /**
- * Le rôle porte-t-il la gestion de l'espace de travail ?
+ * Does the role carry workspace management?
  *
- * Owner et Admin, pas Agent ni Viewer. Le propriétaire est au-dessus de
- * l'administrateur : l'exclure de ce que peut faire un administrateur n'aurait
- * pas de sens. C'est la frontière qu'emploient déjà les écrans de réglages et,
- * depuis ce changement, l'écriture dans la base de connaissances.
+ * Owner and Admin, not Agent nor Viewer. The owner is above the administrator:
+ * excluding them from what an administrator can do would make no sense. This is
+ * the boundary the settings screens already use and, since this change, writing
+ * in the knowledge base.
  */
 export function isManager(role: string): boolean {
   return role === "owner" || role === "admin";
 }
 
 /**
- * Garde des server actions de gestion. Elle LÈVE plutôt que de rediriger : une
- * action appelée par un rôle qui n'y a pas droit est une tentative, pas une
- * navigation, et doit échouer bruyamment.
+ * Guard for the management server actions. It THROWS rather than redirecting: an
+ * action called by a role that has no right to it is an attempt, not a
+ * navigation, and must fail loudly.
  */
 export async function requireManager(): Promise<CurrentAgent> {
   const current = await requireAgent();

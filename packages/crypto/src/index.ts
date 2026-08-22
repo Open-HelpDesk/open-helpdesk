@@ -1,13 +1,13 @@
 /**
- * Chiffrement des secrets applicatifs au repos (AES-256-GCM).
+ * Encryption of application secrets at rest (AES-256-GCM).
  *
- * Sert aux identifiants d'envoi email (mots de passe SMTP, clés d'API) et aux secrets
- * de connexion SSO des organisations. La clé vient de `ENCRYPTION_KEY` (32 octets en
- * base64 ou hex, ou n'importe quelle chaîne longue) ; à défaut elle est dérivée de
- * `BETTER_AUTH_SECRET` pour que le développement fonctionne sans configuration.
+ * Used by the email sending credentials (SMTP passwords, API keys) and by the SSO
+ * connection secrets of organizations. The key comes from `ENCRYPTION_KEY` (32 bytes
+ * in base64 or hex, or any long string); failing that it is derived from
+ * `BETTER_AUTH_SECRET` so that development works without configuration.
  *
- * Format stocké : `v1.<iv base64url>.<tag base64url>.<chiffré base64url>` — le préfixe
- * de version permettra une rotation de clé sans deviner le format.
+ * Stored format: `v1.<iv base64url>.<tag base64url>.<ciphertext base64url>` — the
+ * version prefix will allow rotating the key without guessing the format.
  */
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 
@@ -20,11 +20,11 @@ function keyMaterial(): string {
   if (explicit && explicit.length >= 16) return explicit;
   const fallback = process.env.BETTER_AUTH_SECRET;
   if (fallback && fallback.length >= 8) return fallback;
-  // Développement sans configuration : clé stable mais publique, jamais en production.
+  // Development without configuration: stable but public key, never in production.
   return "openhelpdesk-dev-encryption-key";
 }
 
-/** Clé 32 octets dérivée du matériel disponible (SHA-256 : longueur garantie). */
+/** 32-byte key derived from the available material (SHA-256: guaranteed length). */
 function key(): Buffer {
   return createHash("sha256").update(keyMaterial()).digest();
 }
@@ -42,7 +42,7 @@ export function encryptSecret(plaintext: string): string {
   ].join(".");
 }
 
-/** Déchiffre, ou renvoie null si la valeur est illisible (clé changée, données corrompues). */
+/** Decrypts, or returns null if the value is unreadable (key changed, corrupted data). */
 export function decryptSecret(payload: string | null | undefined): string | null {
   if (!payload) return null;
   const parts = payload.split(".");
@@ -59,7 +59,7 @@ export function decryptSecret(payload: string | null | undefined): string | null
   }
 }
 
-/** Chiffre un objet de secrets (clés multiples : Mailjet a une clé et un secret). */
+/** Encrypts an object of secrets (several keys: Mailjet has a key and a secret). */
 export function encryptSecrets(secrets: Record<string, string>): string {
   return encryptSecret(JSON.stringify(secrets));
 }
@@ -75,23 +75,23 @@ export function decryptSecrets(payload: string | null | undefined): Record<strin
   }
 }
 
-/** Suffixe affichable d'un secret : « ••••••••1a2b » (jamais le secret entier). */
+/** Displayable suffix of a secret: "••••••••1a2b" (never the whole secret). */
 export function secretHint(secret: string): string {
   const tail = secret.slice(-4);
   return `${"•".repeat(Math.min(20, Math.max(4, secret.length - 4)))}${tail}`;
 }
 
-/** Vrai si l'instance tourne encore sur la clé de développement (bandeau d'alerte). */
+/** True if the instance still runs on the development key (warning banner). */
 export function usingDevEncryptionKey(): boolean {
   return !process.env.ENCRYPTION_KEY && !process.env.BETTER_AUTH_SECRET;
 }
 
 /**
- * Provenance du matériel de clé — miroir exact de keyMaterial(), pour que le
- * diagnostic (ST-01) qualifie l'installation sans dupliquer les seuils :
- * `explicit` = ENCRYPTION_KEY dédiée · `derived` = dérivée de
- * BETTER_AUTH_SECRET (acceptable, à corriger) · `dev` = clé publique de
- * développement (jamais en production).
+ * Provenance of the key material — an exact mirror of keyMaterial(), so that the
+ * diagnostics (ST-01) can qualify the installation without duplicating the
+ * thresholds: `explicit` = dedicated ENCRYPTION_KEY · `derived` = derived from
+ * BETTER_AUTH_SECRET (acceptable, to be fixed) · `dev` = public development
+ * key (never in production).
  */
 export function encryptionKeySource(): "explicit" | "derived" | "dev" {
   const explicit = process.env.ENCRYPTION_KEY;

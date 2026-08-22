@@ -1,20 +1,20 @@
 /**
- * Lecture du logo ou du favicon d'un workspace — publique par nature.
+ * Reading a workspace's logo or favicon — public by nature.
  *
- * Publique, mais pas ouverte : la clé doit commencer par l'identifiant du tenant
- * résolu depuis le domaine, sans quoi l'URL d'un logo permettrait de lire les
- * fichiers d'un autre workspace.
+ * Public, but not open: the key must start with the id of the tenant resolved
+ * from the domain, otherwise a logo's URL would allow reading another
+ * workspace's files.
  *
- * Cette route est délibérément distincte de celle des images d'articles. Un
- * logo doit se charger là où une image d'article n'a rien à faire : dans l'entête
- * du portail quand la base de connaissances n'est pas publiée, et dans l'onglet
- * du navigateur côté agent.
+ * This route is deliberately separate from the one for article images. A logo
+ * must load where an article image has no business being: in the portal header
+ * when the knowledge base is not published, and in the browser tab on the
+ * agent side.
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { getTenantFromHeaders } from "@/lib/tenant";
 import { getBrandAssetBody } from "@/lib/storage";
 
-const CLE = /^[0-9a-f-]{36}\/(logo|favicon)-[\w.\- ]+$/i;
+const KEY = /^[0-9a-f-]{36}\/(logo|favicon)-[\w.\- ]+$/i;
 
 const TYPES: Record<string, string> = {
   png: "image/png",
@@ -30,23 +30,23 @@ export async function GET(
   { params }: { params: Promise<{ key: string[] }> },
 ) {
   const { key } = await params;
-  const chemin = key.join("/");
-  if (!CLE.test(chemin)) return NextResponse.json({ error: "not_found" }, { status: 404 });
+  const path = key.join("/");
+  if (!KEY.test(path)) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
   const tenant = await getTenantFromHeaders();
-  if (!tenant || !chemin.startsWith(`${tenant.id}/`)) {
+  if (!tenant || !path.startsWith(`${tenant.id}/`)) {
     return NextResponse.json({ error: "not_found" }, { status: 404 });
   }
 
-  const body = await getBrandAssetBody(chemin);
+  const body = await getBrandAssetBody(path);
   if (!body) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
-  const extension = chemin.split(".").pop()?.toLowerCase() ?? "";
+  const extension = path.split(".").pop()?.toLowerCase() ?? "";
   return new NextResponse(body.transformToWebStream(), {
     headers: {
-      // L'URL porte un UUID : elle change à chaque remplacement, donc son
-      // contenu ne change jamais. Le cache peut être définitif, ce qui évite
-      // que l'onglet reste sur l'ancien favicon.
+      // The URL carries a UUID: it changes on every replacement, so its
+      // content never changes. The cache can be permanent, which avoids the
+      // tab staying on the old favicon.
       "Content-Type": TYPES[extension] ?? "application/octet-stream",
       "Cache-Control": "public, max-age=31536000, immutable",
     },

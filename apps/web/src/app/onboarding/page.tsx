@@ -7,15 +7,15 @@ import { isManager, requireAgent } from "@/lib/session";
 import { CopyButton, IdentityForm, TeamInviteForm } from "./onboarding-client";
 import { I18nProvider } from "@/i18n/client";
 import { getT } from "@/i18n/server";
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 
 /**
- * AG-02 — Onboarding (design espace-agent) : colonne gauche 320 px fond canvas avec
- * stepper 4 étapes, colonne droite kicker + titre 26 px + CTA h38 « Passer cette étape ».
- * Navigation par ?step=1..4.
+ * AG-02 — Onboarding (agent space design): left column 320 px on canvas
+ * background with a 4-step stepper, right column kicker + 26 px title + h38 CTA
+ * "Skip this step". Navigation through ?step=1..4.
  */
 
-/** Le stepper est une constante de module : il porte des CLÉS, pas des mots. */
+/** The stepper is a module constant: it carries KEYS, not words. */
 const STEPS: readonly { n: number; label: MessageKey; hint: MessageKey }[] = [
   { n: 1, label: "app.onboarding.stepIdentity", hint: "app.onboarding.stepIdentityHint" },
   { n: 2, label: "app.onboarding.stepEmail", hint: "app.onboarding.stepEmailHint" },
@@ -30,8 +30,8 @@ export default async function OnboardingPage({
 }) {
   const t = await getT();
   const { tenant, agent } = await requireAgent();
-  // L'écran de configuration initiale n'est pas un écran de travail : un agent
-  // n'a rien à y faire, et ses formulaires portent des pouvoirs d'administration.
+  // The initial setup screen is not a work screen: an agent has no business
+  // there, and its forms carry administration powers.
   if (!isManager(agent.role)) redirect("/app/tickets");
   const { step: stepParam } = await searchParams;
   const step = Math.min(4, Math.max(1, Number(stepParam) || 1));
@@ -53,13 +53,13 @@ export default async function OnboardingPage({
     { label: "app.onboarding.checklistTicket", done: (ticketCount?.n ?? 0) > 0 },
     { label: "app.onboarding.checklistSla", done: true },
   ];
-  // La phrase de fin insère l'adresse en police à chasse fixe : elle est
-  // découpée autour du paramètre pour garder l'ordre des mots de chaque langue.
+  // The closing sentence inserts the address in a monospace font: it is split
+  // around the parameter to keep the word order of each language.
   const [readyBefore, readyAfter] = t.parts("app.onboarding.readyBody", "address");
 
   return (
     <div className="ohd flex min-h-screen">
-      {/* Colonne gauche — stepper 320 px */}
+      {/* Left column — 320 px stepper */}
       <aside
         className="hidden w-[320px] shrink-0 flex-col border-r p-8 md:flex"
         style={{ background: "var(--canvas)", borderColor: "var(--line)" }}
@@ -125,7 +125,7 @@ export default async function OnboardingPage({
         </p>
       </aside>
 
-      {/* Colonne droite */}
+      {/* Right column */}
       <main
         className="ohd-rise min-w-0 flex-1 overflow-y-auto"
         style={{ background: "var(--bg)", padding: "48px 56px" }}

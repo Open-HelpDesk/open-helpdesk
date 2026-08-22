@@ -2,38 +2,38 @@ import { expect, test, type Page } from "@playwright/test";
 import { AGENTS, expectStatus, signInAgent, uniqueEmail, uniqueSubject } from "./helpers";
 
 /**
- * ST-09 — les deux interrupteurs du portail coupent vraiment.
+ * ST-09 — the two portal toggles really do switch things off.
  *
- * « Portail client activé » et « Base de connaissances publiée » étaient
- * enregistrés par l'écran d'administration sans que personne ne les lise : on
- * les basculait, l'écran confirmait, et le portail continuait de tout servir.
- * Un test qui se contenterait de rouvrir l'écran verrait le réglage « à off » et
- * passerait au vert. C'est pourquoi tout se vérifie ici du côté du visiteur —
- * codes HTTP des pages publiques, contenu de l'accueil, réponse de l'API de
- * suggestions — et jamais dans le formulaire qui vient d'être soumis.
+ * “Customer portal enabled” and “Knowledge base published” were saved by the
+ * administration screen without anybody ever reading them: they were flipped,
+ * the screen confirmed, and the portal went on serving everything. A test that
+ * merely reopened the screen would see the setting “off” and go green. That is
+ * why everything is verified here from the visitor's side — HTTP codes of the
+ * public pages, content of the home page, answer of the suggestions API — and
+ * never in the form that has just been submitted.
  *
- * Le tenant est partagé par toutes les specs : les deux réglages sont remis en
- * service dans un afterEach, échec compris.
+ * The tenant is shared by every spec: both settings are put back in service in
+ * an afterEach, failures included.
  */
 
-/** Les trois portes du portail : consultation, connexion, dépôt de demande. */
+/** The portal's three doors: browsing, signing in, submitting a request. */
 const PORTAL_ROUTES = ["/help", "/help/login", "/help/requests/new"];
 
 /**
- * Ouvre l'écran des réglages du portail avec une session de gestionnaire.
+ * Opens the portal settings screen with a manager session.
  *
- * La connexion agent atterrit sur l'inbox — la page la plus lourde du produit —
- * et le helper partagé lui laisse 15 s. Sur une machine chargée, ce délai est
- * dépassé alors que la session est bel et bien ouverte. On vise donc directement
- * l'écran de réglages, et on ne passe par le formulaire que si l'application
- * nous renvoie vers /login. Si la connexion est réellement cassée, l'échec vient
- * quand même — simplement au bout de la boucle, et sur la même erreur.
+ * Agent sign-in lands on the inbox — the heaviest page of the product — and the
+ * shared helper allows it 15 s. On a loaded machine that budget is exceeded
+ * while the session is in fact wide open. So the settings screen is aimed at
+ * directly, and the form is only used if the application sends us back to
+ * /login. If signing in is really broken, the failure still comes — simply at
+ * the end of the loop, and on the same error.
  */
 async function openPortalSettings(page: Page): Promise<void> {
   await expect(async () => {
     await page.goto("/app/settings/portal");
     if (page.url().includes("/app/settings/portal")) return;
-    // Les réglages du tenant demandent un gestionnaire : l'Agent n'y accède pas.
+    // Tenant settings require a manager: the Agent has no access to them.
     await signInAgent(page, AGENTS.admin);
     await page.goto("/app/settings/portal");
     await expect(page).toHaveURL(/\/app\/settings\/portal/);
@@ -41,18 +41,18 @@ async function openPortalSettings(page: Page): Promise<void> {
 }
 
 /**
- * Bascule un interrupteur de ST-09 et enregistre.
+ * Flips one of the ST-09 toggles and saves.
  *
- * On ne clique pas l'`<input>` : le toggle des réglages masque sa case
- * (`position:absolute; width:0; height:0; opacity:0`), elle mesure 0×0 et refuse
- * le clic même en `force` (« Element is outside of the viewport »). On clique donc
- * ce que clique un utilisateur : le curseur visible, `span.ohd-knob`.
+ * The `<input>` is not what gets clicked: the settings toggle hides its checkbox
+ * (`position:absolute; width:0; height:0; opacity:0`), it measures 0×0 and
+ * refuses the click even with `force` (“Element is outside of the viewport”). So
+ * we click what a user clicks: the visible knob, `span.ohd-knob`.
  *
- * Ce sélecteur portait un préfixe `st-` qui n'existe nulle part dans le produit —
- * le composant rend `label.ohd-toggle`. Le clic était donc TOUJOURS ignoré, et
- * ces deux tests ne passaient que lorsque l'état voulu se trouvait déjà en
- * place : les tests écrits pour attraper « un réglage enregistré que personne ne
- * lit » n'actionnaient aucun interrupteur.
+ * This selector used to carry an `st-` prefix that exists nowhere in the
+ * product — the component renders `label.ohd-toggle`. The click was therefore
+ * ALWAYS ignored, and these two tests only passed when the wanted state already
+ * happened to be in place: the tests written to catch “a saved setting nobody
+ * reads” were not actuating any toggle at all.
  */
 async function setToggle(
   page: Page,
@@ -65,94 +65,95 @@ async function setToggle(
   if ((await box.isChecked()) !== on) {
     await page.locator(`label.ohd-toggle:has(input[name="${name}"]) .ohd-knob`).click();
   }
-  // L'état voulu doit être atteint AVANT l'envoi : un curseur qui n'aurait pas
-  // pris le clic ferait enregistrer l'état inverse, et le test mentirait dans
-  // les deux sens à la fois.
+  // The wanted state must be reached BEFORE submitting: a knob that had not
+  // taken the click would get the opposite state saved, and the test would lie
+  // in both directions at once.
   await expect(box).toBeChecked({ checked: on });
   await page.locator('form:has(input[name="portalEnabled"]) button[type=submit]').click();
-  // La redirection `saved=1` est la seule confirmation que l'action serveur est
-  // allée au bout : rester sur l'écran ne prouverait rien.
+  // The `saved=1` redirect is the only confirmation that the server action went
+  // all the way through: staying on the screen would prove nothing.
   await expect(page).toHaveURL(/saved=1/);
 }
 
-test.describe("Interrupteurs du portail (ST-09)", () => {
+test.describe("Portal toggles (ST-09)", () => {
   test.beforeEach(async ({ page }) => {
-    // Deux allers-retours dans les réglages plus un parcours client : le budget
-    // par défaut de 30 s ne suffit pas, et un test qui expire ne dit rien.
+    // Two round trips through the settings plus a customer journey: the default
+    // 30 s budget is not enough, and a test that times out says nothing.
     test.setTimeout(120_000);
     await openPortalSettings(page);
   });
 
   test.afterEach(async ({ page }) => {
-    // Restauration inconditionnelle : le tenant est partagé et les workers valent
-    // 1. Un portail laissé coupé ferait tomber en 404 toutes les specs suivantes,
-    // qui échoueraient alors pour une raison qui ne les concerne pas.
+    // Unconditional restoration: the tenant is shared and workers is 1. A
+    // portal left switched off would drop every following spec into 404, and
+    // they would then fail for a reason that is none of their business.
     await setToggle(page, "portalEnabled", true);
     await setToggle(page, "kbPublished", true);
   });
 
-  test("portail coupé, le centre d'aide et le widget n'existent plus", async ({ page }) => {
+  test("portal switched off, the help centre and the widget no longer exist", async ({ page }) => {
     await setToggle(page, "portalEnabled", false);
 
-    // Le portail entier disparaît — y compris la connexion client et le dépôt de
-    // demande, qui vivent sous /help. C'est la promesse du réglage : pas une
-    // page d'information, une extinction.
+    // The whole portal disappears — including customer sign-in and request
+    // submission, which live under /help. That is the setting's promise: not an
+    // information page, a shutdown.
     for (const path of PORTAL_ROUTES) await expectStatus(page, path, 404);
-    // Le widget embarqué dépose ses demandes au même endroit : il tombe avec lui.
+    // The embedded widget submits its requests to the same place: it falls too.
     await expectStatus(page, "/widget", 404);
 
-    /* --- Réactivé, tout revient --- */
+    /* --- Switched back on, everything comes back --- */
     await setToggle(page, "portalEnabled", true);
     for (const path of PORTAL_ROUTES) await expectStatus(page, path, 200);
     await expectStatus(page, "/widget", 200);
   });
 
-  test("base de connaissances dépubliée, le support reste ouvert mais les articles disparaissent", async ({
+  test("knowledge base unpublished, support stays open but the articles disappear", async ({
     page,
   }) => {
     await setToggle(page, "portalEnabled", true);
 
-    // Témoin : base publiée, l'accueil annonce bien ses catégories et sa
-    // recherche. Sans ce passage, l'absence constatée plus bas ne prouverait
-    // rien — un accueil vide pour une tout autre raison passerait au vert.
+    // Control: base published, the home page does announce its categories and
+    // its search. Without this step, the absence observed below would prove
+    // nothing — a home page left empty for an entirely different reason would go
+    // green.
     await page.goto("/help");
-    await expect(page.getByRole("heading", { name: "Catégories" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Categories" })).toBeVisible();
     await expect(page.locator('form[role="search"]')).toBeVisible();
     await expect(page.locator('a[href^="/help/categories/"]').first()).toBeVisible();
 
     await setToggle(page, "kbPublished", false);
 
-    // Couper la base ne ferme pas le support : le portail répond toujours et la
-    // demande reste déposable. Les deux réglages sont indépendants.
+    // Switching the base off does not close support: the portal still answers
+    // and a request can still be submitted. The two settings are independent.
     await expectStatus(page, "/help", 200);
     await expectStatus(page, "/help/requests/new", 200);
 
-    // Les pages de la base, elles, cessent d'exister. « Facturation » est une
-    // catégorie du jeu de démonstration, stable d'une exécution à l'autre.
-    await expectStatus(page, "/help/categories/facturation", 404);
-    await expectStatus(page, "/help/search?q=factur", 404);
+    // The base's pages, on the other hand, cease to exist. “Billing” is a
+    // category of the demo data set, stable from one run to the next.
+    await expectStatus(page, "/help/categories/billing", 404);
+    await expectStatus(page, "/help/search?q=invoice", 404);
 
-    // Le typeahead est servi par une API publique : si elle continuait de
-    // répondre, elle resterait une fenêtre ouverte sur des articles que les
-    // pages refusent d'ouvrir — donc une fuite de contenu dépublié.
-    const suggest = await page.request.get("/api/portal/kb-suggest?q=factur", {
+    // The typeahead is served by a public API: if it went on answering, it
+    // would remain a window open onto articles the pages refuse to open — hence
+    // a leak of unpublished content.
+    const suggest = await page.request.get("/api/portal/kb-suggest?q=invoice", {
       failOnStatusCode: false,
     });
-    expect(suggest.status(), "/api/portal/kb-suggest devrait répondre 200").toBe(200);
-    expect(await suggest.json(), "aucune suggestion quand la base est dépubliée").toEqual([]);
+    expect(suggest.status(), "/api/portal/kb-suggest should answer 200").toBe(200);
+    expect(await suggest.json(), "no suggestion once the base is unpublished").toEqual([]);
 
-    // L'accueil cesse d'annoncer ce qu'il ne peut plus servir : ni section
-    // « Catégories », ni barre de recherche. Les liens de catégorie sont comptés
-    // en plus du titre — c'est la section entière qui doit tomber, pas son seul
-    // en-tête.
+    // The home page stops announcing what it can no longer serve: no
+    // “Categories” section, no search bar. The category links are counted on
+    // top of the heading — it is the whole section that must fall, not just its
+    // header.
     await page.goto("/help");
-    await expect(page.getByRole("heading", { name: "Catégories" })).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Categories" })).toHaveCount(0);
     await expect(page.locator('form[role="search"]')).toHaveCount(0);
     await expect(page.locator('a[href^="/help/categories/"]')).toHaveCount(0);
 
-    /* --- Le support fonctionne encore vraiment, pas seulement en code 200 --- */
+    /* --- Support really still works, not just in HTTP 200 --- */
     const email = uniqueEmail("kb-off");
-    const subject = uniqueSubject("Base dépubliée, demande quand même");
+    const subject = uniqueSubject("Base unpublished, request all the same");
     await page.goto("/help/requests/new");
     await page.locator("#pt-email").fill(email);
     await page.locator("#pt-subject").fill(subject);
@@ -161,11 +162,11 @@ test.describe("Interrupteurs du portail (ST-09)", () => {
     );
     await page.locator("button[type=submit]").click();
 
-    // La référence de la page de confirmation est la seule preuve que la demande
-    // a été créée : le contenu des champs, lui, resterait dans le DOM même si
-    // rien n'était parti.
+    // The reference on the confirmation page is the only proof that the request
+    // was created: the fields' content, for its part, would stay in the DOM even
+    // if nothing had been sent.
     await expect(page).toHaveURL(/\/help\/requests\/submitted/);
     const reference = await page.locator("span.font-mono").first().innerText();
-    expect(reference, "la demande déposée doit porter un numéro").toMatch(/^#\d+$/);
+    expect(reference, "the submitted request must carry a number").toMatch(/^#\d+$/);
   });
 });

@@ -1,2 +1,2 @@
-/** ST-12 — Export CSV de l'audit log (EE) : le handler vit dans ee/web. */
+/** ST-12 — CSV export of the audit log (EE): the handler lives in ee/web. */
 export { GET } from "@openhelpdesk/ee-web/settings/audit/export-route";

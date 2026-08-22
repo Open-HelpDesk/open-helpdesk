@@ -6,9 +6,9 @@ import { getT } from "@/i18n/server";
 import { NewTicketForm } from "./new-ticket-form";
 
 /**
- * AG-05 — Nouveau ticket (design espace-agent) : carte centrée 720 px radius 12,
- * combobox contact réelle, grille Sujet/Formulaire, description avec toolbar,
- * 4 selects, encart « Envoyer la réponse par email », pied sunk.
+ * AG-05 — New ticket (agent space design): centered 720 px card radius 12,
+ * real contact combobox, Subject/Form grid, description with toolbar,
+ * 4 selects, "Send the reply by email" callout, sunk footer.
  */
 export default async function NewTicketPage() {
   const t = await getT();
@@ -44,7 +44,7 @@ export default async function NewTicketPage() {
           border: "1px solid var(--line)",
         }}
       >
-        {/* En-tête de la carte */}
+        {/* Card header */}
         <div
           className="flex items-center border-b"
           style={{ padding: "14px 18px", borderColor: "var(--line)" }}

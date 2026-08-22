@@ -5,7 +5,7 @@ import { apiAgent } from "@/lib/session";
 import { entitlementsFor } from "@/lib/entitlements";
 import { getT } from "@/i18n/server";
 
-/** ST-12 — Export CSV du journal d'audit (plan Pro, Owner/Admin). */
+/** ST-12 — CSV export of the audit log (requires the entitlement, Owner/Admin). */
 export async function GET(request: NextRequest) {
   const t = await getT();
   const current = await apiAgent();

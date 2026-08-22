@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const ro: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const ro: Dictionary = {
     "Serviciul este suspendat temporar: consultarea rămâne deschisă, cererile noi sunt dezactivate.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Centru de asistență",
   "home.title": "Cum vă putem ajuta?",
   "home.subtitle":
@@ -30,7 +30,7 @@ export const ro: Dictionary = {
   "home.ctaBody":
     "Echipa noastră răspunde în medie în 34 de minute în timpul programului de lucru.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Căutați în centrul de asistență…",
   "search.emptyTitle": "Niciun rezultat pentru „{query}”",
   "search.emptyBody":
@@ -38,7 +38,7 @@ export const ro: Dictionary = {
   "search.breadcrumb": "Căutare",
   "search.resultsTitle": "Rezultate pentru „{query}”",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Asistență",
   "category.otherCategories": "Alte categorii",
   "category.otherArticles": "Alte articole",
@@ -65,7 +65,7 @@ export const ro: Dictionary = {
   "vote.prefill": "Creați o solicitare precompletată",
   "vote.prefillSubject": "Despre articolul „{title}”",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Trimiteți o solicitare",
   "newRequest.subtitle": "Descrieți situația dvs. Răspundem în maximum 4 ore lucrătoare.",
   "newRequest.type": "Tipul solicitării",
@@ -107,7 +107,7 @@ export const ro: Dictionary = {
   "submitted.track": "Urmăriți solicitarea",
   "submitted.backToHelp": "Înapoi la asistență",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "Solicitările mele",
   "requests.new": "Solicitare nouă",
   "requests.tabOpen": "Deschise",
@@ -119,13 +119,13 @@ export const ro: Dictionary = {
     "Solicitările dvs. de asistență vor apărea aici, cu starea lor și istoricul discuțiilor.",
   "requests.awaitingReply": "Se așteaptă răspuns",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "În curs",
   "status.waiting": "În așteptarea răspunsului dvs.",
   "status.resolved": "Rezolvată",
   "status.closed": "Închisă",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Rezolvată {when}",
   "activity.closed": "Închisă {when}",
   "activity.waiting": "În așteptarea răspunsului dvs. {since}",
@@ -133,13 +133,13 @@ export const ro: Dictionary = {
   "activity.youReplied": "Ați răspuns {when}",
   "activity.created": "Creată {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": { one: "de {count} min", few: "de {count} min", other: "de {count} min" },
   "since.hours": { one: "de {count} h", few: "de {count} h", other: "de {count} h" },
   "since.days": { one: "de {count} zi", few: "de {count} zile", other: "de {count} de zile" },
   "since.date": "din {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Dvs.",
   "request.team": "Echipa",
   "request.agentAuthor": "{name} — {tenant}",
@@ -156,7 +156,7 @@ export const ro: Dictionary = {
   "request.markSolved": "Marcați ca rezolvată",
   "request.reopen": "Redeschideți solicitarea",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Urmăriți-vă solicitările",
   "login.magicIntro":
     "Introduceți adresa dvs. de email: vă trimitem un link de conectare. Nicio parolă de reținut.",
@@ -169,7 +169,15 @@ export const ro: Dictionary = {
   "login.expired": "Acest link a expirat sau nu este valid. Solicitați unul nou.",
   "login.footer": "Încă nicio solicitare? Contul dvs. se creează automat la prima trimitere.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Linkul dvs. de conectare — {workspace}",
+  "login.emailBody":
+    "Bună ziua,\n\nApăsați pe acest link pentru a accesa solicitările dvs. (valabil 15 minute):\n{url}\n\nDacă nu ați solicitat acest link, ignorați acest email.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Sunteți administrator al acestei organizații. Ce configurați aici se aplică pentru {count} persoană din {org} care folosește asistența {tenant}.",
     few: "Sunteți administrator al acestei organizații. Ce configurați aici se aplică pentru {count} persoane din {org} care folosesc asistența {tenant}.",
@@ -258,7 +266,7 @@ export const ro: Dictionary = {
   "members.note":
     "Colaboratorii apar automat la prima conectare sau la prima solicitare. Puteți desemna un al doilea administrator pentru a nu rămâne singurul punct de contact.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Aveți nevoie de ajutor?",
   "widget.close": "Închideți",
   "widget.messageLabel": "Mesajul dvs.",
@@ -279,7 +287,7 @@ export const ro: Dictionary = {
   "csatPage.doneTitle": "Vă mulțumim!",
   "csatPage.doneBody": "Comentariul dvs. a fost transmis echipei.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Inbox",
@@ -292,7 +300,7 @@ export const ro: Dictionary = {
   "app.shell.suspendedTitle": "Acest workspace este suspendat",
   "app.shell.suspendedText": "Contactați administratorul pentru a restabili accesul.",
   "app.shell.suspendedOwnerText":
-    "Alegeți un plan sau actualizați metoda de plată pentru a reactiva workspace-ul.",
+    "Regularizați abonamentul sau actualizați metoda de plată pentru a reactiva workspace-ul.",
   "app.shell.suspendedBillingCta": "Deschide Abonament și facturare",
   "app.shell.myTickets": "Tichetele mele",
   "app.shell.newTicket": "Tichet nou",
@@ -723,7 +731,7 @@ export const ro: Dictionary = {
   "app.reports.columnAgent": "Agent",
   "app.reports.columnFirstReply": "Primul răspuns",
   "app.reports.customReports": "Rapoarte personalizate",
-  "app.reports.enterprisePlanBadge": "PLANUL ENTERPRISE",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Descoperiți",
   "app.reports.chartDailyAria": "{labelA} și {labelB} pe zi",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -747,8 +755,11 @@ export const ro: Dictionary = {
   "app.settings.shell.saved": "✓ Salvat",
   "app.settings.shell.cancel": "Anulați",
   "app.settings.shell.save": "Salvați",
-  "app.settings.shell.planEnterprise": "PLANUL ENTERPRISE",
-  "app.settings.shell.upgradeToEnterprise": "Treceți la planul Enterprise",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Închideți",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Gestionați abonamentul",
   "app.settings.shell.eeSelfHostedTitle": "Funcționalitate a ediției Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Această funcționalitate este supusă licenței comerciale (directorul ee/ din depozit) și nu este inclusă în ediția open source auto-găzduită.",
@@ -921,10 +932,10 @@ export const ro: Dictionary = {
   "app.settings.sso.agentTitle": "SSO pentru agenți",
   "app.settings.sso.agentSubtitle":
     "Autentificare unică SAML 2.0 și provizionare SCIM pentru echipa dvs. de suport.",
-  "app.settings.sso.agentLockedTitle": "SSO pentru agenți este disponibil doar în planul Enterprise",
+  "app.settings.sso.agentLockedTitle": "SSO pentru agenți face parte din Enterprise Edition",
   "app.settings.sso.agentLockedText":
     "Conectați furnizorul dvs. de identitate SAML 2.0, provizionați agenții prin SCIM și impuneți autentificarea unică întregii echipe.",
-  "app.settings.sso.agentEnterpriseOnly": "SSO pentru agenți este disponibil doar în planul Enterprise.",
+  "app.settings.sso.agentEnterpriseOnly": "SSO pentru agenți face parte din Enterprise Edition.",
   "app.settings.sso.idpOther": "Altul (SAML generic)",
   "app.settings.sso.samlToggleLabel": "Activați autentificarea unică SAML 2.0",
   "app.settings.sso.samlHeading": "Autentificare unică SAML 2.0",
@@ -1017,11 +1028,11 @@ export const ro: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Fiecare organizație client își conectează propriul furnizor de identitate din portal. Aici supervizați întregul parc.",
   "app.settings.sso.customerLockedTitle":
-    "SSO pentru organizațiile client este disponibil doar în planul Enterprise",
+    "SSO pentru organizațiile client face parte din Enterprise Edition",
   "app.settings.sso.customerLockedText":
     "Lăsați fiecare organizație client să își conecteze propriul furnizor de identitate (SAML sau OIDC) și supervizați întregul parc din acest ecran.",
   "app.settings.sso.customerEnterpriseOnly":
-    "SSO pentru organizațiile client este disponibil doar în planul Enterprise.",
+    "SSO pentru organizațiile client face parte din Enterprise Edition.",
   "app.settings.sso.statusActive": "Activă",
   "app.settings.sso.statusPending": "De verificat",
   "app.settings.sso.statusError": "Eroare",
@@ -1212,7 +1223,7 @@ export const ro: Dictionary = {
   "app.settings.portal.kbPublishedLabel": "Bază de cunoștințe publicată",
   "app.settings.portal.kbPublishedHint": "Articolele publicate sunt vizibile fără conectare.",
   "app.settings.portal.hidePoweredByLabel": "Ascundeți „Propulsat de Open HelpDesk”",
-  "app.settings.portal.hidePoweredByHint": "Disponibil începând cu planul Enterprise.",
+  "app.settings.portal.hidePoweredByHint": "Disponibil cu Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Vizibilitatea bazei de cunoștințe",
   "app.settings.portal.kbVisibilityPublic": "Publică",
   "app.settings.portal.kbVisibilityAuthenticated": "După conectare",
@@ -1278,8 +1289,8 @@ export const ro: Dictionary = {
   "app.settings.workspace.generalTitle": "General și branding",
   "app.settings.workspace.generalSubtitle":
     "Identitatea spațiului de lucru, limba, fusul orar și numerotarea tichetelor.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "Ștergere refuzată — ștergerea programată este disponibilă în cloud.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Ștergere refuzată — ștergerea programată necesită un control plane.",
   "app.settings.workspace.generalIdentity": "Identitate",
   "app.settings.workspace.generalNameLabel": "Numele spațiului de lucru",
   "app.settings.workspace.generalLogoLabel": "Logo",
@@ -1350,7 +1361,7 @@ export const ro: Dictionary = {
     other: "{count} / {quota} licențe utilizate — limită atinsă",
   },
   "app.settings.workspace.seatsAddHint": "Adăugați licențe pentru a invita agenți noi.",
-  "app.settings.workspace.seatsFreeHint": "Rolurile Viewer sunt gratuite și nelimitate.",
+  "app.settings.workspace.seatsFreeHint": "Rolurile Viewer nu ocupă licențe și sunt nelimitate.",
   "app.settings.workspace.seatsAddAction": "Adăugați licențe",
   "app.settings.workspace.seatsManage": "Gestionați",
   "app.settings.workspace.seatLimitReached":
@@ -1432,8 +1443,8 @@ export const ro: Dictionary = {
   "app.settings.workspace.save": "Salvați",
   "app.settings.workspace.billingTitle": "Abonament și facturare",
   "app.settings.workspace.billingSubtitle":
-    "Plan, licențe, cote, metodă de plată și istoricul facturilor.",
-  "app.settings.workspace.selfHosted": "AUTOGĂZDUIT",
+    "Abonament, licențe, cote, metodă de plată și istoricul facturilor.",
+  "app.settings.workspace.subscriptionNone": "Niciun abonament",
   "app.settings.workspace.trialBadge": "PROBĂ",
   "app.settings.workspace.priceMonthly": "{amount} €",
   "app.settings.workspace.seatPricing": {
@@ -1446,10 +1457,9 @@ export const ro: Dictionary = {
     few: "pe lună · {count} licențe incluse",
     other: "pe lună · {count} de licențe incluse",
   },
-  "app.settings.workspace.billingNoDue":
-    "Nicio scadență pe această instanță — facturarea este gestionată în oferta cloud.",
-  "app.settings.workspace.cloudOnly": "Disponibil în oferta cloud",
-  "app.settings.workspace.changePlan": "Schimbați planul",
+  "app.settings.workspace.billingNoDue": "Nicio scadență în acest moment.",
+  "app.settings.workspace.requiresControlPlane": "Necesită un control plane",
+  "app.settings.workspace.changeSubscription": "Modificați abonamentul",
   "app.settings.workspace.manageSeats": "Gestionați licențele",
   "app.settings.workspace.usageTitle": "Consumul lunii",
   "app.settings.workspace.quotaSeats": "Licențe",
@@ -1461,8 +1471,7 @@ export const ro: Dictionary = {
   "app.settings.workspace.colNumber": "Număr",
   "app.settings.workspace.colPeriod": "Perioadă",
   "app.settings.workspace.colAmount": "Sumă",
-  "app.settings.workspace.invoicesEmpty":
-    "Nicio factură — facturile vor apărea aici în oferta cloud.",
+  "app.settings.workspace.invoicesEmpty": "Nicio factură deocamdată.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Salvat",
@@ -1536,21 +1545,21 @@ export const ro: Dictionary = {
   "app.settings.rules.typeFile": "Fișier",
   "app.settings.rules.typeSelectLong": "Listă derulantă",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Il vivait dans lib/rule-labels.ts, en français, tables et phrases
-     comprises : l'écran des automatisations restait donc français quelle que
-     soit la langue du workspace. Les statuts, priorités et canaux ne sont PAS
-     repris ici — ils viennent des tables partagées de lib/format.ts, celles de
-     l'inbox et de ses filtres. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     It lived in lib/rule-labels.ts, in French, tables and sentences included:
+     the automations screen therefore stayed French whatever the workspace
+     language. Statuses, priorities and channels are NOT repeated here — they
+     come from the shared tables in lib/format.ts, the ones used by the inbox
+     and its filters. */
 
-  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Texte” is typeText, above. */
   "app.settings.rules.typeSelect": "Listă",
   "app.settings.rules.typeMultiSelect": "Selecție multiplă",
   "app.settings.rules.typeDate": "Dată",
   "app.settings.rules.typeNumber": "Număr",
   "app.settings.rules.typeCheckbox": "Casetă de bifat",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Eveniment",
   "app.settings.rules.condFieldStatus": "Stare",
   "app.settings.rules.condFieldPriority": "Prioritate",
@@ -1564,9 +1573,10 @@ export const ro: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Ore de la creare",
   "app.settings.rules.condFieldHoursUpdated": "Ore de la actualizare",
 
-  /* Opérateurs. « est vide » / « n'est pas vide » deviennent « fără valoare » /
-     « cu valoare » : l'adjectif roumain s'accorderait avec le nom du champ, et
-     les douze champs ne sont ni du même genre ni du même nombre. */
+  /* Operators. “is empty” / “is not empty” become “fără valoare” /
+     “cu valoare”: the Romanian adjective would agree with the field's noun,
+     and the twelve fields are neither of the same gender nor of the same
+     number. */
   "app.settings.rules.opIs": "este",
   "app.settings.rules.opIsNot": "nu este",
   "app.settings.rules.opContains": "conține",
@@ -1576,12 +1586,12 @@ export const ro: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Tichet creat",
   "app.settings.rules.eventTicketUpdated": "Tichet actualizat",
   "app.settings.rules.eventMessageCreated": "Mesaj primit",
 
-  /* Actions, telles que le menu du builder les nomme. */
+  /* Actions, as the builder's menu names them. */
   "app.settings.rules.actSetStatus": "Definiți starea",
   "app.settings.rules.actSetPriority": "Definiți prioritatea",
   "app.settings.rules.actAssignUser": "Atribuiți unui agent",
@@ -1590,9 +1600,9 @@ export const ro: Dictionary = {
   "app.settings.rules.actAddTags": "Adăugați etichete",
   "app.settings.rules.actEmailContact": "Trimiteți un email contactului",
 
-  /* Résumé d'une règle, en une ligne de liste. Les bribes sont au présent de la
-     3ᵉ personne — « trece », « atribuie », « adaugă » — comme les descriptions
-     de modèles déjà traduites (templateCloseDesc, templateEscalationDesc). */
+  /* One-line rule summary. The fragments are in the third-person present —
+     “trece”, “atribuie”, “adaugă” — like the template descriptions already
+     translated (templateCloseDesc, templateEscalationDesc). */
   "app.settings.rules.summaryPattern": "Dacă {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "și",
   "app.settings.rules.summaryAlways": "întotdeauna",
@@ -1605,24 +1615,25 @@ export const ro: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "neatribuit",
   "app.settings.rules.summaryAssigned": "atribuit",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : voir
-     formatDurationTokens, ils ne se traduisent pas. La bribe se colle à la
-     condition qui précède : « Stare = În așteptare de 2 j ». */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): see
+     formatDurationTokens, they are not translated. The fragment butts against
+     the preceding condition: “Stare = În așteptare de 2 j”. */
   "app.settings.rules.summarySince": "de {duration}",
   "app.settings.rules.summarySetStatus": "trece în {value}",
-  /* Les priorités roumaines sont des adjectifs féminins qui s'accordent avec
-     « prioritate » : « prioritate Urgentă » se lit tel quel. */
+  /* Romanian priorities are feminine adjectives agreeing with
+     “prioritate”: “prioritate Urgentă” reads as it is. */
   "app.settings.rules.summarySetPriority": "prioritate {value}",
   "app.settings.rules.summaryAssignTeam": "atribuie echipei {team}",
-  /* Repli quand l'équipe n'est plus connue : « o echipă » redoublerait le
-     « echipei » déjà porté par le gabarit, au mauvais cas de surcroît. */
+  /* Fallback when the team is no longer known: “o echipă” would double the
+     “echipei” already carried by the template, and in the wrong case at
+     that. */
   "app.settings.rules.summaryAnyTeam": "(nespecificată)",
   "app.settings.rules.summaryAssignUser": "atribuie unui agent",
   "app.settings.rules.summaryRoundRobin": "atribuie următorului agent",
   "app.settings.rules.summaryAddTags": "adaugă {tags}",
   "app.settings.rules.summaryEmailContact": "trimite un email contactului",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Stare → {value}",
   "app.settings.rules.macroSummaryPriority": "Prioritate → {value}",
   "app.settings.rules.macroSummaryTeam": "Echipă → {team}",
@@ -1735,7 +1746,7 @@ export const ro: Dictionary = {
   "app.settings.dev.auditTitle": "Audit log",
   "app.settings.dev.auditSubtitle":
     "Jurnal complet al acțiunilor de administrare. Retenție 2 ani.",
-  "app.settings.dev.auditLockedTitle": "Auditul log este disponibil doar în planul Enterprise",
+  "app.settings.dev.auditLockedTitle": "Auditul log face parte din Enterprise Edition",
   "app.settings.dev.auditLockedText":
     "Păstrați urma fiecărei acțiuni de administrare timp de 2 ani, cu diferențe înainte/după și export CSV.",
   "app.settings.dev.filterActorAll": "Autor: toți",
@@ -1758,9 +1769,9 @@ export const ro: Dictionary = {
   "app.settings.dev.actorContact": "Contact",
   "app.settings.dev.exportUnauthorized": "Neautorizat",
   "app.settings.dev.exportForbidden": "Rezervat rolurilor Owner și Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Auditul log este disponibil doar în planul Enterprise.",
+  "app.settings.dev.exportEnterpriseOnly": "Auditul log face parte din Enterprise Edition.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Spațiu de lucru",
   "app.settingsNav.itemGeneral": "General",
   "app.settingsNav.itemTeam": "Agenți și echipe",
@@ -1795,7 +1806,7 @@ export const ro: Dictionary = {
   "app.settingsNav.copied": "Copiat",
   "app.settingsNav.copy": "Copiați",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nou",
   "app.status.open": "Deschis",
   "app.status.waiting": "În așteptare",
@@ -1816,7 +1827,7 @@ export const ro: Dictionary = {
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Tichetele mele",
   "app.views.unassigned": "Neatribuite",
   "app.views.breaching": "În curând în întârziere",
@@ -1824,7 +1835,7 @@ export const ro: Dictionary = {
   "app.views.urgent": "Urgente în această săptămână",
   "app.views.escalation": "Escaladări",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Redenumiți",
   "app.kb.renameSave": "Salvați",
   "app.kb.deleteCategory": "Ștergeți categoria",
@@ -1835,7 +1846,7 @@ export const ro: Dictionary = {
     other: "Această categorie mai conține {count} de elemente. Mutați-le înainte de a o șterge.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "Email",
   "app.login.emailPlaceholder": "dvs@companie.ro",
   "app.login.password": "Parolă",
@@ -1864,11 +1875,11 @@ export const ro: Dictionary = {
   "app.login.providerMissing": "Acest furnizor nu este configurat pe această instanță.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Tout cet écran était en français dans le code : le premier écran qu'un
-     nouveau workspace rencontre. Quatre libellés viennent d'ailleurs et ne sont
-     pas repris ici : le titre du portail dans son propre aperçu (home.title), le
-     nom du workspace et la couleur d'accent (les mêmes contrôles qu'en ST-01),
-     et les rôles Owner / Admin / Agent / Viewer, qui ne se traduisent pas. */
+  /* This whole screen was French in the code: the first screen a new
+     workspace meets. Four labels come from elsewhere and are not repeated
+     here: the portal title in its own preview (home.title), the workspace name
+     and the accent colour (the same controls as in ST-01), and the Owner /
+     Admin / Agent / Viewer roles, which are not translated. */
 
   "app.onboarding.asideTitle": "Configurare",
   "app.onboarding.asideFooter":
@@ -1907,7 +1918,7 @@ export const ro: Dictionary = {
 
   "app.onboarding.teamTitle": "Invitați echipa dvs.",
   "app.onboarding.teamBody":
-    "Invitați agenții acum sau partajați linkul de invitație. Licențele Viewer sunt gratuite.",
+    "Invitați agenții acum sau partajați linkul de invitație. Rolurile Viewer nu ocupă licențe.",
   "app.onboarding.invitePlaceholder": "coleg@companie.ro",
   "app.onboarding.addRow": "+ Adăugați un rând",
   "app.onboarding.sendInvites": "Trimiteți invitațiile",
@@ -1916,8 +1927,8 @@ export const ro: Dictionary = {
   "app.onboarding.testBody":
     "Verificați întregul lanț înainte de a deschide serviciul clienților dvs.",
   "app.onboarding.readyTitle": "Spațiul dvs. de lucru este pregătit",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody":
     "Trimiteți un email la {address} pentru a crea un tichet de test.",
   "app.onboarding.openInbox": "Deschideți inboxul",
@@ -1928,32 +1939,43 @@ export const ro: Dictionary = {
   "app.onboarding.checklistTicket": "Primul tichet primit",
   "app.onboarding.checklistSla": "Politică SLA verificată",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
-     « toate / cel puțin una » : le roumain ne peut pas accorder son verbe avec
-     les deux, le sélecteur passe donc en fin de phrase, après le deux-points. */
+  /* ST-05 — the condition group header. The sentence wraps a
+     “toate / cel puțin una” selector: Romanian cannot agree its verb with
+     both, so the selector moves to the end of the sentence, after the
+     colon. */
   "app.settings.rules.matchIf": "DACĂ",
   "app.settings.rules.matchAllPattern": "Condiții care trebuie îndeplinite: {mode}",
   "app.settings.rules.matchAnyPattern": "Condiții care trebuie îndeplinite: {mode}",
   "app.settings.rules.matchAll": "toate",
   "app.settings.rules.matchAny": "cel puțin una",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
-  "app.settings.workspace.planFree": "Planul Free",
-  "app.settings.workspace.planTeam": "Planul Team",
-  "app.settings.workspace.planEnterprise": "Planul Enterprise",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "ATUNCI",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Testați pe un tichet existent",
+  "app.settings.rules.testRunning": "Se testează…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Eliminați",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Corpul emailului — variabile: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française ; seul l'affichage est traduit. */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string; only the display is translated. */
   "app.ticket.typeQuestion": "Întrebare",
   "app.ticket.typeIncident": "Incident",
   "app.ticket.typeTask": "Sarcină",
   "app.ticket.typeOther": "Altele",
 
-  /* AG-09 — export CSV des rapports. « s » est aussi l'abréviation roumaine de
-     la seconde. */
+  /* AG-09 — CSV export of the reports. “s” is the Romanian abbreviation for
+     the second too. */
   "app.reports.csvIndicator": "Indicator",
   "app.reports.csvCurrentPeriod": "Perioada curentă",
   "app.reports.csvPreviousPeriod": "Perioada anterioară",
@@ -1968,8 +1990,8 @@ export const ro: Dictionary = {
   "app.reports.csvResolvedShort": "Rezolvate",
   "app.reports.csvAgent": "Agent",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Articol nou",
   "app.kb.fromTicketSymptomHeading": "Simptom",
   "app.kb.fromTicketSymptomPlaceholder": "[Descrieți ce constată clientul.]",
@@ -1979,8 +2001,8 @@ export const ro: Dictionary = {
   "app.kb.fromTicketMissingRequest": "solicitarea inițială a clientului",
   "app.kb.fromTicketMissingAnswer": "răspunsul agentului",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Procedură pas cu pas",
   "app.kb.tplProcedureHint": "O succesiune de pași numerotați, cu rezultatul așteptat.",
   "app.kb.tplProcedureTitle": "Cum să [efectuați acțiunea]",

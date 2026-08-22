@@ -11,10 +11,10 @@ import { activateFromSession } from "../actions";
 import { AcceptInviteForm } from "./accept-form";
 
 /**
- * Acceptation d'invitation (ST-02) : le lien reçu par email atterrit ici, sur
- * le sous-domaine du workspace. Sans session : formulaire mot de passe (+ OAuth,
- * qui revient sur cette page une fois connecté). Avec session sur la bonne
- * adresse : activation immédiate.
+ * Accepting an invitation (ST-02): the link received by email lands here, on
+ * the workspace subdomain. Without a session: password form (+ OAuth, which
+ * comes back to this page once signed in). With a session on the right
+ * address: immediate activation.
  */
 export default async function InvitePage({
   params,
@@ -57,7 +57,7 @@ export default async function InvitePage({
 
   if (invited.status === "active") redirect("/login?accepted=1");
 
-  // Session déjà ouverte (retour d'OAuth) sur la bonne adresse : activer et entrer.
+  // Session already open (returning from OAuth) on the right address: activate and enter.
   const session = await auth.api.getSession({ headers: await headers() });
   if (session && session.user.email === invited.email) {
     await activateFromSession(token);

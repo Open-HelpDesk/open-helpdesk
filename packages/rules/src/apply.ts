@@ -22,8 +22,13 @@ function renderTemplate(template: string, ticket: TicketRow, contactName: string
 }
 
 /**
- * Applique les actions d'une règle à un ticket, journalise dans automation_runs et
- * pose un événement système dans le fil (visible en AG-04). Retourne le ticket mis à jour.
+ * Applies a rule's actions to a ticket, logs into automation_runs and posts a system
+ * event in the thread (visible in AG-04). Returns the updated ticket.
+ *
+ * The `applied` labels and the system event are stored as written here, and they are
+ * displayed as such (rule execution journal in ST-05, ticket thread). They stay in
+ * English: a package has no access to the i18n dictionaries (apps/web/src/i18n), and
+ * a label frozen at write time could not follow a later change of language anyway.
  */
 export async function applyActions(
   ticket: TicketRow,
@@ -39,22 +44,22 @@ export async function applyActions(
         patch.status = action.value;
         if (action.value === "resolved") patch.resolvedAt = new Date();
         if (action.value === "closed") patch.closedAt = new Date();
-        applied.push(`statut → ${action.value}`);
+        applied.push(`status → ${action.value}`);
         break;
       case "set_priority":
         patch.priority = action.value;
-        applied.push(`priorité → ${action.value}`);
+        applied.push(`priority → ${action.value}`);
         break;
       case "assign_user":
         patch.assigneeId = action.value;
-        applied.push("assigné");
+        applied.push("assigned");
         break;
       case "assign_team":
         patch.teamId = action.value;
-        applied.push("équipe");
+        applied.push("team");
         break;
       case "assign_round_robin": {
-        // Agent actif de l'équipe du ticket ayant le moins de tickets ouverts.
+        // Active agent of the ticket's team with the fewest open tickets.
         const teamId = patch.teamId ?? ticket.teamId;
         if (!teamId) break;
         const members = await db
@@ -80,7 +85,7 @@ export async function applyActions(
         );
         loads.sort((a, b) => a.open - b.open);
         patch.assigneeId = loads[0]!.userId;
-        applied.push("assigné (round-robin)");
+        applied.push("assigned (round-robin)");
         break;
       }
       case "add_tags":
@@ -103,7 +108,7 @@ export async function applyActions(
             });
             applied.push(`email → ${requester.email}`);
           } catch (err) {
-            console.error(`[rules] échec email_contact (règle ${rule.name}) :`, err);
+            console.error(`[rules] email_contact failed (rule ${rule.name}):`, err);
           }
         }
         break;
@@ -131,7 +136,7 @@ export async function applyActions(
     ticketId: ticket.id,
     kind: "system_event",
     authorType: "system",
-    bodyText: `Règle « ${rule.name} » : ${applied.join(" · ") || "aucune action"}`,
+    bodyText: `Rule “${rule.name}”: ${applied.join(" · ") || "no action"}`,
   });
 
   if (patch.status === "resolved") {

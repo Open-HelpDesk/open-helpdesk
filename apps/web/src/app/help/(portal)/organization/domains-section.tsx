@@ -1,7 +1,7 @@
 import { DOMAIN_VERIFICATION_TXT_PREFIX } from "@openhelpdesk/config";
 import type { OrgMemberRow } from "@/lib/portal-data";
 import { getT } from "@/i18n/server";
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 import { addOrgDomain, verifyOrgDomain } from "./actions";
 import { CopyButton } from "./copy-button";
 
@@ -20,7 +20,7 @@ const ADD_ERRORS: Record<string, MessageKey> = {
   exists: "domains.errorExists",
 };
 
-/** PT-08 · onglet Domaines — vérification DNS TXT fonctionnelle. */
+/** PT-08 · Domains tab — working DNS TXT verification. */
 export async function DomainsSection({
   domains,
   members,
@@ -94,8 +94,8 @@ export async function DomainsSection({
                     className="text-[13.5px] leading-[1.55]"
                     style={{ color: "var(--ink-2)", textWrap: "pretty" }}
                   >
-                    {/* Le domaine est en chasse fixe : la phrase est découpée
-                        autour de lui pour ne pas figer l'ordre des mots. */}
+                    {/* The domain is in monospace: the sentence is split
+                        around it so as not to freeze the word order. */}
                     {txtBefore}
                     <span className="font-mono">{d.domain}</span>
                     {txtAfter}
@@ -143,7 +143,7 @@ export async function DomainsSection({
           );
         })}
 
-        {/* + Ajouter un domaine */}
+        {/* + Add a domain */}
         <details
           className="pt-acc pt-dashed rounded-[14px]"
           open={Boolean(error)}

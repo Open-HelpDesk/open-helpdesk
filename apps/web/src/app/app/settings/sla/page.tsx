@@ -39,9 +39,10 @@ type Targets = Record<
 > & { reminderMin?: number };
 
 /**
- * Rend une phrase traduite dont plusieurs segments sont mis en valeur : la phrase
- * reste une seule clé, les segments à passer en gras y sont encadrés d'astérisques
- * (le traducteur les déplace avec les mots, l'ordre change d'une langue à l'autre).
+ * Renders a translated sentence several segments of which are emphasized: the
+ * sentence stays a single key, the segments to be bolded are wrapped in
+ * asterisks in it (the translator moves them along with the words, the order
+ * changes from one language to another).
  */
 function emphasize(sentence: string) {
   return sentence
@@ -49,7 +50,7 @@ function emphasize(sentence: string) {
     .map((part, index) => (index % 2 === 1 ? <strong key={index}>{part}</strong> : part));
 }
 
-/** Champ de cible : même boîte que le design (h32, bordée, tabular-nums). */
+/** Target field: same box as the design (h32, bordered, tabular-nums). */
 function TargetInput({ name, value }: { name: string; value?: number }) {
   return (
     <input
@@ -101,10 +102,10 @@ function SelectBox({
 }
 
 /**
- * ST-07 — SLA & horaires ouvrés (1000 px), fidèle à la maquette :
- * onglet Politiques = bandeau bleu + liste unique glissable + cibles éditables de la
- * politique sélectionnée à côté de l'encart « Exemple calculé » (réellement calculé) ;
- * onglet Horaires = chips calendriers, semaine à interrupteurs, jours fériés en chips.
+ * ST-07 — SLA & business hours (1000 px), faithful to the mockup:
+ * Policies tab = blue banner + single draggable list + editable targets of the
+ * selected policy next to the "Worked example" callout (actually computed);
+ * Hours tab = calendar chips, week with switches, holidays as chips.
  */
 export default async function SlaPage({
   searchParams,
@@ -154,7 +155,7 @@ export default async function SlaPage({
     [120, t("app.settings.sla.reminderHours", { count: 2 })],
   ];
 
-  /* ---------- Exemple calculé : vendredi 17 h de la semaine en cours ---------- */
+  /* ---------- Worked example: Friday 5 pm of the current week ---------- */
   let example: { first: string; resolve: string } | null = null;
   if (selected) {
     const targets = (selected.targets ?? {}) as Targets;
@@ -169,8 +170,8 @@ export default async function SlaPage({
       : null;
     if (urgent?.firstReplyMin || urgent?.resolveMin) {
       const tz = calendar?.timezone ?? tenant.timezone;
-      // Repère du design : le dernier vendredi 17 h, heure murale du calendrier
-      // (zonedTimeToInstant gère le décalage été/hiver).
+      // Design reference point: the last Friday at 5 pm, wall-clock time of the
+      // calendar (zonedTimeToInstant handles the summer/winter offset).
       const today = zonedParts(new Date(), tz);
       const noon = new Date(Date.UTC(today.year, today.month - 1, today.day, 12));
       const daysSinceFriday = (noon.getUTCDay() + 2) % 7;
@@ -265,7 +266,7 @@ export default async function SlaPage({
 
       {activeTab === "policies" ? (
         <div className="flex flex-col gap-4">
-          {/* Bandeau d'ordre d'évaluation */}
+          {/* Evaluation order banner */}
           <div
             style={{
               display: "flex",
@@ -300,8 +301,8 @@ export default async function SlaPage({
 
           {selected && (
             <div className="flex flex-col gap-4">
-              {/* Titre des cibles + édition du nom/conditions. Le drawer porte son
-                  propre <form> : il reste hors du formulaire des cibles. */}
+              {/* Targets title + name/conditions editing. The drawer carries
+                  its own <form>: it stays outside the targets form. */}
               <div className="flex flex-wrap items-center gap-2">
                 <div style={{ fontSize: 14.5, fontWeight: 600 }}>
                   {t("app.settings.sla.targetsFor", { name: selected.name })}
@@ -387,7 +388,7 @@ export default async function SlaPage({
                 </Drawer>
               </div>
 
-              {/* Cibles de la politique sélectionnée */}
+              {/* Targets of the selected policy */}
               <form action={saveSlaTargets} className="flex flex-col gap-2.5">
                 <input type="hidden" name="policyId" value={selected.id} />
                 <div
@@ -504,7 +505,7 @@ export default async function SlaPage({
                     </SelectBox>
                   </label>
                 </div>
-                {/* Exemple calculé — sous la grille de cibles, pleine largeur */}
+                {/* Worked example — under the targets grid, full width */}
                 <div
                   style={{
                     border: "1px solid var(--acc-b)",
@@ -554,7 +555,7 @@ export default async function SlaPage({
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {/* Chips calendriers */}
+          {/* Calendar chips */}
           <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
             {calendars.map((c) => {
               const active = selectedCalendar?.id === c.id;
@@ -707,7 +708,7 @@ export default async function SlaPage({
                 />
               </form>
 
-              {/* Jours fériés */}
+              {/* Holidays */}
               <div className="flex flex-col gap-2.5">
                 <div style={{ fontSize: 14.5, fontWeight: 600 }}>
                   {t("app.settings.sla.holidays")}

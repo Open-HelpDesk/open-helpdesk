@@ -1,13 +1,17 @@
 /**
- * Réception IMAP (ST-03, adresses « kind: imap ») — le poller relève les messages non
- * lus de chaque boîte connectée, les normalise en InboundEmail et les ingère.
+ * IMAP reception (ST-03, "kind: imap" addresses) — the poller picks up the unread
+ * messages of every connected mailbox, normalizes them into InboundEmail and ingests them.
  *
- * L'orchestration métier (triggers, SLA) reste chez l'appelant : ce module ne peut pas
- * importer @openhelpdesk/rules (qui importe déjà ce paquet). Le worker rappelle
- * onTicketCreated / onContactMessage à partir des résultats retournés.
+ * Business orchestration (triggers, SLA) stays with the caller: this module cannot
+ * import @openhelpdesk/rules (which already imports this package). The worker calls
+ * onTicketCreated / onContactMessage back from the results returned.
  *
- * imapflow et mailparser sont importés paresseusement : l'app web n'embarque jamais
- * ces dépendances sur ses chemins de rendu.
+ * imapflow and mailparser are imported lazily: the web app never bundles these
+ * dependencies on its rendering paths.
+ *
+ * The `detail` and `error` strings below reach the user (the "Test" button of a
+ * mailbox, the ST-01 diagnostics card, the mailbox sync error). They stay in
+ * English: a package has no access to the i18n dictionaries (apps/web/src/i18n).
  */
 import { db, mailboxes } from "@openhelpdesk/db";
 import { and, eq, isNotNull } from "drizzle-orm";
@@ -60,7 +64,7 @@ async function connect(config: ImapConfig) {
   return client;
 }
 
-/** Test de connexion (bouton « Tester » de ST-03) : ouvre INBOX et compte les messages. */
+/** Connection test (the "Test" button of ST-03): opens INBOX and counts the messages. */
 export async function verifyImapMailbox(
   row: MailboxRow,
 ): Promise<{ ok: boolean; detail: string }> {
@@ -68,7 +72,7 @@ export async function verifyImapMailbox(
   if (!config) {
     return {
       ok: false,
-      detail: "Connexion incomplète : hôte, identifiant et mot de passe sont requis.",
+      detail: "Incomplete connection: host, username and password are all required.",
     };
   }
   try {
@@ -77,14 +81,14 @@ export async function verifyImapMailbox(
     await client.logout();
     return {
       ok: true,
-      detail: `Connexion établie sur ${config.host}:${config.port} — ${mailbox.exists} message(s) dans INBOX.`,
+      detail: `Connection established on ${config.host}:${config.port} — ${mailbox.exists} message(s) in INBOX.`,
     };
   } catch (err) {
     return { ok: false, detail: err instanceof Error ? err.message : String(err) };
   }
 }
 
-/** MIME brut → InboundEmail normalisé. Le routage force l'adresse de la boîte. */
+/** Raw MIME → normalized InboundEmail. Routing forces the mailbox address. */
 async function parseSource(source: Buffer, mailboxAddress: string): Promise<InboundEmail | null> {
   const { simpleParser } = await import("mailparser");
   const parsed = await simpleParser(source);
@@ -95,7 +99,7 @@ async function parseSource(source: Buffer, mailboxAddress: string): Promise<Inbo
     : parsed.references
       ? [parsed.references]
       : [];
-  // En-têtes en minuscules pour la détection des messages automatiques.
+  // Lowercased headers for the detection of automatic messages.
   const headers: Record<string, string> = {};
   for (const { key, line } of parsed.headerLines ?? []) {
     const colon = line.indexOf(":");
@@ -103,8 +107,8 @@ async function parseSource(source: Buffer, mailboxAddress: string): Promise<Inbo
   }
 
   return {
-    // L'email a atterri dans CETTE boîte : c'est elle qui route, pas l'en-tête To
-    // (listes de diffusion, Cci et alias réécrivent souvent le To).
+    // The email landed in THIS mailbox: that is what routes, not the To header
+    // (mailing lists, Bcc and aliases often rewrite the To).
     to: [mailboxAddress],
     from: { address: fromAddress, name: parsed.from?.value?.[0]?.name || undefined },
     subject: parsed.subject ?? "",
@@ -117,19 +121,19 @@ async function parseSource(source: Buffer, mailboxAddress: string): Promise<Inbo
   };
 }
 
-/** Relève une boîte : messages non lus → ingestion → marqués lus. */
+/** Picks up one mailbox: unread messages → ingestion → marked as read. */
 export async function pollImapMailbox(row: MailboxRow): Promise<ImapPollResult> {
   const base: ImapPollResult = { mailboxId: row.id, address: row.address, fetched: 0, results: [] };
   const config = imapConfigOf(row);
   if (!config) {
-    return { ...base, error: "Connexion incomplète (hôte, identifiant ou mot de passe manquant)." };
+    return { ...base, error: "Incomplete connection (missing host, username or password)." };
   }
 
   try {
     const client = await connect(config);
     const lock = await client.getMailboxLock("INBOX");
     try {
-      // Collecte d'abord (pas d'autre commande pendant l'itération du fetch).
+      // Collect first (no other command while iterating over the fetch).
       const messages: { uid: number; source: Buffer }[] = [];
       for await (const message of client.fetch({ seen: false }, { source: true, uid: true })) {
         if (message.source) messages.push({ uid: message.uid, source: message.source });
@@ -141,7 +145,7 @@ export async function pollImapMailbox(row: MailboxRow): Promise<ImapPollResult> 
         if (inbound) {
           base.results.push(await ingestEmail(inbound));
         }
-        // Marqué lu même si inexploitable : on ne retraite pas indéfiniment un message vide.
+        // Marked as read even when unusable: we do not reprocess an empty message forever.
         await client.messageFlagsAdd({ uid: String(message.uid) }, ["\\Seen"], { uid: true });
       }
     } finally {
@@ -164,7 +168,7 @@ export async function pollImapMailbox(row: MailboxRow): Promise<ImapPollResult> 
   }
 }
 
-/** Toutes les boîtes IMAP configurées de l'instance (appelé par le worker). */
+/** Every IMAP mailbox configured on the instance (called by the worker). */
 export async function pollAllImapMailboxes(): Promise<ImapPollResult[]> {
   const rows = await db
     .select()

@@ -1,13 +1,13 @@
 /**
- * Diagnostic de l'installation (ST-01, carte « Santé de l'installation ») :
- * six sondes bornées à 5 s chacune, exécutées au rendu serveur de la page
- * Général quand `?diag=1`. Rien n'est persisté — le résultat affiché EST le
- * dernier run. Généralise le contrat du test email de ST-03
+ * Installation diagnostics (ST-01, "Installation health" card): six probes
+ * bounded to 5 s each, run at the server render of the General page when
+ * `?diag=1`. Nothing is persisted — the displayed result IS the last run.
+ * Generalises the contract of the ST-03 email test
  * (`MailTransport.verify() → { ok, detail }`).
  *
- * Effets de bord assumés et affichés : la sonde stockage écrit puis supprime
- * un objet témoin ; les sondes IMAP et Redis ouvrent puis ferment une
- * connexion. Aucune n'envoie d'email ni ne crée de ligne en base.
+ * Side effects accepted and displayed: the storage probe writes then deletes a
+ * witness object; the IMAP and Redis probes open then close a connection. None
+ * of them sends an email or creates a row in the database.
  */
 import { and, eq, sql } from "drizzle-orm";
 import { db, mailboxes } from "@openhelpdesk/db";
@@ -24,7 +24,7 @@ type ProbeOutcome = { status: ProbeStatus; detail: string };
 
 const PROBE_TIMEOUT_MS = 5_000;
 
-/** Âge au-delà duquel le dernier tick sla-timers (60 s) signale un worker arrêté. */
+/** Age beyond which the last sla-timers tick (60 s) signals a stopped worker. */
 const WORKER_STALE_MS = 3 * 60_000;
 
 async function withTimeout<T>(work: Promise<T>): Promise<T> {
@@ -40,8 +40,8 @@ async function withTimeout<T>(work: Promise<T>): Promise<T> {
 }
 
 function errorDetail(err: unknown): string {
-  // Les AggregateError réseau (ECONNREFUSED) ont souvent un message vide :
-  // on retombe sur le code puis le nom pour ne jamais afficher une ligne muette.
+  // Network AggregateErrors (ECONNREFUSED) often have an empty message: we fall
+  // back on the code then the name so as never to display a mute row.
   if (err instanceof Error) {
     const code = (err as NodeJS.ErrnoException).code;
     return err.message || code || err.name;
@@ -49,13 +49,13 @@ function errorDetail(err: unknown): string {
   return String(err);
 }
 
-/** select 1 — si la base est morte, la page entière échoue avant cette carte. */
+/** select 1 — if the database is dead, the whole page fails before this card. */
 async function probeDb(t: Translate): Promise<ProbeOutcome> {
   await db.execute(sql`select 1`);
   return { status: "ok", detail: t("app.settings.workspace.diagDetailOk") };
 }
 
-/** Cascade tenant → instance → console : verify() du transport résolu. */
+/** Cascade tenant → instance → console: verify() of the resolved transport. */
 async function probeMailOut(t: Translate, tenantId: string): Promise<ProbeOutcome> {
   const config = await resolveMailConfig(tenantId);
   if (config.source === "default") {
@@ -68,7 +68,7 @@ async function probeMailOut(t: Translate, tenantId: string): Promise<ProbeOutcom
   return { status: result.ok ? "ok" : "fail", detail: result.detail };
 }
 
-/** Secret du webhook entrant + connexion réelle de chaque boîte IMAP du tenant. */
+/** Inbound webhook secret + real connection of every IMAP mailbox of the tenant. */
 async function probeMailIn(t: Translate, tenantId: string): Promise<ProbeOutcome> {
   const secret = process.env.MAIL_INGRESS_SECRET;
   const devSecret = !secret || secret === "dev-ingress-secret";
@@ -81,7 +81,7 @@ async function probeMailIn(t: Translate, tenantId: string): Promise<ProbeOutcome
   for (const row of rows) {
     const result = await verifyImapMailbox(row);
     if (!result.ok) {
-      return { status: "fail", detail: `${row.address} : ${result.detail}` };
+      return { status: "fail", detail: `${row.address}: ${result.detail}` };
     }
   }
   if (devSecret) {
@@ -96,17 +96,17 @@ async function probeMailIn(t: Translate, tenantId: string): Promise<ProbeOutcome
   };
 }
 
-/** HeadBucket + objet témoin écrit puis supprimé (voir probeStorage). */
+/** HeadBucket + witness object written then deleted (see probeStorage). */
 async function probeStore(t: Translate): Promise<ProbeOutcome> {
   const { bucket } = await probeStorage();
   return { status: "ok", detail: t("app.settings.workspace.diagStorageOk", { bucket }) };
 }
 
 /**
- * Redis vivant ≠ worker vivant : après le ping, on lit l'âge du dernier job
- * `sla-timers` terminé (tick de 60 s côté worker). Miroir des imports
- * paresseux de packages/mail/src/outbox.ts — sans REDIS_URL, le web dégrade
- * en envoi direct et les minuteurs SLA ne tournent pas : warn, pas fail.
+ * Redis alive ≠ worker alive: after the ping, we read the age of the last
+ * completed `sla-timers` job (60 s tick on the worker side). Mirrors the lazy
+ * imports of packages/mail/src/outbox.ts — without REDIS_URL, the web degrades
+ * to direct sending and the SLA timers do not run: warn, not fail.
  */
 async function probeQueue(t: Translate): Promise<ProbeOutcome> {
   const url = process.env.REDIS_URL;
@@ -146,7 +146,7 @@ async function probeQueue(t: Translate): Promise<ProbeOutcome> {
   }
 }
 
-/** Provenance de la clé de chiffrement des secrets au repos (packages/crypto). */
+/** Provenance of the encryption key for secrets at rest (packages/crypto). */
 async function probeCrypto(t: Translate): Promise<ProbeOutcome> {
   const source = encryptionKeySource();
   if (source === "explicit") {
@@ -158,7 +158,7 @@ async function probeCrypto(t: Translate): Promise<ProbeOutcome> {
   return { status: "fail", detail: t("app.settings.workspace.diagCryptoDev") };
 }
 
-/** Les six sondes, chronométrées, en parallèle — un échec n'empêche pas les autres. */
+/** The six probes, timed, in parallel — one failure does not prevent the others. */
 export async function runDiagnostics(tenantId: string, t: Translate): Promise<ProbeResult[]> {
   const probes: Array<[ProbeId, () => Promise<ProbeOutcome>]> = [
     ["db", () => probeDb(t)],

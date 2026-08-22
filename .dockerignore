@@ -1,4 +1,4 @@
-# Contexte de build Docker en liste blanche : seul le produit entre dans l'image.
+# Allow-listed Docker build context: only the product goes into the image.
 *
 !apps
 !packages
@@ -10,7 +10,7 @@
 !turbo.json
 !tsconfig.base.json
 !.env.example
-# … et jamais les artefacts de build, même sous les dossiers autorisés.
+# … and never the build artefacts, not even under the allowed directories.
 **/node_modules
 **/.next
 **/.turbo

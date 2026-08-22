@@ -1,43 +1,41 @@
 /**
- * Langues du logiciel — specs/01 § 4 (tenants.locale).
+ * Languages of the software — one per workspace (tenants.locale).
  *
- * Une langue par tenant : tout le monde dans un espace de travail voit la même,
- * agents comme clients. Il n'y a donc ni préférence par utilisateur, ni préfixe
- * d'URL, ni négociation de contenu — la seule source est `tenants.locale`,
- * réglée dans ST-01.
+ * One language per tenant: everyone in a workspace sees the same one, agents and
+ * customers alike. So there is no per-user preference, no URL prefix and no
+ * content negotiation — the only source is `tenants.locale`, set in ST-01.
  *
- * `tag` est l'étiquette BCP-47 passée aux API `Intl` : elle porte les
- * conventions de date, de nombre et de pluriel. `dir` est déclaré dès
- * maintenant pour que la mise en page n'ait pas à être reprise le jour où une
- * langue écrite de droite à gauche s'ajoute ; aucune des langues actuelles n'en
- * fait usage.
+ * `tag` is the BCP-47 label passed to the `Intl` APIs: it carries the date,
+ * number and plural conventions. `dir` is declared right now so that the layout
+ * will not have to be reworked the day a language written from right to left is
+ * added; none of the current languages makes use of it.
  */
 
 export type LocaleCode =
-  // Les 24 langues officielles de l'Union européenne…
+  // The 24 official languages of the European Union…
   | "bg" | "cs" | "da" | "de" | "el" | "en" | "es" | "et" | "fi" | "fr"
   | "ga" | "hr" | "hu" | "it" | "lt" | "lv" | "mt" | "nl" | "pl" | "pt"
   | "ro" | "sk" | "sl" | "sv"
-  // …plus le norvégien, hors UE, conservé depuis la première livraison.
+  // …plus Norwegian, outside the EU, kept since the first release.
   | "nb";
 
 export type LocaleDefinition = {
   code: LocaleCode;
-  /** Étiquette BCP-47 pour Intl.* */
+  /** BCP-47 label for Intl.* */
   tag: string;
-  /** Nom de la langue dans cette langue — un menu de langues ne se traduit pas. */
+  /** Name of the language in that language — a language menu is not translated. */
   nativeName: string;
   dir: "ltr" | "rtl";
 };
 
 /**
- * Les 24 langues officielles de l'UE couvrent ses 27 pays : chaque État membre a
- * au moins une de ces langues comme langue officielle. Le norvégien s'y ajoute,
- * hors UE, parce qu'il était livré avant.
+ * The 24 official EU languages cover its 27 countries: every member state has at
+ * least one of them as an official language. Norwegian is added to them, outside
+ * the EU, because it shipped earlier.
  *
- * Aucune ne s'écrit de droite à gauche — le maltais, seule langue sémitique de
- * la liste, s'écrit en alphabet latin. `dir` reste déclaré pour que l'ajout
- * d'une langue RTL soit un travail de traduction et non de mise en page.
+ * None of them is written from right to left — Maltese, the only Semitic
+ * language on the list, is written in the Latin alphabet. `dir` stays declared
+ * so that adding an RTL language is translation work and not layout work.
  */
 export const LOCALES: readonly LocaleDefinition[] = [
   { code: "bg", tag: "bg-BG", nativeName: "Български", dir: "ltr" },
@@ -67,7 +65,7 @@ export const LOCALES: readonly LocaleDefinition[] = [
   { code: "sv", tag: "sv-SE", nativeName: "Svenska", dir: "ltr" },
 ] as const;
 
-export const DEFAULT_LOCALE: LocaleCode = "fr";
+export const DEFAULT_LOCALE: LocaleCode = "en";
 
 const BY_CODE = new Map(LOCALES.map((l) => [l.code, l]));
 
@@ -75,7 +73,7 @@ export function isLocaleCode(value: unknown): value is LocaleCode {
   return typeof value === "string" && BY_CODE.has(value as LocaleCode);
 }
 
-/** Normalise ce qui vient de la base ou d'un formulaire ; retombe sur le français. */
+/** Normalises what comes from the database or from a form; falls back to French. */
 export function resolveLocale(value: unknown): LocaleDefinition {
   return BY_CODE.get(isLocaleCode(value) ? value : DEFAULT_LOCALE)!;
 }

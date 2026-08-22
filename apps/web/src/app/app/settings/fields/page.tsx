@@ -17,24 +17,24 @@ import { Drawer } from "@/components/settings-overlays";
 import { addFieldToForm, createForm, deleteField, removeFieldFromForm, saveField } from "./actions";
 
 const FIELDS_GRID = "minmax(200px,1.4fr) 170px 110px 110px 120px";
-/** Libellés longs de la table ST-04 (« Liste déroulante ») — la composition utilise « Liste ». */
+/** Long labels in the ST-04 table ("Drop-down list") — the composition uses "List". */
 function typeLabelLong(type: string, t: Translate): string {
   if (type === "select") return t("app.settings.rules.typeSelectLong");
   return typeLabel(type, t);
 }
 
-/** Libellé court d'un type de champ, ou le type brut s'il est inconnu. */
+/** Short label for a field type, or the raw type when it is unknown. */
 function typeLabel(type: string, t: Translate): string {
-  const cle = FIELD_TYPE_KEYS[type];
-  return cle ? t(cle) : type;
+  const messageKey = FIELD_TYPE_KEYS[type];
+  return messageKey ? t(messageKey) : type;
 }
 
 type FieldRow = typeof ticketFields.$inferSelect;
 
 /**
- * ST-04 — Champs & formulaires (1100 px). Onglet Champs : table
- * `minmax(200px,1.4fr) 170px 110px 110px 120px` + drawer 420 px. Onglet Formulaires :
- * 3 colonnes auto-fit minmax(260px,1fr) — champs disponibles / composition / aperçu portail.
+ * ST-04 — Fields & forms (1100 px). Fields tab: table
+ * `minmax(200px,1.4fr) 170px 110px 110px 120px` + 420 px drawer. Forms tab:
+ * 3 auto-fit minmax(260px,1fr) columns — available fields / composition / portal preview.
  */
 export default async function FieldsSettingsPage({
   searchParams,
@@ -192,7 +192,7 @@ export default async function FieldsSettingsPage({
         </div>
       ) : (
         <>
-          {/* Sélecteur de formulaire + création */}
+          {/* Form selector + creation */}
           <div className="flex flex-wrap items-center gap-2">
             {forms.map((f) => {
               const active = selectedForm?.id === f.id;
@@ -252,7 +252,7 @@ export default async function FieldsSettingsPage({
               className="st-rise grid items-start"
               style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}
             >
-              {/* Colonne 1 — champs disponibles */}
+              {/* Column 1 — available fields */}
               <div
                 className="overflow-hidden rounded-[10px] border"
                 style={{ background: "var(--panel)", borderColor: "var(--line)" }}
@@ -305,7 +305,7 @@ export default async function FieldsSettingsPage({
                 </div>
               </div>
 
-              {/* Colonne 2 — composition */}
+              {/* Column 2 — composition */}
               <div
                 className="overflow-hidden rounded-[10px] border"
                 style={{ background: "var(--panel)", borderColor: "var(--line)" }}
@@ -364,7 +364,7 @@ export default async function FieldsSettingsPage({
                 </div>
               </div>
 
-              {/* Colonne 3 — aperçu portail */}
+              {/* Column 3 — portal preview */}
               <div
                 className="overflow-hidden rounded-[10px] border"
                 style={{ background: "var(--panel)", borderColor: "var(--line)" }}
@@ -403,7 +403,7 @@ export default async function FieldsSettingsPage({
   );
 }
 
-/** Ligne de la composition — pastille « Requis » 10.5/700 sur --dang-t. */
+/** Composition row — "Required" pill 10.5/700 on --dang-t. */
 function ComposedRow({
   label,
   type,
@@ -467,7 +467,7 @@ function PreviewField({ label, height }: { label: string; height: number }) {
   );
 }
 
-/** Drawer création/édition d'un champ (420 px) — types FR, options une par ligne, portail. */
+/** Field create/edit drawer (420 px) — localized types, options one per line, portal. */
 function FieldForm({ field, t }: { field?: FieldRow; t: Translate }) {
   const control = { minHeight: 36, padding: "7px 11px", fontSize: 13.5 } as const;
   return (
@@ -484,9 +484,9 @@ function FieldForm({ field, t }: { field?: FieldRow; t: Translate }) {
       </Field>
       <Field label={t("app.settings.rules.colType")}>
         <Select name="type" defaultValue={field?.type ?? "text"} style={control}>
-          {Object.entries(FIELD_TYPE_KEYS).map(([v, cle]) => (
+          {Object.entries(FIELD_TYPE_KEYS).map(([v, messageKey]) => (
             <option key={v} value={v}>
-              {t(cle)}
+              {t(messageKey)}
             </option>
           ))}
         </Select>

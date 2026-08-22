@@ -10,9 +10,9 @@ import { requireAgent } from "@/lib/session";
 const DOMAIN_RE = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+$/;
 
 /**
- * Ajouter un domaine de rattachement. Refusés : format invalide, domaines grand
- * public, domaine déjà porté par une autre organisation du tenant (sinon les
- * contacts seraient rattachés de façon ambiguë).
+ * Add a domain used for matching. Rejected: invalid format, consumer email
+ * domains, domain already held by another organization of the tenant (otherwise
+ * contacts would be matched ambiguously).
  */
 export async function addOrgDomain(formData: FormData) {
   const { tenant } = await requireAgent();
@@ -66,7 +66,7 @@ export async function removeOrgDomain(formData: FormData) {
   revalidatePath("/app/organizations");
 }
 
-/** « Partage des demandes » (AG-08 / PT-05). */
+/** "Request sharing" (AG-08 / PT-05). */
 export async function toggleOrgSharedTickets(formData: FormData) {
   const { tenant } = await requireAgent();
   const organizationId = String(formData.get("organizationId"));
@@ -77,7 +77,7 @@ export async function toggleOrgSharedTickets(formData: FormData) {
   revalidatePath("/app/organizations");
 }
 
-/** Onglet Notes du panneau AG-08 — organizations.notes. */
+/** Notes tab of the AG-08 panel — organizations.notes. */
 export async function updateOrgNotes(formData: FormData) {
   const { tenant } = await requireAgent();
   const organizationId = String(formData.get("organizationId"));

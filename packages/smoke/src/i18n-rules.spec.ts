@@ -3,34 +3,34 @@ import { AGENTS, setTenantLocale, signInAgent } from "./helpers";
 import { simpleEntries } from "./dict-source";
 
 /**
- * Le résumé des règles, dans une autre langue que le français.
+ * The rules summary, in a language other than French.
  *
- * C'est la pièce la plus fragile du travail de traduction. Ce résumé n'est pas
- * une phrase du dictionnaire : il est ASSEMBLÉ à l'exécution — un gabarit, des
- * bribes de conditions reliées par un « et », des bribes d'actions reliées par
- * « · ». Il portait trois défauts que rien ne signalait :
+ * This is the most fragile piece of the translation work. That summary is not a
+ * sentence from the dictionary: it is ASSEMBLED at run time — a template,
+ * fragments of conditions joined by an “and”, fragments of actions joined by
+ * “·”. It carried three defects that nothing reported:
  *
- *  · les libellés étaient des constantes françaises ;
- *  · deux écrans découpaient le TEXTE RENDU à l'expression régulière pour n'en
- *    garder qu'une moitié — `/^Si toujours → /` et `/^Si /` — ce qui ne retirait
- *    plus rien dès que la langue changeait ;
- *  · l'ordre des mots du gabarit était figé, alors qu'une langue peut rejeter
- *    son verbe à la fin.
+ *  · the labels were French constants;
+ *  · two screens cut the RENDERED TEXT down with a regular expression so as to
+ *    keep only one half of it — `/^If always → /` and `/^If /` — which
+ *    stopped removing anything as soon as the language changed;
+ *  · the word order of the template was frozen, whereas a language may push its
+ *    verb to the end.
  *
- * Le polonais sert de témoin : son vocabulaire est assez éloigné pour qu'un
- * fragment resté français saute aux yeux.
+ * Polish serves as the control: its vocabulary is remote enough for a fragment
+ * left in the source language to leap out.
  */
 
-/** Tournures françaises que le rendu assemblé laissait passer. */
-const RESTES = ["aucune action", "toujours", "assigner à", "passer en"];
+/** Source-language turns of phrase the assembled rendering used to let through. */
+const LEFTOVERS = ["no action", "always", "assign to", "move to"];
 
-/** La tête et la queue d'un gabarit, autour de son paramètre. */
-function autour(gabarit: string, param: string): [string, string] {
-  const [avant = "", apres = ""] = gabarit.split(`{${param}}`);
-  return [avant.trim(), apres.trim()];
+/** The head and the tail of a template, around its parameter. */
+function around(template: string, param: string): [string, string] {
+  const [head = "", tail = ""] = template.split(`{${param}}`);
+  return [head.trim(), tail.trim()];
 }
 
-test.describe("Résumé des règles traduit", () => {
+test.describe("Translated rules summary", () => {
   let context: BrowserContext;
   let page: Page;
   let pl: Map<string, string>;
@@ -47,53 +47,53 @@ test.describe("Résumé des règles traduit", () => {
   });
 
   test.afterAll(async () => {
-    // Le tenant est partagé : il repart en français quoi qu'il arrive.
+    // The tenant is shared: it goes back to French whatever happens.
     await setTenantLocale(page, "fr");
     await context.close();
   });
 
-  test("chaque règle est résumée en polonais, sans fragment français", async () => {
+  test("every rule is summarised in Polish, with no French fragment", async () => {
     await page.goto("/app/settings/automations");
-    const resumes = page.locator('div:has(> a[href^="/app/settings/automations/"]) > p');
-    const lignes = (await resumes.allInnerTexts()).map((s) => s.trim()).filter(Boolean);
-    expect(lignes.length, "le jeu de démonstration devrait porter des règles").toBeGreaterThan(0);
+    const summaries = page.locator('div:has(> a[href^="/app/settings/automations/"]) > p');
+    const lines = (await summaries.allInnerTexts()).map((s) => s.trim()).filter(Boolean);
+    expect(lines.length, "the demo data set should carry rules").toBeGreaterThan(0);
 
-    const [tete] = autour(pl.get("app.settings.rules.summaryPattern")!, "conditions");
-    for (const ligne of lignes) {
-      // Le gabarit polonais ouvre la phrase : si sa tête manque, le résumé n'a
-      // pas été rendu par le dictionnaire.
-      if (tete) expect(ligne, `« ${ligne} »`).toContain(tete);
-      for (const reste of RESTES) {
-        expect(ligne.toLowerCase(), `« ${ligne} » garde « ${reste} »`).not.toContain(reste);
+    const [head] = around(pl.get("app.settings.rules.summaryPattern")!, "conditions");
+    for (const line of lines) {
+      // The Polish template opens the sentence: if its head is missing, the
+      // summary was not rendered by the dictionary.
+      if (head) expect(line, `“${line}”`).toContain(head);
+      for (const leftover of LEFTOVERS) {
+        expect(line.toLowerCase(), `“${line}” still carries “${leftover}”`).not.toContain(leftover);
       }
     }
   });
 
-  test("l'éditeur SLA n'affiche que la moitié conditions", async () => {
+  test("the SLA editor shows only the conditions half", async () => {
     await page.goto("/app/settings/sla");
-    // `body` et non `main` : l'espace agent n'a pas d'élément `main`, et un
-    // sélecteur qui ne résout jamais fait attendre le test au lieu de le faire
-    // échouer — c'est ainsi que ce test a d'abord expiré à trente secondes.
-    const texte = await page.locator("body").innerText();
+    // `body` and not `main`: the agent workspace has no `main` element, and a
+    // selector that never resolves makes the test wait instead of making it
+    // fail — that is how this test first timed out at thirty seconds.
+    const text = await page.locator("body").innerText();
 
-    // Cet écran obtenait cette moitié en fabriquant la phrase entière puis en
-    // retirant sa tête et sa queue à l'expression régulière. Inopérant hors du
-    // français : la phrase complète se serait affichée dans la colonne.
-    const [tete] = autour(pl.get("app.settings.rules.summaryPattern")!, "conditions");
-    if (tete) expect(texte, `« ${tete} » n'a rien à faire ici`).not.toContain(tete);
-    expect(texte).not.toContain(pl.get("app.settings.rules.journalNoAction")!);
+    // This screen used to obtain that half by building the whole sentence and
+    // then stripping its head and its tail with a regular expression. Inert
+    // outside French: the complete sentence would have shown in the column.
+    const [head] = around(pl.get("app.settings.rules.summaryPattern")!, "conditions");
+    if (head) expect(text, `“${head}” has no business here`).not.toContain(head);
+    expect(text).not.toContain(pl.get("app.settings.rules.journalNoAction")!);
   });
 
-  test("l'entête du groupe de conditions suit le mode choisi", async () => {
-    // Le sélecteur est posé AU MILIEU d'une phrase, et le cadre unique d'avant
-    // était fautif : le français écrivait « Correspond à au moins une les
-    // conditions », l'allemand « mindestens eine Bedingungen treffen zu ».
+  test("the condition group header follows the chosen mode", async () => {
+    // The selector sits IN THE MIDDLE of a sentence, and the single frame used
+    // before was wrong: French wrote “Correspond à au moins une les
+    // conditions”, German “mindestens eine Bedingungen treffen zu”.
     //
-    // Le témoin est ici le FRANÇAIS, et non le polonais comme dans les tests
-    // ci-dessus : le polonais place son sélecteur en fin de phrase, il n'a donc
-    // aucune queue à comparer et l'assertion passerait à vide. Le français est
-    // la langue où le défaut vivait, et celle où les deux cadres diffèrent —
-    // « toutes LES conditions » contre « au moins une DES conditions ».
+    // The control here is FRENCH, and not Polish as in the tests above: Polish
+    // places its selector at the end of the sentence, so it has no tail to
+    // compare and the assertion would pass on nothing. French is the language
+    // where the defect lived, and the one where the two frames differ —
+    // “toutes LES conditions” against “au moins une DES conditions”.
     await setTenantLocale(page, "fr");
     await page.goto("/app/settings/automations");
     await page.locator('a[href^="/app/settings/automations/"]').first().click();
@@ -101,23 +101,23 @@ test.describe("Résumé des règles traduit", () => {
 
     const fr = simpleEntries("fr");
     const modes = [
-      { label: fr.get("app.settings.rules.matchAll")!, cadre: fr.get("app.settings.rules.matchAllPattern")! },
-      { label: fr.get("app.settings.rules.matchAny")!, cadre: fr.get("app.settings.rules.matchAnyPattern")! },
+      { label: fr.get("app.settings.rules.matchAll")!, frame: fr.get("app.settings.rules.matchAllPattern")! },
+      { label: fr.get("app.settings.rules.matchAny")!, frame: fr.get("app.settings.rules.matchAnyPattern")! },
     ];
-    const queues = modes.map((m) => autour(m.cadre, "mode")[1]);
-    expect(queues[0], "les deux cadres français doivent différer").not.toBe(queues[1]);
+    const tails = modes.map((m) => around(m.frame, "mode")[1]);
+    expect(tails[0], "the two French frames must differ").not.toBe(tails[1]);
 
-    // L'entête est le bloc qui porte l'étiquette « SI » en enfant direct.
-    const entete = page.locator(
+    // The header is the block carrying the “SI” label as a direct child.
+    const header = page.locator(
       `div:has(> span:text-is("${fr.get("app.settings.rules.matchIf")}"))`,
     ).first();
-    await expect(entete).toBeVisible();
+    await expect(header).toBeVisible();
 
     for (const [i, m] of modes.entries()) {
-      await entete.getByRole("button", { name: m.label, exact: true }).click();
-      await expect(entete).toContainText(queues[i]!);
-      await expect(entete, "la queue de l'autre mode ne doit pas s'afficher").not.toContainText(
-        queues[1 - i]!,
+      await header.getByRole("button", { name: m.label, exact: true }).click();
+      await expect(header).toContainText(tails[i]!);
+      await expect(header, "the other mode's tail must not be displayed").not.toContainText(
+        tails[1 - i]!,
       );
     }
   });

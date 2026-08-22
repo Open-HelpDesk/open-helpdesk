@@ -1,11 +1,11 @@
 /**
- * Pipeline email entrant → ticket (parcours clé n°2, specs/01 § 8).
+ * Inbound email → ticket pipeline (key journey #2).
  *
- * 1. Résolution de la boîte destinataire → tenant (app.mailboxes).
- * 2. Anti-boucle et expéditeurs bloqués.
- * 3. Contact trouvé ou créé, rattaché à l'organisation par domaine.
- * 4. Threading : In-Reply-To/References ↔ email_meta, sinon numéro [#N] dans le sujet.
- * 5. Ajout au fil (résolu → rouvert ; clos → ticket de suivi) ou création.
+ * 1. Resolution of the recipient mailbox → tenant (app.mailboxes).
+ * 2. Loop guard and blocked senders.
+ * 3. Contact found or created, attached to the organization by domain.
+ * 4. Threading: In-Reply-To/References ↔ email_meta, else the [#N] number in the subject.
+ * 5. Append to the thread (resolved → reopened; closed → follow-up ticket) or creation.
  */
 import {
   contactOrganizations,
@@ -23,13 +23,13 @@ import type { InboundEmail, IngestResult } from "./types";
 
 const REOPEN_FROM = new Set(["waiting", "on_hold", "resolved"]);
 
-/** Expéditeurs techniques : un ticket n'y servirait à rien, personne ne les lit. */
+/** Technical senders: a ticket would serve no purpose, nobody reads them. */
 const SYSTEM_SENDERS = /^(mailer-daemon|postmaster|bounces?|bounce-|nobody)[@+-]/i;
 
 /**
- * Écarte les messages émis par une machine : rapports de non-délivrance et
- * réponses automatiques d'absence. Sans ce garde-fou, notre accusé de réception
- * et l'auto-répondeur du correspondant se répondent en boucle.
+ * Discards messages emitted by a machine: delivery failure reports and automatic
+ * out-of-office replies. Without this guard rail, our acknowledgement of receipt
+ * and the correspondent's auto-responder answer each other in a loop.
  */
 function automaticKind(mail: InboundEmail): "bounce" | "auto_reply" | null {
   const h = mail.headers ?? {};
@@ -41,7 +41,7 @@ function automaticKind(mail: InboundEmail): "bounce" | "auto_reply" | null {
   ) {
     return "bounce";
   }
-  // RFC 3834 : tout sauf « no » désigne un message généré automatiquement.
+  // RFC 3834: anything but "no" designates an automatically generated message.
   const autoSubmitted = (h["auto-submitted"] ?? "").trim().toLowerCase();
   if (autoSubmitted && autoSubmitted !== "no") {
     return autoSubmitted.startsWith("auto-replied") ? "auto_reply" : "bounce";
@@ -52,8 +52,8 @@ function automaticKind(mail: InboundEmail): "bounce" | "auto_reply" | null {
 }
 
 /**
- * Verdict antispam du fournisseur (SpamAssassin et compatibles). Nous ne calculons
- * pas de score nous-mêmes : nous faisons confiance à l'en-tête posé en amont.
+ * Antispam verdict of the provider (SpamAssassin and compatible). We do not compute
+ * a score ourselves: we trust the header set upstream.
  */
 function spamVerdict(mail: InboundEmail): { score: string } | null {
   const h = mail.headers ?? {};
@@ -63,12 +63,15 @@ function spamVerdict(mail: InboundEmail): { score: string } | null {
   const score = match ? Number(match[0].replace(",", ".")) : null;
 
   if (score !== null && (flagged || score >= 5)) {
-    return { score: `score ${score.toFixed(1).replace(".", ",")}` };
+    // Decimal point and English wording: this verdict is stored in the ST-03 rejected
+    // log and displayed as stored. A package reaches neither the tenant's language nor
+    // the i18n dictionaries (apps/web/src/i18n), so a localized form would lie.
+    return { score: `score ${score.toFixed(1)}` };
   }
-  return flagged ? { score: "signalé par le fournisseur" } : null;
+  return flagged ? { score: "flagged by the provider" } : null;
 }
 
-/** Trace un rejet dans le journal de ST-03 (jamais bloquant pour l'ingestion). */
+/** Records a rejection in the ST-03 log (never blocking for ingestion). */
 async function logRejection(
   tenantId: string,
   fromAddress: string,
@@ -79,13 +82,15 @@ async function logRejection(
   try {
     await db.insert(rejectedEmails).values({
       tenantId,
-      fromAddress: fromAddress || "(expéditeur inconnu)",
+      // English placeholder: written once, displayed as stored — a package has no
+      // access to the i18n dictionaries (apps/web/src/i18n).
+      fromAddress: fromAddress || "(unknown sender)",
       subject: subject.slice(0, 300) || null,
       reason,
       detail: detail?.slice(0, 120) ?? null,
     });
   } catch (err) {
-    console.error("[mail] journalisation du rejet impossible :", err);
+    console.error("[mail] could not log the rejection:", err);
   }
 }
 
@@ -94,7 +99,7 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
   const fromAddress = mail.from.address.toLowerCase().trim();
   const bodyText = (mail.text ?? "").trim();
 
-  // 1. Boîte → tenant (résolue d'abord : les rejets suivants sont journalisés par tenant)
+  // 1. Mailbox → tenant (resolved first: the rejections below are logged per tenant)
   const [mailbox] = await db
     .select()
     .from(mailboxes)
@@ -107,33 +112,33 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
     return { outcome: "rejected", reason: "empty" };
   }
 
-  // 2. Anti-boucle : l'expéditeur est une boîte du produit
+  // 2. Loop guard: the sender is one of the product's mailboxes
   const [loop] = await db.select().from(mailboxes).where(eq(mailboxes.address, fromAddress));
   if (loop) {
     await logRejection(tenantId, fromAddress, mail.subject, "loop");
     return { outcome: "rejected", reason: "loop" };
   }
 
-  // 2b. Messages automatiques : non-délivrance et réponses d'absence
+  // 2b. Automatic messages: delivery failures and out-of-office replies
   const automatic = automaticKind(mail);
   if (automatic) {
     await logRejection(tenantId, fromAddress, mail.subject, automatic);
     return { outcome: "rejected", reason: automatic };
   }
 
-  // 2c. Verdict antispam posé par le fournisseur en amont
+  // 2c. Antispam verdict set upstream by the provider
   const spam = spamVerdict(mail);
   if (spam) {
     await logRejection(tenantId, fromAddress, mail.subject, "spam", spam.score);
     return { outcome: "rejected", reason: "spam" };
   }
 
-  // Le premier email reçu prouve que le routage fonctionne (transfert vérifié — ST-03).
+  // The first email received proves the routing works (forwarding verified — ST-03).
   if (!mailbox.verified) {
     await db.update(mailboxes).set({ verified: true }).where(eq(mailboxes.id, mailbox.id));
   }
 
-  // 3. Contact (+ organisation par domaine)
+  // 3. Contact (+ organization by domain)
   let [contact] = await db
     .select()
     .from(contacts)
@@ -176,7 +181,7 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
     to: recipientAddresses,
   };
 
-  // 4. Threading — a) en-têtes RFC 5322
+  // 4. Threading — a) RFC 5322 headers
   let ticket: typeof tickets.$inferSelect | undefined;
   const refIds = [mail.inReplyTo, ...(mail.references ?? [])].filter(
     (r): r is string => Boolean(r),
@@ -198,7 +203,7 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
     }
   }
 
-  // 4b. Repli : numéro de ticket dans le sujet — « [#4821] » ou « #4821 »
+  // 4b. Fallback: ticket number in the subject — "[#4821]" or "#4821"
   if (!ticket) {
     const numberMatch = mail.subject.match(/#(\d{1,10})\b/);
     if (numberMatch) {
@@ -209,7 +214,7 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
     }
   }
 
-  // 5a. Ajout au fil existant
+  // 5a. Append to the existing thread
   if (ticket && !ticket.mergedIntoId && ticket.status !== "closed") {
     await db.insert(ticketMessages).values({
       tenantId,
@@ -231,14 +236,16 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
     return { outcome: "appended", ticketId: ticket.id, number: ticket.number, tenantId };
   }
 
-  // 5b. Ticket clos → ticket de suivi ; sinon nouveau ticket
+  // 5b. Closed ticket → follow-up ticket; otherwise a new ticket
   const number = await nextTicketNumber(tenantId);
   const [created] = await db
     .insert(tickets)
     .values({
       tenantId,
       number,
-      subject: mail.subject.trim() || "(sans objet)",
+      // Same rule as above: the fallback subject is persisted, so it stays in
+      // English — a package cannot reach the i18n dictionaries.
+      subject: mail.subject.trim() || "(no subject)",
       status: "new",
       channel: "email",
       requesterId: contact!.id,

@@ -1,124 +1,119 @@
-# Smoke test de bout en bout
+# End-to-end smoke test
 
-Rejoue les parcours du produit sur une instance qui tourne vraiment — sa base,
-son SMTP, ses sessions. Il ne remplace pas des tests unitaires : il attrape la
-classe de défaut qui coûte le plus cher ici, celle qu'aucun typage ne voit.
+Replays the product's journeys against an instance that really runs — its
+database, its SMTP, its sessions. It does not replace unit tests: it catches the
+class of defect that costs the most here, the one no type system sees.
 
-Les quatre défauts qui ont motivé cette suite, tous réels, tous invisibles à la
-compilation :
+The eight defects that motivated this suite, all real, all invisible at compile
+time:
 
-| Défaut | Ce que le test vérifie désormais |
+| Defect | What the test now checks |
 |---|---|
-| Un réglage enregistré que personne ne lit (`portalEnabled`, `kbPublished`, `tenants.locale`) | Couper l'interrupteur coupe vraiment le portail |
-| Une redirection qui perd le sous-domaine du tenant | Le lien magique ouvre bien une session |
-| Une garde de rôle qui n'existe que dans l'interface | Un agent est refusé par l'URL directe et par l'API |
-| Une traduction manquante ou un format perdu | L'allemand s'affiche, et « 4.182 » garde son séparateur |
-| Une forme de pluriel absente d'une langue qui en compte quatre | Le polonais choisit `few` ou `many` quand il le doit |
-| Un contrôle dessiné mais inerte | Le champ du logo est un vrai `input[type=file]`, et le fichier déposé s'affiche |
-| Deux statuts traduits par le même mot | Aucun libellé en double dans un jeu, sur 24 langues |
-| Un libellé écrit en dur dans un composant | Aucun texte accentué hors du dictionnaire |
+| A setting that is saved but never read (`portalEnabled`, `kbPublished`, `tenants.locale`) | Flipping the switch off really does close the portal |
+| A redirect that loses the tenant subdomain | The magic link does open a session |
+| A role guard that only exists in the interface | An agent is refused by the direct URL and by the API |
+| A missing translation, or a format lost along the way | German shows up, and "4.182" keeps its separator |
+| A plural form missing from a language that has four of them | Polish picks `few` or `many` when it must |
+| A control that is drawn but inert | The logo field is a real `input[type=file]`, and the dropped file is displayed |
+| Two statuses translated by the same word | No duplicate label within a set, across 24 languages |
+| A label hardcoded in a component | No accented text outside the dictionary |
 
-## Avant de lancer
+## Before you run
 
 ```bash
-# 1. Les services
+# 1. The services
 docker compose -f docker/docker-compose.yml up -d      # Postgres, Mailpit, MinIO
 
-# 2. La base
+# 2. The database
 pnpm db:migrate && pnpm db:seed && pnpm db:seed:auth
 
-# 3. L'application — BASE_DOMAIN DOIT correspondre au port
+# 3. The application — BASE_DOMAIN MUST match the port
 pnpm --filter @openhelpdesk/web build
 BASE_DOMAIN=localhost:3006 pnpm --filter @openhelpdesk/web exec next start --port 3006
 ```
 
-Sans la correspondance `BASE_DOMAIN` ↔ port, le middleware ne résout aucun tenant
-et **tout répond 404** : c'est le premier piège de l'environnement local.
+Without the `BASE_DOMAIN` ↔ port match, the middleware resolves no tenant at all
+and **everything answers 404**: the first trap of the local environment.
 
-## Lancer
+## Run
 
 ```bash
-pnpm --filter @openhelpdesk/smoke smoke          # la suite
-pnpm --filter @openhelpdesk/smoke smoke:ui       # mode interactif
-SMOKE_HEADED=1 pnpm --filter @openhelpdesk/smoke smoke   # navigateur visible
+pnpm --filter @openhelpdesk/smoke smoke          # the suite
+pnpm --filter @openhelpdesk/smoke smoke:ui       # interactive mode
+SMOKE_HEADED=1 pnpm --filter @openhelpdesk/smoke smoke   # visible browser
 ```
 
-Variables : `SMOKE_PORT` (3006), `SMOKE_BASE_URL`, `SMOKE_TENANT` (acme),
+Variables: `SMOKE_PORT` (3006), `SMOKE_BASE_URL`, `SMOKE_TENANT` (acme),
 `SMOKE_MAILPIT_URL` (http://localhost:8026).
 
-Le navigateur est le Chrome installé sur la machine (`channel: "chrome"`) : aucun
-binaire à télécharger.
+The browser is the Chrome installed on the machine (`channel: "chrome"`): no
+binary to download.
 
-## Ce qui est couvert
+## What is covered
 
-| Fichier | Parcours |
+| File | Journey |
 |---|---|
-| `request-lifecycle` | Dépôt d'une demande → lien magique → réponse de l'agent → lecture par le client |
-| `portal-public` | Accueil, typeahead, catégorie, article, vote, recherche, état vide |
-| `agent-workflow` | Connexion, inbox, vues, ticket, priorité, palette ⌘K, déconnexion |
-| `kb-permissions` | Agent en lecture seule vs Admin en écriture, sur les écrans **et** l'API |
-| `settings-toggles` | Les interrupteurs ST-09 coupent le portail et la base |
-| `branding` | Dépôt du logo et du favicon, affichage dans les deux shells, isolation entre tenants |
-| `i18n` | Bascule allemand/polonais/français, séparateurs de milliers, sélection de pluriel, contenu du tenant non traduit |
-| `i18n-source` | Tables de pluriel et jeux de vocabulaire des 24 dictionnaires — **sans navigateur** |
-| `i18n-source-francais` | Aucun texte français ne vit hors de `i18n/` — **sans navigateur** |
+| `request-lifecycle` | Submitting a request → magic link → agent reply → read by the customer |
+| `portal-public` | Home, typeahead, category, article, vote, search, empty state |
+| `agent-workflow` | Sign-in, inbox, views, ticket, priority, ⌘K palette, sign-out |
+| `kb-permissions` | Read-only Agent vs writing Admin, on the screens **and** the API |
+| `settings-toggles` | The ST-09 switches close the portal and the knowledge base |
+| `branding` | Uploading the logo and the favicon, display in both shells, isolation between tenants |
+| `i18n` | Switching to German/Polish/French, thousands separators, plural selection, untranslated tenant content |
+| `i18n-source` | Plural tables and vocabulary sets of the 24 dictionaries — **no browser** |
+| `i18n-hardcoded` | No translatable text lives outside `i18n/` — **no browser** |
 
-## Les contrôles statiques
+## The static checks
 
-`i18n-source` est la seule vérification du dossier qui ne lance pas de
-navigateur : elle lit les 24 dictionnaires comme du texte. Deux familles de
-défauts y sont couvertes.
+`i18n-source` starts no browser at all: it reads the 24 dictionaries as text.
+Two families of defects are covered there.
 
-**Les tables de pluriel.** Elle compare les formes fournies à celles que
-`Intl.PluralRules` peut sélectionner dans la langue.
+**The plural tables.** It compares the forms provided against those
+`Intl.PluralRules` can select in the language.
 
-Elle existe parce que le typage ne peut pas la remplacer. `Message` n'exige
-qu'une forme `other` — toutes les autres sont optionnelles, puisque aucune langue
-n'utilise le même jeu. Un dictionnaire polonais amputé de sa forme `many`
-compile donc sans un mot, et affiche une phrase fausse dès qu'un compteur passe
-à 5.
+It exists because the type system cannot replace it. `Message` only requires an
+`other` form — every other one is optional, since no two languages use the same
+set. A Polish dictionary stripped of its `many` form therefore compiles without
+a word, and shows a wrong sentence as soon as a counter reaches 5.
 
-Deux catégories sont volontairement hors périmètre, et le test le dit dans son
-code : le `many` du tchèque, du slovaque et du lituanien, qui ne concerne que les
-nombres décimaux — aucun `{count}` du produit n'en reçoit ; et le `many` du
-français, de l'espagnol, de l'italien et du portugais, qui se déclenche au
-million exact.
+Two categories are deliberately out of scope, and the test says so in its own
+code: the `many` of Czech, Slovak and Lithuanian, which only concerns decimal
+numbers — no `{count}` in the product ever receives one; and the `many` of
+French, Spanish, Italian and Portuguese, which triggers at exactly one million.
 
-**Les jeux de vocabulaire** — statuts, priorités, urgences, canaux. Ces libellés
-vivent dans des tables de correspondance, à l'écart des écrans qui les affichent,
-et le risque propre à un jeu est la collision : deux statuts traduits par le même
-mot donnent un filtre où deux entrées sont identiques, sans que rien ne plante.
-Le français ne peut pas révéler ce défaut, puisque c'est lui la source.
+**The vocabulary sets** — statuses, priorities, urgencies, channels. These
+labels live in lookup tables, away from the screens that display them, and the
+risk specific to a set is collision: two statuses translated by the same word
+give a filter with two identical entries, without anything crashing. French
+cannot reveal that defect, since French is the source.
 
-Le contrôle statique ne prouve pas pour autant que le produit *choisit* la bonne
-forme : c'est le rôle du test polonais d'`i18n`, qui lit le nombre affiché par
-l'accueil du portail, en déduit la catégorie avec `Intl.PluralRules` et exige la
-phrase correspondante. Le polonais est choisi parce qu'aucun nombre entier n'y
-sélectionne `other` : une sélection cassée ne peut pas s'y cacher derrière le
-repli.
+The static check does not prove that the product *selects* the right form,
+though: that is the job of the Polish test in `i18n`, which reads the number
+displayed by the portal home, derives the category with `Intl.PluralRules` and
+requires the matching sentence. Polish is chosen because no integer selects
+`other` there: a broken selection cannot hide behind the fallback.
 
-## Règles de rédaction
+## Writing rules
 
-Trois pièges rencontrés en écrivant cette suite, qui valent d'être connus avant
-d'ajouter un test :
+Three traps met while writing this suite, worth knowing before adding a test:
 
-1. **N'attendez jamais une durée**, attendez un signal du produit : une URL, un
-   élément, un code HTTP. Pour ce qui prend du temps, `expect(...).toPass()`.
-2. **`getByText` matche aussi le contenu d'un `<textarea>`** — React y rend la
-   valeur comme nœud texte. Une assertion sur le texte qu'on vient de saisir
-   passe au vert sans que rien n'ait été envoyé. Vérifiez le résultat là où il
-   compte, jamais l'état du champ de saisie.
-3. **Le tenant est partagé.** Tout ce qu'un test modifie dans les réglages, il le
-   remet — `try/finally` ou `afterEach`. Les workers valent 1 pour cette raison.
+1. **Never wait for a duration**, wait for a signal from the product: a URL, an
+   element, an HTTP status. For anything that takes time, `expect(...).toPass()`.
+2. **`getByText` also matches the content of a `<textarea>`** — React renders the
+   value there as a text node. An assertion on the text you just typed turns
+   green without anything having been sent. Check the result where it counts,
+   never the state of the input field.
+3. **The tenant is shared.** Whatever a test changes in the settings, it puts
+   back — `try/finally` or `afterEach`. That is why the worker count is 1.
 
-## Limites connues
+## Known limitations
 
-- La suite **écrit** dans la base de développement : elle y laisse les demandes
-  qu'elle dépose et un fichier image orphelin dans MinIO. À lancer sur une base
-  jetable, pas sur des données auxquelles vous tenez.
-- Better Auth plafonne la connexion à trois tentatives par dizaine de secondes et
-  par IP. `signInAgent` réessaie, ce qui suffit — mais deux exécutions
-  simultanées de la suite se gêneront.
-- `i18n` et `settings-toggles` basculent des réglages du tenant partagé. Ils les
-  remettent en `afterEach`, mais une exécution interrompue en plein milieu peut
-  laisser le workspace dans une autre langue ou son portail coupé.
+- The suite **writes** to the development database: it leaves behind the requests
+  it submits and an orphan image file in MinIO. Run it against a throwaway
+  database, not against data you care about.
+- Better Auth caps sign-in at three attempts per ten seconds per IP.
+  `signInAgent` retries, which is enough — but two concurrent runs of the suite
+  will get in each other's way.
+- `i18n` and `settings-toggles` flip settings of the shared tenant. They put them
+  back in `afterEach`, but a run interrupted midway can leave the workspace in
+  another language, or with its portal closed.

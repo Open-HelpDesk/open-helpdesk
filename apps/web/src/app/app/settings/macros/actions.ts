@@ -7,8 +7,8 @@ import { and, eq } from "drizzle-orm";
 import { requireManager } from "../guard";
 
 /**
- * ST-06 — Sauvegarde d'une macro (drawer) : texte inséré OU note interne,
- * statut appliqué optionnel, disponibilité (tous les agents / équipe).
+ * ST-06 — Saving a macro (drawer): inserted text OR internal note,
+ * optional applied status, availability (all agents / team).
  */
 export async function saveMacro(formData: FormData) {
   const { tenant, agent } = await requireManager();

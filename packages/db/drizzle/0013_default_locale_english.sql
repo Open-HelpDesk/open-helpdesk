@@ -1,0 +1,1 @@
+ALTER TABLE "app"."tenants" ALTER COLUMN "locale" SET DEFAULT 'en';

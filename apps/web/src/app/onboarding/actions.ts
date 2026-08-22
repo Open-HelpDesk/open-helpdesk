@@ -8,18 +8,18 @@ import { eq } from "drizzle-orm";
 import { requireManager } from "@/lib/session";
 
 /**
- * L'onboarding configure l'espace de travail : il est réservé à Owner et Admin.
+ * Onboarding configures the workspace: it is restricted to Owner and Admin.
  *
- * `inviteTeam` insère un membre avec le rôle lu dans le formulaire, « admin »
- * compris. Sous `requireAgent`, n'importe quel agent — ou viewer — pouvait donc
- * s'inviter lui-même comme administrateur à une seconde adresse, s'y connecter
- * (l'inscription par email est ouverte et sans vérification) et récupérer tout
- * ce que garde `requireManager` : les réglages, les clés d'API, l'écriture dans
- * la base de connaissances. La restriction posée sur la KB ne valait rien tant
- * que cette porte restait ouverte.
+ * `inviteTeam` inserts a member with the role read from the form, "admin"
+ * included. Under `requireAgent`, any agent — or viewer — could therefore
+ * invite themselves as an administrator at a second address, sign in there
+ * (email sign-up is open and unverified) and get hold of everything
+ * `requireManager` guards: the settings, the API keys, write access to the
+ * knowledge base. The restriction placed on the KB was worth nothing as long
+ * as this door stayed open.
  */
 
-/** Étape 1 — Identité : nom du workspace + couleur d'accent (tenants.branding). */
+/** Step 1 — Identity: workspace name + accent color (tenants.branding). */
 export async function saveIdentity(formData: FormData) {
   const { tenant } = await requireManager();
   const name = String(formData.get("name") ?? "").trim();
@@ -41,7 +41,7 @@ export async function saveIdentity(formData: FormData) {
   redirect("/onboarding?step=2");
 }
 
-/** Étape 3 — Équipe : chaque ligne email + rôle crée un utilisateur « invité ». */
+/** Step 3 — Team: each email + role row creates an "invited" user. */
 export async function inviteTeam(formData: FormData) {
   const { tenant } = await requireManager();
   const emails = formData.getAll("email").map((e) => String(e).trim().toLowerCase());

@@ -2,41 +2,41 @@ import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import { AGENTS, expectStatus, signInAgent, uniqueEmail, uniqueSubject } from "./helpers";
 
 /**
- * La journée d'un agent : il se connecte, lit son inbox, change de vue, ouvre un
- * ticket, en corrige la priorité, cherche dans la palette, puis s'en va.
+ * An agent's day: they sign in, read their inbox, switch view, open a ticket,
+ * fix its priority, search in the palette, then leave.
  *
- * Chaque test part d'une demande qu'il a lui-même déposée sur le portail. Le jeu
- * de démonstration bouge — les autres parcours créent, assignent et résolvent
- * des tickets — et viser un ticket du seed ferait échouer ce fichier pour une
- * raison qui n'a rien à voir avec l'espace agent.
+ * Every test starts from a request the test itself submitted on the portal. The
+ * demo data set moves — the other journeys create, assign and resolve tickets —
+ * and aiming at a seeded ticket would make this file fail for a reason that has
+ * nothing to do with the agent workspace.
  */
 
-// Le panneau de propriétés est en `xl:flex` : sous 1280 px il n'est pas caché,
-// il est absent du DOM. Sans cette fenêtre, les assertions qui le visent
-// échoueraient à cause de la taille du navigateur, pas du produit.
+// The properties panel is `xl:flex`: below 1280 px it is not hidden, it is
+// absent from the DOM. Without this viewport, the assertions aiming at it
+// would fail because of the browser size, not because of the product.
 test.use({ viewport: { width: 1440, height: 900 } });
 
-// Déposer une demande, se connecter et recharger un ticket ne tient pas toujours
-// en 30 s sur une instance partagée : le budget par défaut est trop court ici.
+// Submitting a request, signing in and reloading a ticket does not always fit
+// in 30 s on a shared instance: the default budget is too short here.
 test.describe.configure({ timeout: 90_000 });
 
 /* ---------------------------------------------------------------------------
- * Session agent
+ * Agent session
  *
- * better-auth n'accepte que trois appels à /sign-in par tranche de 10 s, toutes
- * origines confondues. Un fichier qui rejoue le formulaire à chaque test se fait
- * jeter au troisième : le test échoue alors sur une protection du produit, pas
- * sur ce qu'il prétend vérifier. On ouvre donc UNE session pour tout le fichier
- * et on la prête aux contextes suivants ; seul le test qui parle vraiment de
- * connexion repasse par le formulaire.
+ * better-auth only accepts three calls to /sign-in per 10 s window, all origins
+ * taken together. A file that replays the form on every test gets thrown out on
+ * the third: the test then fails on a product protection, not on what it claims
+ * to verify. So ONE session is opened for the whole file and lent to the
+ * following contexts; only the test that is really about signing in goes back
+ * through the form.
  * ------------------------------------------------------------------------- */
 
 let agentCookies: Awaited<ReturnType<BrowserContext["cookies"]>> = [];
 
 /**
- * Connexion agent tolérante au quota d'authentification : une tentative refusée
- * laisse le formulaire en place, on la rejoue jusqu'à obtenir l'inbox. Si toutes
- * échouent, l'erreur remontée est celle du helper (l'inbox n'est jamais venue).
+ * Agent sign-in tolerant of the authentication quota: a refused attempt leaves
+ * the form in place, so it is replayed until the inbox comes up. If they all
+ * fail, the error reported is the helper's (the inbox never came).
  */
 async function signIn(page: Page, email: string): Promise<void> {
   await expect(async () => {
@@ -52,45 +52,45 @@ test.beforeAll(async ({ browser }) => {
   await context.close();
 });
 
-/** Rend le contexte courant authentifié, sans repasser par le formulaire. */
+/** Makes the current context authenticated, without going through the form. */
 async function reuseAgentSession(page: Page): Promise<void> {
   await page.context().addCookies(agentCookies);
 }
 
 /* ---------------------------------------------------------------------------
- * Matière du test
+ * Test material
  * ------------------------------------------------------------------------- */
 
 type PortalTicket = { number: string; subject: string; body: string };
 
 /**
- * Dépose une demande par le portail public, sans session, comme un visiteur.
- * Le ticket obtenu est neuf : statut « Nouveau », priorité normale, sans
- * assigné — exactement ce qu'un agent trouve en arrivant le matin.
+ * Submits a request through the public portal, with no session, like a visitor.
+ * The resulting ticket is brand new: status “New”, normal priority, no
+ * assignee — exactly what an agent finds on arriving in the morning.
  */
 async function submitPortalRequest(page: Page, label: string): Promise<PortalTicket> {
   const subject = uniqueSubject(label);
-  const body = `Détail de la demande ${subject} — la sauvegarde s'interrompt à mi-parcours.`;
+  const body = `Details of request ${subject} — the backup stops halfway through.`;
 
   await page.goto("/help/requests/new");
-  await page.locator("#pt-email").fill(uniqueEmail("journee"));
+  await page.locator("#pt-email").fill(uniqueEmail("workday"));
   await page.locator("#pt-subject").fill(subject);
   await page.locator("#pt-body").fill(body);
   await page.locator("button[type=submit]").click();
 
   await expect(page).toHaveURL(/\/help\/requests\/submitted/);
   const reference = await page.locator("span.font-mono").first().innerText();
-  expect(reference, "la confirmation doit porter la référence de la demande").toMatch(/^#\d+$/);
+  expect(reference, "the confirmation must carry the request's reference").toMatch(/^#\d+$/);
 
   return { number: reference.replace("#", ""), subject, body };
 }
 
 /**
- * La ligne d'inbox qui porte ce sujet.
+ * The inbox row that carries this subject.
  *
- * Les lignes ne sont pas des liens mais des `<div>` cliquables : impossible de
- * les viser par leur URL. Le sujet, lui, est unique à chaque exécution — deux
- * specs qui s'enchaînent ne se confondent pas.
+ * The rows are not links but clickable `<div>`s: there is no way to aim at them
+ * by URL. The subject, on the other hand, is unique on every run — two specs
+ * running one after the other cannot be confused.
  */
 function inboxRow(page: Page, subject: string) {
   return page.locator("div.cursor-pointer").filter({ hasText: subject });
@@ -98,66 +98,66 @@ function inboxRow(page: Page, subject: string) {
 
 /* ------------------------------------------------------------------------- */
 
-test.describe("Journée d'un agent", () => {
-  test("un agent se connecte et atterrit sur son inbox", async ({ page }) => {
+test.describe("An agent's day", () => {
+  test("an agent signs in and lands on their inbox", async ({ page }) => {
     await signIn(page, AGENTS.agent);
 
     await expect(page).toHaveURL(/\/app\/tickets/);
-    // Le panneau des vues est le repère de l'inbox : sans lui, l'agent est
-    // peut-être authentifié, mais il n'est pas chez lui.
-    await expect(page.getByRole("link", { name: /Non assignés/ })).toBeVisible();
+    // The views panel is the inbox's landmark: without it the agent may be
+    // authenticated, but they are not home.
+    await expect(page.getByRole("link", { name: /Unassigned/ })).toBeVisible();
   });
 
-  test("l'inbox liste les tickets avec leur statut, leur SLA et leur assigné", async ({
+  test("the inbox lists tickets with their status, their SLA and their assignee", async ({
     page,
   }) => {
     const ticket = await submitPortalRequest(page, "Sauvegarde interrompue");
     await reuseAgentSession(page);
     await page.goto("/app/tickets?view=unassigned");
 
-    // Les trois colonnes sur lesquelles un agent décide quoi traiter. On les
-    // cherche dans l'en-tête de la table, pas n'importe où dans la page : les
-    // mêmes mots servent aussi de libellés aux filtres de la barre du haut.
+    // The three columns an agent decides on what to handle from. They are
+    // looked for in the table header, not anywhere in the page: the same words
+    // also serve as labels for the filters in the top bar.
     const columns = page.locator("div.sticky").first();
-    await expect(columns).toContainText("Statut");
+    await expect(columns).toContainText("Status");
     await expect(columns).toContainText("SLA");
-    await expect(columns).toContainText("Assigné");
+    await expect(columns).toContainText("Assignee");
 
     const row = inboxRow(page, ticket.subject);
     await expect(row).toHaveCount(1);
     await expect(row).toContainText(`#${ticket.number}`);
-    // Arrivée du jour, personne dessus : la colonne assigné affiche « — ».
-    await expect(row).toContainText("Nouveau");
+    // Arrived today, nobody on it: the assignee column shows “—”.
+    await expect(row).toContainText("New");
     await expect(row).toContainText("—");
-    // Le compte à rebours SLA est posé à la création. On vise le badge (le seul
-    // `inline-flex` chiffré de la ligne) et non n'importe quel nombre : la
-    // colonne activité est elle aussi en chiffres tabulaires et rendrait
-    // l'assertion verte même sans échéance.
+    // The SLA countdown is set at creation. We aim at the badge (the row's
+    // only numeric `inline-flex`) and not at any number: the activity column is
+    // in tabular figures too and would turn the assertion green even with no
+    // deadline.
     await expect(row.locator("span.inline-flex.tabular-nums")).toHaveText(/\d+\s*(min|h)/);
   });
 
-  test("la vue « Non assignés » change l'URL et la liste", async ({ page }) => {
+  test("the “Unassigned” view changes the URL and the list", async ({ page }) => {
     const ticket = await submitPortalRequest(page, "Filtre des vues");
     await reuseAgentSession(page);
     await page.goto("/app/tickets");
 
-    // Constater une absence n'a de sens qu'une fois l'inbox rendue : sans ce
-    // repère, « aucune ligne » voudrait aussi dire « pas encore de page ».
-    const unassignedView = page.getByRole("link", { name: /Non assignés/ });
+    // Observing an absence only makes sense once the inbox is rendered:
+    // without that landmark, “no row” would also mean “no page yet”.
+    const unassignedView = page.getByRole("link", { name: /Unassigned/ });
     await expect(unassignedView).toBeVisible();
 
-    // Vue par défaut « Mes tickets » : la demande, sans assigné, n'y est pas.
+    // Default view “My tickets”: the request, with no assignee, is not in it.
     await expect(inboxRow(page, ticket.subject)).toHaveCount(0);
 
     await unassignedView.click();
 
-    // La vue vit dans l'URL — c'est ce qui rend un lien d'inbox partageable.
+    // The view lives in the URL — that is what makes an inbox link shareable.
     await expect(page).toHaveURL(/\/app\/tickets\?view=unassigned/);
-    // Et la liste a réellement changé de contenu, pas seulement de vue active.
+    // And the list really changed its content, not just its active view.
     await expect(inboxRow(page, ticket.subject)).toHaveCount(1);
   });
 
-  test("ouvrir un ticket affiche son fil et son panneau de propriétés", async ({ page }) => {
+  test("opening a ticket shows its thread and its properties panel", async ({ page }) => {
     const ticket = await submitPortalRequest(page, "Ouverture du fil");
     await reuseAgentSession(page);
     await page.goto("/app/tickets?view=unassigned");
@@ -166,20 +166,20 @@ test.describe("Journée d'un agent", () => {
     await expect(page).toHaveURL(new RegExp(`/app/tickets/${ticket.number}`));
     await expect(page.getByRole("heading", { name: ticket.subject })).toBeVisible();
 
-    // Le message du client est rendu dans le fil, pas dans un champ de saisie :
-    // on vise l'<article> qui le porte. Chercher ce texte n'importe où le
-    // trouverait aussi dans le composeur, qui est un textarea.
+    // The customer's message is rendered in the thread, not in an input
+    // field: we aim at the <article> that carries it. Looking for that text
+    // anywhere would also find it in the composer, which is a textarea.
     await expect(page.locator("article").filter({ hasText: ticket.body })).toHaveCount(1);
 
-    // Panneau de propriétés : les groupes que l'agent manipule et le suivi SLA.
+    // Properties panel: the groups the agent handles, and the SLA tracking.
     const panel = page.locator("aside").filter({ hasText: "Classification" });
-    await expect(panel.getByText("Affectation")).toBeVisible();
+    await expect(panel.getByText("Assignment")).toBeVisible();
     await expect(panel.getByText("SLA", { exact: true })).toBeVisible();
     await expect(panel.locator('select:has(option[value="urgent"])')).toHaveValue("normal");
   });
 
-  test("la priorité changée dans le panneau survit à un rechargement", async ({ page }) => {
-    const ticket = await submitPortalRequest(page, "Priorité à corriger");
+  test("a priority changed in the panel survives a reload", async ({ page }) => {
+    const ticket = await submitPortalRequest(page, "Priority to fix");
     await reuseAgentSession(page);
     await page.goto(`/app/tickets/${ticket.number}`);
 
@@ -187,60 +187,60 @@ test.describe("Journée d'un agent", () => {
     await expect(priority).toHaveValue("normal");
     await priority.selectOption("high");
 
-    // L'enregistrement est une action serveur. Le select, lui, garderait sa
-    // nouvelle valeur même si rien n'était parti : on recharge donc jusqu'à ce
-    // que la page rendue par le serveur porte la priorité choisie.
+    // Saving is a server action. The select, for its part, would keep its new
+    // value even if nothing had been sent: so we reload until the page rendered
+    // by the server carries the chosen priority.
     await expect(async () => {
       await page.reload();
       await expect(priority).toHaveValue("high", { timeout: 2_000 });
     }).toPass({ timeout: 20_000 });
 
-    // Le rechargement ci-dessus suffit à prouver la persistance : /app/tickets/{n}
-    // est rendu par le serveur, la valeur du select vient donc de la base et non
-    // de l'état laissé par le clic. C'est bien la classe de défaut visée ici —
-    // un réglage enregistré mais jamais relu.
+    // The reload above is enough to prove persistence: /app/tickets/{n} is
+    // rendered by the server, so the select's value comes from the database and
+    // not from the state left behind by the click. This is exactly the class of
+    // defect aimed at here — a setting saved but never read back.
     await expect(priority).toHaveValue("high");
   });
 
-  test("la palette ⌘K s'ouvre au raccourci et trouve ce qui parle de facturation", async ({
+  test("the ⌘K palette opens on the shortcut and finds what is about invoicing", async ({
     page,
   }) => {
     await reuseAgentSession(page);
     await page.goto("/app/tickets");
 
     await page.keyboard.press("ControlOrMeta+k");
-    const search = page.getByPlaceholder(/Rechercher/);
+    const search = page.getByPlaceholder(/Search/);
     await expect(search).toBeFocused();
-    await expect(page.getByText("Tapez au moins deux caractères")).toBeVisible();
+    await expect(page.getByText("Type at least two characters")).toBeVisible();
 
-    await search.fill("factur");
+    await search.fill("invoice");
 
-    // La requête est différée de 180 ms puis servie par /api/search : on attend
-    // le résultat, jamais le délai.
-    const article = page.getByRole("button", { name: /Comment télécharger vos factures/ });
+    // The query is deferred by 180 ms then served by /api/search: we wait for
+    // the result, never for the delay.
+    const article = page.getByRole("button", { name: /How to download your invoices/ });
     await expect(article).toBeVisible();
     await expect(page.getByText("Articles", { exact: true })).toBeVisible();
 
-    // Un résultat mène quelque part : la palette navigue et se referme. La
-    // destination dépend du rôle — Thomas est agent, pas gestionnaire : il est
-    // envoyé vers l'article publié, le seul endroit où il peut le lire.
-    // L'éditeur /app/kb reste aux gestionnaires.
+    // A result leads somewhere: the palette navigates and closes again. The
+    // destination depends on the role — Thomas is an Agent, not a manager: he
+    // is sent to the published article, the only place where he can read it.
+    // The /app/kb editor stays with the managers.
     await article.click();
     await expect(search).toBeHidden();
-    await expect(page).toHaveURL(/\/help\/articles\/comment-telecharger-vos-factures/);
+    await expect(page).toHaveURL(/\/help\/articles\/how-to-download-your-invoices/);
   });
 
-  // Dernier de la journée, et il doit le rester : se déconnecter révoque la
-  // session partagée par tous les tests de ce fichier.
-  test("la déconnexion referme l'espace agent", async ({ page }) => {
+  // Last of the day, and it must stay that way: signing out revokes the
+  // session shared by all the tests in this file.
+  test("signing out closes the agent workspace again", async ({ page }) => {
     await reuseAgentSession(page);
     await page.goto("/app/tickets");
 
-    await page.getByTitle("Se déconnecter").click();
+    await page.getByTitle("Sign out").click();
     await expect(page).toHaveURL(/\/login/);
 
-    // Le vrai test n'est pas la redirection mais la session : l'inbox doit
-    // redevenir inaccessible même en y retournant à la main.
+    // The real test is not the redirect but the session: the inbox must become
+    // inaccessible again, even when going back to it by hand.
     await expectStatus(page, "/app/tickets", 307);
     await page.goto("/app/tickets");
     await expect(page).toHaveURL(/\/login/);

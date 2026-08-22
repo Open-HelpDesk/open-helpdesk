@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Shell de l'espace agent (AG-03 → AG-10) — parties clientes :
- * rail 64 px avec états actifs par route + badge Inbox, topbar 48 px avec titre/sous-titre
- * dynamiques, faux champ recherche ⌘K, cloche, « + Nouveau ticket ».
+ * Agent workspace shell (AG-03 → AG-10) — client parts:
+ * 64 px rail with per-route active states + Inbox badge, 48 px topbar with dynamic
+ * title/subtitle, fake ⌘K search field, bell, "+ New ticket".
  */
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -121,10 +121,10 @@ export function RailNav({ inboxBadge }: { inboxBadge: number }) {
 
 type TopbarInfo = { title: string; subtitle: string };
 
-/** Fonction de traduction du contexte client, passée aux fonctions hors composant. */
+/** Translation function from the client context, passed to functions outside the component. */
 type Translate = ReturnType<typeof useT>;
 
-/** Les pages (ex. AG-04) peuvent surcharger le titre du topbar via cet événement. */
+/** Pages (e.g. AG-04) can override the topbar title through this event. */
 export function TopbarOverride({ title, subtitle }: { title: string; subtitle: string }) {
   useEffect(() => {
     window.dispatchEvent(
@@ -203,7 +203,7 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
     return () => window.removeEventListener("ohd:topbar", onOverride);
   }, []);
 
-  // Reset de la surcharge au changement de route.
+  // Reset the override on route change.
   useEffect(() => {
     setOverride(null);
   }, [pathname]);
@@ -234,7 +234,7 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
 
       <span className="flex-1" />
 
-      {/* Faux champ recherche → palette ⌘K */}
+      {/* Fake search field → ⌘K palette */}
       <button
         type="button"
         onClick={() => window.dispatchEvent(new Event("ohd:open-search"))}
@@ -264,7 +264,7 @@ export function TopBar({ counts }: { counts: ShellCounts }) {
         </kbd>
       </button>
 
-      {/* Cloche */}
+      {/* Bell */}
       <button
         type="button"
         title={t("app.shell.notifications")}

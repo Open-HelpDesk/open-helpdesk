@@ -1,4 +1,4 @@
-/** AG-09 — Export CSV des KPI de la période (toolbar « Export CSV »). */
+/** AG-09 — CSV export of the period's KPIs (toolbar "Export CSV"). */
 import { NextResponse, type NextRequest } from "next/server";
 import { apiAgent } from "@/lib/session";
 import { getReportData } from "@/lib/reports";

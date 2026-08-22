@@ -1,12 +1,12 @@
 /**
- * Adaptateurs des webhooks de réception des fournisseurs (ST-03).
+ * Adapters for the providers' inbound webhooks (ST-03).
  *
- * Chaque fournisseur POste son propre format ; tout converge vers InboundEmail avant
- * ingestion. Parsing défensif : un champ manquant produit un email ignoré, jamais une
- * exception — un webhook qui répond 500 est rejoué en boucle par le fournisseur.
+ * Each provider POSTs its own format; everything converges towards InboundEmail before
+ * ingestion. Defensive parsing: a missing field produces an ignored email, never an
+ * exception — a webhook answering 500 is replayed in a loop by the provider.
  *
- * - Brevo « Inbound parsing » : POST { items: [ { From, To, Subject, RawTextBody… } ] }
- * - Mailjet « Parse API »     : POST plat { From, Recipient, Subject, Text-part… }
+ * - Brevo "Inbound parsing" : POST { items: [ { From, To, Subject, RawTextBody… } ] }
+ * - Mailjet "Parse API"     : flat POST { From, Recipient, Subject, Text-part… }
  */
 import type { InboundEmail } from "./types";
 
@@ -14,7 +14,7 @@ function str(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value : undefined;
 }
 
-/** « Nom <a@b.fr> » → { address, name } ; « a@b.fr » accepté tel quel. */
+/** "Name <a@b.fr>" → { address, name }; "a@b.fr" accepted as-is. */
 function parseAddress(value: unknown): { address: string; name?: string } | null {
   if (typeof value !== "string") return null;
   const match = value.match(/^\s*(?:"?([^"<]*)"?\s*)?<([^>]+)>\s*$/);
@@ -30,7 +30,7 @@ function parseReferences(value: unknown): string[] {
   return [];
 }
 
-/** Tous les en-têtes fournisseur, clés en minuscules (détection des messages automatiques). */
+/** All the provider headers, keys lowercased (detection of automatic messages). */
 function lowerHeaders(headers: unknown): Record<string, string> {
   if (!headers || typeof headers !== "object") return {};
   const out: Record<string, string> = {};
@@ -41,7 +41,7 @@ function lowerHeaders(headers: unknown): Record<string, string> {
   return out;
 }
 
-/** En-têtes fournisseur : casse et forme variables ("Message-Id", "message-id", tableaux). */
+/** Provider headers: case and shape vary ("Message-Id", "message-id", arrays). */
 function header(headers: unknown, name: string): string | undefined {
   if (!headers || typeof headers !== "object") return undefined;
   const wanted = name.toLowerCase();

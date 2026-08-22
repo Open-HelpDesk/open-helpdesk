@@ -1,10 +1,10 @@
 "use server";
 
 /**
- * PT-08 — actions core de l'administration d'organisation (réservées aux
- * contacts porteurs d'un orgAdminGrant) : domaines vérifiés (DNS TXT) et
- * partage des demandes. Les actions SSO vivent dans ee/web (licence
- * commerciale) : ee/web/src/portal/sso-actions.ts.
+ * PT-08 — core actions of organization administration (restricted to
+ * contacts holding an orgAdminGrant): verified domains (DNS TXT) and
+ * request sharing. The SSO actions live in ee/web (commercial
+ * license): ee/web/src/portal/sso-actions.ts.
  */
 import { randomBytes } from "node:crypto";
 import { resolveTxt } from "node:dns/promises";
@@ -15,10 +15,10 @@ import { and, eq } from "drizzle-orm";
 import { DOMAIN_VERIFICATION_TXT_PREFIX, PUBLIC_EMAIL_DOMAINS } from "@openhelpdesk/config";
 import { requireOrgAdmin } from "@/lib/portal-auth";
 
-/** Nom de domaine plausible : étiquettes alphanumériques + tirets, au moins un point. */
+/** Plausible domain name: alphanumeric labels + hyphens, at least one dot. */
 const DOMAIN_RE = /^(?!-)[a-z0-9-]{1,63}(?<!-)(\.(?!-)[a-z0-9-]{1,63}(?<!-))+$/;
 
-/** « + Ajouter un domaine » : format + refus des domaines grand public + unicité tenant. */
+/** "+ Add a domain": format + rejection of consumer domains + uniqueness per tenant. */
 export async function addOrgDomain(formData: FormData) {
   const { session, org } = await requireOrgAdmin();
   const domain = String(formData.get("domain") ?? "").trim().toLowerCase();
@@ -43,7 +43,7 @@ export async function addOrgDomain(formData: FormData) {
   redirect("/help/organization?tab=domains");
 }
 
-/** « Vérifier maintenant » : cherche ohd-verify={token} dans les TXT du domaine. */
+/** "Verify now": looks for ohd-verify={token} in the domain's TXT records. */
 export async function verifyOrgDomain(formData: FormData) {
   const { session, org } = await requireOrgAdmin();
   const id = String(formData.get("id") ?? "");
@@ -65,7 +65,7 @@ export async function verifyOrgDomain(formData: FormData) {
     const expected = `${DOMAIN_VERIFICATION_TXT_PREFIX}${row.verificationToken}`;
     found = records.some((r) => r.trim() === expected || r.includes(expected));
   } catch {
-    found = false; // NXDOMAIN, timeout… : traité comme un échec de vérification
+    found = false; // NXDOMAIN, timeout…: treated as a verification failure
   }
 
   await db
@@ -80,7 +80,7 @@ export async function verifyOrgDomain(formData: FormData) {
   redirect("/help/organization?tab=domains");
 }
 
-/** Toggle « Demandes visibles par toute l'organisation » (organizations.sharedTickets). */
+/** "Requests visible to the whole organization" toggle (organizations.sharedTickets). */
 export async function toggleOrgSharing() {
   const { session, org } = await requireOrgAdmin();
   await db

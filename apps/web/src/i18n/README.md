@@ -1,123 +1,124 @@
-# Ajouter une langue
+# Adding a language
 
-Le logiciel se règle en 25 langues : les 24 officielles de l'Union européenne,
-qui couvrent ses 27 États membres, plus le norvégien. Une langue par tenant
-(`tenants.locale`, réglée dans ST-01) : agents et clients d'un même espace de
-travail lisent la même, il n'y a ni préférence individuelle ni préfixe d'URL.
+The software runs in 25 languages: the 24 official languages of the European
+Union, which cover its 27 member states, plus Norwegian. One language per tenant
+(`tenants.locale`, set in ST-01): agents and customers of the same workspace read
+the same one — there is no per-user preference and no URL prefix.
 
-`fr.ts` est la source. Les autres dictionnaires sont typés dessus, si bien
-qu'une clé oubliée est une erreur de compilation. C'est la seule garantie que le
-compilateur apporte — tout le reste de cette page décrit ce qu'il ne voit pas.
+`en.ts` is the source. The other dictionaries are typed against it, so a
+forgotten key is a compile error. That is the only guarantee the compiler gives
+— everything else on this page describes what it does not see.
 
-## La marche à suivre
+## The procedure
 
-1. Ajouter l'entrée dans [`locales.ts`](locales.ts) : `code`, `tag` BCP-47,
-   `nativeName` dans la langue elle-même, `dir`.
-2. Écrire `dictionaries/<code>.ts`, calqué sur `fr.ts` — mêmes clés, même ordre,
-   mêmes repères de section. Une relecture se fait alors en diff côte à côte.
-3. L'importer dans [`server.ts`](server.ts) et l'ajouter à `DICTIONARIES`.
-4. Lancer les contrôles : `pnpm --filter @openhelpdesk/smoke exec playwright test
-   src/i18n-source.spec.ts` — il ne demande aucune instance.
+1. Add the entry to [`locales.ts`](locales.ts): `code`, BCP-47 `tag`,
+   `nativeName` in the language itself, `dir`.
+2. Write `dictionaries/<code>.ts`, modelled on `en.ts` — same keys, same order,
+   same section markers. A review then reads as a side-by-side diff.
+3. Import it in [`server.ts`](server.ts) and add it to `DICTIONARIES`.
+4. Run the checks: `pnpm --filter @openhelpdesk/smoke exec playwright test
+   src/i18n-source.spec.ts` — it needs no running instance.
 
-## Les quatre pièges, tous vérifiés par des tests
+## The four traps, every one covered by a test
 
-**Les formes de pluriel.** `Message` n'exige que `other` ; les autres sont
-optionnelles, puisque aucune langue n'utilise le même jeu. Un dictionnaire
-polonais amputé de sa forme `many` compile sans un mot et affiche une phrase
-fausse dès qu'un compteur passe à 5. Fournissez toutes les catégories que
-`new Intl.PluralRules(tag).resolvedOptions().pluralCategories` renvoie ; le
-`many` du tchèque, du slovaque et du lituanien est la seule exception admise
-(il ne vise que les décimaux, qu'aucun `{count}` du produit ne reçoit).
+**Plural forms.** `Message` only requires `other`; the rest are optional, since
+no two languages use the same set. A Polish dictionary missing its `many` form
+compiles without a word of warning and prints a wrong sentence as soon as a
+counter reaches 5. Supply every category that
+`new Intl.PluralRules(tag).resolvedOptions().pluralCategories` returns; the
+`many` of Czech, Slovak and Lithuanian is the one admitted exception (it only
+targets decimals, which no `{count}` in the product receives).
 
-**Les noms propres non déclinés.** Le produit interpole les noms tels qu'ils
-ont été saisis, au nominatif : il ne sait pas en fabriquer le génitif, y coller
-un suffixe casuel, ni assimiler un article. Une phrase qui l'exigerait est
-fausse à chaque affichage — le tchèque écrivait « Odpověď od Petr » au lieu de
-« od Petra ». Trente clés sont concernées, et elles seules : celles dont un
-paramètre reçoit `name`, `org`, `agent`, `contact`, `tenant`, `domain`,
-`subject`, `team` ou `title`. Les parades éprouvées, par ordre de préférence :
-un nom commun qui porte le cas devant le nom propre (« Kontakty organizace
-{org} », « l-organizzazzjoni {org} »), la phrase retournée pour faire du
-paramètre un sujet, ou le détachement typographique (« agent: {agent} »). Et
-méfiez-vous des accords que le paramètre commande sans qu'on y pense : le croate
-accordait un participe avec le nom de l'agent, faux pour toute agente.
+**Undeclined proper nouns.** The product interpolates names exactly as they were
+entered, in the nominative: it cannot build a genitive, append a case suffix or
+assimilate an article. A sentence that requires it is wrong on every render —
+Czech read "Odpověď od Petr" instead of "od Petra". Thirty keys are concerned,
+and only those: the ones whose parameter receives `name`, `org`, `agent`,
+`contact`, `tenant`, `domain`, `subject`, `team` or `title`. The proven ways out,
+in order of preference: a common noun that carries the case in front of the
+proper noun ("Kontakty organizace {org}", "l-organizzazzjoni {org}"), the
+sentence turned around to make the parameter its subject, or typographic
+detachment ("agent: {agent}"). And beware of agreements the parameter commands
+without anyone thinking about it: Croatian agreed a participle with the agent's
+name, wrong for any woman.
 
-**Les verbes destructeurs qui se confondent.** Dans quatre des quatorze
-dernières langues livrées, le mot naturel de la révocation était aussi celui de
-l'annulation : le lien rouge qui invalide définitivement une clé d'API portait le
-même mot que le bouton Annuler du même écran. Vérifiez que « révoquer »,
-« supprimer », « désactiver », « retirer », « fermer » et « annuler » restent
-distinguables **quand ils cohabitent sur un écran** ; ailleurs, un seul mot est
-souvent légitime.
+**Destructive verbs that blur together.** In four of the last fourteen languages
+shipped, the natural word for revoking was also the word for cancelling: the red
+link that permanently invalidates an API key carried the same word as the Cancel
+button on the same screen. Check that "revoke", "delete", "disable", "remove",
+"close" and "cancel" stay distinguishable **when they live on the same screen**;
+elsewhere, one word is often legitimate.
 
-**Les jeux de vocabulaire.** Statuts, priorités, urgences, canaux vivent dans des
-tables à l'écart des écrans qui les affichent, et deux valeurs identiques dans un
-même jeu donnent un filtre inutilisable sans que rien ne plante. Attention aussi
-au genre : les statuts du portail qualifient une « demande », ceux de l'espace
-agent un « ticket », et ces deux mots n'ont pas forcément le même genre.
+**Vocabulary sets.** Statuses, priorities, urgencies and channels live in tables
+away from the screens that display them, and two identical values in one set
+give an unusable filter without anything breaking. Mind grammatical gender too:
+portal statuses qualify a "request", agent-space statuses a "ticket", and those
+two words need not share a gender.
 
-## Rien de traduisible ne vit hors de ce dossier
+## Nothing translatable lives outside this folder
 
-`fr.ts` est la source, et c'est la seule. Un libellé écrit dans un composant ne
-sera jamais traduit — il ne manquera à aucune langue, le compilateur ne dira
-rien, et seul un lecteur bulgare s'en apercevra. La faute a été commise à grande
-échelle : cent quarante-huit chaînes, dont l'écran des automatisations et
-l'onboarding entiers.
+`en.ts` is the source, and the only one. A label written inside a component will
+never be translated — it will be missing from no language, the compiler will say
+nothing, and only a reader of another language will notice. The mistake was made
+at scale: a hundred and forty-eight strings, including the whole automations
+screen and the whole onboarding.
 
-`packages/smoke/src/i18n-source-francais.spec.ts` monte la garde : il balaie
-`apps/web/src` hors `i18n/` et refuse tout texte accentué qui ne passe pas par
-`t()`. Quatre exceptions y sont inscrites avec leur raison — le 404 du
-middleware, qui ne peut pas connaître une langue puisqu'il n'a pas résolu le
-tenant ; les noms de catégorie saisis par le tenant, comparés tels quels ; la
-valeur en base des types de ticket ; un commentaire du JavaScript servi. Un
-cinquième cas se justifie ou passe par le dictionnaire.
+`packages/smoke/src/i18n-hardcoded.spec.ts` stands guard: it sweeps
+`apps/web/src` and `ee/web/src` outside `i18n/` and rejects any accented text
+that does not go through `t()`. Its exceptions are listed with their reason —
+category names entered by the tenant and compared as-is, and the database value
+of ticket types. A third case either justifies itself or goes through the
+dictionary.
 
-Trois pièges de ce balayage valent d'être connus avant d'y ajouter du texte :
+That guard has a known limit worth stating: it keys on accents, so a hardcoded
+**English** label slips through it. It is kept because it still catches the
+likeliest accident, and because a check with no false positives is a check that
+survives. Two habits close the gap: add the key first, then use it; and read the
+diff of any file where a literal string sits next to JSX.
 
-**Une phrase assemblée n'est pas traduisible.** Le résumé des règles concaténait
-« Si » + conditions + « → » + actions : l'ordre des mots était figé en français.
-Le gabarit est maintenant une clé (`summaryPattern`), et chaque bribe la sienne.
-Une langue qui rejette son verbe à la fin peut le faire.
+Three traps of that sweep are worth knowing before adding text to it:
 
-**Ne découpez jamais du texte rendu.** Deux écrans fabriquaient la phrase
-complète pour en retirer le début à l'expression régulière — `/^Si toujours → /`,
-`/^Si /`. Dès que la langue changeait, le `replace` ne retirait plus rien.
-Exposez la moitié dont vous avez besoin (`conditionsSummary`, `actionsSummary`)
-au lieu de rogner une chaîne.
+**An assembled sentence is not translatable.** The rule summary concatenated
+"If" + conditions + "→" + actions: word order was frozen in one language. The
+pattern is now a key (`summaryPattern`), and every fragment has its own. A
+language that throws its verb to the end can do so.
 
-**Tout ce qui ressemble à du français n'est pas du texte.** Les jetons de durée
-`min`, `h`, `j` de ST-07 sont une syntaxe : la valeur affichée est relue par
-`parseDurationTokens` au prochain enregistrement, et les traduire empêcherait
-d'enregistrer. Les fonctions s'appelaient `formatDurationFr` / `parseDurationFr`,
-ce qui invitait précisément à l'erreur.
+**Never slice rendered text.** Two screens built the full sentence to strip its
+beginning with a regular expression. As soon as the language changed, the
+`replace` stripped nothing. Expose the half you need (`conditionsSummary`,
+`actionsSummary`) instead of trimming a string.
 
-Enfin, méfiez-vous des opérations qui ont l'air neutres : `toLowerCase()` est
-faux dès qu'une langue capitalise ses substantifs, et `localeCompare(a, "fr-FR")`
-ne classe correctement ni le cyrillique ni les diacritiques du tchèque — passez
-`t.locale.tag`.
+**Not everything that looks like a word is text.** The ST-07 duration tokens
+`min`, `h`, `j` are a syntax: the displayed value is read back by
+`parseDurationTokens` on the next save, and translating them would prevent
+saving.
 
-## Ce qui n'est pas à traduire
+Finally, beware of operations that look neutral: `toLowerCase()` is wrong as
+soon as a language capitalises its nouns, and `localeCompare(a, "fr-FR")` sorts
+neither Cyrillic nor Czech diacritics correctly — pass `t.locale.tag`.
 
-Les marques et les sigles techniques, les touches de clavier (`⌘K`, `↑↓`, `↵` —
-dans « G puis B », seul le mot de liaison change), les `{{jetons.doubles}}` des
-macros, les chemins de consoles tierces non localisées, et les rôles affichés du
-produit : **Owner, Admin, Agent, Viewer** sont des valeurs, pas du texte.
+## What is not translated
 
-En revanche, adaptez les unités, les domaines d'exemple, les jours fériés cités
-et les initiales des jours de la semaine de la heatmap.
+Brands and technical acronyms, keyboard keys (`⌘K`, `↑↓`, `↵` — in "G then B",
+only the linking word changes), the `{{double.tokens}}` of macros, paths in
+third-party consoles that are not localised, and the product's displayed roles:
+**Owner, Admin, Agent, Viewer** are values, not text.
 
-Un piège technique : l'exemple de `app.settings.sla.durationHint` est relu par
-`parseDurationFr`, qui n'accepte littéralement que `min`, `h` et `j` quelle que
-soit la langue. Gardez ces jetons analysables et glosez-les.
+Do adapt units, example domains, the public holidays cited and the weekday
+initials of the heatmap.
 
-## Formats : ne les écrivez pas, déléguez-les
+One technical trap: the example in `app.settings.sla.durationHint` is read back
+by the duration parser, which literally accepts only `min`, `h` and `j` whatever
+the language. Keep those tokens parseable and gloss them.
 
-Dates, heures, nombres, pluriels et temps relatif passent par `Intl` via
-[`LocaleFormat`](format.ts). Un nombre interpolé dans une phrase est formaté par
-`interpolate` avec la locale : ne le mettez pas en dur. Les langues ne groupent
-pas les milliers de la même façon, et certaines ne les groupent pas du tout à
-quatre chiffres — le polonais écrit « 4262 » là où le français écrit « 4 262 ».
+## Formats: do not write them, delegate them
 
-`of()` est le seul endroit où une règle de langue est codée en dur : l'élision
-française (« le support d'Acme »). Les autres langues reçoivent le nom tel quel
-et leur dictionnaire tourne la phrase.
+Dates, times, numbers, plurals and relative time all go through `Intl` via
+[`LocaleFormat`](format.ts). A number interpolated into a sentence is formatted
+by `interpolate` with the locale: do not hardcode it. Languages do not group
+thousands the same way, and some do not group four digits at all — Polish writes
+"4262" where French writes "4 262".
+
+`of()` is the one place where a language rule is hardcoded: French elision ("le
+support d'Acme"). Other languages receive the name as-is and their dictionary
+turns the sentence around.

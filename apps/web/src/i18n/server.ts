@@ -3,13 +3,13 @@ import { getTenantFromHeaders } from "@/lib/tenant";
 import { renderMessage, splitAround, type Message, type MessageParams } from "./dictionary";
 import { LocaleFormat } from "./format";
 import { DEFAULT_LOCALE, resolveLocale, type LocaleDefinition } from "./locales";
-import { fr, type Dictionary, type MessageKey } from "./dictionaries/fr";
+import { en, type Dictionary, type MessageKey } from "./dictionaries/en";
 import { bg } from "./dictionaries/bg";
+import { fr } from "./dictionaries/fr";
 import { cs } from "./dictionaries/cs";
 import { da } from "./dictionaries/da";
 import { de } from "./dictionaries/de";
 import { el } from "./dictionaries/el";
-import { en } from "./dictionaries/en";
 import { es } from "./dictionaries/es";
 import { et } from "./dictionaries/et";
 import { fi } from "./dictionaries/fi";
@@ -30,12 +30,12 @@ import { sl } from "./dictionaries/sl";
 import { sv } from "./dictionaries/sv";
 
 /**
- * Résolution de la langue côté serveur.
+ * Server-side language resolution.
  *
- * Une langue par tenant (ST-01 → `tenants.locale`), pas de préférence
- * individuelle : dans un espace de travail, agents et clients lisent la même.
- * La lecture du tenant est mémoïsée par requête, donc appeler `getT()` dans
- * dix composants ne fait qu'une requête SQL.
+ * One language per tenant (ST-01 → `tenants.locale`), no individual
+ * preference: within a workspace, agents and customers read the same one. The
+ * tenant lookup is memoised per request, so calling `getT()` in ten components
+ * runs only one SQL query.
  */
 
 const DICTIONARIES: Record<string, Dictionary> = {
@@ -47,13 +47,13 @@ const DICTIONARIES: Record<string, Dictionary> = {
 
 export type Translate = {
   (key: MessageKey, params?: MessageParams): string;
-  /** Langue résolue, pour `lang`/`dir` et les composants clients. */
+  /** Resolved language, for `lang`/`dir` and the client components. */
   locale: LocaleDefinition;
-  /** Dates, nombres, pluriels, temps relatif dans cette langue. */
+  /** Dates, numbers, plurals, relative time in this language. */
   fmt: LocaleFormat;
-  /** Le dictionnaire complet — à passer à un composant client. */
+  /** The full dictionary — to be passed to a client component. */
   dict: Dictionary;
-  /** Phrase découpée autour d'un paramètre rendu en JSX (lien, valeur en gras). */
+  /** Sentence split around a parameter rendered in JSX (link, value in bold). */
   parts: (key: MessageKey, slot: string, params?: MessageParams) => [string, string];
 };
 
@@ -62,12 +62,12 @@ export const getLocale = cache(async (): Promise<LocaleDefinition> => {
     const tenant = await getTenantFromHeaders();
     return resolveLocale(tenant?.locale);
   } catch {
-    // Route hors middleware (jamais en pratique) : le français reste le repli.
+    // Route outside the middleware (never in practice): French stays the fallback.
     return resolveLocale(DEFAULT_LOCALE);
   }
 });
 
-/** Construit la fonction de traduction pour la langue du tenant. */
+/** Builds the translation function for the tenant's language. */
 export const getT = cache(async (): Promise<Translate> => {
   const locale = await getLocale();
   return buildTranslate(locale);
@@ -78,8 +78,8 @@ export function buildTranslate(locale: LocaleDefinition): Translate {
   const fmt = new LocaleFormat(locale);
 
   const t = ((key: MessageKey, params?: MessageParams) => {
-    // Repli sur le français plutôt que sur la clé brute : une traduction
-    // manquante doit rester lisible, pas afficher « requests.emptyTitle ».
+    // Fall back to French rather than to the raw key: a missing translation
+    // must stay readable, not display "requests.emptyTitle".
     const message: Message = dict[key] ?? fr[key];
     if (message === undefined) return key;
     const count = params?.count;

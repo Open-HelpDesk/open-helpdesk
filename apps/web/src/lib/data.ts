@@ -24,10 +24,10 @@ import {
   type SQL,
 } from "drizzle-orm";
 
-import type { MessageKey } from "@/i18n/dictionaries/fr";
-/** Vues par défaut de l'inbox (AG-03) — pastille 6×6 colorée par token de statut. */
-/** Vues livrées avec le produit. `key` est stable (URL, filtres) ; le libellé
- *  est de l'interface, il suit donc la langue du tenant. */
+import type { MessageKey } from "@/i18n/dictionaries/en";
+/** Default inbox views (AG-03) — 6×6 dot colored by status token. */
+/** Views shipped with the product. `key` is stable (URL, filters); the label
+ *  belongs to the interface, hence it follows the tenant's language. */
 export const DEFAULT_VIEWS = [
   { key: "mine", labelKey: "app.views.mine", dot: "open" },
   { key: "unassigned", labelKey: "app.views.unassigned", dot: "new" },
@@ -40,11 +40,11 @@ export type ViewKey = (typeof DEFAULT_VIEWS)[number]["key"];
 
 const OPEN_STATUSES = ["new", "open", "waiting", "on_hold"] as const;
 
-async function escaladeTeamId(tenantId: string): Promise<string | null> {
+async function escalationTeamId(tenantId: string): Promise<string | null> {
   const [team] = await db
     .select({ id: teams.id })
     .from(teams)
-    .where(and(eq(teams.tenantId, tenantId), eq(teams.name, "Escalade")));
+    .where(and(eq(teams.tenantId, tenantId), eq(teams.name, "Escalation")));
   return team?.id ?? null;
 }
 
@@ -52,7 +52,7 @@ function viewWhere(
   tenantId: string,
   view: ViewKey,
   agentId: string,
-  escaladeId: string | null,
+  escalationId: string | null,
 ) {
   const base = and(
     eq(tickets.tenantId, tenantId),
@@ -66,7 +66,7 @@ function viewWhere(
     case "unassigned":
       return and(base, openOnly, isNull(tickets.assigneeId));
     case "breaching": {
-      // Échéance (1ʳᵉ réponse ou résolution) dépassée ou sous 30 min.
+      // Due date (1st reply or resolution) passed, or less than 30 min away.
       const soon = sql`now() + interval '30 minutes'`;
       return and(
         base,
@@ -91,19 +91,19 @@ function viewWhere(
         gt(tickets.createdAt, sql`now() - interval '7 days'`),
       );
     case "escalation":
-      return escaladeId
-        ? and(base, openOnly, eq(tickets.teamId, escaladeId))
+      return escalationId
+        ? and(base, openOnly, eq(tickets.teamId, escalationId))
         : and(base, openOnly, sql`false`);
   }
 }
 
-/* ---------- Vues d'équipe (table views) ---------- */
+/* ---------- Team views (views table) ---------- */
 
 export type TeamView = { id: string; name: string; count: number };
 
 type ViewCondition = { field?: string; op?: string; value?: unknown };
 
-/** Évaluation minimale des conditions d'une vue partagée (statut/priorité/assigné/équipe/tag). */
+/** Minimal evaluation of a shared view's conditions (status/priority/assignee/team/tag). */
 function teamViewWhere(tenantId: string, conditions: ViewCondition[]) {
   const base = and(
     eq(tickets.tenantId, tenantId),
@@ -166,25 +166,25 @@ export async function listTeamViews(tenantId: string): Promise<TeamView[]> {
 }
 
 export async function viewCounts(tenantId: string, agentId: string) {
-  const escaladeId = await escaladeTeamId(tenantId);
+  const escalationId = await escalationTeamId(tenantId);
   const rows = await Promise.all(
     DEFAULT_VIEWS.map(async (v) => {
       const [row] = await db
         .select({ n: count() })
         .from(tickets)
-        .where(viewWhere(tenantId, v.key, agentId, escaladeId));
+        .where(viewWhere(tenantId, v.key, agentId, escalationId));
       return [v.key, row?.n ?? 0] as const;
     }),
   );
   return Object.fromEntries(rows) as Record<ViewKey, number>;
 }
 
-/* ---------- Liste des tickets (filtres + tri + pagination) ---------- */
+/* ---------- Ticket list (filters + sort + pagination) ---------- */
 
 export type InboxFilters = {
   status?: string;
   priority?: string;
-  /** uuid d'agent, ou "none" pour « non assigné ». */
+  /** Agent uuid, or "none" for "unassigned". */
   assignee?: string;
   sort?: "priority" | "recent";
   /** 1-based. */
@@ -210,7 +210,7 @@ async function inboxWhere(
       .where(and(eq(views.tenantId, tenantId), eq(views.id, view.teamViewId)));
     where = teamViewWhere(tenantId, ((teamView?.conditions ?? []) as ViewCondition[]) ?? []);
   } else {
-    where = viewWhere(tenantId, view, agentId, await escaladeTeamId(tenantId));
+    where = viewWhere(tenantId, view, agentId, await escalationTeamId(tenantId));
   }
 
   const parts: (SQL | undefined)[] = [where];
@@ -280,7 +280,7 @@ export async function listTickets(
     return { rows: rows.map((r) => ({ ...r, excerpt: null as string | null })), total };
   }
 
-  // Extrait du dernier message par ticket (une requête, dépliée en JS).
+  // Excerpt of the last message per ticket (one query, unfolded in JS).
   const ids = rows.map((r) => r.id);
   const msgs = await db
     .select({
@@ -309,13 +309,13 @@ export async function listTickets(
   };
 }
 
-/** Numéros ordonnés de la vue — navigation ←/→ de AG-04 (« ticket X sur N »). */
+/** Ordered numbers of the view — AG-04 ←/→ navigation ("ticket X of N"). */
 export async function viewTicketNumbers(
   tenantId: string,
   view: ViewKey,
   agentId: string,
 ): Promise<number[]> {
-  const where = viewWhere(tenantId, view, agentId, await escaladeTeamId(tenantId));
+  const where = viewWhere(tenantId, view, agentId, await escalationTeamId(tenantId));
   const rows = await db
     .select({ number: tickets.number })
     .from(tickets)
@@ -327,7 +327,7 @@ export async function viewTicketNumbers(
 
 export { nextTicketNumber } from "@openhelpdesk/db";
 
-/** Macros disponibles dans l'éditeur de AG-04 (format aplati pour le client). */
+/** Macros available in the AG-04 editor (flattened format for the client). */
 export async function listMacrosForEditor(tenantId: string) {
   const { macros } = await import("@openhelpdesk/db");
   const rows = await db
@@ -345,7 +345,7 @@ export async function listMacrosForEditor(tenantId: string) {
       insertText: String(insert?.value ?? ""),
       insertKind: insert?.type === "insert_note" ? ("internal_note" as const) : ("public_reply" as const),
       setStatus: String(actions.find((a) => a.type === "set_status")?.value ?? ""),
-      /** D'autres actions (priorité, équipe, tags) sont appliquées côté serveur à l'envoi. */
+      /** Other actions (priority, team, tags) are applied server-side on send. */
       hasServerActions: actions.some((a) =>
         ["set_priority", "assign_team", "assign_user", "add_tags"].includes(a.type),
       ),
@@ -447,7 +447,7 @@ export async function getTicketByNumber(tenantId: string, number: number) {
       .limit(3),
   ]);
 
-  // Ticket cible si celui-ci a été fusionné (bannière lecture seule).
+  // Target ticket if this one was merged (read-only banner).
   const mergedInto = ticket.mergedIntoId
     ? (
         await db

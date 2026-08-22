@@ -4,14 +4,14 @@ import { SettingsNav } from "@/components/settings-nav";
 import { getT } from "@/i18n/server";
 
 /**
- * Shell de l'administration (ST-01 → ST-14, design-notes/administration.md) :
- * navigation secondaire 220 px groupée (codes ST-xx en mono, badges EE) +
- * zone de contenu padding 26px 28px 40px. Accès Owner/Admin uniquement.
+ * Admin shell (ST-01 → ST-14): grouped 220 px
+ * secondary navigation (ST-xx codes in mono, EE badges) +
+ * content area with padding 26px 28px 40px. Owner/Admin access only.
  *
- * CSS local : uniquement les entrées d'écran propres à l'administration
- * (st-rise, st-slide, st-pop). L'interrupteur et les survols sont des primitives
- * partagées (.ohd-toggle, .ohd-hover) — ils sont identiques dans les deux
- * maquettes, et les dupliquer ici les laissait dériver.
+ * Local CSS: only the screen entrances specific to the admin area
+ * (st-rise, st-slide, st-pop). The toggle and the hovers are shared
+ * primitives (.ohd-toggle, .ohd-hover) — they are identical in both
+ * mockups, and duplicating them here let them drift.
  */
 export default async function SettingsLayout({ children }: { children: React.ReactNode }) {
   const { agent } = await requireAgent();
@@ -29,8 +29,8 @@ export default async function SettingsLayout({ children }: { children: React.Rea
 
   return (
     <div className="flex h-full">
-      {/* `both` n'est pas décoratif : sans lui l'écran s'affiche une frame à son
-          état final avant de repartir de translateY(6px), et l'entrée saute. */}
+      {/* `both` is not decorative: without it the screen shows for one frame at its
+          final state before starting over from translateY(6px), and the entrance jumps. */}
       <style>{`
         @keyframes st-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
         .st-rise { animation: st-rise .18s ease both; }
@@ -40,7 +40,7 @@ export default async function SettingsLayout({ children }: { children: React.Rea
         .st-pop { animation: st-pop .16s ease both; }
       `}</style>
       <SettingsNav edition={getEdition()} />
-      {/* Le padding et la largeur maximale vivent dans PageShell, comme dans le design. */}
+      {/* The padding and the max width live in PageShell, as in the design. */}
       <div className="min-w-0 flex-1 overflow-y-auto" style={{ background: "var(--canvas)" }}>
         {children}
       </div>

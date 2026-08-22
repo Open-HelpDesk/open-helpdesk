@@ -7,13 +7,13 @@ import { getT } from "@/i18n/server";
 import { createCategory, deleteCategory, renameCategory } from "./actions";
 
 /**
- * AG-10 — Base de connaissances (design espace-agent) : arbre 250 px avec catégories
- * parent/enfants (carets, compteurs réels), liste « {catégorie} / N articles » et table
+ * AG-10 — Knowledge base (agent space design): 250 px tree with parent/child
+ * categories (carets, real counters), "{category} / N articles" list and table
  * grid `minmax(240px,1fr) 110px 140px 80px 80px 110px`.
  *
- * Lecture ouverte à toute l'équipe — un agent cite les articles dans ses réponses.
- * Écriture (créer, renommer, supprimer) réservée à Owner et Admin : les commandes
- * n'apparaissent pas pour les autres, et les server actions refont le contrôle.
+ * Reading open to the whole team — an agent quotes articles in their replies.
+ * Writing (create, rename, delete) restricted to Owner and Admin: the commands
+ * do not show up for the others, and the server actions re-run the check.
  */
 
 const GRID = "minmax(240px,1fr) 110px 140px 80px 80px 110px";
@@ -21,11 +21,11 @@ const GRID = "minmax(240px,1fr) 110px 140px 80px 80px 110px";
 export default async function KbPage({
   searchParams,
 }: {
-  searchParams: Promise<{ cat?: string; erreur?: string; n?: string }>;
+  searchParams: Promise<{ cat?: string; error?: string; n?: string }>;
 }) {
   const { tenant, agent } = await requireAgent();
   const t = await getT();
-  const { cat, erreur, n } = await searchParams;
+  const { cat, error, n } = await searchParams;
   const canManage = isManager(agent.role);
 
   const [allCategories, countRows] = await Promise.all([
@@ -37,8 +37,8 @@ export default async function KbPage({
     db
       .select({ categoryId: kbArticles.categoryId, n: count() })
       .from(kbArticles)
-      // Même filtre que la liste : un compteur qui annonce trois articles quand
-      // deux s'affichent révèle par la soustraction ce qu'on vient de cacher.
+      // Same filter as the list: a counter announcing three articles when only
+      // two are displayed reveals by subtraction what we have just hidden.
       .where(
         and(
           eq(kbArticles.tenantId, tenant.id),
@@ -62,7 +62,7 @@ export default async function KbPage({
   const selectedIsParent = selected ? !selected.parentId : false;
   const expandedParentId = selected ? (selected.parentId ?? selected.id) : null;
 
-  // Articles de la sélection (une catégorie parent inclut ses sections).
+  // Articles of the selection (a parent category includes its sections).
   const catIds = selected
     ? selectedIsParent
       ? [selected.id, ...childrenOf(selected.id).map((c) => c.id)]
@@ -84,10 +84,10 @@ export default async function KbPage({
           })
           .from(kbArticles)
           .leftJoin(users, eq(kbArticles.authorId, users.id))
-          // La recherche partagée (lib/directory) cache déjà les brouillons aux
-          // non-gestionnaires, au motif qu'un titre non publié est déjà une
-          // information à protéger. Cette liste les montrait encore, badge
-          // « Brouillon » compris : les deux écrans disaient le contraire.
+          // The shared search (lib/directory) already hides drafts from
+          // non-managers, on the grounds that an unpublished title is already
+          // information to protect. This list still showed them, "Draft" badge
+          // included: the two screens were saying the opposite.
           .where(
             and(
               eq(kbArticles.tenantId, tenant.id),
@@ -114,7 +114,7 @@ export default async function KbPage({
       fontWeight: active ? 600 : 400,
     }) as CSSProperties;
 
-  // État vide global.
+  // Global empty state.
   if (parents.length === 0) {
     return (
       <div className="flex h-full items-center justify-center p-8">
@@ -167,7 +167,7 @@ export default async function KbPage({
 
   return (
     <div className="flex h-full">
-      {/* Arbre — 250 px */}
+      {/* Tree — 250 px */}
       <nav
         className="flex w-[250px] shrink-0 flex-col overflow-y-auto border-r p-3"
         style={{ background: "var(--sunk)", borderColor: "var(--line)" }}
@@ -260,7 +260,7 @@ export default async function KbPage({
         )}
       </nav>
 
-      {/* Liste des articles */}
+      {/* Article list */}
       <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <div
           className="flex shrink-0 items-center gap-2 border-b px-4"
@@ -273,7 +273,7 @@ export default async function KbPage({
           <span className="flex-1" />
           {canManage && selected && (
             <>
-              {/* Renommer : le champ s'ouvre au clic, sans quitter la page. */}
+              {/* Rename: the field opens on click, without leaving the page. */}
               <details className="relative">
                 <summary
                   className="inline-flex cursor-pointer items-center rounded-md border px-3 font-medium"
@@ -324,8 +324,8 @@ export default async function KbPage({
           )}
         </div>
 
-        {/* Une catégorie non vide ne se supprime pas : on dit ce qui bloque. */}
-        {erreur === "categorie-non-vide" && (
+        {/* A non-empty category cannot be deleted: we say what is blocking. */}
+        {error === "category-not-empty" && (
           <p
             className="shrink-0 border-b px-4 py-2 text-[13px]"
             style={{ background: "var(--dang-t)", borderColor: "var(--line)", color: "var(--dang)" }}
@@ -359,10 +359,10 @@ export default async function KbPage({
                 <span className="text-right">{t("app.kb.colHelpful")}</span>
                 <span className="pr-4 text-right">{t("app.kb.colUpdated")}</span>
               </div>
-              {/* Où mène une ligne dépend du rôle : l'éditeur pour qui peut
-                  écrire, l'article publié sur le portail pour les autres. Un
-                  brouillon n'est lisible nulle part ailleurs : sa ligne ne
-                  cliquera pas, plutôt que de renvoyer sur une redirection. */}
+              {/* Where a row leads depends on the role: the editor for whoever
+                  can write, the article published on the portal for the others. A
+                  draft is readable nowhere else: its row will not click through,
+                  rather than sending the reader to a redirect. */}
               {articles.map((a) => (
                 <Link
                   key={a.id}

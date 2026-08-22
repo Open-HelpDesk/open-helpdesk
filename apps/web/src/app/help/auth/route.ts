@@ -1,4 +1,4 @@
-/** PT-07 — atterrissage du lien magique : vérifie le jeton, pose la session, redirige. */
+/** PT-07 — magic link landing: verifies the token, sets the session, redirects. */
 import { NextResponse, type NextRequest } from "next/server";
 import { contacts, db } from "@openhelpdesk/db";
 import { and, eq } from "drizzle-orm";
@@ -13,8 +13,8 @@ import { getPortalSettings } from "@/lib/portal-config";
 
 export async function GET(request: NextRequest) {
   const base = requestOrigin(request);
-  // Portail coupé : un lien magique encore en circulation ne doit pas rouvrir
-  // une session sur un portail éteint.
+  // Portal turned off: a magic link still in circulation must not reopen
+  // a session on a portal that has been switched off.
   if (!(await getPortalSettings()).portalEnabled) {
     return new NextResponse("Not found", { status: 404 });
   }

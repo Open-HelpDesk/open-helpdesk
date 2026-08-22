@@ -7,10 +7,10 @@ import { getT } from "@/i18n/server";
 import { initials, shortName } from "@/i18n/format";
 
 /**
- * Chrome du portail client (maquette PT) : header 66 px (logo 32, marque en serif
- * 19, liens 14.5, pilule utilisateur) + rangée de navigation mobile (deux boutons
- * h46, maquette « narrow ») + footer « © {année} {tenant} / Propulsé par Open HelpDesk ».
- * /help/login et /help/auth vivent hors de ce groupe — sans chrome (PT-07).
+ * Customer portal chrome (PT mockup): 66 px header (32 logo, serif brand at
+ * 19, 14.5 links, user pill) + mobile navigation row (two h46 buttons,
+ * "narrow" mockup) + footer "© {year} {tenant} / Powered by Open HelpDesk".
+ * /help/login and /help/auth live outside this group — chrome-free (PT-07).
  */
 export default async function PortalChromeLayout({ children }: { children: React.ReactNode }) {
   const t = await getT();
@@ -19,7 +19,7 @@ export default async function PortalChromeLayout({ children }: { children: React
   const adminOrg = session ? await getOrgAdminOrg(session.tenant.id, session.contact.id) : null;
   const name = tenant?.name ?? t("chrome.defaultName");
   const logo = (tenant?.branding as { logoUrl?: string } | null)?.logoUrl ?? null;
-  // « Masquer Propulsé par Open HelpDesk » : réglage ST-09, réservé au plan Pro.
+  // "Hide Powered by Open HelpDesk": ST-09 setting, restricted to the Pro plan.
   const hidePoweredBy =
     tenant != null &&
     (tenant.portalConfig as { hidePoweredBy?: boolean } | null)?.hidePoweredBy === true &&
@@ -43,13 +43,13 @@ export default async function PortalChromeLayout({ children }: { children: React
       >
         <div className="flex h-[66px] items-center gap-4 px-9 max-sm:px-[18px]">
           <Link href="/help" className="flex items-center gap-[11px] hover:no-underline">
-            {/* Le logo du tenant (ST-01) remplace le carré à l'initiale. Il
-                n'est pas passé à l'optimiseur d'images de Next : un SVG ou un
-                ICO déposé par le tenant n'y survivrait pas, et le fichier est
-                déjà servi avec un cache définitif — son URL porte un UUID qui
-                change à chaque remplacement. */}
+            {/* The tenant logo (ST-01) replaces the square with the initial. It
+                is not passed through Next's image optimizer: an SVG or an ICO
+                uploaded by the tenant would not survive it, and the file is
+                already served with a permanent cache — its URL carries a UUID
+                that changes on every replacement. */}
             {logo ? (
-              /* eslint-disable-next-line @next/next/no-img-element -- voir ci-dessus */
+              /* eslint-disable-next-line @next/next/no-img-element -- see above */
               <img
                 src={logo}
                 alt={name}
@@ -149,7 +149,7 @@ export default async function PortalChromeLayout({ children }: { children: React
           )}
         </div>
 
-        {/* Rangée mobile de la maquette : les deux liens du header en boutons h44. */}
+        {/* Mobile row from the mockup: the two header links as h44 buttons. */}
         <div className="hidden gap-2 px-[18px] pb-3 max-sm:flex">
           <Link
             href="/help/requests/new"
@@ -181,8 +181,8 @@ export default async function PortalChromeLayout({ children }: { children: React
           <span>{t("chrome.copyright", { year: String(new Date().getFullYear()), name })}</span>
           <span className="flex-1" />
           {!hidePoweredBy && (
-            /* Le nom du produit est un lien : la phrase est découpée autour de
-               son emplacement pour que chaque langue garde son ordre de mots. */
+            /* The product name is a link: the sentence is split around its
+               position so that each language keeps its own word order. */
             <span>
               {poweredBefore}
               <a href="https://open-helpdesk.com" className="pt-link">

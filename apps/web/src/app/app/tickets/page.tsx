@@ -18,9 +18,9 @@ import { getT, type Translate } from "@/i18n/server";
 import { InboxTable, type InboxRowData } from "./inbox-table";
 
 /**
- * AG-03 — Inbox (design espace-agent) : panneau vues 240 px avec pastilles et compteurs,
- * barre de filtres (chips fonctionnels via searchParams), table dense au grid exact,
- * sélection multiple + navigation clavier (client), pagination, pied raccourcis.
+ * AG-03 — Inbox (agent space design): 240 px views panel with dots and counters,
+ * filter bar (working chips through searchParams), dense table on the exact grid,
+ * multi-selection + keyboard navigation (client), pagination, shortcuts footer.
  */
 
 type SearchParams = {
@@ -35,7 +35,7 @@ type SearchParams = {
 
 function buildQuery(params: SearchParams, patch: Record<string, string | undefined>) {
   const merged: Record<string, string | undefined> = { ...params, ...patch };
-  if (!("page" in patch)) delete merged.page; // tout changement de filtre revient page 1
+  if (!("page" in patch)) delete merged.page; // any filter change goes back to page 1
   const q = Object.entries(merged)
     .filter(([, v]) => v !== undefined && v !== "")
     .map(([k, v]) => `${k}=${encodeURIComponent(v!)}`)
@@ -43,7 +43,7 @@ function buildQuery(params: SearchParams, patch: Record<string, string | undefin
   return `/app/tickets${q ? `?${q}` : ""}`;
 }
 
-/** Libellé de groupe du panneau vues — 11px/600 uppercase letter-spacing .06em. */
+/** Group label of the views panel — 11px/600 uppercase letter-spacing .06em. */
 const VIEW_GROUP: React.CSSProperties = {
   fontSize: 11,
   fontWeight: 600,
@@ -52,7 +52,7 @@ const VIEW_GROUP: React.CSSProperties = {
   color: "var(--ink-3)",
 };
 
-/** Touches du pied de l'inbox — mono, padding 0 4px, radius 3, sans fond. */
+/** Keys of the inbox footer — mono, padding 0 4px, radius 3, no background. */
 const FOOT_KEY: React.CSSProperties = {
   fontFamily: "var(--font-mono)",
   padding: "0 4px",
@@ -60,14 +60,14 @@ const FOOT_KEY: React.CSSProperties = {
   borderRadius: 3,
 };
 
-/** Boutons de pagination — padding 4px 9px, radius 5, bordés. */
+/** Pagination buttons — padding 4px 9px, radius 5, bordered. */
 const PAGER: React.CSSProperties = {
   padding: "4px 9px",
   border: "1px solid var(--line)",
   borderRadius: 5,
 };
 
-/** Chip de la barre de filtres — h28, padding 0 9px, 12px, fond panel. */
+/** Filter bar chip — h28, padding 0 9px, 12px, panel background. */
 const CHIP: React.CSSProperties = {
   height: 28,
   padding: "0 9px",
@@ -186,7 +186,7 @@ export default async function TicketsPage({
     loadError = true;
   }
 
-  // Premier lancement : aucun ticket dans le workspace.
+  // First launch: no ticket in the workspace.
   let firstLaunch = false;
   let mailboxAddress = "";
   if (!loadError && total === 0 && !params.status && !params.priority && !params.assignee) {
@@ -258,7 +258,7 @@ export default async function TicketsPage({
 
   return (
     <div className="flex h-full">
-      {/* Panneau des vues — 240 px */}
+      {/* Views panel — 240 px */}
       <nav
         className="flex shrink-0 flex-col overflow-auto border-r"
         style={{ width: 240, background: "var(--panel)", borderColor: "var(--line)" }}
@@ -357,9 +357,9 @@ export default async function TicketsPage({
         </button>
       </nav>
 
-      {/* Colonne table */}
+      {/* Table column */}
       <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        {/* Barre de filtres */}
+        {/* Filter bar */}
         <div
           className="flex shrink-0 flex-wrap items-center border-b"
           style={{ gap: 6, padding: "9px 14px", borderColor: "var(--line)" }}
@@ -601,7 +601,7 @@ export default async function TicketsPage({
           )}
         </div>
 
-        {/* Pied raccourcis */}
+        {/* Shortcuts footer */}
         <div
           className="flex shrink-0 items-center border-t"
           style={{

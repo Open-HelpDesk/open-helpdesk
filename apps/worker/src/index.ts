@@ -13,23 +13,24 @@ import { onContactMessage, onTicketCreated, runScheduledRules, scanSlaTimers } f
 import { QUEUE_NAMES, type QueueName } from "./queues";
 
 const connection = new IORedis(process.env.REDIS_URL ?? "redis://localhost:6380", {
-  // Requis par BullMQ : pas d'abandon des commandes pendant une reconnexion.
+  // Required by BullMQ: commands must not be dropped during a reconnection.
   maxRetriesPerRequest: null,
 });
 
 const DAY_MS = 24 * 3600 * 1000;
 
-/** Processeurs par file. */
+/** Processors, one per queue. */
 const processors: Record<QueueName, Processor> = {
   "sla-timers": async () => {
     const { warned, breached } = await scanSlaTimers();
     if (warned || breached) {
-      console.log(`[sla-timers] ${warned} avertissement(s), ${breached} dépassement(s)`);
+      console.log(`[sla-timers] ${warned} warning(s), ${breached} breach(es)`);
     }
   },
   "mail-ingest": async (job) => {
-    // Le poller IMAP (auto-hébergé) publie des InboundEmail normalisés dans cette file ;
-    // en cloud, le webhook /api/ingress/email appelle ingestEmail directement.
+    // The IMAP poller (self-hosted) publishes normalized InboundEmail into this
+    // queue; in control-plane deployments, the /api/ingress/email webhook calls
+    // ingestEmail directly.
     const result = await ingestEmail(job.data as InboundEmail);
     if (result.outcome === "created") await onTicketCreated(result.tenantId, result.ticketId);
     if (result.outcome === "appended") await onContactMessage(result.tenantId, result.ticketId);
@@ -39,9 +40,9 @@ const processors: Record<QueueName, Processor> = {
   "mail-send": async (job) => {
     const { deliveryId, text, headers } = job.data as MailSendJob;
     const result = await deliverEmail(deliveryId, { text, headers });
-    // Lever l'erreur laisse BullMQ réessayer avec son backoff exponentiel.
-    if (!result.sent) throw new Error(result.error ?? "envoi échoué");
-    console.log(`[mail-send] livraison ${deliveryId} envoyée (${result.messageId ?? "sans id"})`);
+    // Throwing the error lets BullMQ retry with its exponential backoff.
+    if (!result.sent) throw new Error(result.error ?? "send failed");
+    console.log(`[mail-send] delivery ${deliveryId} sent (${result.messageId ?? "no id"})`);
   },
   "imap-poll": async () => {
     const polls = await pollAllImapMailboxes();
@@ -55,24 +56,24 @@ const processors: Record<QueueName, Processor> = {
         if (result.outcome === "appended") await onContactMessage(result.tenantId, result.ticketId);
       }
       if (poll.fetched > 0) {
-        console.log(`[imap-poll] ${poll.address} : ${poll.fetched} message(s) relevé(s)`);
+        console.log(`[imap-poll] ${poll.address}: ${poll.fetched} message(s) picked up`);
       }
     }
   },
   automations: async () => {
     const applied = await runScheduledRules();
-    if (applied) console.log(`[automations] règles horaires : ${applied} application(s)`);
+    if (applied) console.log(`[automations] scheduled rules: ${applied} application(s)`);
   },
   housekeeping: async () => {
-    // Rétention 90 j des événements d'auth SSO (specs/15 § 3).
+    // 90-day retention of SSO auth events.
     await db
       .delete(ssoAuthEvents)
       .where(lt(ssoAuthEvents.createdAt, new Date(Date.now() - 90 * DAY_MS)));
-    // Rétention 30 j du journal des emails rejetés (ST-03).
+    // 30-day retention of the rejected-emails log (ST-03).
     await db
       .delete(rejectedEmails)
       .where(lt(rejectedEmails.createdAt, new Date(Date.now() - 30 * DAY_MS)));
-    console.log("[housekeeping] purges effectuées");
+    console.log("[housekeeping] purges done");
   },
 };
 
@@ -86,11 +87,11 @@ const workers = QUEUE_NAMES.map(
 
 for (const w of workers) {
   w.on("failed", (job, err) => {
-    console.error(`[${w.name}] échec du job ${job?.id}:`, err.message);
+    console.error(`[${w.name}] job ${job?.id} failed:`, err.message);
   });
 }
 
-/** Balayages périodiques — schedulers répétables BullMQ (idempotents). */
+/** Periodic sweeps — repeatable BullMQ schedulers (idempotent). */
 async function registerSchedulers() {
   const schedules: Array<[QueueName, number]> = [
     ["sla-timers", 60_000],
@@ -102,15 +103,15 @@ async function registerSchedulers() {
     const queue = new Queue(name, { connection });
     await queue.upsertJobScheduler(`${name}-tick`, { every });
     await queue.close();
-    console.log(`[scheduler] ${name} toutes les ${Math.round(every / 1000)} s`);
+    console.log(`[scheduler] ${name} every ${Math.round(every / 1000)} s`);
   }
 }
 
 await registerSchedulers();
-console.log(`Worker Open HelpDesk démarré — files : ${QUEUE_NAMES.join(", ")}`);
+console.log(`Open HelpDesk worker started — queues: ${QUEUE_NAMES.join(", ")}`);
 
 async function shutdown() {
-  console.log("Arrêt du worker…");
+  console.log("Stopping the worker…");
   await Promise.all(workers.map((w) => w.close()));
   await connection.quit();
   process.exit(0);

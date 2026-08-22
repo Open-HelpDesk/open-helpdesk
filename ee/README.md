@@ -1,18 +1,18 @@
-# /ee — Édition Entreprise
+# /ee — commercially licensed features
 
-Ce dossier contient les fonctionnalités sous **licence commerciale** (modèle
-open-core, voir la section « Editions & licensing » du README) :
+This directory holds the features under a **commercial licence** (open-core
+model, see the "Licensing" section of the README):
 
-- SSO SAML/SCIM des agents (ST-13) — `ee/web/src/settings/agent-sso`
-- SSO délégué des organisations clientes (ST-14, PT-08) — `ee/web/src/settings/customer-sso`, `ee/web/src/portal`
-- Audit log avancé (ST-12) — `ee/web/src/settings/audit`
-- À venir : domaines personnalisés, multi-marques, IA (triage, suggestions, résumé de fil)
+- Agent SAML/SCIM SSO (ST-13) — `ee/web/src/settings/agent-sso`
+- Delegated SSO for customer organizations (ST-14, PT-08) — `ee/web/src/settings/customer-sso`, `ee/web/src/portal`
+- Advanced audit log (ST-12) — `ee/web/src/settings/audit`
+- Planned: custom domains, multi-brand, AI (triage, suggestions, thread summary)
 
-Le reste du dépôt est sous AGPL-3.0. Les packages de ce dossier ne sont **pas** couverts
-par cette licence — voir [`ee/LICENSE`](LICENSE) : usage libre en développement et en
-test, la production requiert un accord commercial. Convention des packages :
-`"license": "SEE LICENSE IN ../LICENSE"`.
+The rest of the repository is under AGPL-3.0. The packages in this directory are
+**not** covered by that licence — see [`ee/LICENSE`](LICENSE): free to use in
+development and testing, production requires a commercial agreement. Package
+convention: `"license": "SEE LICENSE IN ../LICENSE"`.
 
-Les écrans restent servis par `apps/web` via des coquilles d'export minces
-(`export { default } from "@openhelpdesk/ee-web/…"`) : les URLs ne changent pas, la
-frontière de licence si.
+The screens are still served by `apps/web` through thin re-export shells
+(`export { default } from "@openhelpdesk/ee-web/…"`): the URLs do not change,
+the licence boundary does.

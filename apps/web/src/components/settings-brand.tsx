@@ -1,36 +1,36 @@
 "use client";
 
 /**
- * ST-01 — Logo et favicon du workspace.
+ * ST-01 — Workspace logo and favicon.
  *
- * Ces deux contrôles étaient dessinés mais inertes : un carré à l'initiale du
- * workspace et une zone en pointillés qui ne s'ouvrait sur rien. Ils déposent
- * désormais un vrai fichier, lu par `saveGeneral`.
+ * These two controls were drawn but inert: a square holding the workspace
+ * initial and a dashed area that opened onto nothing. They now upload a real
+ * file, read by `saveGeneral`.
  *
- * Deux partis pris :
+ * Two deliberate choices:
  *
- *  · L'aperçu local est ce qui sépare un champ de fichier d'un contrôle
- *    utilisable. Sans lui, on choisit une image, rien ne bouge, et on ne sait
- *    pas si le clic a été pris avant d'avoir enregistré.
- *  · Retirer ne déclenche rien tout seul. L'écran n'a qu'une barre
- *    d'enregistrement, et tout ce qu'on y fait s'applique en l'actionnant : un
- *    bouton qui soumettrait le formulaire de son côté emporterait le nom ou la
- *    langue qu'on venait de changer sans les enregistrer. Le retrait est donc un
- *    état, porté par un champ caché, et il s'annule d'un second clic.
+ *  · The local preview is what separates a file input from a usable control.
+ *    Without it, you pick an image, nothing moves, and you cannot tell whether
+ *    the click registered until you have saved.
+ *  · Remove does not trigger anything on its own. The screen has a single save
+ *    bar, and everything done there applies when it is actioned: a button that
+ *    submitted the form by itself would carry along the name or the
+ *    language just changed without saving them. The removal is therefore a
+ *    state, carried by a hidden field, and a second click cancels it.
  */
 import { useState, type CSSProperties } from "react";
 import { useT } from "@/i18n/client";
 
 type Props = {
-  /** Nom du champ, lu par la server action : « logo » ou « favicon ». */
+  /** Field name, read by the server action: "logo" or "favicon". */
   name: "logo" | "favicon";
-  /** L'URL déjà enregistrée, ou null pour l'initiale du workspace. */
+  /** The already saved URL, or null for the workspace initial. */
   current: string | null;
-  /** Initiale de repli, quand aucun fichier n'est posé. */
+  /** Fallback initial, when no file is in place. */
   initial: string;
-  /** Fond du carré d'aperçu — l'accent du tenant pour le logo. */
+  /** Background of the preview square — the tenant accent for the logo. */
   background: string;
-  /** Types acceptés par le sélecteur de fichiers du navigateur. */
+  /** Types accepted by the browser file picker. */
   accept: string;
   label: string;
   replaceLabel: string;
@@ -50,21 +50,21 @@ export function BrandAssetField({
   hint,
 }: Props) {
   const t = useT();
-  // L'URL d'objet locale n'est pas révoquée : le composant vit le temps de
-  // l'écran, et la révoquer viderait l'aperçu au rendu suivant.
-  const [apercu, setApercu] = useState<string | null>(null);
-  const [nomFichier, setNomFichier] = useState<string | null>(null);
-  const [retire, setRetire] = useState(false);
+  // The local object URL is not revoked: the component lives for as long as the
+  // screen does, and revoking it would empty the preview on the next render.
+  const [preview, setPreview] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [removed, setRemoved] = useState(false);
 
-  const affiche = apercu ?? (retire ? null : current);
-  const estFavicon = name === "favicon";
+  const shown = preview ?? (removed ? null : current);
+  const isFavicon = name === "favicon";
 
-  function choisir(fichier: File) {
-    setApercu(URL.createObjectURL(fichier));
-    setNomFichier(fichier.name);
-    // Déposer un fichier annule un retrait demandé : on remplace, on ne retire
-    // pas puis on repose.
-    setRetire(false);
+  function choose(file: File) {
+    setPreview(URL.createObjectURL(file));
+    setFileName(file.name);
+    // Picking a file cancels a requested removal: you replace, you do not
+    // remove and then put back.
+    setRemoved(false);
   }
 
   return (
@@ -80,20 +80,20 @@ export function BrandAssetField({
             height: 46,
             flex: "none",
             borderRadius: 10,
-            fontSize: estFavicon ? 15 : 19,
-            // Un fichier posé occupe tout le carré : le fond d'accent et
-            // l'initiale n'ont plus à se voir derrière lui.
-            background: affiche ? "var(--sunk)" : background,
-            color: estFavicon ? "var(--ink)" : "#fff",
-            ...(affiche || estFavicon ? { border: "1px solid var(--line)" } : {}),
+            fontSize: isFavicon ? 15 : 19,
+            // A file in place fills the whole square: the accent background and
+            // the initial no longer have to show behind it.
+            background: shown ? "var(--sunk)" : background,
+            color: isFavicon ? "var(--ink)" : "#fff",
+            ...(shown || isFavicon ? { border: "1px solid var(--line)" } : {}),
           }}
         >
-          {affiche ? (
+          {shown ? (
             /* eslint-disable-next-line @next/next/no-img-element --
-               un SVG ou un ICO déposé par le tenant n'a rien à faire dans
-               l'optimiseur d'images, qui ne les traite pas. */
+               an SVG or an ICO uploaded by the tenant has no business in the
+               image optimizer, which does not process them. */
             <img
-              src={affiche}
+              src={shown}
               alt=""
               style={{ width: "100%", height: "100%", objectFit: "contain" }}
             />
@@ -102,16 +102,16 @@ export function BrandAssetField({
           )}
         </span>
 
-        {/* La zone en pointillés de la maquette EST le contrôle : un `label` qui
-            enveloppe le champ, plutôt qu'un bouton qui le cliquerait en
-            JavaScript. Le clic est alors natif, le champ est correctement
-            étiqueté, et le focus se voit sur la boîte — un champ en `sr-only`
-            recevrait le focus hors de l'écran.
+        {/* The mockup's dashed area IS the control: a `label` that wraps the
+            input, rather than a button that would click it in JavaScript. The
+            click is then native, the input is properly labeled, and the focus
+            shows on the box — an `sr-only` input would take the focus
+            off-screen.
 
-            Survol et focus sont ceux que la maquette donne à ses boîtes en
-            pointillés « + ajouter » : filet et libellé à l'accent, liseré 2px.
-            Le rayon suit le carré d'aperçu voisin (10) et non le `rounded-lg` de
-            Tailwind, qui vaut 8 et désalignait les deux angles côte à côte. */}
+            Hover and focus are the ones the mockup gives its dashed "+ add"
+            boxes: rule and label at the accent color, 2px ring. The radius
+            follows the neighboring preview square (10) and not Tailwind's
+            `rounded-lg`, which is 8 and misaligned the two corners side by side. */}
         <label
           className="ohd-hover-edge-ink ohd-focus flex flex-1 cursor-pointer items-center justify-center border border-dashed px-2"
           style={{
@@ -119,10 +119,10 @@ export function BrandAssetField({
             borderRadius: 10,
             borderColor: "var(--line)",
             fontSize: 12.5,
-            color: nomFichier ? "var(--ink-2)" : "var(--ink-3)",
+            color: fileName ? "var(--ink-2)" : "var(--ink-3)",
           }}
         >
-          <span className="truncate">{nomFichier ?? replaceLabel}</span>
+          <span className="truncate">{fileName ?? replaceLabel}</span>
           <input
             type="file"
             name={name}
@@ -131,20 +131,20 @@ export function BrandAssetField({
             className="sr-only"
             onChange={(e) => {
               const f = e.currentTarget.files?.[0];
-              if (f) choisir(f);
+              if (f) choose(f);
             }}
           />
         </label>
 
-        {retire && <input type="hidden" name={`remove-${name}`} value="1" />}
+        {removed && <input type="hidden" name={`remove-${name}`} value="1" />}
 
-        {/* Retirer ne concerne qu'un fichier DÉJÀ enregistré : un aperçu local
-            s'abandonne en n'enregistrant pas. */}
-        {current && !apercu && (
+        {/* Remove only concerns a file that is ALREADY saved: a local preview is
+            abandoned by not saving. */}
+        {current && !preview && (
           <button
             type="button"
-            onClick={() => setRetire((v) => !v)}
-            aria-pressed={retire}
+            onClick={() => setRemoved((v) => !v)}
+            aria-pressed={removed}
             aria-label={removeLabel}
             title={removeLabel}
             className="ohd-row grid place-items-center border"
@@ -153,23 +153,24 @@ export function BrandAssetField({
               height: 30,
               flex: "none",
               borderRadius: 6,
-              borderColor: retire ? "var(--dang)" : "var(--line)",
-              color: retire ? "var(--dang)" : "var(--ink-3)",
-              // Bouton d'icône 30×30 de la maquette : survol --sunk. Le fond de
-              // l'état « retrait demandé » passe par --row-bg pour que le survol
-              // reste perceptible — en style inline il l'aurait masqué.
-              "--row-bg": retire ? "var(--dang-t)" : "transparent",
+              borderColor: removed ? "var(--dang)" : "var(--line)",
+              color: removed ? "var(--dang)" : "var(--ink-3)",
+              // 30×30 icon button from the mockup: --sunk on hover. The
+              // background of the "removal requested" state goes through
+              // --row-bg so that hover stays perceptible — as an inline style it
+              // would have masked it.
+              "--row-bg": removed ? "var(--dang-t)" : "transparent",
               fontSize: 13,
             } as CSSProperties}
           >
-            {retire ? "↺" : "✕"}
+            {removed ? "↺" : "✕"}
           </button>
         )}
       </div>
-      <span style={{ fontSize: 12, color: retire ? "var(--dang)" : "var(--ink-3)" }}>
-        {retire
+      <span style={{ fontSize: 12, color: removed ? "var(--dang)" : "var(--ink-3)" }}>
+        {removed
           ? t("app.settings.workspace.generalAssetRemoved")
-          : nomFichier
+          : fileName
             ? t("app.settings.workspace.generalAssetPending")
             : hint}
       </span>

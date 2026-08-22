@@ -17,9 +17,9 @@ const TABS = [
 ] as const;
 
 /**
- * PT-08 — Administration de mon organisation. Réservé aux contacts porteurs d'un
- * orgAdminGrant (sinon redirection /help). Onglets Connexion SSO / Domaines /
- * Collaborateurs — domaines et collaborateurs fonctionnels, SSO en persistance minimale.
+ * PT-08 — Administration of my organization. Restricted to contacts holding an
+ * orgAdminGrant (redirect to /help otherwise). SSO login / Domains / Members
+ * tabs — domains and members functional, SSO at minimal persistence.
  */
 export default async function OrganizationPage({
   searchParams,
@@ -32,8 +32,8 @@ export default async function OrganizationPage({
   const org = await getOrgAdminOrg(session.tenant.id, session.contact.id);
   if (!org) redirect("/help");
 
-  // Le SSO délégué est une capacité EE (ST-14/PT-08) : sans elle, l'onglet
-  // disparaît — pas d'écran verrouillé côté client final.
+  // Delegated SSO is an EE entitlement (ST-14/PT-08): without it, the tab
+  // disappears — no locked screen on the end customer's side.
   const ssoEnabled = entitlementsFor(session.tenant).customerSso;
   const tabs = ssoEnabled ? TABS : TABS.filter(([key]) => key !== "sso");
 
@@ -57,7 +57,7 @@ export default async function OrganizationPage({
   return (
     <div className="pt-rise px-9 pb-[60px] pt-12 max-sm:px-[18px] max-sm:py-[30px]">
       <div className="mx-auto flex max-w-[920px] flex-col gap-[26px]">
-        {/* En-tête */}
+        {/* Header */}
         <header className="flex flex-wrap items-start gap-4">
           <span
             className="grid h-12 w-12 flex-none place-items-center rounded-[13px] border text-[15px] font-bold"
@@ -75,10 +75,10 @@ export default async function OrganizationPage({
               className="max-w-[64ch] text-[14.5px] leading-[1.6]"
               style={{ color: "var(--ink-2)", textWrap: "pretty" }}
             >
-              {/* Toute la phrase est traduite, y compris son accord au pluriel :
-                  la composer par morceaux figerait la grammaire française.
-                  `t.fmt.of` porte l'élision (« le support d'Acme »), que seules
-                  certaines langues appliquent. */}
+              {/* The whole sentence is translated, including its plural agreement:
+                  composing it piecewise would freeze French grammar into it.
+                  `t.fmt.of` carries the elision ("le support d'Acme"), which only
+                  some languages apply. */}
               {t("org.intro", {
                 count: members.length,
                 org: org.name,
@@ -88,7 +88,7 @@ export default async function OrganizationPage({
           </div>
         </header>
 
-        {/* Onglets */}
+        {/* Tabs */}
         <nav className="flex flex-wrap gap-0.5 border-b" style={{ borderColor: "var(--line)" }}>
           {tabs.map(([key, labelKey]) => {
             const active = tab === key;

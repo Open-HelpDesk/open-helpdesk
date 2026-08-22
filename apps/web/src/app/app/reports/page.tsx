@@ -17,10 +17,10 @@ import {
 } from "@/components/charts";
 
 /**
- * AG-09 — Rapports (design « Espace agent ») : toolbar sticky padding 14/18 (segmented
- * 7 j / 30 j / 90 j / Personnalisé, équipe, comparaison, export CSV), 6 tuiles KPI
- * `repeat(6,1fr)` gap 10, rangée `1.6fr 1fr` (« Créés vs résolus » 190px + canaux),
- * rangée `1fr 1fr` (heatmap + performance agent), encart pointillé « PLAN PRO ».
+ * AG-09 — Reports (agent space design): sticky toolbar padding 14/18 (segmented
+ * 7 d / 30 d / 90 d / Custom, team, comparison, CSV export), 6 KPI tiles
+ * `repeat(6,1fr)` gap 10, `1.6fr 1fr` row ("Created vs resolved" 190px + channels),
+ * `1fr 1fr` row (heatmap + agent performance), dashed "PRO PLAN" callout.
  */
 
 const PERIODS = [{ days: 7 }, { days: 30 }, { days: 90 }] as const;
@@ -173,7 +173,7 @@ export default async function ReportsPage({
 
   return (
     <div className="h-full overflow-auto" style={{ background: "var(--canvas)" }}>
-      {/* Toolbar sticky */}
+      {/* Sticky toolbar */}
       <div
         className="sticky top-0 z-20 flex items-center"
         style={{
@@ -183,7 +183,7 @@ export default async function ReportsPage({
           borderBottom: "1px solid var(--line)",
         }}
       >
-        {/* Segmented périodes */}
+        {/* Segmented periods */}
         <div
           className="flex"
           style={{ padding: 2, gap: 2, background: "var(--sunk)", borderRadius: 7 }}
@@ -218,7 +218,7 @@ export default async function ReportsPage({
           </span>
         </div>
 
-        {/* Équipe */}
+        {/* Team */}
         <details className="relative">
           <summary
             className="flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden"
@@ -257,7 +257,7 @@ export default async function ReportsPage({
           </div>
         </details>
 
-        {/* Comparaison */}
+        {/* Comparison */}
         <Link
           href={buildUrl({ compare: showCompare ? "0" : undefined })}
           className="flex items-center"
@@ -314,7 +314,7 @@ export default async function ReportsPage({
       )}
 
       <div className="flex flex-col" style={{ padding: "16px 18px", gap: 16 }}>
-        {/* Tuiles KPI */}
+        {/* KPI tiles */}
         <div
           style={{
             display: "grid",
@@ -333,7 +333,7 @@ export default async function ReportsPage({
           ))}
         </div>
 
-        {/* Rangée 2 : Créés vs résolus · Répartition par canal */}
+        {/* Row 2: Created vs resolved · Breakdown by channel */}
         <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 14 }}>
           <section className="flex min-w-0 flex-col" style={{ ...CARD, padding: 15, gap: 12 }}>
             <div className="flex items-baseline" style={{ gap: 10 }}>
@@ -372,7 +372,7 @@ export default async function ReportsPage({
           </section>
         </div>
 
-        {/* Rangée 3 : heatmap · performance par agent */}
+        {/* Row 3: heatmap · performance per agent */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
           <section className="flex min-w-0 flex-col" style={{ ...CARD, padding: 15, gap: 12 }}>
             <div style={CARD_TITLE}>{t("app.reports.hourDayVolume")}</div>
@@ -459,7 +459,7 @@ export default async function ReportsPage({
           </section>
         </div>
 
-        {/* Tuile verrouillée « PLAN PRO » */}
+        {/* Locked "PRO PLAN" tile */}
         <div
           className="flex items-center"
           style={{
@@ -495,10 +495,10 @@ export default async function ReportsPage({
               letterSpacing: ".04em",
             }}
           >
-            {t("app.reports.enterprisePlanBadge")}
+            {t("app.reports.enterpriseEditionBadge")}
           </span>
           <span className="flex-1" />
-          {/* Le CTA mène à ST-11, invisible en auto-hébergé : pas de lien mort. */}
+          {/* The CTA leads to ST-11, invisible when self-hosted: no dead link. */}
           {isCloud() && (
             <Link href="/app/settings/billing" style={{ fontSize: 12.5 }}>
               {t("app.reports.discover")}

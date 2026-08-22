@@ -1,9 +1,9 @@
 /**
- * Boîte d'envoi : tout email sortant passe par ici (ST-03).
+ * Outbox: every outgoing email goes through here (ST-03).
  *
- * Chaque envoi est journalisé dans `email_deliveries` avant la tentative, puis mis en
- * file BullMQ (`mail-send`) pour être réessayé en cas d'échec. Si Redis est indisponible,
- * l'envoi est tenté immédiatement plutôt que perdu.
+ * Each send is logged in `email_deliveries` before the attempt, then queued on BullMQ
+ * (`mail-send`) so it can be retried on failure. If Redis is unavailable, the send is
+ * attempted immediately rather than lost.
  */
 import { db, emailDeliveries, tenants } from "@openhelpdesk/db";
 import { eq } from "drizzle-orm";
@@ -20,7 +20,7 @@ export type SendTenantEmailInput = {
   kind?: MailKind;
   headers?: Record<string, string>;
   ticketId?: string;
-  /** Ignore la file et envoie tout de suite (test de configuration). */
+  /** Bypasses the queue and sends right away (configuration test). */
   immediate?: boolean;
 };
 
@@ -34,9 +34,9 @@ export type SendTenantEmailResult = {
 };
 
 /**
- * Job de la file. Le corps voyage DANS le job : le worker est un autre process que
- * l'application web, il ne partage aucune mémoire avec elle. Le corps n'est jamais
- * écrit en base (données personnelles) — il ne vit que le temps du job.
+ * Queue job. The body travels IN the job: the worker is a different process from the
+ * web application, it shares no memory with it. The body is never written to the
+ * database (personal data) — it only lives for the duration of the job.
  */
 export type MailSendJob = {
   deliveryId: string;
@@ -68,14 +68,14 @@ async function enqueue(job: MailSendJob): Promise<boolean> {
     await connection.quit();
     return true;
   } catch (err) {
-    console.error("[mail] mise en file impossible, envoi direct :", err);
+    console.error("[mail] could not enqueue, sending directly:", err);
     return false;
   }
 }
 
 /**
- * Envoie (ou met en file) un email pour un tenant. Retourne toujours l'identifiant de
- * journal : l'appelant peut afficher l'état sans attendre l'envoi réel.
+ * Sends (or queues) an email for a tenant. Always returns the log identifier: the
+ * caller can display the state without waiting for the actual send.
  */
 export async function sendTenantEmail(
   input: SendTenantEmailInput,
@@ -110,7 +110,7 @@ export async function sendTenantEmail(
   return { deliveryId, queued: false, ...result };
 }
 
-/** Effectue l'envoi d'une livraison journalisée. Appelé en direct ou par le worker. */
+/** Performs the send of a logged delivery. Called directly or by the worker. */
 export async function deliverEmail(
   deliveryId: string,
   body: { text: string; headers?: Record<string, string> },
@@ -121,8 +121,8 @@ export async function deliverEmail(
     .where(eq(emailDeliveries.id, deliveryId));
   if (!delivery) return { sent: false, error: "Livraison introuvable", from: "" };
 
-  // Tenant suspendu : le sortant est coupé (l'entrant continue d'être ingéré).
-  // sent:true = « traité » — la livraison est marquée en échec, sans retry BullMQ.
+  // Suspended tenant: outbound is cut off (inbound keeps being ingested).
+  // sent:true = "handled" — the delivery is marked as failed, without a BullMQ retry.
   const [tenantRow] = await db
     .select({ status: tenants.status })
     .from(tenants)
@@ -170,7 +170,7 @@ export async function deliverEmail(
         error: message.slice(0, 1000),
       })
       .where(eq(emailDeliveries.id, deliveryId));
-    console.error(`[mail] échec d'envoi (${deliveryId}) :`, message);
+    console.error(`[mail] send failed (${deliveryId}):`, message);
     return { sent: false, error: message, from: config.from };
   }
 }

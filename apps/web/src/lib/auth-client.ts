@@ -1,4 +1,4 @@
 import { createAuthClient } from "better-auth/react";
 
-/** Client Better Auth — baseURL implicite : l'origine courante (le sous-domaine du tenant). */
+/** Better Auth client — implicit baseURL: the current origin (the tenant's subdomain). */
 export const authClient = createAuthClient();

@@ -15,8 +15,8 @@ const SCOPE_SETS: Record<string, string[]> = {
 };
 
 /**
- * ST-10 — Création d'une clé : `ohd_live_` + aléa, hash SHA-256 stocké, préfixe
- * masqué `ohd_live_xxxx…yyyy` affichable. La clé complète n'est renvoyée qu'UNE fois.
+ * ST-10 — Key creation: `ohd_live_` + randomness, SHA-256 hash stored, masked
+ * prefix `ohd_live_xxxx…yyyy` safe to display. The full key is returned only ONCE.
  */
 export async function createApiKey(_prev: NewKeyState, formData: FormData): Promise<NewKeyState> {
   const { tenant } = await requireManager();
@@ -91,7 +91,7 @@ export async function toggleWebhook(formData: FormData) {
   if (hook.active) {
     await db.update(webhooks).set({ active: false }).where(eq(webhooks.id, hook.id));
   } else {
-    // Réactivation : on repart d'un état sain (compteurs d'échec remis à zéro).
+    // Re-enabling: we start from a clean state (failure counters reset to zero).
     await db
       .update(webhooks)
       .set({ active: true, disabledAt: null, failingSince: null })
@@ -109,7 +109,7 @@ export async function deleteWebhook(formData: FormData) {
   revalidatePath("/app/settings/api");
 }
 
-/** Renvoi d'une livraison : POST signé HMAC-SHA256, nouvelle ligne de livraison. */
+/** Resending a delivery: HMAC-SHA256-signed POST, new delivery row. */
 export async function resendDelivery(formData: FormData) {
   const { tenant } = await requireManager();
   const deliveryId = String(formData.get("deliveryId") ?? "");
@@ -146,7 +146,7 @@ export async function resendDelivery(formData: FormData) {
     clearTimeout(timer);
     httpStatus = res.status;
   } catch {
-    httpStatus = null; // échec réseau / timeout
+    httpStatus = null; // network failure / timeout
   }
 
   await db.insert(webhookDeliveries).values({

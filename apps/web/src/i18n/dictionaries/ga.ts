@@ -1,4 +1,4 @@
-import type { Dictionary } from "./fr";
+import type { Dictionary } from "./en";
 
 export const ga: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -14,7 +14,7 @@ export const ga: Dictionary = {
     "Tá an tseirbhís ar fionraí go sealadach: is féidir brabhsáil i gcónaí, tá iarratais nua díchumasaithe.",
   "chrome.copyright": "© {year} {name}",
 
-  /* ---------- PT-01 Accueil ---------- */
+  /* ---------- PT-01 Home ---------- */
   "home.eyebrow": "Ionad Cabhrach",
   "home.title": "Conas is féidir linn cabhrú leat?",
   "home.subtitle":
@@ -32,7 +32,7 @@ export const ga: Dictionary = {
   "home.ctaBody":
     "Freagraíonn ár bhfoireann i gceann 34 nóiméad ar an meán le linn uaireanta oibre.",
 
-  /* ---------- Recherche ---------- */
+  /* ---------- Search ---------- */
   "search.placeholder": "Cuardaigh an ionad cabhrach…",
   "search.emptyTitle": "Gan torthaí do “{query}”",
   "search.emptyBody":
@@ -40,7 +40,7 @@ export const ga: Dictionary = {
   "search.breadcrumb": "Cuardach",
   "search.resultsTitle": "Torthaí do “{query}”",
 
-  /* ---------- PT-02 Catégorie ---------- */
+  /* ---------- PT-02 Category ---------- */
   "breadcrumb.help": "Cabhair",
   "category.otherCategories": "Catagóirí eile",
   "category.otherArticles": "Ailt eile",
@@ -71,7 +71,7 @@ export const ga: Dictionary = {
   "vote.prefill": "Cruthaigh iarratas réamhlíonta",
   "vote.prefillSubject": "Maidir leis an alt “{title}”",
 
-  /* ---------- PT-04 Soumettre ---------- */
+  /* ---------- PT-04 Submit ---------- */
   "newRequest.title": "Cuir iarratas isteach",
   "newRequest.subtitle": "Déan cur síos ar an gcás. Freagraímid faoi cheann 4 uair oibre.",
   "newRequest.type": "Cineál iarratais",
@@ -115,7 +115,7 @@ export const ga: Dictionary = {
   "submitted.track": "Lean m'iarratas",
   "submitted.backToHelp": "Ar ais chuig an gcabhair",
 
-  /* ---------- PT-05 Mes demandes ---------- */
+  /* ---------- PT-05 My requests ---------- */
   "requests.title": "M'iarratais",
   "requests.new": "Iarratas nua",
   "requests.tabOpen": "Oscailte",
@@ -127,13 +127,13 @@ export const ga: Dictionary = {
     "Taispeánfar d'iarratais tacaíochta anseo, mar aon lena stádas agus an stair iomlán.",
   "requests.awaitingReply": "Ag feitheamh le do fhreagra",
 
-  /* Statuts dans le vocabulaire du client — voir statusKey() du portail. */
+  /* Statuses in the customer's vocabulary — see the portal's statusKey(). */
   "status.open": "Ar siúl",
   "status.waiting": "Ag feitheamh leat",
   "status.resolved": "Réitithe",
   "status.closed": "Dúnta",
 
-  /* Dernière activité d'une demande. */
+  /* Last activity on a request. */
   "activity.resolved": "Réitithe {when}",
   "activity.closed": "Dúnta {when}",
   "activity.waiting": "Ag feitheamh le do fhreagra {since}",
@@ -141,7 +141,7 @@ export const ga: Dictionary = {
   "activity.youReplied": "D'fhreagair tú {when}",
   "activity.created": "Cruthaithe {when}",
 
-  /* « depuis … » — l'anglais dit « for 3 days », le français « depuis 3 jours ». */
+  /* “for …” — English says “for 3 days”, French “depuis 3 jours”. */
   "since.minutes": {
     one: "ar feadh {count} min",
     two: "ar feadh {count} min",
@@ -165,7 +165,7 @@ export const ga: Dictionary = {
   },
   "since.date": "ó {date}",
 
-  /* ---------- PT-06 Détail ---------- */
+  /* ---------- PT-06 Detail ---------- */
   "request.you": "Tusa",
   "request.team": "An fhoireann",
   "request.agentAuthor": "{name} — {tenant}",
@@ -182,7 +182,7 @@ export const ga: Dictionary = {
   "request.markSolved": "Marcáil mar réitithe",
   "request.reopen": "Athoscail an iarratas",
 
-  /* ---------- PT-07 Connexion ---------- */
+  /* ---------- PT-07 Sign-in ---------- */
   "login.title": "Lean do chuid iarratas",
   "login.magicIntro":
     "Cuir isteach do sheoladh ríomhphoist agus seolfaimid nasc logála isteach chugat. Gan pasfhocal ar bith le cuimhneamh.",
@@ -198,7 +198,15 @@ export const ga: Dictionary = {
   "login.footer":
     "Gan aon iarratas fós? Cruthaítear do chuntas go huathoibríoch leis an gcéad cheann.",
 
-  /* ---------- PT-08 Mon organisation ---------- */
+  /* PT-07 — the magic-link email, sent from a server action so it leaves in
+     the workspace's language like every other portal message. The subject
+     keeps {workspace} detached after a dash: the name arrives exactly as it
+     was typed, and no language can decline it. */
+  "login.emailSubject": "Do nasc logála isteach — {workspace}",
+  "login.emailBody":
+    "Dia duit,\n\nCliceáil an nasc seo chun teacht ar do chuid iarratas (bailí ar feadh 15 nóiméad):\n{url}\n\nMura raibh tú ag súil leis an nasc seo, déan neamhaird den ríomhphost seo.\n\n{workspace}",
+
+  /* ---------- PT-08 My organisation ---------- */
   "org.intro": {
     one: "Is riarthóir ar an eagraíocht seo tú. Baineann na socruithe seo le {count} duine as {org} a úsáideann an tseirbhís tacaíochta {tenant}.",
     two: "Is riarthóir ar an eagraíocht seo tú. Baineann na socruithe seo le {count} dhuine as {org} a úsáideann an tseirbhís tacaíochta {tenant}.",
@@ -293,7 +301,7 @@ export const ga: Dictionary = {
   "members.note":
     "Taispeánfar baill go huathoibríoch ag a gcéad logáil isteach nó ag a gcéad iarratas. Is féidir leat riarthóir eile a cheapadh ionas nach tusa an t-aon phointe teagmhála.",
 
-  /* ---------- Widget embarquable (ST-09) et page publique CSAT (ST-08) ---------- */
+  /* ---------- Embeddable widget (ST-09) and public CSAT page (ST-08) ---------- */
   "widget.defaultTitle": "Cabhair de dhíth?",
   "widget.close": "Dún",
   "widget.messageLabel": "Do theachtaireacht",
@@ -314,7 +322,7 @@ export const ga: Dictionary = {
   "csatPage.doneTitle": "Go raibh maith agat!",
   "csatPage.doneBody": "Cuireadh do nóta tráchta ar aghaidh chuig an bhfoireann.",
 
-  /* ===================== Espace agent & administration ===================== */
+  /* ===================== Agent space & administration ===================== */
 
   /* --- shell --- */
   "app.shell.inbox": "Bosca Isteach",
@@ -327,7 +335,7 @@ export const ga: Dictionary = {
   "app.shell.suspendedTitle": "Tá an workspace seo ar fionraí",
   "app.shell.suspendedText": "Déan teagmháil le do riarthóir chun rochtain a athbhunú.",
   "app.shell.suspendedOwnerText":
-    "Roghnaigh plean nó nuashonraigh do mhodh íocaíochta chun an workspace a athghníomhachtú.",
+    "Socraigh an síntiús nó nuashonraigh do mhodh íocaíochta chun an workspace a athghníomhachtú.",
   "app.shell.suspendedBillingCta": "Oscail Síntiús & billeáil",
   "app.shell.myTickets": "Mo thicéid",
   "app.shell.newTicket": "Ticéad nua",
@@ -794,7 +802,7 @@ export const ga: Dictionary = {
   "app.reports.columnAgent": "Gníomhaire",
   "app.reports.columnFirstReply": "An chéad fhreagra",
   "app.reports.customReports": "Tuairiscí saincheaptha",
-  "app.reports.enterprisePlanBadge": "PLEAN ENTERPRISE",
+  "app.reports.enterpriseEditionBadge": "ENTERPRISE EDITION",
   "app.reports.discover": "Faigh amach tuilleadh",
   "app.reports.chartDailyAria": "{labelA} agus {labelB} in aghaidh an lae",
   "app.reports.chartDailyPoint": "{date} — {labelA}: {created} · {labelB}: {resolved}",
@@ -820,8 +828,11 @@ export const ga: Dictionary = {
   "app.settings.shell.saved": "✓ Sábháilte",
   "app.settings.shell.cancel": "Cealaigh",
   "app.settings.shell.save": "Sábháil",
-  "app.settings.shell.planEnterprise": "PLEAN ENTERPRISE",
-  "app.settings.shell.upgradeToEnterprise": "Uasghrádaigh go Enterprise",
+  /* The X of the drawer and of the modal. It is rendered on the same screens
+     as `cancel` above, so the two words have to stay distinguishable. */
+  "app.settings.shell.close": "Dún",
+  "app.settings.shell.enterpriseEdition": "ENTERPRISE EDITION",
+  "app.settings.shell.manageSubscription": "Bainistigh an síntiús",
   "app.settings.shell.eeSelfHostedTitle": "Gné den eagrán Enterprise Edition",
   "app.settings.shell.eeSelfHostedText":
     "Tá an ghné seo faoin gceadúnas tráchtála (an chomhadlann ee/ sa stór) agus níl sí san áireamh san eagrán foinse oscailte féin-óstáilte.",
@@ -997,10 +1008,10 @@ export const ga: Dictionary = {
   "app.settings.sso.agentTitle": "SSO na ngníomhairí",
   "app.settings.sso.agentSubtitle":
     "Aonsínithe isteach SAML 2.0 agus soláthar SCIM do do fhoireann tacaíochta.",
-  "app.settings.sso.agentLockedTitle": "Níl SSO na ngníomhairí ar fáil ach ar an bplean Enterprise",
+  "app.settings.sso.agentLockedTitle": "Tá SSO na ngníomhairí mar chuid d'Enterprise Edition",
   "app.settings.sso.agentLockedText":
     "Ceangail do sholáthraí aitheantais SAML 2.0, soláthair do ghníomhairí trí SCIM agus éiligh aonsínithe isteach ar an bhfoireann ar fad.",
-  "app.settings.sso.agentEnterpriseOnly": "Níl SSO na ngníomhairí ar fáil ach ar an bplean Enterprise.",
+  "app.settings.sso.agentEnterpriseOnly": "Tá SSO na ngníomhairí mar chuid d'Enterprise Edition.",
   "app.settings.sso.idpOther": "Eile (SAML ginearálta)",
   "app.settings.sso.samlToggleLabel": "Cumasaigh aonsínithe isteach SAML 2.0",
   "app.settings.sso.samlHeading": "Aonsínithe isteach SAML 2.0",
@@ -1095,11 +1106,11 @@ export const ga: Dictionary = {
   "app.settings.sso.customerSubtitle":
     "Ceanglaíonn gach eagraíocht chustaiméara a soláthraí aitheantais féin ón tairseach. Déanann tú maoirseacht ar gach ceann acu anseo.",
   "app.settings.sso.customerLockedTitle":
-    "Níl SSO na n-eagraíochtaí custaiméirí ar fáil ach ar an bplean Enterprise",
+    "Tá SSO na n-eagraíochtaí custaiméirí mar chuid d'Enterprise Edition",
   "app.settings.sso.customerLockedText":
     "Lig do gach eagraíocht chustaiméara a soláthraí aitheantais féin (SAML nó OIDC) a phlugáil isteach agus déan maoirseacht ar gach ceann acu ón scáileán seo.",
   "app.settings.sso.customerEnterpriseOnly":
-    "Níl SSO na n-eagraíochtaí custaiméirí ar fáil ach ar an bplean Enterprise.",
+    "Tá SSO na n-eagraíochtaí custaiméirí mar chuid d'Enterprise Edition.",
   "app.settings.sso.statusActive": "Gníomhach",
   "app.settings.sso.statusPending": "Le fíorú",
   "app.settings.sso.statusError": "Earráid",
@@ -1305,7 +1316,7 @@ export const ga: Dictionary = {
   "app.settings.portal.kbPublishedHint":
     "Bíonn ailt fhoilsithe le feiceáil gan logáil isteach.",
   "app.settings.portal.hidePoweredByLabel": "Folaigh “Cumhachtaithe ag Open HelpDesk”",
-  "app.settings.portal.hidePoweredByHint": "Ar fáil ón bplean Enterprise.",
+  "app.settings.portal.hidePoweredByHint": "Ar fáil le Enterprise Edition.",
   "app.settings.portal.kbVisibilityLabel": "Infheictheacht an bhunachair eolais",
   "app.settings.portal.kbVisibilityPublic": "Poiblí",
   "app.settings.portal.kbVisibilityAuthenticated": "Logáilte isteach amháin",
@@ -1375,8 +1386,8 @@ export const ga: Dictionary = {
   "app.settings.workspace.generalTitle": "Ginearálta & brandáil",
   "app.settings.workspace.generalSubtitle":
     "Aitheantas an spáis oibre, teanga, crios ama agus uimhriú ticéad.",
-  "app.settings.workspace.generalDeleteCloudError":
-    "Diúltaíodh don scriosadh — tá scriosadh sceidealta ar fáil ar an tairiscint néil.",
+  "app.settings.workspace.generalDeleteControlPlaneError":
+    "Diúltaíodh don scriosadh — teastaíonn control plane don scriosadh sceidealta.",
   "app.settings.workspace.generalIdentity": "Aitheantas",
   "app.settings.workspace.generalNameLabel": "Ainm an spáis oibre",
   "app.settings.workspace.generalLogoLabel": "Lógó",
@@ -1457,7 +1468,8 @@ export const ga: Dictionary = {
   },
   "app.settings.workspace.seatsAddHint":
     "Cuir suíocháin leis chun cuireadh a thabhairt do ghníomhairí nua.",
-  "app.settings.workspace.seatsFreeHint": "Tá róil Viewer saor in aisce agus gan teorainn.",
+  "app.settings.workspace.seatsFreeHint":
+    "Ní úsáideann róil Viewer suíochán agus tá siad gan teorainn.",
   "app.settings.workspace.seatsAddAction": "Cuir suíocháin leis",
   "app.settings.workspace.seatsManage": "Bainistigh",
   "app.settings.workspace.seatLimitReached":
@@ -1541,8 +1553,8 @@ export const ga: Dictionary = {
   "app.settings.workspace.save": "Sábháil",
   "app.settings.workspace.billingTitle": "Síntiús & billeáil",
   "app.settings.workspace.billingSubtitle":
-    "Plean, suíocháin, cuótaí, modh íocaíochta agus stair na sonrasc.",
-  "app.settings.workspace.selfHosted": "FÉINÓSTAILTE",
+    "Síntiús, suíocháin, cuótaí, modh íocaíochta agus stair na sonrasc.",
+  "app.settings.workspace.subscriptionNone": "Gan síntiús",
   "app.settings.workspace.trialBadge": "TRIAIL",
   "app.settings.workspace.priceMonthly": "€{amount}",
   "app.settings.workspace.seatPricing": {
@@ -1559,10 +1571,9 @@ export const ga: Dictionary = {
     many: "sa mhí · {count} suíochán san áireamh",
     other: "sa mhí · {count} suíochán san áireamh",
   },
-  "app.settings.workspace.billingNoDue":
-    "Faic dlite ar an ásc seo — láimhseáiltear an billeáil ar an tairiscint néil.",
-  "app.settings.workspace.cloudOnly": "Ar fáil ar an tairiscint néil",
-  "app.settings.workspace.changePlan": "Athraigh an plean",
+  "app.settings.workspace.billingNoDue": "Faic dlite faoi láthair.",
+  "app.settings.workspace.requiresControlPlane": "Teastaíonn control plane",
+  "app.settings.workspace.changeSubscription": "Athraigh an síntiús",
   "app.settings.workspace.manageSeats": "Bainistigh na suíocháin",
   "app.settings.workspace.usageTitle": "Úsáid na míosa seo",
   "app.settings.workspace.quotaSeats": "Suíocháin",
@@ -1574,8 +1585,7 @@ export const ga: Dictionary = {
   "app.settings.workspace.colNumber": "Uimhir",
   "app.settings.workspace.colPeriod": "Tréimhse",
   "app.settings.workspace.colAmount": "Méid",
-  "app.settings.workspace.invoicesEmpty":
-    "Gan sonraisc — taispeánfar sonraisc anseo ar an tairiscint néil.",
+  "app.settings.workspace.invoicesEmpty": "Gan sonraisc go fóill.",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Sábháilte",
@@ -1649,18 +1659,18 @@ export const ga: Dictionary = {
   "app.settings.rules.typeFile": "Comhad",
   "app.settings.rules.typeSelectLong": "Liosta anuas",
 
-  /* --- Vocabulaire du moteur de règles (ST-05, ST-06, ST-07) ---
-     Les statuts, priorités et canaux ne sont PAS repris ici : ils viennent des
-     tables partagées app.status.* / app.priority.* / app.channel.*. */
+  /* --- Rule-engine vocabulary (ST-05, ST-06, ST-07) ---
+     Statuses, priorities and channels are NOT repeated here: they come from the
+     shared tables app.status.* / app.priority.* / app.channel.*. */
 
-  /* Types de champs personnalisés (ST-04) ; « Texte » est typeText, au-dessus. */
+  /* Custom field types (ST-04); “Texte” is typeText, above. */
   "app.settings.rules.typeSelect": "Liosta",
   "app.settings.rules.typeMultiSelect": "Ilroghnú",
   "app.settings.rules.typeDate": "Dáta",
   "app.settings.rules.typeNumber": "Uimhir",
   "app.settings.rules.typeCheckbox": "Ticbhosca",
 
-  /* Champs sur lesquels une condition peut porter. */
+  /* Fields a condition can be built on. */
   "app.settings.rules.condFieldEvent": "Imeacht",
   "app.settings.rules.condFieldStatus": "Stádas",
   "app.settings.rules.condFieldPriority": "Tosaíocht",
@@ -1674,8 +1684,8 @@ export const ga: Dictionary = {
   "app.settings.rules.condFieldHoursCreated": "Uaireanta ó chruthú",
   "app.settings.rules.condFieldHoursUpdated": "Uaireanta ó nuashonrú",
 
-  /* Opérateurs. Ils se lisent après le nom du champ — « Ábhar ina bhfuil … » —
-     et ≥ / ≤ restent des symboles en irlandais. */
+  /* Operators. They read after the field name — “Ábhar ina bhfuil …” — and
+     ≥ / ≤ stay symbols in Irish. */
   "app.settings.rules.opIs": "cothrom le",
   "app.settings.rules.opIsNot": "neamhionann le",
   "app.settings.rules.opContains": "ina bhfuil",
@@ -1685,13 +1695,13 @@ export const ga: Dictionary = {
   "app.settings.rules.opGte": "≥",
   "app.settings.rules.opLte": "≤",
 
-  /* Événements déclencheurs. */
+  /* Trigger events. */
   "app.settings.rules.eventTicketCreated": "Ticéad cruthaithe",
   "app.settings.rules.eventTicketUpdated": "Ticéad nuashonraithe",
   "app.settings.rules.eventMessageCreated": "Teachtaireacht faighte",
 
-  /* Actions, telles que le menu du builder les nomme : à l'impératif, comme
-     « + Cuir gníomh leis » au-dessus. */
+  /* Actions, as the builder's menu names them: in the imperative, like
+     “+ Cuir gníomh leis” above. */
   "app.settings.rules.actSetStatus": "Socraigh an stádas",
   "app.settings.rules.actSetPriority": "Socraigh an tosaíocht",
   "app.settings.rules.actAssignUser": "Sann do ghníomhaire",
@@ -1700,10 +1710,10 @@ export const ga: Dictionary = {
   "app.settings.rules.actAddTags": "Cuir clibeanna leis",
   "app.settings.rules.actEmailContact": "Seol ríomhphost chuig an teagmhálaí",
 
-  /* Résumé d'une règle, en une ligne de liste. « Má » exige un verbe derrière
-     lui, et {conditions} arrive sous forme nominale : le gabarit irlandais
-     ouvre donc sur « I gcás » (« dans le cas de »). Les bribes sont des noms
-     verbaux, sans majuscule ni point, pour s'enchaîner. */
+  /* One-line rule summary. “Má” requires a verb after it, and {conditions}
+     arrives in nominal form: the Irish template therefore opens on “I gcás”
+     (“in the case of”). The fragments are verbal nouns, with no capital and no
+     full stop, so that they run on. */
   "app.settings.rules.summaryPattern": "I gcás {conditions} → {actions}",
   "app.settings.rules.summaryAnd": "agus",
   "app.settings.rules.summaryAlways": "i gcónaí",
@@ -1718,9 +1728,9 @@ export const ga: Dictionary = {
   "app.settings.rules.summaryConditionNoValue": "{field} {operator}",
   "app.settings.rules.summaryUnassigned": "neamhshannta",
   "app.settings.rules.summaryAssigned": "sannta",
-  /* {duration} arrive en jetons du parseur (« 48 h », « 2 j ») : ils ne se
-     traduisent pas. « le » est la préposition de durée déjà employée ailleurs
-     dans ce fichier (« le 2 lá »). */
+  /* {duration} arrives as parser tokens (“48 h”, “2 j”): they are not
+     translated. “le” is the duration preposition already used elsewhere in
+     this file (“le 2 lá”). */
   "app.settings.rules.summarySince": "le {duration}",
   "app.settings.rules.summarySetStatus": "aistriú go {value}",
   "app.settings.rules.summarySetPriority": "tosaíocht {value}",
@@ -1731,7 +1741,7 @@ export const ga: Dictionary = {
   "app.settings.rules.summaryAddTags": "{tags} a chur leis",
   "app.settings.rules.summaryEmailContact": "ríomhphost a sheoladh chuig an teagmhálaí",
 
-  /* Résumé des actions d'une macro (ST-06). */
+  /* Summary of a macro's actions (ST-06). */
   "app.settings.rules.macroSummaryStatus": "Stádas → {value}",
   "app.settings.rules.macroSummaryPriority": "Tosaíocht → {value}",
   "app.settings.rules.macroSummaryTeam": "Foireann → {team}",
@@ -1848,7 +1858,7 @@ export const ga: Dictionary = {
   "app.settings.dev.auditTitle": "Loga iniúchta",
   "app.settings.dev.auditSubtitle":
     "Loga iomlán de na gníomhartha riaracháin. Coinnítear ar feadh 2 bhliain.",
-  "app.settings.dev.auditLockedTitle": "Níl an loga iniúchta ar fáil ach ar an bplean Enterprise",
+  "app.settings.dev.auditLockedTitle": "Tá an loga iniúchta mar chuid d'Enterprise Edition",
   "app.settings.dev.auditLockedText":
     "Coinnigh taifead ar gach gníomh riaracháin ar feadh 2 bhliain, le difríocht roimh/tar éis agus easpórtáil CSV.",
   "app.settings.dev.filterActorAll": "Gníomhaí: uile",
@@ -1873,9 +1883,9 @@ export const ga: Dictionary = {
   "app.settings.dev.actorContact": "Teagmhálaí",
   "app.settings.dev.exportUnauthorized": "Neamhúdaraithe",
   "app.settings.dev.exportForbidden": "Teoranta do na róil Owner agus Admin.",
-  "app.settings.dev.exportEnterpriseOnly": "Níl an loga iniúchta ar fáil ach ar an bplean Enterprise.",
+  "app.settings.dev.exportEnterpriseOnly": "Tá an loga iniúchta mar chuid d'Enterprise Edition.",
 
-  /* --- settingsNav : navigation de l'administration et éditeur de règles --- */
+  /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Spás oibre",
   "app.settingsNav.itemGeneral": "Ginearálta",
   "app.settingsNav.itemTeam": "Gníomhairí & foirne",
@@ -1909,7 +1919,7 @@ export const ga: Dictionary = {
   "app.settingsNav.copied": "Cóipeáilte",
   "app.settingsNav.copy": "Cóipeáil",
 
-  /* --- Socle : statuts, priorités, canaux, unités --- */
+  /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nua",
   "app.status.open": "Oscailte",
   "app.status.waiting": "Ag feitheamh",
@@ -1930,7 +1940,7 @@ export const ga: Dictionary = {
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 
-  /* --- Vues livrées avec le produit (AG-03) --- */
+  /* --- Views shipped with the product (AG-03) --- */
   "app.views.mine": "Mo thicéid",
   "app.views.unassigned": "Neamhshannta",
   "app.views.breaching": "Thar téarma go luath",
@@ -1938,7 +1948,7 @@ export const ga: Dictionary = {
   "app.views.urgent": "Práinneach an tseachtain seo",
   "app.views.escalation": "Géaruithe",
 
-  /* --- Gestion des catégories KB, réservée à Owner/Admin --- */
+  /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Athainmnigh",
   "app.kb.renameSave": "Sábháil",
   "app.kb.deleteCategory": "Scrios an chatagóir",
@@ -1952,7 +1962,7 @@ export const ga: Dictionary = {
     other: "Tá {count} mír fós sa chatagóir seo. Bog iad sula scriosfaidh tú an chatagóir.",
   },
 
-  /* --- AG-01 Connexion agent --- */
+  /* --- AG-01 Agent sign-in --- */
   "app.login.email": "Ríomhphost",
   "app.login.emailPlaceholder": "tusa@comhlacht.ie",
   "app.login.password": "Pasfhocal",
@@ -1981,9 +1991,9 @@ export const ga: Dictionary = {
   "app.login.providerMissing": "Níl an soláthraí seo cumraithe ar an ásc seo.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  /* Le titre du portail dans son propre aperçu (home.title), le nom du
-     workspace et la couleur d'accent viennent d'ailleurs ; les rôles Owner /
-     Admin / Agent / Viewer ne se traduisent pas. */
+  /* The portal title in its own preview (home.title), the workspace name
+     and the accent colour come from elsewhere; the Owner / Admin / Agent /
+     Viewer roles are not translated. */
 
   "app.onboarding.asideTitle": "Cumraíocht",
   "app.onboarding.asideFooter":
@@ -2022,7 +2032,7 @@ export const ga: Dictionary = {
 
   "app.onboarding.teamTitle": "Tabhair cuireadh do d'fhoireann",
   "app.onboarding.teamBody":
-    "Tabhair cuireadh do do ghníomhairí anois, nó roinn an nasc cuiridh. Tá suíocháin Viewer saor in aisce.",
+    "Tabhair cuireadh do do ghníomhairí anois, nó roinn an nasc cuiridh. Ní úsáideann róil Viewer suíochán.",
   "app.onboarding.invitePlaceholder": "comhghleacai@comhlacht.ie",
   "app.onboarding.addRow": "+ Cuir líne leis",
   "app.onboarding.sendInvites": "Seol na cuirí",
@@ -2031,8 +2041,8 @@ export const ga: Dictionary = {
   "app.onboarding.testBody":
     "Seiceáil an slabhra iomlán sula osclóidh tú an tseirbhís do do chustaiméirí.",
   "app.onboarding.readyTitle": "Tá do spás oibre réidh",
-  /* {address} est rendue en police à chasse fixe : la phrase est découpée
-     autour du paramètre, elle doit donc rester une seule phrase. */
+  /* {address} is rendered in a monospace font: the sentence is split
+     around the parameter, so it must remain a single sentence. */
   "app.onboarding.readyBody": "Seol ríomhphost chuig {address} chun ticéad tástála a chruthú.",
   "app.onboarding.openInbox": "Oscail an bosca isteach",
 
@@ -2042,32 +2052,42 @@ export const ga: Dictionary = {
   "app.onboarding.checklistTicket": "An chéad thicéad faighte",
   "app.onboarding.checklistSla": "Beartas SLA seiceáilte",
 
-  /* ===================== Reste du français codé en dur ===================== */
+  /* ================= Text formerly hard-coded in French ================= */
 
-  /* ST-05 — l'entête du groupe de conditions. La phrase entoure un sélecteur
-     « gach ceann / ceann amháin ar a laghad » : l'irlandais est VSO, le verbe
-     passe donc AVANT {mode} et le reste de la phrase le suit. */
+  /* ST-05 — the condition group header. The sentence wraps a
+     “gach ceann / ceann amháin ar a laghad” selector: Irish is VSO, so the verb
+     goes BEFORE {mode} and the rest of the sentence follows it. */
   "app.settings.rules.matchIf": "MÁ",
   "app.settings.rules.matchAllPattern": "Meaitseálann {mode} de na coinníollacha",
   "app.settings.rules.matchAnyPattern": "Meaitseálann {mode} de na coinníollacha",
   "app.settings.rules.matchAll": "gach ceann",
   "app.settings.rules.matchAny": "ceann amháin ar a laghad",
 
-  /* ST-11 — noms des offres. « Free », « Standard » et « Pro » sont des noms de
-     produit et ne se traduisent pas ; seul le mot « Plan » est du texte. */
-  "app.settings.workspace.planFree": "Plean Free",
-  "app.settings.workspace.planTeam": "Plean Team",
-  "app.settings.workspace.planEnterprise": "Plean Enterprise",
+  /* ST-05 — the THEN block header, facing `matchIf` above. */
+  "app.settings.rules.matchThen": "ANSIN",
+  /* The dashed test area: the button, then its label while the transition
+     is pending. */
+  "app.settings.rules.testOnTicket": "Tástáil ar thicéad atá ann",
+  "app.settings.rules.testRunning": "Á thástáil…",
+  /* The X that drops a condition or an action row (ST-05, ST-07, SLA). It sits
+     next to `app.settings.shell.cancel`, and must not read as deleting the
+     rule itself. */
+  "app.settings.rules.removeRow": "Bain",
+  /* Placeholder of the “send an email to the contact” action. The
+     {{double.tokens}} are macro variables and are not translated:
+     `interpolate` only replaces single braces around word characters. */
+  "app.settings.rules.emailBodyPlaceholder":
+    "Corp an ríomhphoist — athróga: {{contact.name}}, {{ticket.number}}, {{ticket.subject}}",
 
-  /* Types de ticket (AG-05). La VALEUR enregistrée en base reste la chaîne
-     française ; seul l'affichage est traduit. */
+  /* Ticket types (AG-05). The VALUE stored in the database stays the French
+     string; only the display is translated. */
   "app.ticket.typeQuestion": "Ceist",
   "app.ticket.typeIncident": "Teagmhas",
   "app.ticket.typeTask": "Tasc",
   "app.ticket.typeOther": "Eile",
 
-  /* AG-09 — export CSV des rapports. L'irlandais abrège la seconde par le
-     symbole SI « s », comme « min » et « h » de app.unit.* dans ce fichier. */
+  /* AG-09 — CSV export of the reports. Irish abbreviates the second with the
+     SI symbol “s”, like the “min” and “h” of app.unit.* in this file. */
   "app.reports.csvIndicator": "Táscaire",
   "app.reports.csvCurrentPeriod": "An tréimhse reatha",
   "app.reports.csvPreviousPeriod": "An tréimhse roimhe",
@@ -2082,8 +2102,8 @@ export const ga: Dictionary = {
   "app.reports.csvResolvedShort": "Réitithe",
   "app.reports.csvAgent": "Gníomhaire",
 
-  /* AG-10 — conversion d'une demande résolue en article. Les deux titres de
-     section sont du markdown rendu par le portail : le « ## » reste. */
+  /* AG-10 — turning a resolved request into an article. Both section titles
+     are markdown rendered by the portal: the “##” stays. */
   "app.kb.fromTicketDefaultTitle": "Alt nua",
   "app.kb.fromTicketSymptomHeading": "Siomptóm",
   "app.kb.fromTicketSymptomPlaceholder": "[Déan cur síos ar an rud a fheiceann an custaiméir.]",
@@ -2093,8 +2113,8 @@ export const ga: Dictionary = {
   "app.kb.fromTicketMissingRequest": "iarratas bunaidh an chustaiméara",
   "app.kb.fromTicketMissingAnswer": "freagra an ghníomhaire",
 
-  /* Modèles de départ d'un article (AG-10). Le corps est du markdown ; le texte
-     entre crochets est à remplacer par l'auteur, et se traduit comme le reste. */
+  /* Article starter templates (AG-10). The body is markdown; the bracketed
+     text is for the author to replace, and is translated like the rest. */
   "app.kb.tplProcedureLabel": "Nós imeachta céim ar chéim",
   "app.kb.tplProcedureHint": "Sraith céimeanna uimhrithe, agus an toradh a bhfuil súil leis.",
   "app.kb.tplProcedureTitle": "Conas [an gníomh a dhéanamh]",

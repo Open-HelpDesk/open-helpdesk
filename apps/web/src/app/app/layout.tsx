@@ -20,17 +20,17 @@ import { I18nProvider } from "@/i18n/client";
 import { getT } from "@/i18n/server";
 
 /**
- * Shell commun de l'espace agent (AG-03 → AG-10) : rail 64 px (logo 32×32, 7 icônes
- * 40×40 avec états actifs, badge rouge sur Inbox = tickets ouverts de l'agent, avatar
- * 30×30 en bas) + topbar 48 px (titre + sous-titre dynamiques, ⌘K, cloche, « + Nouveau
- * ticket »).
+ * Shared shell for the agent workspace (AG-03 → AG-10): 64 px rail (32×32 logo, 7 icons
+ * 40×40 with active states, red badge on Inbox = the agent's open tickets, 30×30 avatar
+ * at the bottom) + 48 px topbar (dynamic title + subtitle, ⌘K, bell, "+ New
+ * ticket").
  */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { tenant, agent } = await requireAgent();
   const t0 = await getT();
 
-  // Workspace suspendu (impayé, fin d'essai…) : tout est bloqué, sauf
-  // Abonnement & facturation pour l'Owner — c'est là que la suspension se lève.
+  // Suspended workspace (unpaid, trial over…): everything is blocked, except
+  // Subscription & billing for the Owner — that is where the suspension gets lifted.
   if (tenant.status === "suspended" || tenant.status === "deleting") {
     const pathname = (await headers()).get("x-pathname") ?? "";
     const ownerOnBilling =
@@ -83,9 +83,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         .select({ n: count() })
         .from(organizations)
         .where(eq(organizations.tenantId, tenant.id)),
-      // Le sous-titre « N articles » du topbar suit la même règle que la liste :
-      // un non-gestionnaire ne compte que le publié, sinon l'écart trahit les
-      // brouillons qu'on lui cache par ailleurs.
+      // The topbar's "N articles" subtitle follows the same rule as the list:
+      // a non-manager only counts what is published, otherwise the gap gives away the
+      // drafts we hide from them elsewhere.
       db
         .select({ n: count() })
         .from(kbArticles)
@@ -119,11 +119,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           className="flex w-16 shrink-0 flex-col items-center border-r"
           style={{ padding: "10px 0", background: "var(--panel)", borderColor: "var(--line)" }}
         >
-          {/* Le logo du tenant (ST-01) prend la place du carré à l'initiale,
-              ici comme dans l'entête du portail. */}
+          {/* The tenant logo (ST-01) takes the place of the initial square,
+              here just as in the portal header. */}
           {branding.logoUrl ? (
-            /* eslint-disable-next-line @next/next/no-img-element -- un SVG ou un
-               ICO déposé par le tenant ne passe pas par l'optimiseur d'images. */
+            /* eslint-disable-next-line @next/next/no-img-element -- an SVG or an
+               ICO uploaded by the tenant does not go through the image optimizer. */
             <img
               src={branding.logoUrl}
               alt={tenant.name}

@@ -1,15 +1,15 @@
 "use client";
 
 /**
- * Éditeur d'article — édition visuelle (TipTap/ProseMirror).
+ * Article editor — visual editing (TipTap/ProseMirror).
  *
- * L'agent met en forme et voit le résultat : aucun balisage n'apparaît à l'écran.
- * La conversion vers le format stocké se fait à chaque frappe dans un champ caché,
- * ce qui laisse la server action existante inchangée et garde le portail compatible
- * avec les articles déjà publiés.
+ * The agent applies formatting and sees the result: no markup shows up on screen.
+ * Conversion to the stored format happens on every keystroke in a hidden field,
+ * which leaves the existing server action untouched and keeps the portal compatible
+ * with the articles already published.
  *
- * Seules les mises en forme que le portail sait rendre sont proposées : barré et
- * souligné sont désactivés, ils seraient perdus à la publication.
+ * Only the formatting the portal knows how to render is offered: strikethrough and
+ * underline are disabled, they would be lost on publication.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EditorContent, useEditor, type Editor } from "@tiptap/react";
@@ -19,96 +19,96 @@ import { CodeBlock } from "@tiptap/extension-code-block";
 import { docToMarkup, markupToHtml, type EditorNode } from "@/lib/article-convert";
 import { plainText } from "@/lib/article-format";
 import { useT } from "@/i18n/client";
-import type { MessageKey } from "@/i18n/dictionaries/fr";
+import type { MessageKey } from "@/i18n/dictionaries/en";
 
 type Action = {
-  cle: string;
-  libelle: string;
-  /** Clé de l'infobulle : la table est construite hors du composant. */
-  titre: MessageKey;
-  actif: (e: Editor) => boolean;
-  lancer: (e: Editor) => void;
+  key: string;
+  label: string;
+  /** Tooltip key: the table is built outside the component. */
+  title: MessageKey;
+  isActive: (e: Editor) => boolean;
+  run: (e: Editor) => void;
   style?: React.CSSProperties;
 };
 
 const ACTIONS: Action[] = [
   {
-    cle: "h2",
-    libelle: "T",
-    titre: "app.kb.toolHeading",
-    actif: (e) => e.isActive("heading", { level: 2 }),
-    lancer: (e) => e.chain().focus().toggleHeading({ level: 2 }).run(),
+    key: "h2",
+    label: "T",
+    title: "app.kb.toolHeading",
+    isActive: (e) => e.isActive("heading", { level: 2 }),
+    run: (e) => e.chain().focus().toggleHeading({ level: 2 }).run(),
     style: { fontWeight: 700 },
   },
   {
-    cle: "h3",
-    libelle: "t",
-    titre: "app.kb.toolSubheading",
-    actif: (e) => e.isActive("heading", { level: 3 }),
-    lancer: (e) => e.chain().focus().toggleHeading({ level: 3 }).run(),
+    key: "h3",
+    label: "t",
+    title: "app.kb.toolSubheading",
+    isActive: (e) => e.isActive("heading", { level: 3 }),
+    run: (e) => e.chain().focus().toggleHeading({ level: 3 }).run(),
     style: { fontWeight: 600, fontSize: 11.5 },
   },
   {
-    cle: "gras",
-    libelle: "B",
-    titre: "app.kb.toolBold",
-    actif: (e) => e.isActive("bold"),
-    lancer: (e) => e.chain().focus().toggleBold().run(),
+    key: "bold",
+    label: "B",
+    title: "app.kb.toolBold",
+    isActive: (e) => e.isActive("bold"),
+    run: (e) => e.chain().focus().toggleBold().run(),
     style: { fontWeight: 700 },
   },
   {
-    cle: "italique",
-    libelle: "I",
-    titre: "app.kb.toolItalic",
-    actif: (e) => e.isActive("italic"),
-    lancer: (e) => e.chain().focus().toggleItalic().run(),
+    key: "italic",
+    label: "I",
+    title: "app.kb.toolItalic",
+    isActive: (e) => e.isActive("italic"),
+    run: (e) => e.chain().focus().toggleItalic().run(),
     style: { fontStyle: "italic" },
   },
   {
-    cle: "puces",
-    libelle: "•",
-    titre: "app.kb.toolBulletList",
-    actif: (e) => e.isActive("bulletList"),
-    lancer: (e) => e.chain().focus().toggleBulletList().run(),
+    key: "bullets",
+    label: "•",
+    title: "app.kb.toolBulletList",
+    isActive: (e) => e.isActive("bulletList"),
+    run: (e) => e.chain().focus().toggleBulletList().run(),
   },
   {
-    cle: "etapes",
-    libelle: "1.",
-    titre: "app.kb.toolOrderedList",
-    actif: (e) => e.isActive("orderedList"),
-    lancer: (e) => e.chain().focus().toggleOrderedList().run(),
+    key: "steps",
+    label: "1.",
+    title: "app.kb.toolOrderedList",
+    isActive: (e) => e.isActive("orderedList"),
+    run: (e) => e.chain().focus().toggleOrderedList().run(),
     style: { fontSize: 11 },
   },
   {
-    cle: "encadre",
-    libelle: "❝",
-    titre: "app.kb.toolQuote",
-    actif: (e) => e.isActive("blockquote"),
-    lancer: (e) => e.chain().focus().toggleBlockquote().run(),
+    key: "quote",
+    label: "❝",
+    title: "app.kb.toolQuote",
+    isActive: (e) => e.isActive("blockquote"),
+    run: (e) => e.chain().focus().toggleBlockquote().run(),
   },
   {
-    cle: "code",
-    libelle: "‹›",
-    titre: "app.kb.toolInlineCode",
-    actif: (e) => e.isActive("code"),
-    lancer: (e) => e.chain().focus().toggleCode().run(),
+    key: "code",
+    label: "‹›",
+    title: "app.kb.toolInlineCode",
+    isActive: (e) => e.isActive("code"),
+    run: (e) => e.chain().focus().toggleCode().run(),
     style: { fontSize: 11 },
   },
   {
-    cle: "bloc",
-    libelle: "▤",
-    titre: "app.kb.toolCodeBlock",
-    actif: (e) => e.isActive("codeBlock"),
-    lancer: (e) => e.chain().focus().toggleCodeBlock().run(),
+    key: "bloc",
+    label: "▤",
+    title: "app.kb.toolCodeBlock",
+    isActive: (e) => e.isActive("codeBlock"),
+    run: (e) => e.chain().focus().toggleCodeBlock().run(),
   },
 ];
 
 /**
- * Bloc de code portant un titre (« Format du nom de fichier » dans le design).
- * L'attribut standard « language » ne convient pas : il est rendu en classe CSS,
- * donc tronqué au premier espace.
+ * Code block carrying a title ("File name format" in the design).
+ * The standard "language" attribute does not fit: it is rendered as a CSS class,
+ * hence truncated at the first space.
  */
-const BlocCodeTitre = CodeBlock.extend({
+const TitledCodeBlock = CodeBlock.extend({
   addAttributes() {
     return {
       ...this.parent?.(),
@@ -131,25 +131,25 @@ export function ArticleEditor({
 }) {
   const t = useT();
   const [markup, setMarkup] = useState(defaultBody);
-  const [depot, setDepot] = useState(false);
-  const [erreur, setErreur] = useState<string | null>(null);
-  const [pretPourRendu, setPretPourRendu] = useState(false);
-  const fichier = useRef<HTMLInputElement>(null);
+  const [dropping, setDropping] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [readyToRender, setReadyToRender] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
-    // Le rendu initial doit être identique au serveur : TipTap monte après coup.
+    // The initial render must be identical to the server one: TipTap mounts afterwards.
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3] },
-        // Le format du portail ne rend ni le barré, ni le souligné, ni les filets.
+        // The portal format renders neither strikethrough, nor underline, nor rules.
         strike: false,
         underline: false,
         horizontalRule: false,
         codeBlock: false,
         link: { openOnClick: false, HTMLAttributes: { rel: "noopener" } },
       }),
-      BlocCodeTitre,
+      TitledCodeBlock,
       Image.configure({ HTMLAttributes: { class: "kb-image" } }),
     ],
     content: markupToHtml(defaultBody),
@@ -162,42 +162,42 @@ export function ArticleEditor({
     onUpdate: ({ editor: e }) => setMarkup(docToMarkup(e.getJSON() as EditorNode)),
   });
 
-  useEffect(() => setPretPourRendu(true), []);
+  useEffect(() => setReadyToRender(true), []);
 
-  /** Dépose les fichiers image reçus et les insère à la suite. */
-  const televerser = useCallback(
-    async (fichiers: File[]) => {
-      const images = fichiers.filter((f) => f.type.startsWith("image/"));
+  /** Uploads the image files received and inserts them one after the other. */
+  const upload = useCallback(
+    async (files: File[]) => {
+      const images = files.filter((f) => f.type.startsWith("image/"));
       if (images.length === 0 || !editor) return;
-      setErreur(null);
+      setError(null);
       for (const image of images) {
-        const corps = new FormData();
-        corps.append("file", image);
+        const payload = new FormData();
+        payload.append("file", image);
         try {
-          const reponse = await fetch("/api/kb/images", { method: "POST", body: corps });
-          const donnees = (await reponse.json()) as { url?: string; detail?: string };
-          if (!reponse.ok || !donnees.url) {
-            setErreur(donnees.detail ?? t("app.kb.imageRejected"));
+          const response = await fetch("/api/kb/images", { method: "POST", body: payload });
+          const data = (await response.json()) as { url?: string; detail?: string };
+          if (!response.ok || !data.url) {
+            setError(data.detail ?? t("app.kb.imageRejected"));
             continue;
           }
-          // Après le bloc courant : une image déposée dans une étape de liste
-          // s'imbriquerait dans celle-ci.
-          const apresBloc = editor.state.selection.$to.after(1);
+          // After the current block: an image dropped inside a list step
+          // would end up nested inside it.
+          const afterBlock = editor.state.selection.$to.after(1);
           editor
             .chain()
             .focus()
-            .insertContentAt(apresBloc, { type: "image", attrs: { src: donnees.url, alt: image.name } })
+            .insertContentAt(afterBlock, { type: "image", attrs: { src: data.url, alt: image.name } })
             .run();
         } catch {
-          setErreur(t("app.kb.uploadFailed"));
+          setError(t("app.kb.uploadFailed"));
         }
       }
     },
     [editor, t],
   );
 
-  const mots = plainText(markup).split(/\s+/).filter(Boolean).length;
-  const minutes = Math.max(1, Math.round(mots / 200));
+  const words = plainText(markup).split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.round(words / 200));
 
   return (
     <div
@@ -205,20 +205,20 @@ export function ArticleEditor({
       onDragOver={(e) => {
         if (!e.dataTransfer.types.includes("Files")) return;
         e.preventDefault();
-        setDepot(true);
+        setDropping(true);
       }}
       onDragLeave={(e) => {
         if (e.currentTarget.contains(e.relatedTarget as Node)) return;
-        setDepot(false);
+        setDropping(false);
       }}
       onDrop={(e) => {
         if (!e.dataTransfer.files.length) return;
         e.preventDefault();
-        setDepot(false);
-        void televerser([...e.dataTransfer.files]);
+        setDropping(false);
+        void upload([...e.dataTransfer.files]);
       }}
     >
-      {/* Le format stocké voyage ici : la server action ne change pas. */}
+      {/* The stored format travels here: the server action does not change. */}
       <input type="hidden" name="body" value={markup} />
 
       <div className="mx-auto" style={{ maxWidth: "72ch" }}>
@@ -237,27 +237,27 @@ export function ArticleEditor({
         >
           {editor &&
             ACTIONS.map((action) => {
-              const actif = action.actif(editor);
+              const active = action.isActive(editor);
               return (
                 <button
-                  key={action.cle}
+                  key={action.key}
                   type="button"
-                  title={t(action.titre)}
-                  aria-label={t(action.titre)}
-                  aria-pressed={actif}
-                  onClick={() => action.lancer(editor)}
+                  title={t(action.title)}
+                  aria-label={t(action.title)}
+                  aria-pressed={active}
+                  onClick={() => action.run(editor)}
                   className="flex items-center justify-center ohd-hover"
                   style={{
                     width: 26,
                     height: 24,
                     borderRadius: 5,
                     fontSize: 12.5,
-                    background: actif ? "var(--acc-t)" : "transparent",
-                    color: actif ? "var(--acc)" : "var(--ink-2)",
+                    background: active ? "var(--acc-t)" : "transparent",
+                    color: active ? "var(--acc)" : "var(--ink-2)",
                     ...action.style,
                   }}
                 >
-                  {action.libelle}
+                  {action.label}
                 </button>
               );
             })}
@@ -268,8 +268,8 @@ export function ArticleEditor({
             aria-label={t("app.kb.insertLink")}
             onClick={() => {
               if (!editor) return;
-              const actuel = String(editor.getAttributes("link").href ?? "");
-              const url = window.prompt(t("app.kb.linkPrompt"), actuel || "https://");
+              const current = String(editor.getAttributes("link").href ?? "");
+              const url = window.prompt(t("app.kb.linkPrompt"), current || "https://");
               if (url === null) return;
               if (!url.trim()) {
                 editor.chain().focus().unsetLink().run();
@@ -294,47 +294,47 @@ export function ArticleEditor({
             type="button"
             title={t("app.kb.insertImage")}
             aria-label={t("app.kb.insertImage")}
-            onClick={() => fichier.current?.click()}
+            onClick={() => fileInput.current?.click()}
             className="flex items-center justify-center ohd-hover"
             style={{ width: 26, height: 24, borderRadius: 5, fontSize: 11, color: "var(--ink-2)" }}
           >
             🖼
           </button>
           <input
-            ref={fichier}
+            ref={fileInput}
             type="file"
             accept="image/*"
             multiple
             className="hidden"
             onChange={(e) => {
-              void televerser([...(e.target.files ?? [])]);
+              void upload([...(e.target.files ?? [])]);
               e.target.value = "";
             }}
           />
 
           <span className="flex-1" />
           <span className="tabular-nums" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-            {t("app.kb.readingStats", { count: mots, minutes })}
+            {t("app.kb.readingStats", { count: words, minutes })}
           </span>
         </div>
 
-        {erreur && (
+        {error && (
           <p
             className="mb-3 rounded-md px-3 py-2"
             style={{ fontSize: 12.5, background: "var(--dang-t)", color: "var(--dang)" }}
           >
-            {erreur}
+            {error}
           </p>
         )}
 
         <div
           style={{
             borderRadius: 10,
-            outline: depot ? "2px dashed var(--acc)" : "none",
+            outline: dropping ? "2px dashed var(--acc)" : "none",
             outlineOffset: 8,
           }}
         >
-          {pretPourRendu ? (
+          {readyToRender ? (
             <EditorContent editor={editor} />
           ) : (
             <p style={{ fontSize: 14.5, color: "var(--ink-3)" }}>{t("app.kb.loadingEditor")}</p>
