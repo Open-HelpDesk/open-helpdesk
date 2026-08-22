@@ -104,9 +104,11 @@ export default async function BillingPage() {
 
   const planName = planDisplayName(tenant, t);
   // Abonnement dénormalisé par le control plane ; repli sur la grille publique
-  // (essai ou tenant pas encore facturé). Team : 3 premiers sièges inclus.
+  // (essai ou tenant pas encore facturé). Team : 3 premiers sièges INCLUS —
+  // le prix Stripe est en paliers gradués, l'affichage doit suivre.
   const seatPrice = billing.seatPriceCents != null ? billing.seatPriceCents / 100 : (SEAT_PRICE[planId] ?? 0);
-  const billedSeats = billing.seats ?? Math.max(0, seats - (planId === "team" ? 3 : 0));
+  const includedSeats = planId === "team" ? 3 : 0;
+  const billedSeats = Math.max(0, (billing.seats ?? seats) - includedSeats);
   const monthly = planId === "free" ? 0 : seatPrice * billedSeats;
   const seatLine =
     monthly > 0
@@ -143,19 +145,19 @@ export default async function BillingPage() {
               >
                 {planName}
               </span>
-              <span
-                className="rounded-full font-bold"
-                style={{
-                  padding: "2px 9px",
-                  fontSize: 11.5,
-                  background: "var(--panel)",
-                  color: "var(--acc)",
-                }}
-              >
-                {tenant.status === "trial"
-                  ? t("app.settings.workspace.trialBadge")
-                  : planName}
-              </span>
+              {tenant.status === "trial" && (
+                <span
+                  className="rounded-full font-bold"
+                  style={{
+                    padding: "2px 9px",
+                    fontSize: 11.5,
+                    background: "var(--panel)",
+                    color: "var(--acc)",
+                  }}
+                >
+                  {t("app.settings.workspace.trialBadge")}
+                </span>
+              )}
             </div>
             <div className="flex flex-wrap items-baseline" style={{ gap: 6 }}>
               <span
