@@ -14,6 +14,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 export function Drawer({
@@ -53,46 +54,54 @@ export function Drawer({
       >
         {trigger}
       </button>
-      {open && (
-        <div className="fixed inset-0 z-40 flex justify-end" role="dialog" aria-modal>
-          <div
-            className="absolute inset-0"
-            style={{ background: "var(--scrim-drawer)" }}
-            onClick={() => setOpen(false)}
-          />
-          <div
-            className="st-slide relative flex h-full flex-col border-l"
-            style={{
-              width,
-              maxWidth: "94vw",
-              background: "var(--panel)",
-              borderColor: "var(--line)",
-              boxShadow: "-16px 0 40px rgba(17,33,28,.16)",
-            }}
-            onSubmit={() => setOpen(false)}
-          >
+      {open &&
+        createPortal(
+          // A React portal, not a DOM child of the trigger: a `.st-rise` ancestor's
+          // entrance animation leaves `transform: matrix(1,0,0,1,0,0)` behind
+          // (animation-fill-mode: both never resolves back to the `none` keyword),
+          // which — being a value other than `none` — opens a new containing block
+          // for `position: fixed` descendants. Nested here, the drawer would be
+          // confined to that ancestor's box instead of the viewport.
+          <div className="fixed inset-0 z-40 flex justify-end" role="dialog" aria-modal>
             <div
-              className="flex shrink-0 items-center justify-between border-b"
-              style={{ padding: "14px 18px", borderColor: "var(--line)" }}
+              className="absolute inset-0"
+              style={{ background: "var(--scrim-drawer)" }}
+              onClick={() => setOpen(false)}
+            />
+            <div
+              className="st-slide relative flex h-full flex-col border-l"
+              style={{
+                width,
+                maxWidth: "94vw",
+                background: "var(--panel)",
+                borderColor: "var(--line)",
+                boxShadow: "-16px 0 40px rgba(17,33,28,.16)",
+              }}
+              onSubmit={() => setOpen(false)}
             >
-              <h2 className="font-semibold" style={{ fontSize: 15, color: "var(--ink)" }}>
-                {title}
-              </h2>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label={t("app.settings.shell.close")}
-                style={{ color: "var(--ink-3)" }}
+              <div
+                className="flex shrink-0 items-center justify-between border-b"
+                style={{ padding: "14px 18px", borderColor: "var(--line)" }}
               >
-                <X size={16} />
-              </button>
+                <h2 className="font-semibold" style={{ fontSize: 15, color: "var(--ink)" }}>
+                  {title}
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  aria-label={t("app.settings.shell.close")}
+                  style={{ color: "var(--ink-3)" }}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto" style={{ padding: 18 }}>
+                {children}
+              </div>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto" style={{ padding: 18 }}>
-              {children}
-            </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
@@ -134,47 +143,53 @@ export function Modal({
       >
         {trigger}
       </button>
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center"
-          role="dialog"
-          aria-modal
-          style={{ padding: 24 }}
-        >
+      {open &&
+        createPortal(
+          // Same reason as Drawer: escape any `.st-rise`/`.st-pop` ancestor whose
+          // finished entrance animation leaves a non-`none` computed transform
+          // behind, which would otherwise confine this `position: fixed` overlay
+          // to that ancestor's box instead of the viewport.
           <div
-            className="absolute inset-0"
-            style={{ background: "var(--scrim-modal)" }}
-            onClick={() => setOpen(false)}
-          />
-          <div
-            className="st-pop relative rounded-[10px] border"
-            style={{
-              width,
-              maxWidth: "94vw",
-              background: "var(--panel)",
-              borderColor: "var(--line)",
-              boxShadow: "0 20px 48px rgba(17,33,28,.2)",
-              padding: 20,
-            }}
-            onSubmit={() => setOpen(false)}
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            role="dialog"
+            aria-modal
+            style={{ padding: 24 }}
           >
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="font-semibold" style={{ fontSize: 15, color: "var(--ink)" }}>
-                {title}
-              </h2>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label={t("app.settings.shell.close")}
-                style={{ color: "var(--ink-3)" }}
-              >
-                <X size={16} />
-              </button>
+            <div
+              className="absolute inset-0"
+              style={{ background: "var(--scrim-modal)" }}
+              onClick={() => setOpen(false)}
+            />
+            <div
+              className="st-pop relative rounded-[10px] border"
+              style={{
+                width,
+                maxWidth: "94vw",
+                background: "var(--panel)",
+                borderColor: "var(--line)",
+                boxShadow: "0 20px 48px rgba(17,33,28,.2)",
+                padding: 20,
+              }}
+              onSubmit={() => setOpen(false)}
+            >
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="font-semibold" style={{ fontSize: 15, color: "var(--ink)" }}>
+                  {title}
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  aria-label={t("app.settings.shell.close")}
+                  style={{ color: "var(--ink-3)" }}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+              {children}
             </div>
-            {children}
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
