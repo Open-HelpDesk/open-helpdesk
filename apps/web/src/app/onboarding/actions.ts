@@ -47,6 +47,11 @@ export async function inviteTeam(formData: FormData) {
   const emails = formData.getAll("email").map((e) => String(e).trim().toLowerCase());
   const roles = formData.getAll("role").map((r) => String(r));
 
+  // Nothing to send → stay on the step. Moving on without inviting is the
+  // "Skip" link's job; the primary button advancing on an empty form read as
+  // a success that never happened.
+  if (!emails.some((e) => e.includes("@"))) redirect("/onboarding?step=3");
+
   for (let i = 0; i < emails.length; i++) {
     const email = emails[i];
     if (!email || !email.includes("@")) continue;

@@ -169,6 +169,11 @@ export function CopyButton({ value, label }: { value: string; label?: string }) 
 export function TeamInviteForm() {
   const t = useT();
   const [rows, setRows] = useState([0, 1]);
+  // The primary button means "send": with every field empty it has nothing to
+  // send, and letting it through used to jump to step 4 as a silent no-op —
+  // the "Skip" link next to it is the way to move on without inviting.
+  const [values, setValues] = useState<Record<number, string>>({});
+  const hasEmail = rows.some((id) => (values[id] ?? "").includes("@"));
 
   return (
     <form action={inviteTeam} className="flex flex-col gap-3" style={{ maxWidth: 460 }}>
@@ -178,6 +183,7 @@ export function TeamInviteForm() {
             name="email"
             type="email"
             placeholder={t("app.onboarding.invitePlaceholder")}
+            onChange={(e) => setValues((v) => ({ ...v, [id]: e.target.value }))}
             className="min-w-0 flex-1 border px-3 text-sm outline-none"
             style={{
               height: 36,
@@ -216,7 +222,8 @@ export function TeamInviteForm() {
       <div className="mt-3 flex items-center gap-4">
         <button
           type="submit"
-          className="rounded-md px-5 text-sm font-semibold text-white"
+          disabled={!hasEmail}
+          className="rounded-md px-5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
           style={{ height: 38, background: "var(--acc)" }}
         >
           {t("app.onboarding.sendInvites")}

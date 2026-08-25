@@ -46,11 +46,22 @@ export default async function OnboardingPage({
   const mailbox = mailboxRows.find((m) => m.kind === "provided") ?? mailboxRows[0];
   const mailboxAddress = mailbox?.address ?? providedMailboxAddress(tenant.slug);
 
+  // The stepper and the step-4 checklist read the SAME reality: a step is done
+  // because the workspace says so, never because the URL happens to be further
+  // along. Deriving "done" from ?step= let a deep link (or the inbox CTA to
+  // step 2) tick steps the owner had never even seen.
+  const stepDone: Record<number, boolean> = {
+    1: Boolean(branding.accentColor),
+    2: Boolean(mailbox?.verified),
+    3: (userCount?.n ?? 0) > 1,
+    4: (ticketCount?.n ?? 0) > 0,
+  };
+
   const checklist: { label: MessageKey; done: boolean }[] = [
-    { label: "app.onboarding.checklistIdentity", done: Boolean(branding.accentColor) },
-    { label: "app.onboarding.checklistEmail", done: Boolean(mailbox?.verified) },
-    { label: "app.onboarding.checklistTeam", done: (userCount?.n ?? 0) > 1 },
-    { label: "app.onboarding.checklistTicket", done: (ticketCount?.n ?? 0) > 0 },
+    { label: "app.onboarding.checklistIdentity", done: stepDone[1]! },
+    { label: "app.onboarding.checklistEmail", done: stepDone[2]! },
+    { label: "app.onboarding.checklistTeam", done: stepDone[3]! },
+    { label: "app.onboarding.checklistTicket", done: stepDone[4]! },
     { label: "app.onboarding.checklistSla", done: true },
   ];
   // The closing sentence inserts the address in a monospace font: it is split
@@ -82,7 +93,7 @@ export default async function OnboardingPage({
 
         <ol className="flex flex-col gap-6">
           {STEPS.map((s) => {
-            const done = s.n < step;
+            const done = stepDone[s.n] ?? false;
             const current = s.n === step;
             return (
               <li key={s.n} className="flex items-start gap-3">
