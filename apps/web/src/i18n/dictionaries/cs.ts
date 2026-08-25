@@ -1934,6 +1934,12 @@ export const cs: Dictionary = {
     "Nastavte přeposílání ze své existující adresy ({example}) na adresu uvedenou výše. Podrobnou konfiguraci najdete v nastavení.",
   "app.onboarding.forwardLabel": "Přeposílaná adresa",
   "app.onboarding.forwardPlaceholder": "podpora@vase-domena.cz",
+  "app.onboarding.forwardConnect": "Připojit tuto adresu",
+  "app.onboarding.forwardPending":
+    "U svého poskytovatele e-mailu nastavte přesměrování z {address} na {target}.",
+  "app.onboarding.forwardWaiting": "Čeká se na první přeposlaný e-mail…",
+  "app.onboarding.forwardVerified":
+    "Adresa {address} je ověřena: přeposlané e-maily se stávají tikety.",
 
   "app.onboarding.teamTitle": "Pozvěte svůj tým",
   "app.onboarding.teamBody":

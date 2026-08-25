@@ -1915,6 +1915,12 @@ export const ro: Dictionary = {
     "Redirecționați adresa dvs. existentă ({example}) către adresa furnizată mai sus. Configurare detaliată în Setări.",
   "app.onboarding.forwardLabel": "Adresa de redirecționat",
   "app.onboarding.forwardPlaceholder": "suport@domeniul-dvs.ro",
+  "app.onboarding.forwardConnect": "Conectează această adresă",
+  "app.onboarding.forwardPending":
+    "Configurează la furnizorul tău de email o redirecționare de la {address} către {target}.",
+  "app.onboarding.forwardWaiting": "Se așteaptă primul email redirecționat…",
+  "app.onboarding.forwardVerified":
+    "{address} este verificată: emailurile redirecționate devin tichete.",
 
   "app.onboarding.teamTitle": "Invitați echipa dvs.",
   "app.onboarding.teamBody":

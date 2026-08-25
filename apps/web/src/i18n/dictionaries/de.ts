@@ -1577,6 +1577,12 @@ export const de: Dictionary = {
     "Leiten Sie Ihre bestehende Adresse ({example}) an die oben angegebene Adresse weiter. Die ausführliche Einrichtung finden Sie in den Einstellungen.",
   "app.onboarding.forwardLabel": "Weiterzuleitende Adresse",
   "app.onboarding.forwardPlaceholder": "support@ihre-domain.de",
+  "app.onboarding.forwardConnect": "Diese Adresse verbinden",
+  "app.onboarding.forwardPending":
+    "Richten Sie bei Ihrem E-Mail-Anbieter eine Weiterleitung von {address} an {target} ein.",
+  "app.onboarding.forwardWaiting": "Warten auf die erste weitergeleitete E-Mail …",
+  "app.onboarding.forwardVerified":
+    "{address} ist bestätigt: weitergeleitete E-Mails werden zu Tickets.",
 
   "app.onboarding.teamTitle": "Ihr Team einladen",
   "app.onboarding.teamBody":

@@ -1904,6 +1904,12 @@ export const lv: Dictionary = {
     "Pārsūtiet savu esošo adresi ({example}) uz iepriekš norādīto adresi. Detalizēta konfigurācija — iestatījumos.",
   "app.onboarding.forwardLabel": "Pārsūtāmā adrese",
   "app.onboarding.forwardPlaceholder": "atbalsts@jusu-domens.lv",
+  "app.onboarding.forwardConnect": "Pievienot šo adresi",
+  "app.onboarding.forwardPending":
+    "Sava e-pasta pakalpojumu sniedzēja iestatījumos izveidojiet pāradresāciju no {address} uz {target}.",
+  "app.onboarding.forwardWaiting": "Gaidām pirmo pārsūtīto e-pastu…",
+  "app.onboarding.forwardVerified":
+    "{address} ir apstiprināta: pārsūtītie e-pasti kļūst par pieteikumiem.",
 
   "app.onboarding.teamTitle": "Uzaiciniet savu komandu",
   "app.onboarding.teamBody":

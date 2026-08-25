@@ -2023,6 +2023,11 @@ export const mt: Dictionary = {
     "Ittrasferixxi l-indirizz eżistenti tiegħek ({example}) lejn l-indirizz fornut hawn fuq. Konfigurazzjoni dettaljata fl-impostazzjonijiet.",
   "app.onboarding.forwardLabel": "Indirizz tat-trasferiment",
   "app.onboarding.forwardPlaceholder": "support@dominju-tieghek.com.mt",
+  "app.onboarding.forwardConnect": "Qabbad dan l-indirizz",
+  "app.onboarding.forwardPending":
+    "Waqqaf redirect minn {address} għal {target} mal-fornitur tal-email tiegħek.",
+  "app.onboarding.forwardWaiting": "Qed nistennew l-ewwel email mgħoddija…",
+  "app.onboarding.forwardVerified": "{address} huwa vverifikat: l-emails mgħoddija jsiru tickets.",
 
   "app.onboarding.teamTitle": "Stieden it-tim tiegħek",
   "app.onboarding.teamBody":

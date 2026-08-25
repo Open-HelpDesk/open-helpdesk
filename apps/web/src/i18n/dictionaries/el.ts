@@ -1809,6 +1809,12 @@ export const el: Dictionary = {
     "Προωθήστε την υπάρχουσα διεύθυνσή σας ({example}) στη διεύθυνση που δίνεται παραπάνω. Αναλυτική διαμόρφωση στις ρυθμίσεις.",
   "app.onboarding.forwardLabel": "Διεύθυνση προς προώθηση",
   "app.onboarding.forwardPlaceholder": "support@to-domain-sas.gr",
+  "app.onboarding.forwardConnect": "Σύνδεση αυτής της διεύθυνσης",
+  "app.onboarding.forwardPending":
+    "Ρυθμίστε στον πάροχο email σας μια προώθηση από το {address} στο {target}.",
+  "app.onboarding.forwardWaiting": "Αναμονή για το πρώτο προωθημένο email…",
+  "app.onboarding.forwardVerified":
+    "Το {address} επαληθεύτηκε: τα προωθημένα email γίνονται τικέτ.",
 
   "app.onboarding.teamTitle": "Προσκαλέστε την ομάδα σας",
   "app.onboarding.teamBody":

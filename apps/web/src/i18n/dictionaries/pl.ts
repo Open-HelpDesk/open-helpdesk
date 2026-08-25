@@ -1972,6 +1972,12 @@ export const pl: Dictionary = {
     "Prosimy przekierować istniejący adres ({example}) na adres podany powyżej. Szczegółową konfigurację opisano w ustawieniach.",
   "app.onboarding.forwardLabel": "Adres do przekierowania",
   "app.onboarding.forwardPlaceholder": "support@twoja-domena.pl",
+  "app.onboarding.forwardConnect": "Połącz ten adres",
+  "app.onboarding.forwardPending":
+    "Skonfiguruj u swojego dostawcy poczty przekierowanie z {address} na {target}.",
+  "app.onboarding.forwardWaiting": "Oczekiwanie na pierwszą przekazaną wiadomość…",
+  "app.onboarding.forwardVerified":
+    "Adres {address} został zweryfikowany: przekazywane wiadomości stają się zgłoszeniami.",
 
   "app.onboarding.teamTitle": "Zaproszenie zespołu",
   "app.onboarding.teamBody":

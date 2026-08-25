@@ -1584,6 +1584,12 @@ export const nl: Dictionary = {
     "Stuur uw bestaande adres ({example}) door naar het adres hierboven. De volledige configuratie vindt u bij de instellingen.",
   "app.onboarding.forwardLabel": "Adres om door te sturen",
   "app.onboarding.forwardPlaceholder": "support@uw-domein.nl",
+  "app.onboarding.forwardConnect": "Dit adres koppelen",
+  "app.onboarding.forwardPending":
+    "Stel bij uw e-mailprovider een doorsturing in van {address} naar {target}.",
+  "app.onboarding.forwardWaiting": "Wachten op de eerste doorgestuurde e-mail…",
+  "app.onboarding.forwardVerified":
+    "{address} is geverifieerd: doorgestuurde e-mails worden tickets.",
 
   "app.onboarding.teamTitle": "Uw team uitnodigen",
   "app.onboarding.teamBody":

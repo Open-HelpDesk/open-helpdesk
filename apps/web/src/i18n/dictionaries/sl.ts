@@ -1956,6 +1956,12 @@ export const sl: Dictionary = {
     "Obstoječi naslov ({example}) preusmerite na zgoraj navedeni naslov. Podrobna navodila najdete v nastavitvah.",
   "app.onboarding.forwardLabel": "Naslov za preusmeritev",
   "app.onboarding.forwardPlaceholder": "podpora@vase-podjetje.si",
+  "app.onboarding.forwardConnect": "Poveži ta naslov",
+  "app.onboarding.forwardPending":
+    "Pri svojem ponudniku e-pošte nastavite posredovanje z naslova {address} na {target}.",
+  "app.onboarding.forwardWaiting": "Čakanje na prvo posredovano e-sporočilo…",
+  "app.onboarding.forwardVerified":
+    "Naslov {address} je potrjen: posredovana e-sporočila postanejo zahtevki.",
 
   "app.onboarding.teamTitle": "Povabite svojo ekipo",
   "app.onboarding.teamBody":

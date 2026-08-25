@@ -1772,6 +1772,12 @@ export const et: Dictionary = {
     "Suunake oma olemasolev aadress ({example}) eespool antud aadressile. Üksikasjalik seadistus on seadetes.",
   "app.onboarding.forwardLabel": "Suunatav aadress",
   "app.onboarding.forwardPlaceholder": "tugi@teie-domeen.ee",
+  "app.onboarding.forwardConnect": "Ühenda see aadress",
+  "app.onboarding.forwardPending":
+    "Seadista oma e-posti teenusepakkuja juures edastus aadressilt {address} aadressile {target}.",
+  "app.onboarding.forwardWaiting": "Ootame esimest edastatud e-kirja…",
+  "app.onboarding.forwardVerified":
+    "{address} on kinnitatud: edastatud e-kirjadest saavad piletid.",
 
   "app.onboarding.teamTitle": "Kutsuge oma tiim",
   "app.onboarding.teamBody":

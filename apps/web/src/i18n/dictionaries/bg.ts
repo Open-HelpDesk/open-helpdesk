@@ -1748,6 +1748,12 @@ export const bg: Dictionary = {
     "Пренасочете съществуващия си адрес ({example}) към предоставения по-горе адрес. Подробната конфигурация е в настройките.",
   "app.onboarding.forwardLabel": "Адрес за пренасочване",
   "app.onboarding.forwardPlaceholder": "support@firma.bg",
+  "app.onboarding.forwardConnect": "Свързване на този адрес",
+  "app.onboarding.forwardPending":
+    "Настройте при вашия имейл доставчик пренасочване от {address} към {target}.",
+  "app.onboarding.forwardWaiting": "Изчаква се първият препратен имейл…",
+  "app.onboarding.forwardVerified":
+    "{address} е потвърден: препратените имейли се превръщат в тикети.",
 
   "app.onboarding.teamTitle": "Поканване на Вашия екип",
   "app.onboarding.teamBody":

@@ -1590,6 +1590,12 @@ export const pt: Dictionary = {
     "Reencaminhe o seu endereço atual ({example}) para o endereço indicado acima. Configuração detalhada nas definições.",
   "app.onboarding.forwardLabel": "Endereço a reencaminhar",
   "app.onboarding.forwardPlaceholder": "apoio@o-seu-dominio.pt",
+  "app.onboarding.forwardConnect": "Ligar este endereço",
+  "app.onboarding.forwardPending":
+    "Configure um redirecionamento de {address} para {target} no seu fornecedor de email.",
+  "app.onboarding.forwardWaiting": "A aguardar o primeiro email reencaminhado…",
+  "app.onboarding.forwardVerified":
+    "{address} está verificado: os emails reencaminhados tornam-se pedidos.",
 
   "app.onboarding.teamTitle": "Convidar a sua equipa",
   "app.onboarding.teamBody":

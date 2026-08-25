@@ -1970,6 +1970,12 @@ export const lt: Dictionary = {
     "Peradresuokite savo esamą adresą ({example}) į aukščiau nurodytą adresą. Išsami sąranka — nustatymuose.",
   "app.onboarding.forwardLabel": "Peradresuojamas adresas",
   "app.onboarding.forwardPlaceholder": "pagalba@jusu-domenas.lt",
+  "app.onboarding.forwardConnect": "Prijungti šį adresą",
+  "app.onboarding.forwardPending":
+    "Savo el. pašto paslaugų teikėjo nustatymuose sukurkite persiuntimą iš {address} į {target}.",
+  "app.onboarding.forwardWaiting": "Laukiama pirmo persiųsto el. laiško…",
+  "app.onboarding.forwardVerified":
+    "{address} patvirtintas: persiųsti el. laiškai tampa užklausomis.",
 
   "app.onboarding.teamTitle": "Pakvieskite savo komandą",
   "app.onboarding.teamBody":

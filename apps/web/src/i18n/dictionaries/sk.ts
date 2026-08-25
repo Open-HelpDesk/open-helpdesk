@@ -1955,6 +1955,12 @@ export const sk: Dictionary = {
     "Presmerujte svoju existujúcu adresu ({example}) na adresu uvedenú vyššie. Podrobné nastavenie nájdete v nastaveniach.",
   "app.onboarding.forwardLabel": "Adresa na presmerovanie",
   "app.onboarding.forwardPlaceholder": "podpora@vasa-domena.sk",
+  "app.onboarding.forwardConnect": "Pripojiť túto adresu",
+  "app.onboarding.forwardPending":
+    "U svojho poskytovateľa e-mailu nastavte presmerovanie z {address} na {target}.",
+  "app.onboarding.forwardWaiting": "Čaká sa na prvý preposlaný e-mail…",
+  "app.onboarding.forwardVerified":
+    "Adresa {address} je overená: preposlané e-maily sa stávajú tiketmi.",
 
   "app.onboarding.teamTitle": "Pozvite svoj tím",
   "app.onboarding.teamBody":

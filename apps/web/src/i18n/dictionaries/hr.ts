@@ -1876,6 +1876,12 @@ export const hr: Dictionary = {
     "Preusmjerite svoju postojeću adresu ({example}) na adresu navedenu iznad. Detaljna konfiguracija nalazi se u postavkama.",
   "app.onboarding.forwardLabel": "Adresa za preusmjeravanje",
   "app.onboarding.forwardPlaceholder": "podrska@vasa-domena.hr",
+  "app.onboarding.forwardConnect": "Poveži ovu adresu",
+  "app.onboarding.forwardPending":
+    "Kod svog davatelja e-pošte postavite prosljeđivanje s {address} na {target}.",
+  "app.onboarding.forwardWaiting": "Čeka se prva proslijeđena e-poruka…",
+  "app.onboarding.forwardVerified":
+    "Adresa {address} je potvrđena: proslijeđene e-poruke postaju tiketi.",
 
   "app.onboarding.teamTitle": "Pozovite svoj tim",
   "app.onboarding.teamBody":

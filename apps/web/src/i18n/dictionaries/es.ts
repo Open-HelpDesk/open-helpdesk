@@ -1589,6 +1589,12 @@ export const es: Dictionary = {
     "Reenvía tu dirección actual ({example}) a la dirección facilitada más arriba. Configuración detallada en los ajustes.",
   "app.onboarding.forwardLabel": "Dirección para reenviar",
   "app.onboarding.forwardPlaceholder": "soporte@tu-dominio.es",
+  "app.onboarding.forwardConnect": "Conectar esta dirección",
+  "app.onboarding.forwardPending":
+    "Configura una redirección de {address} a {target} en tu proveedor de correo.",
+  "app.onboarding.forwardWaiting": "Esperando el primer correo reenviado…",
+  "app.onboarding.forwardVerified":
+    "{address} está verificada: los correos reenviados se convierten en solicitudes.",
 
   "app.onboarding.teamTitle": "Invitar a tu equipo",
   "app.onboarding.teamBody":

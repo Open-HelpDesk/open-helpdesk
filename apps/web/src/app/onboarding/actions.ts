@@ -3,7 +3,7 @@
 import { sendAgentInvite } from "@/lib/agent-invite";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { db, tenants, users } from "@openhelpdesk/db";
+import { db, mailboxes, tenants, users } from "@openhelpdesk/db";
 import { eq } from "drizzle-orm";
 import { requireManager } from "@/lib/session";
 
@@ -36,6 +36,29 @@ export async function saveIdentity(formData: FormData) {
       updatedAt: new Date(),
     })
     .where(eq(tenants.id, tenant.id));
+
+  revalidatePath("/onboarding");
+  redirect("/onboarding?step=2");
+}
+
+/**
+ * Step 2 — Own address: registers a forwarding mailbox, same rules as
+ * settings → email (ST-03). No verification action to call: the ingestion
+ * flips `verified` on the first email that arrives through the redirect,
+ * and the step shows the waiting state until then.
+ */
+export async function connectForwardingAddress(formData: FormData) {
+  const { tenant } = await requireManager();
+  const address = String(formData.get("address") ?? "")
+    .trim()
+    .toLowerCase();
+
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
+    await db
+      .insert(mailboxes)
+      .values({ tenantId: tenant.id, address, kind: "forwarding", verified: false })
+      .onConflictDoNothing();
+  }
 
   revalidatePath("/onboarding");
   redirect("/onboarding?step=2");

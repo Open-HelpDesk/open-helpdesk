@@ -2029,6 +2029,12 @@ export const ga: Dictionary = {
     "Cuir do sheoladh reatha ({example}) ar aghaidh chuig an seoladh atá tugtha thuas. Cumraíocht mhionsonraithe sna socruithe.",
   "app.onboarding.forwardLabel": "An seoladh a chuirfear ar aghaidh",
   "app.onboarding.forwardPlaceholder": "tacaiocht@do-fhearann.ie",
+  "app.onboarding.forwardConnect": "Ceangail an seoladh seo",
+  "app.onboarding.forwardPending":
+    "Socraigh athsheoladh ó {address} chuig {target} le do sholáthraí ríomhphoist.",
+  "app.onboarding.forwardWaiting": "Ag fanacht leis an gcéad ríomhphost athsheolta…",
+  "app.onboarding.forwardVerified":
+    "Tá {address} fíoraithe: déantar ticéid de na ríomhphoist athsheolta.",
 
   "app.onboarding.teamTitle": "Tabhair cuireadh do d'fhoireann",
   "app.onboarding.teamBody":

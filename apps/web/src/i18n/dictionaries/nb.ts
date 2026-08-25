@@ -1587,6 +1587,12 @@ export const nb: Dictionary = {
     "Videresend den eksisterende adressen din ({example}) til adressen ovenfor. Detaljert oppsett under Innstillinger.",
   "app.onboarding.forwardLabel": "Adresse som skal videresendes",
   "app.onboarding.forwardPlaceholder": "support@ditt-domene.no",
+  "app.onboarding.forwardConnect": "Koble til denne adressen",
+  "app.onboarding.forwardPending":
+    "Sett opp videresending fra {address} til {target} hos e-postleverandøren din.",
+  "app.onboarding.forwardWaiting": "Venter på den første videresendte e-posten …",
+  "app.onboarding.forwardVerified":
+    "{address} er bekreftet: videresendte e-poster blir henvendelser.",
 
   "app.onboarding.teamTitle": "Inviter teamet ditt",
   "app.onboarding.teamBody":

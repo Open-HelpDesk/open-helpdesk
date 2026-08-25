@@ -1578,6 +1578,12 @@ export const it: Dictionary = {
     "Inoltra il tuo indirizzo esistente ({example}) all'indirizzo fornito sopra. Configurazione dettagliata nelle impostazioni.",
   "app.onboarding.forwardLabel": "Indirizzo da inoltrare",
   "app.onboarding.forwardPlaceholder": "supporto@tuo-dominio.it",
+  "app.onboarding.forwardConnect": "Collega questo indirizzo",
+  "app.onboarding.forwardPending":
+    "Configura un inoltro da {address} a {target} presso il tuo provider email.",
+  "app.onboarding.forwardWaiting": "In attesa della prima email inoltrata…",
+  "app.onboarding.forwardVerified":
+    "{address} è verificato: le email inoltrate diventano richieste.",
 
   "app.onboarding.teamTitle": "Invitare il tuo team",
   "app.onboarding.teamBody":

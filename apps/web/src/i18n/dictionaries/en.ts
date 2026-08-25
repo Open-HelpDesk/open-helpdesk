@@ -1577,6 +1577,11 @@ export const en = {
     "Forward your existing address ({example}) to the address given above. Detailed setup in the settings.",
   "app.onboarding.forwardLabel": "Address to forward",
   "app.onboarding.forwardPlaceholder": "support@your-domain.co.uk",
+  "app.onboarding.forwardConnect": "Connect this address",
+  "app.onboarding.forwardPending":
+    "Set up a redirect from {address} to {target} with your email provider.",
+  "app.onboarding.forwardWaiting": "Waiting for the first forwarded email…",
+  "app.onboarding.forwardVerified": "{address} is verified: forwarded emails become tickets.",
 
   "app.onboarding.teamTitle": "Invite your team",
   "app.onboarding.teamBody":

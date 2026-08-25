@@ -4,6 +4,7 @@ import { count, eq } from "drizzle-orm";
 import { db, mailboxes, tickets, users } from "@openhelpdesk/db";
 import { redirect } from "next/navigation";
 import { isManager, requireAgent } from "@/lib/session";
+import { connectForwardingAddress } from "./actions";
 import { CopyButton, IdentityForm, TeamInviteForm } from "./onboarding-client";
 import { I18nProvider } from "@/i18n/client";
 import { getT } from "@/i18n/server";
@@ -45,6 +46,9 @@ export default async function OnboardingPage({
   ]);
   const mailbox = mailboxRows.find((m) => m.kind === "provided") ?? mailboxRows[0];
   const mailboxAddress = mailbox?.address ?? providedMailboxAddress(tenant.slug);
+  // Step 2's "own address" option — one forwarding mailbox, verified by the
+  // first email that arrives through the customer's redirect (ST-03).
+  const forwarding = mailboxRows.find((m) => m.kind === "forwarding");
 
   // The stepper and the step-4 checklist read the SAME reality: a step is done
   // because the workspace says so, never because the URL happens to be further
@@ -211,26 +215,74 @@ export default async function OnboardingPage({
                 <p className="mb-1 text-[13.5px] font-semibold">
                   {t("app.onboarding.ownAddressTitle")}
                 </p>
-                <p className="mb-3 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
-                  {t("app.onboarding.ownAddressBody", {
-                    example: t("app.onboarding.forwardPlaceholder"),
-                  })}
-                </p>
-                <label className="flex flex-col gap-1 text-[12.5px] font-medium">
-                  {t("app.onboarding.forwardLabel")}
-                  <input
-                    disabled
-                    placeholder={t("app.onboarding.forwardPlaceholder")}
-                    className="border px-3 text-sm font-normal"
-                    style={{
-                      height: 34,
-                      borderRadius: 6,
-                      borderColor: "var(--line)",
-                      background: "var(--sunk)",
-                      color: "var(--ink-3)",
-                    }}
-                  />
-                </label>
+                {!forwarding ? (
+                  <>
+                    <p className="mb-3 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
+                      {t("app.onboarding.ownAddressBody", {
+                        example: t("app.onboarding.forwardPlaceholder"),
+                      })}
+                    </p>
+                    <form action={connectForwardingAddress} className="flex items-end gap-2">
+                      <label className="flex min-w-0 flex-1 flex-col gap-1 text-[12.5px] font-medium">
+                        {t("app.onboarding.forwardLabel")}
+                        <input
+                          name="address"
+                          type="email"
+                          required
+                          placeholder={t("app.onboarding.forwardPlaceholder")}
+                          className="border px-3 text-sm font-normal outline-none"
+                          style={{
+                            height: 34,
+                            borderRadius: 6,
+                            borderColor: "var(--line)",
+                            background: "var(--bg)",
+                          }}
+                        />
+                      </label>
+                      <button
+                        type="submit"
+                        className="shrink-0 rounded-md border px-3 text-[12.5px] font-semibold"
+                        style={{
+                          height: 34,
+                          borderColor: "var(--line)",
+                          background: "var(--panel)",
+                          color: "var(--ink)",
+                        }}
+                      >
+                        {t("app.onboarding.forwardConnect")}
+                      </button>
+                    </form>
+                  </>
+                ) : forwarding.verified ? (
+                  <p className="flex items-center gap-2 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
+                    <span
+                      className="flex shrink-0 items-center justify-center rounded-full text-[10px] text-white"
+                      style={{ width: 18, height: 18, background: "var(--acc)" }}
+                    >
+                      ✓
+                    </span>
+                    {t("app.onboarding.forwardVerified", { address: forwarding.address })}
+                  </p>
+                ) : (
+                  <>
+                    <p className="mb-3 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
+                      {t("app.onboarding.forwardPending", {
+                        address: forwarding.address,
+                        target: mailboxAddress,
+                      })}
+                    </p>
+                    <p
+                      className="flex items-center gap-2 text-[12.5px] font-medium"
+                      style={{ color: "var(--ink-3)" }}
+                    >
+                      <span
+                        className="inline-block animate-pulse rounded-full"
+                        style={{ width: 8, height: 8, background: "var(--acc)" }}
+                      />
+                      {t("app.onboarding.forwardWaiting")}
+                    </p>
+                  </>
+                )}
               </div>
 
               <div className="mt-7 flex items-center gap-4">

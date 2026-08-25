@@ -1594,6 +1594,11 @@ export const sv: Dictionary = {
     "Vidarebefordra din befintliga adress ({example}) till adressen ovan. Detaljerad konfiguration under Inställningar.",
   "app.onboarding.forwardLabel": "Adress att vidarebefordra",
   "app.onboarding.forwardPlaceholder": "support@ditt-foretag.se",
+  "app.onboarding.forwardConnect": "Anslut den här adressen",
+  "app.onboarding.forwardPending":
+    "Ställ in vidarebefordran från {address} till {target} hos din e-postleverantör.",
+  "app.onboarding.forwardWaiting": "Väntar på det första vidarebefordrade mejlet …",
+  "app.onboarding.forwardVerified": "{address} är verifierad: vidarebefordrade mejl blir ärenden.",
 
   "app.onboarding.teamTitle": "Bjud in ditt team",
   "app.onboarding.teamBody":

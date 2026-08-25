@@ -1567,6 +1567,12 @@ export const da: Dictionary = {
   "app.onboarding.ownAddressBody": "Videresend din eksisterende adresse ({example}) til adressen ovenfor. Detaljeret opsætning under Indstillinger.",
   "app.onboarding.forwardLabel": "Adresse, der skal videresendes",
   "app.onboarding.forwardPlaceholder": "support@ditfirma.dk",
+  "app.onboarding.forwardConnect": "Forbind denne adresse",
+  "app.onboarding.forwardPending":
+    "Opsæt en videresendelse fra {address} til {target} hos din e-mailudbyder.",
+  "app.onboarding.forwardWaiting": "Venter på den første videresendte e-mail …",
+  "app.onboarding.forwardVerified":
+    "{address} er bekræftet: videresendte e-mails bliver til sager.",
 
   "app.onboarding.teamTitle": "Invitér dit team",
   "app.onboarding.teamBody":

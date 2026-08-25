@@ -1789,6 +1789,12 @@ export const hu: Dictionary = {
     "Továbbítsa meglévő címét ({example}) a fent megadott címre. A részletes beállítás a beállításokban található.",
   "app.onboarding.forwardLabel": "Továbbítandó cím",
   "app.onboarding.forwardPlaceholder": "support@sajatdomain.hu",
+  "app.onboarding.forwardConnect": "Cím összekapcsolása",
+  "app.onboarding.forwardPending":
+    "Állítson be átirányítást a(z) {address} címről a(z) {target} címre az e-mail-szolgáltatójánál.",
+  "app.onboarding.forwardWaiting": "Várakozás az első továbbított e-mailre…",
+  "app.onboarding.forwardVerified":
+    "A(z) {address} cím ellenőrizve: a továbbított e-mailekből jegy lesz.",
 
   "app.onboarding.teamTitle": "A csapat meghívása",
   "app.onboarding.teamBody":

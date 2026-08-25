@@ -1584,6 +1584,12 @@ export const fi: Dictionary = {
     "Välitä nykyiseen osoitteeseesi ({example}) saapuvat viestit yllä olevaan osoitteeseen. Tarkempi määritys löytyy asetuksista.",
   "app.onboarding.forwardLabel": "Välitettävä osoite",
   "app.onboarding.forwardPlaceholder": "tuki@yrityksesi.fi",
+  "app.onboarding.forwardConnect": "Yhdistä tämä osoite",
+  "app.onboarding.forwardPending":
+    "Määritä sähköpostipalvelussasi edelleenlähetys osoitteesta {address} osoitteeseen {target}.",
+  "app.onboarding.forwardWaiting": "Odotetaan ensimmäistä edelleenlähetettyä viestiä…",
+  "app.onboarding.forwardVerified":
+    "{address} on vahvistettu: edelleenlähetetyistä viesteistä tulee pyyntöjä.",
 
   "app.onboarding.teamTitle": "Kutsu tiimisi",
   "app.onboarding.teamBody":

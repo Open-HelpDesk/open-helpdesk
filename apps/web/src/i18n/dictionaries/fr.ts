@@ -1652,6 +1652,12 @@ export const fr: Dictionary = {
     "Transférez votre adresse existante ({example}) vers l'adresse fournie ci-dessus. Configuration détaillée dans les paramètres.",
   "app.onboarding.forwardLabel": "Adresse à transférer",
   "app.onboarding.forwardPlaceholder": "support@votre-domaine.fr",
+  "app.onboarding.forwardConnect": "Connecter cette adresse",
+  "app.onboarding.forwardPending":
+    "Mettez en place une redirection de {address} vers {target} chez votre fournisseur d'email.",
+  "app.onboarding.forwardWaiting": "En attente du premier email transféré…",
+  "app.onboarding.forwardVerified":
+    "{address} est vérifiée : les emails transférés deviennent des tickets.",
 
   "app.onboarding.teamTitle": "Inviter votre équipe",
   "app.onboarding.teamBody":
