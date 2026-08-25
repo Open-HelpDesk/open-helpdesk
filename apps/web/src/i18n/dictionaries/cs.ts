@@ -1894,6 +1894,8 @@ export const cs: Dictionary = {
   "app.login.google": "Pokračovat přes Google",
   "app.login.microsoft": "Pokračovat přes Microsoft",
   "app.login.badCredentials": "Nesprávné přihlašovací údaje.",
+  "app.login.emailNotVerified":
+    "Nejprve ověřte svou e-mailovou adresu — při registraci jsme vám poslali odkaz.",
   "app.login.rateLimited":
     "Příliš mnoho pokusů o přihlášení. Než to zkusíte znovu, počkejte několik sekund.",
   "app.login.notAMember": "Tato identita není členem tohoto pracovního prostoru.",

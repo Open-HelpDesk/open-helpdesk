@@ -1910,6 +1910,8 @@ export const sl: Dictionary = {
   "app.login.google": "Nadaljuj z Google",
   "app.login.microsoft": "Nadaljuj z Microsoft",
   "app.login.badCredentials": "Napačni prijavni podatki.",
+  "app.login.emailNotVerified":
+    "Najprej potrdite svoj e-poštni naslov — ob registraciji smo vam poslali povezavo.",
   "app.login.rateLimited":
     "Preveč poskusov prijave. Počakajte nekaj sekund, preden poskusite znova.",
   "app.login.notAMember": "Ta identiteta ni član tega delovnega prostora.",

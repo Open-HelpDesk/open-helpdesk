@@ -1978,6 +1978,8 @@ export const mt: Dictionary = {
   "app.login.google": "Kompli b'Google",
   "app.login.microsoft": "Kompli b'Microsoft",
   "app.login.badCredentials": "Kredenzjali żbaljati.",
+  "app.login.emailNotVerified":
+    "L-ewwel ivverifika l-indirizz tal-email tiegħek — bgħatnielek link mar-reġistrazzjoni.",
   "app.login.rateLimited":
     "Wisq tentattivi ta' dħul. Stenna ftit sekondi qabel terġa' tipprova.",
   "app.login.notAMember": "Din l-identità mhijiex membru ta' dan l-ispazju tax-xogħol.",

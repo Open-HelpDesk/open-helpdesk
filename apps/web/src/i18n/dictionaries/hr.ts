@@ -1832,6 +1832,8 @@ export const hr: Dictionary = {
   "app.login.google": "Nastavi s Googleom",
   "app.login.microsoft": "Nastavi s Microsoftom",
   "app.login.badCredentials": "Neispravni podaci za prijavu.",
+  "app.login.emailNotVerified":
+    "Najprije potvrdite svoju e-adresu — poslali smo vam poveznicu pri registraciji.",
   "app.login.rateLimited":
     "Previše pokušaja prijave. Pričekajte nekoliko sekundi prije novog pokušaja.",
   "app.login.notAMember": "Ovaj identitet nije član ovog radnog prostora.",

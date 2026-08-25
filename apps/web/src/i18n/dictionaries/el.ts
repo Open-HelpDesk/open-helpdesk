@@ -1764,6 +1764,8 @@ export const el: Dictionary = {
   "app.login.google": "Συνέχεια με Google",
   "app.login.microsoft": "Συνέχεια με Microsoft",
   "app.login.badCredentials": "Λανθασμένα στοιχεία σύνδεσης.",
+  "app.login.emailNotVerified":
+    "Επαληθεύστε πρώτα τη διεύθυνση email σας — σας στείλαμε έναν σύνδεσμο κατά την εγγραφή.",
   "app.login.rateLimited":
     "Υπερβολικά πολλές προσπάθειες σύνδεσης. Περιμένετε λίγα δευτερόλεπτα προτού δοκιμάσετε ξανά.",
   "app.login.notAMember": "Αυτή η ταυτότητα δεν είναι μέλος αυτού του χώρου εργασίας.",

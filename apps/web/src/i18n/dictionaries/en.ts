@@ -1534,6 +1534,8 @@ export const en = {
   "app.login.google": "Continue with Google",
   "app.login.microsoft": "Continue with Microsoft",
   "app.login.badCredentials": "Incorrect credentials.",
+  "app.login.emailNotVerified":
+    "Verify your email address first — we sent you a link when you signed up.",
   "app.login.rateLimited": "Too many sign-in attempts. Wait a few seconds before trying again.",
   "app.login.notAMember": "This identity is not a member of this workspace.",
   "app.login.providerMissing": "This provider is not configured on this instance.",

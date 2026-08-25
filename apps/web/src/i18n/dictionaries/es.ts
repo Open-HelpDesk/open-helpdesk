@@ -1542,6 +1542,8 @@ export const es: Dictionary = {
   "app.login.google": "Continuar con Google",
   "app.login.microsoft": "Continuar con Microsoft",
   "app.login.badCredentials": "Credenciales incorrectas.",
+  "app.login.emailNotVerified":
+    "Verifica primero tu dirección de correo: te enviamos un enlace al registrarte.",
   "app.login.rateLimited": "Demasiados intentos de inicio de sesión. Espera unos segundos antes de volver a intentarlo.",
   "app.login.notAMember": "Esta identidad no es miembro de este espacio de trabajo.",
   "app.login.providerMissing": "Este proveedor no está configurado en esta instancia.",

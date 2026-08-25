@@ -1928,6 +1928,8 @@ export const pl: Dictionary = {
   "app.login.google": "Kontynuuj z Google",
   "app.login.microsoft": "Kontynuuj z Microsoft",
   "app.login.badCredentials": "Nieprawidłowe dane logowania.",
+  "app.login.emailNotVerified":
+    "Najpierw zweryfikuj swój adres e-mail — wysłaliśmy Ci link przy rejestracji.",
   "app.login.rateLimited":
     "Zbyt wiele prób logowania. Prosimy odczekać kilka sekund przed ponowną próbą.",
   "app.login.notAMember": "Ta tożsamość nie jest członkiem tego obszaru roboczego.",

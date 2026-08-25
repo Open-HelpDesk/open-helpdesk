@@ -29,9 +29,19 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       // at a few calls per ten seconds; conflating the two blamed a legitimate
       // agent for a fault they had not committed, and invited them to fix a
       // correct password instead of waiting.
+      // Same logic for an unverified email (cloud signup): the password IS
+      // correct — telling the user otherwise sends them to reset a password
+      // that works instead of opening the verification email.
       const rateLimited = error.status === 429;
-      setError(rateLimited ? t("app.login.rateLimited") : t("app.login.badCredentials"));
-      setBadCredentials(!rateLimited);
+      const unverified = error.code === "EMAIL_NOT_VERIFIED";
+      setError(
+        rateLimited
+          ? t("app.login.rateLimited")
+          : unverified
+            ? t("app.login.emailNotVerified")
+            : t("app.login.badCredentials"),
+      );
+      setBadCredentials(!rateLimited && !unverified);
       setPending(false);
       return;
     }

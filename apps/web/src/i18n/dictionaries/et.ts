@@ -1728,6 +1728,8 @@ export const et: Dictionary = {
   "app.login.google": "Jätka Google'iga",
   "app.login.microsoft": "Jätka Microsoftiga",
   "app.login.badCredentials": "Vale kasutajanimi või parool.",
+  "app.login.emailNotVerified":
+    "Kinnita esmalt oma e-posti aadress — saatsime sulle registreerumisel lingi.",
   "app.login.rateLimited":
     "Liiga palju sisselogimiskatseid. Oodake mõni sekund ja proovige uuesti.",
   "app.login.notAMember": "See identiteet ei ole selle tööruumi liige.",

@@ -1912,6 +1912,8 @@ export const sk: Dictionary = {
   "app.login.google": "Pokračovať s Google",
   "app.login.microsoft": "Pokračovať s Microsoft",
   "app.login.badCredentials": "Nesprávne prihlasovacie údaje.",
+  "app.login.emailNotVerified":
+    "Najprv overte svoju e-mailovú adresu — pri registrácii sme vám poslali odkaz.",
   "app.login.rateLimited":
     "Príliš mnoho pokusov o prihlásenie. Pred ďalším pokusom počkajte niekoľko sekúnd.",
   "app.login.notAMember": "Táto identita nie je členom tohto pracovného priestoru.",

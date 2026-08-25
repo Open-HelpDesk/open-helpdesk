@@ -1869,6 +1869,8 @@ export const ro: Dictionary = {
   "app.login.google": "Continuați cu Google",
   "app.login.microsoft": "Continuați cu Microsoft",
   "app.login.badCredentials": "Date de conectare incorecte.",
+  "app.login.emailNotVerified":
+    "Verifică mai întâi adresa de email — ți-am trimis un link la înscriere.",
   "app.login.rateLimited":
     "Prea multe încercări de conectare. Așteptați câteva secunde înainte de a încerca din nou.",
   "app.login.notAMember": "Această identitate nu este membră a acestui spațiu de lucru.",

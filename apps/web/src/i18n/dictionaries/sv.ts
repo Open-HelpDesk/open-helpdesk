@@ -1551,6 +1551,8 @@ export const sv: Dictionary = {
   "app.login.google": "Fortsätt med Google",
   "app.login.microsoft": "Fortsätt med Microsoft",
   "app.login.badCredentials": "Felaktiga inloggningsuppgifter.",
+  "app.login.emailNotVerified":
+    "Verifiera din e-postadress först — vi skickade en länk när du registrerade dig.",
   "app.login.rateLimited": "För många inloggningsförsök. Vänta några sekunder innan du försöker igen.",
   "app.login.notAMember": "Den här identiteten är inte medlem i den här arbetsytan.",
   "app.login.providerMissing": "Den här leverantören är inte konfigurerad på den här instansen.",

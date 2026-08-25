@@ -1858,6 +1858,8 @@ export const lv: Dictionary = {
   "app.login.google": "Turpināt ar Google",
   "app.login.microsoft": "Turpināt ar Microsoft",
   "app.login.badCredentials": "Nepareizi pieteikšanās dati.",
+  "app.login.emailNotVerified":
+    "Vispirms apstipriniet savu e-pasta adresi — reģistrējoties nosūtījām jums saiti.",
   "app.login.rateLimited":
     "Pārāk daudz pieteikšanās mēģinājumu. Pagaidiet dažas sekundes, pirms mēģināt vēlreiz.",
   "app.login.notAMember": "Šī identitāte nav šīs darbvietas dalībnieks.",

@@ -1541,6 +1541,8 @@ export const fi: Dictionary = {
   "app.login.google": "Jatka Googlella",
   "app.login.microsoft": "Jatka Microsoftilla",
   "app.login.badCredentials": "Virheelliset kirjautumistiedot.",
+  "app.login.emailNotVerified":
+    "Vahvista ensin sähköpostiosoitteesi — lähetimme sinulle linkin rekisteröityessäsi.",
   "app.login.rateLimited": "Liian monta kirjautumisyritystä. Odota hetki ennen uutta yritystä.",
   "app.login.notAMember": "Tämä henkilöllisyys ei kuulu tähän työtilaan.",
   "app.login.providerMissing": "Tätä tarjoajaa ei ole määritetty tässä instanssissa.",

@@ -1746,6 +1746,8 @@ export const hu: Dictionary = {
   "app.login.google": "Folytatás Google-fiókkal",
   "app.login.microsoft": "Folytatás Microsoft-fiókkal",
   "app.login.badCredentials": "Hibás bejelentkezési adatok.",
+  "app.login.emailNotVerified":
+    "Először erősítse meg az e-mail-címét — a regisztrációkor küldtünk egy linket.",
   "app.login.rateLimited":
     "Túl sok bejelentkezési kísérlet. Várjon néhány másodpercet, mielőtt újra próbálja.",
   "app.login.notAMember": "Ez az identitás nem tagja ennek a munkaterületnek.",

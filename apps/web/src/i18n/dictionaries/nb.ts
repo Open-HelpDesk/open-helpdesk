@@ -1542,6 +1542,8 @@ export const nb: Dictionary = {
   "app.login.google": "Fortsett med Google",
   "app.login.microsoft": "Fortsett med Microsoft",
   "app.login.badCredentials": "Feil innloggingsinformasjon.",
+  "app.login.emailNotVerified":
+    "Bekreft e-postadressen din først — vi sendte deg en lenke da du registrerte deg.",
   "app.login.rateLimited": "For mange innloggingsforsøk. Vent noen sekunder før du prøver igjen.",
   "app.login.notAMember": "Denne identiteten er ikke medlem av dette arbeidsområdet.",
   "app.login.providerMissing": "Denne leverandøren er ikke konfigurert på denne instansen.",

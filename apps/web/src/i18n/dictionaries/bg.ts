@@ -1707,6 +1707,8 @@ export const bg: Dictionary = {
   "app.login.google": "Продължаване с Google",
   "app.login.microsoft": "Продължаване с Microsoft",
   "app.login.badCredentials": "Неправилни данни за вход.",
+  "app.login.emailNotVerified":
+    "Първо потвърдете имейл адреса си — изпратихме ви линк при регистрацията.",
   "app.login.rateLimited":
     "Твърде много опити за вход. Изчакайте няколко секунди, преди да опитате отново.",
   "app.login.notAMember": "Тази идентичност не е член на това работно пространство.",

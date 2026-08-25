@@ -1924,6 +1924,8 @@ export const lt: Dictionary = {
   "app.login.google": "Tęsti su Google",
   "app.login.microsoft": "Tęsti su Microsoft",
   "app.login.badCredentials": "Neteisingi prisijungimo duomenys.",
+  "app.login.emailNotVerified":
+    "Pirmiausia patvirtinkite savo el. pašto adresą — registruojantis atsiuntėme nuorodą.",
   "app.login.rateLimited":
     "Per daug prisijungimo bandymų. Prieš bandydami vėl palaukite kelias sekundes.",
   "app.login.notAMember": "Ši tapatybė nėra šios darbo erdvės narė.",

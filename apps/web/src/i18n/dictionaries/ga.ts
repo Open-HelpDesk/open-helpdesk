@@ -1985,6 +1985,8 @@ export const ga: Dictionary = {
   "app.login.google": "Lean ar aghaidh le Google",
   "app.login.microsoft": "Lean ar aghaidh le Microsoft",
   "app.login.badCredentials": "Dintiúir mhícheart.",
+  "app.login.emailNotVerified":
+    "Fíoraigh do sheoladh ríomhphoist ar dtús — sheolamar nasc chugat nuair a chláraigh tú.",
   "app.login.rateLimited":
     "An iomarca iarrachtaí logála isteach. Fan cúpla soicind sula mbainfidh tú triail eile as.",
   "app.login.notAMember": "Ní ball den spás oibre seo an aitheantas seo.",

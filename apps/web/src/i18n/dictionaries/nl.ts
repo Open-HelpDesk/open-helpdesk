@@ -1540,6 +1540,8 @@ export const nl: Dictionary = {
   "app.login.google": "Doorgaan met Google",
   "app.login.microsoft": "Doorgaan met Microsoft",
   "app.login.badCredentials": "Onjuiste inloggegevens.",
+  "app.login.emailNotVerified":
+    "Verifieer eerst uw e-mailadres — we hebben u bij de registratie een link gestuurd.",
   "app.login.rateLimited": "Te veel inlogpogingen. Wacht enkele seconden voordat u het opnieuw probeert.",
   "app.login.notAMember": "Deze identiteit is geen lid van deze werkruimte.",
   "app.login.providerMissing": "Deze provider is niet geconfigureerd op deze instantie.",
