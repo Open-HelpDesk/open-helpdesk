@@ -12,7 +12,7 @@ import {
   subscriptionLabel,
 } from "@/lib/entitlements";
 import { PageHeader, PageShell } from "@/components/settings-page";
-import { fetchOffers, gatewayConfigured } from "@/lib/control-plane";
+import { fetchInvoices, fetchOffers, gatewayConfigured } from "@/lib/control-plane";
 import { goCheckout, goPortal, goRecheck } from "./actions";
 import { OfferPicker } from "./offer-picker";
 
@@ -127,9 +127,10 @@ export default async function BillingPage({
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
 
-  const [seats, offers, [ticketRow], [storageRow]] = await Promise.all([
+  const [seats, offers, invoices, [ticketRow], [storageRow]] = await Promise.all([
     occupiedSeats(tenant.id),
     fetchOffers(),
+    fetchInvoices(tenant.slug),
     db
       .select({ n: count() })
       .from(tickets)
@@ -484,9 +485,74 @@ export default async function BillingPage({
                 <span className="text-right">{t("app.settings.workspace.colStatus")}</span>
                 <span className="text-right" />
               </div>
-              <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
-                {t("app.settings.workspace.invoicesEmpty")}
-              </p>
+              {invoices.length === 0 ? (
+                <p style={{ padding: "18px 14px", fontSize: 13, color: "var(--ink-2)" }}>
+                  {t("app.settings.workspace.invoicesEmpty")}
+                </p>
+              ) : (
+                invoices.map((inv, i) => {
+                  // The status wording is ours; the state itself is the
+                  // provider's, and an unknown one is shown verbatim rather
+                  // than mapped onto a reassuring label.
+                  const statusLabel =
+                    inv.status === "paid"
+                      ? t("app.settings.workspace.invoicePaid")
+                      : inv.status === "open"
+                        ? t("app.settings.workspace.invoiceOpen")
+                        : inv.status === "void" || inv.status === "uncollectible"
+                          ? t("app.settings.workspace.invoiceVoid")
+                          : inv.status;
+                  const paid = inv.status === "paid";
+                  const issued = inv.issuedAt ? new Date(inv.issuedAt) : null;
+                  return (
+                    <div
+                      key={inv.number ?? String(i)}
+                      className="grid items-center"
+                      style={{
+                        gridTemplateColumns: INVOICE_GRID,
+                        minHeight: 42,
+                        padding: "0 14px",
+                        fontSize: 12.5,
+                        borderTop: i === 0 ? undefined : "1px solid var(--line)",
+                      }}
+                    >
+                      <span className="truncate font-mono" style={{ color: "var(--ink-2)" }}>
+                        {inv.number ?? "—"}
+                      </span>
+                      <span style={{ color: "var(--ink-2)" }}>
+                        {issued ? t.fmt.dateLong(issued) : "—"}
+                      </span>
+                      <span
+                        className="text-right font-semibold tabular-nums"
+                        style={{ color: "var(--ink)" }}
+                      >
+                        {t("app.settings.workspace.priceAmount", {
+                          amount: t.fmt.amount(inv.amountCents / 100),
+                        })}
+                      </span>
+                      <span
+                        className="text-right font-semibold"
+                        style={{ color: paid ? "var(--ok)" : "var(--wait)" }}
+                      >
+                        {statusLabel}
+                      </span>
+                      <span className="text-right">
+                        {inv.pdfUrl ? (
+                          <a
+                            href={inv.pdfUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="font-semibold underline"
+                            style={{ color: "var(--acc-2)" }}
+                          >
+                            {t("app.settings.workspace.invoicePdf")}
+                          </a>
+                        ) : null}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>

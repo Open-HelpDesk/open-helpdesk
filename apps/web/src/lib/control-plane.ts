@@ -68,6 +68,23 @@ export async function fetchOffers(): Promise<Offer[]> {
   return res?.offers ?? [];
 }
 
+/** One invoice as the control plane mirrors it from the payment provider. */
+export type Invoice = {
+  number: string | null;
+  amountCents: number;
+  currency: string;
+  status: string;
+  issuedAt: string | null;
+  paidAt: string | null;
+  pdfUrl: string | null;
+};
+
+/** Invoice history. Empty without a control plane — the table then says so. */
+export async function fetchInvoices(tenantSlug: string): Promise<Invoice[]> {
+  const res = await call<{ invoices: Invoice[] }>("/api/gateway/invoices", { tenantSlug });
+  return res?.invoices ?? [];
+}
+
 export type RecheckResult =
   | {
       outcome: "reactivated" | "still_over";
