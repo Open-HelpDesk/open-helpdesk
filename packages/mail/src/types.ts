@@ -59,4 +59,11 @@ export type MailKind =
   | "rule"
   | "invitation"
   | "test"
+  /**
+   * The workspace talking to its own people about itself — trial ending,
+   * failed payment, suspension. The only kind that survives a suspended
+   * workspace's outbound cut-off, because it is how the suspension gets
+   * announced in the first place.
+   */
+  | "admin"
   | "other";

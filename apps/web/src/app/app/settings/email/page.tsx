@@ -73,6 +73,8 @@ function deliveryKindLabel(kind: string, t: Translate): string {
       return t("app.settings.email.deliveryInvitation");
     case "test":
       return t("app.settings.email.deliveryTest");
+    case "admin":
+      return t("app.settings.email.deliveryAdmin");
     case "other":
       return t("app.settings.email.deliveryOther");
     default:

@@ -318,7 +318,11 @@ export const emailDeliveries = app.table(
       .references(() => tenants.id, { onDelete: "cascade" }),
     toAddress: text("to_address").notNull(),
     subject: text("subject").notNull(),
-    /** "ticket_reply", "csat", "magic_link", "rule", "test"… */
+    /**
+     * "ticket_reply", "csat", "magic_link", "rule", "test"… plus "admin":
+     * a message to the workspace's own people about the workspace itself,
+     * which keeps being sent while the workspace is suspended.
+     */
     kind: text("kind").notNull().default("other"),
     provider: mailProvider("provider").notNull(),
     status: emailDeliveryStatus("status").notNull().default("queued"),

@@ -123,11 +123,22 @@ export async function deliverEmail(
 
   // Suspended tenant: outbound is cut off (inbound keeps being ingested).
   // sent:true = "handled" — the delivery is marked as failed, without a BullMQ retry.
+  //
+  // "admin" is the exception, and it has to be: an email that tells the owner
+  // their workspace is suspended is the only way they learn it, and cutting it
+  // off along with the customer traffic left them with a locked workspace and
+  // no notice. Those messages go to the workspace's own people, never to its
+  // customers.
   const [tenantRow] = await db
     .select({ status: tenants.status })
     .from(tenants)
     .where(eq(tenants.id, delivery.tenantId));
-  if (tenantRow && tenantRow.status !== "active" && tenantRow.status !== "trial") {
+  if (
+    tenantRow &&
+    tenantRow.status !== "active" &&
+    tenantRow.status !== "trial" &&
+    delivery.kind !== "admin"
+  ) {
     await db
       .update(emailDeliveries)
       .set({ status: "failed", error: "tenant_suspended" })
