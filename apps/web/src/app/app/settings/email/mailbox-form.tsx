@@ -7,7 +7,7 @@
 import { useState } from "react";
 import { Field, Select, TextInput } from "@/components/settings-page";
 import { useT } from "@/i18n/client";
-import { saveMailbox } from "./actions";
+import { deleteMailbox, saveMailbox } from "./actions";
 
 type Option = { id: string; name: string };
 
@@ -150,7 +150,31 @@ export function MailboxForm({
         </Field>
       </div>
 
-      <div className="mt-auto flex justify-end border-t pt-3" style={{ borderColor: "var(--line)" }}>
+      <div
+        className="mt-auto flex items-center justify-between gap-3 border-t pt-3"
+        style={{ borderColor: "var(--line)" }}
+      >
+        {/* Deleting an address is also how a suspended workspace comes back
+            under the free allowance: it cannot live only in the row's ✕, which
+            the address table clips away as soon as the column scrolls.
+            formAction retargets this one button — a nested <form> is invalid. */}
+        {mailbox ? (
+          <button
+            type="submit"
+            formAction={deleteMailbox}
+            className="rounded-md border px-3 font-semibold"
+            style={{
+              height: 32,
+              fontSize: 13,
+              borderColor: "var(--dang)",
+              color: "var(--dang)",
+            }}
+          >
+            {t("app.settings.email.deleteAddress")}
+          </button>
+        ) : (
+          <span />
+        )}
         <button
           type="submit"
           className="rounded-md px-3.5 font-semibold text-white"

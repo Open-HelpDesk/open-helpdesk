@@ -51,6 +51,9 @@ export async function deleteMailbox(formData: FormData) {
       ),
     );
   revalidatePath("/app/settings/email");
+  // Also called from the edit drawer: without the redirect the drawer stays
+  // open over an address that no longer exists.
+  redirect("/app/settings/email?tab=reception&saved=1");
 }
 
 /**
