@@ -30,13 +30,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const { tenant, agent } = await requireAgent();
   const t0 = await getT();
 
-  // Suspended workspace (unpaid, trial over…): everything is blocked, except
-  // Subscription & billing for the Owner — that is where the suspension gets lifted.
+  // Suspended workspace (unpaid, trial over…): everything is blocked, except —
+  // for the Owner — billing (where the suspension gets lifted) plus the team
+  // and email settings: shrinking the workspace back into the free allowance
+  // is the other way out, and it needs those two screens.
   if (tenant.status === "suspended" || tenant.status === "deleting") {
     const pathname = (await headers()).get("x-pathname") ?? "";
-    const ownerOnBilling =
-      agent.role === "owner" && pathname.startsWith("/app/settings/billing");
-    if (!ownerOnBilling) {
+    const allowedWhileSuspended = ["/app/settings/billing", "/app/settings/team", "/app/settings/email"];
+    const ownerOnAllowed =
+      agent.role === "owner" && allowedWhileSuspended.some((p) => pathname.startsWith(p));
+    if (!ownerOnAllowed) {
       return (
         <main className="ohd flex min-h-screen items-center justify-center p-6">
           <div className="w-full text-center" style={{ maxWidth: 440 }}>
