@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Re-run on demand: a push event that GitHub drops leaves a commit with no
+  # check at all, and there is otherwise no way to ask for one.
+  workflow_dispatch:
 
 jobs:
   build:
