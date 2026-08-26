@@ -134,9 +134,15 @@ export default async function BillingPage({
   const seatLine =
     monthly > 0
       ? t("app.settings.workspace.seatPricing", { count: billedSeats, price: seatPrice })
-      : ent.maxAgents != null
-        ? t("app.settings.workspace.seatsIncluded", { count: ent.maxAgents })
-        : t("app.settings.workspace.billingTrialSeats");
+      : billing.seats != null
+        ? // Paid subscription still inside the included tier (e.g. 1 seat on
+          // graduated pricing): the included allowance, not a trial wording.
+          t("app.settings.workspace.seatsIncluded", {
+            count: billing.includedSeats ?? billing.seats,
+          })
+        : ent.maxAgents != null
+          ? t("app.settings.workspace.seatsIncluded", { count: ent.maxAgents })
+          : t("app.settings.workspace.billingTrialSeats");
 
   return (
     <PageShell maxWidth={1040}>
