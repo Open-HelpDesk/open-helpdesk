@@ -18,11 +18,19 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: cp .env.example .env
+      # The magic-link email needs a real outbound path: the instance SMTP
+      # fallback ships commented out in .env.example, so nothing could ever
+      # reach Mailpit.
+      - run: printf 'SMTP_HOST=localhost\nSMTP_PORT=1026\nSMTP_SECURE=false\n' >> .env
       - run: docker compose -f docker/docker-compose.yml up -d --wait
       - run: pnpm db:migrate
       - run: pnpm --filter @openhelpdesk/db db:rls
       - run: pnpm db:seed && pnpm db:seed:auth
       - run: pnpm --filter @openhelpdesk/web build
+      # Outbound emails go through the BullMQ outbox: without the worker the
+      # magic link stays queued forever and the lifecycle test cannot pass.
+      - name: Start worker
+        run: pnpm --filter @openhelpdesk/worker start &
       - name: Start web
         run: |
           BASE_DOMAIN=localhost:3006 pnpm --filter @openhelpdesk/web exec next start --port 3006 &
