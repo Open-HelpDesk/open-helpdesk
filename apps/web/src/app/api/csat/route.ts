@@ -10,6 +10,19 @@ import { verifyCsatSignature } from "@openhelpdesk/rules";
 import { getT, type Translate } from "@/i18n/server";
 import { getTenantFromHeaders } from "@/lib/tenant";
 
+/**
+ * The 404 the pages get from `requireTenant()`, for a route handler.
+ *
+ * This endpoint assembles HTML, so it belongs to the same rule: nothing under
+ * an invented subdomain may render a page. Its own guard is the signature, but
+ * an invalid one still answers with a rendered "invalid link" page — enough to
+ * make every hostname under the wildcard a live page. `notFound()` is for
+ * components, hence a plain response here.
+ */
+async function tenantMissing(): Promise<boolean> {
+  return (await getTenantFromHeaders().catch(() => null)) === null;
+}
+
 /** Escapes translated text: it ends up in hand-assembled HTML. */
 function esc(text: string): string {
   return text.replace(/[&<>"]/g, (c) =>
@@ -101,6 +114,7 @@ async function recordScore(ticketId: string, score: "good" | "bad") {
 }
 
 export async function GET(request: NextRequest) {
+  if (await tenantMissing()) return new NextResponse("Not found", { status: 404 });
   const tr = await getT();
   const m = await brand();
   const params = request.nextUrl.searchParams;
@@ -141,6 +155,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  if (await tenantMissing()) return new NextResponse("Not found", { status: 404 });
   const tr = await getT();
   const m = await brand();
   const form = await request.formData();
