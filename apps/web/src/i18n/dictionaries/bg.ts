@@ -278,7 +278,7 @@ export const bg: Dictionary = {
   "app.shell.suspendedTitle": "Това работно пространство е спряно",
   "app.shell.suspendedText": "Свържете се с вашия администратор, за да възстановите достъпа.",
   "app.shell.suspendedOwnerText":
-    "Уредете абонамента или актуализирайте начина си на плащане, за да активирате отново работното пространство.",
+    "Изберете план, уредете плащането или върнете работното пространство в безплатните лимити, за да го активирате отново.",
   "app.shell.suspendedBillingCta": "Отваряне на Абонамент и фактуриране",
   "app.shell.trialBanner": "Пробният ви период изтича на {date}.",
   "app.shell.dunningBanner":
@@ -1356,6 +1356,53 @@ export const bg: Dictionary = {
   "app.settings.workspace.quotaTicketsValue": "{tickets} / неограничено",
   "app.settings.workspace.quotaStorage": "Съхранение",
   "app.settings.workspace.gigabytes": "{value} ГБ",
+  "app.settings.workspace.cancelScheduledBadge": "НАСРОЧЕНО ПРЕКРАТЯВАНЕ",
+  "app.settings.workspace.billingEndsOn": "Абонаментът приключва на {date} — без подновяване.",
+  "app.settings.workspace.recheckReactivated":
+    "Работното пространство е активирано отново на безплатния план — добре дошли обратно!",
+  "app.settings.workspace.recheckStillOver":
+    "Все още над безплатните лимити: {seats}/{maxSeats} агенти, {mailboxes}/{maxMailboxes} имейл кутии. Намалете още и след това проверете отново.",
+  "app.settings.workspace.recheckPanelTitle": "Повторно активиране без абонамент",
+  "app.settings.workspace.recheckPanelText":
+    "Върнете работното пространство в безплатните лимити — най-много {seats} агенти и {mailboxes} имейл кутия — след което поискайте повторна проверка. Настройките Агенти и екипи и Имейл остават отворени за това.",
+  "app.settings.workspace.recheckCta": "Повторна проверка сега",
+  "app.settings.workspace.offersTitle": "Планове",
+  "app.settings.workspace.offersMonthly": "Месечно",
+  "app.settings.workspace.offersYearly": "Годишно",
+  "app.settings.workspace.offersYearlySave": "−{percent}%",
+  "app.settings.workspace.offersPerMonth": "на месец",
+  "app.settings.workspace.offersPerMonthYearly": "на месец, фактурирано годишно",
+  "app.settings.workspace.offersSeatsRule": {
+    one: "Първото място е включено, след това {price} € на допълнително място на месец.",
+    other: "Първите {count} места са включени, след това {price} € на допълнително място на месец.",
+  },
+  "app.settings.workspace.offersFreeNote":
+    "Без абонамент и без карта — докато работното пространство се побира в лимитите.",
+  "app.settings.workspace.offersSeats": "Места",
+  "app.settings.workspace.offersSeatsFewer": "По-малко места",
+  "app.settings.workspace.offersSeatsMore": "Повече места",
+  "app.settings.workspace.offersSeatsOccupied": {
+    one: "{count} заето днес",
+    other: "{count} заети днес",
+  },
+  "app.settings.workspace.offersCurrentPlan": "Текущ план",
+  "app.settings.workspace.offersChoose": "Избор на {plan}",
+  "app.settings.workspace.offersManageInPortal": "Управление в портала за фактуриране",
+  "app.settings.workspace.offersFeatAgents": {
+    one: "{count} агент",
+    other: "До {count} агенти",
+  },
+  "app.settings.workspace.offersFeatAgentsUnlimited": "Неограничени агенти",
+  "app.settings.workspace.offersFeatMailboxes": {
+    one: "{count} имейл кутия",
+    other: "{count} имейл кутии",
+  },
+  "app.settings.workspace.offersFeatMailboxesUnlimited": "Неограничени имейл кутии",
+  "app.settings.workspace.offersFeatStorage": "{value} ГБ съхранение",
+  "app.settings.workspace.offersFeatAutomations": "Автоматизации",
+  "app.settings.workspace.offersFeatSla": "SLA и работно време",
+  "app.settings.workspace.offersFeatCsat": "CSAT анкети",
+  "app.settings.workspace.offersFeatReports": "Отчети",
   "app.settings.workspace.invoicesTitle": "История на фактурите",
   "app.settings.workspace.colNumber": "Номер",
   "app.settings.workspace.colPeriod": "Период",

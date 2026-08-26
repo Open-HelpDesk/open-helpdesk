@@ -288,7 +288,7 @@ export const el: Dictionary = {
   "app.shell.suspendedText":
     "Επικοινωνήστε με τον διαχειριστή σας για να αποκατασταθεί η πρόσβαση.",
   "app.shell.suspendedOwnerText":
-    "Τακτοποιήστε τη συνδρομή ή ενημερώστε τον τρόπο πληρωμής για να επανενεργοποιήσετε το workspace.",
+    "Επιλέξτε ένα πλάνο, τακτοποιήστε την πληρωμή ή επαναφέρετε το workspace στα δωρεάν όρια για να το επανενεργοποιήσετε.",
   "app.shell.suspendedBillingCta": "Άνοιγμα Συνδρομής και χρέωσης",
   "app.shell.trialBanner": "Η δοκιμαστική σας περίοδος λήγει στις {date}.",
   "app.shell.dunningBanner":
@@ -1393,6 +1393,53 @@ export const el: Dictionary = {
   "app.settings.workspace.quotaTicketsValue": "{tickets} / χωρίς όριο",
   "app.settings.workspace.quotaStorage": "Αποθηκευτικός χώρος",
   "app.settings.workspace.gigabytes": "{value} GB",
+  "app.settings.workspace.cancelScheduledBadge": "ΠΡΟΓΡΑΜΜΑΤΙΣΜΕΝΗ ΑΚΥΡΩΣΗ",
+  "app.settings.workspace.billingEndsOn": "Η συνδρομή λήγει στις {date} — χωρίς ανανέωση.",
+  "app.settings.workspace.recheckReactivated":
+    "Το workspace επανενεργοποιήθηκε στο δωρεάν πλάνο — καλώς ήρθατε ξανά!",
+  "app.settings.workspace.recheckStillOver":
+    "Ακόμη πάνω από τα δωρεάν όρια: {seats}/{maxSeats} χειριστές, {mailboxes}/{maxMailboxes} γραμματοκιβώτια. Μειώστε κι άλλο και έπειτα ελέγξτε ξανά.",
+  "app.settings.workspace.recheckPanelTitle": "Επανενεργοποίηση χωρίς συνδρομή",
+  "app.settings.workspace.recheckPanelText":
+    "Επαναφέρετε το workspace στα δωρεάν όρια — το πολύ {seats} χειριστές και {mailboxes} γραμματοκιβώτιο — και έπειτα ζητήστε επανέλεγχο. Οι ρυθμίσεις Χειριστές και ομάδες και Email παραμένουν ανοιχτές για αυτό.",
+  "app.settings.workspace.recheckCta": "Επανέλεγχος τώρα",
+  "app.settings.workspace.offersTitle": "Πλάνα",
+  "app.settings.workspace.offersMonthly": "Μηνιαία",
+  "app.settings.workspace.offersYearly": "Ετήσια",
+  "app.settings.workspace.offersYearlySave": "−{percent}%",
+  "app.settings.workspace.offersPerMonth": "τον μήνα",
+  "app.settings.workspace.offersPerMonthYearly": "τον μήνα, με ετήσια χρέωση",
+  "app.settings.workspace.offersSeatsRule": {
+    one: "Η πρώτη θέση περιλαμβάνεται, έπειτα {price} € ανά επιπλέον θέση τον μήνα.",
+    other: "Οι πρώτες {count} θέσεις περιλαμβάνονται, έπειτα {price} € ανά επιπλέον θέση τον μήνα.",
+  },
+  "app.settings.workspace.offersFreeNote":
+    "Χωρίς συνδρομή και χωρίς κάρτα — όσο το workspace χωράει στα όρια.",
+  "app.settings.workspace.offersSeats": "Θέσεις",
+  "app.settings.workspace.offersSeatsFewer": "Λιγότερες θέσεις",
+  "app.settings.workspace.offersSeatsMore": "Περισσότερες θέσεις",
+  "app.settings.workspace.offersSeatsOccupied": {
+    one: "{count} κατειλημμένη σήμερα",
+    other: "{count} κατειλημμένες σήμερα",
+  },
+  "app.settings.workspace.offersCurrentPlan": "Τρέχον πλάνο",
+  "app.settings.workspace.offersChoose": "Επιλογή {plan}",
+  "app.settings.workspace.offersManageInPortal": "Διαχείριση στην πύλη χρέωσης",
+  "app.settings.workspace.offersFeatAgents": {
+    one: "{count} χειριστής",
+    other: "Έως {count} χειριστές",
+  },
+  "app.settings.workspace.offersFeatAgentsUnlimited": "Απεριόριστοι χειριστές",
+  "app.settings.workspace.offersFeatMailboxes": {
+    one: "{count} γραμματοκιβώτιο",
+    other: "{count} γραμματοκιβώτια",
+  },
+  "app.settings.workspace.offersFeatMailboxesUnlimited": "Απεριόριστα γραμματοκιβώτια",
+  "app.settings.workspace.offersFeatStorage": "{value} GB αποθηκευτικού χώρου",
+  "app.settings.workspace.offersFeatAutomations": "Αυτοματισμοί",
+  "app.settings.workspace.offersFeatSla": "SLA και ώρες λειτουργίας",
+  "app.settings.workspace.offersFeatCsat": "Έρευνες CSAT",
+  "app.settings.workspace.offersFeatReports": "Αναφορές",
   "app.settings.workspace.invoicesTitle": "Ιστορικό τιμολογίων",
   "app.settings.workspace.colNumber": "Αριθμός",
   "app.settings.workspace.colPeriod": "Περίοδος",

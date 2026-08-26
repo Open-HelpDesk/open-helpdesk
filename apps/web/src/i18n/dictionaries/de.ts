@@ -311,7 +311,7 @@ export const de: Dictionary = {
   "app.shell.suspendedText":
     "Wenden Sie sich an Ihren Administrator, um den Zugang wiederherzustellen.",
   "app.shell.suspendedOwnerText":
-    "Begleichen Sie Ihr Abonnement oder aktualisieren Sie Ihre Zahlungsmethode, um den Workspace zu reaktivieren.",
+    "Wählen Sie einen Plan, begleichen Sie die Zahlung oder bringen Sie den Workspace zurück in die kostenlosen Grenzen, um ihn zu reaktivieren.",
   "app.shell.suspendedBillingCta": "Abonnement & Abrechnung öffnen",
   "app.shell.trialBanner": "Ihre Testphase endet am {date}.",
   "app.shell.dunningBanner":
@@ -1245,6 +1245,47 @@ export const de: Dictionary = {
   "app.settings.workspace.quotaTicketsValue": "{tickets} / unbegrenzt",
   "app.settings.workspace.quotaStorage": "Speicher",
   "app.settings.workspace.gigabytes": "{value} GB",
+  "app.settings.workspace.cancelScheduledBadge": "KÜNDIGUNG GEPLANT",
+  "app.settings.workspace.billingEndsOn": "Das Abonnement endet am {date} — keine Verlängerung.",
+  "app.settings.workspace.recheckReactivated":
+    "Workspace im kostenlosen Plan reaktiviert — willkommen zurück!",
+  "app.settings.workspace.recheckStillOver":
+    "Noch über den kostenlosen Grenzen: {seats}/{maxSeats} Agenten, {mailboxes}/{maxMailboxes} Postfächer. Reduzieren Sie weiter und prüfen Sie dann erneut.",
+  "app.settings.workspace.recheckPanelTitle": "Ohne Abonnement reaktivieren",
+  "app.settings.workspace.recheckPanelText":
+    "Bringen Sie den Workspace in die kostenlosen Grenzen — höchstens {seats} Agenten und {mailboxes} Postfach — und bitten Sie dann um eine erneute Prüfung. Die Einstellungen Agenten & Teams sowie E-Mail bleiben dafür geöffnet.",
+  "app.settings.workspace.recheckCta": "Jetzt erneut prüfen",
+  "app.settings.workspace.offersTitle": "Pläne",
+  "app.settings.workspace.offersMonthly": "Monatlich",
+  "app.settings.workspace.offersYearly": "Jährlich",
+  "app.settings.workspace.offersYearlySave": "−{percent} %",
+  "app.settings.workspace.offersPerMonth": "pro Monat",
+  "app.settings.workspace.offersPerMonthYearly": "pro Monat, jährlich abgerechnet",
+  "app.settings.workspace.offersSeatsRule": {
+    one: "Der erste Platz ist inklusive, danach {price} € pro zusätzlichen Platz und Monat.",
+    other: "Die ersten {count} Plätze sind inklusive, danach {price} € pro zusätzlichen Platz und Monat.",
+  },
+  "app.settings.workspace.offersFreeNote":
+    "Kein Abonnement und keine Karte — solange der Workspace in die Grenzen passt.",
+  "app.settings.workspace.offersSeats": "Plätze",
+  "app.settings.workspace.offersSeatsFewer": "Weniger Plätze",
+  "app.settings.workspace.offersSeatsMore": "Mehr Plätze",
+  "app.settings.workspace.offersSeatsOccupied": {
+    one: "{count} heute belegt",
+    other: "{count} heute belegt",
+  },
+  "app.settings.workspace.offersCurrentPlan": "Aktueller Plan",
+  "app.settings.workspace.offersChoose": "{plan} wählen",
+  "app.settings.workspace.offersManageInPortal": "Im Abrechnungsportal verwalten",
+  "app.settings.workspace.offersFeatAgents": { one: "{count} Agent", other: "Bis zu {count} Agenten" },
+  "app.settings.workspace.offersFeatAgentsUnlimited": "Unbegrenzte Agenten",
+  "app.settings.workspace.offersFeatMailboxes": { one: "{count} Postfach", other: "{count} Postfächer" },
+  "app.settings.workspace.offersFeatMailboxesUnlimited": "Unbegrenzte Postfächer",
+  "app.settings.workspace.offersFeatStorage": "{value} GB Speicher",
+  "app.settings.workspace.offersFeatAutomations": "Automatisierungen",
+  "app.settings.workspace.offersFeatSla": "SLA & Geschäftszeiten",
+  "app.settings.workspace.offersFeatCsat": "CSAT-Umfragen",
+  "app.settings.workspace.offersFeatReports": "Berichte",
   "app.settings.workspace.invoicesTitle": "Rechnungsverlauf",
   "app.settings.workspace.colNumber": "Nummer",
   "app.settings.workspace.colPeriod": "Zeitraum",
