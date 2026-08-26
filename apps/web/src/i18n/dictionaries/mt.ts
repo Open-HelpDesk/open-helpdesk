@@ -853,6 +853,7 @@ export const mt: Dictionary = {
   "app.settings.email.deliveryRule": "Awtomazzjoni",
   "app.settings.email.deliveryInvitation": "Stedina",
   "app.settings.email.deliveryTest": "Test",
+  "app.settings.email.deliveryAdmin": "Avviż tal-ispazju",
   "app.settings.email.deliveryOther": "Oħra",
   "app.settings.email.rejectLoop": "Loop identifikat",
   "app.settings.email.rejectBounce": "Bounce awtomatiku",
@@ -1657,6 +1658,11 @@ export const mt: Dictionary = {
   "app.settings.workspace.colPeriod": "Perjodu",
   "app.settings.workspace.colAmount": "Ammont",
   "app.settings.workspace.invoicesEmpty": "Għad l-ebda fattura.",
+  "app.settings.workspace.priceAmount": "€{amount}",
+  "app.settings.workspace.invoicePaid": "Imħallsa",
+  "app.settings.workspace.invoiceOpen": "Dovuta",
+  "app.settings.workspace.invoiceVoid": "Ikkanċellata",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Maħżun",

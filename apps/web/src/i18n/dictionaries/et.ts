@@ -711,6 +711,7 @@ export const et: Dictionary = {
   "app.settings.email.deliveryRule": "Automatiseerimine",
   "app.settings.email.deliveryInvitation": "Kutse",
   "app.settings.email.deliveryTest": "Test",
+  "app.settings.email.deliveryAdmin": "Tööruumi teade",
   "app.settings.email.deliveryOther": "Muu",
   "app.settings.email.rejectLoop": "Tuvastati tsükkel",
   "app.settings.email.rejectBounce": "Automaatne tagasipõrge",
@@ -1411,6 +1412,11 @@ export const et: Dictionary = {
   "app.settings.workspace.colPeriod": "Periood",
   "app.settings.workspace.colAmount": "Summa",
   "app.settings.workspace.invoicesEmpty": "Arveid veel ei ole.",
+  "app.settings.workspace.priceAmount": "{amount} €",
+  "app.settings.workspace.invoicePaid": "Makstud",
+  "app.settings.workspace.invoiceOpen": "Maksmata",
+  "app.settings.workspace.invoiceVoid": "Tühistatud",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Salvestatud",

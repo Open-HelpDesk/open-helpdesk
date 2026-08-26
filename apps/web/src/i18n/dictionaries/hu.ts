@@ -718,6 +718,7 @@ export const hu: Dictionary = {
   "app.settings.email.deliveryRule": "Automatizálás",
   "app.settings.email.deliveryInvitation": "Meghívó",
   "app.settings.email.deliveryTest": "Teszt",
+  "app.settings.email.deliveryAdmin": "Munkaterületi értesítés",
   "app.settings.email.deliveryOther": "Egyéb",
   "app.settings.email.rejectLoop": "Hurkot észleltünk",
   "app.settings.email.rejectBounce": "Automatikus visszapattanás",
@@ -1420,6 +1421,11 @@ export const hu: Dictionary = {
   "app.settings.workspace.colPeriod": "Időszak",
   "app.settings.workspace.colAmount": "Összeg",
   "app.settings.workspace.invoicesEmpty": "Még nincs számla.",
+  "app.settings.workspace.priceAmount": "{amount} €",
+  "app.settings.workspace.invoicePaid": "Fizetve",
+  "app.settings.workspace.invoiceOpen": "Esedékes",
+  "app.settings.workspace.invoiceVoid": "Törölve",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Mentve",

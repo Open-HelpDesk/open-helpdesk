@@ -765,6 +765,7 @@ export const hr: Dictionary = {
   "app.settings.email.deliveryRule": "Automatizacija",
   "app.settings.email.deliveryInvitation": "Pozivnica",
   "app.settings.email.deliveryTest": "Test",
+  "app.settings.email.deliveryAdmin": "Obavijest radnog prostora",
   "app.settings.email.deliveryOther": "Ostalo",
   "app.settings.email.rejectLoop": "Otkrivena petlja",
   "app.settings.email.rejectBounce": "Automatski povrat pošte",
@@ -1515,6 +1516,11 @@ export const hr: Dictionary = {
   "app.settings.workspace.colPeriod": "Razdoblje",
   "app.settings.workspace.colAmount": "Iznos",
   "app.settings.workspace.invoicesEmpty": "Još nema računa.",
+  "app.settings.workspace.priceAmount": "{amount} €",
+  "app.settings.workspace.invoicePaid": "Plaćeno",
+  "app.settings.workspace.invoiceOpen": "Dospjelo",
+  "app.settings.workspace.invoiceVoid": "Otkazano",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Spremljeno",

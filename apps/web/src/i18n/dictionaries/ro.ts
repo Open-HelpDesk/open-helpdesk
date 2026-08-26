@@ -783,6 +783,7 @@ export const ro: Dictionary = {
   "app.settings.email.deliveryRule": "Automatizare",
   "app.settings.email.deliveryInvitation": "Invitație",
   "app.settings.email.deliveryTest": "Test",
+  "app.settings.email.deliveryAdmin": "Aviz de spațiu",
   "app.settings.email.deliveryOther": "Altele",
   "app.settings.email.rejectLoop": "Buclă detectată",
   "app.settings.email.rejectBounce": "Bounce automat",
@@ -1542,6 +1543,11 @@ export const ro: Dictionary = {
   "app.settings.workspace.colPeriod": "Perioadă",
   "app.settings.workspace.colAmount": "Sumă",
   "app.settings.workspace.invoicesEmpty": "Nicio factură deocamdată.",
+  "app.settings.workspace.priceAmount": "{amount} €",
+  "app.settings.workspace.invoicePaid": "Plătită",
+  "app.settings.workspace.invoiceOpen": "De plată",
+  "app.settings.workspace.invoiceVoid": "Anulată",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Salvat",

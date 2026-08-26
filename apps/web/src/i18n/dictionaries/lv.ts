@@ -780,6 +780,7 @@ export const lv: Dictionary = {
   "app.settings.email.deliveryRule": "Automatizācija",
   "app.settings.email.deliveryInvitation": "Uzaicinājums",
   "app.settings.email.deliveryTest": "Pārbaude",
+  "app.settings.email.deliveryAdmin": "Darbvietas paziņojums",
   "app.settings.email.deliveryOther": "Cits",
   "app.settings.email.rejectLoop": "Atklāta cilpa",
   "app.settings.email.rejectBounce": "Automātiska atgriešana",
@@ -1536,6 +1537,11 @@ export const lv: Dictionary = {
   "app.settings.workspace.colPeriod": "Periods",
   "app.settings.workspace.colAmount": "Summa",
   "app.settings.workspace.invoicesEmpty": "Rēķinu vēl nav.",
+  "app.settings.workspace.priceAmount": "{amount} €",
+  "app.settings.workspace.invoicePaid": "Apmaksāts",
+  "app.settings.workspace.invoiceOpen": "Neapmaksāts",
+  "app.settings.workspace.invoiceVoid": "Atcelts",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Saglabāts",

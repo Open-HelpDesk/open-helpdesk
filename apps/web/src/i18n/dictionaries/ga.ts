@@ -856,6 +856,7 @@ export const ga: Dictionary = {
   "app.settings.email.deliveryRule": "Uathoibriú",
   "app.settings.email.deliveryInvitation": "Cuireadh",
   "app.settings.email.deliveryTest": "Tástáil",
+  "app.settings.email.deliveryAdmin": "Fógra spáis oibre",
   "app.settings.email.deliveryOther": "Eile",
   "app.settings.email.rejectLoop": "Lúb braite",
   "app.settings.email.rejectBounce": "Preab uathoibríoch",
@@ -1665,6 +1666,11 @@ export const ga: Dictionary = {
   "app.settings.workspace.colPeriod": "Tréimhse",
   "app.settings.workspace.colAmount": "Méid",
   "app.settings.workspace.invoicesEmpty": "Gan sonraisc go fóill.",
+  "app.settings.workspace.priceAmount": "€{amount}",
+  "app.settings.workspace.invoicePaid": "Íoctha",
+  "app.settings.workspace.invoiceOpen": "Dlite",
+  "app.settings.workspace.invoiceVoid": "Cealaithe",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Sábháilte",

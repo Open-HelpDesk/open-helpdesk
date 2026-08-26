@@ -815,6 +815,7 @@ export const sk: Dictionary = {
   "app.settings.email.deliveryRule": "Automatizácia",
   "app.settings.email.deliveryInvitation": "Pozvánka",
   "app.settings.email.deliveryTest": "Test",
+  "app.settings.email.deliveryAdmin": "Oznámenie pracovného priestoru",
   "app.settings.email.deliveryOther": "Iné",
   "app.settings.email.rejectLoop": "Zistená slučka",
   "app.settings.email.rejectBounce": "Automatické vrátenie",
@@ -1593,6 +1594,11 @@ export const sk: Dictionary = {
   "app.settings.workspace.colPeriod": "Obdobie",
   "app.settings.workspace.colAmount": "Suma",
   "app.settings.workspace.invoicesEmpty": "Zatiaľ žiadne faktúry.",
+  "app.settings.workspace.priceAmount": "{amount} €",
+  "app.settings.workspace.invoicePaid": "Zaplatená",
+  "app.settings.workspace.invoiceOpen": "Na úhradu",
+  "app.settings.workspace.invoiceVoid": "Stornovaná",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Uložené",

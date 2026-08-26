@@ -695,6 +695,7 @@ export const fr: Dictionary = {
   "app.settings.email.deliveryRule": "Automatisation",
   "app.settings.email.deliveryInvitation": "Invitation",
   "app.settings.email.deliveryTest": "Test",
+  "app.settings.email.deliveryAdmin": "Avis d'espace",
   "app.settings.email.deliveryOther": "Autre",
   "app.settings.email.rejectLoop": "Boucle détectée",
   "app.settings.email.rejectBounce": "Bounce automatique",
@@ -1310,6 +1311,11 @@ export const fr: Dictionary = {
   "app.settings.workspace.colPeriod": "Période",
   "app.settings.workspace.colAmount": "Montant",
   "app.settings.workspace.invoicesEmpty": "Aucune facture pour le moment.",
+  "app.settings.workspace.priceAmount": "{amount} €",
+  "app.settings.workspace.invoicePaid": "Payée",
+  "app.settings.workspace.invoiceOpen": "À payer",
+  "app.settings.workspace.invoiceVoid": "Annulée",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Enregistré",

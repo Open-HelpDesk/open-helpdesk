@@ -721,6 +721,7 @@ export const el: Dictionary = {
   "app.settings.email.deliveryRule": "Αυτοματισμός",
   "app.settings.email.deliveryInvitation": "Πρόσκληση",
   "app.settings.email.deliveryTest": "Δοκιμή",
+  "app.settings.email.deliveryAdmin": "Ειδοποίηση χώρου εργασίας",
   "app.settings.email.deliveryOther": "Άλλο",
   "app.settings.email.rejectLoop": "Εντοπίστηκε βρόχος",
   "app.settings.email.rejectBounce": "Αυτόματο bounce",
@@ -1445,6 +1446,11 @@ export const el: Dictionary = {
   "app.settings.workspace.colPeriod": "Περίοδος",
   "app.settings.workspace.colAmount": "Ποσό",
   "app.settings.workspace.invoicesEmpty": "Δεν υπάρχουν ακόμη τιμολόγια.",
+  "app.settings.workspace.priceAmount": "{amount} €",
+  "app.settings.workspace.invoicePaid": "Πληρωμένο",
+  "app.settings.workspace.invoiceOpen": "Οφειλόμενο",
+  "app.settings.workspace.invoiceVoid": "Ακυρωμένο",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Αποθηκεύτηκε",

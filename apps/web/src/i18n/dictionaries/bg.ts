@@ -704,6 +704,7 @@ export const bg: Dictionary = {
   "app.settings.email.deliveryRule": "Автоматизация",
   "app.settings.email.deliveryInvitation": "Покана",
   "app.settings.email.deliveryTest": "Тест",
+  "app.settings.email.deliveryAdmin": "Известие на пространството",
   "app.settings.email.deliveryOther": "Друго",
   "app.settings.email.rejectLoop": "Открит цикъл",
   "app.settings.email.rejectBounce": "Автоматичен bounce",
@@ -1408,6 +1409,11 @@ export const bg: Dictionary = {
   "app.settings.workspace.colPeriod": "Период",
   "app.settings.workspace.colAmount": "Сума",
   "app.settings.workspace.invoicesEmpty": "Все още няма фактури.",
+  "app.settings.workspace.priceAmount": "{amount} €",
+  "app.settings.workspace.invoicePaid": "Платена",
+  "app.settings.workspace.invoiceOpen": "Дължима",
+  "app.settings.workspace.invoiceVoid": "Анулирана",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Запазено",

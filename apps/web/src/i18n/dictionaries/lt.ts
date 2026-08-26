@@ -821,6 +821,7 @@ export const lt: Dictionary = {
   "app.settings.email.deliveryRule": "Automatizavimas",
   "app.settings.email.deliveryInvitation": "Pakvietimas",
   "app.settings.email.deliveryTest": "Bandymas",
+  "app.settings.email.deliveryAdmin": "Darbo erdvės pranešimas",
   "app.settings.email.deliveryOther": "Kita",
   "app.settings.email.rejectLoop": "Nustatytas ciklas",
   "app.settings.email.rejectBounce": "Automatinis grąžinimas",
@@ -1604,6 +1605,11 @@ export const lt: Dictionary = {
   "app.settings.workspace.colPeriod": "Laikotarpis",
   "app.settings.workspace.colAmount": "Suma",
   "app.settings.workspace.invoicesEmpty": "Sąskaitų dar nėra.",
+  "app.settings.workspace.priceAmount": "{amount} €",
+  "app.settings.workspace.invoicePaid": "Apmokėta",
+  "app.settings.workspace.invoiceOpen": "Neapmokėta",
+  "app.settings.workspace.invoiceVoid": "Atšaukta",
+  "app.settings.workspace.invoicePdf": "PDF",
 
   /* --- settings.rules --- */
   "app.settings.rules.saved": "✓ Įrašyta",
