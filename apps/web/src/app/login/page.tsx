@@ -1,6 +1,4 @@
-import { db, tenants } from "@openhelpdesk/db";
-import { eq } from "drizzle-orm";
-import { getTenantSlug } from "@/lib/tenant";
+import { requireTenant } from "@/lib/tenant";
 import { LoginForm } from "./login-form";
 import { I18nProvider } from "@/i18n/client";
 import { getT } from "@/i18n/server";
@@ -18,10 +16,13 @@ export default async function LoginPage({
 }) {
   const t = await getT();
   const { error, accepted } = await searchParams;
-  const slug = await getTenantSlug();
-  const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug));
-  const workspaceName = tenant?.name ?? "Open HelpDesk";
-  const branding = (tenant?.branding ?? {}) as { accentColor?: string };
+  // The one page that must never render for a workspace that does not exist:
+  // a password field plus Google and Microsoft buttons, reachable under any
+  // invented subdomain, is a phishing page wearing our certificate. It used to
+  // fall back to the product name and render anyway (see requireTenant).
+  const tenant = await requireTenant();
+  const workspaceName = tenant.name;
+  const branding = (tenant.branding ?? {}) as { accentColor?: string };
   const accent = branding.accentColor || "var(--acc)";
 
   return (
@@ -35,7 +36,7 @@ export default async function LoginPage({
             {t("app.login.invited")}
           </p>
         )}
-        {(tenant?.status === "suspended" || tenant?.status === "deleting") && (
+        {(tenant.status === "suspended" || tenant.status === "deleting") && (
           <p
             className="mb-4 rounded-md px-3.5 py-2.5 text-center"
             style={{ fontSize: 13, background: "var(--dang-t)", color: "var(--dang)" }}

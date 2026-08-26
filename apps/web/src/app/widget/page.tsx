@@ -1,6 +1,7 @@
 import { getPortalTenant } from "@/lib/portal-auth";
 import { notFound } from "next/navigation";
 import { getPortalSettings } from "@/lib/portal-config";
+import { requireTenant } from "@/lib/tenant";
 import { getT } from "@/i18n/server";
 // The widget lives outside the /help group: it loads the portal's .pt-* styles itself.
 import "../help/portal.css";
@@ -23,6 +24,9 @@ export default async function WidgetPage({
   searchParams: Promise<{ sent?: string }>;
 }) {
   const t = await getT();
+  // Before reading any setting: an invented subdomain has no widget to serve,
+  // and this one is meant to be embedded anywhere (see requireTenant).
+  await requireTenant();
   const settings = await getPortalSettings();
   // The widget depends on the portal: it submits requests to the same place.
   if (!settings.portalEnabled || !settings.widget.enabled) notFound();

@@ -4,6 +4,7 @@ import { count, eq } from "drizzle-orm";
 import { db, mailboxes, tickets, users } from "@openhelpdesk/db";
 import { redirect } from "next/navigation";
 import { isManager, requireAgent } from "@/lib/session";
+import { requireTenant } from "@/lib/tenant";
 import { connectForwardingAddress } from "./actions";
 import { CopyButton, IdentityForm, TeamInviteForm } from "./onboarding-client";
 import { I18nProvider } from "@/i18n/client";
@@ -30,6 +31,9 @@ export default async function OnboardingPage({
   searchParams: Promise<{ step?: string }>;
 }) {
   const t = await getT();
+  // Ahead of requireAgent, for the same reason as the agent layout: a 404 for an
+  // invented subdomain rather than a detour through /login (see requireTenant).
+  await requireTenant();
   const { tenant, agent } = await requireAgent();
   // The initial setup screen is not a work screen: an agent has no business
   // there, and its forms carry administration powers.

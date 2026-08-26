@@ -11,6 +11,7 @@ import {
   tickets,
 } from "@openhelpdesk/db";
 import { isManager, requireAgent } from "@/lib/session";
+import { requireTenant } from "@/lib/tenant";
 import { billingOf } from "@/lib/entitlements";
 import { Avatar } from "@/components/ticket-bits";
 import { getEdition } from "@openhelpdesk/config";
@@ -27,6 +28,9 @@ import { getT } from "@/i18n/server";
  * ticket").
  */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  // Ahead of requireAgent, which would send an invented subdomain to /login
+  // instead of answering the 404 it deserves (see requireTenant).
+  await requireTenant();
   const { tenant, agent } = await requireAgent();
   const t0 = await getT();
 

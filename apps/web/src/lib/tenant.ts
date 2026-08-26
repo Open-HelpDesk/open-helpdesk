@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 
 /** Slug of the current tenant, set by the middleware. */
 export async function getTenantSlug(): Promise<string> {
@@ -26,6 +27,32 @@ export const getTenantFromHeaders = cache(async () => {
   const [tenant] = await db.select().from(tenants).where(eq(tenants.slug, slug));
   return tenant ?? null;
 });
+
+/**
+ * Current tenant, or a 404 — the guard every public entry point owes the domain.
+ *
+ * The middleware only validates the *shape* of the subdomain: it runs on the
+ * edge, with no database, so it cannot tell `mesange` from `secure-paypal-login`.
+ * Both used to come through, and the page behind them answered 200 all the same:
+ * a real sign-in form, password field and third-party SSO buttons, under a
+ * wildcard certificate that made the padlock look right. With a wildcard DNS
+ * record, that turns the whole domain into a phishing kit anyone can address —
+ * which is precisely what Google Safe Browsing flags as a "deceptive page", for
+ * the domain as a whole rather than for one URL.
+ *
+ * So the existence check belongs at every entry point that renders something to
+ * an anonymous visitor. It costs nothing: getTenantFromHeaders is memoised per
+ * request, and the pages here already call it (or getLocale, which does).
+ *
+ * It has to be `notFound()` rather than a rendered message: only a real 404
+ * keeps these hostnames out of the index instead of turning each one into a
+ * crawlable page.
+ */
+export async function requireTenant() {
+  const tenant = await getTenantFromHeaders().catch(() => null);
+  if (!tenant) notFound();
+  return tenant;
+}
 
 /**
  * Real origin of a request, rebuilt from the `Host` header.

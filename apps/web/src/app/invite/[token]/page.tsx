@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@openhelpdesk/auth";
 import { db, users } from "@openhelpdesk/db";
 import { and, eq } from "drizzle-orm";
-import { getTenantFromHeaders } from "@/lib/tenant";
+import { requireTenant } from "@/lib/tenant";
 import { verifyInviteToken } from "@/lib/invite-token";
 import { getT } from "@/i18n/server";
 import { I18nProvider } from "@/i18n/client";
@@ -26,8 +26,9 @@ export default async function InvitePage({
   const t = await getT();
   const { token } = await params;
   const { error } = await searchParams;
-  const tenant = await getTenantFromHeaders();
-  if (!tenant) redirect("/login");
+  // A 404 rather than the old bounce to /login: an invitation that names no
+  // existing workspace is a dead link, not a sign-in (see requireTenant).
+  const tenant = await requireTenant();
 
   const userId = verifyInviteToken(tenant.id, token);
   const [invited] = userId

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPortalTenant } from "@/lib/portal-auth";
 import { getPortalSettings } from "@/lib/portal-config";
+import { requireTenant } from "@/lib/tenant";
 import { I18nProvider } from "@/i18n/client";
 import { getT } from "@/i18n/server";
 import "./portal.css";
@@ -18,6 +19,9 @@ import "./portal.css";
 const DEFAULT_ACCENT = "#0b5f46";
 
 export default async function HelpLayout({ children }: { children: React.ReactNode }) {
+  // The portal is the public face of the workspace: it must not exist at all
+  // for a subdomain that has no workspace behind it (see requireTenant).
+  await requireTenant();
   const tenant = await getPortalTenant();
   // ST-09: "Customer portal enabled". Turned off, /help no longer exists — sign-in
   // and request tracking included. The setting used to be saved without being read.
