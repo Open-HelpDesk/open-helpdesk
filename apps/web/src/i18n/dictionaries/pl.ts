@@ -323,6 +323,10 @@ export const pl: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Prosimy uregulować subskrypcję lub zaktualizować metodę płatności, aby ponownie aktywować workspace.",
   "app.shell.suspendedBillingCta": "Otwórz Subskrypcję i rozliczenia",
+  "app.shell.trialBanner": "Twój okres próbny kończy się {date}.",
+  "app.shell.dunningBanner":
+    "Płatność nie powiodła się — bez uregulowania workspace zostanie zawieszone {date}.",
+  "app.shell.bannerBillingCta": "Zarządzaj subskrypcją",
   "app.shell.myTickets": "Moje zgłoszenia",
   "app.shell.newTicket": "Nowe zgłoszenie",
   "app.shell.topbarTickets": {
@@ -1519,6 +1523,20 @@ export const pl: Dictionary = {
     other: "miesięcznie · {count} stanowiska w cenie",
   },
   "app.settings.workspace.billingNoDue": "Obecnie brak należności.",
+  "app.settings.workspace.checkoutSuccess":
+    "Subskrypcja zaktualizowana — dziękujemy! Ekran może potrzebować kilku sekund, aby pokazać zmianę.",
+  "app.settings.workspace.checkoutCancelled": "Płatność anulowana — nic nie zostało zmienione.",
+  "app.settings.workspace.billingGatewayError":
+    "Usługa rozliczeń jest niedostępna — spróbuj ponownie za chwilę.",
+  "app.settings.workspace.billingOwnerOnly": "Tylko właściciel workspace może zmienić subskrypcję.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Okres próbny się zakończył, a workspace przekracza limity planu Free — wybierz plan, aby je ponownie aktywować.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace zawieszone z powodu braku płatności — ureguluj płatność, aby je ponownie aktywować.",
+  "app.settings.workspace.billingTrialUntil":
+    "Bezpłatny okres próbny do {date} — brak zapisanej karty.",
+  "app.settings.workspace.billingTrialSeats": "nielimitowane stanowiska w okresie próbnym",
+  "app.settings.workspace.billingNextDue": "Następna płatność {date}.",
   "app.settings.workspace.requiresControlPlane": "Wymaga control plane",
   "app.settings.workspace.changeSubscription": "Zmień subskrypcję",
   "app.settings.workspace.manageSeats": "Zarządzaj stanowiskami",

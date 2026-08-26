@@ -320,6 +320,9 @@ export const sl: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Poravnajte naročnino ali posodobite način plačila, da workspace znova aktivirate.",
   "app.shell.suspendedBillingCta": "Odpri Naročnino in obračun",
+  "app.shell.trialBanner": "Vaše poskusno obdobje se izteče {date}.",
+  "app.shell.dunningBanner": "Plačilo ni uspelo — brez poravnave bo workspace {date} zadržan.",
+  "app.shell.bannerBillingCta": "Upravljaj naročnino",
   "app.shell.myTickets": "Moji zahtevki",
   "app.shell.newTicket": "Nov zahtevek",
   "app.shell.topbarTickets": {
@@ -1505,6 +1508,20 @@ export const sl: Dictionary = {
     other: "na mesec · {count} licenc je vključenih",
   },
   "app.settings.workspace.billingNoDue": "Trenutno ni zapadlih zneskov.",
+  "app.settings.workspace.checkoutSuccess":
+    "Naročnina posodobljena — hvala! Ta zaslon lahko potrebuje nekaj sekund, da prikaže spremembo.",
+  "app.settings.workspace.checkoutCancelled": "Plačilo preklicano — nič ni bilo spremenjeno.",
+  "app.settings.workspace.billingGatewayError":
+    "Storitev zaračunavanja ni dosegljiva — poskusite znova čez trenutek.",
+  "app.settings.workspace.billingOwnerOnly": "Naročnino lahko spremeni le lastnik workspacea.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Poskusno obdobje se je izteklo in workspace presega omejitve paketa Free — izberite paket, da ga znova aktivirate.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace zadržan zaradi neplačila — poravnajte plačilo, da ga znova aktivirate.",
+  "app.settings.workspace.billingTrialUntil":
+    "Brezplačno poskusno obdobje do {date} — nobena kartica ni shranjena.",
+  "app.settings.workspace.billingTrialSeats": "neomejena mesta med poskusnim obdobjem",
+  "app.settings.workspace.billingNextDue": "Naslednja zapadlost {date}.",
   "app.settings.workspace.requiresControlPlane": "Zahteva control plane",
   "app.settings.workspace.changeSubscription": "Spremeni naročnino",
   "app.settings.workspace.manageSeats": "Upravljaj licence",

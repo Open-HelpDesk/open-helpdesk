@@ -337,6 +337,10 @@ export const ga: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Socraigh an síntiús nó nuashonraigh do mhodh íocaíochta chun an workspace a athghníomhachtú.",
   "app.shell.suspendedBillingCta": "Oscail Síntiús & billeáil",
+  "app.shell.trialBanner": "Críochnóidh do thréimhse trialach ar {date}.",
+  "app.shell.dunningBanner":
+    "Theip ar an íocaíocht — gan socrú, cuirfear an workspace ar fionraí ar {date}.",
+  "app.shell.bannerBillingCta": "Bainistigh an síntiús",
   "app.shell.myTickets": "Mo thicéid",
   "app.shell.newTicket": "Ticéad nua",
   "app.shell.topbarTickets": {
@@ -1572,6 +1576,22 @@ export const ga: Dictionary = {
     other: "sa mhí · {count} suíochán san áireamh",
   },
   "app.settings.workspace.billingNoDue": "Faic dlite faoi láthair.",
+  "app.settings.workspace.checkoutSuccess":
+    "Síntiús nuashonraithe — go raibh maith agat! Seans go dtógfaidh sé cúpla soicind ar an scáileán seo an t-athrú a thaispeáint.",
+  "app.settings.workspace.checkoutCancelled":
+    "Íocaíocht curtha ar ceal — níor athraíodh rud ar bith.",
+  "app.settings.workspace.billingGatewayError":
+    "Níl an tseirbhís billeála ar fáil — bain triail eile as ar ball beag.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Ní féidir ach le húinéir an workspace an síntiús a athrú.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Tá an tréimhse trialach thart agus sáraíonn an workspace teorainneacha an phlean Free — roghnaigh plean chun é a athghníomhachtú.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace ar fionraí mar gheall ar neamhíocaíocht — socraigh an íocaíocht chun é a athghníomhachtú.",
+  "app.settings.workspace.billingTrialUntil":
+    "Triail saor in aisce go dtí {date} — níl aon chárta ar comhad.",
+  "app.settings.workspace.billingTrialSeats": "suíocháin gan teorainn le linn na trialach",
+  "app.settings.workspace.billingNextDue": "An chéad íocaíocht eile dlite ar {date}.",
   "app.settings.workspace.requiresControlPlane": "Teastaíonn control plane",
   "app.settings.workspace.changeSubscription": "Athraigh an síntiús",
   "app.settings.workspace.manageSeats": "Bainistigh na suíocháin",

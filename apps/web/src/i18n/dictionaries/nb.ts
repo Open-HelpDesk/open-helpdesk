@@ -310,6 +310,9 @@ export const nb: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Gjør opp abonnementet eller oppdater betalingsmetoden din for å reaktivere workspacet.",
   "app.shell.suspendedBillingCta": "Åpne Abonnement & fakturering",
+  "app.shell.trialBanner": "Prøveperioden din utløper {date}.",
+  "app.shell.dunningBanner": "Betalingen mislyktes — uten handling suspenderes workspacet {date}.",
+  "app.shell.bannerBillingCta": "Administrer abonnement",
   "app.shell.myTickets": "Mine henvendelser",
   "app.shell.newTicket": "Ny henvendelse",
   "app.shell.topbarTickets": { one: "{count} henvendelse · oppdatert nettopp", other: "{count} henvendelser · oppdatert nettopp" },
@@ -1213,6 +1216,20 @@ export const nb: Dictionary = {
   "app.settings.workspace.seatPricing": { one: "per måned · {count} plass à {price} €", other: "per måned · {count} plasser à {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "per måned · {count} plass inkludert", other: "per måned · {count} plasser inkludert" },
   "app.settings.workspace.billingNoDue": "Ingenting forfaller nå.",
+  "app.settings.workspace.checkoutSuccess":
+    "Abonnementet er oppdatert — takk! Det kan ta noen sekunder før skjermen viser endringen.",
+  "app.settings.workspace.checkoutCancelled": "Betalingen ble avbrutt — ingenting ble endret.",
+  "app.settings.workspace.billingGatewayError":
+    "Faktureringstjenesten er utilgjengelig — prøv igjen om litt.",
+  "app.settings.workspace.billingOwnerOnly": "Bare eieren av workspacet kan endre abonnementet.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Prøveperioden er over og workspacet overskrider grensene i Free-planen — velg en plan for å reaktivere det.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspacet er suspendert på grunn av manglende betaling — gjør opp betalingen for å reaktivere det.",
+  "app.settings.workspace.billingTrialUntil":
+    "Gratis prøveperiode til {date} — ingen kort registrert.",
+  "app.settings.workspace.billingTrialSeats": "ubegrensede seter i prøveperioden",
+  "app.settings.workspace.billingNextDue": "Neste forfall {date}.",
   "app.settings.workspace.requiresControlPlane": "Krever et control plane",
   "app.settings.workspace.changeSubscription": "Endre abonnement",
   "app.settings.workspace.manageSeats": "Administrer plasser",

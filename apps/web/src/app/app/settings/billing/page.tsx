@@ -59,15 +59,42 @@ function QuotaRow({ label, value, pct }: { label: string; value: string; pct: nu
  * seats), "Usage this month" card (3 real gauges) and invoice history
  * (empty state — billing lives on the cloud plan).
  */
-export default async function BillingPage() {
+export default async function BillingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ checkout?: string; error?: string }>;
+}) {
   // ST-11 needs a control plane: invisible when self-hosted.
   if (isSelfHosted()) notFound();
 
   const t = await getT();
   const { tenant } = await requireAgent();
+  const { checkout, error } = await searchParams;
   const ent = entitlementsFor(tenant);
   const billing = billingOf(tenant);
   const seatLimit = seatLimitFor(tenant);
+
+  // The screen is where the owner lands to act: it must SAY what just
+  // happened (checkout return, gateway failure) and what state the workspace
+  // is in (trial deadline, suspension and its cause) — silence here left the
+  // owner in front of a zen screen while their workspace was locked.
+  const notice: { tone: "ok" | "dang" | "muted"; text: string } | null =
+    checkout === "success"
+      ? { tone: "ok", text: t("app.settings.workspace.checkoutSuccess") }
+      : checkout === "cancelled"
+        ? { tone: "muted", text: t("app.settings.workspace.checkoutCancelled") }
+        : error === "gateway"
+          ? { tone: "dang", text: t("app.settings.workspace.billingGatewayError") }
+          : error === "owner"
+            ? { tone: "dang", text: t("app.settings.workspace.billingOwnerOnly") }
+            : tenant.status === "suspended"
+              ? {
+                  tone: "dang",
+                  text: billing.dunningDeadline
+                    ? t("app.settings.workspace.billingSuspendedUnpaid")
+                    : t("app.settings.workspace.billingSuspendedTrial"),
+                }
+              : null;
 
   const monthStart = new Date();
   monthStart.setDate(1);
@@ -101,10 +128,15 @@ export default async function BillingPage() {
   const seatPrice = (billing.seatPriceCents ?? 0) / 100;
   const billedSeats = Math.max(0, (billing.seats ?? 0) - (billing.includedSeats ?? 0));
   const monthly = seatPrice * billedSeats;
+  // Without a subscription, the honest seat line is the PLAN's allowance, not
+  // the occupied count ("1 seat included" on a Free plan that includes 3 read
+  // as a limit the tenant did not have).
   const seatLine =
     monthly > 0
       ? t("app.settings.workspace.seatPricing", { count: billedSeats, price: seatPrice })
-      : t("app.settings.workspace.seatsIncluded", { count: Math.max(seats, 1) });
+      : ent.maxAgents != null
+        ? t("app.settings.workspace.seatsIncluded", { count: ent.maxAgents })
+        : t("app.settings.workspace.billingTrialSeats");
 
   return (
     <PageShell maxWidth={1040}>
@@ -112,6 +144,35 @@ export default async function BillingPage() {
         title={t("app.settings.workspace.billingTitle")}
         subtitle={t("app.settings.workspace.billingSubtitle")}
       />
+
+      {notice && (
+        <p
+          className="rounded-md border px-3.5 py-2.5"
+          style={{
+            fontSize: 13,
+            background:
+              notice.tone === "ok"
+                ? "var(--ok-t)"
+                : notice.tone === "dang"
+                  ? "var(--dang-t)"
+                  : "var(--sunk)",
+            borderColor:
+              notice.tone === "ok"
+                ? "var(--acc-b)"
+                : notice.tone === "dang"
+                  ? "var(--dang)"
+                  : "var(--line)",
+            color:
+              notice.tone === "ok"
+                ? "var(--ok)"
+                : notice.tone === "dang"
+                  ? "var(--dang)"
+                  : "var(--ink-2)",
+          }}
+        >
+          {notice.text}
+        </p>
+      )}
 
       <div className="st-rise flex flex-col" style={{ gap: 20 }}>
         <div
@@ -160,7 +221,15 @@ export default async function BillingPage() {
               <span style={{ fontSize: 13, color: "var(--ink-2)" }}>{seatLine}</span>
             </div>
             <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
-              {t("app.settings.workspace.billingNoDue")}
+              {tenant.status === "trial" && tenant.trialEndsAt
+                ? t("app.settings.workspace.billingTrialUntil", {
+                    date: t.fmt.dateLong(tenant.trialEndsAt),
+                  })
+                : billing.currentPeriodEnd
+                  ? t("app.settings.workspace.billingNextDue", {
+                      date: t.fmt.dateLong(new Date(billing.currentPeriodEnd)),
+                    })
+                  : t("app.settings.workspace.billingNoDue")}
             </p>
             {/* Stripe sessions come from the private gateway: without it
                 (dev, control plane off), the buttons stay inert. */}

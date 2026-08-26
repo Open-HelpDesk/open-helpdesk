@@ -285,6 +285,10 @@ export const hu: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Rendezze az előfizetést, vagy frissítse fizetési módját a workspace újraaktiválásához.",
   "app.shell.suspendedBillingCta": "Előfizetés és számlázás megnyitása",
+  "app.shell.trialBanner": "A próbaidőszaka {date} napján ér véget.",
+  "app.shell.dunningBanner":
+    "Sikertelen fizetés — rendezés nélkül a workspace {date} napján felfüggesztésre kerül.",
+  "app.shell.bannerBillingCta": "Előfizetés kezelése",
   "app.shell.myTickets": "Jegyeim",
   "app.shell.newTicket": "Új jegy",
   "app.shell.topbarTickets": {
@@ -1346,6 +1350,21 @@ export const hu: Dictionary = {
     other: "havonta · {count} licenc benne van",
   },
   "app.settings.workspace.billingNoDue": "Jelenleg nincs fizetési kötelezettség.",
+  "app.settings.workspace.checkoutSuccess":
+    "Előfizetés frissítve — köszönjük! Eltarthat néhány másodpercig, mire a képernyő mutatja a változást.",
+  "app.settings.workspace.checkoutCancelled": "Fizetés megszakítva — semmi sem változott.",
+  "app.settings.workspace.billingGatewayError":
+    "A számlázási szolgáltatás nem érhető el — próbálja meg kis idő múlva újra.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Az előfizetést csak a workspace tulajdonosa módosíthatja.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "A próbaidőszak lejárt, és a workspace túllépi a Free csomag kereteit — válasszon csomagot az újraaktiváláshoz.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "A workspace fizetés elmaradása miatt felfüggesztve — rendezze a fizetést az újraaktiváláshoz.",
+  "app.settings.workspace.billingTrialUntil":
+    "Ingyenes próbaidőszak {date}-ig — nincs rögzített bankkártya.",
+  "app.settings.workspace.billingTrialSeats": "korlátlan férőhely a próbaidőszak alatt",
+  "app.settings.workspace.billingNextDue": "Következő esedékesség: {date}.",
   "app.settings.workspace.requiresControlPlane": "Control plane szükséges",
   "app.settings.workspace.changeSubscription": "Előfizetés módosítása",
   "app.settings.workspace.manageSeats": "Licencek kezelése",

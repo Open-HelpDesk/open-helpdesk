@@ -319,6 +319,9 @@ export const sk: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Vyrovnajte predplatné alebo aktualizujte platobnú metódu, aby ste workspace znova aktivovali.",
   "app.shell.suspendedBillingCta": "Otvoriť Predplatné a fakturáciu",
+  "app.shell.trialBanner": "Vaše skúšobné obdobie končí {date}.",
+  "app.shell.dunningBanner": "Platba zlyhala — bez vyrovnania bude workspace {date} pozastavený.",
+  "app.shell.bannerBillingCta": "Spravovať predplatné",
   "app.shell.myTickets": "Moje tikety",
   "app.shell.newTicket": "Nový tiket",
   "app.shell.topbarTickets": {
@@ -1507,6 +1510,20 @@ export const sk: Dictionary = {
     other: "za mesiac · {count} licencií v cene",
   },
   "app.settings.workspace.billingNoDue": "Momentálne nie je nič na úhradu.",
+  "app.settings.workspace.checkoutSuccess":
+    "Predplatné aktualizované — ďakujeme! Zmena sa na tejto obrazovke môže prejaviť až o niekoľko sekúnd.",
+  "app.settings.workspace.checkoutCancelled": "Platba zrušená — nič sa nezmenilo.",
+  "app.settings.workspace.billingGatewayError":
+    "Fakturačná služba je nedostupná — skúste to o chvíľu znova.",
+  "app.settings.workspace.billingOwnerOnly": "Predplatné môže zmeniť iba vlastník workspace.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Skúšobné obdobie skončilo a workspace prekračuje limity plánu Free — vyberte plán a znova ho aktivujte.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace pozastavený pre neuhradenú platbu — uhraďte platbu a znova ho aktivujte.",
+  "app.settings.workspace.billingTrialUntil":
+    "Bezplatné skúšobné obdobie do {date} — žiadna karta nie je uložená.",
+  "app.settings.workspace.billingTrialSeats": "neobmedzený počet miest počas skúšobného obdobia",
+  "app.settings.workspace.billingNextDue": "Ďalšia splatnosť {date}.",
   "app.settings.workspace.requiresControlPlane": "Vyžaduje control plane",
   "app.settings.workspace.changeSubscription": "Zmeniť predplatné",
   "app.settings.workspace.manageSeats": "Spravovať licencie",

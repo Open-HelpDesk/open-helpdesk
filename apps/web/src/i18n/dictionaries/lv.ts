@@ -309,6 +309,10 @@ export const lv: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Nokārtojiet abonementu vai atjauniniet maksājuma veidu, lai atkal aktivizētu darbvietu.",
   "app.shell.suspendedBillingCta": "Atvērt Abonementu un rēķinus",
+  "app.shell.trialBanner": "Jūsu izmēģinājuma periods beidzas {date}.",
+  "app.shell.dunningBanner":
+    "Maksājums neizdevās — bez nokārtošanas darbvieta tiks apturēta {date}.",
+  "app.shell.bannerBillingCta": "Pārvaldīt abonementu",
   "app.shell.myTickets": "Mani pieteikumi",
   "app.shell.newTicket": "Jauns pieteikums",
   "app.shell.topbarTickets": {
@@ -1453,6 +1457,20 @@ export const lv: Dictionary = {
     other: "mēnesī · {count} iekļautas licences",
   },
   "app.settings.workspace.billingNoDue": "Šobrīd nav maksājumu.",
+  "app.settings.workspace.checkoutSuccess":
+    "Abonements atjaunināts — paldies! Izmaiņas šajā ekrānā var parādīties pēc dažām sekundēm.",
+  "app.settings.workspace.checkoutCancelled": "Maksājums atcelts — nekas netika mainīts.",
+  "app.settings.workspace.billingGatewayError":
+    "Norēķinu pakalpojums nav pieejams — pēc brīža mēģiniet vēlreiz.",
+  "app.settings.workspace.billingOwnerOnly": "Abonementu var mainīt tikai darbvietas īpašnieks.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Izmēģinājuma periods ir beidzies, un darbvieta pārsniedz Free plāna ierobežojumus — izvēlieties plānu, lai to atkal aktivizētu.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Darbvieta apturēta nemaksāšanas dēļ — nokārtojiet maksājumu, lai to atkal aktivizētu.",
+  "app.settings.workspace.billingTrialUntil":
+    "Bezmaksas izmēģinājums līdz {date} — karte nav reģistrēta.",
+  "app.settings.workspace.billingTrialSeats": "neierobežots vietu skaits izmēģinājuma laikā",
+  "app.settings.workspace.billingNextDue": "Nākamais maksājuma termiņš {date}.",
   "app.settings.workspace.requiresControlPlane": "Nepieciešams control plane",
   "app.settings.workspace.changeSubscription": "Mainīt abonementu",
   "app.settings.workspace.manageSeats": "Pārvaldīt licences",

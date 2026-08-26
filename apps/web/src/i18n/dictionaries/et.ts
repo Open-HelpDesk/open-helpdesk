@@ -282,6 +282,9 @@ export const et: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Tööruumi taasaktiveerimiseks tasuge tellimus või uuendage makseviisi.",
   "app.shell.suspendedBillingCta": "Ava Tellimus ja arveldus",
+  "app.shell.trialBanner": "Sinu prooviperiood lõpeb {date}.",
+  "app.shell.dunningBanner": "Makse ebaõnnestus — ilma tasumiseta peatatakse tööruum {date}.",
+  "app.shell.bannerBillingCta": "Halda tellimust",
   "app.shell.myTickets": "Minu piletid",
   "app.shell.newTicket": "Uus pilet",
   "app.shell.topbarTickets": {
@@ -1333,6 +1336,20 @@ export const et: Dictionary = {
     other: "kuus · {count} kohta sisaldub",
   },
   "app.settings.workspace.billingNoDue": "Praegu ei ole makseid.",
+  "app.settings.workspace.checkoutSuccess":
+    "Tellimus uuendatud — aitäh! Muudatuse kuvamine sellel ekraanil võib võtta paar sekundit.",
+  "app.settings.workspace.checkoutCancelled": "Makse tühistatud — midagi ei muudetud.",
+  "app.settings.workspace.billingGatewayError":
+    "Arveldusteenus pole kättesaadav — proovi hetke pärast uuesti.",
+  "app.settings.workspace.billingOwnerOnly": "Tellimust saab muuta ainult tööruumi omanik.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Prooviperiood on lõppenud ja tööruum ületab Free-paketi piire — vali pakett, et see uuesti aktiveerida.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Tööruum on maksmata arve tõttu peatatud — tasu makse, et see uuesti aktiveerida.",
+  "app.settings.workspace.billingTrialUntil":
+    "Tasuta prooviperiood kuni {date} — kaarti pole salvestatud.",
+  "app.settings.workspace.billingTrialSeats": "piiramatult kohti prooviperioodil",
+  "app.settings.workspace.billingNextDue": "Järgmine maksetähtaeg {date}.",
   "app.settings.workspace.requiresControlPlane": "Vajab control plane'i",
   "app.settings.workspace.changeSubscription": "Muuda tellimust",
   "app.settings.workspace.manageSeats": "Halda kohti",

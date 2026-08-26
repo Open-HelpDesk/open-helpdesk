@@ -334,6 +334,10 @@ export const mt: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Irregola l-abbonament jew aġġorna l-metodu ta' ħlas biex terġa' tattiva l-workspace.",
   "app.shell.suspendedBillingCta": "Iftaħ Abbonament u fatturazzjoni",
+  "app.shell.trialBanner": "Il-perjodu ta' prova tiegħek jintemm fi {date}.",
+  "app.shell.dunningBanner":
+    "Il-ħlas falla — mingħajr regolarizzazzjoni, il-workspace jiġi sospiż fi {date}.",
+  "app.shell.bannerBillingCta": "Immaniġġja l-abbonament",
   "app.shell.myTickets": "It-tickets tiegħi",
   "app.shell.newTicket": "Ticket ġdid",
   "app.shell.topbarTickets": {
@@ -1566,6 +1570,20 @@ export const mt: Dictionary = {
     other: "fix-xahar · {count} post inkluż",
   },
   "app.settings.workspace.billingNoDue": "L-ebda ħlas dovut bħalissa.",
+  "app.settings.workspace.checkoutSuccess":
+    "L-abbonament ġie aġġornat — grazzi! Din l-iskrin tista' tieħu ftit sekondi biex turi l-bidla.",
+  "app.settings.workspace.checkoutCancelled": "Il-ħlas ġie kkanċellat — xejn ma nbidel.",
+  "app.settings.workspace.billingGatewayError":
+    "Is-servizz tal-fatturazzjoni mhux disponibbli — erġa' pprova fi ftit ħin.",
+  "app.settings.workspace.billingOwnerOnly":
+    "L-abbonament jista' jinbidel biss mis-sid tal-workspace.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Il-perjodu ta' prova ntemm u l-workspace jaqbeż il-limiti tal-pjan Free — agħżel pjan biex terġa' tattivah.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Il-workspace ġie sospiż minħabba nuqqas ta' ħlas — ħallas biex terġa' tattivah.",
+  "app.settings.workspace.billingTrialUntil": "Prova b'xejn sa {date} — l-ebda karta rreġistrata.",
+  "app.settings.workspace.billingTrialSeats": "postijiet bla limitu matul il-prova",
+  "app.settings.workspace.billingNextDue": "Id-data tal-ħlas li jmiss: {date}.",
   "app.settings.workspace.requiresControlPlane": "Jeħtieġ control plane",
   "app.settings.workspace.changeSubscription": "Ibdel l-abbonament",
   "app.settings.workspace.manageSeats": "Immexxi l-postijiet",

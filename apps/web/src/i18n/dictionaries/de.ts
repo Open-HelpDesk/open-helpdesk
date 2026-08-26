@@ -313,6 +313,10 @@ export const de: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Begleichen Sie Ihr Abonnement oder aktualisieren Sie Ihre Zahlungsmethode, um den Workspace zu reaktivieren.",
   "app.shell.suspendedBillingCta": "Abonnement & Abrechnung öffnen",
+  "app.shell.trialBanner": "Ihre Testphase endet am {date}.",
+  "app.shell.dunningBanner":
+    "Zahlung fehlgeschlagen — ohne Ausgleich wird der Workspace am {date} gesperrt.",
+  "app.shell.bannerBillingCta": "Abonnement verwalten",
   "app.shell.myTickets": "Meine Tickets",
   "app.shell.newTicket": "Neues Ticket",
   "app.shell.topbarTickets": { one: "{count} Ticket · gerade aktualisiert", other: "{count} Tickets · gerade aktualisiert" },
@@ -1217,6 +1221,21 @@ export const de: Dictionary = {
   "app.settings.workspace.seatPricing": { one: "pro Monat · {count} Platz zu {price} €", other: "pro Monat · {count} Plätze zu je {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "pro Monat · {count} Platz inklusive", other: "pro Monat · {count} Plätze inklusive" },
   "app.settings.workspace.billingNoDue": "Derzeit ist nichts fällig.",
+  "app.settings.workspace.checkoutSuccess":
+    "Abonnement aktualisiert — vielen Dank! Es kann einige Sekunden dauern, bis diese Ansicht die Änderung anzeigt.",
+  "app.settings.workspace.checkoutCancelled": "Bezahlvorgang abgebrochen — nichts wurde geändert.",
+  "app.settings.workspace.billingGatewayError":
+    "Der Abrechnungsdienst ist nicht erreichbar — versuchen Sie es gleich erneut.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Nur der Inhaber des Workspace kann das Abonnement ändern.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Die Testphase ist beendet und der Workspace überschreitet die Grenzen des Free-Plans — wählen Sie einen Plan, um ihn zu reaktivieren.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace wegen ausstehender Zahlung gesperrt — begleichen Sie die Zahlung, um ihn zu reaktivieren.",
+  "app.settings.workspace.billingTrialUntil":
+    "Kostenlose Testphase bis {date} — keine Karte hinterlegt.",
+  "app.settings.workspace.billingTrialSeats": "unbegrenzte Plätze während der Testphase",
+  "app.settings.workspace.billingNextDue": "Nächste Fälligkeit am {date}.",
   "app.settings.workspace.requiresControlPlane": "Erfordert eine Control Plane",
   "app.settings.workspace.changeSubscription": "Abonnement ändern",
   "app.settings.workspace.manageSeats": "Plätze verwalten",

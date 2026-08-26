@@ -280,6 +280,10 @@ export const bg: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Уредете абонамента или актуализирайте начина си на плащане, за да активирате отново работното пространство.",
   "app.shell.suspendedBillingCta": "Отваряне на Абонамент и фактуриране",
+  "app.shell.trialBanner": "Пробният ви период изтича на {date}.",
+  "app.shell.dunningBanner":
+    "Неуспешно плащане — без уреждане работното пространство ще бъде спряно на {date}.",
+  "app.shell.bannerBillingCta": "Управление на абонамента",
   "app.shell.myTickets": "Моите тикети",
   "app.shell.newTicket": "Нов тикет",
   "app.shell.topbarTickets": {
@@ -1328,6 +1332,21 @@ export const bg: Dictionary = {
     other: "на месец · {count} включени места",
   },
   "app.settings.workspace.billingNoDue": "В момента няма дължими суми.",
+  "app.settings.workspace.checkoutSuccess":
+    "Абонаментът е обновен — благодарим! Екранът може да отнеме няколко секунди, за да отрази промяната.",
+  "app.settings.workspace.checkoutCancelled": "Плащането е отказано — нищо не е променено.",
+  "app.settings.workspace.billingGatewayError":
+    "Услугата за фактуриране е недостъпна — опитайте отново след малко.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Само собственикът на работното пространство може да промени абонамента.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Пробният период изтече и работното пространство надвишава лимитите на плана Free — изберете план, за да го активирате отново.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Работното пространство е спряно поради неплащане — уредете плащането, за да го активирате отново.",
+  "app.settings.workspace.billingTrialUntil":
+    "Безплатен пробен период до {date} — няма записана карта.",
+  "app.settings.workspace.billingTrialSeats": "неограничени места по време на пробния период",
+  "app.settings.workspace.billingNextDue": "Следващ падеж на {date}.",
   "app.settings.workspace.requiresControlPlane": "Изисква control plane",
   "app.settings.workspace.changeSubscription": "Промяна на абонамента",
   "app.settings.workspace.manageSeats": "Управление на местата",

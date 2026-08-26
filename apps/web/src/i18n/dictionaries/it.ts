@@ -313,6 +313,10 @@ export const it: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Regolarizza l'abbonamento o aggiorna il metodo di pagamento per riattivare il workspace.",
   "app.shell.suspendedBillingCta": "Apri Abbonamento e fatturazione",
+  "app.shell.trialBanner": "La tua prova termina il {date}.",
+  "app.shell.dunningBanner":
+    "Pagamento non riuscito — senza regolarizzazione il workspace sarà sospeso il {date}.",
+  "app.shell.bannerBillingCta": "Gestisci l'abbonamento",
   "app.shell.myTickets": "Le mie richieste",
   "app.shell.newTicket": "Nuova richiesta",
   "app.shell.topbarTickets": { one: "{count} richiesta · aggiornata poco fa", other: "{count} richieste · aggiornate poco fa" },
@@ -1217,6 +1221,21 @@ export const it: Dictionary = {
   "app.settings.workspace.seatPricing": { one: "al mese · {count} postazione a {price} €", other: "al mese · {count} postazioni a {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "al mese · {count} postazione inclusa", other: "al mese · {count} postazioni incluse" },
   "app.settings.workspace.billingNoDue": "Nessuna scadenza al momento.",
+  "app.settings.workspace.checkoutSuccess":
+    "Abbonamento aggiornato — grazie! Questa schermata può impiegare qualche secondo a riflettere la modifica.",
+  "app.settings.workspace.checkoutCancelled": "Pagamento annullato — non è stato modificato nulla.",
+  "app.settings.workspace.billingGatewayError":
+    "Il servizio di fatturazione non è raggiungibile — riprova tra un istante.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Solo il proprietario del workspace può modificare l'abbonamento.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "La prova è terminata e il workspace supera i limiti del piano Free — scegli un piano per riattivarlo.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace sospeso per mancato pagamento — regolarizza il pagamento per riattivarlo.",
+  "app.settings.workspace.billingTrialUntil":
+    "Prova gratuita fino al {date} — nessuna carta registrata.",
+  "app.settings.workspace.billingTrialSeats": "postazioni illimitate durante la prova",
+  "app.settings.workspace.billingNextDue": "Prossima scadenza il {date}.",
   "app.settings.workspace.requiresControlPlane": "Richiede un control plane",
   "app.settings.workspace.changeSubscription": "Modifica l'abbonamento",
   "app.settings.workspace.manageSeats": "Gestisci le postazioni",

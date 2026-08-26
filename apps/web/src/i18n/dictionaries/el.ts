@@ -290,6 +290,10 @@ export const el: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Τακτοποιήστε τη συνδρομή ή ενημερώστε τον τρόπο πληρωμής για να επανενεργοποιήσετε το workspace.",
   "app.shell.suspendedBillingCta": "Άνοιγμα Συνδρομής και χρέωσης",
+  "app.shell.trialBanner": "Η δοκιμαστική σας περίοδος λήγει στις {date}.",
+  "app.shell.dunningBanner":
+    "Η πληρωμή απέτυχε — χωρίς τακτοποίηση, το workspace θα ανασταλεί στις {date}.",
+  "app.shell.bannerBillingCta": "Διαχείριση συνδρομής",
   "app.shell.myTickets": "Τα τικέτ μου",
   "app.shell.newTicket": "Νέο τικέτ",
   "app.shell.topbarTickets": {
@@ -1365,6 +1369,21 @@ export const el: Dictionary = {
     other: "τον μήνα · {count} θέσεις περιλαμβάνονται",
   },
   "app.settings.workspace.billingNoDue": "Καμία οφειλή αυτή τη στιγμή.",
+  "app.settings.workspace.checkoutSuccess":
+    "Η συνδρομή ενημερώθηκε — ευχαριστούμε! Η οθόνη μπορεί να χρειαστεί λίγα δευτερόλεπτα για να δείξει την αλλαγή.",
+  "app.settings.workspace.checkoutCancelled": "Η πληρωμή ακυρώθηκε — δεν άλλαξε τίποτα.",
+  "app.settings.workspace.billingGatewayError":
+    "Η υπηρεσία χρέωσης δεν είναι διαθέσιμη — δοκιμάστε ξανά σε λίγο.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Μόνο ο ιδιοκτήτης του workspace μπορεί να αλλάξει τη συνδρομή.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Η δοκιμή έληξε και το workspace υπερβαίνει τα όρια του πλάνου Free — επιλέξτε ένα πλάνο για να το επανενεργοποιήσετε.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Το workspace ανεστάλη λόγω μη πληρωμής — τακτοποιήστε την πληρωμή για να το επανενεργοποιήσετε.",
+  "app.settings.workspace.billingTrialUntil":
+    "Δωρεάν δοκιμή έως {date} — καμία κάρτα καταχωρημένη.",
+  "app.settings.workspace.billingTrialSeats": "απεριόριστες θέσεις κατά τη δοκιμή",
+  "app.settings.workspace.billingNextDue": "Επόμενη οφειλή στις {date}.",
   "app.settings.workspace.requiresControlPlane": "Απαιτεί control plane",
   "app.settings.workspace.changeSubscription": "Αλλαγή συνδρομής",
   "app.settings.workspace.manageSeats": "Διαχείριση θέσεων",

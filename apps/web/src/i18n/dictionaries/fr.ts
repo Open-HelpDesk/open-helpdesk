@@ -302,6 +302,10 @@ export const fr: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Régularisez l'abonnement ou mettez à jour votre moyen de paiement pour réactiver le workspace.",
   "app.shell.suspendedBillingCta": "Ouvrir Abonnement & facturation",
+  "app.shell.trialBanner": "Votre essai se termine le {date}.",
+  "app.shell.dunningBanner":
+    "Paiement en échec — sans régularisation, le workspace sera suspendu le {date}.",
+  "app.shell.bannerBillingCta": "Gérer l'abonnement",
   "app.shell.myTickets": "Mes tickets",
   "app.shell.newTicket": "Nouveau ticket",
   "app.shell.topbarTickets": { one: "{count} ticket · mis à jour à l'instant", other: "{count} tickets · mis à jour à l'instant" },
@@ -1236,6 +1240,21 @@ export const fr: Dictionary = {
   "app.settings.workspace.seatPricing": { one: "par mois · {count} siège à {price} €", other: "par mois · {count} sièges à {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "par mois · {count} siège inclus", other: "par mois · {count} sièges inclus" },
   "app.settings.workspace.billingNoDue": "Aucune échéance en cours.",
+  "app.settings.workspace.checkoutSuccess":
+    "Abonnement mis à jour — merci ! L'écran peut mettre quelques secondes à refléter le changement.",
+  "app.settings.workspace.checkoutCancelled": "Paiement annulé — rien n'a été modifié.",
+  "app.settings.workspace.billingGatewayError":
+    "Le service de facturation est injoignable — réessayez dans un instant.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Seul le propriétaire du workspace peut modifier l'abonnement.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "L'essai est terminé et le workspace dépasse les limites de l'offre Free — choisissez une offre pour le réactiver.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace suspendu pour impayé — régularisez le paiement pour le réactiver.",
+  "app.settings.workspace.billingTrialUntil":
+    "Essai gratuit jusqu'au {date} — aucune carte enregistrée.",
+  "app.settings.workspace.billingTrialSeats": "sièges illimités pendant l'essai",
+  "app.settings.workspace.billingNextDue": "Prochaine échéance le {date}.",
   "app.settings.workspace.requiresControlPlane": "Nécessite un control plane",
   "app.settings.workspace.changeSubscription": "Modifier l'abonnement",
   "app.settings.workspace.manageSeats": "Gérer les sièges",

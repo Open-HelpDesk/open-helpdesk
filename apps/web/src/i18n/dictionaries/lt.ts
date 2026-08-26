@@ -323,6 +323,9 @@ export const lt: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Sutvarkykite prenumeratą arba atnaujinkite mokėjimo būdą, kad vėl aktyvintumėte darbo erdvę.",
   "app.shell.suspendedBillingCta": "Atidaryti Prenumeratą ir sąskaitas",
+  "app.shell.trialBanner": "Jūsų bandomasis laikotarpis baigiasi {date}.",
+  "app.shell.dunningBanner": "Mokėjimas nepavyko — nesumokėjus darbo erdvė bus sustabdyta {date}.",
+  "app.shell.bannerBillingCta": "Tvarkyti prenumeratą",
   "app.shell.myTickets": "Mano užklausos",
   "app.shell.newTicket": "Nauja užklausa",
   "app.shell.topbarTickets": {
@@ -1518,6 +1521,20 @@ export const lt: Dictionary = {
     other: "per mėnesį · įskaičiuota {count} vietų",
   },
   "app.settings.workspace.billingNoDue": "Šiuo metu mokėjimų nėra.",
+  "app.settings.workspace.checkoutSuccess":
+    "Prenumerata atnaujinta — ačiū! Pakeitimas šiame ekrane gali atsirasti po kelių sekundžių.",
+  "app.settings.workspace.checkoutCancelled": "Mokėjimas atšauktas — niekas nepakeista.",
+  "app.settings.workspace.billingGatewayError":
+    "Atsiskaitymo paslauga nepasiekiama — po akimirkos bandykite dar kartą.",
+  "app.settings.workspace.billingOwnerOnly": "Prenumeratą keisti gali tik darbo erdvės savininkas.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Bandomasis laikotarpis baigėsi, o darbo erdvė viršija Free plano ribas — pasirinkite planą, kad ją vėl aktyvuotumėte.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Darbo erdvė sustabdyta dėl neapmokėjimo — sumokėkite, kad ją vėl aktyvuotumėte.",
+  "app.settings.workspace.billingTrialUntil":
+    "Nemokamas bandomasis laikotarpis iki {date} — kortelė neužregistruota.",
+  "app.settings.workspace.billingTrialSeats": "neribotas vietų skaičius bandomuoju laikotarpiu",
+  "app.settings.workspace.billingNextDue": "Kitas mokėjimo terminas {date}.",
   "app.settings.workspace.requiresControlPlane": "Reikia control plane",
   "app.settings.workspace.changeSubscription": "Keisti prenumeratą",
   "app.settings.workspace.manageSeats": "Tvarkyti vietas",

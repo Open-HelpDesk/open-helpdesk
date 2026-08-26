@@ -313,6 +313,10 @@ export const en = {
   "app.shell.suspendedOwnerText":
     "Settle your subscription or update your payment method to reactivate the workspace.",
   "app.shell.suspendedBillingCta": "Open Billing & subscription",
+  "app.shell.trialBanner": "Your trial ends on {date}.",
+  "app.shell.dunningBanner":
+    "Payment failed — without action, the workspace will be suspended on {date}.",
+  "app.shell.bannerBillingCta": "Manage subscription",
   "app.shell.myTickets": "My tickets",
   "app.shell.newTicket": "New ticket",
   "app.shell.topbarTickets": { one: "{count} ticket · updated just now", other: "{count} tickets · updated just now" },
@@ -1214,6 +1218,20 @@ export const en = {
   "app.settings.workspace.seatPricing": { one: "per month · {count} seat at €{price}", other: "per month · {count} seats at €{price}" },
   "app.settings.workspace.seatsIncluded": { one: "per month · {count} seat included", other: "per month · {count} seats included" },
   "app.settings.workspace.billingNoDue": "Nothing due right now.",
+  "app.settings.workspace.checkoutSuccess":
+    "Subscription updated — thank you! This screen can take a few seconds to reflect the change.",
+  "app.settings.workspace.checkoutCancelled": "Checkout cancelled — nothing was changed.",
+  "app.settings.workspace.billingGatewayError":
+    "The billing service is unreachable — try again in a moment.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Only the workspace owner can change the subscription.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "The trial has ended and the workspace exceeds the Free plan's limits — pick a plan to reactivate it.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace suspended for non-payment — settle the payment to reactivate it.",
+  "app.settings.workspace.billingTrialUntil": "Free trial until {date} — no card on file.",
+  "app.settings.workspace.billingTrialSeats": "unlimited seats during the trial",
+  "app.settings.workspace.billingNextDue": "Next payment due on {date}.",
   "app.settings.workspace.requiresControlPlane": "Requires a control plane",
   "app.settings.workspace.changeSubscription": "Change subscription",
   "app.settings.workspace.manageSeats": "Manage seats",

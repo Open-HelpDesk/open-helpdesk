@@ -294,6 +294,10 @@ export const hr: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Podmirite pretplatu ili ažurirajte način plaćanja da biste ponovno aktivirali workspace.",
   "app.shell.suspendedBillingCta": "Otvori Pretplatu i naplatu",
+  "app.shell.trialBanner": "Vaše probno razdoblje završava {date}.",
+  "app.shell.dunningBanner":
+    "Plaćanje nije uspjelo — bez podmirenja workspace će biti suspendiran {date}.",
+  "app.shell.bannerBillingCta": "Upravljaj pretplatom",
   "app.shell.myTickets": "Moji tiketi",
   "app.shell.newTicket": "Novi tiket",
   "app.shell.topbarTickets": {
@@ -1432,6 +1436,20 @@ export const hr: Dictionary = {
     other: "mjesečno · {count} mjesta uključeno",
   },
   "app.settings.workspace.billingNoDue": "Trenutačno nema dospjelih obveza.",
+  "app.settings.workspace.checkoutSuccess":
+    "Pretplata ažurirana — hvala! Ovom zaslonu može trebati nekoliko sekundi da prikaže promjenu.",
+  "app.settings.workspace.checkoutCancelled": "Plaćanje otkazano — ništa nije promijenjeno.",
+  "app.settings.workspace.billingGatewayError":
+    "Usluga naplate nije dostupna — pokušajte ponovno za trenutak.",
+  "app.settings.workspace.billingOwnerOnly": "Samo vlasnik workspacea može promijeniti pretplatu.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Probno razdoblje je završilo, a workspace premašuje ograničenja Free plana — odaberite plan da ga ponovno aktivirate.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace suspendiran zbog neplaćanja — podmirite plaćanje da ga ponovno aktivirate.",
+  "app.settings.workspace.billingTrialUntil":
+    "Besplatno probno razdoblje do {date} — nijedna kartica nije pohranjena.",
+  "app.settings.workspace.billingTrialSeats": "neograničena mjesta tijekom probnog razdoblja",
+  "app.settings.workspace.billingNextDue": "Sljedeće dospijeće {date}.",
   "app.settings.workspace.requiresControlPlane": "Zahtijeva control plane",
   "app.settings.workspace.changeSubscription": "Promijeni pretplatu",
   "app.settings.workspace.manageSeats": "Upravljaj mjestima",

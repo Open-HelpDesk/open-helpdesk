@@ -313,6 +313,10 @@ export const es: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Regulariza tu suscripción o actualiza tu método de pago para reactivar el workspace.",
   "app.shell.suspendedBillingCta": "Abrir Suscripción y facturación",
+  "app.shell.trialBanner": "Tu período de prueba termina el {date}.",
+  "app.shell.dunningBanner":
+    "Pago fallido: sin regularización, el workspace se suspenderá el {date}.",
+  "app.shell.bannerBillingCta": "Gestionar la suscripción",
   "app.shell.myTickets": "Mis solicitudes",
   "app.shell.newTicket": "Nueva solicitud",
   "app.shell.topbarTickets": { one: "{count} solicitud · actualizado ahora mismo", other: "{count} solicitudes · actualizado ahora mismo" },
@@ -1217,6 +1221,21 @@ export const es: Dictionary = {
   "app.settings.workspace.seatPricing": { one: "al mes · {count} puesto a {price} €", other: "al mes · {count} puestos a {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "al mes · {count} puesto incluido", other: "al mes · {count} puestos incluidos" },
   "app.settings.workspace.billingNoDue": "Ningún vencimiento en este momento.",
+  "app.settings.workspace.checkoutSuccess":
+    "Suscripción actualizada, ¡gracias! Esta pantalla puede tardar unos segundos en reflejar el cambio.",
+  "app.settings.workspace.checkoutCancelled": "Pago cancelado: no se modificó nada.",
+  "app.settings.workspace.billingGatewayError":
+    "El servicio de facturación no está disponible: inténtalo de nuevo en un momento.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Solo el propietario del workspace puede modificar la suscripción.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "La prueba terminó y el workspace supera los límites del plan Free: elige un plan para reactivarlo.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace suspendido por impago: regulariza el pago para reactivarlo.",
+  "app.settings.workspace.billingTrialUntil":
+    "Prueba gratuita hasta el {date}: sin tarjeta registrada.",
+  "app.settings.workspace.billingTrialSeats": "asientos ilimitados durante la prueba",
+  "app.settings.workspace.billingNextDue": "Próximo vencimiento el {date}.",
   "app.settings.workspace.requiresControlPlane": "Requiere un control plane",
   "app.settings.workspace.changeSubscription": "Cambiar la suscripción",
   "app.settings.workspace.manageSeats": "Gestionar los puestos",

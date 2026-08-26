@@ -310,6 +310,10 @@ export const sv: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Reglera abonnemanget eller uppdatera din betalningsmetod för att återaktivera arbetsytan.",
   "app.shell.suspendedBillingCta": "Öppna Prenumeration & fakturering",
+  "app.shell.trialBanner": "Din provperiod slutar den {date}.",
+  "app.shell.dunningBanner":
+    "Betalningen misslyckades — utan åtgärd stängs arbetsytan av den {date}.",
+  "app.shell.bannerBillingCta": "Hantera prenumeration",
   "app.shell.myTickets": "Mina ärenden",
   "app.shell.newTicket": "Nytt ärende",
   "app.shell.topbarTickets": { one: "{count} ärende · uppdaterat nyss", other: "{count} ärenden · uppdaterat nyss" },
@@ -1212,6 +1216,20 @@ export const sv: Dictionary = {
   "app.settings.workspace.seatPricing": { one: "per månad · {count} plats à {price} €", other: "per månad · {count} platser à {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "per månad · {count} plats ingår", other: "per månad · {count} platser ingår" },
   "app.settings.workspace.billingNoDue": "Inget att betala just nu.",
+  "app.settings.workspace.checkoutSuccess":
+    "Prenumerationen uppdaterad — tack! Det kan ta några sekunder innan skärmen visar ändringen.",
+  "app.settings.workspace.checkoutCancelled": "Betalningen avbröts — inget ändrades.",
+  "app.settings.workspace.billingGatewayError":
+    "Faktureringstjänsten kan inte nås — försök igen om en stund.",
+  "app.settings.workspace.billingOwnerOnly": "Endast arbetsytans ägare kan ändra prenumerationen.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Provperioden är slut och arbetsytan överskrider Free-planens gränser — välj en plan för att återaktivera den.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Arbetsytan är avstängd på grund av utebliven betalning — reglera betalningen för att återaktivera den.",
+  "app.settings.workspace.billingTrialUntil":
+    "Gratis provperiod till {date} — inget kort registrerat.",
+  "app.settings.workspace.billingTrialSeats": "obegränsade platser under provperioden",
+  "app.settings.workspace.billingNextDue": "Nästa förfallodag den {date}.",
   "app.settings.workspace.requiresControlPlane": "Kräver ett control plane",
   "app.settings.workspace.changeSubscription": "Ändra abonnemang",
   "app.settings.workspace.manageSeats": "Hantera platser",

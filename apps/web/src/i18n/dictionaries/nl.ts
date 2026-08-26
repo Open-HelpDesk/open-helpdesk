@@ -312,6 +312,10 @@ export const nl: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Breng uw abonnement in orde of werk uw betaalmethode bij om de workspace te heractiveren.",
   "app.shell.suspendedBillingCta": "Abonnement & facturatie openen",
+  "app.shell.trialBanner": "Uw proefperiode eindigt op {date}.",
+  "app.shell.dunningBanner":
+    "Betaling mislukt — zonder actie wordt de workspace op {date} opgeschort.",
+  "app.shell.bannerBillingCta": "Abonnement beheren",
   "app.shell.myTickets": "Mijn tickets",
   "app.shell.newTicket": "Nieuw ticket",
   "app.shell.topbarTickets": { one: "{count} ticket · zojuist bijgewerkt", other: "{count} tickets · zojuist bijgewerkt" },
@@ -1217,6 +1221,21 @@ export const nl: Dictionary = {
   "app.settings.workspace.seatPricing": { one: "per maand · {count} licentie à € {price}", other: "per maand · {count} licenties à € {price}" },
   "app.settings.workspace.seatsIncluded": { one: "per maand · {count} licentie inbegrepen", other: "per maand · {count} licenties inbegrepen" },
   "app.settings.workspace.billingNoDue": "Er is nu niets te betalen.",
+  "app.settings.workspace.checkoutSuccess":
+    "Abonnement bijgewerkt — bedankt! Het kan enkele seconden duren voordat dit scherm de wijziging toont.",
+  "app.settings.workspace.checkoutCancelled": "Afrekenen geannuleerd — er is niets gewijzigd.",
+  "app.settings.workspace.billingGatewayError":
+    "De factureringsdienst is onbereikbaar — probeer het zo opnieuw.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Alleen de eigenaar van de workspace kan het abonnement wijzigen.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "De proefperiode is afgelopen en de workspace overschrijdt de limieten van het Free-abonnement — kies een abonnement om hem te heractiveren.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace opgeschort wegens niet-betaling — voldoe de betaling om hem te heractiveren.",
+  "app.settings.workspace.billingTrialUntil":
+    "Gratis proefperiode tot {date} — geen kaart geregistreerd.",
+  "app.settings.workspace.billingTrialSeats": "onbeperkt aantal seats tijdens de proefperiode",
+  "app.settings.workspace.billingNextDue": "Volgende vervaldatum op {date}.",
   "app.settings.workspace.requiresControlPlane": "Vereist een control plane",
   "app.settings.workspace.changeSubscription": "Abonnement wijzigen",
   "app.settings.workspace.manageSeats": "Licenties beheren",

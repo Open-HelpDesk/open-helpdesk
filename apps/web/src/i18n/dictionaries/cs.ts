@@ -318,6 +318,10 @@ export const cs: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Vyrovnejte předplatné nebo aktualizujte platební metodu, abyste workspace znovu aktivovali.",
   "app.shell.suspendedBillingCta": "Otevřít Předplatné a fakturaci",
+  "app.shell.trialBanner": "Vaše zkušební období končí {date}.",
+  "app.shell.dunningBanner":
+    "Platba se nezdařila — bez vyrovnání bude workspace {date} pozastaven.",
+  "app.shell.bannerBillingCta": "Spravovat předplatné",
   "app.shell.myTickets": "Moje tikety",
   "app.shell.newTicket": "Nový tiket",
   "app.shell.topbarTickets": {
@@ -1498,6 +1502,20 @@ export const cs: Dictionary = {
     other: "měsíčně · {count} licencí v ceně",
   },
   "app.settings.workspace.billingNoDue": "Aktuálně není nic k úhradě.",
+  "app.settings.workspace.checkoutSuccess":
+    "Předplatné aktualizováno — děkujeme! Změna se na této obrazovce může projevit až za několik sekund.",
+  "app.settings.workspace.checkoutCancelled": "Platba zrušena — nic se nezměnilo.",
+  "app.settings.workspace.billingGatewayError":
+    "Fakturační služba je nedostupná — zkuste to za okamžik znovu.",
+  "app.settings.workspace.billingOwnerOnly": "Předplatné může změnit pouze vlastník workspace.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Zkušební období skončilo a workspace překračuje limity plánu Free — vyberte plán a znovu jej aktivujte.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace pozastaven kvůli neuhrazené platbě — uhraďte platbu a znovu jej aktivujte.",
+  "app.settings.workspace.billingTrialUntil":
+    "Zkušební období zdarma do {date} — žádná karta není uložena.",
+  "app.settings.workspace.billingTrialSeats": "neomezený počet míst během zkušebního období",
+  "app.settings.workspace.billingNextDue": "Další splatnost {date}.",
   "app.settings.workspace.requiresControlPlane": "Vyžaduje control plane",
   "app.settings.workspace.changeSubscription": "Změnit předplatné",
   "app.settings.workspace.manageSeats": "Spravovat licence",

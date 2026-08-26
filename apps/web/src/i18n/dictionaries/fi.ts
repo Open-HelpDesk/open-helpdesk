@@ -310,6 +310,9 @@ export const fi: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Maksa tilaus tai päivitä maksutapasi aktivoidaksesi työtilan uudelleen.",
   "app.shell.suspendedBillingCta": "Avaa Tilaus ja laskutus",
+  "app.shell.trialBanner": "Kokeilujaksosi päättyy {date}.",
+  "app.shell.dunningBanner": "Maksu epäonnistui — ilman toimenpiteitä työtila jäädytetään {date}.",
+  "app.shell.bannerBillingCta": "Hallitse tilausta",
   "app.shell.myTickets": "Omat pyyntöni",
   "app.shell.newTicket": "Uusi pyyntö",
   "app.shell.topbarTickets": { one: "{count} pyyntö · päivitetty juuri nyt", other: "{count} pyyntöä · päivitetty juuri nyt" },
@@ -1215,6 +1218,20 @@ export const fi: Dictionary = {
   "app.settings.workspace.seatPricing": { one: "kuukaudessa · {count} paikka hintaan {price} €", other: "kuukaudessa · {count} paikkaa hintaan {price} €" },
   "app.settings.workspace.seatsIncluded": { one: "kuukaudessa · {count} paikka sisältyy", other: "kuukaudessa · {count} paikkaa sisältyy" },
   "app.settings.workspace.billingNoDue": "Tällä hetkellä ei ole maksuja.",
+  "app.settings.workspace.checkoutSuccess":
+    "Tilaus päivitetty — kiitos! Voi kestää muutaman sekunnin ennen kuin muutos näkyy tällä näytöllä.",
+  "app.settings.workspace.checkoutCancelled": "Maksu peruutettu — mitään ei muutettu.",
+  "app.settings.workspace.billingGatewayError":
+    "Laskutuspalvelu ei vastaa — yritä hetken kuluttua uudelleen.",
+  "app.settings.workspace.billingOwnerOnly": "Vain työtilan omistaja voi muuttaa tilausta.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Kokeilujakso on päättynyt ja työtila ylittää Free-paketin rajat — valitse paketti aktivoidaksesi sen uudelleen.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Työtila on jäädytetty maksamattomuuden vuoksi — suorita maksu aktivoidaksesi sen uudelleen.",
+  "app.settings.workspace.billingTrialUntil":
+    "Ilmainen kokeilu {date} asti — korttia ei ole tallennettu.",
+  "app.settings.workspace.billingTrialSeats": "rajattomasti paikkoja kokeilun aikana",
+  "app.settings.workspace.billingNextDue": "Seuraava eräpäivä {date}.",
   "app.settings.workspace.requiresControlPlane": "Vaatii control plane -palvelun",
   "app.settings.workspace.changeSubscription": "Muuta tilausta",
   "app.settings.workspace.manageSeats": "Hallitse paikkoja",

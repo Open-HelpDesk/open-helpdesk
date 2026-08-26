@@ -302,6 +302,10 @@ export const ro: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Regularizați abonamentul sau actualizați metoda de plată pentru a reactiva workspace-ul.",
   "app.shell.suspendedBillingCta": "Deschide Abonament și facturare",
+  "app.shell.trialBanner": "Perioada ta de probă se încheie pe {date}.",
+  "app.shell.dunningBanner":
+    "Plata a eșuat — fără regularizare, workspace-ul va fi suspendat pe {date}.",
+  "app.shell.bannerBillingCta": "Gestionează abonamentul",
   "app.shell.myTickets": "Tichetele mele",
   "app.shell.newTicket": "Tichet nou",
   "app.shell.topbarTickets": {
@@ -1458,6 +1462,21 @@ export const ro: Dictionary = {
     other: "pe lună · {count} de licențe incluse",
   },
   "app.settings.workspace.billingNoDue": "Nicio scadență în acest moment.",
+  "app.settings.workspace.checkoutSuccess":
+    "Abonament actualizat — mulțumim! Ecranul poate avea nevoie de câteva secunde pentru a reflecta schimbarea.",
+  "app.settings.workspace.checkoutCancelled": "Plată anulată — nimic nu a fost modificat.",
+  "app.settings.workspace.billingGatewayError":
+    "Serviciul de facturare este indisponibil — încearcă din nou peste puțin timp.",
+  "app.settings.workspace.billingOwnerOnly":
+    "Doar proprietarul workspace-ului poate modifica abonamentul.",
+  "app.settings.workspace.billingSuspendedTrial":
+    "Perioada de probă s-a încheiat, iar workspace-ul depășește limitele planului Free — alege un plan pentru a-l reactiva.",
+  "app.settings.workspace.billingSuspendedUnpaid":
+    "Workspace suspendat pentru neplată — regularizează plata pentru a-l reactiva.",
+  "app.settings.workspace.billingTrialUntil":
+    "Probă gratuită până pe {date} — niciun card înregistrat.",
+  "app.settings.workspace.billingTrialSeats": "locuri nelimitate în perioada de probă",
+  "app.settings.workspace.billingNextDue": "Următoarea scadență pe {date}.",
   "app.settings.workspace.requiresControlPlane": "Necesită un control plane",
   "app.settings.workspace.changeSubscription": "Modificați abonamentul",
   "app.settings.workspace.manageSeats": "Gestionați licențele",

@@ -11,6 +11,7 @@ import {
   tickets,
 } from "@openhelpdesk/db";
 import { isManager, requireAgent } from "@/lib/session";
+import { billingOf } from "@/lib/entitlements";
 import { Avatar } from "@/components/ticket-bits";
 import { getEdition } from "@openhelpdesk/config";
 import { CommandPalette } from "@/components/command-palette";
@@ -48,13 +49,17 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 : t0("app.shell.suspendedText")}
             </p>
             {agent.role === "owner" && (
-              <Link
+              /* Plain <a>, not <Link>: this screen is rendered by the LAYOUT,
+                 which Next.js does not re-render on client navigation — with a
+                 soft navigation the URL changed but the suspension screen
+                 stayed, locking the owner out of the very page that lifts it. */
+              <a
                 href="/app/settings/billing"
                 className="mt-5 inline-flex items-center rounded-md px-4 font-semibold text-white"
                 style={{ height: 36, fontSize: 13.5, background: "var(--acc)" }}
               >
                 {t0("app.shell.suspendedBillingCta")}
-              </Link>
+              </a>
             )}
           </div>
         </main>
@@ -111,6 +116,28 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const t = await getT();
 
+  // Shell banners (ST-11): a failed payment shows its deadline in red; a trial
+  // in its last three days shows its end date. Managers get the link to act.
+  const billing = billingOf(tenant);
+  const dunningDeadline = billing.dunningDeadline ? new Date(billing.dunningDeadline) : null;
+  const trialDaysLeft =
+    tenant.status === "trial" && tenant.trialEndsAt
+      ? Math.ceil((tenant.trialEndsAt.getTime() - Date.now()) / 86_400_000)
+      : null;
+  const banner: { tone: "dang" | "acc"; text: string } | null = dunningDeadline
+    ? {
+        tone: "dang",
+        text: t("app.shell.dunningBanner", { date: t.fmt.dateLong(dunningDeadline) }),
+      }
+    : trialDaysLeft != null && trialDaysLeft <= 3
+      ? {
+          tone: "acc",
+          text: t("app.shell.trialBanner", {
+            date: t.fmt.dateLong(tenant.trialEndsAt as Date),
+          }),
+        }
+      : null;
+
   return (
     <I18nProvider locale={t.locale} dict={t.dict}>
       <div className="ohd flex h-screen overflow-hidden">
@@ -159,6 +186,27 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <Suspense fallback={<div style={{ height: 48 }} />}>
             <TopBar counts={counts} />
           </Suspense>
+
+          {banner && (
+            <div
+              className="flex shrink-0 items-center justify-center gap-3 border-b px-4 text-center"
+              style={{
+                minHeight: 34,
+                fontSize: 12.5,
+                fontWeight: 600,
+                background: banner.tone === "dang" ? "var(--dang-t)" : "var(--acc-t)",
+                borderColor: banner.tone === "dang" ? "var(--dang)" : "var(--acc-b)",
+                color: banner.tone === "dang" ? "var(--dang)" : "var(--acc-2)",
+              }}
+            >
+              <span>{banner.text}</span>
+              {isManager(agent.role) && (
+                <a href="/app/settings/billing" className="underline" style={{ fontWeight: 700 }}>
+                  {t("app.shell.bannerBillingCta")}
+                </a>
+              )}
+            </div>
+          )}
 
           <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
         </div>
