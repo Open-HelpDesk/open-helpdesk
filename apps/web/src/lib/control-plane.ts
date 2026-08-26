@@ -32,13 +32,15 @@ async function call<T>(path: string, body: unknown): Promise<T | null> {
 }
 
 /**
- * Subscription session: the product passes the workspace and its occupied seat
- * count, nothing more — what is subscribed to, and at what price, belongs to
- * the control plane.
+ * Subscription session: the product passes the workspace and the owner's
+ * choice (plan id as named by the control plane, billing interval, seats) —
+ * what those cost belongs to the control plane.
  */
 export async function checkoutUrl(input: {
   tenantSlug: string;
   seats: number;
+  planId?: string;
+  interval?: "month" | "year";
 }): Promise<string | null> {
   const res = await call<{ url: string }>("/api/gateway/checkout-session", input);
   return res?.url ?? null;
@@ -47,4 +49,39 @@ export async function checkoutUrl(input: {
 export async function portalUrl(tenantSlug: string): Promise<string | null> {
   const res = await call<{ url: string }>("/api/gateway/portal-session", { tenantSlug });
   return res?.url ?? null;
+}
+
+/** One public plan as the control plane sells it. The product invents none of it. */
+export type Offer = {
+  id: string;
+  name: string;
+  monthlyPriceCents: number;
+  yearlyPriceCents: number;
+  includedSeats: number;
+  currency: string;
+  entitlements: Record<string, unknown>;
+};
+
+/** The public catalog. Empty without a control plane — ST-11 then shows no offers. */
+export async function fetchOffers(): Promise<Offer[]> {
+  const res = await call<{ offers: Offer[] }>("/api/gateway/offers", {});
+  return res?.offers ?? [];
+}
+
+export type RecheckResult =
+  | {
+      outcome: "reactivated" | "still_over";
+      seats: number;
+      mailboxes: number;
+      maxSeats: number;
+      maxMailboxes: number;
+    }
+  | { outcome: "not_suspended" | "unpaid" | "unknown" };
+
+/**
+ * A suspended workspace that reduced its usage asks to be re-checked right
+ * away instead of waiting for the control plane's next sweep.
+ */
+export async function recheckSuspension(tenantSlug: string): Promise<RecheckResult | null> {
+  return call<RecheckResult>("/api/gateway/recheck", { tenantSlug });
 }

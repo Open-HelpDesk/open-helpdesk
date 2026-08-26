@@ -27,6 +27,7 @@ export class LocaleFormat {
   #plural?: Intl.PluralRules;
   #relative?: Intl.RelativeTimeFormat;
   #number?: Intl.NumberFormat;
+  #amount?: Intl.NumberFormat;
 
   constructor(locale: LocaleDefinition) {
     this.locale = locale;
@@ -43,6 +44,19 @@ export class LocaleFormat {
   number(n: number): string {
     this.#number ??= new Intl.NumberFormat(this.#tag);
     return this.#number.format(n);
+  }
+
+  /**
+   * An amount, always with its two decimals — "7,20" and not "7,2", which
+   * reads as an unfinished price. The currency symbol stays in the
+   * dictionaries: its side of the number changes with the language.
+   */
+  amount(n: number): string {
+    this.#amount ??= new Intl.NumberFormat(this.#tag, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    return this.#amount.format(n);
   }
 
   /** "3 hours ago", "yesterday", "2 weeks ago". Switches to a date beyond one year. */
