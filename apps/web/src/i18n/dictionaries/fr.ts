@@ -1720,6 +1720,10 @@ export const fr: Dictionary = {
   "app.onboarding.or": "OU",
   "app.onboarding.copy": "Copier",
   "app.onboarding.copied": "Copié ✓",
+  "app.onboarding.providedTitle": "Utiliser l'adresse fournie",
+  "app.onboarding.providedActive": "Active — prête à recevoir",
+  "app.onboarding.optional": "facultatif",
+  "app.onboarding.forwardRemove": "Retirer",
   "app.onboarding.ownAddressTitle": "Connecter ma propre adresse",
   "app.onboarding.ownAddressBody":
     "Transférez votre adresse existante ({example}) vers l'adresse fournie ci-dessus. Configuration détaillée dans les paramètres.",

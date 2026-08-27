@@ -2036,6 +2036,10 @@ export const sl: Dictionary = {
   "app.onboarding.or": "ALI",
   "app.onboarding.copy": "Kopiraj",
   "app.onboarding.copied": "Kopirano ✓",
+  "app.onboarding.providedTitle": "Uporabite naslov, ki ga ponujamo",
+  "app.onboarding.providedActive": "Aktiven — pripravljen za prejemanje",
+  "app.onboarding.optional": "izbirno",
+  "app.onboarding.forwardRemove": "Odstrani",
   "app.onboarding.ownAddressTitle": "Povežite svoj lastni naslov",
   "app.onboarding.ownAddressBody":
     "Obstoječi naslov ({example}) preusmerite na zgoraj navedeni naslov. Podrobna navodila najdete v nastavitvah.",

@@ -1650,6 +1650,10 @@ export const fi: Dictionary = {
   "app.onboarding.or": "TAI",
   "app.onboarding.copy": "Kopioi",
   "app.onboarding.copied": "Kopioitu ✓",
+  "app.onboarding.providedTitle": "Käytä antamaamme osoitetta",
+  "app.onboarding.providedActive": "Aktiivinen — valmis vastaanottamaan",
+  "app.onboarding.optional": "valinnainen",
+  "app.onboarding.forwardRemove": "Poista",
   "app.onboarding.ownAddressTitle": "Yhdistä oma osoitteeni",
   "app.onboarding.ownAddressBody":
     "Välitä nykyiseen osoitteeseesi ({example}) saapuvat viestit yllä olevaan osoitteeseen. Tarkempi määritys löytyy asetuksista.",

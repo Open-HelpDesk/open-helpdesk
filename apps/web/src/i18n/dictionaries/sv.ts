@@ -1661,6 +1661,10 @@ export const sv: Dictionary = {
   "app.onboarding.or": "ELLER",
   "app.onboarding.copy": "Kopiera",
   "app.onboarding.copied": "Kopierat ✓",
+  "app.onboarding.providedTitle": "Använd adressen vi tillhandahåller",
+  "app.onboarding.providedActive": "Aktiv — redo att ta emot",
+  "app.onboarding.optional": "valfritt",
+  "app.onboarding.forwardRemove": "Ta bort",
   "app.onboarding.ownAddressTitle": "Koppla min egen adress",
   "app.onboarding.ownAddressBody":
     "Vidarebefordra din befintliga adress ({example}) till adressen ovan. Detaljerad konfiguration under Inställningar.",

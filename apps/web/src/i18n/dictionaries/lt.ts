@@ -2050,6 +2050,10 @@ export const lt: Dictionary = {
   "app.onboarding.or": "ARBA",
   "app.onboarding.copy": "Kopijuoti",
   "app.onboarding.copied": "Nukopijuota ✓",
+  "app.onboarding.providedTitle": "Naudoti mūsų suteiktą adresą",
+  "app.onboarding.providedActive": "Aktyvus — paruoštas gauti",
+  "app.onboarding.optional": "neprivaloma",
+  "app.onboarding.forwardRemove": "Pašalinti",
   "app.onboarding.ownAddressTitle": "Prijungti savo adresą",
   "app.onboarding.ownAddressBody":
     "Peradresuokite savo esamą adresą ({example}) į aukščiau nurodytą adresą. Išsami sąranka — nustatymuose.",

@@ -2015,6 +2015,10 @@ export const cs: Dictionary = {
   "app.onboarding.or": "NEBO",
   "app.onboarding.copy": "Kopírovat",
   "app.onboarding.copied": "Zkopírováno ✓",
+  "app.onboarding.providedTitle": "Použít adresu, kterou poskytujeme",
+  "app.onboarding.providedActive": "Aktivní — připravena přijímat",
+  "app.onboarding.optional": "volitelné",
+  "app.onboarding.forwardRemove": "Odebrat",
   "app.onboarding.ownAddressTitle": "Připojit vlastní adresu",
   "app.onboarding.ownAddressBody":
     "Nastavte přeposílání ze své existující adresy ({example}) na adresu uvedenou výše. Podrobnou konfiguraci najdete v nastavení.",

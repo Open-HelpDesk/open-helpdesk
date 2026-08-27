@@ -2053,6 +2053,10 @@ export const pl: Dictionary = {
   "app.onboarding.or": "LUB",
   "app.onboarding.copy": "Kopiuj",
   "app.onboarding.copied": "Skopiowano ✓",
+  "app.onboarding.providedTitle": "Użycie udostępnionego adresu",
+  "app.onboarding.providedActive": "Aktywny — gotowy do odbioru",
+  "app.onboarding.optional": "opcjonalnie",
+  "app.onboarding.forwardRemove": "Usuń",
   "app.onboarding.ownAddressTitle": "Podłączenie własnego adresu",
   "app.onboarding.ownAddressBody":
     "Prosimy przekierować istniejący adres ({example}) na adres podany powyżej. Szczegółową konfigurację opisano w ustawieniach.",

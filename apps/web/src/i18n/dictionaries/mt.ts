@@ -2108,6 +2108,10 @@ export const mt: Dictionary = {
   "app.onboarding.or": "JEW",
   "app.onboarding.copy": "Ikkopja",
   "app.onboarding.copied": "Ikkupjat ✓",
+  "app.onboarding.providedTitle": "Uża l-indirizz li nipprovdu",
+  "app.onboarding.providedActive": "Attiv — lest biex jirċievi",
+  "app.onboarding.optional": "fakultattiv",
+  "app.onboarding.forwardRemove": "Neħħi",
   "app.onboarding.ownAddressTitle": "Qabbad l-indirizz tiegħi stess",
   "app.onboarding.ownAddressBody":
     "Ittrasferixxi l-indirizz eżistenti tiegħek ({example}) lejn l-indirizz fornut hawn fuq. Konfigurazzjoni dettaljata fl-impostazzjonijiet.",

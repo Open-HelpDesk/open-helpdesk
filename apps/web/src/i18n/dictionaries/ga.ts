@@ -2116,6 +2116,10 @@ export const ga: Dictionary = {
   "app.onboarding.or": "NÓ",
   "app.onboarding.copy": "Cóipeáil",
   "app.onboarding.copied": "Cóipeáilte ✓",
+  "app.onboarding.providedTitle": "Úsáid an seoladh a chuirimid ar fáil",
+  "app.onboarding.providedActive": "Gníomhach — réidh le glacadh",
+  "app.onboarding.optional": "roghnach",
+  "app.onboarding.forwardRemove": "Bain",
   "app.onboarding.ownAddressTitle": "Ceangail mo sheoladh féin",
   "app.onboarding.ownAddressBody":
     "Cuir do sheoladh reatha ({example}) ar aghaidh chuig an seoladh atá tugtha thuas. Cumraíocht mhionsonraithe sna socruithe.",

@@ -5,7 +5,7 @@ import { db, mailboxes, tickets, users } from "@openhelpdesk/db";
 import { redirect } from "next/navigation";
 import { isManager, requireAgent } from "@/lib/session";
 import { requireTenant } from "@/lib/tenant";
-import { connectForwardingAddress } from "./actions";
+import { connectForwardingAddress, removeForwardingAddress } from "./actions";
 import { CopyButton, IdentityForm, TeamInviteForm } from "./onboarding-client";
 import { I18nProvider } from "@/i18n/client";
 import { getT } from "@/i18n/server";
@@ -48,8 +48,13 @@ export default async function OnboardingPage({
     db.select({ n: count() }).from(users).where(eq(users.tenantId, tenant.id)),
     db.select({ n: count() }).from(tickets).where(eq(tickets.tenantId, tenant.id)),
   ]);
-  const mailbox = mailboxRows.find((m) => m.kind === "provided") ?? mailboxRows[0];
+  const providedMailbox = mailboxRows.find((m) => m.kind === "provided");
+  const mailbox = providedMailbox ?? mailboxRows[0];
   const mailboxAddress = mailbox?.address ?? providedMailboxAddress(tenant.slug);
+  // The provided address works from the moment the workspace exists (it is the
+  // tenant domain's MX): step 2 needs no action to be satisfied, and the screen
+  // must say so rather than present it as a passive field to copy.
+  const providedActive = Boolean(providedMailbox?.verified);
   // Step 2's "own address" option — one forwarding mailbox, verified by the
   // first email that arrives through the customer's redirect (ST-03).
   const forwarding = mailboxRows.find((m) => m.kind === "forwarding");
@@ -183,41 +188,59 @@ export default async function OnboardingPage({
                 {t("app.onboarding.emailBody")}
               </p>
 
-              <div
-                className="flex items-center gap-2 border p-3"
-                style={{
-                  borderRadius: 8,
-                  borderColor: "var(--line)",
-                  background: "var(--sunk)",
-                  maxWidth: 460,
-                }}
-              >
-                <code
-                  className="min-w-0 flex-1 truncate text-[13px]"
-                  style={{ fontFamily: "var(--font-mono)" }}
-                >
-                  {mailboxAddress}
-                </code>
-                <I18nProvider locale={t.locale} dict={t.dict}>
-                  <CopyButton value={mailboxAddress} />
-                </I18nProvider>
-              </div>
-
-              <div
-                className="my-5 flex items-center gap-3 text-[11px] font-semibold"
-                style={{ color: "var(--ink-3)", maxWidth: 460 }}
-              >
-                <span className="h-px flex-1" style={{ background: "var(--line)" }} />
-                {t("app.onboarding.or")}
-                <span className="h-px flex-1" style={{ background: "var(--line)" }} />
-              </div>
-
+              {/* Provided address — active from the start, the default option. */}
               <div
                 className="border p-4"
                 style={{ borderRadius: 8, borderColor: "var(--line)", maxWidth: 460 }}
               >
+                <div className="mb-2 flex flex-wrap items-center gap-2">
+                  <span className="text-[13.5px] font-semibold">
+                    {t("app.onboarding.providedTitle")}
+                  </span>
+                  {providedActive && (
+                    <span
+                      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                      style={{ background: "var(--ok-t)", color: "var(--ok)" }}
+                    >
+                      <span
+                        className="flex items-center justify-center rounded-full text-[9px] text-white"
+                        style={{ width: 14, height: 14, background: "var(--ok)" }}
+                        aria-hidden
+                      >
+                        ✓
+                      </span>
+                      {t("app.onboarding.providedActive")}
+                    </span>
+                  )}
+                </div>
+                <div
+                  className="flex items-center gap-2 border p-3"
+                  style={{ borderRadius: 8, borderColor: "var(--line)", background: "var(--sunk)" }}
+                >
+                  <code
+                    className="min-w-0 flex-1 truncate text-[13px]"
+                    style={{ fontFamily: "var(--font-mono)" }}
+                  >
+                    {mailboxAddress}
+                  </code>
+                  <I18nProvider locale={t.locale} dict={t.dict}>
+                    <CopyButton value={mailboxAddress} />
+                  </I18nProvider>
+                </div>
+              </div>
+
+              {/* Own address — optional, and removable until it is verified: the
+                  step no longer traps the owner in a waiting state with no way
+                  back to the provided address. */}
+              <div
+                className="mt-4 border p-4"
+                style={{ borderRadius: 8, borderColor: "var(--line)", maxWidth: 460 }}
+              >
                 <p className="mb-1 text-[13.5px] font-semibold">
-                  {t("app.onboarding.ownAddressTitle")}
+                  {t("app.onboarding.ownAddressTitle")}{" "}
+                  <span className="font-normal" style={{ color: "var(--ink-3)" }}>
+                    · {t("app.onboarding.optional")}
+                  </span>
                 </p>
                 {!forwarding ? (
                   <>
@@ -257,34 +280,55 @@ export default async function OnboardingPage({
                       </button>
                     </form>
                   </>
-                ) : forwarding.verified ? (
-                  <p className="flex items-center gap-2 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
-                    <span
-                      className="flex shrink-0 items-center justify-center rounded-full text-[10px] text-white"
-                      style={{ width: 18, height: 18, background: "var(--acc)" }}
-                    >
-                      ✓
-                    </span>
-                    {t("app.onboarding.forwardVerified", { address: forwarding.address })}
-                  </p>
                 ) : (
                   <>
-                    <p className="mb-3 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
-                      {t("app.onboarding.forwardPending", {
-                        address: forwarding.address,
-                        target: mailboxAddress,
-                      })}
-                    </p>
-                    <p
-                      className="flex items-center gap-2 text-[12.5px] font-medium"
-                      style={{ color: "var(--ink-3)" }}
-                    >
-                      <span
-                        className="inline-block animate-pulse rounded-full"
-                        style={{ width: 8, height: 8, background: "var(--acc)" }}
-                      />
-                      {t("app.onboarding.forwardWaiting")}
-                    </p>
+                    {forwarding.verified ? (
+                      <p
+                        className="flex items-center gap-2 text-[12.5px]"
+                        style={{ color: "var(--ink-2)" }}
+                      >
+                        <span
+                          className="flex shrink-0 items-center justify-center rounded-full text-[10px] text-white"
+                          style={{ width: 18, height: 18, background: "var(--acc)" }}
+                        >
+                          ✓
+                        </span>
+                        {t("app.onboarding.forwardVerified", { address: forwarding.address })}
+                      </p>
+                    ) : (
+                      <>
+                        <p className="mb-3 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
+                          {t("app.onboarding.forwardPending", {
+                            address: forwarding.address,
+                            target: mailboxAddress,
+                          })}
+                        </p>
+                        <p
+                          className="flex items-center gap-2 text-[12.5px] font-medium"
+                          style={{ color: "var(--ink-3)" }}
+                        >
+                          <span
+                            className="inline-block animate-pulse rounded-full"
+                            style={{ width: 8, height: 8, background: "var(--acc)" }}
+                          />
+                          {t("app.onboarding.forwardWaiting")}
+                        </p>
+                      </>
+                    )}
+                    <form action={removeForwardingAddress} className="mt-3">
+                      <button
+                        type="submit"
+                        className="rounded-md border px-3 text-[12px] font-semibold"
+                        style={{
+                          height: 30,
+                          borderColor: "var(--line)",
+                          background: "var(--panel)",
+                          color: "var(--ink-2)",
+                        }}
+                      >
+                        {t("app.onboarding.forwardRemove")}
+                      </button>
+                    </form>
                   </>
                 )}
               </div>

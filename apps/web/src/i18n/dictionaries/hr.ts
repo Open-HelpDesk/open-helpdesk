@@ -1953,6 +1953,10 @@ export const hr: Dictionary = {
   "app.onboarding.or": "ILI",
   "app.onboarding.copy": "Kopiraj",
   "app.onboarding.copied": "Kopirano ✓",
+  "app.onboarding.providedTitle": "Koristi adresu koju pružamo",
+  "app.onboarding.providedActive": "Aktivna — spremna za primanje",
+  "app.onboarding.optional": "neobavezno",
+  "app.onboarding.forwardRemove": "Ukloni",
   "app.onboarding.ownAddressTitle": "Povežite vlastitu adresu",
   "app.onboarding.ownAddressBody":
     "Preusmjerite svoju postojeću adresu ({example}) na adresu navedenu iznad. Detaljna konfiguracija nalazi se u postavkama.",

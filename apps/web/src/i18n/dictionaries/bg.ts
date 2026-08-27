@@ -1822,6 +1822,10 @@ export const bg: Dictionary = {
   "app.onboarding.or": "ИЛИ",
   "app.onboarding.copy": "Копиране",
   "app.onboarding.copied": "Копирано ✓",
+  "app.onboarding.providedTitle": "Използвайте адреса, който предоставяме",
+  "app.onboarding.providedActive": "Активен — готов за получаване",
+  "app.onboarding.optional": "по избор",
+  "app.onboarding.forwardRemove": "Премахване",
   "app.onboarding.ownAddressTitle": "Свързване на собствен адрес",
   "app.onboarding.ownAddressBody":
     "Пренасочете съществуващия си адрес ({example}) към предоставения по-горе адрес. Подробната конфигурация е в настройките.",

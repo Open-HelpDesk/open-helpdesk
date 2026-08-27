@@ -1647,6 +1647,10 @@ export const en = {
   "app.onboarding.or": "OR",
   "app.onboarding.copy": "Copy",
   "app.onboarding.copied": "Copied ✓",
+  "app.onboarding.providedTitle": "Use the address we provide",
+  "app.onboarding.providedActive": "Active — ready to receive",
+  "app.onboarding.optional": "optional",
+  "app.onboarding.forwardRemove": "Remove",
   "app.onboarding.ownAddressTitle": "Connect my own address",
   "app.onboarding.ownAddressBody":
     "Forward your existing address ({example}) to the address given above. Detailed setup in the settings.",

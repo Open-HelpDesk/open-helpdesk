@@ -1653,6 +1653,10 @@ export const nb: Dictionary = {
   "app.onboarding.or": "ELLER",
   "app.onboarding.copy": "Kopier",
   "app.onboarding.copied": "Kopiert ✓",
+  "app.onboarding.providedTitle": "Bruk adressen vi gir deg",
+  "app.onboarding.providedActive": "Aktiv — klar til å motta",
+  "app.onboarding.optional": "valgfritt",
+  "app.onboarding.forwardRemove": "Fjern",
   "app.onboarding.ownAddressTitle": "Koble til min egen adresse",
   "app.onboarding.ownAddressBody":
     "Videresend den eksisterende adressen din ({example}) til adressen ovenfor. Detaljert oppsett under Innstillinger.",

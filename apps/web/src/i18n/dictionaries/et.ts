@@ -1844,6 +1844,10 @@ export const et: Dictionary = {
   "app.onboarding.or": "VÕI",
   "app.onboarding.copy": "Kopeeri",
   "app.onboarding.copied": "Kopeeritud ✓",
+  "app.onboarding.providedTitle": "Kasuta antud aadressi",
+  "app.onboarding.providedActive": "Aktiivne — valmis vastu võtma",
+  "app.onboarding.optional": "valikuline",
+  "app.onboarding.forwardRemove": "Eemalda",
   "app.onboarding.ownAddressTitle": "Ühenda oma aadress",
   "app.onboarding.ownAddressBody":
     "Suunake oma olemasolev aadress ({example}) eespool antud aadressile. Üksikasjalik seadistus on seadetes.",

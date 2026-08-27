@@ -1657,6 +1657,10 @@ export const es: Dictionary = {
   "app.onboarding.or": "O",
   "app.onboarding.copy": "Copiar",
   "app.onboarding.copied": "Copiado ✓",
+  "app.onboarding.providedTitle": "Usar la dirección facilitada",
+  "app.onboarding.providedActive": "Activa — lista para recibir",
+  "app.onboarding.optional": "opcional",
+  "app.onboarding.forwardRemove": "Quitar",
   "app.onboarding.ownAddressTitle": "Conectar mi propia dirección",
   "app.onboarding.ownAddressBody":
     "Reenvía tu dirección actual ({example}) a la dirección facilitada más arriba. Configuración detallada en los ajustes.",

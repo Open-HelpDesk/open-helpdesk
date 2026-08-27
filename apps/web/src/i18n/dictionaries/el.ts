@@ -1883,6 +1883,10 @@ export const el: Dictionary = {
   "app.onboarding.or": "Ή",
   "app.onboarding.copy": "Αντιγραφή",
   "app.onboarding.copied": "Αντιγράφηκε ✓",
+  "app.onboarding.providedTitle": "Χρήση της διεύθυνσης που παρέχουμε",
+  "app.onboarding.providedActive": "Ενεργή — έτοιμη για λήψη",
+  "app.onboarding.optional": "προαιρετικό",
+  "app.onboarding.forwardRemove": "Αφαίρεση",
   "app.onboarding.ownAddressTitle": "Σύνδεση της δικής μου διεύθυνσης",
   "app.onboarding.ownAddressBody":
     "Προωθήστε την υπάρχουσα διεύθυνσή σας ({example}) στη διεύθυνση που δίνεται παραπάνω. Αναλυτική διαμόρφωση στις ρυθμίσεις.",

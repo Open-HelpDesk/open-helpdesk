@@ -1645,6 +1645,10 @@ export const de: Dictionary = {
   "app.onboarding.or": "ODER",
   "app.onboarding.copy": "Kopieren",
   "app.onboarding.copied": "Kopiert ✓",
+  "app.onboarding.providedTitle": "Bereitgestellte Adresse verwenden",
+  "app.onboarding.providedActive": "Aktiv — empfangsbereit",
+  "app.onboarding.optional": "optional",
+  "app.onboarding.forwardRemove": "Entfernen",
   "app.onboarding.ownAddressTitle": "Eigene Adresse verbinden",
   "app.onboarding.ownAddressBody":
     "Leiten Sie Ihre bestehende Adresse ({example}) an die oben angegebene Adresse weiter. Die ausführliche Einrichtung finden Sie in den Einstellungen.",

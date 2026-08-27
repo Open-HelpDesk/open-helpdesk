@@ -1993,6 +1993,10 @@ export const ro: Dictionary = {
   "app.onboarding.or": "SAU",
   "app.onboarding.copy": "Copiați",
   "app.onboarding.copied": "Copiat ✓",
+  "app.onboarding.providedTitle": "Folosiți adresa pe care o oferim",
+  "app.onboarding.providedActive": "Activă — gata de primire",
+  "app.onboarding.optional": "opțional",
+  "app.onboarding.forwardRemove": "Elimină",
   "app.onboarding.ownAddressTitle": "Conectați propria adresă",
   "app.onboarding.ownAddressBody":
     "Redirecționați adresa dvs. existentă ({example}) către adresa furnizată mai sus. Configurare detaliată în Setări.",

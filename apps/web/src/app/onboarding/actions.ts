@@ -4,7 +4,7 @@ import { sendAgentInvite } from "@/lib/agent-invite";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db, mailboxes, tenants, users } from "@openhelpdesk/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { requireManager } from "@/lib/session";
 
 /**
@@ -60,6 +60,25 @@ export async function connectForwardingAddress(formData: FormData) {
       .onConflictDoNothing();
   }
 
+  revalidatePath("/onboarding");
+  redirect("/onboarding?step=2");
+}
+
+/**
+ * Step 2 — Undo "connect my own address".
+ *
+ * Once a forwarding mailbox existed the step showed only its waiting state, with
+ * no way back: the owner could neither correct a typo nor fall back to the
+ * provided address, which is what left this screen feeling stuck. Removing it
+ * brings back the form (or lets the owner simply move on with the provided
+ * address, which is active from the start). Scoped to the forwarding kind — the
+ * provided address is never deleted here.
+ */
+export async function removeForwardingAddress() {
+  const { tenant } = await requireManager();
+  await db
+    .delete(mailboxes)
+    .where(and(eq(mailboxes.tenantId, tenant.id), eq(mailboxes.kind, "forwarding")));
   revalidatePath("/onboarding");
   redirect("/onboarding?step=2");
 }

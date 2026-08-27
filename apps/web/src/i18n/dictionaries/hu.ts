@@ -1857,6 +1857,10 @@ export const hu: Dictionary = {
   "app.onboarding.or": "VAGY",
   "app.onboarding.copy": "Másolás",
   "app.onboarding.copied": "Másolva ✓",
+  "app.onboarding.providedTitle": "A megadott cím használata",
+  "app.onboarding.providedActive": "Aktív — fogadásra kész",
+  "app.onboarding.optional": "opcionális",
+  "app.onboarding.forwardRemove": "Eltávolítás",
   "app.onboarding.ownAddressTitle": "Saját cím összekapcsolása",
   "app.onboarding.ownAddressBody":
     "Továbbítsa meglévő címét ({example}) a fent megadott címre. A részletes beállítás a beállításokban található.",

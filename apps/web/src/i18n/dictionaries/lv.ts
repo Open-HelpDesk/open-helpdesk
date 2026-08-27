@@ -1981,6 +1981,10 @@ export const lv: Dictionary = {
   "app.onboarding.or": "VAI",
   "app.onboarding.copy": "Kopēt",
   "app.onboarding.copied": "Nokopēts ✓",
+  "app.onboarding.providedTitle": "Izmantot mūsu piešķirto adresi",
+  "app.onboarding.providedActive": "Aktīva — gatava saņemt",
+  "app.onboarding.optional": "neobligāti",
+  "app.onboarding.forwardRemove": "Noņemt",
   "app.onboarding.ownAddressTitle": "Pievienot savu adresi",
   "app.onboarding.ownAddressBody":
     "Pārsūtiet savu esošo adresi ({example}) uz iepriekš norādīto adresi. Detalizēta konfigurācija — iestatījumos.",

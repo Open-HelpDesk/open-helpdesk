@@ -1652,6 +1652,10 @@ export const nl: Dictionary = {
   "app.onboarding.or": "OF",
   "app.onboarding.copy": "Kopiëren",
   "app.onboarding.copied": "Gekopieerd ✓",
+  "app.onboarding.providedTitle": "Het adres gebruiken dat wij aanbieden",
+  "app.onboarding.providedActive": "Actief — klaar om te ontvangen",
+  "app.onboarding.optional": "optioneel",
+  "app.onboarding.forwardRemove": "Verwijderen",
   "app.onboarding.ownAddressTitle": "Mijn eigen adres koppelen",
   "app.onboarding.ownAddressBody":
     "Stuur uw bestaande adres ({example}) door naar het adres hierboven. De volledige configuratie vindt u bij de instellingen.",

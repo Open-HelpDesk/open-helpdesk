@@ -2035,6 +2035,10 @@ export const sk: Dictionary = {
   "app.onboarding.or": "ALEBO",
   "app.onboarding.copy": "Kopírovať",
   "app.onboarding.copied": "Skopírované ✓",
+  "app.onboarding.providedTitle": "Použiť poskytnutú adresu",
+  "app.onboarding.providedActive": "Aktívna — pripravená prijímať",
+  "app.onboarding.optional": "voliteľné",
+  "app.onboarding.forwardRemove": "Odstrániť",
   "app.onboarding.ownAddressTitle": "Pripojiť vlastnú adresu",
   "app.onboarding.ownAddressBody":
     "Presmerujte svoju existujúcu adresu ({example}) na adresu uvedenú vyššie. Podrobné nastavenie nájdete v nastaveniach.",
