@@ -312,6 +312,11 @@ export const nl: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Kies een abonnement, voldoe de betaling, of breng de workspace terug binnen de gratis limieten om hem te heractiveren.",
   "app.shell.suspendedBillingCta": "Abonnement & facturatie openen",
+  "app.shell.suspendedUnverifiedTitle": "Bevestig uw e-mailadres",
+  "app.shell.suspendedUnverifiedText":
+    "Deze workspace is gepauzeerd omdat het e-mailadres van de eigenaar nooit is bevestigd. Er is niets verwijderd.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Zodra u uw adres bevestigt, wordt de workspace direct weer geactiveerd. Gebruik de link die we u bij de registratie hebben gestuurd, of vraag een nieuwe aan als die is verlopen.",
   "app.shell.trialBanner": "Uw proefperiode eindigt op {date}.",
   "app.shell.dunningBanner":
     "Betaling mislukt — zonder actie wordt de workspace op {date} opgeschort.",

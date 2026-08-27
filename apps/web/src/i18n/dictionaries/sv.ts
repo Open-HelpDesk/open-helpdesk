@@ -310,6 +310,11 @@ export const sv: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Välj en plan, reglera betalningen eller krymp arbetsytan tillbaka inom gratisgränserna för att återaktivera den.",
   "app.shell.suspendedBillingCta": "Öppna Prenumeration & fakturering",
+  "app.shell.suspendedUnverifiedTitle": "Bekräfta din e-postadress",
+  "app.shell.suspendedUnverifiedText":
+    "Den här arbetsytan är pausad eftersom ägarens e-postadress aldrig bekräftades. Ingenting har tagits bort.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Så snart du bekräftar din adress återaktiveras arbetsytan direkt. Använd länken vi skickade när du registrerade dig, eller begär en ny om den har gått ut.",
   "app.shell.trialBanner": "Din provperiod slutar den {date}.",
   "app.shell.dunningBanner":
     "Betalningen misslyckades — utan åtgärd stängs arbetsytan av den {date}.",

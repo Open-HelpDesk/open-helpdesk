@@ -282,6 +282,11 @@ export const et: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Tööruumi taasaktiveerimiseks valige pakett, tasuge makse või tooge tööruum tagasi tasuta paketi piiridesse.",
   "app.shell.suspendedBillingCta": "Ava Tellimus ja arveldus",
+  "app.shell.suspendedUnverifiedTitle": "Kinnitage oma e-posti aadress",
+  "app.shell.suspendedUnverifiedText":
+    "See tööruum on peatatud, sest selle omaniku e-posti aadressi ei ole kunagi kinnitatud. Midagi ei ole kustutatud.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Aadressi kinnitamine taasaktiveerib tööruumi kohe. Kasutage linki, mille saatsime teile registreerumisel, või küsige uus, kui see on aegunud.",
   "app.shell.trialBanner": "Sinu prooviperiood lõpeb {date}.",
   "app.shell.dunningBanner": "Makse ebaõnnestus — ilma tasumiseta peatatakse tööruum {date}.",
   "app.shell.bannerBillingCta": "Halda tellimust",

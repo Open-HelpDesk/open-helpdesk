@@ -302,6 +302,11 @@ export const ro: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Alegeți un plan, regularizați plata sau readuceți workspace-ul în limitele gratuite pentru a-l reactiva.",
   "app.shell.suspendedBillingCta": "Deschide Abonament și facturare",
+  "app.shell.suspendedUnverifiedTitle": "Confirmați adresa de email",
+  "app.shell.suspendedUnverifiedText":
+    "Acest workspace a fost pus pe pauză deoarece adresa de email a proprietarului său nu a fost niciodată confirmată. Nimic nu a fost șters.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Confirmarea adresei reactivează imediat workspace-ul. Folosiți linkul pe care vi l-am trimis la înscriere sau cereți unul nou dacă a expirat.",
   "app.shell.trialBanner": "Perioada ta de probă se încheie pe {date}.",
   "app.shell.dunningBanner":
     "Plata a eșuat — fără regularizare, workspace-ul va fi suspendat pe {date}.",

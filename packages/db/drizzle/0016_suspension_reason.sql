@@ -1,0 +1,1 @@
+ALTER TABLE "app"."tenants" ADD COLUMN "suspended_reason" text;

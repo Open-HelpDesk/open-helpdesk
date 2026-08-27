@@ -318,6 +318,11 @@ export const cs: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Vyberte plán, uhraďte platbu, nebo vraťte workspace do bezplatných limitů, abyste jej znovu aktivovali.",
   "app.shell.suspendedBillingCta": "Otevřít Předplatné a fakturaci",
+  "app.shell.suspendedUnverifiedTitle": "Ověřte svou e-mailovou adresu",
+  "app.shell.suspendedUnverifiedText":
+    "Tento workspace je pozastaven, protože e-mailová adresa jeho vlastníka nebyla nikdy ověřena. Nic nebylo smazáno.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Ověření vaší adresy workspace okamžitě znovu aktivuje. Použijte odkaz, který jsme vám poslali při registraci, nebo si vyžádejte nový, pokud vypršel.",
   "app.shell.trialBanner": "Vaše zkušební období končí {date}.",
   "app.shell.dunningBanner":
     "Platba se nezdařila — bez vyrovnání bude workspace {date} pozastaven.",

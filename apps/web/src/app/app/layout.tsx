@@ -44,18 +44,31 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     const ownerOnAllowed =
       agent.role === "owner" && allowedWhileSuspended.some((p) => pathname.startsWith(p));
     if (!ownerOnAllowed) {
+      /*
+       * The advice has to match the reason. Picking a plan or shrinking the team
+       * is the way out of a billing suspension and of no other: told to a
+       * workspace paused because its address was never confirmed, it sends the
+       * owner to the one screen that cannot help, and leaves the real remedy
+       * unsaid. An unknown reason keeps the generic wording — a control plane
+       * may add reasons before the product knows them.
+       */
+      const unverified = tenant.suspendedReason === "email_unverified";
       return (
         <main className="ohd flex min-h-screen items-center justify-center p-6">
           <div className="w-full text-center" style={{ maxWidth: 440 }}>
             <h1 className="font-bold" style={{ fontSize: 22, color: "var(--ink)" }}>
-              {t0("app.shell.suspendedTitle")}
+              {t0(unverified ? "app.shell.suspendedUnverifiedTitle" : "app.shell.suspendedTitle")}
             </h1>
             <p className="mt-3" style={{ fontSize: 14, color: "var(--ink-2)" }}>
-              {agent.role === "owner"
-                ? t0("app.shell.suspendedOwnerText")
-                : t0("app.shell.suspendedText")}
+              {unverified
+                ? agent.role === "owner"
+                  ? t0("app.shell.suspendedUnverifiedOwnerText")
+                  : t0("app.shell.suspendedUnverifiedText")
+                : agent.role === "owner"
+                  ? t0("app.shell.suspendedOwnerText")
+                  : t0("app.shell.suspendedText")}
             </p>
-            {agent.role === "owner" && (
+            {agent.role === "owner" && !unverified && (
               /* Plain <a>, not <Link>: this screen is rendered by the LAYOUT,
                  which Next.js does not re-render on client navigation — with a
                  soft navigation the URL changed but the suspension screen

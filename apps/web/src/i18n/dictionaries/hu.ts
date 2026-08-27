@@ -285,6 +285,11 @@ export const hu: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Válasszon csomagot, rendezze a fizetést, vagy hozza vissza a workspace-t az ingyenes keretek közé az újraaktiváláshoz.",
   "app.shell.suspendedBillingCta": "Előfizetés és számlázás megnyitása",
+  "app.shell.suspendedUnverifiedTitle": "Erősítse meg az e-mail-címét",
+  "app.shell.suspendedUnverifiedText":
+    "Ez a workspace fel van függesztve, mert a tulajdonosának az e-mail-címe soha nem lett megerősítve. Semmi nem törlődött.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "A cím megerősítése azonnal újraaktiválja a workspace-t. Használja a regisztrációkor küldött linket, vagy kérjen újat, ha lejárt.",
   "app.shell.trialBanner": "A próbaidőszaka {date} napján ér véget.",
   "app.shell.dunningBanner":
     "Sikertelen fizetés — rendezés nélkül a workspace {date} napján felfüggesztésre kerül.",

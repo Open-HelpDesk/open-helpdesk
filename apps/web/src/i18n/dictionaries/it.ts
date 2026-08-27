@@ -313,6 +313,11 @@ export const it: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Scegli un piano, regolarizza il pagamento o riporta il workspace entro i limiti gratuiti per riattivarlo.",
   "app.shell.suspendedBillingCta": "Apri Abbonamento e fatturazione",
+  "app.shell.suspendedUnverifiedTitle": "Conferma il tuo indirizzo email",
+  "app.shell.suspendedUnverifiedText":
+    "Questo workspace è in pausa perché l'indirizzo email del suo proprietario non è mai stato confermato. Nulla è stato eliminato.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Confermare il tuo indirizzo riattiva subito il workspace. Usa il link che ti abbiamo inviato alla registrazione, oppure chiedine uno nuovo se è scaduto.",
   "app.shell.trialBanner": "La tua prova termina il {date}.",
   "app.shell.dunningBanner":
     "Pagamento non riuscito — senza regolarizzazione il workspace sarà sospeso il {date}.",

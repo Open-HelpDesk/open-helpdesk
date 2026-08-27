@@ -310,6 +310,11 @@ export const fi: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Valitse paketti, suorita maksu tai tuo työtila takaisin ilmaisen paketin rajoihin aktivoidaksesi sen uudelleen.",
   "app.shell.suspendedBillingCta": "Avaa Tilaus ja laskutus",
+  "app.shell.suspendedUnverifiedTitle": "Vahvista sähköpostiosoitteesi",
+  "app.shell.suspendedUnverifiedText":
+    "Tämä työtila on jäädytetty, koska sen omistajan sähköpostiosoitetta ei ole koskaan vahvistettu. Mitään ei ole poistettu.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Osoitteen vahvistaminen aktivoi työtilan heti uudelleen. Käytä linkkiä, jonka lähetimme sinulle rekisteröityessäsi, tai pyydä uusi, jos se on vanhentunut.",
   "app.shell.trialBanner": "Kokeilujaksosi päättyy {date}.",
   "app.shell.dunningBanner": "Maksu epäonnistui — ilman toimenpiteitä työtila jäädytetään {date}.",
   "app.shell.bannerBillingCta": "Hallitse tilausta",

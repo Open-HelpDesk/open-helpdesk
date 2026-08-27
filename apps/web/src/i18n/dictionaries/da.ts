@@ -311,6 +311,11 @@ export const da: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Vælg en plan, betal det udestående, eller bring dit workspace tilbage inden for de gratis grænser for at genaktivere det.",
   "app.shell.suspendedBillingCta": "Åbn Abonnement & fakturering",
+  "app.shell.suspendedUnverifiedTitle": "Bekræft din e-mailadresse",
+  "app.shell.suspendedUnverifiedText":
+    "Dette workspace er suspenderet, fordi ejerens e-mailadresse aldrig blev bekræftet. Intet er blevet slettet.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Når du bekræfter din adresse, genaktiveres workspacet med det samme. Brug det link, vi sendte dig ved tilmeldingen, eller bed om et nyt, hvis det er udløbet.",
   "app.shell.trialBanner": "Din prøveperiode udløber den {date}.",
   "app.shell.dunningBanner":
     "Betaling mislykkedes — uden handling suspenderes dette workspace den {date}.",

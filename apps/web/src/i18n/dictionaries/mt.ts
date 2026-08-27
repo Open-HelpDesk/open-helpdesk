@@ -334,6 +334,11 @@ export const mt: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Agħżel pjan, irregola l-ħlas, jew ċekken il-workspace lura fil-limiti tal-pjan Free biex terġa' tattivah.",
   "app.shell.suspendedBillingCta": "Iftaħ Abbonament u fatturazzjoni",
+  "app.shell.suspendedUnverifiedTitle": "Ikkonferma l-indirizz tal-email tiegħek",
+  "app.shell.suspendedUnverifiedText":
+    "Dan il-workspace huwa sospiż għax l-indirizz tal-email tal-proprjetarju tiegħu qatt ma ġie kkonfermat. Xejn ma tħassar.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Meta tikkonferma l-indirizz tiegħek, il-workspace jerġa' jiġi attivat minnufih. Uża l-link li bgħatnielek mar-reġistrazzjoni, jew itlob wieħed ġdid jekk skada.",
   "app.shell.trialBanner": "Il-perjodu ta' prova tiegħek jintemm fi {date}.",
   "app.shell.dunningBanner":
     "Il-ħlas falla — mingħajr regolarizzazzjoni, il-workspace jiġi sospiż fi {date}.",

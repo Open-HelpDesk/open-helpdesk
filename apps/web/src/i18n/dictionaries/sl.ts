@@ -320,6 +320,11 @@ export const sl: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Izberite paket, poravnajte plačilo ali skrčite workspace nazaj v brezplačne omejitve, da ga znova aktivirate.",
   "app.shell.suspendedBillingCta": "Odpri Naročnino in obračun",
+  "app.shell.suspendedUnverifiedTitle": "Potrdite svoj e-poštni naslov",
+  "app.shell.suspendedUnverifiedText":
+    "Ta workspace je začasno zaustavljen, ker e-poštni naslov njegovega lastnika ni bil nikoli potrjen. Nič ni bilo izbrisano.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Potrditev naslova workspace takoj znova aktivira. Uporabite povezavo, ki smo vam jo poslali ob registraciji, ali zaprosite za novo, če je potekla.",
   "app.shell.trialBanner": "Vaše poskusno obdobje se izteče {date}.",
   "app.shell.dunningBanner": "Plačilo ni uspelo — brez poravnave bo workspace {date} zadržan.",
   "app.shell.bannerBillingCta": "Upravljaj naročnino",

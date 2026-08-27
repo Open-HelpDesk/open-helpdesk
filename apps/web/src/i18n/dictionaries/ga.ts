@@ -337,6 +337,11 @@ export const ga: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Roghnaigh plean, socraigh an íocaíocht, nó tabhair an workspace ar ais laistigh de theorainneacha an phlean saor in aisce chun é a athghníomhachtú.",
   "app.shell.suspendedBillingCta": "Oscail Síntiús & billeáil",
+  "app.shell.suspendedUnverifiedTitle": "Fíoraigh do sheoladh ríomhphoist",
+  "app.shell.suspendedUnverifiedText":
+    "Tá an workspace seo ar fionraí mar nár fíoraíodh seoladh ríomhphoist an úinéara riamh. Níor scriosadh aon rud.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Nuair a fhíoraíonn tú do sheoladh, athghníomhachtaítear an workspace láithreach. Úsáid an nasc a sheolamar chugat nuair a chláraigh tú, nó iarr ceann nua má tá sé imithe as feidhm.",
   "app.shell.trialBanner": "Críochnóidh do thréimhse trialach ar {date}.",
   "app.shell.dunningBanner":
     "Theip ar an íocaíocht — gan socrú, cuirfear an workspace ar fionraí ar {date}.",

@@ -323,6 +323,11 @@ export const lt: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Pasirinkite planą, sumokėkite arba sugrąžinkite darbo erdvę į Free plano ribas, kad ją vėl aktyvintumėte.",
   "app.shell.suspendedBillingCta": "Atidaryti Prenumeratą ir sąskaitas",
+  "app.shell.suspendedUnverifiedTitle": "Patvirtinkite savo el. pašto adresą",
+  "app.shell.suspendedUnverifiedText":
+    "Ši darbo erdvė pristabdyta, nes jos savininko el. pašto adresas niekada nebuvo patvirtintas. Nieko nebuvo ištrinta.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Patvirtinus adresą darbo erdvė iškart vėl aktyvinama. Pasinaudokite nuoroda, kurią atsiuntėme registruojantis, arba paprašykite naujos, jei ji nebegalioja.",
   "app.shell.trialBanner": "Jūsų bandomasis laikotarpis baigiasi {date}.",
   "app.shell.dunningBanner": "Mokėjimas nepavyko — nesumokėjus darbo erdvė bus sustabdyta {date}.",
   "app.shell.bannerBillingCta": "Tvarkyti prenumeratą",

@@ -100,6 +100,21 @@ export const tenants = app.table("tenants", {
    */
   /** active | trial | suspended | deleting. */
   status: text("status").notNull().default("active"),
+  /**
+   * Why the workspace is suspended, as a stable code — not prose to display.
+   *
+   * Without it the product knew only THAT it was suspended, so its one paused
+   * screen told everyone to pick a plan or shrink the team. That is the way out
+   * of a billing suspension and of no other: for a workspace paused because its
+   * address was never confirmed, the advice was simply wrong, and the only real
+   * remedy went unmentioned.
+   *
+   * Read, never matched on loosely: the product maps known codes to its own
+   * wording and falls back to the generic message for anything it does not
+   * know, so a control plane may add reasons without waiting for the product.
+   * Null when active, and always null on a standalone instance.
+   */
+  suspendedReason: text("suspended_reason"),
   trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }),
   /** Resolved capabilities — null: the product falls back on the core ones. */
   entitlements: jsonb("entitlements"),

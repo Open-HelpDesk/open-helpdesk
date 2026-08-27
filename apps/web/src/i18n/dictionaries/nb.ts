@@ -310,6 +310,11 @@ export const nb: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Velg en plan, gjør opp betalingen, eller få workspacet tilbake innenfor gratisgrensene for å reaktivere det.",
   "app.shell.suspendedBillingCta": "Åpne Abonnement & fakturering",
+  "app.shell.suspendedUnverifiedTitle": "Bekreft e-postadressen din",
+  "app.shell.suspendedUnverifiedText":
+    "Dette workspacet er satt på pause fordi e-postadressen til eieren aldri ble bekreftet. Ingenting er slettet.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Så snart du bekrefter adressen din, reaktiveres workspacet umiddelbart. Bruk lenken vi sendte deg da du registrerte deg, eller be om en ny hvis den er utløpt.",
   "app.shell.trialBanner": "Prøveperioden din utløper {date}.",
   "app.shell.dunningBanner": "Betalingen mislyktes — uten handling suspenderes workspacet {date}.",
   "app.shell.bannerBillingCta": "Administrer abonnement",

@@ -313,6 +313,14 @@ export const en = {
   "app.shell.suspendedOwnerText":
     "Pick a plan, settle the payment, or shrink the workspace back into the free allowance to reactivate it.",
   "app.shell.suspendedBillingCta": "Open Billing & subscription",
+  // Suspension for an address that was never confirmed: neither a plan nor a
+  // smaller team lifts it, so the generic advice above would send the owner to
+  // the one screen that cannot help. Only confirming the address does.
+  "app.shell.suspendedUnverifiedTitle": "Confirm your email address",
+  "app.shell.suspendedUnverifiedText":
+    "This workspace is paused because its owner's email address was never confirmed. Nothing has been deleted.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Confirming your address reactivates the workspace straight away. Use the link we emailed you at sign-up, or ask for a new one if it has expired.",
   "app.shell.trialBanner": "Your trial ends on {date}.",
   "app.shell.dunningBanner":
     "Payment failed — without action, the workspace will be suspended on {date}.",

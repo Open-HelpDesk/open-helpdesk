@@ -290,6 +290,11 @@ export const el: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Επιλέξτε ένα πλάνο, τακτοποιήστε την πληρωμή ή επαναφέρετε το workspace στα δωρεάν όρια για να το επανενεργοποιήσετε.",
   "app.shell.suspendedBillingCta": "Άνοιγμα Συνδρομής και χρέωσης",
+  "app.shell.suspendedUnverifiedTitle": "Επαληθεύστε τη διεύθυνση email σας",
+  "app.shell.suspendedUnverifiedText":
+    "Αυτό το workspace έχει ανασταλεί επειδή η διεύθυνση email του ιδιοκτήτη του δεν επαληθεύτηκε ποτέ. Δεν έχει διαγραφεί τίποτα.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Μόλις επαληθεύσετε τη διεύθυνσή σας, το workspace επανενεργοποιείται αμέσως. Χρησιμοποιήστε τον σύνδεσμο που σας στείλαμε κατά την εγγραφή ή ζητήστε νέον, αν έχει λήξει.",
   "app.shell.trialBanner": "Η δοκιμαστική σας περίοδος λήγει στις {date}.",
   "app.shell.dunningBanner":
     "Η πληρωμή απέτυχε — χωρίς τακτοποίηση, το workspace θα ανασταλεί στις {date}.",

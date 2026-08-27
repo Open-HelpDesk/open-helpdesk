@@ -294,6 +294,11 @@ export const hr: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Odaberite plan, podmirite plaćanje ili vratite workspace unutar ograničenja besplatnog plana da biste ga ponovno aktivirali.",
   "app.shell.suspendedBillingCta": "Otvori Pretplatu i naplatu",
+  "app.shell.suspendedUnverifiedTitle": "Potvrdite svoju e-adresu",
+  "app.shell.suspendedUnverifiedText":
+    "Ovaj workspace je suspendiran jer e-adresa njegova vlasnika nikada nije potvrđena. Ništa nije izbrisano.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Potvrda vaše adrese odmah ponovno aktivira workspace. Upotrijebite poveznicu koju smo vam poslali pri registraciji ili zatražite novu ako je istekla.",
   "app.shell.trialBanner": "Vaše probno razdoblje završava {date}.",
   "app.shell.dunningBanner":
     "Plaćanje nije uspjelo — bez podmirenja workspace će biti suspendiran {date}.",

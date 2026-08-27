@@ -313,6 +313,11 @@ export const de: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Wählen Sie einen Plan, begleichen Sie die Zahlung oder bringen Sie den Workspace zurück in die kostenlosen Grenzen, um ihn zu reaktivieren.",
   "app.shell.suspendedBillingCta": "Abonnement & Abrechnung öffnen",
+  "app.shell.suspendedUnverifiedTitle": "Bestätigen Sie Ihre E-Mail-Adresse",
+  "app.shell.suspendedUnverifiedText":
+    "Dieser Workspace ist gesperrt, weil die E-Mail-Adresse seines Eigentümers nie bestätigt wurde. Nichts wurde gelöscht.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Sobald Sie Ihre Adresse bestätigen, wird der Workspace sofort reaktiviert. Nutzen Sie den Link, den wir Ihnen bei der Registrierung geschickt haben, oder fordern Sie einen neuen an, falls er abgelaufen ist.",
   "app.shell.trialBanner": "Ihre Testphase endet am {date}.",
   "app.shell.dunningBanner":
     "Zahlung fehlgeschlagen — ohne Ausgleich wird der Workspace am {date} gesperrt.",

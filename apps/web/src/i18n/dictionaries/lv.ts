@@ -309,6 +309,11 @@ export const lv: Dictionary = {
   "app.shell.suspendedOwnerText":
     "Izvēlieties plānu, nokārtojiet maksājumu vai atgrieziet darbvietu Free plāna ierobežojumos, lai to atkal aktivizētu.",
   "app.shell.suspendedBillingCta": "Atvērt Abonementu un rēķinus",
+  "app.shell.suspendedUnverifiedTitle": "Apstipriniet savu e-pasta adresi",
+  "app.shell.suspendedUnverifiedText":
+    "Šī darbvieta ir apturēta, jo tās īpašnieka e-pasta adrese nekad nav apstiprināta. Nekas nav dzēsts.",
+  "app.shell.suspendedUnverifiedOwnerText":
+    "Adreses apstiprināšana uzreiz atkal aktivizē darbvietu. Izmantojiet saiti, ko nosūtījām reģistrējoties, vai pieprasiet jaunu, ja tai beidzies derīguma termiņš.",
   "app.shell.trialBanner": "Jūsu izmēģinājuma periods beidzas {date}.",
   "app.shell.dunningBanner":
     "Maksājums neizdevās — bez nokārtošanas darbvieta tiks apturēta {date}.",
