@@ -71,7 +71,12 @@ function errorResponses(...codes: number[]) {
 }
 
 export function GET(request: Request) {
-  const origin = new URL(request.url).origin;
+  // From the Host header, not request.url: inside a container request.url
+  // carries the internal bind address (0.0.0.0:3000), which would publish a
+  // server URL nobody can call. Same reason lib/tenant.ts has requestOrigin.
+  const host = request.headers.get("host");
+  const proto = request.headers.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
+  const origin = host ? `${proto}://${host}` : new URL(request.url).origin;
 
   const spec = {
     openapi: "3.1.0",
