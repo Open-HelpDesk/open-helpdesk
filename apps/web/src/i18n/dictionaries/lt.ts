@@ -969,6 +969,14 @@ export const lt: Dictionary = {
   "app.settings.email.add": "Pridėti",
   "app.settings.email.auditProviderConfigured":
     "Sukonfigūruotas el. pašto siuntimo teikėjas: {provider}",
+  "app.settings.email.auditSenderIdentity": "Atnaujinta siuntėjo tapatybė (valdomas siuntimas)",
+  "app.settings.email.managedTitle": "Siuntimas",
+  "app.settings.email.managedIntro":
+    "Atsakymai už jus siunčiami iš toliau nurodyto adreso per pačios Open HelpDesk autentikuotą infrastruktūrą. Nieko nereikia konfigūruoti ir nereikia pridėti jokio DNS įrašo.",
+  "app.settings.email.managedFromLabel": "Atsakymai siunčiami iš",
+  "app.settings.email.managedOwnDomain":
+    "Naudojate savo adresą? Peradresuokite jį į aukščiau nurodytą adresą: gaunami laiškai tampa užklausomis, o atsakymai vis tiek išeina iš šio adreso, todėl toliau pasiekia gavėjus. Jei norite, kad atsakymai grįžtų į jūsų pašto dėžutę, toliau nustatykite lauką „Atsakyti adresu“.",
+  "app.settings.email.managedSenderName": "Klientams rodomas siuntėjo vardas",
   "app.settings.email.connectionNoProvider":
     "Šioje darbo erdvėje teikėjas nesukonfigūruotas: el. laiškai tik įrašomi į žurnalus.",
   "app.settings.email.connectionNoVerify": "Ši perdavimo priemonė ryšio patikrinimo neturi.",

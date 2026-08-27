@@ -914,6 +914,16 @@ export const hr: Dictionary = {
   "app.settings.email.add": "Dodaj",
   "app.settings.email.auditProviderConfigured":
     "Postavljen davatelj usluge slanja e-pošte: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "Ažuriran identitet pošiljatelja (upravljano slanje)",
+  "app.settings.email.managedTitle": "Slanje",
+  "app.settings.email.managedIntro":
+    "Odgovori se za vas šalju s adrese u nastavku, preko vlastite autentificirane infrastrukture Open HelpDeska. Nema se što postavljati i ne treba dodati nijedan DNS zapis.",
+  "app.settings.email.managedFromLabel": "Odgovori se šalju s adrese",
+  "app.settings.email.managedOwnDomain":
+    "Koristite vlastitu adresu? Preusmjerite je na adresu iznad: dolazne poruke postaju tiketi, a odgovori i dalje odlaze s ove adrese, pa i dalje stižu. Postavite adresu za odgovor u nastavku ako želite da odgovori dolaze u vaš vlastiti sandučić.",
+  "app.settings.email.managedSenderName":
+    "Ime pošiljatelja prikazano klijentima",
   "app.settings.email.connectionNoProvider":
     "Za ovaj radni prostor nije postavljen davatelj usluge: poruke se samo zapisuju.",
   "app.settings.email.connectionNoVerify": "Ovaj prijenos ne nudi test povezivanja.",

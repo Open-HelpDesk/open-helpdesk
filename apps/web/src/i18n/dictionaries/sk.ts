@@ -965,6 +965,15 @@ export const sk: Dictionary = {
   "app.settings.email.add": "Pridať",
   "app.settings.email.auditProviderConfigured":
     "Nastavený poskytovateľ odosielania e-mailov: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "Identita odosielateľa aktualizovaná (spravované odosielanie)",
+  "app.settings.email.managedTitle": "Odosielanie",
+  "app.settings.email.managedIntro":
+    "Odpovede sa za vás odosielajú z adresy nižšie, cez vlastnú autentifikovanú infrastruktúru Open HelpDesk. Nie je čo nastavovať a netreba pridávať žiadny záznam DNS.",
+  "app.settings.email.managedFromLabel": "Odpovede sa odosielajú z adresy",
+  "app.settings.email.managedOwnDomain":
+    "Používate vlastnú adresu? Prepošlite ju na adresu vyššie: prichádzajúce e-maily sa stanú tiketmi a odpovede stále odchádzajú z tejto adresy, takže naďalej dochádzajú. Ak chcete, aby sa odpovede vracali do vašej vlastnej schránky, nastavte nižšie adresu na odpovede.",
+  "app.settings.email.managedSenderName": "Názov odosielateľa zobrazený zákazníkom",
   "app.settings.email.connectionNoProvider":
     "Pre tento pracovný priestor nie je nastavený žiadny poskytovateľ: e-maily sa iba zapisujú do záznamov.",
   "app.settings.email.connectionNoVerify": "Tento prenos neponúka test pripojenia.",

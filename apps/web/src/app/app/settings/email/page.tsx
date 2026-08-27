@@ -1,4 +1,4 @@
-import { providedMailboxAddress } from "@openhelpdesk/config";
+import { isCloud, providedMailboxAddress } from "@openhelpdesk/config";
 import { requireAgent } from "@/lib/session";
 import {
   db,
@@ -217,6 +217,10 @@ export default async function EmailSettingsPage({
   const providedAddress =
     boxes.find((m) => m.kind === "provided")?.address ?? providedMailboxAddress(tenant.slug);
   const primary = boxes.find((m) => m.kind === "provided") ?? boxes[0];
+  // Cloud: sending is the platform's — the screen states the address instead of
+  // offering a provider whose credentials the customer does not have (and must
+  // not set: a From on their own domain would leave our Brevo unsigned for it).
+  const cloudSending = isCloud();
 
   const sendingDomain = domainOf(settingsRow?.fromAddress ?? resolved.from);
   const dnsRecords = dnsRecordsFor({
@@ -537,119 +541,186 @@ export default async function EmailSettingsPage({
         </>
       ) : (
         <>
-          {/* Sending provider */}
-          <Card
-            title={t("app.settings.email.providerTitle")}
-            action={
-              settingsRow?.testStatus === "ok" ? (
-                <StatusPill tone="ok">{t("app.settings.email.testOk")}</StatusPill>
-              ) : settingsRow?.testStatus === "failed" ? (
-                <StatusPill tone="dang">{t("app.settings.email.testFailed")}</StatusPill>
-              ) : resolved.provider === "console" ? (
-                <StatusPill tone="wait">{t("app.settings.email.testNone")}</StatusPill>
-              ) : (
-                <StatusPill tone="closed">{t("app.settings.email.testUntested")}</StatusPill>
-              )
-            }
-          >
-            <div className="flex flex-col gap-4">
-              <p
-                className="flex items-baseline gap-2"
-                style={{
-                  fontSize: 12.5,
-                  color: banner.color,
-                  background: banner.bg,
-                  borderRadius: 8,
-                  padding: "10px 13px",
-                }}
-              >
-                <span aria-hidden style={{ fontSize: 9 }}>
-                  ●
-                </span>
-                <span>
-                  {resolved.source === "default" ? (
-                    t("app.settings.email.bannerDefault")
-                  ) : (
-                    <>
-                      {bannerBefore}
-                      <span className="font-mono">{resolved.from}</span>
-                      {bannerAfter}
-                    </>
-                  )}
-                </span>
-              </p>
-
-              <form action={saveEmailProvider} className="flex flex-col gap-4">
-                <ProviderForm
-                  secretHint={settingsRow?.secretHint ?? null}
-                  initial={{
-                    provider: settingsRow?.provider ?? "console",
-                    fromName: settingsRow?.fromName ?? primary?.senderName ?? "",
-                    fromAddress: settingsRow?.fromAddress ?? "",
-                    replyTo: settingsRow?.replyTo ?? "",
-                    smtpHost: settingsRow?.smtpHost ?? "",
-                    smtpPort: settingsRow?.smtpPort ?? 587,
-                    smtpSecure: settingsRow?.smtpSecure ?? false,
-                    smtpUser: settingsRow?.smtpUser ?? "",
-                  }}
-                />
-                <SaveBar saved={saved === "1"} cancelHref="/app/settings/email" surface="panel" />
-              </form>
-
-              <div
-                className="flex flex-wrap items-center gap-2 border-t pt-3"
-                style={{ borderColor: "var(--line-2)" }}
-              >
-                <form action={testEmailConnection}>
-                  <button
-                    className="ohd-hover-edge-ink rounded-md border px-3 font-medium"
-                    style={{
-                      height: 32,
-                      fontSize: 12.5,
-                      borderColor: "var(--line)",
-                      background: "var(--panel)",
-                      color: "var(--ink)",
-                    }}
-                  >
-                    {t("app.settings.email.testConnection")}
-                  </button>
-                </form>
-                <form action={sendEmailTest}>
-                  <button
-                    className="rounded-md px-3.5 font-semibold text-white"
-                    style={{ height: 32, fontSize: 12.5, background: "var(--acc)" }}
-                  >
-                    {t("app.settings.email.sendTest")}
-                  </button>
-                </form>
-                {settingsRow?.lastTestedAt && (
-                  <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                    {t("app.settings.email.lastTest", {
-                      time: t.fmt.relative(settingsRow.lastTestedAt),
-                    })}
-                  </span>
-                )}
-              </div>
-
-              {settingsRow?.testStatus !== "untested" && settingsRow?.lastTestedAt && (
-                <p
+          {/* Sending — managed in cloud, configurable when self-hosted. */}
+          {cloudSending ? (
+            <Card title={t("app.settings.email.managedTitle")}>
+              <div className="flex flex-col gap-4">
+                <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
+                  {t("app.settings.email.managedIntro")}
+                </p>
+                <div
+                  className="flex flex-wrap items-center gap-2"
                   style={{
-                    fontSize: 13,
-                    fontWeight: 500,
+                    fontSize: 12.5,
+                    background: "var(--ok-t)",
+                    color: "var(--ok)",
                     borderRadius: 8,
-                    padding: "11px 13px",
-                    background:
-                      settingsRow.testStatus === "ok" ? "var(--ok-t)" : "var(--dang-t)",
-                    color: settingsRow.testStatus === "ok" ? "var(--ok)" : "var(--dang)",
+                    padding: "10px 13px",
                   }}
                 >
-                  {settingsRow.testStatus === "ok"
-                    ? t("app.settings.email.testOkDetail")
-                    : settingsRow.testError}
+                  <span aria-hidden style={{ fontSize: 9 }}>
+                    ●
+                  </span>
+                  <span>{t("app.settings.email.managedFromLabel")}</span>
+                  <span className="font-mono" style={{ fontWeight: 600 }}>
+                    {providedAddress}
+                  </span>
+                  <CopyButton text={providedAddress} />
+                </div>
+                <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+                  {t("app.settings.email.managedOwnDomain")}
                 </p>
-              )}
-            </div>
-          </Card>
+                <form action={saveEmailProvider} className="flex flex-col gap-3">
+                  <label className="flex flex-col gap-1" style={{ fontSize: 12.5, fontWeight: 500 }}>
+                    {t("app.settings.email.managedSenderName")}
+                    <input
+                      name="fromName"
+                      defaultValue={settingsRow?.fromName ?? primary?.senderName ?? ""}
+                      placeholder={tenant.name}
+                      className="border px-3 font-normal outline-none"
+                      style={{
+                        height: 34,
+                        borderRadius: 6,
+                        borderColor: "var(--line)",
+                        background: "var(--bg)",
+                        fontSize: 13,
+                      }}
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1" style={{ fontSize: 12.5, fontWeight: 500 }}>
+                    {t("app.settings.email.replyToLabel")}
+                    <input
+                      name="replyTo"
+                      type="email"
+                      defaultValue={settingsRow?.replyTo ?? ""}
+                      className="border px-3 font-normal outline-none"
+                      style={{
+                        height: 34,
+                        borderRadius: 6,
+                        borderColor: "var(--line)",
+                        background: "var(--bg)",
+                        fontSize: 13,
+                      }}
+                    />
+                  </label>
+                  <SaveBar saved={saved === "1"} cancelHref="/app/settings/email" surface="panel" />
+                </form>
+              </div>
+            </Card>
+          ) : (
+            <Card
+              title={t("app.settings.email.providerTitle")}
+              action={
+                settingsRow?.testStatus === "ok" ? (
+                  <StatusPill tone="ok">{t("app.settings.email.testOk")}</StatusPill>
+                ) : settingsRow?.testStatus === "failed" ? (
+                  <StatusPill tone="dang">{t("app.settings.email.testFailed")}</StatusPill>
+                ) : resolved.provider === "console" ? (
+                  <StatusPill tone="wait">{t("app.settings.email.testNone")}</StatusPill>
+                ) : (
+                  <StatusPill tone="closed">{t("app.settings.email.testUntested")}</StatusPill>
+                )
+              }
+            >
+              <div className="flex flex-col gap-4">
+                <p
+                  className="flex items-baseline gap-2"
+                  style={{
+                    fontSize: 12.5,
+                    color: banner.color,
+                    background: banner.bg,
+                    borderRadius: 8,
+                    padding: "10px 13px",
+                  }}
+                >
+                  <span aria-hidden style={{ fontSize: 9 }}>
+                    ●
+                  </span>
+                  <span>
+                    {resolved.source === "default" ? (
+                      t("app.settings.email.bannerDefault")
+                    ) : (
+                      <>
+                        {bannerBefore}
+                        <span className="font-mono">{resolved.from}</span>
+                        {bannerAfter}
+                      </>
+                    )}
+                  </span>
+                </p>
+
+                <form action={saveEmailProvider} className="flex flex-col gap-4">
+                  <ProviderForm
+                    secretHint={settingsRow?.secretHint ?? null}
+                    initial={{
+                      provider: settingsRow?.provider ?? "console",
+                      fromName: settingsRow?.fromName ?? primary?.senderName ?? "",
+                      fromAddress: settingsRow?.fromAddress ?? "",
+                      replyTo: settingsRow?.replyTo ?? "",
+                      smtpHost: settingsRow?.smtpHost ?? "",
+                      smtpPort: settingsRow?.smtpPort ?? 587,
+                      smtpSecure: settingsRow?.smtpSecure ?? false,
+                      smtpUser: settingsRow?.smtpUser ?? "",
+                    }}
+                  />
+                  <SaveBar saved={saved === "1"} cancelHref="/app/settings/email" surface="panel" />
+                </form>
+
+                <div
+                  className="flex flex-wrap items-center gap-2 border-t pt-3"
+                  style={{ borderColor: "var(--line-2)" }}
+                >
+                  <form action={testEmailConnection}>
+                    <button
+                      className="ohd-hover-edge-ink rounded-md border px-3 font-medium"
+                      style={{
+                        height: 32,
+                        fontSize: 12.5,
+                        borderColor: "var(--line)",
+                        background: "var(--panel)",
+                        color: "var(--ink)",
+                      }}
+                    >
+                      {t("app.settings.email.testConnection")}
+                    </button>
+                  </form>
+                  <form action={sendEmailTest}>
+                    <button
+                      className="rounded-md px-3.5 font-semibold text-white"
+                      style={{ height: 32, fontSize: 12.5, background: "var(--acc)" }}
+                    >
+                      {t("app.settings.email.sendTest")}
+                    </button>
+                  </form>
+                  {settingsRow?.lastTestedAt && (
+                    <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
+                      {t("app.settings.email.lastTest", {
+                        time: t.fmt.relative(settingsRow.lastTestedAt),
+                      })}
+                    </span>
+                  )}
+                </div>
+
+                {settingsRow?.testStatus !== "untested" && settingsRow?.lastTestedAt && (
+                  <p
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 500,
+                      borderRadius: 8,
+                      padding: "11px 13px",
+                      background:
+                        settingsRow.testStatus === "ok" ? "var(--ok-t)" : "var(--dang-t)",
+                      color: settingsRow.testStatus === "ok" ? "var(--ok)" : "var(--dang)",
+                    }}
+                  >
+                    {settingsRow.testStatus === "ok"
+                      ? t("app.settings.email.testOkDetail")
+                      : settingsRow.testError}
+                  </p>
+                )}
+              </div>
+            </Card>
+          )}
 
           {/* Signature */}
           <form action={saveSending} className="flex flex-col" style={{ gap: 22 }}>

@@ -822,6 +822,14 @@ export const fr: Dictionary = {
   "app.settings.email.save": "Enregistrer",
   "app.settings.email.add": "Ajouter",
   "app.settings.email.auditProviderConfigured": "Fournisseur d'envoi email configuré : {provider}",
+  "app.settings.email.auditSenderIdentity": "Identité d'expéditeur mise à jour (envoi géré)",
+  "app.settings.email.managedTitle": "Envoi",
+  "app.settings.email.managedIntro":
+    "Les réponses sont envoyées pour vous depuis l'adresse ci-dessous, via l'infrastructure authentifiée d'Open HelpDesk. Il n'y a rien à configurer ni aucun enregistrement DNS à publier.",
+  "app.settings.email.managedFromLabel": "Les réponses partent de",
+  "app.settings.email.managedOwnDomain":
+    "Vous avez votre propre adresse ? Transférez-la vers l'adresse ci-dessus : les emails entrants deviennent des tickets, et les réponses partent toujours de cette adresse, pour qu'elles continuent d'arriver. Renseignez une adresse de réponse ci-dessous si vous préférez que les retours arrivent dans votre propre boîte.",
+  "app.settings.email.managedSenderName": "Nom d'expéditeur affiché aux clients",
   "app.settings.email.connectionNoProvider": "Aucun fournisseur configuré pour ce workspace : les emails sont seulement journalisés.",
   "app.settings.email.connectionNoVerify": "Ce transport n'expose pas de test de connexion.",
   "app.settings.email.testEmailSubject": "Test d'envoi — {name}",

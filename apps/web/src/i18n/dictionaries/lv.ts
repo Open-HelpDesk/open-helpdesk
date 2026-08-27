@@ -926,6 +926,15 @@ export const lv: Dictionary = {
   "app.settings.email.add": "Pievienot",
   "app.settings.email.auditProviderConfigured":
     "Konfigurēts e-pasta nosūtīšanas nodrošinātājs: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "Atjaunināta sūtītāja identitāte (pārvaldīta nosūtīšana)",
+  "app.settings.email.managedTitle": "Nosūtīšana",
+  "app.settings.email.managedIntro":
+    "Atbildes jūsu vietā tiek sūtītas no zemāk norādītās adreses, izmantojot pašas Open HelpDesk autentificēto infrastruktūru. Nekas nav jākonfigurē un nav jāpievieno neviens DNS ieraksts.",
+  "app.settings.email.managedFromLabel": "Atbildes tiek sūtītas no",
+  "app.settings.email.managedOwnDomain":
+    "Vai izmantojat savu adresi? Pārsūtiet to uz augstāk norādīto adresi: ienākošais pasts kļūst par pieteikumiem, un atbildes joprojām tiek sūtītas no šīs adreses, tāpēc tās turpina nonākt pie adresātiem. Ja vēlaties, lai atbildes atgrieztos jūsu pastkastē, zemāk norādiet atbildes adresi.",
+  "app.settings.email.managedSenderName": "Klientiem redzamais sūtītāja vārds",
   "app.settings.email.connectionNoProvider":
     "Šai darbvietai nav konfigurēts neviens nodrošinātājs: e-pasti tikai tiek ierakstīti žurnālos.",
   "app.settings.email.connectionNoVerify": "Šim transportam nav savienojuma pārbaudes.",

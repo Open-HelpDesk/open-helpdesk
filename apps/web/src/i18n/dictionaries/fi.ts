@@ -813,6 +813,14 @@ export const fi: Dictionary = {
   "app.settings.email.save": "Tallenna",
   "app.settings.email.add": "Lisää",
   "app.settings.email.auditProviderConfigured": "Sähköpostin lähetyspalvelu määritetty: {provider}",
+  "app.settings.email.auditSenderIdentity": "Lähettäjän tiedot päivitetty (hallinnoitu lähetys)",
+  "app.settings.email.managedTitle": "Lähetys",
+  "app.settings.email.managedIntro":
+    "Vastaukset lähetetään puolestasi alla olevasta osoitteesta Open HelpDeskin omalla todennetulla infrastruktuurilla. Mitään ei tarvitse määrittää eikä yhtään DNS-tietuetta lisätä.",
+  "app.settings.email.managedFromLabel": "Vastaukset lähetetään osoitteesta",
+  "app.settings.email.managedOwnDomain":
+    "Käytätkö omaa osoitettasi? Lähetä se edelleen yllä olevaan osoitteeseen: saapuvista viesteistä tulee pyyntöjä, ja vastaukset lähtevät edelleen tästä osoitteesta, joten ne menevät perille jatkossakin. Määritä alle vastausosoite, jos haluat vastausten tulevan omaan postilaatikkoosi.",
+  "app.settings.email.managedSenderName": "Asiakkaille näytettävä lähettäjän nimi",
   "app.settings.email.connectionNoProvider": "Tälle työtilalle ei ole määritetty palveluntarjoajaa: sähköpostit vain kirjataan lokiin.",
   "app.settings.email.connectionNoVerify": "Tämä siirtotapa ei tarjoa yhteystestiä.",
   "app.settings.email.testEmailSubject": "Lähetystesti — {name}",

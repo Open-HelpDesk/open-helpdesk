@@ -866,6 +866,15 @@ export const hu: Dictionary = {
   "app.settings.email.add": "Hozzáadás",
   "app.settings.email.auditProviderConfigured":
     "E-mail-küldési szolgáltató beállítva: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "A feladó adatai frissítve (kezelt küldés)",
+  "app.settings.email.managedTitle": "Küldés",
+  "app.settings.email.managedIntro":
+    "A válaszokat Ön helyett az alábbi címről küldjük, az Open HelpDesk saját hitelesített infrastruktúráján. Nincs mit beállítani, és nem kell DNS-rekordot hozzáadni.",
+  "app.settings.email.managedFromLabel": "A válaszok feladási címe",
+  "app.settings.email.managedOwnDomain":
+    "Saját címet használ? Továbbítsa a fenti címre: a beérkező levelekből jegyek lesznek, a válaszok pedig továbbra is erről a címről indulnak, így ugyanúgy megérkeznek. Ha inkább a saját postafiókjába szeretné a válaszokat, állítson be lentebb válaszcímet.",
+  "app.settings.email.managedSenderName": "Az ügyfeleknek megjelenő feladónév",
   "app.settings.email.connectionNoProvider":
     "Ehhez a munkaterülethez nincs beállított szolgáltató: az e-maileket csak naplózzuk.",
   "app.settings.email.connectionNoVerify": "Ez az átvitel nem kínál kapcsolattesztet.",

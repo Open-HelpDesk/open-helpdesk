@@ -817,6 +817,14 @@ export const de: Dictionary = {
   "app.settings.email.save": "Speichern",
   "app.settings.email.add": "Hinzufügen",
   "app.settings.email.auditProviderConfigured": "E-Mail-Versandanbieter konfiguriert: {provider}",
+  "app.settings.email.auditSenderIdentity": "Absenderidentität aktualisiert (verwalteter Versand)",
+  "app.settings.email.managedTitle": "Versand",
+  "app.settings.email.managedIntro":
+    "Antworten werden für Sie von der Adresse unten über die eigene authentifizierte Infrastruktur von Open HelpDesk versendet. Es gibt nichts zu konfigurieren und keinen DNS-Eintrag hinzuzufügen.",
+  "app.settings.email.managedFromLabel": "Antworten werden gesendet von",
+  "app.settings.email.managedOwnDomain":
+    "Sie nutzen Ihre eigene Adresse? Leiten Sie sie an die Adresse oben weiter: Eingehende E-Mails werden zu Tickets, und Antworten gehen weiterhin von dieser Adresse aus, damit sie weiter ankommen. Legen Sie unten eine Antwortadresse fest, wenn die Antworten stattdessen in Ihrem eigenen Postfach eingehen sollen.",
+  "app.settings.email.managedSenderName": "Absendername, der Kunden angezeigt wird",
   "app.settings.email.connectionNoProvider": "Für diesen Workspace ist kein Anbieter konfiguriert: E-Mails werden nur protokolliert.",
   "app.settings.email.connectionNoVerify": "Dieser Transport bietet keinen Verbindungstest.",
   "app.settings.email.testEmailSubject": "Versandtest — {name}",

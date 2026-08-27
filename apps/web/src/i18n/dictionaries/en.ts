@@ -820,6 +820,16 @@ export const en = {
   "app.settings.email.save": "Save",
   "app.settings.email.add": "Add",
   "app.settings.email.auditProviderConfigured": "Email sending provider configured: {provider}",
+  "app.settings.email.auditSenderIdentity": "Sender identity updated (managed sending)",
+  // Cloud only: sending is the platform's, so the screen states the address
+  // instead of offering a provider nobody here has credentials for.
+  "app.settings.email.managedTitle": "Sending",
+  "app.settings.email.managedIntro":
+    "Replies are sent for you from the address below, over Open HelpDesk's own authenticated infrastructure. There is nothing to configure and no DNS record to add.",
+  "app.settings.email.managedFromLabel": "Replies are sent from",
+  "app.settings.email.managedOwnDomain":
+    "Using your own address? Forward it to the address above: incoming mail becomes tickets, and replies still leave from this address so they keep arriving. Set a Reply-To below if you would rather answers came back to your own mailbox.",
+  "app.settings.email.managedSenderName": "Sender name shown to customers",
   "app.settings.email.connectionNoProvider": "No provider configured for this workspace: emails are only written to the logs.",
   "app.settings.email.connectionNoVerify": "This transport doesn't offer a connection test.",
   "app.settings.email.testEmailSubject": "Sending test — {name}",

@@ -1005,6 +1005,16 @@ export const ga: Dictionary = {
   "app.settings.email.add": "Cuir leis",
   "app.settings.email.auditProviderConfigured":
     "Soláthraí seolta ríomhphoist cumraithe: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "Nuashonraíodh aitheantas an seoltóra (seoladh bainistithe)",
+  "app.settings.email.managedTitle": "Seoladh",
+  "app.settings.email.managedIntro":
+    "Seoltar freagraí ar do shon ón seoladh thíos, trí bhonneagar fíordheimhnithe Open HelpDesk féin. Níl aon rud le cumrú agus níl aon taifead DNS le cur leis.",
+  "app.settings.email.managedFromLabel": "Seoltar freagraí ó",
+  "app.settings.email.managedOwnDomain":
+    "An bhfuil do sheoladh féin agat? Cuir ar aghaidh chuig an seoladh thuas é: déantar ticéid den phost a thagann isteach, agus seoltar na freagraí ón seoladh seo fós, ionas go leanann siad de bheith ag teacht. Socraigh seoladh freagra thíos más fearr leat go dtiocfadh na freagraí ar ais chuig do bhosca poist féin.",
+  "app.settings.email.managedSenderName":
+    "Ainm an seoltóra a thaispeántar do chustaiméirí",
   "app.settings.email.connectionNoProvider":
     "Gan soláthraí cumraithe don spás oibre seo: níl na ríomhphoist ach á scríobh sna logaí.",
   "app.settings.email.connectionNoVerify":

@@ -965,6 +965,15 @@ export const sl: Dictionary = {
   "app.settings.email.add": "Dodaj",
   "app.settings.email.auditProviderConfigured":
     "Nastavljen ponudnik pošiljanja e-pošte: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "Identiteta pošiljatelja posodobljena (upravljano pošiljanje)",
+  "app.settings.email.managedTitle": "Pošiljanje",
+  "app.settings.email.managedIntro":
+    "Odgovori se namesto vas pošiljajo s spodnjega naslova prek lastne infrastrukture Open HelpDesk s preverjeno pristnostjo. Ničesar ni treba nastavljati in ni treba dodati nobenega zapisa DNS.",
+  "app.settings.email.managedFromLabel": "Odgovori se pošiljajo z naslova",
+  "app.settings.email.managedOwnDomain":
+    "Uporabljate svoj naslov? Preusmerite ga na zgornji naslov: dohodna e-pošta postane zahtevek, odgovori pa še naprej odhajajo s tega naslova, zato še vedno prispejo. Če želite, da bi odgovori prihajali v vaš predal, spodaj nastavite naslov za odgovore.",
+  "app.settings.email.managedSenderName": "Ime pošiljatelja, prikazano strankam",
   "app.settings.email.connectionNoProvider":
     "Za ta delovni prostor ni nastavljenega ponudnika: e-pošta se samo zapisuje v dnevnik.",
   "app.settings.email.connectionNoVerify": "Ta prenos ne omogoča preverjanja povezave.",

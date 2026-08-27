@@ -816,6 +816,14 @@ export const nl: Dictionary = {
   "app.settings.email.save": "Opslaan",
   "app.settings.email.add": "Toevoegen",
   "app.settings.email.auditProviderConfigured": "Verzendprovider voor e-mail ingesteld: {provider}",
+  "app.settings.email.auditSenderIdentity": "Afzenderidentiteit bijgewerkt (beheerde verzending)",
+  "app.settings.email.managedTitle": "Verzenden",
+  "app.settings.email.managedIntro":
+    "De antwoorden worden voor u verstuurd vanaf het onderstaande adres, via de eigen geauthenticeerde infrastructuur van Open HelpDesk. Er is niets in te stellen en er hoeft geen DNS-record te worden toegevoegd.",
+  "app.settings.email.managedFromLabel": "Antwoorden worden verstuurd vanaf",
+  "app.settings.email.managedOwnDomain":
+    "Gebruikt u uw eigen adres? Stuur het door naar het bovenstaande adres: binnenkomende e-mail wordt een ticket, en antwoorden vertrekken nog steeds vanaf dit adres, zodat ze blijven aankomen. Stel hieronder een adres bij ‘Antwoorden aan’ in als u liever wilt dat de reacties in uw eigen mailbox terechtkomen.",
+  "app.settings.email.managedSenderName": "Naam van de afzender die klanten zien",
   "app.settings.email.connectionNoProvider": "Geen provider ingesteld voor deze werkruimte: de e-mails worden alleen gelogd.",
   "app.settings.email.connectionNoVerify": "Dit transport biedt geen verbindingstest.",
   "app.settings.email.testEmailSubject": "Verzendtest — {name}",

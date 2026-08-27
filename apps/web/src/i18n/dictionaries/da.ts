@@ -815,6 +815,14 @@ export const da: Dictionary = {
   "app.settings.email.save": "Gem",
   "app.settings.email.add": "Tilføj",
   "app.settings.email.auditProviderConfigured": "Udbyder til e-mailafsendelse konfigureret: {provider}",
+  "app.settings.email.auditSenderIdentity": "Afsenderidentitet opdateret (administreret afsendelse)",
+  "app.settings.email.managedTitle": "Afsendelse",
+  "app.settings.email.managedIntro":
+    "Svar sendes for dig fra adressen nedenfor via Open HelpDesks egen godkendte infrastruktur. Der er ikke noget at konfigurere og ingen DNS-post at oprette.",
+  "app.settings.email.managedFromLabel": "Svar sendes fra",
+  "app.settings.email.managedOwnDomain":
+    "Bruger du din egen adresse? Videresend den til adressen ovenfor: indgående mail bliver til sager, og svar afsendes stadig fra denne adresse, så de fortsat kommer frem. Angiv en svaradresse nedenfor, hvis du hellere vil have svarene tilbage i din egen postkasse.",
+  "app.settings.email.managedSenderName": "Afsendernavn vist for kunderne",
   "app.settings.email.connectionNoProvider": "Ingen udbyder konfigureret for dette arbejdsområde: e-mails bliver kun logget.",
   "app.settings.email.connectionNoVerify": "Denne transport tilbyder ikke en forbindelsestest.",
   "app.settings.email.testEmailSubject": "Afsendelsestest — {name}",

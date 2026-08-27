@@ -241,6 +241,9 @@ importers:
 
   packages/mail:
     dependencies:
+      '@openhelpdesk/config':
+        specifier: workspace:*
+        version: link:../config
       '@openhelpdesk/crypto':
         specifier: workspace:*
         version: link:../crypto

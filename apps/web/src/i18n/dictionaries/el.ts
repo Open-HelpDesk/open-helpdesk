@@ -872,6 +872,16 @@ export const el: Dictionary = {
   "app.settings.email.add": "Προσθήκη",
   "app.settings.email.auditProviderConfigured":
     "Ρυθμίστηκε πάροχος αποστολής email: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "Ενημερώθηκε η ταυτότητα αποστολέα (διαχειριζόμενη αποστολή)",
+  "app.settings.email.managedTitle": "Αποστολή",
+  "app.settings.email.managedIntro":
+    "Οι απαντήσεις αποστέλλονται για εσάς από τη διεύθυνση παρακάτω, μέσω της πιστοποιημένης υποδομής του Open HelpDesk. Δεν υπάρχει κάτι να ρυθμίσετε ούτε εγγραφή DNS να προσθέσετε.",
+  "app.settings.email.managedFromLabel": "Οι απαντήσεις αποστέλλονται από",
+  "app.settings.email.managedOwnDomain":
+    "Χρησιμοποιείτε τη δική σας διεύθυνση; Προωθήστε την στη διεύθυνση παραπάνω: τα εισερχόμενα μηνύματα γίνονται τικέτ και οι απαντήσεις εξακολουθούν να φεύγουν από αυτήν τη διεύθυνση, ώστε να συνεχίσουν να φτάνουν. Ορίστε παρακάτω μια διεύθυνση απάντησης, αν προτιμάτε οι απαντήσεις να επιστρέφουν στο δικό σας γραμματοκιβώτιο.",
+  "app.settings.email.managedSenderName":
+    "Όνομα αποστολέα που εμφανίζεται στους πελάτες",
   "app.settings.email.connectionNoProvider":
     "Δεν έχει ρυθμιστεί πάροχος για αυτόν τον χώρο εργασίας: τα email καταγράφονται μόνο στα αρχεία καταγραφής.",
   "app.settings.email.connectionNoVerify":

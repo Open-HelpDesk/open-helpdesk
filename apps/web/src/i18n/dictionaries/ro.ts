@@ -930,6 +930,15 @@ export const ro: Dictionary = {
   "app.settings.email.add": "Adăugați",
   "app.settings.email.auditProviderConfigured":
     "Furnizor de trimitere email configurat: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "Identitatea expeditorului a fost actualizată (trimitere administrată)",
+  "app.settings.email.managedTitle": "Trimitere",
+  "app.settings.email.managedIntro":
+    "Răspunsurile sunt trimise în numele dvs. de la adresa de mai jos, prin infrastructura autentificată a Open HelpDesk. Nu aveți nimic de configurat și nicio înregistrare DNS de adăugat.",
+  "app.settings.email.managedFromLabel": "Răspunsurile sunt trimise de la",
+  "app.settings.email.managedOwnDomain":
+    "Folosiți propria dvs. adresă? Redirecționați-o către adresa de mai sus: emailurile primite devin tichete, iar răspunsurile pleacă în continuare de la această adresă, așa că ajung fără probleme. Dacă preferați ca răspunsurile să revină în propria dvs. căsuță, configurați mai jos o adresă de răspuns.",
+  "app.settings.email.managedSenderName": "Numele expeditorului afișat clienților",
   "app.settings.email.connectionNoProvider":
     "Niciun furnizor configurat pentru acest spațiu de lucru: emailurile sunt doar consemnate în jurnal.",
   "app.settings.email.connectionNoVerify": "Acest transport nu oferă un test de conexiune.",

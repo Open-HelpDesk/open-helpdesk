@@ -971,6 +971,14 @@ export const pl: Dictionary = {
   "app.settings.email.add": "Dodaj",
   "app.settings.email.auditProviderConfigured":
     "Skonfigurowano dostawcę wysyłki e-maili: {provider}",
+  "app.settings.email.auditSenderIdentity": "Zaktualizowano tożsamość nadawcy (wysyłka zarządzana)",
+  "app.settings.email.managedTitle": "Wysyłka",
+  "app.settings.email.managedIntro":
+    "Odpowiedzi są wysyłane za Państwa z adresu poniżej, przez własną uwierzytelnioną infrastrukturę Open HelpDesk. Nie ma nic do skonfigurowania ani żadnego rekordu DNS do dodania.",
+  "app.settings.email.managedFromLabel": "Odpowiedzi są wysyłane z adresu",
+  "app.settings.email.managedOwnDomain":
+    "Mają Państwo własny adres? Wystarczy przekierować go na adres powyżej — przychodzące wiadomości stają się zgłoszeniami, a odpowiedzi nadal wychodzą z tego adresu, więc wciąż docierają do odbiorców. Jeśli odpowiedzi mają wracać do Państwa skrzynki, prosimy ustawić poniżej adres odpowiedzi.",
+  "app.settings.email.managedSenderName": "Nazwa nadawcy widoczna dla klientów",
   "app.settings.email.connectionNoProvider":
     "Dla tego obszaru roboczego nie skonfigurowano dostawcy — e-maile są tylko zapisywane w dzienniku.",
   "app.settings.email.connectionNoVerify": "Ten transport nie udostępnia testu połączenia.",

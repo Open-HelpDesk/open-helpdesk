@@ -963,6 +963,16 @@ export const cs: Dictionary = {
   "app.settings.email.add": "Přidat",
   "app.settings.email.auditProviderConfigured":
     "Nastaven poskytovatel odesílání e-mailů: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "Aktualizována identita odesílatele (spravované odesílání)",
+  "app.settings.email.managedTitle": "Odesílání",
+  "app.settings.email.managedIntro":
+    "Odpovědi za vás odcházejí z níže uvedené adresy přes vlastní ověřenou infrastrukturu Open HelpDesk. Není co nastavovat a není třeba přidávat žádný DNS záznam.",
+  "app.settings.email.managedFromLabel": "Odpovědi odcházejí z adresy",
+  "app.settings.email.managedOwnDomain":
+    "Používáte vlastní adresu? Přeposílejte ji na adresu výše: příchozí pošta se stane tikety a odpovědi budou dál odcházet z této adresy, takže budou i dál doručovány. Pokud chcete, aby odpovědi chodily do vaší vlastní schránky, nastavte níže Reply-To.",
+  "app.settings.email.managedSenderName":
+    "Jméno odesílatele zobrazené zákazníkům",
   "app.settings.email.connectionNoProvider":
     "Pro tento pracovní prostor není nastaven žádný poskytovatel: e-maily se pouze zapisují do protokolů.",
   "app.settings.email.connectionNoVerify": "Tento přenos nenabízí test připojení.",

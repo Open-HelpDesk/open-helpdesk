@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@openhelpdesk/config": "workspace:*",
     "@openhelpdesk/crypto": "workspace:*",
     "@openhelpdesk/db": "workspace:*",
     "bullmq": "^5.44.0",

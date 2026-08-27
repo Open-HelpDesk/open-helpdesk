@@ -1000,6 +1000,14 @@ export const mt: Dictionary = {
   "app.settings.email.add": "Żid",
   "app.settings.email.auditProviderConfigured":
     "Fornitur tal-bgħit tal-email ikkonfigurat: {provider}",
+  "app.settings.email.auditSenderIdentity": "Identità tal-mittent aġġornata (bgħit immexxi)",
+  "app.settings.email.managedTitle": "Bgħit",
+  "app.settings.email.managedIntro":
+    "It-tweġibiet jintbagħtu għalik mill-indirizz hawn taħt, permezz tal-infrastruttura awtentikata ta' Open HelpDesk stess. Ma hemm xejn x'tikkonfigura u l-ebda rekord DNS x'iżżid.",
+  "app.settings.email.managedFromLabel": "It-tweġibiet jintbagħtu minn",
+  "app.settings.email.managedOwnDomain":
+    "Qed tuża indirizz tiegħek? Ittrasferih lejn l-indirizz hawn fuq: l-email li tidħol issir ticket, u t-tweġibiet xorta jitilqu minn dan l-indirizz, biex jibqgħu jaslu. Issettja indirizz “Wieġeb lil” hawn taħt jekk tippreferi li t-tweġibiet jaslu fil-kaxxa tal-posta tiegħek stess.",
+  "app.settings.email.managedSenderName": "Isem tal-mittent li jidher lill-klijenti",
   "app.settings.email.connectionNoProvider":
     "L-ebda fornitur ikkonfigurat għal dan l-ispazju tax-xogħol: l-emails jiġu biss irreġistrati.",
   "app.settings.email.connectionNoVerify": "Dan it-trasport ma joffrix test tal-konnessjoni.",

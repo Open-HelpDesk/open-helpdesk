@@ -8,6 +8,7 @@ import { and, asc, eq, ne } from "drizzle-orm";
 import { decryptSecrets, encryptSecrets, secretHint } from "@openhelpdesk/crypto";
 import { sendTenantEmail, transportFor, verifyImapMailbox } from "@openhelpdesk/mail";
 import { getT } from "@/i18n/server";
+import { isCloud } from "@openhelpdesk/config";
 import { requireManager } from "../guard";
 
 /** ST-03 — Adding a receiving address (forwarding or IMAP, never "provided"). */
@@ -106,6 +107,41 @@ const PROVIDERS = new Set(["console", "smtp", "resend", "brevo", "mailjet"]);
 export async function saveEmailProvider(formData: FormData) {
   const { tenant, agent } = await requireManager();
   const t = await getT();
+
+  /*
+   * Cloud: sending belongs to the platform, so only the two fields no receiver
+   * authenticates are the customer's — the display name and the Reply-To. The
+   * provider and the From address are refused HERE, not merely hidden in the UI:
+   * a stored provider would divert sending away from the Brevo account whose IP
+   * is allow-listed, and a From address on the customer's own domain would go
+   * out through our Brevo unsigned for that domain and fail DMARC.
+   */
+  if (isCloud()) {
+    const [current] = await db
+      .select()
+      .from(emailSettings)
+      .where(eq(emailSettings.tenantId, tenant.id));
+    const managed = {
+      fromName: String(formData.get("fromName") ?? "").trim().slice(0, 120) || null,
+      replyTo: String(formData.get("replyTo") ?? "").trim().toLowerCase() || null,
+      updatedAt: new Date(),
+    };
+    if (current) {
+      await db.update(emailSettings).set(managed).where(eq(emailSettings.id, current.id));
+    } else {
+      await db.insert(emailSettings).values({ tenantId: tenant.id, ...managed });
+    }
+    await db.insert(auditEvents).values({
+      tenantId: tenant.id,
+      actorType: "user",
+      actorId: agent.id,
+      action: t("app.settings.email.auditSenderIdentity"),
+      targetType: "email_settings",
+    });
+    revalidatePath("/app/settings/email");
+    redirect("/app/settings/email?saved=1");
+  }
+
   const provider = String(formData.get("provider") ?? "console");
   if (!PROVIDERS.has(provider)) return;
 

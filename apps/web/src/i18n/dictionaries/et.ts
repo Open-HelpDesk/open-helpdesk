@@ -856,6 +856,15 @@ export const et: Dictionary = {
   "app.settings.email.add": "Lisa",
   "app.settings.email.auditProviderConfigured":
     "E-posti saatmise teenusepakkuja on seadistatud: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "Saatja identiteet uuendatud (hallatud saatmine)",
+  "app.settings.email.managedTitle": "Saatmine",
+  "app.settings.email.managedIntro":
+    "Vastused saadetakse teie eest allpool olevalt aadressilt Open HelpDeski enda autenditud taristu kaudu. Midagi ei ole vaja seadistada ega ühtki DNS-kirjet lisada.",
+  "app.settings.email.managedFromLabel": "Vastused saadetakse aadressilt",
+  "app.settings.email.managedOwnDomain":
+    "Kasutate oma aadressi? Suunake see edasi ülal olevale aadressile: saabuvatest kirjadest saavad piletid ja vastused lähevad endiselt välja sellelt aadressilt, nii et need jõuavad ka edaspidi kohale. Kui soovite, et vastused tuleksid teie enda postkasti, määrake allpool vastuse aadress.",
+  "app.settings.email.managedSenderName": "Klientidele kuvatav saatja nimi",
   "app.settings.email.connectionNoProvider":
     "Selle tööruumi jaoks pole teenusepakkujat seadistatud: e-kirjad ainult logitakse.",
   "app.settings.email.connectionNoVerify": "See transport ei paku ühenduse testimist.",

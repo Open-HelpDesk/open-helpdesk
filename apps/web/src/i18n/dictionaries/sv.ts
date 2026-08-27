@@ -814,6 +814,14 @@ export const sv: Dictionary = {
   "app.settings.email.save": "Spara",
   "app.settings.email.add": "Lägg till",
   "app.settings.email.auditProviderConfigured": "Sändningsleverantör för e-post konfigurerad: {provider}",
+  "app.settings.email.auditSenderIdentity": "Avsändaridentiteten uppdaterad (hanterad sändning)",
+  "app.settings.email.managedTitle": "Sändning",
+  "app.settings.email.managedIntro":
+    "Svaren skickas åt dig från adressen nedan, via Open HelpDesks egen autentiserade infrastruktur. Det finns ingenting att konfigurera och ingen DNS-post att lägga till.",
+  "app.settings.email.managedFromLabel": "Svaren skickas från",
+  "app.settings.email.managedOwnDomain":
+    "Använder du din egen adress? Vidarebefordra den till adressen ovan: inkommande e-post blir ärenden, och svaren går fortfarande ut från den här adressen, så de fortsätter att komma fram. Ställ in en ”Svara till”-adress nedan om du hellre vill att svaren kommer tillbaka till din egen brevlåda.",
+  "app.settings.email.managedSenderName": "Avsändarnamn som visas för kunderna",
   "app.settings.email.connectionNoProvider": "Ingen leverantör konfigurerad för den här arbetsytan: e-postmeddelandena loggas bara.",
   "app.settings.email.connectionNoVerify": "Den här transporten erbjuder inget anslutningstest.",
   "app.settings.email.testEmailSubject": "Sändningstest — {name}",

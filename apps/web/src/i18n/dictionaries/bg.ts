@@ -852,6 +852,16 @@ export const bg: Dictionary = {
   "app.settings.email.add": "Добавяне",
   "app.settings.email.auditProviderConfigured":
     "Конфигуриран доставчик за изпращане на имейли: {provider}",
+  "app.settings.email.auditSenderIdentity":
+    "Обновена самоличност на изпращача (управлявано изпращане)",
+  "app.settings.email.managedTitle": "Изпращане",
+  "app.settings.email.managedIntro":
+    "Отговорите се изпращат от Ваше име от адреса по-долу, през собствената удостоверена инфраструктура на Open HelpDesk. Няма нищо за конфигуриране и няма DNS запис за добавяне.",
+  "app.settings.email.managedFromLabel": "Отговорите се изпращат от",
+  "app.settings.email.managedOwnDomain":
+    "Използвате свой собствен адрес? Пренасочете го към адреса по-горе: входящата поща се превръща в тикети, а отговорите продължават да излизат от този адрес, така че да продължават да пристигат. Задайте адрес за отговор по-долу, ако предпочитате отговорите да се връщат във Вашата пощенска кутия.",
+  "app.settings.email.managedSenderName":
+    "Име на изпращача, показвано на клиентите",
   "app.settings.email.connectionNoProvider":
     "Няма конфигуриран доставчик за това работно пространство: имейлите само се записват в дневника.",
   "app.settings.email.connectionNoVerify": "Този транспорт не предлага тест на връзката.",

@@ -813,6 +813,14 @@ export const nb: Dictionary = {
   "app.settings.email.save": "Lagre",
   "app.settings.email.add": "Legg til",
   "app.settings.email.auditProviderConfigured": "Sendeleverandør for e-post konfigurert: {provider}",
+  "app.settings.email.auditSenderIdentity": "Avsenderidentitet oppdatert (administrert utsending)",
+  "app.settings.email.managedTitle": "Utsending",
+  "app.settings.email.managedIntro":
+    "Svarene sendes for deg fra adressen nedenfor, over Open HelpDesks egen autentiserte infrastruktur. Det er ingenting å konfigurere og ingen DNS-oppføring å legge til.",
+  "app.settings.email.managedFromLabel": "Svarene sendes fra",
+  "app.settings.email.managedOwnDomain":
+    "Bruker du din egen adresse? Videresend den til adressen ovenfor: innkommende e-post blir henvendelser, og svarene går fortsatt ut fra denne adressen, slik at de fortsetter å komme fram. Sett en «Svar til»-adresse nedenfor hvis du heller vil at svarene skal komme tilbake til din egen postkasse.",
+  "app.settings.email.managedSenderName": "Avsendernavn som vises for kundene",
   "app.settings.email.connectionNoProvider": "Ingen leverandør er konfigurert for dette arbeidsområdet: e-postene blir bare loggført.",
   "app.settings.email.connectionNoVerify": "Denne transporten tilbyr ingen tilkoblingstest.",
   "app.settings.email.testEmailSubject": "Testutsending — {name}",

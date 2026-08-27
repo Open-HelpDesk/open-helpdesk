@@ -817,6 +817,14 @@ export const es: Dictionary = {
   "app.settings.email.save": "Guardar",
   "app.settings.email.add": "Añadir",
   "app.settings.email.auditProviderConfigured": "Proveedor de envío de correo configurado: {provider}",
+  "app.settings.email.auditSenderIdentity": "Identidad del remitente actualizada (envío gestionado)",
+  "app.settings.email.managedTitle": "Envío",
+  "app.settings.email.managedIntro":
+    "Las respuestas se envían por ti desde la dirección de abajo, a través de la propia infraestructura autenticada de Open HelpDesk. No hay nada que configurar ni ningún registro DNS que añadir.",
+  "app.settings.email.managedFromLabel": "Las respuestas se envían desde",
+  "app.settings.email.managedOwnDomain":
+    "¿Usas tu propia dirección? Reenvíala a la dirección de arriba: el correo entrante se convierte en solicitudes y las respuestas siguen saliendo de esta dirección, así que seguirán llegando. Indica abajo una dirección de respuesta si prefieres que las contestaciones vuelvan a tu propio buzón.",
+  "app.settings.email.managedSenderName": "Nombre del remitente mostrado a los clientes",
   "app.settings.email.connectionNoProvider": "Ningún proveedor configurado para este espacio de trabajo: los correos solo se registran.",
   "app.settings.email.connectionNoVerify": "Este transporte no ofrece prueba de conexión.",
   "app.settings.email.testEmailSubject": "Prueba de envío — {name}",
