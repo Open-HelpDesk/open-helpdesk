@@ -10,6 +10,7 @@ import {
   type MailSendJob,
 } from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated, runScheduledRules, scanSlaTimers } from "@openhelpdesk/rules";
+import { deliverWebhookJob, type WebhookJob } from "@openhelpdesk/webhooks";
 import { QUEUE_NAMES, type QueueName } from "./queues";
 
 const connection = new IORedis(process.env.REDIS_URL ?? "redis://localhost:6380", {
@@ -59,6 +60,15 @@ const processors: Record<QueueName, Processor> = {
         console.log(`[imap-poll] ${poll.address}: ${poll.fetched} message(s) picked up`);
       }
     }
+  },
+  "webhook-dispatch": async (job) => {
+    const data = job.data as WebhookJob;
+    const { httpStatus } = await deliverWebhookJob(data);
+    // Throwing lets BullMQ retry with its backoff; a 2xx (or a hook that no
+    // longer exists) is final.
+    const ok = httpStatus === null ? false : httpStatus >= 200 && httpStatus < 300;
+    if (!ok && httpStatus !== null) throw new Error(`webhook responded ${httpStatus}`);
+    console.log(`[webhook-dispatch] ${data.event} → ${httpStatus ?? "no response"}`);
   },
   automations: async () => {
     const applied = await runScheduledRules();

@@ -1,9 +1,10 @@
 "use server";
 
-import { createHash, createHmac, randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { apiKeys, db, webhookDeliveries, webhooks } from "@openhelpdesk/db";
 import { and, eq } from "drizzle-orm";
+import { deliverWebhookJob, type WebhookEvent } from "@openhelpdesk/webhooks";
 import { requireManager } from "../guard";
 
 export type NewKeyState = { key: string; name: string } | null;
@@ -119,43 +120,15 @@ export async function resendDelivery(formData: FormData) {
     .from(webhookDeliveries)
     .where(and(eq(webhookDeliveries.tenantId, tenant.id), eq(webhookDeliveries.id, deliveryId)));
   if (!delivery) return;
-  const [hook] = await db
-    .select()
-    .from(webhooks)
-    .where(and(eq(webhooks.tenantId, tenant.id), eq(webhooks.id, delivery.webhookId)));
-  if (!hook) return;
 
-  const body = JSON.stringify(delivery.payload ?? {});
-  const signature = createHmac("sha256", hook.secret).update(body).digest("hex");
-
-  const started = Date.now();
-  let httpStatus: number | null = null;
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 5000);
-    const res = await fetch(hook.url, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-ohd-event": delivery.event,
-        "x-ohd-signature": `sha256=${signature}`,
-      },
-      body,
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
-    httpStatus = res.status;
-  } catch {
-    httpStatus = null; // network failure / timeout
-  }
-
-  await db.insert(webhookDeliveries).values({
+  // One signed-POST implementation, shared with the automatic dispatch
+  // (packages/webhooks): a resend must be byte-for-byte what the endpoint would
+  // have received, signature included — two copies of that would drift.
+  await deliverWebhookJob({
     tenantId: tenant.id,
-    webhookId: hook.id,
-    event: delivery.event,
-    httpStatus,
-    latencyMs: Date.now() - started,
-    payload: delivery.payload,
+    webhookId: delivery.webhookId,
+    event: delivery.event as WebhookEvent,
+    payload: (delivery.payload ?? {}) as Record<string, unknown>,
   });
 
   revalidatePath("/app/settings/api");

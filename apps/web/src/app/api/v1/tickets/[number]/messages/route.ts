@@ -10,6 +10,7 @@ import type { NextRequest } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { db, ticketMessages, tickets, users } from "@openhelpdesk/db";
 import { onContactMessage } from "@openhelpdesk/rules";
+import { dispatchWebhookEvent } from "@openhelpdesk/webhooks";
 import { apiError, apiJson, readJson, withApi } from "@/lib/api";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ number: string }> }) {
@@ -54,8 +55,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     await db.update(tickets).set({ updatedAt: new Date() }).where(eq(tickets.id, ticket.id));
 
-    // Only a public reply is an outbound event worth firing triggers for.
+    // Only a public reply is an outbound event worth firing triggers for
+    // (onContactMessage also dispatches message.created); an internal note gets
+    // the webhook on its own, since integrations care about both.
     if (!internal) await onContactMessage(tenant.id, ticket.id);
+    else await dispatchWebhookEvent(tenant.id, "message.created", ticket.id);
 
     return apiJson(
       {

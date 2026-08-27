@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { dispatchTicketChanged, dispatchWebhookEvent } from "@openhelpdesk/webhooks";
 import {
   contactOrganizations,
   contacts,
@@ -121,6 +122,13 @@ export async function sendReply(formData: FormData) {
     await maybeSendCsat(tenant.id, ticketId);
   }
 
+  // An agent's reply or note is a message event too — the customer channels go
+  // through onContactMessage, this is the other side of the same conversation.
+  await dispatchWebhookEvent(tenant.id, "message.created", ticketId);
+  if (patch.status) {
+    await dispatchTicketChanged(tenant.id, ticketId, ticket.status, patch.status);
+  }
+
   revalidatePath(`/app/tickets/${ticket.number}`);
   revalidatePath("/app/tickets");
 }
@@ -156,6 +164,13 @@ export async function updateTicketProps(formData: FormData) {
     if (status === "closed") patch.closedAt = new Date();
   }
 
+  // Read the status before writing: ticket.solved must fire on the transition,
+  // not every time a resolved ticket is touched again.
+  const [before] = await db
+    .select({ status: tickets.status })
+    .from(tickets)
+    .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.id, ticketId)));
+
   await db
     .update(tickets)
     .set(patch)
@@ -166,6 +181,12 @@ export async function updateTicketProps(formData: FormData) {
   }
 
   await runTriggers("ticket.updated", tenant.id, ticketId);
+  await dispatchTicketChanged(
+    tenant.id,
+    ticketId,
+    before?.status ?? null,
+    patch.status ?? before?.status ?? null,
+  );
 
   revalidatePath(`/app/tickets/${number}`);
   revalidatePath("/app/tickets");
@@ -197,6 +218,12 @@ export async function bulkUpdateTickets(input: {
       break;
     case "status":
       if (["new", "open", "waiting", "on_hold", "resolved", "closed"].includes(value)) {
+        // Statuses read before the write: a bulk pass can hold tickets that were
+        // already resolved, and those must not re-emit ticket.solved.
+        const previous = await db
+          .select({ id: tickets.id, status: tickets.status })
+          .from(tickets)
+          .where(scope);
         await db
           .update(tickets)
           .set({
@@ -206,6 +233,9 @@ export async function bulkUpdateTickets(input: {
             updatedAt: new Date(),
           })
           .where(scope);
+        for (const row of previous) {
+          await dispatchTicketChanged(tenant.id, row.id, row.status, value);
+        }
       }
       break;
     case "priority":

@@ -8,6 +8,7 @@
 import type { NextRequest } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { contacts, db, tickets, users } from "@openhelpdesk/db";
+import { dispatchTicketChanged } from "@openhelpdesk/webhooks";
 import { apiError, apiJson, readJson, serializeTicket, withApi } from "@/lib/api";
 
 const STATUSES = ["new", "open", "waiting", "on_hold", "resolved", "closed"] as const;
@@ -85,6 +86,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       .set(patch)
       .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.id, ticket.id)))
       .returning();
+
+    await dispatchTicketChanged(tenant.id, ticket.id, ticket.status, updated!.status);
 
     return apiJson(serializeTicket(updated!, await withRequester(tenant.id, updated!.requesterId)));
   });

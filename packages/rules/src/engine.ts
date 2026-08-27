@@ -1,4 +1,5 @@
 import { automationRules, db, tickets } from "@openhelpdesk/db";
+import { dispatchWebhookEvent } from "@openhelpdesk/webhooks";
 import { and, asc, eq, inArray, isNull } from "drizzle-orm";
 import { applyActions } from "./apply";
 import { evaluateConditions } from "./evaluate";
@@ -58,12 +59,18 @@ export async function runTriggers(
 export async function onTicketCreated(tenantId: string, ticketId: string): Promise<void> {
   await runTriggers("ticket.created", tenantId, ticketId);
   await applySlaOnCreate(tenantId, ticketId);
+  // Outbound webhooks last: triggers may still change the priority, and the
+  // payload should carry the ticket as it ended up. Dispatched from here rather
+  // than from each channel — email, portal, widget, API and IMAP all come
+  // through this function, so no channel can be forgotten.
+  await dispatchWebhookEvent(tenantId, "ticket.created", ticketId);
 }
 
 /** Orchestration after a contact reply (portal or email). */
 export async function onContactMessage(tenantId: string, ticketId: string): Promise<void> {
   await runTriggers("message.created", tenantId, ticketId);
   await onContactReplySla(tenantId, ticketId);
+  await dispatchWebhookEvent(tenantId, "message.created", ticketId);
 }
 
 /**

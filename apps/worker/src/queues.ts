@@ -5,6 +5,7 @@
  * - mail-send     : outbound sending with retries (email_deliveries log)
  * - imap-poll     : collection from the connected IMAP mailboxes (ST-03)
  * - automations   : time-based rules (follow-ups, auto-close at D+4)
+ * - webhook-dispatch : outbound webhooks (ST-10), signed POST with retries
  * - housekeeping  : purges (SsoAuthEvent 90 d, ticket trash 30 d, domain recheck 24 h)
  */
 export const QUEUE_NAMES = [
@@ -13,6 +14,7 @@ export const QUEUE_NAMES = [
   "mail-send",
   "imap-poll",
   "automations",
+  "webhook-dispatch",
   "housekeeping",
 ] as const;
 
