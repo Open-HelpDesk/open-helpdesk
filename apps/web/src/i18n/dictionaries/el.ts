@@ -352,10 +352,11 @@ export const el: Dictionary = {
   "app.tickets.loadErrorTitle": "Δεν ήταν δυνατή η φόρτωση αυτής της προβολής",
   "app.tickets.loadErrorBody": "Η σύνδεση με τον διακομιστή απέτυχε.",
   "app.tickets.retry": "Δοκιμάστε ξανά",
-  "app.tickets.firstLaunchTitle": "Συνδέστε το γραμματοκιβώτιό σας",
-  "app.tickets.firstLaunchBody":
-    "Κανένα τικέτ προς το παρόν. Προωθήστε τα email υποστήριξής σας στο {address} για να ξεκινήσετε.",
-  "app.tickets.configureEmail": "Ρύθμιση του email",
+  "app.tickets.firstLaunchTitle": "Τα εισερχόμενά σας είναι έτοιμα",
+  "app.tickets.firstLaunchBody": "Ό,τι στέλνεται στο {address} καταλήγει εδώ αυτόματα.",
+  "app.tickets.firstLaunchHint":
+    "Όσο περιμένετε το πρώτο τικέτ, ολοκληρώστε τη διαμόρφωση του χώρου εργασίας σας.",
+  "app.tickets.configureEmail": "Ολοκλήρωση διαμόρφωσης",
   "app.tickets.emptyTitle": "Κανένα τικέτ σε αυτήν την προβολή",
   "app.tickets.emptyBody": "Όλα έχουν διεκπεραιωθεί. Τα νέα email θα καταλήγουν εδώ αυτόματα.",
   "app.tickets.pageRange": "{from}–{to} από {total}",

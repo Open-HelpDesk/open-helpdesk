@@ -375,10 +375,11 @@ export const hr: Dictionary = {
   "app.tickets.loadErrorTitle": "Nije moguće učitati ovaj prikaz",
   "app.tickets.loadErrorBody": "Povezivanje sa serverom nije uspjelo.",
   "app.tickets.retry": "Pokušaj ponovno",
-  "app.tickets.firstLaunchTitle": "Povežite svoj sandučić e-pošte",
-  "app.tickets.firstLaunchBody":
-    "Za sada nema tiketa. Preusmjerite svoju e-poštu podrške na {address} da započnete.",
-  "app.tickets.configureEmail": "Postavi e-poštu",
+  "app.tickets.firstLaunchTitle": "Vaš ulazni sandučić je spreman",
+  "app.tickets.firstLaunchBody": "Sve što se pošalje na {address} automatski dolazi ovamo.",
+  "app.tickets.firstLaunchHint":
+    "Dok čekate prvi tiket, dovršite postavljanje svojeg radnog prostora.",
+  "app.tickets.configureEmail": "Dovrši postavljanje",
   "app.tickets.emptyTitle": "Nema tiketa u ovom prikazu",
   "app.tickets.emptyBody": "Sve je obrađeno. Nove poruke e-pošte automatski će dolaziti ovamo.",
   "app.tickets.pageRange": "{from}–{to} od {total}",

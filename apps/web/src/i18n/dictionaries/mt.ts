@@ -435,10 +435,12 @@ export const mt: Dictionary = {
   "app.tickets.loadErrorTitle": "Ma nistgħux intellgħu din il-vista",
   "app.tickets.loadErrorBody": "Il-konnessjoni mas-server falliet.",
   "app.tickets.retry": "Erġa' pprova",
-  "app.tickets.firstLaunchTitle": "Qabbad il-kaxxa tal-email tiegħek",
+  "app.tickets.firstLaunchTitle": "L-inbox tiegħek lest",
   "app.tickets.firstLaunchBody":
-    "Għadu l-ebda ticket. Ibgħat l-emails tas-support tiegħek lil {address} biex tibda.",
-  "app.tickets.configureEmail": "Ikkonfigura l-email",
+    "Kull ma jintbagħat lil {address} jasal hawn awtomatikament.",
+  "app.tickets.firstLaunchHint":
+    "Waqt li tistenna l-ewwel ticket, temm il-konfigurazzjoni tal-spazju tax-xogħol tiegħek.",
+  "app.tickets.configureEmail": "Temm il-konfigurazzjoni",
   "app.tickets.emptyTitle": "L-ebda ticket f'din il-vista",
   "app.tickets.emptyBody": "Kollox ittrattat. L-emails ġodda jaslu hawn awtomatikament.",
   "app.tickets.pageRange": "{from}–{to} minn {total}",

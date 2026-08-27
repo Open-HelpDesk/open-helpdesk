@@ -387,10 +387,12 @@ export const ro: Dictionary = {
   "app.tickets.loadErrorTitle": "Această vizualizare nu a putut fi încărcată",
   "app.tickets.loadErrorBody": "Conexiunea la server a eșuat.",
   "app.tickets.retry": "Încercați din nou",
-  "app.tickets.firstLaunchTitle": "Conectați-vă căsuța de email",
+  "app.tickets.firstLaunchTitle": "Inboxul dvs. este gata",
   "app.tickets.firstLaunchBody":
-    "Niciun tichet deocamdată. Redirecționați emailurile de asistență către {address} pentru a începe.",
-  "app.tickets.configureEmail": "Configurați emailul",
+    "Tot ce este trimis către {address} ajunge aici automat.",
+  "app.tickets.firstLaunchHint":
+    "În timp ce așteptați primul tichet, finalizați configurarea spațiului de lucru.",
+  "app.tickets.configureEmail": "Finalizați configurarea",
   "app.tickets.emptyTitle": "Niciun tichet în această vizualizare",
   "app.tickets.emptyBody": "Totul este tratat. Emailurile noi vor ajunge aici automat.",
   "app.tickets.pageRange": "{from}–{to} din {total}",

@@ -415,10 +415,12 @@ export const lt: Dictionary = {
   "app.tickets.loadErrorTitle": "Nepavyko įkelti šio rodinio",
   "app.tickets.loadErrorBody": "Nepavyko prisijungti prie serverio.",
   "app.tickets.retry": "Bandyti dar kartą",
-  "app.tickets.firstLaunchTitle": "Prijunkite savo el. pašto dėžutę",
+  "app.tickets.firstLaunchTitle": "Jūsų gautieji paruošti",
   "app.tickets.firstLaunchBody":
-    "Kol kas užklausų nėra. Norėdami pradėti, peradresuokite pagalbos el. laiškus adresu {address}.",
-  "app.tickets.configureEmail": "Nustatyti el. paštą",
+    "Viskas, kas išsiųsta adresu {address}, čia atsiras automatiškai.",
+  "app.tickets.firstLaunchHint":
+    "Kol laukiate pirmosios užklausos, užbaikite darbo erdvės sąranką.",
+  "app.tickets.configureEmail": "Užbaigti sąranką",
   "app.tickets.emptyTitle": "Šiame rodinyje užklausų nėra",
   "app.tickets.emptyBody": "Viskas sutvarkyta. Nauji el. laiškai čia atsiras automatiškai.",
   "app.tickets.pageRange": "{from}–{to} iš {total}",

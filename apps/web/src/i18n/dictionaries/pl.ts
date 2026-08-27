@@ -416,10 +416,12 @@ export const pl: Dictionary = {
   "app.tickets.loadErrorTitle": "Nie można wczytać tego widoku",
   "app.tickets.loadErrorBody": "Połączenie z serwerem nie powiodło się.",
   "app.tickets.retry": "Ponów próbę",
-  "app.tickets.firstLaunchTitle": "Podłącz skrzynkę pocztową",
+  "app.tickets.firstLaunchTitle": "Skrzynka jest gotowa",
   "app.tickets.firstLaunchBody":
-    "Nie ma jeszcze żadnych zgłoszeń. Aby zacząć, prosimy przekierować e-maile wsparcia na adres {address}.",
-  "app.tickets.configureEmail": "Skonfiguruj e-mail",
+    "Wszystko, co zostanie wysłane na adres {address}, pojawi się tutaj automatycznie.",
+  "app.tickets.firstLaunchHint":
+    "W oczekiwaniu na pierwsze zgłoszenie warto dokończyć konfigurację obszaru roboczego.",
+  "app.tickets.configureEmail": "Dokończ konfigurację",
   "app.tickets.emptyTitle": "Brak zgłoszeń w tym widoku",
   "app.tickets.emptyBody": "Wszystko obsłużone. Nowe e-maile pojawią się tutaj automatycznie.",
   "app.tickets.pageRange": "{from}–{to} z {total}",

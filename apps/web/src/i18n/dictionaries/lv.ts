@@ -394,10 +394,12 @@ export const lv: Dictionary = {
   "app.tickets.loadErrorTitle": "Neizdevās ielādēt šo skatu",
   "app.tickets.loadErrorBody": "Savienojums ar serveri neizdevās.",
   "app.tickets.retry": "Mēģināt vēlreiz",
-  "app.tickets.firstLaunchTitle": "Pievienojiet savu e-pasta kasti",
+  "app.tickets.firstLaunchTitle": "Jūsu iesūtne ir gatava",
   "app.tickets.firstLaunchBody":
-    "Pagaidām nav neviena pieteikuma. Lai sāktu, pārsūtiet atbalsta e-pastus uz {address}.",
-  "app.tickets.configureEmail": "Konfigurēt e-pastu",
+    "Viss, kas nosūtīts uz {address}, nonāks šeit automātiski.",
+  "app.tickets.firstLaunchHint":
+    "Kamēr gaidāt pirmo pieteikumu, pabeidziet darbvietas iestatīšanu.",
+  "app.tickets.configureEmail": "Pabeigt iestatīšanu",
   "app.tickets.emptyTitle": "Šajā skatā nav neviena pieteikuma",
   "app.tickets.emptyBody": "Viss ir apstrādāts. Jaunie e-pasti nonāks šeit automātiski.",
   "app.tickets.pageRange": "{from}–{to} no {total}",

@@ -343,10 +343,12 @@ export const et: Dictionary = {
   "app.tickets.loadErrorTitle": "Seda vaadet ei õnnestu laadida",
   "app.tickets.loadErrorBody": "Ühendus serveriga ebaõnnestus.",
   "app.tickets.retry": "Proovi uuesti",
-  "app.tickets.firstLaunchTitle": "Ühendage oma postkast",
+  "app.tickets.firstLaunchTitle": "Teie sisendkast on valmis",
   "app.tickets.firstLaunchBody":
-    "Pileteid veel ei ole. Alustuseks suunake oma tugikirjad edasi aadressile {address}.",
-  "app.tickets.configureEmail": "Seadista e-post",
+    "Kõik, mis saadetakse aadressile {address}, jõuab automaatselt siia.",
+  "app.tickets.firstLaunchHint":
+    "Kuni ootate esimest piletit, viige oma tööruumi seadistamine lõpuni.",
+  "app.tickets.configureEmail": "Lõpeta seadistamine",
   "app.tickets.emptyTitle": "Selles vaates pole pileteid",
   "app.tickets.emptyBody": "Kõik on läbi töötatud. Uued e-kirjad jõuavad siia automaatselt.",
   "app.tickets.pageRange": "{from}–{to} / {total}",

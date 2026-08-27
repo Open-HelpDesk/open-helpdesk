@@ -367,9 +367,14 @@ export const en = {
   "app.tickets.loadErrorTitle": "Couldn't load this view",
   "app.tickets.loadErrorBody": "The connection to the server failed.",
   "app.tickets.retry": "Try again",
-  "app.tickets.firstLaunchTitle": "Connect your mailbox",
-  "app.tickets.firstLaunchBody": "No tickets yet. Forward your support emails to {address} to get started.",
-  "app.tickets.configureEmail": "Set up email",
+  // Empty inbox on a new workspace. It used to say "Connect your mailbox",
+  // which was wrong the moment onboarding step 2 was done — the receiving
+  // address works from the start, so the inbox is connected and simply empty.
+  // It now states that, and points at the settings for the rest of the setup.
+  "app.tickets.firstLaunchTitle": "Your inbox is ready",
+  "app.tickets.firstLaunchBody": "Anything sent to {address} lands here automatically.",
+  "app.tickets.firstLaunchHint": "While you wait for the first one, finish setting up your workspace.",
+  "app.tickets.configureEmail": "Finish setup",
   "app.tickets.emptyTitle": "No tickets in this view",
   "app.tickets.emptyBody": "Everything is handled. New emails will land here automatically.",
   "app.tickets.pageRange": "{from}–{to} of {total}",

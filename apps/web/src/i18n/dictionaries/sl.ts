@@ -412,10 +412,12 @@ export const sl: Dictionary = {
   "app.tickets.loadErrorTitle": "Tega pogleda ni bilo mogoče naložiti",
   "app.tickets.loadErrorBody": "Povezava s strežnikom je bila neuspešna.",
   "app.tickets.retry": "Poskusi znova",
-  "app.tickets.firstLaunchTitle": "Povežite svoj poštni predal",
+  "app.tickets.firstLaunchTitle": "Vaš poštni predal je pripravljen",
   "app.tickets.firstLaunchBody":
-    "Zahtevkov še ni. Za začetek preusmerite svojo e-pošto podpore na {address}.",
-  "app.tickets.configureEmail": "Nastavi e-pošto",
+    "Vse, kar je poslano na {address}, samodejno prispe sem.",
+  "app.tickets.firstLaunchHint":
+    "Medtem ko čakate na prvi zahtevek, dokončajte nastavitev delovnega prostora.",
+  "app.tickets.configureEmail": "Dokončaj nastavitev",
   "app.tickets.emptyTitle": "V tem pogledu ni zahtevkov",
   "app.tickets.emptyBody": "Vse je obdelano. Nova e-pošta bo prispela sem samodejno.",
   "app.tickets.pageRange": "{from}–{to} od {total}",

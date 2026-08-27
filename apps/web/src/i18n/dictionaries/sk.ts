@@ -411,10 +411,12 @@ export const sk: Dictionary = {
   "app.tickets.loadErrorTitle": "Toto zobrazenie sa nepodarilo načítať",
   "app.tickets.loadErrorBody": "Pripojenie k serveru sa nepodarilo.",
   "app.tickets.retry": "Skúsiť znova",
-  "app.tickets.firstLaunchTitle": "Pripojte svoju e-mailovú schránku",
+  "app.tickets.firstLaunchTitle": "Vaša schránka je pripravená",
   "app.tickets.firstLaunchBody":
-    "Zatiaľ žiadne tikety. Začnite preposielaním e-mailov podpory na adresu {address}.",
-  "app.tickets.configureEmail": "Nastaviť e-mail",
+    "Všetko, čo niekto pošle na adresu {address}, tu pribudne automaticky.",
+  "app.tickets.firstLaunchHint":
+    "Kým čakáte na prvý tiket, dokončite nastavenie pracovného priestoru.",
+  "app.tickets.configureEmail": "Dokončiť nastavenie",
   "app.tickets.emptyTitle": "V tomto zobrazení nie sú žiadne tikety",
   "app.tickets.emptyBody": "Všetko je vyriešené. Nové e-maily tu pribudnú automaticky.",
   "app.tickets.pageRange": "{from}–{to} z {total}",

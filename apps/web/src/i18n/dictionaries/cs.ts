@@ -411,10 +411,11 @@ export const cs: Dictionary = {
   "app.tickets.loadErrorTitle": "Tento pohled se nepodařilo načíst",
   "app.tickets.loadErrorBody": "Připojení k serveru se nezdařilo.",
   "app.tickets.retry": "Zkusit znovu",
-  "app.tickets.firstLaunchTitle": "Připojte svou e-mailovou schránku",
-  "app.tickets.firstLaunchBody":
-    "Zatím žádné tikety. Začněte přeposíláním e-mailů podpory na adresu {address}.",
-  "app.tickets.configureEmail": "Nastavit e-mail",
+  "app.tickets.firstLaunchTitle": "Vaše doručená pošta je připravena",
+  "app.tickets.firstLaunchBody": "Vše, co je doručeno na {address}, sem přijde automaticky.",
+  "app.tickets.firstLaunchHint":
+    "Zatímco čekáte na první tiket, dokončete nastavení svého pracovního prostoru.",
+  "app.tickets.configureEmail": "Dokončit nastavení",
   "app.tickets.emptyTitle": "V tomto pohledu nejsou žádné tikety",
   "app.tickets.emptyBody": "Vše je vyřízeno. Nové e-maily sem přijdou automaticky.",
   "app.tickets.pageRange": "{from}–{to} z {total}",

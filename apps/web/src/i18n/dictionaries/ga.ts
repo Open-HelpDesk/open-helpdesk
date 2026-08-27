@@ -438,10 +438,12 @@ export const ga: Dictionary = {
   "app.tickets.loadErrorTitle": "Níorbh fhéidir an amharc seo a lódáil",
   "app.tickets.loadErrorBody": "Theip ar an gceangal leis an bhfreastalaí.",
   "app.tickets.retry": "Bain triail eile as",
-  "app.tickets.firstLaunchTitle": "Ceangail do bhosca ríomhphoist",
+  "app.tickets.firstLaunchTitle": "Tá do bhosca isteach réidh",
   "app.tickets.firstLaunchBody":
-    "Gan ticéid go fóill. Cuir do chuid ríomhphost tacaíochta ar aghaidh chuig {address} chun tosú.",
-  "app.tickets.configureEmail": "Socraigh an ríomhphost",
+    "Tagann gach rud a sheoltar chuig {address} isteach anseo go huathoibríoch.",
+  "app.tickets.firstLaunchHint":
+    "Agus tú ag fanacht ar an gcéad ticéad, cuir cumraíocht do spáis oibre i gcrích.",
+  "app.tickets.configureEmail": "Críochnaigh an chumraíocht",
   "app.tickets.emptyTitle": "Gan ticéid san amharc seo",
   "app.tickets.emptyBody":
     "Tá gach rud láimhseáilte. Tiocfaidh ríomhphoist nua isteach anseo go huathoibríoch.",

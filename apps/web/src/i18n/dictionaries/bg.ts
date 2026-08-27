@@ -339,10 +339,11 @@ export const bg: Dictionary = {
   "app.tickets.loadErrorTitle": "Този изглед не може да бъде зареден",
   "app.tickets.loadErrorBody": "Връзката със сървъра се провали.",
   "app.tickets.retry": "Нов опит",
-  "app.tickets.firstLaunchTitle": "Свържете имейл кутията си",
-  "app.tickets.firstLaunchBody":
-    "Още няма тикети. Пренасочвайте имейлите си за поддръжка към {address}, за да започнете.",
-  "app.tickets.configureEmail": "Настройване на имейла",
+  "app.tickets.firstLaunchTitle": "Вашата входяща поща е готова",
+  "app.tickets.firstLaunchBody": "Всичко, изпратено до {address}, пристига тук автоматично.",
+  "app.tickets.firstLaunchHint":
+    "Докато чакате първия тикет, довършете настройката на Вашето работно пространство.",
+  "app.tickets.configureEmail": "Завършване на настройката",
   "app.tickets.emptyTitle": "Няма тикети в този изглед",
   "app.tickets.emptyBody": "Всичко е обработено. Новите имейли ще пристигат тук автоматично.",
   "app.tickets.pageRange": "{from}–{to} от {total}",

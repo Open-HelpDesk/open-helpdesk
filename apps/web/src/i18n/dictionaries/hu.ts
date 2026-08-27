@@ -347,10 +347,12 @@ export const hu: Dictionary = {
   "app.tickets.loadErrorTitle": "Ez a nézet nem tölthető be",
   "app.tickets.loadErrorBody": "A kiszolgálóhoz való kapcsolódás nem sikerült.",
   "app.tickets.retry": "Újra",
-  "app.tickets.firstLaunchTitle": "Kapcsolja össze a postafiókját",
+  "app.tickets.firstLaunchTitle": "A beérkezettek készen állnak",
   "app.tickets.firstLaunchBody":
-    "Egyelőre nincs jegy. A kezdéshez továbbítsa a támogatási e-mailjeit a(z) {address} címre.",
-  "app.tickets.configureEmail": "E-mail beállítása",
+    "Minden, amit a(z) {address} címre küldenek, automatikusan itt jelenik meg.",
+  "app.tickets.firstLaunchHint":
+    "Amíg az első jegyre vár, fejezze be a munkaterület beállítását.",
+  "app.tickets.configureEmail": "Beállítás befejezése",
   "app.tickets.emptyTitle": "Ebben a nézetben nincs jegy",
   "app.tickets.emptyBody": "Minden elintézve. Az új e-mailek automatikusan itt jelennek meg.",
   "app.tickets.pageRange": "{from}–{to} / {total}",

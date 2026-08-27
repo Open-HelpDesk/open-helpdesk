@@ -490,50 +490,90 @@ export default async function TicketsPage({
               </div>
             </div>
           ) : firstLaunch ? (
+            /* Empty inbox on a new workspace. This used to read "Connect your
+               mailbox" with a button back into onboarding step 2 — wrong as soon
+               as that step was done, since the receiving address is live from
+               the start: the inbox is connected, just empty. It now says so and
+               sends the owner to the settings for the rest of the setup. */
             <div className="grid flex-1 place-items-center" style={{ padding: 24 }}>
               <div
                 className="flex flex-col items-center text-center"
                 style={{
-                  gap: 12,
-                  maxWidth: 380,
-                  padding: 32,
-                  border: "1px solid var(--acc-b)",
-                  background: "var(--acc-t)",
-                  borderRadius: 12,
+                  gap: 14,
+                  maxWidth: 420,
+                  padding: "32px 28px",
+                  border: "1px solid var(--line)",
+                  background: "var(--panel)",
+                  borderRadius: 14,
+                  boxShadow: "0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.10)",
                 }}
               >
-                <p style={{ fontSize: 16, fontWeight: 600 }}>
-                  {t("app.tickets.firstLaunchTitle")}
-                </p>
-                <p style={{ fontSize: 13, color: "var(--ink-2)", textWrap: "pretty" }}>
-                  {firstLaunchBefore}
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 12,
-                      background: "var(--panel)",
-                      padding: "1px 5px",
-                      borderRadius: 4,
-                      border: "1px solid var(--acc-b)",
-                    }}
-                  >
-                    {mailboxAddress}
-                  </span>
-                  {firstLaunchAfter}
-                </p>
-                <Link
-                  href="/onboarding?step=2"
-                  className="grid place-items-center font-semibold text-white"
+                <span
+                  className="grid place-items-center"
                   style={{
-                    height: 34,
-                    padding: "0 16px",
-                    borderRadius: 6,
-                    background: "var(--acc)",
-                    fontSize: 13,
+                    width: 44,
+                    height: 44,
+                    borderRadius: 12,
+                    background: "var(--acc-t)",
+                    border: "1px solid var(--acc-b)",
+                  }}
+                  aria-hidden
+                >
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--acc)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="5" width="18" height="14" rx="2.5" />
+                    <path d="M3.5 7.5 12 13l8.5-5.5" />
+                  </svg>
+                </span>
+
+                <div className="flex flex-col" style={{ gap: 6 }}>
+                  <p style={{ fontSize: 16.5, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                    {t("app.tickets.firstLaunchTitle")}
+                  </p>
+                  <p style={{ fontSize: 13.5, color: "var(--ink-2)", textWrap: "pretty" }}>
+                    {firstLaunchBefore}
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 12.5,
+                        background: "var(--sunk)",
+                        padding: "2px 6px",
+                        borderRadius: 5,
+                        border: "1px solid var(--line-2)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {mailboxAddress}
+                    </span>
+                    {firstLaunchAfter}
+                  </p>
+                </div>
+
+                <div
+                  className="flex flex-col items-center"
+                  style={{
+                    gap: 10,
+                    width: "100%",
+                    paddingTop: 14,
+                    borderTop: "1px solid var(--line-2)",
                   }}
                 >
-                  {t("app.tickets.configureEmail")}
-                </Link>
+                  <p style={{ fontSize: 12.5, color: "var(--ink-3)", textWrap: "pretty" }}>
+                    {t("app.tickets.firstLaunchHint")}
+                  </p>
+                  <Link
+                    href="/app/settings/general"
+                    className="ohd-hover-acc grid place-items-center font-semibold text-white"
+                    style={{
+                      height: 36,
+                      padding: "0 18px",
+                      borderRadius: 8,
+                      background: "var(--acc)",
+                      fontSize: 13,
+                    }}
+                  >
+                    {t("app.tickets.configureEmail")}
+                  </Link>
+                </div>
               </div>
             </div>
           ) : rows.length === 0 ? (
