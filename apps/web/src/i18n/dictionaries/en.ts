@@ -1612,6 +1612,25 @@ export const en = {
   "app.login.rateLimited": "Too many sign-in attempts. Wait a few seconds before trying again.",
   "app.login.notAMember": "This identity is not a member of this workspace.",
   "app.login.providerMissing": "This provider is not configured on this instance.",
+  "app.forgot.title": "Reset your password",
+  "app.forgot.body": "Enter your email and we'll send you a link to set a new password.",
+  "app.forgot.submit": "Send the reset link",
+  "app.forgot.pending": "Sending…",
+  "app.forgot.sent":
+    "If an account exists for that address, a reset link is on its way. Check your inbox — and your spam folder.",
+  "app.forgot.back": "Back to sign in",
+  "app.reset.title": "Set a new password",
+  "app.reset.body": "Choose a new password for your account.",
+  "app.reset.password": "New password",
+  "app.reset.placeholder": "At least 8 characters",
+  "app.reset.submit": "Save the new password",
+  "app.reset.pending": "Saving…",
+  "app.reset.success": "Password changed",
+  "app.reset.successBody": "Your password has been updated. You can now sign in with it.",
+  "app.reset.signIn": "Sign in",
+  "app.reset.invalid": "This reset link is invalid or has expired. Request a new one.",
+  "app.reset.tooShort": "The password must be at least 8 characters.",
+  "app.reset.missing": "This link is missing its token. Request a new reset link.",
 
   /* ===================== AG-02 Onboarding ===================== */
   /* The portal title in its own preview (home.title), the workspace name

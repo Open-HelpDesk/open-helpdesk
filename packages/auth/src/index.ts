@@ -88,6 +88,33 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification,
+    // A forgotten password used to be a dead end: the login link went nowhere
+    // and this callback did not exist, so Better Auth's reset endpoints stayed
+    // inert. Configuring it turns on /request-password-reset and /reset-password.
+    resetPasswordTokenExpiresIn: 3600,
+    // A reset is the recovery move after a possible compromise: cut every other
+    // session so a lurking one cannot outlive the new password.
+    revokeSessionsOnPasswordReset: true,
+    sendResetPassword: async ({ user, token }, request) => {
+      // The link must land on the workspace that asked, not on the apex.
+      // Better Auth builds its own url from baseURL (the apex, where www serves
+      // auth) — we ignore it and point at the tenant subdomain the request came
+      // in on, so the reset page renders in the right workspace. The token is
+      // the same value /reset-password consumes, so no apex round-trip is needed.
+      const host = request?.headers.get("host") ?? baseDomain;
+      const proto = host.startsWith("localhost") ? "http" : "https";
+      const url = `${proto}://${host}/reset-password?token=${token}`;
+      await sendInstanceEmail({
+        to: user.email,
+        // English only, like the verification email: a package has no access to
+        // the tenant's i18n dictionaries (apps/web/src/i18n).
+        subject: "Reset your password",
+        text:
+          `Someone asked to reset the password for your Open HelpDesk account.\n` +
+          `Set a new one here (the link expires in one hour):\n${url}\n\n` +
+          `If you did not ask for this, ignore this email — your password stays unchanged.`,
+      });
+    },
   },
   emailVerification: {
     sendOnSignUp: sendEmailVerification,
