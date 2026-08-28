@@ -1360,6 +1360,8 @@ export const ga: Dictionary = {
   "app.settings.sla.tabHours": "Uaireanta oibre",
   "app.settings.sla.newPolicy": "Beartas nua",
   "app.settings.sla.newPolicyTitle": "Beartas SLA nua",
+  "app.settings.sla.newPolicySubtitle":
+    "Ainm, raon, spriocanna de réir tosaíochta agus féilire. Socraíonn an t-ord cén beartas a bhaineann.",
   "app.settings.sla.policyName": "Ainm an bheartais",
   "app.settings.sla.policyNamePlaceholder": "Custaiméirí Premium",
   "app.settings.sla.conditionsLabelNew":

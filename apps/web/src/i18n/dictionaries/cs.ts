@@ -1304,6 +1304,8 @@ export const cs: Dictionary = {
   "app.settings.sla.tabHours": "Pracovní doba",
   "app.settings.sla.newPolicy": "Nová politika",
   "app.settings.sla.newPolicyTitle": "Nová politika SLA",
+  "app.settings.sla.newPolicySubtitle":
+    "Název, rozsah, cíle podle priority a kalendář. O uplatnění rozhoduje pozice v pořadí.",
   "app.settings.sla.policyName": "Název politiky",
   "app.settings.sla.policyNamePlaceholder": "Zákazníci Premium",
   "app.settings.sla.conditionsLabelNew":

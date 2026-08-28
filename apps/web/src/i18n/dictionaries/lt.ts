@@ -1315,6 +1315,8 @@ export const lt: Dictionary = {
   "app.settings.sla.tabHours": "Darbo laikas",
   "app.settings.sla.newPolicy": "Nauja politika",
   "app.settings.sla.newPolicyTitle": "Nauja SLA politika",
+  "app.settings.sla.newPolicySubtitle":
+    "Pavadinimas, aprėptis, tikslai pagal prioritetą ir kalendorius. Vieta eilėje lemia, kuri politika taikoma.",
   "app.settings.sla.policyName": "Politikos pavadinimas",
   "app.settings.sla.policyNamePlaceholder": "Premium klientai",
   "app.settings.sla.conditionsLabelNew":

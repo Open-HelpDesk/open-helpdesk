@@ -1364,6 +1364,8 @@ export const mt: Dictionary = {
   "app.settings.sla.tabHours": "Ħinijiet tax-xogħol",
   "app.settings.sla.newPolicy": "Politika ġdida",
   "app.settings.sla.newPolicyTitle": "Politika SLA ġdida",
+  "app.settings.sla.newPolicySubtitle":
+    "Isem, ambitu, miri skont il-prijorità u kalendarju. Il-pożizzjoni fl-ordni tiddeċiedi liema politika tapplika.",
   "app.settings.sla.policyName": "Isem tal-politika",
   "app.settings.sla.policyNamePlaceholder": "Klijenti Premium",
   "app.settings.sla.conditionsLabelNew":

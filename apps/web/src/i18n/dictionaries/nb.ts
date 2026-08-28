@@ -1080,6 +1080,8 @@ export const nb: Dictionary = {
   "app.settings.sla.tabHours": "Arbeidstider",
   "app.settings.sla.newPolicy": "Ny policy",
   "app.settings.sla.newPolicyTitle": "Ny SLA-policy",
+  "app.settings.sla.newPolicySubtitle":
+    "Navn, omfang, mål per prioritet og kalender. Rekkefølgen avgjør hvilken policy som gjelder.",
   "app.settings.sla.policyName": "Navn på policyen",
   "app.settings.sla.policyNamePlaceholder": "Premium-kunder",
   "app.settings.sla.conditionsLabelNew": "GJELDER HVIS — alle disse betingelsene (tomt = alle henvendelser)",

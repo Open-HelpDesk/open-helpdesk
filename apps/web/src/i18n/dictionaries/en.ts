@@ -1091,6 +1091,8 @@ export const en = {
   "app.settings.sla.tabHours": "Business hours",
   "app.settings.sla.newPolicy": "New policy",
   "app.settings.sla.newPolicyTitle": "New SLA policy",
+  "app.settings.sla.newPolicySubtitle":
+    "Name, scope, targets per priority and calendar. Position in the order decides which policy applies.",
   "app.settings.sla.policyName": "Policy name",
   "app.settings.sla.policyNamePlaceholder": "Premium customers",
   "app.settings.sla.conditionsLabelNew": "APPLIES IF — all of these conditions (empty = all tickets)",

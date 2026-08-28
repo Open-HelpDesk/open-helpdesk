@@ -1268,6 +1268,8 @@ export const ro: Dictionary = {
   "app.settings.sla.tabHours": "Program de lucru",
   "app.settings.sla.newPolicy": "Politică nouă",
   "app.settings.sla.newPolicyTitle": "Politică SLA nouă",
+  "app.settings.sla.newPolicySubtitle":
+    "Nume, domeniu, ținte pe prioritate și calendar. Poziția în ordine decide ce politică se aplică.",
   "app.settings.sla.policyName": "Numele politicii",
   "app.settings.sla.policyNamePlaceholder": "Clienți Premium",
   "app.settings.sla.conditionsLabelNew":

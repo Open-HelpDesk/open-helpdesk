@@ -1154,6 +1154,8 @@ export const bg: Dictionary = {
   "app.settings.sla.tabHours": "Работно време",
   "app.settings.sla.newPolicy": "Нова политика",
   "app.settings.sla.newPolicyTitle": "Нова SLA политика",
+  "app.settings.sla.newPolicySubtitle":
+    "Име, обхват, цели по приоритет и календар. Позицията в реда решава коя политика се прилага.",
   "app.settings.sla.policyName": "Име на политиката",
   "app.settings.sla.policyNamePlaceholder": "Premium клиенти",
   "app.settings.sla.conditionsLabelNew":

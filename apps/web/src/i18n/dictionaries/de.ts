@@ -1086,6 +1086,8 @@ export const de: Dictionary = {
   "app.settings.sla.tabHours": "Geschäftszeiten",
   "app.settings.sla.newPolicy": "Neue Richtlinie",
   "app.settings.sla.newPolicyTitle": "Neue SLA-Richtlinie",
+  "app.settings.sla.newPolicySubtitle":
+    "Name, Geltungsbereich, Ziele je Priorität und Kalender. Die Position in der Reihenfolge entscheidet, welche Richtlinie greift.",
   "app.settings.sla.policyName": "Name der Richtlinie",
   "app.settings.sla.policyNamePlaceholder": "Premium-Kunden",
   "app.settings.sla.conditionsLabelNew": "GILT, WENN — alle diese Bedingungen (leer = alle Tickets)",

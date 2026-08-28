@@ -195,13 +195,24 @@ export default async function SlaPage({
     }
   }
 
-  const newPolicyTrigger = (
-    <span
-      className="inline-flex items-center rounded-[9px] px-3.5 font-semibold"
-      style={{ color: "var(--on-brand)", height: 38, fontSize: 13, background: "var(--acc)" }}
+  /* V2 sends "New policy" to a page of its own (sla/new): the conditions
+     builder is a three-column grid, and the 420 px drawer folded it in half. */
+  const newPolicyLink = (
+    <Link
+      href="/app/settings/sla/new"
+      className="inline-flex items-center font-semibold"
+      style={{
+        color: "var(--on-brand)",
+        height: 38,
+        padding: "0 16px",
+        borderRadius: 9,
+        fontSize: 13.5,
+        background: "var(--brand)",
+        whiteSpace: "nowrap",
+      }}
     >
       {t("app.settings.sla.newPolicy")}
-    </span>
+    </Link>
   );
 
   return (
@@ -210,58 +221,7 @@ export default async function SlaPage({
         title={t("app.settings.sla.title")}
         subtitle={t("app.settings.sla.subtitle")}
         tabs={tabs}
-        actions={
-          activeTab === "policies" ? (
-            <Drawer trigger={newPolicyTrigger} title={t("app.settings.sla.newPolicyTitle")}>
-              <form action={createSlaPolicy} className="flex flex-col gap-4">
-                <label className="flex flex-col gap-1.5">
-                  <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                    {t("app.settings.sla.policyName")}
-                  </span>
-                  <input
-                    name="name"
-                    required
-                    placeholder={t("app.settings.sla.policyNamePlaceholder")}
-                    style={{
-                      height: 36,
-                      padding: "0 11px",
-                      border: "1px solid var(--line)",
-                      borderRadius: 9,
-                      background: "var(--bg)",
-                      color: "var(--ink)",
-                      fontSize: 13.5,
-                    }}
-                  />
-                </label>
-                <ConditionsBuilder
-                  name="conditions"
-                  label={t("app.settings.sla.conditionsLabelNew")}
-                  initial={[]}
-                />
-                <label className="flex flex-col gap-1.5">
-                  <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-                    {t("app.settings.sla.calendarApplied")}
-                  </span>
-                  <SelectBox name="businessHoursId">
-                    <option value="">{t("app.settings.sla.calendarNone")}</option>
-                    {calendars.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </SelectBox>
-                </label>
-                <button
-                  type="submit"
-                  className="self-start rounded-[9px] px-3.5 font-semibold"
-                  style={{ height: 38, fontSize: 13, background: "var(--acc)" }}
-                >
-                  {t("app.settings.sla.createPolicy")}
-                </button>
-              </form>
-            </Drawer>
-          ) : undefined
-        }
+        actions={activeTab === "policies" ? newPolicyLink : undefined}
       />
 
       {activeTab === "policies" ? (

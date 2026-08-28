@@ -73,6 +73,37 @@ export function PageHeader({
   );
 }
 
+/**
+ * Local breadcrumb of a sub-screen ("SLA policies / New policy").
+ *
+ * V2 gives the four sub-screens a page of their own rather than a drawer, and
+ * this line is what says where that page sits. It hangs just above the title,
+ * hence the negative margin: the header's own gap would otherwise read as a
+ * separation between two blocks instead of one heading.
+ */
+export function SubCrumb({
+  parent,
+  href,
+  current,
+}: {
+  parent: string;
+  href: string;
+  current: string;
+}) {
+  return (
+    <div
+      className="flex items-center"
+      style={{ gap: 9, fontSize: 13, color: "var(--ink-3)", marginTop: -8 }}
+    >
+      <Link href={href} style={{ color: "var(--brand-2)", fontWeight: 500 }}>
+        {parent}
+      </Link>
+      <span>/</span>
+      <span style={{ color: "var(--ink-2)" }}>{current}</span>
+    </div>
+  );
+}
+
 /** Segmented control — --sunk container, radius 7, padding 2, active segment panel background/600. */
 export function SegTabs({ tabs }: { tabs: PageTab[] }) {
   return (

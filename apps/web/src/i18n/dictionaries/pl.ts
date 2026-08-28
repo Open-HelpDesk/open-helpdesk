@@ -1319,6 +1319,8 @@ export const pl: Dictionary = {
   "app.settings.sla.tabHours": "Godziny pracy",
   "app.settings.sla.newPolicy": "Nowa zasada",
   "app.settings.sla.newPolicyTitle": "Nowa zasada SLA",
+  "app.settings.sla.newPolicySubtitle":
+    "Nazwa, zakres, cele według priorytetu i kalendarz. Pozycja w kolejności decyduje, która zasada obowiązuje.",
   "app.settings.sla.policyName": "Nazwa zasady",
   "app.settings.sla.policyNamePlaceholder": "Klienci Premium",
   "app.settings.sla.conditionsLabelNew":

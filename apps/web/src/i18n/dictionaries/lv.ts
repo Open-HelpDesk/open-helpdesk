@@ -1262,6 +1262,8 @@ export const lv: Dictionary = {
   "app.settings.sla.tabHours": "Darba laiks",
   "app.settings.sla.newPolicy": "Jauna politika",
   "app.settings.sla.newPolicyTitle": "Jauna SLA politika",
+  "app.settings.sla.newPolicySubtitle":
+    "Nosaukums, tvērums, mērķi pēc prioritātes un kalendārs. Vieta secībā nosaka, kura politika tiek piemērota.",
   "app.settings.sla.policyName": "Politikas nosaukums",
   "app.settings.sla.policyNamePlaceholder": "Premium klienti",
   "app.settings.sla.conditionsLabelNew":

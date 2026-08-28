@@ -1183,6 +1183,8 @@ export const el: Dictionary = {
   "app.settings.sla.tabHours": "Ώρες λειτουργίας",
   "app.settings.sla.newPolicy": "Νέα πολιτική",
   "app.settings.sla.newPolicyTitle": "Νέα πολιτική SLA",
+  "app.settings.sla.newPolicySubtitle":
+    "Όνομα, εμβέλεια, στόχοι ανά προτεραιότητα και ημερολόγιο. Η θέση στη σειρά καθορίζει ποια πολιτική ισχύει.",
   "app.settings.sla.policyName": "Όνομα της πολιτικής",
   "app.settings.sla.policyNamePlaceholder": "Πελάτες Premium",
   "app.settings.sla.conditionsLabelNew":

@@ -1158,6 +1158,8 @@ export const et: Dictionary = {
   "app.settings.sla.tabHours": "Tööaeg",
   "app.settings.sla.newPolicy": "Uus poliitika",
   "app.settings.sla.newPolicyTitle": "Uus SLA-poliitika",
+  "app.settings.sla.newPolicySubtitle":
+    "Nimi, ulatus, sihid prioriteedi kaupa ja kalender. Järjekord otsustab, milline reegel kehtib.",
   "app.settings.sla.policyName": "Poliitika nimi",
   "app.settings.sla.policyNamePlaceholder": "Premium-kliendid",
   "app.settings.sla.conditionsLabelNew":

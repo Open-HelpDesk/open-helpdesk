@@ -8,6 +8,7 @@
     "./settings/agent-sso/page": "./src/settings/agent-sso/page.tsx",
     "./settings/agent-sso/actions": "./src/settings/agent-sso/actions.ts",
     "./settings/customer-sso/page": "./src/settings/customer-sso/page.tsx",
+    "./settings/customer-sso/detail-page": "./src/settings/customer-sso/detail-page.tsx",
     "./settings/audit/page": "./src/settings/audit/page.tsx",
     "./settings/audit/export-route": "./src/settings/audit/export-route.ts",
     "./portal/sso-section": "./src/portal/sso-section.tsx",

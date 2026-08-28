@@ -1084,6 +1084,8 @@ export const nl: Dictionary = {
   "app.settings.sla.tabHours": "Werktijden",
   "app.settings.sla.newPolicy": "Nieuw beleid",
   "app.settings.sla.newPolicyTitle": "Nieuw SLA-beleid",
+  "app.settings.sla.newPolicySubtitle":
+    "Naam, bereik, doelen per prioriteit en kalender. De volgorde bepaalt welk beleid geldt.",
   "app.settings.sla.policyName": "Naam van het beleid",
   "app.settings.sla.policyNamePlaceholder": "Premium-klanten",
   "app.settings.sla.conditionsLabelNew": "GELDT ALS — al deze voorwaarden (leeg = alle tickets)",

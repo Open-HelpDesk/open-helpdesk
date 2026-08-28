@@ -4,7 +4,15 @@ import { automationRules, db, teams, users } from "@openhelpdesk/db";
 import { and, asc, eq, ne } from "drizzle-orm";
 import type { Action, Condition } from "@/components/rule-builders";
 import { RuleEditorBody } from "@/components/settings-rule-editor";
-import { Field, PageHeader, PageShell, SaveBar, TextInput, Toggle } from "@/components/settings-page";
+import {
+  Field,
+  PageHeader,
+  PageShell,
+  SaveBar,
+  SubCrumb,
+  TextInput,
+  Toggle,
+} from "@/components/settings-page";
 import { getT, type Translate } from "@/i18n/server";
 import { saveRule, testRule } from "../actions";
 
@@ -104,8 +112,16 @@ export default async function RuleEditorPage({
 
   return (
     <PageShell>
+      {/* V2 names the sub-screen after what is being edited, and says where it
+          sits. The generic "Automations" title left the two screens looking like
+          the same one. */}
+      <SubCrumb
+        parent={t("app.settings.rules.automationsTitle")}
+        href="/app/settings/automations"
+        current={isNew ? t("app.settings.rules.ruleNew") : rule!.name}
+      />
       <PageHeader
-        title={t("app.settings.rules.automationsTitle")}
+        title={isNew ? t("app.settings.rules.ruleNew") : rule!.name}
         subtitle={t("app.settings.rules.automationsSubtitle")}
         tabs={tabs}
       />

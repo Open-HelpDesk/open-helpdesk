@@ -1171,6 +1171,8 @@ export const hu: Dictionary = {
   "app.settings.sla.tabHours": "Munkaidő",
   "app.settings.sla.newPolicy": "Új szabályzat",
   "app.settings.sla.newPolicyTitle": "Új SLA-szabályzat",
+  "app.settings.sla.newPolicySubtitle":
+    "Név, hatókör, prioritásonkénti célok és naptár. A sorrendbeli hely dönti el, melyik szabály érvényes.",
   "app.settings.sla.policyName": "A szabályzat neve",
   "app.settings.sla.policyNamePlaceholder": "Prémium ügyfelek",
   "app.settings.sla.conditionsLabelNew":

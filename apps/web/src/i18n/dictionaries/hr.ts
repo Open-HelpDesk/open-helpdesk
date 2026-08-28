@@ -1247,6 +1247,8 @@ export const hr: Dictionary = {
   "app.settings.sla.tabHours": "Radno vrijeme",
   "app.settings.sla.newPolicy": "Nova politika",
   "app.settings.sla.newPolicyTitle": "Nova SLA politika",
+  "app.settings.sla.newPolicySubtitle":
+    "Naziv, opseg, ciljevi po prioritetu i kalendar. Položaj u redoslijedu odlučuje koja se politika primjenjuje.",
   "app.settings.sla.policyName": "Naziv politike",
   "app.settings.sla.policyNamePlaceholder": "Premium klijenti",
   "app.settings.sla.conditionsLabelNew":

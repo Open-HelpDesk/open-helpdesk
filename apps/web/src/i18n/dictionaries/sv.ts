@@ -1080,6 +1080,8 @@ export const sv: Dictionary = {
   "app.settings.sla.tabHours": "Öppettider",
   "app.settings.sla.newPolicy": "Ny policy",
   "app.settings.sla.newPolicyTitle": "Ny SLA-policy",
+  "app.settings.sla.newPolicySubtitle":
+    "Namn, omfattning, mål per prioritet och kalender. Ordningen avgör vilken policy som gäller.",
   "app.settings.sla.policyName": "Policyns namn",
   "app.settings.sla.policyNamePlaceholder": "Premiumkunder",
   "app.settings.sla.conditionsLabelNew": "GÄLLER OM — alla dessa villkor (tomt = alla ärenden)",

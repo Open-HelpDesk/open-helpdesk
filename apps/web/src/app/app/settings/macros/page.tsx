@@ -1,20 +1,16 @@
+import Link from "next/link";
 import { requireAgent } from "@/lib/session";
 import { db, macros, teams } from "@openhelpdesk/db";
 import { asc, eq } from "drizzle-orm";
 import { macroActionsSummary } from "@/lib/rule-labels";
-import { STATUS_KEYS } from "@/lib/format";
-import { getT, type Translate } from "@/i18n/server";
+import { getT } from "@/i18n/server";
 import {
   EmptyState,
-  Field,
   PageHeader,
   PageShell,
-  Select,
   StatusPill,
   TextInput,
 } from "@/components/settings-page";
-import { Drawer } from "@/components/settings-overlays";
-import { deleteMacro, saveMacro } from "./actions";
 
 type MacroRow = typeof macros.$inferSelect;
 
@@ -28,9 +24,9 @@ type MacroRow = typeof macros.$inferSelect;
 const CATEGORY_ORDER = ["Common replies", "Escalation", "Billing"];
 
 /**
- * ST-06 — Macros (1000 px): search bar + "+ New macro", groups by category
- * (11px/700 uppercase title) in one card per group, generated action summary,
- * scope pill, 30-day usage, editor in a 420 px drawer.
+ * ST-06 — Macros: search bar + "+ New macro", groups by category (11px/700
+ * uppercase title) in one card per group, generated action summary, scope pill,
+ * 30-day usage. A macro's name opens ST-06b, its own page.
  */
 export default async function MacrosPage({
   searchParams,
@@ -100,20 +96,21 @@ export default async function MacrosPage({
             />
           </form>
           <span className="flex-1" />
-          <Drawer
-            title={t("app.settings.rules.macroCreateTitle")}
-            trigger={<>{t("app.settings.rules.macroNew")}</>}
-            triggerClassName="inline-flex items-center justify-center rounded-md font-semibold"
-            triggerStyle={{
-              height: 34,
-              padding: "0 14px",
-              fontSize: 13,
-              background: "var(--acc)",
+          <Link
+            href="/app/settings/macros/new"
+            className="inline-flex items-center justify-center font-semibold"
+            style={{
+              height: 38,
+              padding: "0 16px",
+              borderRadius: 9,
+              fontSize: 13.5,
+              background: "var(--brand)",
               color: "var(--on-brand)",
+              whiteSpace: "nowrap",
             }}
           >
-            <MacroForm teams={teamRows} t={t} />
-          </Drawer>
+            {t("app.settings.rules.macroNew")}
+          </Link>
         </div>
 
         {rows.length === 0 ? (
@@ -153,14 +150,13 @@ export default async function MacrosPage({
                       style={{ padding: "12px 15px", gap: 13, borderColor: "var(--line-2)" }}
                     >
                       <div className="min-w-0 flex-1">
-                        <Drawer
-                          title={t("app.settings.rules.macroEditTitle")}
-                          trigger={<>{m.name}</>}
-                          triggerClassName="block truncate text-left font-semibold"
-                          triggerStyle={{ fontSize: 13.5, color: "var(--ink)" }}
+                        <Link
+                          href={`/app/settings/macros/${m.id}`}
+                          className="block truncate text-left font-semibold"
+                          style={{ fontSize: 13.5, color: "var(--ink)" }}
                         >
-                          <MacroForm macro={m} teams={teamRows} t={t} />
-                        </Drawer>
+                          {m.name}
+                        </Link>
                         <p className="truncate" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
                           {macroActionsSummary(t, actions, teamNameById)}
                         </p>
@@ -184,154 +180,5 @@ export default async function MacrosPage({
         )}
       </div>
     </PageShell>
-  );
-}
-
-/** 420 px edit drawer: name, category, inserted text, applied status, availability. */
-function MacroForm({
-  macro,
-  teams,
-  t,
-}: {
-  macro?: MacroRow;
-  teams: { id: string; name: string }[];
-  t: Translate;
-}) {
-  const actions = (macro?.actions as { type: string; value?: unknown }[]) ?? [];
-  const insert = actions.find((a) => a.type === "insert_text" || a.type === "insert_note");
-  const insertKind = insert?.type === "insert_note" ? "insert_note" : "insert_text";
-  const insertText = String(insert?.value ?? "");
-  const setStatus = String(actions.find((a) => a.type === "set_status")?.value ?? "");
-  const availability =
-    macro?.availability === "team" && macro.teamId ? `team:${macro.teamId}` : "everyone";
-  const control = { minHeight: 36, padding: "7px 11px", fontSize: 13.5 } as const;
-
-  return (
-    <form action={saveMacro} className="flex h-full flex-col" style={{ gap: 14 }}>
-      {macro && <input type="hidden" name="macroId" value={macro.id} />}
-
-      <Field label={t("app.settings.rules.macroName")}>
-        <TextInput
-          name="name"
-          required
-          defaultValue={macro?.name ?? ""}
-          placeholder={t("app.settings.rules.ackReceipt")}
-          style={control}
-        />
-      </Field>
-
-      <Field label={t("app.settings.rules.macroCategory")}>
-        <TextInput
-          name="category"
-          defaultValue={macro?.category ?? ""}
-          placeholder={t("app.settings.rules.macroCategoryPlaceholder")}
-          style={control}
-        />
-      </Field>
-
-      <div className="flex flex-col gap-1.5">
-        <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
-          {t("app.settings.rules.macroInsertKind")}
-        </span>
-        <div className="flex gap-4" style={{ fontSize: 13.5 }}>
-          <label className="flex items-center gap-1.5">
-            <input
-              type="radio"
-              name="insertKind"
-              value="insert_text"
-              defaultChecked={insertKind === "insert_text"}
-            />
-            {t("app.settings.rules.macroInsertText")}
-          </label>
-          <label className="flex items-center gap-1.5">
-            <input
-              type="radio"
-              name="insertKind"
-              value="insert_note"
-              defaultChecked={insertKind === "insert_note"}
-            />
-            {t("app.settings.rules.macroInsertNote")}
-          </label>
-        </div>
-      </div>
-
-      <Field
-        label={t("app.settings.rules.macroText")}
-        hint={t("app.settings.rules.macroTextHint")}
-      >
-        <textarea
-          name="insertText"
-          required
-          rows={4}
-          defaultValue={insertText}
-          className="rounded-md border"
-          style={{
-            minHeight: 96,
-            padding: "10px 11px",
-            fontSize: 13.5,
-            lineHeight: 1.55,
-            borderColor: "var(--line)",
-            background: "var(--bg)",
-            color: "var(--ink)",
-          }}
-        />
-      </Field>
-
-      <Field label={t("app.settings.rules.macroStatus")}>
-        <Select name="setStatus" defaultValue={setStatus} style={control}>
-          <option value="">{t("app.settings.rules.macroStatusNone")}</option>
-          {Object.entries(STATUS_KEYS).map(([k, v]) => (
-            <option key={k} value={k}>
-              {t(v)}
-            </option>
-          ))}
-        </Select>
-      </Field>
-
-      <Field
-        label={t("app.settings.rules.macroAvailability")}
-        hint={t("app.settings.rules.macroAvailabilityHint")}
-      >
-        <Select name="availability" defaultValue={availability} style={control}>
-          <option value="everyone">{t("app.settings.rules.macroScopeEveryone")}</option>
-          {teams.map((team) => (
-            <option key={team.id} value={`team:${team.id}`}>
-              {team.name}
-            </option>
-          ))}
-        </Select>
-      </Field>
-
-      <div
-        className="mt-auto flex items-center gap-2 border-t pt-3"
-        style={{ borderColor: "var(--line)" }}
-      >
-        {macro && (
-          <button
-            type="submit"
-            formAction={deleteMacro}
-            className="ohd-hover-edge-ink rounded-md border font-medium"
-            style={{
-              height: 34,
-              padding: "0 14px",
-              fontSize: 13,
-              borderColor: "var(--dang)",
-              color: "var(--dang)",
-              background: "var(--panel)",
-            }}
-          >
-            {t("app.settings.rules.delete")}
-          </button>
-        )}
-        <span className="flex-1" />
-        <button
-          type="submit"
-          className="rounded-md font-semibold"
-          style={{ color: "var(--on-brand)", height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
-        >
-          {t("app.settings.rules.save")}
-        </button>
-      </div>
-    </form>
   );
 }

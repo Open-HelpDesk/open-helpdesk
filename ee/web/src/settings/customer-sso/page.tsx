@@ -448,11 +448,11 @@ export default async function CustomerSsoPage({
               const status = c?.status ?? "pending";
               const failures = failuresByOrg.get(org.id) ?? 0;
               return (
-                <Drawer
+                <Link
                   key={org.id}
-                  title={t("app.settings.sso.drawerTitle", { name: org.name })}
-                  triggerClassName="ohd-hover"
-                  triggerStyle={{
+                  href={`/app/settings/customer-sso/${org.id}`}
+                  className="ohd-hover"
+                  style={{
                     display: "grid",
                     gridTemplateColumns: PARK_GRID,
                     minWidth: PARK_MIN_WIDTH,
@@ -465,8 +465,8 @@ export default async function CustomerSsoPage({
                     fontSize: 12.5,
                     ...(c && status === "error" ? { background: "var(--dang-t)" } : {}),
                   }}
-                  trigger={
-                    <>
+                >
+                  <>
                       <span>
                         <span
                           className="inline-block rounded-full"
@@ -513,17 +513,7 @@ export default async function CustomerSsoPage({
                         {admin?.contactEmail ?? "—"}
                       </span>
                     </>
-                  }
-                >
-                  <OrgDetail
-                    t={t}
-                    org={org.name}
-                    connection={c}
-                    domains={orgDomains}
-                    admin={admin ?? null}
-                    failures24h={failures}
-                  />
-                </Drawer>
+                </Link>
               );
             })}
           </div>
@@ -669,7 +659,8 @@ function DrawerField({
 }
 
 /** Detail drawer — read-only, only action: disable the connection. */
-function OrgDetail({
+/** Exported: ST-14b renders the same block on its own page (detail-page.tsx). */
+export function OrgSsoDetail({
   t,
   org,
   connection,

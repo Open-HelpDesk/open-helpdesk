@@ -1082,6 +1082,8 @@ export const fi: Dictionary = {
   "app.settings.sla.tabHours": "Palveluajat",
   "app.settings.sla.newPolicy": "Uusi käytäntö",
   "app.settings.sla.newPolicyTitle": "Uusi SLA-käytäntö",
+  "app.settings.sla.newPolicySubtitle":
+    "Nimi, laajuus, tavoitteet prioriteeteittain ja kalenteri. Järjestys ratkaisee, mikä käytäntö pätee.",
   "app.settings.sla.policyName": "Käytännön nimi",
   "app.settings.sla.policyNamePlaceholder": "Premium-asiakkaat",
   "app.settings.sla.conditionsLabelNew": "SOVELLETAAN JOS — kaikki nämä ehdot (tyhjä = kaikki pyynnöt)",

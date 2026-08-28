@@ -1311,6 +1311,8 @@ export const sl: Dictionary = {
   "app.settings.sla.tabHours": "Delovni čas",
   "app.settings.sla.newPolicy": "Nov pravilnik",
   "app.settings.sla.newPolicyTitle": "Nov pravilnik SLA",
+  "app.settings.sla.newPolicySubtitle":
+    "Ime, obseg, cilji po prioriteti in koledar. Položaj v vrstnem redu odloči, katera politika velja.",
   "app.settings.sla.policyName": "Ime pravilnika",
   "app.settings.sla.policyNamePlaceholder": "Stranke Premium",
   "app.settings.sla.conditionsLabelNew": "VELJA, ČE — vsi ti pogoji (prazno = vsi zahtevki)",

@@ -1085,6 +1085,8 @@ export const pt: Dictionary = {
   "app.settings.sla.tabHours": "Horário de expediente",
   "app.settings.sla.newPolicy": "Nova política",
   "app.settings.sla.newPolicyTitle": "Nova política de SLA",
+  "app.settings.sla.newPolicySubtitle":
+    "Nome, âmbito, objetivos por prioridade e calendário. A posição na ordem decide qual política se aplica.",
   "app.settings.sla.policyName": "Nome da política",
   "app.settings.sla.policyNamePlaceholder": "Clientes Premium",
   "app.settings.sla.conditionsLabelNew": "APLICA-SE SE — todas estas condições (vazio = todos os pedidos)",
