@@ -30,6 +30,13 @@ export async function maybeSendCsat(tenantId: string, ticketId: string): Promise
     .from(tickets)
     .where(and(eq(tickets.tenantId, tenantId), eq(tickets.id, ticketId), isNull(tickets.csatSentAt)));
   if (!ticket || ticket.status !== "resolved") return false;
+  /*
+   * The agent can turn the survey off for this ticket from the Resolution tab
+   * (V2). Checked here rather than at each caller: three call sites resolve a
+   * ticket, and a switch honoured by two of them is a switch that cannot be
+   * trusted.
+   */
+  if (!ticket.resolutionSendCsat) return false;
 
   const [tenant] = await db.select().from(tenants).where(eq(tenants.id, tenantId));
   const config = (tenant?.csatConfig ?? {}) as CsatConfig;

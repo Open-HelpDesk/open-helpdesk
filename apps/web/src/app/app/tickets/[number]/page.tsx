@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { and, asc, eq } from "drizzle-orm";
+import { db, kbArticles } from "@openhelpdesk/db";
 import { isManager, requireAgent } from "@/lib/session";
 import {
   DEFAULT_VIEWS,
@@ -30,6 +32,7 @@ import {
   type SlaEvent,
 } from "./side-panels";
 import { updateTicketProps } from "../actions";
+import { resolveTicket } from "./resolve-actions";
 import { ReplyEditor } from "./reply-editor";
 
 /**
@@ -161,10 +164,18 @@ export default async function TicketPage({
 
   const csatEnabled = (tenant.csatConfig as { enabled?: boolean } | null)?.enabled === true;
 
-  const [noteRows, linkRows, orgTickets] = await Promise.all([
+  const [noteRows, linkRows, orgTickets, publishedArticles] = await Promise.all([
     listContactNotes(tenant.id, requester.id),
     listTicketLinks(tenant.id, ticket.id),
     sameOrgTickets(tenant.id, ticket.organizationId, ticket.id),
+    // Only published articles: proposing a draft sends the customer to a page
+    // that is not there.
+    db
+      .select({ id: kbArticles.id, title: kbArticles.title })
+      .from(kbArticles)
+      .where(and(eq(kbArticles.tenantId, tenant.id), eq(kbArticles.status, "published")))
+      .orderBy(asc(kbArticles.title))
+      .limit(50),
   ]);
 
   const pinnedNotes: PinnedNote[] = noteRows.map((n) => ({
@@ -624,7 +635,105 @@ export default async function TicketPage({
                   </form>
                 </div>
               ) : (
-                <>
+                /* One form: the cause, the article, what the customer is told,
+                   the survey switch and the button that commits all of it. Split
+                   across several, half of it would be saved and half not. */
+                <form action={resolveTicket} className="flex flex-col" style={{ gap: 14 }}>
+                  <input type="hidden" name="ticketId" value={ticket.id} />
+                  <input type="hidden" name="number" value={ticket.number} />
+
+                  <div className="grid gap-3" style={{ gridTemplateColumns: "1fr 1fr" }}>
+                    <label className="flex flex-col" style={{ gap: 6 }}>
+                      <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink-2)" }}>
+                        {t("app.ticket.resolutionCause")}
+                      </span>
+                      <select
+                        name="cause"
+                        defaultValue=""
+                        style={{
+                          height: 40,
+                          padding: "0 12px",
+                          border: "1px solid var(--line)",
+                          borderRadius: 9,
+                          background: "var(--panel)",
+                          fontSize: 13.5,
+                        }}
+                      >
+                        <option value="">{t("app.ticket.resolutionNone")}</option>
+                        <option value="product_bug">{t("app.ticket.causeProductBug")}</option>
+                        <option value="configuration">{t("app.ticket.causeConfiguration")}</option>
+                        <option value="user_error">{t("app.ticket.causeUserError")}</option>
+                        <option value="third_party">{t("app.ticket.causeThirdParty")}</option>
+                        <option value="duplicate">{t("app.ticket.causeDuplicate")}</option>
+                        <option value="no_fault_found">{t("app.ticket.causeNoFault")}</option>
+                      </select>
+                    </label>
+
+                    <label className="flex min-w-0 flex-col" style={{ gap: 6 }}>
+                      <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink-2)" }}>
+                        {t("app.ticket.resolutionArticle")}
+                      </span>
+                      <select
+                        name="articleId"
+                        defaultValue=""
+                        style={{
+                          height: 40,
+                          padding: "0 12px",
+                          border: "1px solid var(--line)",
+                          borderRadius: 9,
+                          background: "var(--panel)",
+                          fontSize: 13.5,
+                        }}
+                      >
+                        <option value="">{t("app.ticket.resolutionNone")}</option>
+                        {publishedArticles.map((a) => (
+                          <option key={a.id} value={a.id}>
+                            {a.title}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+
+                  <label className="flex flex-col" style={{ gap: 6 }}>
+                    <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ink-2)" }}>
+                      {t("app.ticket.resolutionSummary")}{" "}
+                      <span style={{ fontWeight: 400, color: "var(--ink-3)" }}>
+                        {t("app.ticket.resolutionSummaryHint")}
+                      </span>
+                    </span>
+                    <textarea
+                      name="summary"
+                      rows={4}
+                      className="w-full resize-y outline-none"
+                      style={{
+                        border: "1px solid var(--line)",
+                        borderRadius: 10,
+                        background: "var(--panel)",
+                        padding: "12px 13px",
+                        fontSize: 13.5,
+                        lineHeight: 1.6,
+                      }}
+                    />
+                  </label>
+
+                  {/* Tells the action the question was asked, so an unchecked box
+                      means "no" and an absent box means "not asked". */}
+                  {csatEnabled && <input type="hidden" name="csatShown" value="1" />}
+                  {csatEnabled && (
+                    <label className="flex items-center" style={{ gap: 10 }}>
+                      <input
+                        type="checkbox"
+                        name="sendCsat"
+                        defaultChecked
+                        style={{ width: 18, height: 18, accentColor: "var(--brand)" }}
+                      />
+                      <span style={{ fontSize: 13.5, color: "var(--ink-2)" }}>
+                        {t("app.ticket.resolutionCsatCheck")}
+                      </span>
+                    </label>
+                  )}
+
                   {openTasks > 0 && (
                     <p
                       style={{
@@ -638,30 +747,21 @@ export default async function TicketPage({
                       {t("app.ticket.resolutionPending", { count: openTasks })}
                     </p>
                   )}
-                  {csatEnabled && (
-                    <p style={{ fontSize: 13, color: "var(--ink-3)" }}>
-                      {t("app.ticket.resolutionCsatNote")}
-                    </p>
-                  )}
-                  <form action={updateTicketProps} className="self-start">
-                    <input type="hidden" name="ticketId" value={ticket.id} />
-                    <input type="hidden" name="number" value={ticket.number} />
-                    <input type="hidden" name="status" value="resolved" />
-                    <button
-                      type="submit"
-                      className="flex items-center font-semibold text-white"
-                      style={{
-                        height: 40,
-                        padding: "0 18px",
-                        borderRadius: 9,
-                        background: "var(--ok)",
-                        fontSize: 13.5,
-                      }}
-                    >
-                      {t("app.ticket.resolutionMark")}
-                    </button>
-                  </form>
-                </>
+
+                  <button
+                    type="submit"
+                    className="flex items-center self-start font-semibold text-white"
+                    style={{
+                      height: 40,
+                      padding: "0 18px",
+                      borderRadius: 9,
+                      background: "var(--ok)",
+                      fontSize: 13.5,
+                    }}
+                  >
+                    {t("app.ticket.resolutionMark")}
+                  </button>
+                </form>
               )}
             </div>
           ) : tab === "activity" ? (

@@ -62,6 +62,21 @@ export const viewShare = app.enum("view_share", ["private", "team", "everyone"])
  * these: it is a fact the data already knows, and storing it would mean keeping
  * a copy in step with every organisation change.
  */
+/**
+ * V2 — why the ticket happened (AG-04, Resolution tab).
+ *
+ * A fixed list, not free text: the point of recording a cause is to count causes,
+ * and a free field gives you forty spellings of "product bug". Deliberately
+ * short — a taxonomy nobody can hold in their head gets filled in at random.
+ */
+export const resolutionCause = app.enum("resolution_cause", [
+  "product_bug",
+  "configuration",
+  "user_error",
+  "third_party",
+  "duplicate",
+  "no_fault_found",
+]);
 export const ticketLinkRelation = app.enum("ticket_link_relation", [
   "related",
   "duplicate",
@@ -509,6 +524,18 @@ export const tickets = app.table(
     /** T-30 min warning and SLA breach — set exactly once by the worker. */
     slaWarnedAt: timestamp("sla_warned_at", { withTimezone: true }),
     slaBreachedAt: timestamp("sla_breached_at", { withTimezone: true }),
+    /** V2 — Resolution tab: why it happened, what to read, what we told them. */
+    resolutionCause: resolutionCause("resolution_cause"),
+    /** A knowledge-base article worth proposing next time this comes up. */
+    resolutionArticleId: uuid("resolution_article_id"),
+    /**
+     * The summary the customer receives. Stored because it is part of the
+     * record, and posted to the thread on resolution — a "customer-visible
+     * summary" that the customer never receives would be a label that lies.
+     */
+    resolutionSummary: text("resolution_summary"),
+    /** Whether the satisfaction survey goes out for this ticket. */
+    resolutionSendCsat: boolean("resolution_send_csat").notNull().default(true),
     /** CSAT survey sent only once per ticket (ST-08). */
     csatSentAt: timestamp("csat_sent_at", { withTimezone: true }),
     resolvedAt: timestamp("resolved_at", { withTimezone: true }),
