@@ -6,6 +6,7 @@ import {
   tickets,
   ticketFields,
   ticketMessages,
+  ticketTasks,
   users,
   views,
 } from "@openhelpdesk/db";
@@ -23,6 +24,7 @@ import {
   sql,
   type SQL,
 } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 
 import type { MessageKey } from "@/i18n/dictionaries/en";
 /** Default inbox views (AG-03) — 6×6 dot colored by status token. */
@@ -565,3 +567,25 @@ export async function getTicketByNumber(tenantId: string, number: number) {
     mergedIntoNumber: mergedInto?.number ?? null,
   };
 }
+
+/**
+ * The ticket's checklist (AG-04, V2), newest last so the list reads in the order
+ * the tasks were written. Open before done: the point of the tab is what is
+ * left, and finished items sinking to the bottom is what makes that readable.
+ */
+export async function listTicketTasks(tenantId: string, ticketId: string) {
+  const assignee = alias(users, "task_assignee");
+  return db
+    .select({
+      id: ticketTasks.id,
+      label: ticketTasks.label,
+      done: ticketTasks.done,
+      dueAt: ticketTasks.dueAt,
+      assigneeName: assignee.name,
+    })
+    .from(ticketTasks)
+    .leftJoin(assignee, eq(assignee.id, ticketTasks.assigneeId))
+    .where(and(eq(ticketTasks.tenantId, tenantId), eq(ticketTasks.ticketId, ticketId)))
+    .orderBy(asc(ticketTasks.done), asc(ticketTasks.createdAt));
+}
+

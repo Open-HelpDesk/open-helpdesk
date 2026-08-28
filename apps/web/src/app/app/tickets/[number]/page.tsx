@@ -5,6 +5,7 @@ import {
   DEFAULT_VIEWS,
   getTicketByNumber,
   listMacrosForEditor,
+  listTicketTasks,
   viewTicketNumbers,
   type ViewKey,
 } from "@/lib/data";
@@ -20,6 +21,8 @@ import { BreadcrumbLeaf } from "@/components/app-shell";
 import { ChipVisual, CopyLinkChip, MergeChip, chipStyle } from "./header-tools";
 import { MessageAttachments, type AttachmentData } from "./attachments";
 import { PropsForm } from "./props-panel";
+import { TasksPanel, type TaskRow } from "./tasks-panel";
+import { updateTicketProps } from "../actions";
 import { ReplyEditor } from "./reply-editor";
 
 /**
@@ -100,12 +103,12 @@ export default async function TicketPage({
   searchParams,
 }: {
   params: Promise<{ number: string }>;
-  searchParams: Promise<{ view?: string; activity?: string }>;
+  searchParams: Promise<{ view?: string; tab?: string }>;
 }) {
   const t = await getT();
   const { tenant, agent } = await requireAgent();
   const { number: numberParam } = await params;
-  const { view: viewParam, activity: activityParam } = await searchParams;
+  const { view: viewParam, tab: tabParam } = await searchParams;
   const number = Number(numberParam);
   if (!Number.isInteger(number)) notFound();
 
@@ -132,18 +135,36 @@ export default async function TicketPage({
   } = data;
 
   /**
-   * The conversation and the activity log are two different things, and they
-   * used to be one stream: a fired rule, an SLA warning or a merge was pushed
-   * between two customer messages as a centred grey line. On a busy ticket that
-   * machine chatter is most of what you scroll through, and none of it is what
-   * the customer said. So the thread keeps the messages, and the rest moves
-   * behind the Activity chip — one click away, never in the way.
+   * V2 — four tabs where there used to be one stream.
+   *
+   * A fired rule, an SLA warning or a merge was pushed between two customer
+   * messages as a centred grey line. On a busy ticket that machine chatter is
+   * most of what you scroll past, and none of it is what the customer said. The
+   * conversation keeps the messages; the rest gets its own tab.
    */
-  const showActivity = activityParam === "1";
+  const TABS = ["conversation", "tasks", "activity", "resolution"] as const;
+  type Tab = (typeof TABS)[number];
+  const tab: Tab = (TABS as readonly string[]).includes(tabParam ?? "")
+    ? (tabParam as Tab)
+    : "conversation";
   const conversation = messages.filter((m) => m.kind !== "system_event");
   const activity = messages.filter((m) => m.kind === "system_event");
-  const threadHref = (on: boolean) =>
-    `/app/tickets/${number}?view=${view}${on ? "&activity=1" : ""}`;
+  const tabHref = (next: Tab) =>
+    `/app/tickets/${number}?view=${view}${next === "conversation" ? "" : `&tab=${next}`}`;
+
+  const csatEnabled = (tenant.csatConfig as { enabled?: boolean } | null)?.enabled === true;
+  const taskRows = await listTicketTasks(tenant.id, ticket.id);
+  const openTasks = taskRows.filter((task) => !task.done).length;
+  const tasks: TaskRow[] = taskRows.map((task) => ({
+    id: task.id,
+    label: task.label,
+    done: task.done,
+    dueLabel: task.dueAt ? t.fmt.dateLong(task.dueAt) : null,
+    // "Urgent" is about the deadline, not the priority: today or past, and still
+    // open. A finished task is never late.
+    urgent: !task.done && task.dueAt !== null && task.dueAt.getTime() <= Date.now(),
+    assigneeName: task.assigneeName,
+  }));
 
   const requesterName = requester.name ?? requester.email;
   const authorName = (authorId: string | null, authorType: string) => {
@@ -244,24 +265,6 @@ export default async function TicketPage({
               <ChipVisual label={t("app.ticket.chipLink")} />
               <ChipVisual label={t("app.ticket.chipToKb")} />
               <CopyLinkChip />
-              {/* A link and not a button: the state lives in the URL, so the
-                  view survives a reload, can be shared, and needs no client
-                  component to hold a boolean. */}
-              <Link
-                href={threadHref(!showActivity)}
-                style={{
-                  ...chipStyle,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  ...(showActivity
-                    ? { background: "var(--acc-t)", borderColor: "var(--acc-b)", color: "var(--acc-2)" }
-                    : {}),
-                }}
-                aria-pressed={showActivity}
-              >
-                {t("app.ticket.chipActivity")}
-                {activity.length > 0 && ` · ${activity.length}`}
-              </Link>
             </div>
             <div className="flex items-center" style={{ gap: 2, marginLeft: 4 }}>
               {prevNumber ? (
@@ -385,12 +388,164 @@ export default async function TicketPage({
           </div>
         )}
 
-        {/* Thread — the conversation, or the activity log in its place */}
+        {/* V2 tab bar */}
+        <nav
+          className="flex flex-none items-center border-b"
+          style={{ gap: 4, padding: "0 22px", borderColor: "var(--line)" }}
+        >
+          {TABS.map((key) => {
+            const on = key === tab;
+            const label = t(
+              key === "conversation"
+                ? "app.ticket.tabConversation"
+                : key === "tasks"
+                  ? "app.ticket.tabTasks"
+                  : key === "activity"
+                    ? "app.ticket.chipActivity"
+                    : "app.ticket.tabResolution",
+            );
+            const badge =
+              key === "tasks" && openTasks > 0
+                ? openTasks
+                : key === "activity" && activity.length > 0
+                  ? activity.length
+                  : null;
+            return (
+              <Link
+                key={key}
+                href={tabHref(key)}
+                aria-current={on ? "page" : undefined}
+                style={{
+                  padding: "13px 10px",
+                  fontSize: 13.5,
+                  fontWeight: on ? 600 : 450,
+                  color: on ? "var(--brand)" : "var(--ink-3)",
+                  borderBottom: `2px solid ${on ? "var(--brand)" : "transparent"}`,
+                  marginBottom: -1,
+                }}
+              >
+                {label}
+                {badge !== null && (
+                  <span style={{ marginLeft: 6, fontSize: 11.5, color: "var(--ink-3)" }}>
+                    {badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
         <div
           className="flex min-h-0 flex-1 flex-col overflow-y-auto"
           style={{ padding: "18px 22px", gap: 14 }}
         >
-          {showActivity ? (
+          {tab === "tasks" ? (
+            <TasksPanel number={ticket.number} tasks={tasks} agents={agents} meId={agent.id} />
+          ) : tab === "resolution" ? (
+            <div className="flex flex-col" style={{ maxWidth: 720, gap: 14 }}>
+              {ticket.resolvedAt ? (
+                <div
+                  className="flex flex-wrap items-center"
+                  style={{
+                    gap: 13,
+                    padding: "16px 18px",
+                    border: "1px solid var(--ok)",
+                    background: "var(--ok-t)",
+                    borderRadius: 14,
+                  }}
+                >
+                  <span
+                    className="grid place-items-center font-bold text-white"
+                    style={{
+                      width: 26,
+                      height: 26,
+                      flex: "none",
+                      borderRadius: "50%",
+                      background: "var(--ok)",
+                      fontSize: 13,
+                    }}
+                  >
+                    ✓
+                  </span>
+                  <div className="flex min-w-0 flex-1 flex-col" style={{ gap: 2 }}>
+                    {/* The design names who resolved it. The product does not
+                        record that, and inventing a name on a resolution card is
+                        worse than leaving it out — so the date stands alone until
+                        there is an author to show. */}
+                    <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ok)" }}>
+                      {t("app.ticket.resolutionResolved", {
+                        date: t.fmt.dateLong(ticket.resolvedAt),
+                      })}
+                    </span>
+                    {csatEnabled && (
+                      <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+                        {t("app.ticket.resolutionCsatNote")}
+                      </span>
+                    )}
+                  </div>
+                  <form action={updateTicketProps}>
+                    <input type="hidden" name="ticketId" value={ticket.id} />
+                    <input type="hidden" name="number" value={ticket.number} />
+                    <input type="hidden" name="status" value="open" />
+                    <button
+                      type="submit"
+                      className="ohd-hover-edge-ink flex items-center"
+                      style={{
+                        height: 34,
+                        padding: "0 14px",
+                        border: "1px solid var(--line)",
+                        borderRadius: 9,
+                        background: "var(--panel)",
+                        fontSize: 12.5,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {t("app.ticket.resolutionReopen")}
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <>
+                  {openTasks > 0 && (
+                    <p
+                      style={{
+                        padding: "11px 14px",
+                        background: "var(--wait-t)",
+                        borderRadius: 10,
+                        fontSize: 13,
+                        color: "var(--wait)",
+                      }}
+                    >
+                      {t("app.ticket.resolutionPending", { count: openTasks })}
+                    </p>
+                  )}
+                  {csatEnabled && (
+                    <p style={{ fontSize: 13, color: "var(--ink-3)" }}>
+                      {t("app.ticket.resolutionCsatNote")}
+                    </p>
+                  )}
+                  <form action={updateTicketProps} className="self-start">
+                    <input type="hidden" name="ticketId" value={ticket.id} />
+                    <input type="hidden" name="number" value={ticket.number} />
+                    <input type="hidden" name="status" value="resolved" />
+                    <button
+                      type="submit"
+                      className="flex items-center font-semibold text-white"
+                      style={{
+                        height: 40,
+                        padding: "0 18px",
+                        borderRadius: 9,
+                        background: "var(--ok)",
+                        fontSize: 13.5,
+                      }}
+                    >
+                      {t("app.ticket.resolutionMark")}
+                    </button>
+                  </form>
+                </>
+              )}
+            </div>
+          ) : tab === "activity" ? (
             <>
               {activity.length === 0 ? (
                 <p style={{ fontSize: 13, color: "var(--ink-3)", maxWidth: 460 }}>
@@ -436,9 +591,9 @@ export default async function TicketPage({
                 </ol>
               )}
               <Link
-                href={threadHref(false)}
+                href={tabHref("conversation")}
                 className="ohd-hover-acc self-start"
-                style={{ fontSize: 12.5, color: "var(--acc-2)" }}
+                style={{ fontSize: 12.5, color: "var(--brand-2)" }}
               >
                 ← {t("app.ticket.activityBack")}
               </Link>
