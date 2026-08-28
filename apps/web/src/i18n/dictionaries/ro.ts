@@ -2012,7 +2012,8 @@ export const ro: Dictionary = {
   "app.onboarding.identityTitle": "Identitatea spațiului dvs. de lucru",
   "app.onboarding.identityBody":
     "Aceste elemente vor apărea în portalul dvs. client și în emailurile trimise clienților dvs.",
-  "app.onboarding.logoDrop": "Trageți aici un fișier PNG sau SVG",
+  "app.onboarding.logoDrop": "Trageți aici un fișier sau faceți clic pentru a alege",
+  "app.onboarding.logoRejected": "Fișier neacceptat — PNG, SVG, JPEG sau WebP, maximum 2 MB.",
   "app.onboarding.previewSearch": "Căutați un articol…",
   "app.onboarding.previewCaption": "Previzualizarea portalului dvs. client",
 

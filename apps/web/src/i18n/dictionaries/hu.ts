@@ -1876,7 +1876,9 @@ export const hu: Dictionary = {
   "app.onboarding.identityTitle": "A munkaterület azonossága",
   "app.onboarding.identityBody":
     "Ezek jelennek meg az ügyfélportálon és az ügyfeleknek küldött e-mailekben.",
-  "app.onboarding.logoDrop": "Húzzon ide egy PNG- vagy SVG-fájlt",
+  "app.onboarding.logoDrop": "Húzzon ide egy fájlt, vagy kattintson a kiválasztáshoz",
+  "app.onboarding.logoRejected":
+    "A fájl nem elfogadható — PNG, SVG, JPEG vagy WebP, legfeljebb 2 MB.",
   "app.onboarding.previewSearch": "Cikk keresése…",
   "app.onboarding.previewCaption": "Az ügyfélportál előnézete",
 

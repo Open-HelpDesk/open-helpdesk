@@ -2054,7 +2054,8 @@ export const sk: Dictionary = {
   "app.onboarding.identityTitle": "Identita vášho pracovného priestoru",
   "app.onboarding.identityBody":
     "Tieto prvky sa zobrazia na vašom klientskom portáli a v e-mailoch odosielaných vašim klientom.",
-  "app.onboarding.logoDrop": "Presuňte sem súbor PNG alebo SVG",
+  "app.onboarding.logoDrop": "Presuňte sem súbor alebo kliknite a vyberte ho",
+  "app.onboarding.logoRejected": "Súbor nebol prijatý — PNG, SVG, JPEG alebo WebP, najviac 2 MB.",
   "app.onboarding.previewSearch": "Hľadať článok…",
   "app.onboarding.previewCaption": "Náhľad vášho klientskeho portálu",
 

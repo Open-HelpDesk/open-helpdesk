@@ -1841,7 +1841,8 @@ export const bg: Dictionary = {
   "app.onboarding.identityTitle": "Идентичност на Вашето работно пространство",
   "app.onboarding.identityBody":
     "Тези елементи ще се показват във Вашия клиентски портал и в имейлите, изпращани до Вашите клиенти.",
-  "app.onboarding.logoDrop": "Пуснете файл PNG или SVG",
+  "app.onboarding.logoDrop": "Пуснете файл тук или щракнете, за да изберете",
+  "app.onboarding.logoRejected": "Файлът не е приет — PNG, SVG, JPEG или WebP, максимум 2 MB.",
   "app.onboarding.previewSearch": "Търсене на статия…",
   "app.onboarding.previewCaption": "Преглед на Вашия клиентски портал",
 

@@ -2034,7 +2034,8 @@ export const cs: Dictionary = {
   "app.onboarding.identityTitle": "Identita vašeho pracovního prostoru",
   "app.onboarding.identityBody":
     "Tyto prvky se zobrazí na vašem zákaznickém portálu a v e-mailech odesílaných zákazníkům.",
-  "app.onboarding.logoDrop": "Přetáhněte sem soubor PNG nebo SVG",
+  "app.onboarding.logoDrop": "Přetáhněte sem soubor nebo klikněte pro výběr",
+  "app.onboarding.logoRejected": "Soubor nebyl přijat — PNG, SVG, JPEG nebo WebP, maximálně 2 MB.",
   "app.onboarding.previewSearch": "Hledat článek…",
   "app.onboarding.previewCaption": "Náhled vašeho zákaznického portálu",
 

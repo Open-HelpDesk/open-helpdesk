@@ -2136,7 +2136,9 @@ export const ga: Dictionary = {
   "app.onboarding.identityTitle": "Aitheantas do spáis oibre",
   "app.onboarding.identityBody":
     "Beidh na míreanna seo le feiceáil ar thairseach do chustaiméirí agus sna ríomhphoist a sheoltar chucu.",
-  "app.onboarding.logoDrop": "Scaoil comhad PNG nó SVG anseo",
+  "app.onboarding.logoDrop": "Scaoil comhad anseo, nó cliceáil chun ceann a roghnú",
+  "app.onboarding.logoRejected":
+    "Níor glacadh leis an gcomhad — PNG, SVG, JPEG nó WebP, 2 MB ar a mhéad.",
   "app.onboarding.previewSearch": "Cuardaigh alt…",
   "app.onboarding.previewCaption": "Réamhamharc ar thairseach do chustaiméirí",
 

@@ -1678,7 +1678,8 @@ export const sv: Dictionary = {
   "app.onboarding.identityTitle": "Arbetsytans identitet",
   "app.onboarding.identityBody":
     "Det här visas i din kundportal och i de e-postmeddelanden som skickas till dina kunder.",
-  "app.onboarding.logoDrop": "Släpp en PNG- eller SVG-fil",
+  "app.onboarding.logoDrop": "Släpp en fil här eller klicka för att välja",
+  "app.onboarding.logoRejected": "Filen godtogs inte — PNG, SVG, JPEG eller WebP, högst 2 MB.",
   "app.onboarding.previewSearch": "Sök artikel…",
   "app.onboarding.previewCaption": "Förhandsvisning av din kundportal",
 

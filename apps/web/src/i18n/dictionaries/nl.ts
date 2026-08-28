@@ -1669,7 +1669,9 @@ export const nl: Dictionary = {
   "app.onboarding.identityTitle": "Identiteit van uw werkruimte",
   "app.onboarding.identityBody":
     "Deze elementen verschijnen op uw klantportaal en in de e-mails die naar uw klanten worden verstuurd.",
-  "app.onboarding.logoDrop": "Sleep hier een PNG- of SVG-bestand",
+  "app.onboarding.logoDrop": "Sleep hier een bestand of klik om te kiezen",
+  "app.onboarding.logoRejected":
+    "Bestand niet geaccepteerd — PNG, SVG, JPEG of WebP, maximaal 2 MB.",
   "app.onboarding.previewSearch": "Zoek een artikel…",
   "app.onboarding.previewCaption": "Voorbeeld van uw klantportaal",
 

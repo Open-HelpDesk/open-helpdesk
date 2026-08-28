@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { db, mailboxes, tenants, users } from "@openhelpdesk/db";
 import { and, eq } from "drizzle-orm";
 import { requireManager } from "@/lib/session";
+import { MAX_BRAND_BYTES, saveBrandAsset } from "@/lib/storage";
 
 /**
  * Onboarding configures the workspace: it is restricted to Owner and Admin.
@@ -19,7 +20,20 @@ import { requireManager } from "@/lib/session";
  * as this door stayed open.
  */
 
-/** Step 1 — Identity: workspace name + accent color (tenants.branding). */
+/**
+ * Accepted logo formats — the same set as settings → general, deliberately: a
+ * file that screen would take must not be refused here, and the upload goes
+ * through the same saveBrandAsset. One rule, one writer.
+ */
+const LOGO_FORMATS = new Set(["image/png", "image/svg+xml", "image/jpeg", "image/webp"]);
+
+/**
+ * Step 1 — Identity: workspace name, logo, accent color (tenants.branding).
+ *
+ * The logo was a promise this action did not keep: the step announced "name,
+ * logo, colour", drew a dashed box reading "drop a PNG or SVG file" that was a
+ * plain div, and nothing here ever looked for a file.
+ */
 export async function saveIdentity(formData: FormData) {
   const { tenant } = await requireManager();
   const name = String(formData.get("name") ?? "").trim();
@@ -27,6 +41,19 @@ export async function saveIdentity(formData: FormData) {
 
   const branding = { ...((tenant.branding ?? {}) as Record<string, unknown>) };
   if (/^#[0-9a-fA-F]{6}$/.test(accentColor)) branding.accentColor = accentColor;
+
+  // The control offers a removal once a logo is in place — the step can be
+  // returned to. Not reading the field would leave that button looking effective.
+  if (formData.get("remove-logo") === "1") delete branding.logoUrl;
+
+  // A refused file interrupts the step with a named reason, rather than saving
+  // the rest and dropping the logo in silence.
+  const file = formData.get("logo");
+  if (file instanceof File && file.size > 0) {
+    if (!LOGO_FORMATS.has(file.type)) redirect("/onboarding?step=1&error=logo-format");
+    if (file.size > MAX_BRAND_BYTES) redirect("/onboarding?step=1&error=logo-size");
+    branding.logoUrl = await saveBrandAsset(tenant.id, "logo", file);
+  }
 
   await db
     .update(tenants)

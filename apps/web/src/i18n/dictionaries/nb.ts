@@ -1668,7 +1668,8 @@ export const nb: Dictionary = {
   "app.onboarding.identityTitle": "Identiteten til arbeidsområdet ditt",
   "app.onboarding.identityBody":
     "Dette vises på kundeportalen din og i e-postene som sendes til kundene dine.",
-  "app.onboarding.logoDrop": "Slipp en PNG- eller SVG-fil",
+  "app.onboarding.logoDrop": "Slipp en fil her, eller klikk for å velge",
+  "app.onboarding.logoRejected": "Filen ble ikke godtatt — PNG, SVG, JPEG eller WebP, maks 2 MB.",
   "app.onboarding.previewSearch": "Søk etter en artikkel…",
   "app.onboarding.previewCaption": "Forhåndsvisning av kundeportalen din",
 

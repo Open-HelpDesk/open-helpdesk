@@ -1902,7 +1902,8 @@ export const el: Dictionary = {
   "app.onboarding.identityTitle": "Η ταυτότητα του χώρου εργασίας σας",
   "app.onboarding.identityBody":
     "Αυτά τα στοιχεία θα εμφανίζονται στην πύλη πελατών σας και στα email που στέλνονται στους πελάτες σας.",
-  "app.onboarding.logoDrop": "Αφήστε εδώ ένα αρχείο PNG ή SVG",
+  "app.onboarding.logoDrop": "Αφήστε εδώ ένα αρχείο ή κάντε κλικ για επιλογή",
+  "app.onboarding.logoRejected": "Το αρχείο δεν έγινε δεκτό — PNG, SVG, JPEG ή WebP, έως 2 MB.",
   "app.onboarding.previewSearch": "Αναζήτηση άρθρου…",
   "app.onboarding.previewCaption": "Προεπισκόπηση της πύλης πελατών σας",
 

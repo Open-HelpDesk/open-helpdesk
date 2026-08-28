@@ -12,13 +12,16 @@
  *  · The local preview is what separates a file input from a usable control.
  *    Without it, you pick an image, nothing moves, and you cannot tell whether
  *    the click registered until you have saved.
+ *  · The dashed area takes a dropped file as well as a click. A dashed box
+ *    that reads "drop a file" and only answers to clicks is what made this
+ *    control look broken on the onboarding step, where it is now reused.
  *  · Remove does not trigger anything on its own. The screen has a single save
  *    bar, and everything done there applies when it is actioned: a button that
  *    submitted the form by itself would carry along the name or the
  *    language just changed without saving them. The removal is therefore a
  *    state, carried by a hidden field, and a second click cancels it.
  */
-import { useState, type CSSProperties } from "react";
+import { useRef, useState, type CSSProperties, type DragEvent } from "react";
 import { useT } from "@/i18n/client";
 
 type Props = {
@@ -36,7 +39,20 @@ type Props = {
   replaceLabel: string;
   removeLabel: string;
   hint: string;
+  /**
+   * What to say about a file refused here, when the shared wording does not fit.
+   * The settings screen carries both fields, so its message names both; the
+   * onboarding step has no favicon and would be talking about something absent.
+   */
+  rejectLabel?: string;
 };
+
+/**
+ * The same ceiling as MAX_BRAND_BYTES, restated rather than imported: that
+ * constant sits next to the S3 client, which has no business in a browser
+ * bundle. The server stays the authority — this only spares a round trip.
+ */
+const MAX_BYTES = 2 * 1024 * 1024;
 
 export function BrandAssetField({
   name,
@@ -48,6 +64,7 @@ export function BrandAssetField({
   replaceLabel,
   removeLabel,
   hint,
+  rejectLabel,
 }: Props) {
   const t = useT();
   // The local object URL is not revoked: the component lives for as long as the
@@ -55,16 +72,58 @@ export function BrandAssetField({
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [removed, setRemoved] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [rejected, setRejected] = useState<"format" | "size" | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const shown = preview ?? (removed ? null : current);
   const isFavicon = name === "favicon";
 
   function choose(file: File) {
+    setRejected(null);
     setPreview(URL.createObjectURL(file));
     setFileName(file.name);
     // Picking a file cancels a requested removal: you replace, you do not
     // remove and then put back.
     setRemoved(false);
+  }
+
+  /**
+   * Does `accept` cover this file?
+   *
+   * Entries are either a MIME type or an extension — the favicon field lists
+   * `.ico` precisely because browsers disagree on the type they report for an
+   * icon (`image/x-icon`, `image/vnd.microsoft.icon`, sometimes nothing). A
+   * MIME-only comparison would refuse on the drop a file the click and the
+   * server both take.
+   */
+  function accepted(file: File) {
+    const name = file.name.toLowerCase();
+    const type = file.type.toLowerCase();
+    return accept
+      .split(",")
+      .map((entry) => entry.trim().toLowerCase())
+      .some((entry) => (entry.startsWith(".") ? name.endsWith(entry) : entry === type));
+  }
+
+  /**
+   * A dropped file has to reach the input, not only the preview: the form
+   * submits `input.files`, so a preview on its own would show a logo and upload
+   * nothing. `accept` does not filter a programmatic assignment either, hence
+   * the two checks — the ones the server applies.
+   */
+  function drop(event: DragEvent<HTMLLabelElement>) {
+    event.preventDefault();
+    setDragging(false);
+    const file = event.dataTransfer.files?.[0];
+    const input = inputRef.current;
+    if (!file || !input) return;
+    if (!accepted(file)) return setRejected("format");
+    if (file.size > MAX_BYTES) return setRejected("size");
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    input.files = transfer.files;
+    choose(file);
   }
 
   return (
@@ -113,17 +172,40 @@ export function BrandAssetField({
             follows the neighboring preview square (10) and not Tailwind's
             `rounded-lg`, which is 8 and misaligned the two corners side by side. */}
         <label
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={drop}
           className="ohd-hover-edge-ink ohd-focus flex flex-1 cursor-pointer items-center justify-center border border-dashed px-2"
           style={{
             height: 46,
             borderRadius: 10,
-            borderColor: "var(--line)",
+            // Dragging over the box answers on the box itself: without that, a
+            // zone that takes a file looks exactly like one that will hand it to
+            // the browser and navigate away from the form.
+            borderColor: dragging ? "var(--acc)" : "var(--line)",
+            background: dragging ? "var(--acc-t)" : undefined,
             fontSize: 12.5,
-            color: fileName ? "var(--ink-2)" : "var(--ink-3)",
+            // --ink-2 at rest, not --ink-3: at the palest tint the box read as
+            // decoration, which is what made the onboarding step look like it
+            // took nothing. It has to look like a control before it is hovered.
+            color: rejected ? "var(--dang)" : "var(--ink-2)",
+            gap: 6,
           }}
         >
+          {/* The glyph the mockup puts on its dashed boxes — the shortest way to
+              say "something goes in here". Hidden once a file is named: the name
+              is then the message. */}
+          {!fileName && (
+            <span aria-hidden style={{ fontSize: 14, lineHeight: 1, color: "var(--ink-3)" }}>
+              +
+            </span>
+          )}
           <span className="truncate">{fileName ?? replaceLabel}</span>
           <input
+            ref={inputRef}
             type="file"
             name={name}
             accept={accept}
@@ -167,12 +249,21 @@ export function BrandAssetField({
           </button>
         )}
       </div>
-      <span style={{ fontSize: 12, color: removed ? "var(--dang)" : "var(--ink-3)" }}>
-        {removed
-          ? t("app.settings.workspace.generalAssetRemoved")
-          : fileName
-            ? t("app.settings.workspace.generalAssetPending")
-            : hint}
+      <span
+        // A refused drop says so where the hint already is, and stays until the
+        // next pick: silence would read as "the file went through".
+        role={rejected ? "alert" : undefined}
+        style={{ fontSize: 12, color: removed || rejected ? "var(--dang)" : "var(--ink-3)" }}
+      >
+        {rejected === "format"
+          ? (rejectLabel ?? t("app.settings.workspace.generalAssetFormatError"))
+          : rejected === "size"
+            ? (rejectLabel ?? t("app.settings.workspace.generalAssetSizeError"))
+            : removed
+              ? t("app.settings.workspace.generalAssetRemoved")
+              : fileName
+                ? t("app.settings.workspace.generalAssetPending")
+                : hint}
       </span>
     </div>
   );

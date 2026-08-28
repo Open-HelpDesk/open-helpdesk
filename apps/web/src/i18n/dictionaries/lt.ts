@@ -2066,7 +2066,9 @@ export const lt: Dictionary = {
   "app.onboarding.identityTitle": "Jūsų darbo erdvės tapatybė",
   "app.onboarding.identityBody":
     "Šie elementai bus rodomi jūsų klientų portale ir klientams siunčiamuose el. laiškuose.",
-  "app.onboarding.logoDrop": "Nuvilkite PNG arba SVG failą",
+  "app.onboarding.logoDrop": "Nuvilkite failą čia arba spustelėkite, kad pasirinktumėte",
+  "app.onboarding.logoRejected":
+    "Failas nepriimtas — PNG, SVG, JPEG arba WebP, ne daugiau kaip 2 MB.",
   "app.onboarding.previewSearch": "Ieškoti straipsnio…",
   "app.onboarding.previewCaption": "Jūsų klientų portalo peržiūra",
 

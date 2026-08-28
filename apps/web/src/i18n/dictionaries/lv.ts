@@ -2000,7 +2000,9 @@ export const lv: Dictionary = {
   "app.onboarding.identityTitle": "Jūsu darbvietas identitāte",
   "app.onboarding.identityBody":
     "Šie elementi būs redzami jūsu klientu portālā un klientiem sūtītajos e-pastos.",
-  "app.onboarding.logoDrop": "Ievelciet PNG vai SVG failu",
+  "app.onboarding.logoDrop": "Ievelciet failu šeit vai noklikšķiniet, lai izvēlētos",
+  "app.onboarding.logoRejected":
+    "Fails nav pieņemts — PNG, SVG, JPEG vai WebP, ne vairāk par 2 MB.",
   "app.onboarding.previewSearch": "Meklēt rakstu…",
   "app.onboarding.previewCaption": "Jūsu klientu portāla priekšskatījums",
 

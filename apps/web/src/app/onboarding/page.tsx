@@ -28,7 +28,7 @@ const STEPS: readonly { n: number; label: MessageKey; hint: MessageKey }[] = [
 export default async function OnboardingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ step?: string }>;
+  searchParams: Promise<{ step?: string; error?: string }>;
 }) {
   const t = await getT();
   // Ahead of requireAgent, for the same reason as the agent layout: a 404 for an
@@ -38,10 +38,10 @@ export default async function OnboardingPage({
   // The initial setup screen is not a work screen: an agent has no business
   // there, and its forms carry administration powers.
   if (!isManager(agent.role)) redirect("/app/tickets");
-  const { step: stepParam } = await searchParams;
+  const { step: stepParam, error } = await searchParams;
   const step = Math.min(4, Math.max(1, Number(stepParam) || 1));
 
-  const branding = (tenant.branding ?? {}) as { accentColor?: string };
+  const branding = (tenant.branding ?? {}) as { accentColor?: string; logoUrl?: string };
 
   const [mailboxRows, [userCount], [ticketCount]] = await Promise.all([
     db.select().from(mailboxes).where(eq(mailboxes.tenantId, tenant.id)),
@@ -174,6 +174,8 @@ export default async function OnboardingPage({
                 <IdentityForm
                   initialName={tenant.name}
                   initialAccent={branding.accentColor ?? "#0B5F46"}
+                  initialLogo={branding.logoUrl ?? null}
+                  error={error ?? null}
                 />
               </I18nProvider>
             </>

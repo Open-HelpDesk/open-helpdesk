@@ -1667,7 +1667,9 @@ export const fi: Dictionary = {
   "app.onboarding.identityTitle": "Työtilasi identiteetti",
   "app.onboarding.identityBody":
     "Nämä näkyvät asiakasportaalissasi ja asiakkaillesi lähetetyissä sähköposteissa.",
-  "app.onboarding.logoDrop": "Pudota PNG- tai SVG-tiedosto",
+  "app.onboarding.logoDrop": "Pudota tiedosto tähän tai valitse napsauttamalla",
+  "app.onboarding.logoRejected":
+    "Tiedostoa ei hyväksytty — PNG, SVG, JPEG tai WebP, enintään 2 Mt.",
   "app.onboarding.previewSearch": "Hae artikkelia…",
   "app.onboarding.previewCaption": "Asiakasportaalisi esikatselu",
 

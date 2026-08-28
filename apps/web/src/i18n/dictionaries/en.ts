@@ -1671,7 +1671,8 @@ export const en = {
   "app.onboarding.identityTitle": "Your workspace identity",
   "app.onboarding.identityBody":
     "These will appear on your customer portal and in the emails sent to your customers.",
-  "app.onboarding.logoDrop": "Drop a PNG or SVG file",
+  "app.onboarding.logoDrop": "Drop a file here, or click to choose",
+  "app.onboarding.logoRejected": "File not accepted — PNG, SVG, JPEG or WebP, 2 MB maximum.",
   "app.onboarding.previewSearch": "Search for an article…",
   "app.onboarding.previewCaption": "Preview of your customer portal",
 

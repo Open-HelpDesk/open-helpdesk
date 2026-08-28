@@ -1972,7 +1972,9 @@ export const hr: Dictionary = {
   "app.onboarding.identityTitle": "Identitet vašeg radnog prostora",
   "app.onboarding.identityBody":
     "Ovi će se elementi pojaviti na vašem klijentskom portalu i u porukama e-pošte koje se šalju vašim klijentima.",
-  "app.onboarding.logoDrop": "Povucite datoteku PNG ili SVG",
+  "app.onboarding.logoDrop": "Povucite datoteku ovdje ili kliknite za odabir",
+  "app.onboarding.logoRejected":
+    "Datoteka nije prihvaćena — PNG, SVG, JPEG ili WebP, najviše 2 MB.",
   "app.onboarding.previewSearch": "Traži članak…",
   "app.onboarding.previewCaption": "Pregled vašeg klijentskog portala",
 

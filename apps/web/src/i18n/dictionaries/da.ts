@@ -1654,7 +1654,9 @@ export const da: Dictionary = {
 
   "app.onboarding.identityTitle": "Dit arbejdsområdes identitet",
   "app.onboarding.identityBody": "Disse elementer vises på din kundeportal og i de e-mails, der sendes til dine kunder.",
-  "app.onboarding.logoDrop": "Slip en PNG- eller SVG-fil her",
+  "app.onboarding.logoDrop": "Slip en fil her, eller klik for at vælge",
+  "app.onboarding.logoRejected":
+    "Filen blev ikke accepteret — PNG, SVG, JPEG eller WebP, højst 2 MB.",
   "app.onboarding.previewSearch": "Søg efter en artikel…",
   "app.onboarding.previewCaption": "Forhåndsvisning af din kundeportal",
 

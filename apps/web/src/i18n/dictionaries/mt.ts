@@ -2126,7 +2126,9 @@ export const mt: Dictionary = {
   "app.onboarding.identityTitle": "Identità tal-ispazju tax-xogħol tiegħek",
   "app.onboarding.identityBody":
     "Dawn jidhru fuq il-portal tal-klijent tiegħek u fl-emails mibgħuta lill-klijenti tiegħek.",
-  "app.onboarding.logoDrop": "Waqqa' fajl PNG jew SVG",
+  "app.onboarding.logoDrop": "Waqqa' fajl hawn, jew agħfas biex tagħżel",
+  "app.onboarding.logoRejected":
+    "Il-fajl ma ġiex aċċettat — PNG, SVG, JPEG jew WebP, mhux aktar minn 2 MB.",
   "app.onboarding.previewSearch": "Fittex artiklu…",
   "app.onboarding.previewCaption": "Previżjoni tal-portal tal-klijent tiegħek",
 

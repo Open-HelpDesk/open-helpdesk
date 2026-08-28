@@ -1672,7 +1672,8 @@ export const es: Dictionary = {
   "app.onboarding.identityTitle": "Identidad de tu espacio de trabajo",
   "app.onboarding.identityBody":
     "Estos elementos aparecerán en tu portal del cliente y en los correos enviados a tus clientes.",
-  "app.onboarding.logoDrop": "Suelta un archivo PNG o SVG",
+  "app.onboarding.logoDrop": "Suelta un archivo aquí o haz clic para elegirlo",
+  "app.onboarding.logoRejected": "Archivo no aceptado: PNG, SVG, JPEG o WebP, 2 MB como máximo.",
   "app.onboarding.previewSearch": "Buscar un artículo…",
   "app.onboarding.previewCaption": "Vista previa de tu portal del cliente",
 

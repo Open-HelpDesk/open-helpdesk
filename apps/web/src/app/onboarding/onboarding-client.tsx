@@ -3,6 +3,7 @@
 /** Interactive pieces of AG-02 — Onboarding. */
 import { useState } from "react";
 import { useT } from "@/i18n/client";
+import { BrandAssetField } from "@/components/settings-brand";
 import { saveIdentity, inviteTeam } from "./actions";
 
 /** Accent color swatches from the design (step 1). */
@@ -13,9 +14,15 @@ export const ACCENT_SWATCHES = ["#0B5F46", "#1D4ED8", "#6D28D9", "#C0342B", "#B4
 export function IdentityForm({
   initialName,
   initialAccent,
+  initialLogo,
+  error,
 }: {
   initialName: string;
   initialAccent: string;
+  /** Logo already saved — the step can be returned to. */
+  initialLogo: string | null;
+  /** `logo-format` or `logo-size`, when the server refused the file. */
+  error: string | null;
 }) {
   const t = useT();
   const [name, setName] = useState(initialName);
@@ -45,27 +52,27 @@ export function IdentityForm({
         />
       </label>
 
-      {/* Logo — informational dropzone */}
-      <div className="flex items-center gap-3">
-        <div
-          className="flex items-center justify-center font-bold text-white"
-          style={{ width: 52, height: 52, borderRadius: 12, background: accent, fontSize: 22 }}
-          aria-hidden
-        >
-          {name[0]?.toUpperCase() ?? "A"}
-        </div>
-        <div
-          className="flex flex-1 items-center justify-center border border-dashed px-4 text-[12.5px]"
-          style={{
-            height: 52,
-            borderRadius: 8,
-            borderColor: "var(--line)",
-            color: "var(--ink-3)",
-            maxWidth: 300,
-          }}
-        >
-          {t("app.onboarding.logoDrop")}
-        </div>
+      {/* Logo — the control from settings → general (ST-01), not a look-alike.
+          What stood here was a plain div: it read "drop a file", answered
+          neither a drop nor a click, and saveIdentity did not look for a file. */}
+      <div style={{ maxWidth: 360 }}>
+        <BrandAssetField
+          name="logo"
+          current={initialLogo}
+          initial={name[0]?.toUpperCase() ?? "A"}
+          background={accent}
+          accept="image/png,image/svg+xml,image/jpeg,image/webp"
+          label={`${t("app.settings.workspace.generalLogoLabel")} · ${t("app.onboarding.optional")}`}
+          replaceLabel={t("app.onboarding.logoDrop")}
+          removeLabel={t("app.settings.workspace.generalLogoRemove")}
+          hint={t("app.settings.workspace.generalLogoHint")}
+          rejectLabel={t("app.onboarding.logoRejected")}
+        />
+        {(error === "logo-format" || error === "logo-size") && (
+          <p role="alert" className="mt-1.5 text-[12px]" style={{ color: "var(--dang)" }}>
+            {t("app.onboarding.logoRejected")}
+          </p>
+        )}
       </div>
 
       {/* Accent swatches */}

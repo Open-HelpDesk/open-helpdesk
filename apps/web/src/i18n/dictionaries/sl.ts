@@ -2055,7 +2055,8 @@ export const sl: Dictionary = {
   "app.onboarding.identityTitle": "Identiteta vašega delovnega prostora",
   "app.onboarding.identityBody":
     "To se bo prikazalo na vašem portalu za stranke in v e-poštnih sporočilih, ki jih prejmejo vaše stranke.",
-  "app.onboarding.logoDrop": "Spustite datoteko PNG ali SVG",
+  "app.onboarding.logoDrop": "Spustite datoteko sem ali kliknite za izbiro",
+  "app.onboarding.logoRejected": "Datoteka ni sprejeta — PNG, SVG, JPEG ali WebP, največ 2 MB.",
   "app.onboarding.previewSearch": "Iskanje članka…",
   "app.onboarding.previewCaption": "Predogled vašega portala za stranke",
 

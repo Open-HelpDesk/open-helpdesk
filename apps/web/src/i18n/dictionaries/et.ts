@@ -1863,7 +1863,8 @@ export const et: Dictionary = {
   "app.onboarding.identityTitle": "Teie tööruumi identiteet",
   "app.onboarding.identityBody":
     "Need ilmuvad teie kliendiportaalis ja klientidele saadetavates e-kirjades.",
-  "app.onboarding.logoDrop": "Lohistage siia PNG- või SVG-fail",
+  "app.onboarding.logoDrop": "Lohistage fail siia või klõpsake valimiseks",
+  "app.onboarding.logoRejected": "Faili ei võetud vastu — PNG, SVG, JPEG või WebP, kuni 2 MB.",
   "app.onboarding.previewSearch": "Otsi artiklit…",
   "app.onboarding.previewCaption": "Teie kliendiportaali eelvaade",
 
