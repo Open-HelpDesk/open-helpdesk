@@ -177,8 +177,8 @@ export function MailboxForm({
         )}
         <button
           type="submit"
-          className="rounded-md px-3.5 font-semibold text-white"
-          style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+          className="rounded-md px-3.5 font-semibold"
+          style={{ color: "var(--on-brand)", height: 32, fontSize: 13, background: "var(--acc)" }}
         >
           {mailbox ? t("app.settings.email.save") : t("app.settings.email.add")}
         </button>

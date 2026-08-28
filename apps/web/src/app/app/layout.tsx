@@ -76,8 +76,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                  stayed, locking the owner out of the very page that lifts it. */
               <a
                 href="/app/settings/billing"
-                className="mt-5 inline-flex items-center rounded-md px-4 font-semibold text-white"
-                style={{ height: 36, fontSize: 13.5, background: "var(--acc)" }}
+                className="mt-5 inline-flex items-center rounded-md px-4 font-semibold"
+                style={{ color: "var(--on-brand)", height: 36, fontSize: 13.5, background: "var(--acc)" }}
               >
                 {t0("app.shell.suspendedBillingCta")}
               </a>

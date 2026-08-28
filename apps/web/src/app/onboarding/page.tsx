@@ -44,7 +44,7 @@ function ctaStyle(primary: boolean): React.CSSProperties {
     padding: "0 14px",
     borderRadius: 8,
     background: primary ? "var(--brand)" : "var(--panel)",
-    color: primary ? "#fff" : "var(--ink-2)",
+    color: primary ? "var(--on-brand)" : "var(--ink-2)",
     border: `1px solid ${primary ? "var(--brand)" : "var(--line)"}`,
     display: "flex",
     alignItems: "center",

@@ -388,8 +388,8 @@ export default async function FieldsSettingsPage({
                     <PreviewField key={f.id} label={f.label} height={36} />
                   ))}
                   <span
-                    className="flex items-center justify-center font-semibold text-white"
-                    style={{ height: 40, borderRadius: 8, fontSize: 13.5, background: "var(--acc)" }}
+                    className="flex items-center justify-center font-semibold"
+                    style={{ color: "var(--on-brand)", height: 40, borderRadius: 8, fontSize: 13.5, background: "var(--acc)" }}
                   >
                     {t("app.settings.rules.previewSubmit")}
                   </span>
@@ -551,8 +551,8 @@ function FieldForm({ field, t }: { field?: FieldRow; t: Translate }) {
         <span className="flex-1" />
         <button
           type="submit"
-          className="rounded-md font-semibold text-white"
-          style={{ height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
+          className="rounded-md font-semibold"
+          style={{ color: "var(--on-brand)", height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
         >
           {t("app.settings.rules.save")}
         </button>

@@ -309,8 +309,9 @@ export function OfferPicker({
                     <input type="hidden" name="seats" value={seats} />
                     <button
                       disabled={!gatewayOk}
-                      className="grid w-full place-items-center font-semibold text-white disabled:opacity-50"
+                      className="grid w-full place-items-center font-semibold disabled:opacity-50"
                       style={{
+                        color: "var(--on-brand)",
                         height: 34,
                         borderRadius: 6,
                         fontSize: 13,

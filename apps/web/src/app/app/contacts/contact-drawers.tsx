@@ -55,8 +55,9 @@ export function NewContactButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center font-semibold text-white"
+        className="inline-flex items-center font-semibold"
         style={{
+          color: "var(--on-brand)",
           height: 30,
           padding: "0 12px",
           borderRadius: 6,
@@ -79,8 +80,8 @@ export function NewContactButton() {
             </label>
             <button
               type="submit"
-              className="mt-1 rounded-md px-4 py-2 text-[13px] font-semibold text-white"
-              style={{ background: "var(--acc)" }}
+              className="mt-1 rounded-md px-4 py-2 text-[13px] font-semibold"
+              style={{ color: "var(--on-brand)", background: "var(--acc)" }}
             >
               {t("app.contacts.createSubmit")}
             </button>
@@ -141,8 +142,8 @@ export function MergeContactButton({
             </label>
             <button
               type="submit"
-              className="mt-1 rounded-md px-4 py-2 text-[13px] font-semibold text-white"
-              style={{ background: "var(--acc)" }}
+              className="mt-1 rounded-md px-4 py-2 text-[13px] font-semibold"
+              style={{ color: "var(--on-brand)", background: "var(--acc)" }}
             >
               {t("app.contacts.mergeSubmit")}
             </button>

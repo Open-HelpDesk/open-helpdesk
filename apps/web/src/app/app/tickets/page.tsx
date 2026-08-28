@@ -440,8 +440,9 @@ export default async function TicketsPage({
                 </p>
                 <Link
                   href={buildQuery(params, {})}
-                  className="grid place-items-center font-semibold text-white"
+                  className="grid place-items-center font-semibold"
                   style={{
+                    color: "var(--on-brand)",
                     height: 32,
                     padding: "0 14px",
                     borderRadius: 6,
@@ -526,8 +527,9 @@ export default async function TicketsPage({
                   </p>
                   <Link
                     href="/app/settings/general"
-                    className="ohd-hover-acc grid place-items-center font-semibold text-white"
+                    className="ohd-hover-acc grid place-items-center font-semibold"
                     style={{
+                      color: "var(--on-brand)",
                       height: 36,
                       padding: "0 18px",
                       borderRadius: 8,

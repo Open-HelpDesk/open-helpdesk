@@ -296,12 +296,12 @@ export default async function EmailSettingsPage({
           {/* Receiving addresses */}
           <Card
             title={t("app.settings.email.addressesTitle")}
-            style={{ padding: 0 }}
+            style={{ color: "var(--on-brand)", padding: 0 }}
             action={
               <Drawer
                 title={t("app.settings.email.addAddress")}
                 trigger={<>{t("app.settings.email.addAddressCta")}</>}
-                triggerClassName="rounded-md px-3 font-semibold text-white"
+                triggerClassName="rounded-md px-3 font-semibold"
                 triggerStyle={{ height: 28, fontSize: 12.5, background: "var(--acc)" }}
               >
                 <MailboxForm
@@ -686,8 +686,8 @@ export default async function EmailSettingsPage({
                   </form>
                   <form action={sendEmailTest}>
                     <button
-                      className="rounded-md px-3.5 font-semibold text-white"
-                      style={{ height: 32, fontSize: 12.5, background: "var(--acc)" }}
+                      className="rounded-md px-3.5 font-semibold"
+                      style={{ color: "var(--on-brand)", height: 32, fontSize: 12.5, background: "var(--acc)" }}
                     >
                       {t("app.settings.email.sendTest")}
                     </button>

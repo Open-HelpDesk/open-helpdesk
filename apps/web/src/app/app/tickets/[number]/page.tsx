@@ -369,7 +369,7 @@ export default async function TicketPage({
                 <>
                   <Link
                     href={`/app/tickets/${ticket.number}?view=${view}#composer`}
-                    className="flex items-center font-semibold text-white"
+                    className="flex items-center font-semibold"
                     style={{
                       height: 36,
                       padding: "0 16px",
@@ -585,13 +585,14 @@ export default async function TicketPage({
                   }}
                 >
                   <span
-                    className="grid place-items-center font-bold text-white"
+                    className="grid place-items-center font-bold"
                     style={{
                       width: 26,
                       height: 26,
                       flex: "none",
                       borderRadius: "50%",
                       background: "var(--ok)",
+                      color: "var(--on-ok)",
                       fontSize: 13,
                     }}
                   >
@@ -750,12 +751,13 @@ export default async function TicketPage({
 
                   <button
                     type="submit"
-                    className="flex items-center self-start font-semibold text-white"
+                    className="flex items-center self-start font-semibold"
                     style={{
                       height: 40,
                       padding: "0 18px",
                       borderRadius: 9,
                       background: "var(--ok)",
+                      color: "var(--on-ok)",
                       fontSize: 13.5,
                     }}
                   >

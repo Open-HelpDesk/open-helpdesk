@@ -258,7 +258,7 @@ export default async function ReportsPage({
                   borderRadius: 4,
                   background: showCompare ? "var(--brand)" : "transparent",
                   border: showCompare ? "none" : "1px solid var(--line)",
-                  color: "#fff",
+                  color: "var(--on-brand)",
                   fontSize: 10,
                 }}
               >

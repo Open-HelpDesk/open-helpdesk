@@ -275,8 +275,9 @@ export default async function BillingPage({
                     ? undefined
                     : t("app.settings.workspace.requiresControlPlane")
                 }
-                className="grid place-items-center font-semibold text-white disabled:opacity-50"
+                className="grid place-items-center font-semibold disabled:opacity-50"
                 style={{
+                  color: "var(--on-brand)",
                   height: 32,
                   padding: "0 14px",
                   borderRadius: 6,
@@ -374,8 +375,9 @@ export default async function BillingPage({
                 <button
                   disabled={!gatewayConfigured()}
                   title={gatewayConfigured() ? undefined : t("app.settings.workspace.requiresControlPlane")}
-                  className="grid place-items-center font-semibold text-white disabled:opacity-50"
+                  className="grid place-items-center font-semibold disabled:opacity-50"
                   style={{
+                    color: "var(--on-brand)",
                     height: 34,
                     padding: "0 14px",
                     borderRadius: 6,

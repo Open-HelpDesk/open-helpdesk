@@ -55,8 +55,8 @@ export function ResetForm({ token }: { token: string }) {
         </p>
         <a
           href="/login"
-          className="rounded-md text-center text-sm font-semibold text-white"
-          style={{ height: 38, lineHeight: "38px", background: "var(--acc)" }}
+          className="rounded-md text-center text-sm font-semibold"
+          style={{ color: "var(--on-brand)", height: 38, lineHeight: "38px", background: "var(--acc)" }}
         >
           {t("app.reset.signIn")}
         </a>
@@ -99,8 +99,8 @@ export function ResetForm({ token }: { token: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="mt-1 rounded-md text-sm font-semibold text-white disabled:opacity-60"
-        style={{ height: 38, background: "var(--acc)" }}
+        className="mt-1 rounded-md text-sm font-semibold disabled:opacity-60"
+        style={{ color: "var(--on-brand)", height: 38, background: "var(--acc)" }}
       >
         {pending ? t("app.reset.pending") : t("app.reset.submit")}
       </button>

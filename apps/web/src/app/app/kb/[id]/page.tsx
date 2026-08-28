@@ -264,8 +264,8 @@ export default async function KbEditorPage({
               type="submit"
               name="intent"
               value="publish"
-              className="flex-1 rounded-md font-semibold text-white"
-              style={{ height: 32, background: "var(--acc)", fontSize: 13 }}
+              className="flex-1 rounded-md font-semibold"
+              style={{ color: "var(--on-brand)", height: 32, background: "var(--acc)", fontSize: 13 }}
             >
               {t("app.kb.publish")}
             </button>

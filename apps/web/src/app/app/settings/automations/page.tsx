@@ -275,8 +275,8 @@ export default async function AutomationsPage({
 
         <Link
           href="/app/settings/automations/new"
-          className="inline-flex items-center justify-center self-start rounded-md font-semibold text-white"
-          style={{ height: 32, padding: "0 13px", fontSize: 13, background: "var(--acc)" }}
+          className="inline-flex items-center justify-center self-start rounded-md font-semibold"
+          style={{ color: "var(--on-brand)", height: 32, padding: "0 13px", fontSize: 13, background: "var(--acc)" }}
         >
           {t("app.settings.rules.ruleNew")}
         </Link>

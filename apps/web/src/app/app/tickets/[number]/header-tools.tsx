@@ -71,8 +71,8 @@ export function MergeDialog({
           />
           <button
             type="submit"
-            className="shrink-0 px-3 text-[13px] font-semibold text-white"
-            style={{ height: 36, borderRadius: 9, background: "var(--brand)" }}
+            className="shrink-0 px-3 text-[13px] font-semibold"
+            style={{ color: "var(--on-brand)", height: 36, borderRadius: 9, background: "var(--brand)" }}
           >
             {t("app.ticket.merge")}
           </button>

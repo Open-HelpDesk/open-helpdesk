@@ -461,8 +461,9 @@ export function NewTicketForm({
         </Link>
         <button
           type="submit"
-          className="grid place-items-center font-semibold text-white"
+          className="grid place-items-center font-semibold"
           style={{
+            color: "var(--on-brand)",
             height: 36,
             padding: "0 17px",
             borderRadius: 9,

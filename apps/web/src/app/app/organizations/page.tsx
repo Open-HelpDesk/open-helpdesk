@@ -408,8 +408,8 @@ export default async function OrganizationsPage({
                 />
                 <button
                   type="submit"
-                  className="self-end rounded-md px-3 py-1.5 text-[12.5px] font-semibold text-white"
-                  style={{ background: "var(--acc)" }}
+                  className="self-end rounded-md px-3 py-1.5 text-[12.5px] font-semibold"
+                  style={{ color: "var(--on-brand)", background: "var(--acc)" }}
                 >
                   {t("app.contacts.orgSaveNotes")}
                 </button>

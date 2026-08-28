@@ -89,8 +89,8 @@ export function AcceptInviteForm({
 
         <button
           type="submit"
-          className="rounded-md font-semibold text-white"
-          style={{ height: 38, fontSize: 13.5, background: "var(--acc)" }}
+          className="rounded-md font-semibold"
+          style={{ color: "var(--on-brand)", height: 38, fontSize: 13.5, background: "var(--acc)" }}
         >
           {t("app.invite.submit")}
         </button>

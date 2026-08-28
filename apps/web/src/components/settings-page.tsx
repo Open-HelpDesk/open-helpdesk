@@ -144,8 +144,8 @@ export function SaveBar({
       </Link>
       <button
         type="submit"
-        className="inline-flex items-center rounded-md px-3.5 font-semibold text-white"
-        style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+        className="inline-flex items-center rounded-md px-3.5 font-semibold"
+        style={{ color: "var(--on-brand)", height: 32, fontSize: 13, background: "var(--acc)" }}
       >
         {submitLabel ?? t("app.settings.shell.save")}
       </button>
@@ -399,8 +399,8 @@ export function LockedScreen({
           {variant === "cloud" && (
             <Link
               href="/app/settings/billing"
-              className="mt-4 inline-flex items-center rounded-md px-4 font-semibold text-white"
-              style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+              className="mt-4 inline-flex items-center rounded-md px-4 font-semibold"
+              style={{ color: "var(--on-brand)", height: 32, fontSize: 13, background: "var(--acc)" }}
             >
               {t("app.settings.shell.manageSubscription")}
             </Link>

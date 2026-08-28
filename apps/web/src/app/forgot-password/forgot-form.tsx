@@ -55,8 +55,8 @@ export function ForgotForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-1 rounded-md text-sm font-semibold text-white disabled:opacity-60"
-        style={{ height: 38, background: "var(--acc)" }}
+        className="mt-1 rounded-md text-sm font-semibold disabled:opacity-60"
+        style={{ color: "var(--on-brand)", height: 38, background: "var(--acc)" }}
       >
         {pending ? t("app.forgot.pending") : t("app.forgot.submit")}
       </button>

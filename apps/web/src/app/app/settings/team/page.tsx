@@ -171,7 +171,7 @@ export default async function TeamPage({
                 fontSize: 13,
                 borderColor: seatFull ? "var(--acc)" : "var(--line)",
                 background: seatFull ? "var(--acc)" : "var(--panel)",
-                color: seatFull ? "#fff" : "var(--ink-2)",
+                color: seatFull ? "var(--on-brand)" : "var(--ink-2)",
               }}
             >
               {seatFull
@@ -345,8 +345,8 @@ export default async function TeamPage({
             </Select>
             <button
               type="submit"
-              className="rounded-md font-semibold text-white"
-              style={{ height: 36, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
+              className="rounded-md font-semibold"
+              style={{ color: "var(--on-brand)", height: 36, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
             >
               {t("app.settings.workspace.inviteAction")}
             </button>
@@ -588,8 +588,8 @@ function TeamForm({
         <span className="flex-1" />
         <button
           type="submit"
-          className="rounded-md font-semibold text-white"
-          style={{ height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
+          className="rounded-md font-semibold"
+          style={{ color: "var(--on-brand)", height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
         >
           {t("app.settings.workspace.save")}
         </button>

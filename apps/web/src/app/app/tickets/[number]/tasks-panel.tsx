@@ -182,7 +182,7 @@ export function TasksPanel({
                 padding: "0 13px",
                 borderRadius: 8,
                 background: label.trim() ? "var(--brand)" : "var(--ink-3)",
-                color: "#fff",
+                color: "var(--on-brand)",
                 fontSize: 12,
                 fontWeight: 600,
               }}
@@ -208,13 +208,14 @@ export function TasksPanel({
                 role="checkbox"
                 aria-checked={task.done}
                 aria-label={task.label}
-                className="grid place-items-center font-bold text-white"
+                className="grid place-items-center font-bold"
                 style={{
                   width: 20,
                   height: 20,
                   borderRadius: 6,
                   border: `1.5px solid ${task.done ? "var(--ok)" : "var(--line)"}`,
                   background: task.done ? "var(--ok)" : "var(--panel)",
+                  color: "var(--on-ok)",
                   fontSize: 11,
                 }}
               >

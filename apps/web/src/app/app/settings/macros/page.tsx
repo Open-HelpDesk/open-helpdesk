@@ -103,8 +103,14 @@ export default async function MacrosPage({
           <Drawer
             title={t("app.settings.rules.macroCreateTitle")}
             trigger={<>{t("app.settings.rules.macroNew")}</>}
-            triggerClassName="inline-flex items-center justify-center rounded-md font-semibold text-white"
-            triggerStyle={{ height: 34, padding: "0 14px", fontSize: 13, background: "var(--acc)" }}
+            triggerClassName="inline-flex items-center justify-center rounded-md font-semibold"
+            triggerStyle={{
+              height: 34,
+              padding: "0 14px",
+              fontSize: 13,
+              background: "var(--acc)",
+              color: "var(--on-brand)",
+            }}
           >
             <MacroForm teams={teamRows} t={t} />
           </Drawer>
@@ -320,8 +326,8 @@ function MacroForm({
         <span className="flex-1" />
         <button
           type="submit"
-          className="rounded-md font-semibold text-white"
-          style={{ height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
+          className="rounded-md font-semibold"
+          style={{ color: "var(--on-brand)", height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
         >
           {t("app.settings.rules.save")}
         </button>

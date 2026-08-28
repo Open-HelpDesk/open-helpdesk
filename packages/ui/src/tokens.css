@@ -24,6 +24,13 @@
   --acc-2: var(--brand-2);
   --acc-t: var(--brand-t);
   --acc-b: var(--brand-b);
+  /* Ink for text sitting ON a --brand fill. --brand cannot serve both roles
+     across both themes: as a text colour it has to contrast with the panel (so
+     it goes light in dark mode), and as a button fill the label has to contrast
+     with IT. White on the dark-theme mint is 2.3:1 — below the 4.5 AA asks for.
+     Splitting the role costs one token; a fill dark enough for white in dark
+     mode would cost the accent its legibility as text. */
+  --on-brand: #ffffff;
   --canvas: #f3f6f4;
   --bg: #ffffff;
   --panel: #ffffff;
@@ -56,6 +63,9 @@
   --pause-t: #edf1f4;
   --ok: #0e7a58;
   --ok-t: #e5f1ea;
+  /* Same split as --on-brand, same reason: white on the dark-theme --ok is
+     1.9:1. Only the solved chips and the "resolve" button fill with it. */
+  --on-ok: #ffffff;
   --closed: #6b7280;
   --closed-t: #f0f1f3;
   --dang: #c0342b;
@@ -102,6 +112,8 @@
   --acc: var(--brand);
   --acc-t: var(--brand-t);
   --acc-b: var(--brand-b);
+  /* 8.2:1 on #34c08d — a mint button carries dark ink, as dark themes do. */
+  --on-brand: #08120e;
   --canvas: #080c0b;
   --bg: #0e1413;
   --panel: #131b18;
@@ -131,6 +143,7 @@
   --pause-t: #1a2228;
   --ok: #48d0a0;
   --ok-t: #122a20;
+  --on-ok: #08120e;
   --closed: #9ca3af;
   --closed-t: #1b1f1e;
   --dang: #f0736a;

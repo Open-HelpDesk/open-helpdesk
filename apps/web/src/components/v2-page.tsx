@@ -80,7 +80,7 @@ export const primaryAction: CSSProperties = {
   padding: "0 16px",
   borderRadius: 9,
   background: "var(--brand)",
-  color: "#fff",
+  color: "var(--on-brand)",
   display: "flex",
   alignItems: "center",
   fontSize: 13.5,

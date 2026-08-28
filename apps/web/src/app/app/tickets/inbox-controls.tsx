@@ -285,8 +285,9 @@ export function InboxControls({
                       style={{ gap: 10, padding: "7px 10px", borderRadius: 8, fontSize: 13 }}
                     >
                       <span
-                        className="grid place-items-center font-bold text-white"
+                        className="grid place-items-center font-bold"
                         style={{
+                          color: "var(--on-brand)",
                           width: 16,
                           height: 16,
                           flex: "none",

@@ -408,8 +408,9 @@ export function TopBar({
 
       <Link
         href="/app/tickets/new"
-        className="flex items-center whitespace-nowrap font-semibold text-white"
+        className="flex items-center whitespace-nowrap font-semibold"
         style={{
+          color: "var(--on-brand)",
           height: 36,
           gap: 8,
           padding: "0 14px",

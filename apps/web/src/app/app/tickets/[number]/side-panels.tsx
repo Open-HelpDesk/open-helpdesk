@@ -276,8 +276,9 @@ export function SidePanels({
                   </button>
                   <button
                     type="submit"
-                    className="font-semibold text-white"
+                    className="font-semibold"
                     style={{
+                      color: "var(--on-brand)",
                       height: 30,
                       padding: "0 12px",
                       borderRadius: 8,
@@ -462,8 +463,9 @@ export function SidePanels({
                   </button>
                   <button
                     type="submit"
-                    className="font-semibold text-white"
+                    className="font-semibold"
                     style={{
+                      color: "var(--on-brand)",
                       height: 30,
                       padding: "0 12px",
                       borderRadius: 8,

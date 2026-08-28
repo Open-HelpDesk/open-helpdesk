@@ -198,8 +198,9 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="grid place-items-center text-white disabled:opacity-60"
+        className="grid place-items-center disabled:opacity-60"
         style={{
+          color: "var(--on-brand)",
           height: 44,
           borderRadius: 10,
           background: "var(--brand)",

@@ -61,6 +61,11 @@ export default async function WidgetPage({
         ...(accent ? ({ "--acc": accent, "--acc-2": accent } as React.CSSProperties) : {}),
       }}
     >
+      {/* White on --acc, and not var(--on-brand) like everywhere else in the
+          product: here --acc is the TENANT's colour (ST-09), which can be any
+          hex. A fixed ink would be a guess — half the accents would get the
+          wrong one. Reading it properly means computing the accent's luminance
+          and choosing per tenant; until then white stays, as it did before. */}
       <header
         className="flex-none px-4 py-3.5 text-[15px] font-semibold text-white"
         style={{ background: "var(--acc)" }}
