@@ -56,10 +56,14 @@ export async function getReportData(tenantId: string, days: number, teamId?: str
       where tenant_id = ${tenantId} and created_at >= ${from} and created_at < ${to}
     `)) as unknown as Row[];
     const total = n(rows[0]?.total);
-    return total > 0 ? Math.round((n(rows[0]?.good) / total) * 100) : null;
+    const good = n(rows[0]?.good);
+    // The score enum has two values, so "bad" is the complement — the V2 card
+    // draws two bars and not the mockup's three (there is no neutral rating to
+    // report, and inventing one would put a zero next to a label nothing feeds).
+    return { total, good, bad: total - good, pct: total > 0 ? Math.round((good / total) * 100) : null };
   }
 
-  const [current, previous, csatCurrent, csatPrevious] = await Promise.all([
+  const [current, previous, csatNow, csatBefore] = await Promise.all([
     metrics(0),
     metrics(1),
     csat(0),
@@ -91,7 +95,9 @@ export async function getReportData(tenantId: string, days: number, teamId?: str
       select t.assignee_id as agent_id,
         count(*) filter (where t.resolved_at >= now() - make_interval(days => ${days})) as resolved,
         percentile_cont(0.5) within group (order by extract(epoch from (t.first_replied_at - t.created_at)))
-          filter (where t.first_replied_at >= now() - make_interval(days => ${days})) as median_first_reply_sec
+          filter (where t.first_replied_at >= now() - make_interval(days => ${days})) as median_first_reply_sec,
+        percentile_cont(0.5) within group (order by extract(epoch from (t.resolved_at - t.created_at)))
+          filter (where t.resolved_at >= now() - make_interval(days => ${days})) as median_resolve_sec
       from app.tickets t
       where t.tenant_id = ${tenantId} and t.assignee_id is not null
         and t.deleted_at is null and t.merged_into_id is null${teamFilterT}
@@ -109,6 +115,7 @@ export async function getReportData(tenantId: string, days: number, teamId?: str
     select u.name,
       coalesce(pt.resolved, 0) as resolved,
       pt.median_first_reply_sec,
+      pt.median_resolve_sec,
       coalesce(pc.csat_good, 0) as csat_good,
       coalesce(pc.csat_total, 0) as csat_total
     from app.users u
@@ -147,8 +154,9 @@ export async function getReportData(tenantId: string, days: number, teamId?: str
   return {
     current,
     previous,
-    csatCurrent,
-    csatPrevious,
+    csatCurrent: csatNow.pct,
+    csatPrevious: csatBefore.pct,
+    csatBreakdown: { total: csatNow.total, good: csatNow.good, bad: csatNow.bad },
     daily: daily.map((r) => ({
       day: String(r.day),
       created: n(r.created),
@@ -159,6 +167,7 @@ export async function getReportData(tenantId: string, days: number, teamId?: str
       name: String(r.name),
       resolved: n(r.resolved),
       medianFirstReplySec: r.median_first_reply_sec === null ? null : n(r.median_first_reply_sec),
+      medianResolveSec: r.median_resolve_sec === null ? null : n(r.median_resolve_sec),
       csatPct: n(r.csat_total) > 0 ? Math.round((n(r.csat_good) / n(r.csat_total)) * 100) : null,
     })),
     heatmap,

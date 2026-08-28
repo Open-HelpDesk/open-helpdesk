@@ -12,10 +12,16 @@
  */
 import type { CSSProperties, ReactNode } from "react";
 
-/** The centred column every V2 list screen sits in. */
+/**
+ * The centred column every V2 list screen sits in.
+ *
+ * `h-full` and not only `flex-1`: the shell hands the page a block with
+ * `overflow-hidden`, so a column sized by its content is clipped instead of
+ * scrolling — the scroll has to happen here, against a height it can measure.
+ */
 export function PageShell({ children }: { children: ReactNode }) {
   return (
-    <div className="min-w-0 flex-1 overflow-auto">
+    <div className="h-full min-w-0 flex-1 overflow-auto">
       <div
         className="flex flex-col"
         style={{ maxWidth: 1080, margin: "0 auto", padding: "24px 26px 40px", gap: 18 }}

@@ -1,7 +1,7 @@
 /**
  * AG-09 chart components — server-rendered, design system tokens.
- * Faithful to the "Agent workspace" mockup: KPI tiles (label 11.5 min-h 30, value 24px/600,
- * delta line + 56×20 sparkline), "Created vs resolved" as areas + lines 640×190 (pad 22),
+ * V2 shapes: KPI tiles (radius 13, figure 25px in the display face), "created vs
+ * solved" as grouped bars 150 px tall bucketed by day or week, CSAT meters h9,
  * per-channel bars h7, 7 × 12 heatmap on a `16px repeat(12,1fr)` grid, gap 3.
  *
  * Server-rendered but synchronous: the translation function is passed to them as a
@@ -61,7 +61,12 @@ const DELTA_INK: Record<KpiDelta["tone"], string> = {
   neutral: "var(--ink-2)",
 };
 
-/** KPI tile: label (min-h 30) · value 24px/600 · "delta ↔ sparkline" row. */
+/**
+ * KPI tile (V2): radius 13, padding 15/17, label 12 ink-3, the figure in the
+ * display face at 25px, then the delta. The sparkline sits on the delta line —
+ * the mockup does not draw one, but it costs no vertical rhythm and it is the
+ * only place the shape of the period shows.
+ */
 export function KpiTile({
   label,
   value,
@@ -73,36 +78,36 @@ export function KpiTile({
   delta: KpiDelta | null;
   spark?: number[];
 }) {
-  const sparkColor = delta?.tone === "bad" ? "var(--dang)" : "var(--acc-2)";
+  const sparkColor = delta?.tone === "bad" ? "var(--dang)" : "var(--brand-2)";
   return (
     <div
       className="flex flex-col"
       style={{
-        gap: 7,
-        borderRadius: 10,
-        padding: 13,
+        gap: 4,
+        borderRadius: 13,
+        padding: "15px 17px",
         background: "var(--panel)",
         border: "1px solid var(--line)",
+        boxShadow: "0 1px 2px rgba(13,28,23,.03)",
       }}
     >
-      <div style={{ fontSize: 11.5, color: "var(--ink-3)", fontWeight: 500, minHeight: 30 }}>
-        {label}
-      </div>
+      <div style={{ fontSize: 12, color: "var(--ink-3)" }}>{label}</div>
       <div
         style={{
-          fontSize: 24,
+          fontFamily: "var(--font-title)",
+          fontSize: 25,
           fontWeight: 600,
-          letterSpacing: "-.02em",
+          letterSpacing: "-.01em",
           fontVariantNumeric: "tabular-nums",
-          lineHeight: 1.15,
+          lineHeight: 1.2,
         }}
       >
         {value}
       </div>
-      <div className="flex items-center justify-between" style={{ gap: 6 }}>
+      <div className="flex items-center justify-between" style={{ gap: 8, marginTop: "auto" }}>
         <span
           style={{
-            fontSize: 11.5,
+            fontSize: 12,
             fontWeight: 600,
             color: delta ? DELTA_INK[delta.tone] : "var(--ink-3)",
             fontVariantNumeric: "tabular-nums",
@@ -110,7 +115,7 @@ export function KpiTile({
         >
           {delta?.text ?? ""}
         </span>
-        <div style={{ width: 56, height: 20 }}>
+        <div style={{ width: 48, height: 18, flex: "none" }}>
           {spark && spark.some((v) => v !== spark[0]) ? (
             <Sparkline values={spark} color={sparkColor} />
           ) : null}
@@ -120,14 +125,52 @@ export function KpiTile({
   );
 }
 
-/** "■ Created ■ Resolved" legend — 8×8 squares, 11.5px ink-3, inline with the title. */
+/**
+ * Horizontal meter used by the CSAT breakdown — label, track, raw count.
+ * Same 9 px track as the mockup; the width is the share of the responses.
+ */
+export function MeterRow({
+  label,
+  value,
+  total,
+  color,
+  t,
+}: {
+  label: string;
+  value: number;
+  total: number;
+  color: string;
+  t: Translate;
+}) {
+  const pct = total > 0 ? (value / total) * 100 : 0;
+  return (
+    <div className="flex items-center" style={{ gap: 10, fontSize: 12.5 }}>
+      <span style={{ width: 92, flex: "none", color: "var(--ink-2)" }}>{label}</span>
+      <div
+        style={{ flex: 1, height: 9, borderRadius: 5, background: "var(--sunk)", overflow: "hidden" }}
+      >
+        <div
+          style={{ width: `${pct.toFixed(1)}%`, height: "100%", background: color, borderRadius: 5 }}
+        />
+      </div>
+      <span
+        className="tabular-nums"
+        style={{ width: 40, textAlign: "right", color: "var(--ink-3)" }}
+      >
+        {t.fmt.number(value)}
+      </span>
+    </div>
+  );
+}
+
+/** "■ Created ■ Solved" legend — V2: 10×10 squares radius 3, 12px ink-2. */
 export function ChartLegend({ items }: { items: { label: string; color: string }[] }) {
   return (
-    <div className="flex" style={{ gap: 11, fontSize: 11.5, color: "var(--ink-3)" }}>
+    <div className="flex" style={{ gap: 16, fontSize: 12, color: "var(--ink-2)" }}>
       {items.map((i) => (
-        <span key={i.label} className="flex items-center" style={{ gap: 5 }}>
+        <span key={i.label} className="flex items-center" style={{ gap: 6 }}>
           <span
-            style={{ width: 8, height: 8, borderRadius: 2, background: i.color, flex: "none" }}
+            style={{ width: 10, height: 10, borderRadius: 3, background: i.color, flex: "none" }}
           />
           {i.label}
         </span>
@@ -136,93 +179,103 @@ export function ChartLegend({ items }: { items: { label: string; color: string }
   );
 }
 
+export type Bucket = { day: string; created: number; resolved: number };
+
 /**
- * "Created vs resolved" — areas + lines, viewBox 640×190, pad 22, 5 grid lines.
- * The parent container sets the height (190px in the design).
+ * Buckets the daily series so the bar chart never draws more columns than it can
+ * label: a day each over a week, a week each beyond that. 90 days would be 13
+ * weekly bars, which the card still fits because the bars flex.
  */
-export function AreaLines({
+export function bucketDaily(daily: Bucket[], perBucket: number): Bucket[] {
+  if (perBucket <= 1) return daily;
+  const out: Bucket[] = [];
+  // Filled from the end, so the last bucket is the current, complete-so-far one
+  // and it is the OLDEST bucket that is short — a partial week drawn as the last
+  // column reads as a collapse in volume that never happened.
+  for (let end = daily.length; end > 0; end -= perBucket) {
+    const slice = daily.slice(Math.max(0, end - perBucket), end);
+    out.unshift({
+      day: slice[0]!.day,
+      created: slice.reduce((acc, d) => acc + d.created, 0),
+      resolved: slice.reduce((acc, d) => acc + d.resolved, 0),
+    });
+  }
+  return out;
+}
+
+/**
+ * "Tickets created vs solved" — V2 grouped bars: 150 px tall, one pair per
+ * bucket, 22 px wide at most, --series-mute for created and solid --brand for
+ * solved. The parent card sets the width.
+ */
+export function BucketBars({
   data,
   labelA,
   labelB,
   t,
 }: {
-  data: { day: string; created: number; resolved: number }[];
+  data: Bucket[];
   labelA: string;
   labelB: string;
   t: Translate;
 }) {
-  const W = 640;
-  const H = 190;
-  const PAD = 22;
-  const peak = Math.max(...data.map((d) => Math.max(d.created, d.resolved)), 1);
-  // "Round" cap so that the 4 grid quarters land on readable values.
-  const step = Math.max(1, Math.pow(10, Math.floor(Math.log10(peak))) / 2);
-  const max = Math.ceil(peak / (step * 4)) * step * 4;
-  const x = (i: number) => PAD + (data.length > 1 ? (i / (data.length - 1)) * (W - PAD - 8) : 0);
-  const y = (v: number) => H - PAD - (v / max) * (H - PAD - 12);
-
-  const path = (get: (d: (typeof data)[number]) => number) =>
-    data.map((d, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(get(d)).toFixed(1)}`).join(" ");
-  const fill = (get: (d: (typeof data)[number]) => number) =>
-    `${path(get)} L${x(data.length - 1).toFixed(1)},${H - PAD} L${x(0).toFixed(1)},${H - PAD} Z`;
-
-  const slot = data.length > 1 ? (W - PAD - 8) / (data.length - 1) : W;
+  const max = Math.max(...data.map((d) => Math.max(d.created, d.resolved)), 1);
+  // A bucket holding one ticket against a peak of 300 rounds to 0 % and vanishes;
+  // 3 % is the smallest bar that still reads as a bar.
+  const height = (v: number) => (v === 0 ? "0%" : `${Math.max(3, (v / max) * 100).toFixed(1)}%`);
 
   return (
-    <svg
-      viewBox={`0 0 ${W} ${H}`}
-      width="100%"
-      height="100%"
-      preserveAspectRatio="none"
+    <div
+      className="flex items-end"
+      style={{ gap: 14, height: 150, paddingTop: 8 }}
       role="img"
       aria-label={t("app.reports.chartDailyAria", { labelA, labelB })}
-      style={{ display: "block" }}
     >
-      {[0, 0.25, 0.5, 0.75, 1].map((f) => (
-        <line
-          key={f}
-          x1={PAD}
-          x2={W - 8}
-          y1={y(max * f)}
-          y2={y(max * f)}
-          stroke="var(--line-2)"
-          strokeWidth={1}
-        />
+      {data.map((d) => (
+        <div
+          key={d.day}
+          className="flex flex-col items-center justify-end"
+          style={{ flex: 1, minWidth: 0, gap: 6, height: "100%" }}
+          title={t("app.reports.chartDailyPoint", {
+            date: t.fmt.dateCompact(new Date(d.day)),
+            labelA,
+            created: d.created,
+            labelB,
+            resolved: d.resolved,
+          })}
+        >
+          <div
+            className="flex w-full items-end justify-center"
+            style={{ gap: 4, flex: 1, minHeight: 0 }}
+          >
+            <div
+              style={{
+                flex: 1,
+                maxWidth: 22,
+                height: height(d.created),
+                background: "var(--series-mute)",
+                borderRadius: "5px 5px 0 0",
+              }}
+            />
+            <div
+              style={{
+                flex: 1,
+                maxWidth: 22,
+                height: height(d.resolved),
+                background: "var(--brand)",
+                borderRadius: "5px 5px 0 0",
+              }}
+            />
+          </div>
+          <span
+            className="truncate"
+            style={{ fontSize: 11, color: "var(--ink-3)", maxWidth: "100%" }}
+          >
+            {t.fmt.dateCompact(new Date(d.day))}
+          </span>
+        </div>
       ))}
-      {data.length > 1 && (
-        <>
-          <path d={fill((d) => d.created)} fill="var(--open)" opacity={0.12} />
-          <path d={fill((d) => d.resolved)} fill="var(--acc-2)" opacity={0.14} />
-          <path
-            d={path((d) => d.created)}
-            fill="none"
-            stroke="var(--open)"
-            strokeWidth={2}
-            strokeLinejoin="round"
-          />
-          <path
-            d={path((d) => d.resolved)}
-            fill="none"
-            stroke="var(--acc-2)"
-            strokeWidth={2}
-            strokeLinejoin="round"
-          />
-        </>
-      )}
-      {data.map((d, i) => (
-        <rect key={d.day} x={x(i) - slot / 2} y={0} width={slot} height={H} fill="transparent">
-          <title>
-            {t("app.reports.chartDailyPoint", {
-              date: t.fmt.dateShort(new Date(d.day)),
-              labelA,
-              created: d.created,
-              labelB,
-              resolved: d.resolved,
-            })}
-          </title>
-        </rect>
-      ))}
-    </svg>
+    </div>
   );
 }
 

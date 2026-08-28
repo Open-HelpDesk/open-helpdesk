@@ -47,6 +47,15 @@ export class LocaleFormat {
   }
 
   /**
+   * A number with at most `digits` decimals — the deltas of AG-09 ("+ 12,4 %").
+   * Not cached: the digit count varies per call site, and one formatter per
+   * count would be a map keyed by an integer for no gain.
+   */
+  decimal(n: number, digits = 1): string {
+    return new Intl.NumberFormat(this.#tag, { maximumFractionDigits: digits }).format(n);
+  }
+
+  /**
    * An amount, always with its two decimals — "7,20" and not "7,2", which
    * reads as an unfinished price. The currency symbol stays in the
    * dictionaries: its side of the number changes with the language.
@@ -118,6 +127,11 @@ export class LocaleFormat {
   /** "14 August" — without the year. */
   dateShort(date: Date): string {
     return date.toLocaleDateString(this.#tag, { day: "numeric", month: "long" });
+  }
+
+  /** "14 Aug" — the axis label of a chart, where "14 August" would not fit. */
+  dateCompact(date: Date): string {
+    return date.toLocaleDateString(this.#tag, { day: "numeric", month: "short" });
   }
 
   /** "09:12" if the message is from today, otherwise "14 Aug, 09:12". */

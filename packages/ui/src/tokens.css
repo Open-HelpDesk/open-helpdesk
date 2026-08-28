@@ -63,6 +63,11 @@
   /* Chart series (AG-09) — CVD-validated on a light surface (dataviz) */
   --chart-1: #0e8a5f;
   --chart-2: #2563eb;
+  /* The muted half of a two-value series (created vs solved bars): same hue as
+     --brand, one step back. --brand-b would do in light, but in dark it is a
+     hairline colour that disappears against --panel — so the pair gets its own
+     token and each theme picks a value that reads on its own background. */
+  --series-mute: #c7ddd3;
   /* Public site */
   --site-dark: #08281e;
   /* Typography — the faces are shipped by fonts.css, not merely named here. */
@@ -133,6 +138,7 @@
   /* Chart series — CVD-validated on a dark surface (dataviz) */
   --chart-1: #2ea47c;
   --chart-2: #5a87e8;
+  --series-mute: #2f7a5c;
 }
 
 /* ---------- 1ter. Customer portal (.surface-portal) — PT mockup palette ---------- */
