@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { requireAgent } from "@/lib/session";
 import { getOrganization, listOrganizations } from "@/lib/directory";
 import { getT } from "@/i18n/server";
+import { card } from "@/components/v2-page";
 import { Avatar, StatusChip } from "@/components/ticket-bits";
 import {
   addOrgDomain,
@@ -51,23 +52,37 @@ export default async function OrganizationsPage({
     <div className="flex h-full">
       {/* Table column */}
       <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <div
-          className="flex shrink-0 items-center gap-2 border-b px-4"
-          style={{ height: 48, background: "var(--panel)", borderColor: "var(--line)" }}
-        >
-          <form className="min-w-0">
+        {/* V2 header — same shape as contacts, so the two screens stop being two
+            different designs of one screen. */}
+        <div className="flex flex-wrap items-center" style={{ gap: 14, padding: "20px 22px 14px" }}>
+          <div className="flex flex-col" style={{ gap: 4, flex: 1, minWidth: 200 }}>
+            <h1
+              style={{
+                fontFamily: "var(--font-title)",
+                fontSize: 23,
+                fontWeight: 600,
+                letterSpacing: "-.015em",
+              }}
+            >
+              {t("app.shell.organizations")}
+            </h1>
+            <p style={{ fontSize: 13.5, color: "var(--ink-2)" }}>
+              {t("app.contacts.orgSubtitle", { count: rows.length })}
+            </p>
+          </div>
+          <form className="min-w-0" style={{ maxWidth: 260, flex: 1 }}>
             <input
               name="q"
               defaultValue={q ?? ""}
               placeholder={t("app.contacts.orgSearchPlaceholder")}
-              className="border px-3 text-[13px] outline-none"
+              className="w-full outline-none"
               style={{
-                height: 30,
-                maxWidth: 280,
-                width: "100%",
-                borderRadius: 6,
-                borderColor: "var(--line)",
-                background: "var(--bg)",
+                height: 38,
+                padding: "0 12px",
+                borderRadius: 9,
+                border: "1px solid var(--line)",
+                background: "var(--panel)",
+                fontSize: 13,
               }}
             />
           </form>
@@ -81,14 +96,19 @@ export default async function OrganizationsPage({
                 : t("app.contacts.orgEmpty")}
             </p>
           ) : (
-            <div style={{ minWidth: 680 }}>
+            <div style={{ ...card, margin: "0 22px 22px", overflowX: "auto" }}>
               <div
-                className="sticky top-0 z-10 grid items-center border-b font-semibold uppercase tracking-wide"
+                className="grid items-center border-b"
                 style={{
                   gridTemplateColumns: GRID,
-                  height: 32,
+                  minWidth: 680,
+                  height: 40,
+                  fontWeight: 600,
+                  letterSpacing: ".09em",
+                  textTransform: "uppercase",
                   fontSize: 11,
-                  background: "var(--sunk)",
+                  padding: "0 18px",
+                  background: "var(--canvas)",
                   borderColor: "var(--line)",
                   color: "var(--ink-3)",
                 }}
@@ -107,7 +127,8 @@ export default async function OrganizationsPage({
                     className="ohd-row grid items-center border-b"
                     style={{
                       gridTemplateColumns: GRID,
-                      height: 42,
+                      minWidth: 680,
+                      minHeight: 54,
                       borderColor: "var(--line-2)",
                       "--row-bg": active ? "var(--acc-t)" : "var(--bg)",
                     } as CSSProperties}

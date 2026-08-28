@@ -608,6 +608,10 @@ export const fi: Dictionary = {
   "app.newTicket.cancel": "Peruuta",
   "app.newTicket.submit": "Luo pyyntö",
   "app.contacts.searchPlaceholder": "Hae yhteyshenkilöä…",
+  "app.contacts.subtitle": {
+    one: "{count} yhteystieto, luodaan automaattisesti ensimmäisestä viestistä.",
+    other: "{count} yhteystietoa, luodaan automaattisesti ensimmäisestä viestistä.",
+  },
   "app.contacts.importCsv": "Tuo CSV",
   "app.contacts.empty": "Ei yhteyshenkilöitä.",
   "app.contacts.emptyQuery": "Ei yhteyshenkilöitä haulle ”{query}”.",
@@ -645,6 +649,10 @@ export const fi: Dictionary = {
   "app.contacts.cancel": "Peruuta",
   "app.contacts.deletedName": "Poistettu yhteyshenkilö",
   "app.contacts.orgSearchPlaceholder": "Hae organisaatiota…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organisaatio, joka ryhmittelee yhteystiedot verkkotunnuksen mukaan.",
+    other: "{count} organisaatiota, jotka ryhmittelevät yhteystiedot verkkotunnuksen mukaan.",
+  },
   "app.contacts.orgEmpty": "Ei organisaatioita.",
   "app.contacts.orgEmptyQuery": "Ei organisaatioita haulle ”{query}”.",
   "app.contacts.orgColumnDomains": "Verkkotunnukset",

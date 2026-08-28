@@ -4,6 +4,7 @@ import { requireAgent } from "@/lib/session";
 import { getContact, listContacts } from "@/lib/directory";
 import { getT } from "@/i18n/server";
 import { Avatar, StatusChip } from "@/components/ticket-bits";
+import { card, secondaryAction } from "@/components/v2-page";
 import { toggleContactBlocked } from "./actions";
 import { DeleteRgpdButton, MergeContactButton, NewContactButton } from "./contact-drawers";
 
@@ -64,29 +65,42 @@ export default async function ContactsPage({
     <div className="flex h-full" style={{ background: "var(--bg)" }}>
       {/* Table column */}
       <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        {/* Toolbar */}
-        <div
-          className="flex shrink-0 items-center border-b"
-          style={{ gap: 8, padding: "10px 16px", borderColor: "var(--line)" }}
-        >
-          <form className="min-w-0 flex-1" style={{ maxWidth: 280 }}>
+        {/* V2 header: the screen says what it is and what it holds, then its
+            actions. It replaces a toolbar whose search box sat where a title
+            belongs. */}
+        <div className="flex flex-wrap items-center" style={{ gap: 14, padding: "20px 22px 14px" }}>
+          <div className="flex flex-col" style={{ gap: 4, flex: 1, minWidth: 200 }}>
+            <h1
+              style={{
+                fontFamily: "var(--font-title)",
+                fontSize: 23,
+                fontWeight: 600,
+                letterSpacing: "-.015em",
+              }}
+            >
+              {t("app.shell.contacts")}
+            </h1>
+            <p style={{ fontSize: 13.5, color: "var(--ink-2)" }}>
+              {t("app.contacts.subtitle", { count: rows.length })}
+            </p>
+          </div>
+          <form className="min-w-0" style={{ maxWidth: 260, flex: 1 }}>
             <input
               name="q"
               defaultValue={q ?? ""}
               placeholder={t("app.contacts.searchPlaceholder")}
               className="w-full outline-none"
               style={{
-                height: 30,
-                padding: "0 10px",
-                borderRadius: 6,
+                height: 38,
+                padding: "0 12px",
+                borderRadius: 9,
                 border: "1px solid var(--line)",
-                background: "var(--bg)",
-                fontSize: 12.5,
+                background: "var(--panel)",
+                fontSize: 13,
               }}
             />
           </form>
-          <span className="flex-1" />
-          <button type="button" className="grid place-items-center" style={TOOL_BTN}>
+          <button type="button" style={secondaryAction}>
             {t("app.contacts.importCsv")}
           </button>
           <NewContactButton />
@@ -102,15 +116,19 @@ export default async function ContactsPage({
               {query ? t("app.contacts.emptyQuery", { query }) : t("app.contacts.empty")}
             </p>
           ) : (
-            <div style={{ minWidth: 880 }}>
+            <div style={{ ...card, margin: "0 22px 22px", overflowX: "auto" }}>
               <div
-                className="sticky top-0 z-10 grid items-center border-b font-semibold"
+                className="grid items-center border-b"
                 style={{
                   gridTemplateColumns: GRID,
-                  height: 32,
-                  padding: "0 16px",
+                  minWidth: 880,
+                  height: 40,
+                  padding: "0 18px",
                   fontSize: 11,
-                  background: "var(--sunk)",
+                  fontWeight: 600,
+                  letterSpacing: ".09em",
+                  textTransform: "uppercase",
+                  background: "var(--canvas)",
                   borderColor: "var(--line)",
                   color: "var(--ink-3)",
                 }}
@@ -130,15 +148,17 @@ export default async function ContactsPage({
                     className="ohd-row grid items-center border-b"
                     style={{
                       gridTemplateColumns: GRID,
-                      height: 42,
-                      padding: "0 16px",
+                      minWidth: 880,
+                      minHeight: 54,
+                      padding: "0 18px",
                       borderColor: "var(--line-2)",
-                      "--row-bg": active ? "var(--acc-t)" : "transparent",
+                      fontSize: 13.5,
+                      "--row-bg": active ? "var(--brand-t)" : "transparent",
                     } as CSSProperties}
                   >
                     <span className="flex min-w-0 items-center" style={{ gap: 9 }}>
-                      <Avatar name={c.name ?? c.email} size={24} fontSize={9.5} tone={i} />
-                      <span className="truncate" style={{ fontSize: 13, fontWeight: 500 }}>
+                      <Avatar name={c.name ?? c.email} size={32} fontSize={11} tone={i} />
+                      <span className="truncate" style={{ fontSize: 13.5, fontWeight: 600 }}>
                         {c.name ?? "—"}
                       </span>
                       {c.blocked && (

@@ -688,6 +688,11 @@ export const sk: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Hľadať kontakt…",
+  "app.contacts.subtitle": {
+    one: "{count} kontakt, vytvorený automaticky pri prvej správe.",
+    few: "{count} kontakty, vytvorené automaticky pri prvej správe.",
+    other: "{count} kontaktov, vytvorených automaticky pri prvej správe.",
+  },
   "app.contacts.importCsv": "Importovať CSV",
   "app.contacts.empty": "Žiadne kontakty.",
   "app.contacts.emptyQuery": "Žiadne kontakty pre „{query}“.",
@@ -726,6 +731,11 @@ export const sk: Dictionary = {
   "app.contacts.cancel": "Zrušiť",
   "app.contacts.deletedName": "Odstránený kontakt",
   "app.contacts.orgSearchPlaceholder": "Hľadať organizáciu…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organizácia, ktorá zoskupuje kontakty podľa domény.",
+    few: "{count} organizácie, ktoré zoskupujú kontakty podľa domény.",
+    other: "{count} organizácií, ktoré zoskupujú kontakty podľa domény.",
+  },
   "app.contacts.orgEmpty": "Žiadne organizácie.",
   "app.contacts.orgEmptyQuery": "Žiadne organizácie pre „{query}“.",
   "app.contacts.orgColumnDomains": "Domény",

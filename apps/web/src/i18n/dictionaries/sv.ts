@@ -607,6 +607,10 @@ export const sv: Dictionary = {
   "app.newTicket.cancel": "Avbryt",
   "app.newTicket.submit": "Skapa ärendet",
   "app.contacts.searchPlaceholder": "Sök kontakt…",
+  "app.contacts.subtitle": {
+    one: "{count} kontakt, skapad automatiskt vid första meddelandet.",
+    other: "{count} kontakter, skapade automatiskt vid första meddelandet.",
+  },
   "app.contacts.importCsv": "Importera CSV",
   "app.contacts.empty": "Inga kontakter.",
   "app.contacts.emptyQuery": "Inga kontakter för ”{query}”.",
@@ -644,6 +648,10 @@ export const sv: Dictionary = {
   "app.contacts.cancel": "Avbryt",
   "app.contacts.deletedName": "Borttagen kontakt",
   "app.contacts.orgSearchPlaceholder": "Sök organisation…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organisation som grupperar kontakter efter domän.",
+    other: "{count} organisationer som grupperar kontakter efter domän.",
+  },
   "app.contacts.orgEmpty": "Inga organisationer.",
   "app.contacts.orgEmptyQuery": "Inga organisationer för ”{query}”.",
   "app.contacts.orgColumnDomains": "Domäner",

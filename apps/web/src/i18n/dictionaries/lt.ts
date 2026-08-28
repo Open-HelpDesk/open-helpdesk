@@ -694,6 +694,11 @@ export const lt: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Ieškoti kontaktų…",
+  "app.contacts.subtitle": {
+    one: "{count} kontaktas, sukuriamas automatiškai gavus pirmą pranešimą.",
+    few: "{count} kontaktai, sukuriami automatiškai gavus pirmą pranešimą.",
+    other: "{count} kontaktų, sukuriama automatiškai gavus pirmą pranešimą.",
+  },
   "app.contacts.importCsv": "Importuoti CSV",
   "app.contacts.empty": "Kontaktų nėra.",
   "app.contacts.emptyQuery": "Nėra kontaktų pagal „{query}“.",
@@ -732,6 +737,11 @@ export const lt: Dictionary = {
   "app.contacts.cancel": "Atšaukti",
   "app.contacts.deletedName": "Ištrintas kontaktas",
   "app.contacts.orgSearchPlaceholder": "Ieškoti organizacijų…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organizacija, grupuojanti kontaktus pagal domeną.",
+    few: "{count} organizacijos, grupuojančios kontaktus pagal domeną.",
+    other: "{count} organizacijų, grupuojančių kontaktus pagal domeną.",
+  },
   "app.contacts.orgEmpty": "Organizacijų nėra.",
   "app.contacts.orgEmptyQuery": "Nėra organizacijų pagal „{query}“.",
   "app.contacts.orgColumnDomains": "Domenai",

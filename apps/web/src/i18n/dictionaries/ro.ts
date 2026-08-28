@@ -662,6 +662,11 @@ export const ro: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Căutați un contact…",
+  "app.contacts.subtitle": {
+    one: "{count} contact, creat automat la primul mesaj.",
+    few: "{count} contacte, create automat la primul mesaj.",
+    other: "{count} de contacte, create automat la primul mesaj.",
+  },
   "app.contacts.importCsv": "Importați CSV",
   "app.contacts.empty": "Niciun contact.",
   "app.contacts.emptyQuery": "Niciun contact pentru „{query}”.",
@@ -700,6 +705,11 @@ export const ro: Dictionary = {
   "app.contacts.cancel": "Anulați",
   "app.contacts.deletedName": "Contact șters",
   "app.contacts.orgSearchPlaceholder": "Căutați o organizație…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organizație, care grupează contactele după domeniu.",
+    few: "{count} organizații, care grupează contactele după domeniu.",
+    other: "{count} de organizații, care grupează contactele după domeniu.",
+  },
   "app.contacts.orgEmpty": "Nicio organizație.",
   "app.contacts.orgEmptyQuery": "Nicio organizație pentru „{query}”.",
   "app.contacts.orgColumnDomains": "Domenii",

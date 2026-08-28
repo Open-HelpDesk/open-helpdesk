@@ -607,6 +607,10 @@ export const da: Dictionary = {
   "app.newTicket.cancel": "Annuller",
   "app.newTicket.submit": "Opret sagen",
   "app.contacts.searchPlaceholder": "Søg efter en kontakt…",
+  "app.contacts.subtitle": {
+    one: "{count} kontakt, oprettet automatisk ved første besked.",
+    other: "{count} kontakter, oprettet automatisk ved første besked.",
+  },
   "app.contacts.importCsv": "Importér CSV",
   "app.contacts.empty": "Ingen kontakter.",
   "app.contacts.emptyQuery": "Ingen kontakter for »{query}«.",
@@ -644,6 +648,10 @@ export const da: Dictionary = {
   "app.contacts.cancel": "Annuller",
   "app.contacts.deletedName": "Slettet kontakt",
   "app.contacts.orgSearchPlaceholder": "Søg efter en organisation…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organisation, der grupperer kontakter efter domæne.",
+    other: "{count} organisationer, der grupperer kontakter efter domæne.",
+  },
   "app.contacts.orgEmpty": "Ingen organisationer.",
   "app.contacts.orgEmptyQuery": "Ingen organisationer for »{query}«.",
   "app.contacts.orgColumnDomains": "Domæner",

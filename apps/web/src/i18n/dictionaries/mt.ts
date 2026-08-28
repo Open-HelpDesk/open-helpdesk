@@ -722,6 +722,13 @@ export const mt: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Fittex kuntatt…",
+  "app.contacts.subtitle": {
+    one: "{count} kuntatt, jinħoloq awtomatikament fl-ewwel messaġġ.",
+    two: "{count} kuntatti, jinħolqu awtomatikament fl-ewwel messaġġ.",
+    few: "{count} kuntatti, jinħolqu awtomatikament fl-ewwel messaġġ.",
+    many: "{count} kuntatti, jinħolqu awtomatikament fl-ewwel messaġġ.",
+    other: "{count} kuntatti, jinħolqu awtomatikament fl-ewwel messaġġ.",
+  },
   "app.contacts.importCsv": "Importa CSV",
   "app.contacts.empty": "L-ebda kuntatt.",
   "app.contacts.emptyQuery": "L-ebda kuntatt għal “{query}”.",
@@ -760,6 +767,13 @@ export const mt: Dictionary = {
   "app.contacts.cancel": "Ikkanċella",
   "app.contacts.deletedName": "Kuntatt imħassar",
   "app.contacts.orgSearchPlaceholder": "Fittex organizzazzjoni…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organizzazzjoni, li tiġbor il-kuntatti skont id-dominju.",
+    two: "{count} organizzazzjonijiet, li jiġbru l-kuntatti skont id-dominju.",
+    few: "{count} organizzazzjonijiet, li jiġbru l-kuntatti skont id-dominju.",
+    many: "{count} organizzazzjonijiet, li jiġbru l-kuntatti skont id-dominju.",
+    other: "{count} organizzazzjonijiet, li jiġbru l-kuntatti skont id-dominju.",
+  },
   "app.contacts.orgEmpty": "L-ebda organizzazzjoni.",
   "app.contacts.orgEmptyQuery": "L-ebda organizzazzjoni għal “{query}”.",
   "app.contacts.orgColumnDomains": "Dominji",

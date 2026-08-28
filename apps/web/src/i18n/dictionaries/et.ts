@@ -608,6 +608,10 @@ export const et: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Otsi kontakti…",
+  "app.contacts.subtitle": {
+    one: "{count} kontakt, loodud automaatselt esimese sõnumi saabumisel.",
+    other: "{count} kontakti, loodud automaatselt esimese sõnumi saabumisel.",
+  },
   "app.contacts.importCsv": "Impordi CSV",
   "app.contacts.empty": "Kontakte ei ole.",
   "app.contacts.emptyQuery": "Päringule „{query}“ ei leitud kontakte.",
@@ -646,6 +650,10 @@ export const et: Dictionary = {
   "app.contacts.cancel": "Tühista",
   "app.contacts.deletedName": "Kustutatud kontakt",
   "app.contacts.orgSearchPlaceholder": "Otsi organisatsiooni…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organisatsioon, mis rühmitab kontaktid domeeni järgi.",
+    other: "{count} organisatsiooni, mis rühmitavad kontaktid domeeni järgi.",
+  },
   "app.contacts.orgEmpty": "Organisatsioone ei ole.",
   "app.contacts.orgEmptyQuery": "Päringule „{query}“ ei leitud organisatsioone.",
   "app.contacts.orgColumnDomains": "Domeenid",

@@ -666,6 +666,11 @@ export const lv: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Meklēt kontaktpersonu…",
+  "app.contacts.subtitle": {
+    one: "{count} kontakts, izveidots automātiski pēc pirmās ziņas.",
+    zero: "{count} kontaktu, izveidoti automātiski pēc pirmās ziņas.",
+    other: "{count} kontakti, izveidoti automātiski pēc pirmās ziņas.",
+  },
   "app.contacts.importCsv": "Importēt CSV",
   "app.contacts.empty": "Nav kontaktpersonu.",
   "app.contacts.emptyQuery": "Nav kontaktpersonu vaicājumam „{query}“.",
@@ -704,6 +709,11 @@ export const lv: Dictionary = {
   "app.contacts.cancel": "Atcelt",
   "app.contacts.deletedName": "Dzēsta kontaktpersona",
   "app.contacts.orgSearchPlaceholder": "Meklēt organizāciju…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organizācija, kas grupē kontaktus pēc domēna.",
+    zero: "{count} organizāciju, kas grupē kontaktus pēc domēna.",
+    other: "{count} organizācijas, kas grupē kontaktus pēc domēna.",
+  },
   "app.contacts.orgEmpty": "Nav organizāciju.",
   "app.contacts.orgEmptyQuery": "Nav organizāciju vaicājumam „{query}“.",
   "app.contacts.orgColumnDomains": "Domēni",

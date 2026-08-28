@@ -646,6 +646,11 @@ export const hr: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Traži kontakt…",
+  "app.contacts.subtitle": {
+    one: "{count} kontakt, stvoren automatski pri prvoj poruci.",
+    few: "{count} kontakta, stvorena automatski pri prvoj poruci.",
+    other: "{count} kontakata, stvoreno automatski pri prvoj poruci.",
+  },
   "app.contacts.importCsv": "Uvezi CSV",
   "app.contacts.empty": "Nema kontakata.",
   "app.contacts.emptyQuery": "Nema kontakata za „{query}“.",
@@ -684,6 +689,11 @@ export const hr: Dictionary = {
   "app.contacts.cancel": "Odustani",
   "app.contacts.deletedName": "Izbrisan kontakt",
   "app.contacts.orgSearchPlaceholder": "Traži organizaciju…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organizacija, koja grupira kontakte po domeni.",
+    few: "{count} organizacije, koje grupiraju kontakte po domeni.",
+    other: "{count} organizacija, koje grupiraju kontakte po domeni.",
+  },
   "app.contacts.orgEmpty": "Nema organizacija.",
   "app.contacts.orgEmptyQuery": "Nema organizacija za „{query}“.",
   "app.contacts.orgColumnDomains": "Domene",

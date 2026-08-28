@@ -600,6 +600,10 @@ export const bg: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Търсене на контакт…",
+  "app.contacts.subtitle": {
+    one: "{count} контакт, създаван автоматично при първото съобщение.",
+    other: "{count} контакта, създавани автоматично при първото съобщение.",
+  },
   "app.contacts.importCsv": "Импорт от CSV",
   "app.contacts.empty": "Няма контакти.",
   "app.contacts.emptyQuery": "Няма контакти за „{query}“.",
@@ -638,6 +642,10 @@ export const bg: Dictionary = {
   "app.contacts.cancel": "Отказ",
   "app.contacts.deletedName": "Изтрит контакт",
   "app.contacts.orgSearchPlaceholder": "Търсене на организация…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} организация, групираща контактите по домейн.",
+    other: "{count} организации, групиращи контактите по домейн.",
+  },
   "app.contacts.orgEmpty": "Няма организации.",
   "app.contacts.orgEmptyQuery": "Няма организации за „{query}“.",
   "app.contacts.orgColumnDomains": "Домейни",

@@ -612,6 +612,10 @@ export const hu: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Kapcsolattartó keresése…",
+  "app.contacts.subtitle": {
+    one: "{count} névjegy, automatikusan létrejön az első üzenetnél.",
+    other: "{count} névjegy, automatikusan létrejön az első üzenetnél.",
+  },
   "app.contacts.importCsv": "CSV importálása",
   "app.contacts.empty": "Nincs kapcsolattartó.",
   "app.contacts.emptyQuery": "Nincs kapcsolattartó a következőre: „{query}”.",
@@ -650,6 +654,10 @@ export const hu: Dictionary = {
   "app.contacts.cancel": "Mégse",
   "app.contacts.deletedName": "Törölt kapcsolattartó",
   "app.contacts.orgSearchPlaceholder": "Szervezet keresése…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} szervezet, amely domain szerint csoportosítja a névjegyeket.",
+    other: "{count} szervezet, amely domain szerint csoportosítja a névjegyeket.",
+  },
   "app.contacts.orgEmpty": "Nincs szervezet.",
   "app.contacts.orgEmptyQuery": "Nincs szervezet a következőre: „{query}”.",
   "app.contacts.orgColumnDomains": "Domainek",

@@ -612,6 +612,10 @@ export const de: Dictionary = {
   "app.newTicket.cancel": "Abbrechen",
   "app.newTicket.submit": "Ticket erstellen",
   "app.contacts.searchPlaceholder": "Kontakt suchen…",
+  "app.contacts.subtitle": {
+    one: "{count} Kontakt, automatisch bei der ersten Nachricht angelegt.",
+    other: "{count} Kontakte, automatisch bei der ersten Nachricht angelegt.",
+  },
   "app.contacts.importCsv": "CSV importieren",
   "app.contacts.empty": "Keine Kontakte.",
   "app.contacts.emptyQuery": "Keine Kontakte für „{query}“.",
@@ -649,6 +653,10 @@ export const de: Dictionary = {
   "app.contacts.cancel": "Abbrechen",
   "app.contacts.deletedName": "Gelöschter Kontakt",
   "app.contacts.orgSearchPlaceholder": "Organisation suchen…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} Organisation, die Kontakte nach Domain gruppiert.",
+    other: "{count} Organisationen, die Kontakte nach Domain gruppieren.",
+  },
   "app.contacts.orgEmpty": "Keine Organisationen.",
   "app.contacts.orgEmptyQuery": "Keine Organisationen für „{query}“.",
   "app.contacts.orgColumnDomains": "Domains",

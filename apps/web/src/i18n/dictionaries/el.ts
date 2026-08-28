@@ -617,6 +617,10 @@ export const el: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Αναζήτηση επαφής…",
+  "app.contacts.subtitle": {
+    one: "{count} επαφή, δημιουργείται αυτόματα στο πρώτο μήνυμα.",
+    other: "{count} επαφές, δημιουργούνται αυτόματα στο πρώτο μήνυμα.",
+  },
   "app.contacts.importCsv": "Εισαγωγή CSV",
   "app.contacts.empty": "Καμία επαφή.",
   "app.contacts.emptyQuery": "Καμία επαφή για «{query}».",
@@ -655,6 +659,10 @@ export const el: Dictionary = {
   "app.contacts.cancel": "Ακύρωση",
   "app.contacts.deletedName": "Διαγραμμένη επαφή",
   "app.contacts.orgSearchPlaceholder": "Αναζήτηση οργανισμού…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} οργανισμός, που ομαδοποιεί τις επαφές ανά τομέα.",
+    other: "{count} οργανισμοί, που ομαδοποιούν τις επαφές ανά τομέα.",
+  },
   "app.contacts.orgEmpty": "Κανένας οργανισμός.",
   "app.contacts.orgEmptyQuery": "Κανένας οργανισμός για «{query}».",
   "app.contacts.orgColumnDomains": "Τομείς",

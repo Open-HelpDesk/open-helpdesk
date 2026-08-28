@@ -616,6 +616,10 @@ export const en = {
   "app.newTicket.cancel": "Cancel",
   "app.newTicket.submit": "Create ticket",
   "app.contacts.searchPlaceholder": "Search contacts…",
+  "app.contacts.subtitle": {
+    one: "{count} contact, created automatically on the first message.",
+    other: "{count} contacts, created automatically on the first message.",
+  },
   "app.contacts.importCsv": "Import CSV",
   "app.contacts.empty": "No contacts.",
   "app.contacts.emptyQuery": "No contacts for “{query}”.",
@@ -653,6 +657,10 @@ export const en = {
   "app.contacts.cancel": "Cancel",
   "app.contacts.deletedName": "Deleted contact",
   "app.contacts.orgSearchPlaceholder": "Search organisations…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organisation, grouping contacts by domain.",
+    other: "{count} organisations, grouping contacts by domain.",
+  },
   "app.contacts.orgEmpty": "No organisations.",
   "app.contacts.orgEmptyQuery": "No organisations for “{query}”.",
   "app.contacts.orgColumnDomains": "Domains",

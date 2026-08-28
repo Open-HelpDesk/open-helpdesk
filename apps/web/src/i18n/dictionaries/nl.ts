@@ -610,6 +610,10 @@ export const nl: Dictionary = {
   "app.newTicket.cancel": "Annuleren",
   "app.newTicket.submit": "Ticket aanmaken",
   "app.contacts.searchPlaceholder": "Zoek een contact…",
+  "app.contacts.subtitle": {
+    one: "{count} contact, automatisch aangemaakt bij het eerste bericht.",
+    other: "{count} contacten, automatisch aangemaakt bij het eerste bericht.",
+  },
   "app.contacts.importCsv": "CSV importeren",
   "app.contacts.empty": "Geen contacten.",
   "app.contacts.emptyQuery": "Geen contacten voor ‘{query}’.",
@@ -647,6 +651,10 @@ export const nl: Dictionary = {
   "app.contacts.cancel": "Annuleren",
   "app.contacts.deletedName": "Verwijderd contact",
   "app.contacts.orgSearchPlaceholder": "Zoek een organisatie…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organisatie, die contacten per domein groepeert.",
+    other: "{count} organisaties, die contacten per domein groeperen.",
+  },
   "app.contacts.orgEmpty": "Geen organisaties.",
   "app.contacts.orgEmptyQuery": "Geen organisaties voor ‘{query}’.",
   "app.contacts.orgColumnDomains": "Domeinen",

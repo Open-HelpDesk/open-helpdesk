@@ -690,6 +690,12 @@ export const sl: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Iskanje stikov…",
+  "app.contacts.subtitle": {
+    one: "{count} stik, ustvarjen samodejno ob prvem sporočilu.",
+    two: "{count} stika, ustvarjena samodejno ob prvem sporočilu.",
+    few: "{count} stiki, ustvarjeni samodejno ob prvem sporočilu.",
+    other: "{count} stikov, ustvarjenih samodejno ob prvem sporočilu.",
+  },
   "app.contacts.importCsv": "Uvozi CSV",
   "app.contacts.empty": "Ni stikov.",
   "app.contacts.emptyQuery": "Ni stikov za »{query}«.",
@@ -728,6 +734,12 @@ export const sl: Dictionary = {
   "app.contacts.cancel": "Prekliči",
   "app.contacts.deletedName": "Izbrisan stik",
   "app.contacts.orgSearchPlaceholder": "Iskanje organizacij…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organizacija, ki združuje stike po domeni.",
+    two: "{count} organizaciji, ki združujeta stike po domeni.",
+    few: "{count} organizacije, ki združujejo stike po domeni.",
+    other: "{count} organizacij, ki združujejo stike po domeni.",
+  },
   "app.contacts.orgEmpty": "Ni organizacij.",
   "app.contacts.orgEmptyQuery": "Ni organizacij za »{query}«.",
   "app.contacts.orgColumnDomains": "Domene",

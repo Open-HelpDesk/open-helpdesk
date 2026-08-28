@@ -723,6 +723,10 @@ export const ga: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Cuardaigh teagmhálaithe…",
+  "app.contacts.subtitle": {
+    one: "{count} teagmhálaí, cruthaithe go huathoibríoch ar an gcéad teachtaireacht.",
+    other: "{count} teagmhálaí, cruthaithe go huathoibríoch ar an gcéad teachtaireacht.",
+  },
   "app.contacts.importCsv": "Iompórtáil CSV",
   "app.contacts.empty": "Gan teagmhálaithe.",
   "app.contacts.emptyQuery": "Gan teagmhálaithe do “{query}”.",
@@ -761,6 +765,10 @@ export const ga: Dictionary = {
   "app.contacts.cancel": "Cealaigh",
   "app.contacts.deletedName": "Teagmhálaí scriosta",
   "app.contacts.orgSearchPlaceholder": "Cuardaigh eagraíochtaí…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} eagraíocht, a ghrúpálann teagmhálaithe de réir fearainn.",
+    other: "{count} eagraíocht, a ghrúpálann teagmhálaithe de réir fearainn.",
+  },
   "app.contacts.orgEmpty": "Gan eagraíochtaí.",
   "app.contacts.orgEmptyQuery": "Gan eagraíochtaí do “{query}”.",
   "app.contacts.orgColumnDomains": "Fearainn",

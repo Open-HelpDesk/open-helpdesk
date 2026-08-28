@@ -610,6 +610,11 @@ export const fr: Dictionary = {
 
   /* --- contacts --- */
   "app.contacts.searchPlaceholder": "Rechercher un contact…",
+  "app.contacts.subtitle": {
+    one: "{count} contact, créé automatiquement au premier message.",
+    many: "{count} contacts, créés automatiquement au premier message.",
+    other: "{count} contacts, créés automatiquement au premier message.",
+  },
   "app.contacts.importCsv": "Importer CSV",
   "app.contacts.empty": "Aucun contact.",
   "app.contacts.emptyQuery": "Aucun contact pour « {query} ».",
@@ -647,6 +652,11 @@ export const fr: Dictionary = {
   "app.contacts.cancel": "Annuler",
   "app.contacts.deletedName": "Contact supprimé",
   "app.contacts.orgSearchPlaceholder": "Rechercher une organisation…",
+  "app.contacts.orgSubtitle": {
+    one: "{count} organisation, qui regroupe les contacts par domaine.",
+    many: "{count} organisations, qui regroupent les contacts par domaine.",
+    other: "{count} organisations, qui regroupent les contacts par domaine.",
+  },
   "app.contacts.orgEmpty": "Aucune organisation.",
   "app.contacts.orgEmptyQuery": "Aucune organisation pour « {query} ».",
   "app.contacts.orgColumnDomains": "Domaines",
