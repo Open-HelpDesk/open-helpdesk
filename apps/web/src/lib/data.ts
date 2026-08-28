@@ -29,6 +29,10 @@ import {
 import { alias } from "drizzle-orm/pg-core";
 
 import type { MessageKey } from "@/i18n/dictionaries/en";
+// A real import, not only the re-export further down: `export { X } from …`
+// creates no local binding, and reading X here would be a runtime
+// "INBOX_SORTS is not defined" that the typecheck never sees.
+import { INBOX_SORTS } from "./format";
 /** Default inbox views (AG-03) — 6×6 dot colored by status token. */
 /** Views shipped with the product. `key` is stable (URL, filters); the label
  *  belongs to the interface, hence it follows the tenant's language. */
@@ -103,11 +107,43 @@ function viewWhere(
 
 /* ---------- Team views (views table) ---------- */
 
-export type TeamView = { id: string; name: string; count: number };
+export type TeamView = {
+  id: string;
+  name: string;
+  count: number;
+  /** null = the view carries no default sort. */
+  sort: InboxSort | null;
+  shared: "private" | "team" | "everyone";
+  ownerId: string | null;
+};
 
-type ViewCondition = { field?: string; op?: string; value?: unknown };
+/**
+ * Who may delete a saved view: its author, or a manager for a shared one.
+ * Lives here so the inbox (which decides whether to draw the button) and the
+ * server action (which decides whether to obey it) cannot drift apart.
+ */
+export function canDeleteView(
+  view: { ownerId: string | null; shared: string },
+  agent: { id: string; role: string },
+): boolean {
+  if (view.ownerId === agent.id) return true;
+  return (agent.role === "owner" || agent.role === "admin") && view.shared !== "private";
+}
 
-/** Minimal evaluation of a shared view's conditions (status/priority/assignee/team/tag). */
+export type ViewCondition = { field?: string; op?: string; value?: unknown };
+
+/**
+ * Evaluation of a saved view's conditions — the contract the view builder
+ * (/app/tickets/views/new) writes against.
+ *
+ * Status, priority and tag accept a list as well as a single value: the builder
+ * offers "is among", and a view that says "Urgent or High" has to filter on both
+ * rather than silently keeping the first.
+ *
+ * Any field NOT handled here is ignored, which is why the builder only ever
+ * offers these five: a condition the reader drops produces a view that does not
+ * hold what its own definition says it holds.
+ */
 function teamViewWhere(tenantId: string, conditions: ViewCondition[]) {
   const base = and(
     eq(tickets.tenantId, tenantId),
@@ -128,21 +164,30 @@ function teamViewWhere(tenantId: string, conditions: ViewCondition[]) {
         }
         break;
       case "priority":
-        if (typeof value === "string") {
+        if (Array.isArray(value) && value.length > 0) {
+          parts.push(inArray(tickets.priority, value as ("low" | "normal" | "high" | "urgent")[]));
+        } else if (typeof value === "string") {
           parts.push(eq(tickets.priority, value as "low" | "normal" | "high" | "urgent"));
         }
         break;
       case "assignee_id":
       case "assignee":
-        if (typeof value === "string") parts.push(eq(tickets.assigneeId, value));
+        // "none" is a real answer to "who owns this", and the one an "Unassigned"
+        // view is made of — without it the field could only ever name a person.
+        if (value === "none") parts.push(isNull(tickets.assigneeId));
+        else if (typeof value === "string") parts.push(eq(tickets.assigneeId, value));
         break;
       case "team_id":
       case "team":
-        if (typeof value === "string") parts.push(eq(tickets.teamId, value));
+        if (value === "none") parts.push(isNull(tickets.teamId));
+        else if (typeof value === "string") parts.push(eq(tickets.teamId, value));
         break;
       case "tag":
       case "tags":
-        if (typeof value === "string") {
+        if (Array.isArray(value) && value.length > 0) {
+          // Overlap: the ticket carries at least one of the listed tags.
+          parts.push(sql`${tickets.tags} && ${value as string[]}`);
+        } else if (typeof value === "string") {
           parts.push(sql`${value} = any(${tickets.tags})`);
         }
         break;
@@ -152,11 +197,27 @@ function teamViewWhere(tenantId: string, conditions: ViewCondition[]) {
   return and(...parts);
 }
 
-export async function listTeamViews(tenantId: string): Promise<TeamView[]> {
+/**
+ * The saved views an agent may open: everything shared with the workspace or a
+ * team, plus their own private ones.
+ *
+ * Private views used to be invisible — created by nothing, since the builder did
+ * not exist, and listed by nobody. Offering "Personal" in the builder without
+ * this would have made the option a dead end.
+ */
+export async function listSavedViews(tenantId: string, agentId: string): Promise<TeamView[]> {
   const rows = await db
     .select()
     .from(views)
-    .where(and(eq(views.tenantId, tenantId), inArray(views.shared, ["team", "everyone"])))
+    .where(
+      and(
+        eq(views.tenantId, tenantId),
+        or(
+          inArray(views.shared, ["team", "everyone"]),
+          and(eq(views.shared, "private"), eq(views.ownerId, agentId)),
+        ),
+      ),
+    )
     .orderBy(asc(views.position), asc(views.name));
   return Promise.all(
     rows.map(async (v) => {
@@ -164,9 +225,74 @@ export async function listTeamViews(tenantId: string): Promise<TeamView[]> {
         .select({ n: count() })
         .from(tickets)
         .where(teamViewWhere(tenantId, (v.conditions as ViewCondition[]) ?? []));
-      return { id: v.id, name: v.name, count: row?.n ?? 0 };
+      const sort = (v.sort as { key?: string } | null)?.key;
+      return {
+        id: v.id,
+        name: v.name,
+        count: row?.n ?? 0,
+        sort: (INBOX_SORTS as readonly string[]).includes(sort ?? "")
+          ? (sort as InboxSort)
+          : null,
+        shared: v.shared,
+        ownerId: v.ownerId,
+      };
     }),
   );
+}
+
+/* ---------- Writing a view (newview) ---------- */
+
+const VIEW_FIELDS = ["status", "priority", "assignee", "team", "tag"] as const;
+const VIEW_STATUSES = ["new", "open", "waiting", "on_hold", "resolved", "closed"];
+const VIEW_PRIORITIES = ["low", "normal", "high", "urgent"];
+const VIEW_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Keeps the conditions `teamViewWhere` can actually evaluate and drops the rest —
+ * the write side of the same contract, which is why it lives next to it rather
+ * than in the server action: a field kept here and ignored there would save a
+ * view that does not hold what its definition says.
+ *
+ * (It also cannot live in the action file: every export of a "use server" module
+ * has to be an async function.)
+ */
+export function sanitizeViewConditions(raw: unknown): ViewCondition[] {
+  if (!Array.isArray(raw)) return [];
+  const out: ViewCondition[] = [];
+  for (const item of raw.slice(0, 12)) {
+    if (typeof item !== "object" || item === null) continue;
+    const { field, value } = item as { field?: unknown; value?: unknown };
+    if (typeof field !== "string" || !(VIEW_FIELDS as readonly string[]).includes(field)) continue;
+    if (field === "status" || field === "priority") {
+      const allowed = field === "status" ? VIEW_STATUSES : VIEW_PRIORITIES;
+      const list = Array.isArray(value) ? value.filter((v) => allowed.includes(String(v))) : [];
+      // An empty list is not "match nothing", it is "the user picked no value":
+      // such a condition is dropped rather than saved as a filter that can never
+      // be true.
+      if (list.length > 0) out.push({ field, value: list.map(String) });
+    } else if (field === "tag") {
+      const list = Array.isArray(value)
+        ? value.filter((v) => typeof v === "string" && v.length > 0 && v.length <= 64)
+        : [];
+      if (list.length > 0) out.push({ field, value: list.map(String) });
+    } else {
+      const v = String(value ?? "");
+      if (v === "none" || VIEW_UUID.test(v)) out.push({ field, value: v });
+    }
+  }
+  return out;
+}
+
+/** Counts the tickets a set of conditions would match — the builder's preview. */
+export async function countViewMatches(
+  tenantId: string,
+  conditions: ViewCondition[],
+): Promise<number> {
+  const [row] = await db
+    .select({ n: count() })
+    .from(tickets)
+    .where(teamViewWhere(tenantId, conditions));
+  return row?.n ?? 0;
 }
 
 export async function viewCounts(tenantId: string, agentId: string) {
@@ -223,10 +349,21 @@ async function inboxWhere(
 ) {
   let where: SQL | undefined;
   if (typeof view === "object") {
+    // A private view is the agent's own: loading one by id alone would have made
+    // "Personal" a link anyone in the workspace could open.
     const [teamView] = await db
       .select()
       .from(views)
-      .where(and(eq(views.tenantId, tenantId), eq(views.id, view.teamViewId)));
+      .where(
+        and(
+          eq(views.tenantId, tenantId),
+          eq(views.id, view.teamViewId),
+          or(
+            inArray(views.shared, ["team", "everyone"]),
+            and(eq(views.shared, "private"), eq(views.ownerId, agentId)),
+          ),
+        ),
+      );
     where = teamViewWhere(tenantId, ((teamView?.conditions ?? []) as ViewCondition[]) ?? []);
   } else {
     where = viewWhere(tenantId, view, agentId, await escalationTeamId(tenantId));

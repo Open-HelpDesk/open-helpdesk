@@ -344,7 +344,7 @@ export const hu: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Nézetek",
-  "app.tickets.teamViewsGroup": "Csapatnézetek",
+  "app.tickets.teamViewsGroup": "Mentett nézetek",
   "app.tickets.newView": "+ Új nézet",
   "app.tickets.filterAll": "Összes",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -1899,6 +1899,25 @@ export const hu: Dictionary = {
   "app.views.resolved": "Nemrég megoldva",
   "app.views.urgent": "Sürgős jegyek a héten",
   "app.views.escalation": "Eszkalálások",
+  "app.views.nameRequired": "A nézetnek név kell.",
+  "app.views.create": "Nézet létrehozása",
+  "app.views.previewHint": "Minden feltétellel frissül.",
+  "app.views.previewCount": {
+    one: "Jelenleg {count} jegyre illeszkedik.",
+    other: "Jelenleg {count} jegyre illeszkedik.",
+  },
+  "app.views.anyValue": "bármely érték",
+  "app.views.opIsAmong": "egyike",
+  "app.views.opIs": "értéke",
+  "app.views.defaultSort": "Alapértelmezett sorrend",
+  "app.views.removeCondition": "Feltétel eltávolítása",
+  "app.views.addCondition": "+ Feltétel hozzáadása",
+  "app.views.conditionsHint": "mindnek teljesülnie kell",
+  "app.views.conditions": "Feltételek",
+  "app.views.sharePrivate": "Személyes",
+  "app.views.visibility": "Láthatóság",
+  "app.views.nameLabel": "A nézet neve",
+  "app.views.newTitle": "Új nézet",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Átnevezés",

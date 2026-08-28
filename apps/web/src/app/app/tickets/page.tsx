@@ -9,7 +9,8 @@ import {
   INBOX_PAGE_SIZE,
   INBOX_SORTS,
   inboxFacets,
-  listTeamViews,
+  canDeleteView,
+  listSavedViews,
   listTickets,
   viewCounts,
   type InboxFilters,
@@ -20,6 +21,7 @@ import { slaShort } from "@/lib/format";
 import { getT, type Translate } from "@/i18n/server";
 import { InboxTable, type InboxRowData } from "./inbox-table";
 import { InboxControls } from "./inbox-controls";
+import { deleteView } from "./views/new/actions";
 
 /**
  * AG-03 — Inbox (agent space design): 240 px views panel with dots and counters,
@@ -124,10 +126,25 @@ export default async function TicketsPage({
     channels: many(params.chan),
     orgs: many(params.org),
   };
-  // "SLA" is the V2 default, and the design shows it selected.
-  const sort: InboxSort = (INBOX_SORTS as readonly string[]).includes(params.sort ?? "")
+  const urlSort: InboxSort | null = (INBOX_SORTS as readonly string[]).includes(params.sort ?? "")
     ? (params.sort as InboxSort)
-    : "sla";
+    : null;
+
+  const [counts, savedViews, agents] = await Promise.all([
+    viewCounts(tenant.id, agent.id),
+    listSavedViews(tenant.id, agent.id),
+    db
+      .select({ id: users.id, name: users.name })
+      .from(users)
+      .where(and(eq(users.tenantId, tenant.id), ne(users.status, "disabled")))
+      .orderBy(asc(users.name)),
+  ]);
+
+  // A saved view carries its own default sort (newview). The URL still wins:
+  // clicking a sort has to hold, and a shared link has to show what it showed.
+  // "SLA" is the V2 default, and the design shows it selected.
+  const selectedView = teamViewId ? savedViews.find((v) => v.id === teamViewId) : undefined;
+  const sort: InboxSort = urlSort ?? selectedView?.sort ?? "sla";
   const filters: InboxFilters = {
     status: params.status,
     priority: params.priority,
@@ -137,16 +154,12 @@ export default async function TicketsPage({
     page: Math.max(1, Number(params.page) || 1),
   };
 
-  const [counts, teamViews, agents, facets] = await Promise.all([
-    viewCounts(tenant.id, agent.id),
-    listTeamViews(tenant.id),
-    db
-      .select({ id: users.id, name: users.name })
-      .from(users)
-      .where(and(eq(users.tenantId, tenant.id), ne(users.status, "disabled")))
-      .orderBy(asc(users.name)),
-    inboxFacets(tenant.id, teamViewId ? { teamViewId } : view, agent.id, filters),
-  ]);
+  const facets = await inboxFacets(
+    tenant.id,
+    teamViewId ? { teamViewId } : view,
+    agent.id,
+    filters,
+  );
 
   let rows: Awaited<ReturnType<typeof listTickets>>["rows"] = [];
   let total = 0;
@@ -269,13 +282,13 @@ export default async function TicketsPage({
           );
         })}
 
-        {teamViews.length > 0 && (
+        {savedViews.length > 0 && (
           <>
             <div style={{ height: 1, background: "var(--line)", margin: "10px 14px" }} />
             <div style={{ ...VIEW_GROUP, padding: "2px 14px 8px" }}>
               {t("app.tickets.teamViewsGroup")}
             </div>
-            {teamViews.map((v) => {
+            {savedViews.map((v) => {
               const active = v.id === teamViewId;
               return (
                 <Link
@@ -338,7 +351,7 @@ export default async function TicketsPage({
             }}
           >
             {teamViewId
-              ? (teamViews.find((v) => v.id === teamViewId)?.name ?? t("app.tickets.viewsGroup"))
+              ? (selectedView?.name ?? t("app.tickets.viewsGroup"))
               : t(DEFAULT_VIEWS.find((v) => v.key === view)!.labelKey)}
           </h1>
           <span
@@ -355,6 +368,29 @@ export default async function TicketsPage({
             {total}
           </span>
           <span className="flex-1" />
+          {/* Deleting a saved view lives here rather than on its rail row: a form
+              cannot nest inside the row's link, and a view one can create but
+              never remove is a one-way door. */}
+          {selectedView && canDeleteView(selectedView, agent) && (
+            <form action={deleteView}>
+              <input type="hidden" name="viewId" value={selectedView.id} />
+              <button
+                type="submit"
+                className="ohd-hover-edge-ink"
+                style={{
+                  height: 34,
+                  padding: "0 12px",
+                  border: "1px solid var(--line)",
+                  borderRadius: 9,
+                  background: "var(--panel)",
+                  fontSize: 12.5,
+                  color: "var(--ink-2)",
+                }}
+              >
+                {t("app.tickets.delete")}
+              </button>
+            </form>
+          )}
           <InboxControls
             sort={sort}
             facets={facets}

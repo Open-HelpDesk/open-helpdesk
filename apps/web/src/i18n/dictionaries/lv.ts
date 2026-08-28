@@ -387,7 +387,7 @@ export const lv: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Skati",
-  "app.tickets.teamViewsGroup": "Komandas skati",
+  "app.tickets.teamViewsGroup": "Saglabātie skati",
   "app.tickets.newView": "+ Jauns skats",
   "app.tickets.filterAll": "Visi",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -2025,6 +2025,26 @@ export const lv: Dictionary = {
   "app.views.resolved": "Nesen atrisinātie",
   "app.views.urgent": "Steidzamie šonedēļ",
   "app.views.escalation": "Eskalācijas",
+  "app.views.nameRequired": "Skatam vajadzīgs nosaukums.",
+  "app.views.create": "Izveidot skatu",
+  "app.views.previewHint": "Atjaunojas ar katru nosacījumu.",
+  "app.views.previewCount": {
+    zero: "Pašlaik atbilst {count} pieteikumu.",
+    one: "Pašlaik atbilst {count} pieteikums.",
+    other: "Pašlaik atbilst {count} pieteikumi.",
+  },
+  "app.views.anyValue": "jebkura vērtība",
+  "app.views.opIsAmong": "ir starp",
+  "app.views.opIs": "ir",
+  "app.views.defaultSort": "Noklusējuma kārtošana",
+  "app.views.removeCondition": "Noņemt šo nosacījumu",
+  "app.views.addCondition": "+ Pievienot nosacījumu",
+  "app.views.conditionsHint": "visiem jābūt izpildītiem",
+  "app.views.conditions": "Nosacījumi",
+  "app.views.sharePrivate": "Personīgs",
+  "app.views.visibility": "Redzamība",
+  "app.views.nameLabel": "Skata nosaukums",
+  "app.views.newTitle": "Jauns skats",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Pārsaukt",

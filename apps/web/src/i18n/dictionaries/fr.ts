@@ -352,7 +352,7 @@ export const fr: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Vues",
-  "app.tickets.teamViewsGroup": "Vues d'équipe",
+  "app.tickets.teamViewsGroup": "Vues enregistrées",
   "app.tickets.newView": "+ Nouvelle vue",
   "app.tickets.filterAll": "Tous",
   "app.tickets.filterChipValue": "{label} : {value}",
@@ -1764,6 +1764,25 @@ export const fr: Dictionary = {
   "app.views.resolved": "Résolus récemment",
   "app.views.urgent": "Urgents cette semaine",
   "app.views.escalation": "Escalades",
+  "app.views.nameRequired": "La vue a besoin d'un nom.",
+  "app.views.create": "Créer la vue",
+  "app.views.previewHint": "Mis à jour à chaque condition.",
+  "app.views.previewCount": {
+    one: "Correspond à {count} ticket actuellement.",
+    other: "Correspond à {count} tickets actuellement.",
+  },
+  "app.views.anyValue": "n'importe quelle valeur",
+  "app.views.opIsAmong": "est parmi",
+  "app.views.opIs": "est",
+  "app.views.defaultSort": "Tri par défaut",
+  "app.views.removeCondition": "Retirer cette condition",
+  "app.views.addCondition": "+ Ajouter une condition",
+  "app.views.conditionsHint": "toutes doivent être vraies",
+  "app.views.conditions": "Conditions",
+  "app.views.sharePrivate": "Personnelle",
+  "app.views.visibility": "Visibilité",
+  "app.views.nameLabel": "Nom de la vue",
+  "app.views.newTitle": "Nouvelle vue",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Renommer",

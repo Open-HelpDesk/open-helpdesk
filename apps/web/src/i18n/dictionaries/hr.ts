@@ -372,7 +372,7 @@ export const hr: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Prikazi",
-  "app.tickets.teamViewsGroup": "Timski prikazi",
+  "app.tickets.teamViewsGroup": "Spremljeni prikazi",
   "app.tickets.newView": "+ Novi prikaz",
   "app.tickets.filterAll": "Svi",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -2000,6 +2000,26 @@ export const hr: Dictionary = {
   "app.views.resolved": "Nedavno riješeni",
   "app.views.urgent": "Hitni ovaj tjedan",
   "app.views.escalation": "Eskalacije",
+  "app.views.nameRequired": "Prikaz treba naziv.",
+  "app.views.create": "Stvori prikaz",
+  "app.views.previewHint": "Ažurira se sa svakim uvjetom.",
+  "app.views.previewCount": {
+    one: "Trenutno odgovara {count} tiketu.",
+    few: "Trenutno odgovaraju {count} tiketa.",
+    other: "Trenutno odgovara {count} tiketa.",
+  },
+  "app.views.anyValue": "bilo koja vrijednost",
+  "app.views.opIsAmong": "je među",
+  "app.views.opIs": "je",
+  "app.views.defaultSort": "Zadano sortiranje",
+  "app.views.removeCondition": "Ukloni ovaj uvjet",
+  "app.views.addCondition": "+ Dodaj uvjet",
+  "app.views.conditionsHint": "sve moraju biti istinite",
+  "app.views.conditions": "Uvjeti",
+  "app.views.sharePrivate": "Osobni",
+  "app.views.visibility": "Vidljivost",
+  "app.views.nameLabel": "Naziv prikaza",
+  "app.views.newTitle": "Novi prikaz",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Preimenuj",

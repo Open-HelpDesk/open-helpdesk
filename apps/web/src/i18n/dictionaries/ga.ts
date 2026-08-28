@@ -429,7 +429,7 @@ export const ga: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Amhairc",
-  "app.tickets.teamViewsGroup": "Amhairc foirne",
+  "app.tickets.teamViewsGroup": "Amhairc shábháilte",
   "app.tickets.newView": "+ Amharc nua",
   "app.tickets.filterAll": "Uile",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -2163,6 +2163,28 @@ export const ga: Dictionary = {
   "app.views.resolved": "Réitithe le déanaí",
   "app.views.urgent": "Práinneach an tseachtain seo",
   "app.views.escalation": "Géaruithe",
+  "app.views.nameRequired": "Tá ainm de dhíth ar an amharc.",
+  "app.views.create": "Cruthaigh an amharc",
+  "app.views.previewHint": "Nuashonraítear le gach coinníoll.",
+  "app.views.previewCount": {
+    one: "Meaitseálann {count} ticéad faoi láthair.",
+    two: "Meaitseálann {count} ticéad faoi láthair.",
+    few: "Meaitseálann {count} ticéad faoi láthair.",
+    many: "Meaitseálann {count} dticéad faoi láthair.",
+    other: "Meaitseálann {count} ticéad faoi láthair.",
+  },
+  "app.views.anyValue": "aon luach",
+  "app.views.opIsAmong": "ar cheann de",
+  "app.views.opIs": "is é",
+  "app.views.defaultSort": "Sórtáil réamhshocraithe",
+  "app.views.removeCondition": "Bain an coinníoll seo",
+  "app.views.addCondition": "+ Cuir coinníoll leis",
+  "app.views.conditionsHint": "caithfidh gach ceann a bheith fíor",
+  "app.views.conditions": "Coinníollacha",
+  "app.views.sharePrivate": "Pearsanta",
+  "app.views.visibility": "Infheictheacht",
+  "app.views.nameLabel": "Ainm an amhairc",
+  "app.views.newTitle": "Amharc nua",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Athainmnigh",

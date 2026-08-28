@@ -403,7 +403,7 @@ export const cs: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Pohledy",
-  "app.tickets.teamViewsGroup": "Týmové pohledy",
+  "app.tickets.teamViewsGroup": "Uložená zobrazení",
   "app.tickets.newView": "+ Nový pohled",
   "app.tickets.filterAll": "Vše",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -2065,6 +2065,27 @@ export const cs: Dictionary = {
   "app.views.resolved": "Nedávno vyřešené",
   "app.views.urgent": "Urgentní tento týden",
   "app.views.escalation": "Eskalace",
+  "app.views.nameRequired": "Zobrazení potřebuje název.",
+  "app.views.create": "Vytvořit zobrazení",
+  "app.views.previewHint": "Aktualizuje se s každou podmínkou.",
+  "app.views.previewCount": {
+    one: "Nyní odpovídá {count} tiket.",
+    few: "Nyní odpovídají {count} tikety.",
+    many: "Nyní odpovídá {count} tiketu.",
+    other: "Nyní odpovídá {count} tiketů.",
+  },
+  "app.views.anyValue": "jakákoli hodnota",
+  "app.views.opIsAmong": "je jednou z",
+  "app.views.opIs": "je",
+  "app.views.defaultSort": "Výchozí řazení",
+  "app.views.removeCondition": "Odebrat podmínku",
+  "app.views.addCondition": "+ Přidat podmínku",
+  "app.views.conditionsHint": "všechny musí platit",
+  "app.views.conditions": "Podmínky",
+  "app.views.sharePrivate": "Osobní",
+  "app.views.visibility": "Viditelnost",
+  "app.views.nameLabel": "Název zobrazení",
+  "app.views.newTitle": "Nové zobrazení",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Přejmenovat",

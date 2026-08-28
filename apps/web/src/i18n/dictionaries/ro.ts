@@ -380,7 +380,7 @@ export const ro: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Vizualizări",
-  "app.tickets.teamViewsGroup": "Vizualizări de echipă",
+  "app.tickets.teamViewsGroup": "Vizualizări salvate",
   "app.tickets.newView": "+ Vizualizare nouă",
   "app.tickets.filterAll": "Toate",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -2038,6 +2038,26 @@ export const ro: Dictionary = {
   "app.views.resolved": "Rezolvate recent",
   "app.views.urgent": "Urgente în această săptămână",
   "app.views.escalation": "Escaladări",
+  "app.views.nameRequired": "Vizualizarea are nevoie de un nume.",
+  "app.views.create": "Creați vizualizarea",
+  "app.views.previewHint": "Se actualizează la fiecare condiție.",
+  "app.views.previewCount": {
+    one: "Corespunde cu {count} tichet acum.",
+    few: "Corespunde cu {count} tichete acum.",
+    other: "Corespunde cu {count} de tichete acum.",
+  },
+  "app.views.anyValue": "orice valoare",
+  "app.views.opIsAmong": "este printre",
+  "app.views.opIs": "este",
+  "app.views.defaultSort": "Sortare implicită",
+  "app.views.removeCondition": "Eliminați această condiție",
+  "app.views.addCondition": "+ Adăugați o condiție",
+  "app.views.conditionsHint": "toate trebuie îndeplinite",
+  "app.views.conditions": "Condiții",
+  "app.views.sharePrivate": "Personală",
+  "app.views.visibility": "Vizibilitate",
+  "app.views.nameLabel": "Numele vizualizării",
+  "app.views.newTitle": "Vizualizare nouă",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Redenumiți",

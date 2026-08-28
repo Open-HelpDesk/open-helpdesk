@@ -408,7 +408,7 @@ export const pl: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Widoki",
-  "app.tickets.teamViewsGroup": "Widoki zespołu",
+  "app.tickets.teamViewsGroup": "Zapisane widoki",
   "app.tickets.newView": "+ Nowy widok",
   "app.tickets.filterAll": "Wszystkie",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -2101,6 +2101,27 @@ export const pl: Dictionary = {
   "app.views.resolved": "Ostatnio rozwiązane",
   "app.views.urgent": "Pilne w tym tygodniu",
   "app.views.escalation": "Eskalacje",
+  "app.views.nameRequired": "Widok potrzebuje nazwy.",
+  "app.views.create": "Utwórz widok",
+  "app.views.previewHint": "Aktualizuje się z każdym warunkiem.",
+  "app.views.previewCount": {
+    one: "Obecnie pasuje {count} zgłoszenie.",
+    few: "Obecnie pasują {count} zgłoszenia.",
+    many: "Obecnie pasuje {count} zgłoszeń.",
+    other: "Obecnie pasuje {count} zgłoszenia.",
+  },
+  "app.views.anyValue": "dowolna wartość",
+  "app.views.opIsAmong": "jest jednym z",
+  "app.views.opIs": "to",
+  "app.views.defaultSort": "Domyślne sortowanie",
+  "app.views.removeCondition": "Usuń ten warunek",
+  "app.views.addCondition": "+ Dodaj warunek",
+  "app.views.conditionsHint": "wszystkie muszą być spełnione",
+  "app.views.conditions": "Warunki",
+  "app.views.sharePrivate": "Osobisty",
+  "app.views.visibility": "Widoczność",
+  "app.views.nameLabel": "Nazwa widoku",
+  "app.views.newTitle": "Nowy widok",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Zmień nazwę",

@@ -404,7 +404,7 @@ export const sl: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Pogledi",
-  "app.tickets.teamViewsGroup": "Ekipni pogledi",
+  "app.tickets.teamViewsGroup": "Shranjeni pogledi",
   "app.tickets.newView": "+ Nov pogled",
   "app.tickets.filterAll": "Vsi",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -2085,6 +2085,27 @@ export const sl: Dictionary = {
   "app.views.resolved": "Nedavno rešeni",
   "app.views.urgent": "Nujni ta teden",
   "app.views.escalation": "Stopnjevanja",
+  "app.views.nameRequired": "Pogled potrebuje ime.",
+  "app.views.create": "Ustvari pogled",
+  "app.views.previewHint": "Posodobi se z vsakim pogojem.",
+  "app.views.previewCount": {
+    one: "Trenutno ustreza {count} zahtevku.",
+    two: "Trenutno ustrezata {count} zahtevka.",
+    few: "Trenutno ustrezajo {count} zahtevki.",
+    other: "Trenutno ustreza {count} zahtevkov.",
+  },
+  "app.views.anyValue": "poljubna vrednost",
+  "app.views.opIsAmong": "je med",
+  "app.views.opIs": "je",
+  "app.views.defaultSort": "Privzeto razvrščanje",
+  "app.views.removeCondition": "Odstrani ta pogoj",
+  "app.views.addCondition": "+ Dodaj pogoj",
+  "app.views.conditionsHint": "vsi morajo biti izpolnjeni",
+  "app.views.conditions": "Pogoji",
+  "app.views.sharePrivate": "Osebni",
+  "app.views.visibility": "Vidnost",
+  "app.views.nameLabel": "Ime pogleda",
+  "app.views.newTitle": "Nov pogled",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Preimenuj",

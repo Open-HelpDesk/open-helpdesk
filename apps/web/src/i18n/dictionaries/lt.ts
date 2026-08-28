@@ -407,7 +407,7 @@ export const lt: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Rodiniai",
-  "app.tickets.teamViewsGroup": "Komandos rodiniai",
+  "app.tickets.teamViewsGroup": "Išsaugoti rodiniai",
   "app.tickets.newView": "+ Naujas rodinys",
   "app.tickets.filterAll": "Visos",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -2096,6 +2096,27 @@ export const lt: Dictionary = {
   "app.views.resolved": "Neseniai išspręstos",
   "app.views.urgent": "Skubios šią savaitę",
   "app.views.escalation": "Eskalavimai",
+  "app.views.nameRequired": "Rodiniui reikia pavadinimo.",
+  "app.views.create": "Kurti rodinį",
+  "app.views.previewHint": "Atnaujinama su kiekviena sąlyga.",
+  "app.views.previewCount": {
+    one: "Šiuo metu atitinka {count} užklausą.",
+    few: "Šiuo metu atitinka {count} užklausas.",
+    many: "Šiuo metu atitinka {count} užklausos.",
+    other: "Šiuo metu atitinka {count} užklausų.",
+  },
+  "app.views.anyValue": "bet kokia reikšmė",
+  "app.views.opIsAmong": "yra tarp",
+  "app.views.opIs": "yra",
+  "app.views.defaultSort": "Numatytasis rikiavimas",
+  "app.views.removeCondition": "Pašalinti šią sąlygą",
+  "app.views.addCondition": "+ Pridėti sąlygą",
+  "app.views.conditionsHint": "visos turi būti teisingos",
+  "app.views.conditions": "Sąlygos",
+  "app.views.sharePrivate": "Asmeninis",
+  "app.views.visibility": "Matomumas",
+  "app.views.nameLabel": "Rodinio pavadinimas",
+  "app.views.newTitle": "Naujas rodinys",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Pervadinti",

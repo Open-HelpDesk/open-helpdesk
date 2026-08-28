@@ -340,7 +340,7 @@ export const et: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Vaated",
-  "app.tickets.teamViewsGroup": "Tiimi vaated",
+  "app.tickets.teamViewsGroup": "Salvestatud vaated",
   "app.tickets.newView": "+ Uus vaade",
   "app.tickets.filterAll": "Kõik",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -1886,6 +1886,25 @@ export const et: Dictionary = {
   "app.views.resolved": "Hiljuti lahendatud",
   "app.views.urgent": "Kiireloomulised sel nädalal",
   "app.views.escalation": "Eskaleerimised",
+  "app.views.nameRequired": "Vaade vajab nime.",
+  "app.views.create": "Loo vaade",
+  "app.views.previewHint": "Uueneb iga tingimusega.",
+  "app.views.previewCount": {
+    one: "Vastab praegu {count} piletile.",
+    other: "Vastab praegu {count} piletile.",
+  },
+  "app.views.anyValue": "mis tahes väärtus",
+  "app.views.opIsAmong": "on üks neist",
+  "app.views.opIs": "on",
+  "app.views.defaultSort": "Vaikimisi järjestus",
+  "app.views.removeCondition": "Eemalda tingimus",
+  "app.views.addCondition": "+ Lisa tingimus",
+  "app.views.conditionsHint": "kõik peavad kehtima",
+  "app.views.conditions": "Tingimused",
+  "app.views.sharePrivate": "Isiklik",
+  "app.views.visibility": "Nähtavus",
+  "app.views.nameLabel": "Vaate nimi",
+  "app.views.newTitle": "Uus vaade",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Nimeta ümber",

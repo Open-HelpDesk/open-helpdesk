@@ -349,7 +349,7 @@ export const el: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Προβολές",
-  "app.tickets.teamViewsGroup": "Προβολές ομάδας",
+  "app.tickets.teamViewsGroup": "Αποθηκευμένες προβολές",
   "app.tickets.newView": "+ Νέα προβολή",
   "app.tickets.filterAll": "Όλα",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -1923,6 +1923,25 @@ export const el: Dictionary = {
   "app.views.resolved": "Επιλύθηκαν πρόσφατα",
   "app.views.urgent": "Επείγοντα αυτήν την εβδομάδα",
   "app.views.escalation": "Κλιμακώσεις",
+  "app.views.nameRequired": "Η προβολή χρειάζεται όνομα.",
+  "app.views.create": "Δημιουργία προβολής",
+  "app.views.previewHint": "Ενημερώνεται με κάθε συνθήκη.",
+  "app.views.previewCount": {
+    one: "Αντιστοιχεί σε {count} τικέτ αυτή τη στιγμή.",
+    other: "Αντιστοιχεί σε {count} τικέτ αυτή τη στιγμή.",
+  },
+  "app.views.anyValue": "οποιαδήποτε τιμή",
+  "app.views.opIsAmong": "είναι μεταξύ",
+  "app.views.opIs": "είναι",
+  "app.views.defaultSort": "Προεπιλεγμένη ταξινόμηση",
+  "app.views.removeCondition": "Αφαίρεση συνθήκης",
+  "app.views.addCondition": "+ Προσθήκη συνθήκης",
+  "app.views.conditionsHint": "όλες πρέπει να ισχύουν",
+  "app.views.conditions": "Συνθήκες",
+  "app.views.sharePrivate": "Προσωπική",
+  "app.views.visibility": "Ορατότητα",
+  "app.views.nameLabel": "Όνομα προβολής",
+  "app.views.newTitle": "Νέα προβολή",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Μετονομασία",

@@ -426,7 +426,7 @@ export const mt: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Visti",
-  "app.tickets.teamViewsGroup": "Visti tat-tim",
+  "app.tickets.teamViewsGroup": "Veduti salvati",
   "app.tickets.newView": "+ Vista ġdida",
   "app.tickets.filterAll": "Kollha",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -2162,6 +2162,28 @@ export const mt: Dictionary = {
   "app.views.resolved": "Solvuti riċentement",
   "app.views.urgent": "Urġenti din il-ġimgħa",
   "app.views.escalation": "Eskalazzjonijiet",
+  "app.views.nameRequired": "Il-veduta għandha bżonn isem.",
+  "app.views.create": "Oħloq il-veduta",
+  "app.views.previewHint": "Jiġi aġġornat ma' kull kundizzjoni.",
+  "app.views.previewCount": {
+    one: "Bħalissa jaqbel ma' {count} ticket.",
+    two: "Bħalissa jaqbel ma' {count} tickets.",
+    few: "Bħalissa jaqbel ma' {count} tickets.",
+    many: "Bħalissa jaqbel ma' {count} ticket.",
+    other: "Bħalissa jaqbel ma' {count} ticket.",
+  },
+  "app.views.anyValue": "kwalunkwe valur",
+  "app.views.opIsAmong": "huwa fost",
+  "app.views.opIs": "huwa",
+  "app.views.defaultSort": "Ordni prestabbilit",
+  "app.views.removeCondition": "Neħħi din il-kundizzjoni",
+  "app.views.addCondition": "+ Żid kundizzjoni",
+  "app.views.conditionsHint": "kollha jridu jkunu veri",
+  "app.views.conditions": "Kundizzjonijiet",
+  "app.views.sharePrivate": "Personali",
+  "app.views.visibility": "Viżibbiltà",
+  "app.views.nameLabel": "Isem il-veduta",
+  "app.views.newTitle": "Veduta ġdida",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Ibdel l-isem",

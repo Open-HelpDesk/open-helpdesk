@@ -336,7 +336,7 @@ export const bg: Dictionary = {
 
   /* --- tickets --- */
   "app.tickets.viewsGroup": "Изгледи",
-  "app.tickets.teamViewsGroup": "Екипни изгледи",
+  "app.tickets.teamViewsGroup": "Запазени изгледи",
   "app.tickets.newView": "+ Нов изглед",
   "app.tickets.filterAll": "Всички",
   "app.tickets.filterChipValue": "{label}: {value}",
@@ -1866,6 +1866,25 @@ export const bg: Dictionary = {
   "app.views.resolved": "Решени наскоро",
   "app.views.urgent": "Спешни тази седмица",
   "app.views.escalation": "Ескалации",
+  "app.views.nameRequired": "Изгледът има нужда от име.",
+  "app.views.create": "Създаване на изгледа",
+  "app.views.previewHint": "Обновява се при всяко условие.",
+  "app.views.previewCount": {
+    one: "Съответства на {count} тикет в момента.",
+    other: "Съответства на {count} тикета в момента.",
+  },
+  "app.views.anyValue": "всяка стойност",
+  "app.views.opIsAmong": "е сред",
+  "app.views.opIs": "е",
+  "app.views.defaultSort": "Подреждане по подразбиране",
+  "app.views.removeCondition": "Премахване на условието",
+  "app.views.addCondition": "+ Добавяне на условие",
+  "app.views.conditionsHint": "всички трябва да са изпълнени",
+  "app.views.conditions": "Условия",
+  "app.views.sharePrivate": "Лична",
+  "app.views.visibility": "Видимост",
+  "app.views.nameLabel": "Име на изгледа",
+  "app.views.newTitle": "Нов изглед",
 
   /* --- KB category management, Owner/Admin only --- */
   "app.kb.renameCategory": "Преименуване",
