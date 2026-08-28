@@ -1,13 +1,22 @@
+import { headers } from "next/headers";
 import { requireTenant } from "@/lib/tenant";
 import { LoginForm } from "./login-form";
 import { I18nProvider } from "@/i18n/client";
 import { getT } from "@/i18n/server";
 
 /**
- * AG-01 — Login (agent space design): 40×40 "A" logo + workspace name above it,
- * 400 px card padding 24 radius 10, email + password ("Forgot password?"
- * link), error with --dang border, "OR" separator, Google/Microsoft SSO,
- * "Powered by Open HelpDesk" footer.
+ * AG-01 — Login (V2): a brand-tinted gradient, a 400 px column, the workspace
+ * identity above a radius-16 card that leads with SSO.
+ *
+ * The mockup titles the screen "Sign in to the agent workspace" and puts the
+ * host underneath. The title says the workspace name instead — the password
+ * field already says what the screen is for, and the name is what tells an
+ * agent they are on their own workspace. The host stays as the subtitle: it is
+ * the line that distinguishes this page from a copy of it.
+ *
+ * The mockup's closing line, "a 2FA code will be asked after signing in", is not
+ * reproduced: the agent workspace has no second factor. Announcing one would
+ * promise a protection nobody gets.
  */
 export default async function LoginPage({
   searchParams,
@@ -21,64 +30,102 @@ export default async function LoginPage({
   // invented subdomain, is a phishing page wearing our certificate. It used to
   // fall back to the product name and render anyway (see requireTenant).
   const tenant = await requireTenant();
-  const workspaceName = tenant.name;
-  const branding = (tenant.branding ?? {}) as { accentColor?: string };
-  const accent = branding.accentColor || "var(--acc)";
+  const host = (await headers()).get("host") ?? "";
+  const branding = (tenant.branding ?? {}) as { accentColor?: string; logoUrl?: string };
+  const accent = branding.accentColor || "var(--brand)";
 
   return (
-    <main className="ohd flex min-h-screen items-center justify-center p-4">
-      <div className="ohd-rise-slow w-full" style={{ maxWidth: 400 }}>
+    <main
+      className="ohd grid min-h-screen"
+      style={{
+        placeItems: "center",
+        padding: 40,
+        background: "linear-gradient(180deg,var(--brand-t) 0%,var(--canvas) 55%)",
+      }}
+    >
+      <div
+        className="ohd-rise-slow flex w-full flex-col"
+        style={{ maxWidth: 400, gap: 18 }}
+      >
         {accepted === "1" && (
           <p
-            className="mb-4 rounded-md px-3.5 py-2.5 text-center"
-            style={{ fontSize: 13, background: "var(--ok-t)", color: "var(--ok)" }}
+            className="text-center"
+            style={{
+              padding: "10px 14px",
+              borderRadius: 10,
+              fontSize: 13,
+              background: "var(--ok-t)",
+              color: "var(--ok)",
+            }}
           >
             {t("app.login.invited")}
           </p>
         )}
         {(tenant.status === "suspended" || tenant.status === "deleting") && (
           <p
-            className="mb-4 rounded-md px-3.5 py-2.5 text-center"
-            style={{ fontSize: 13, background: "var(--dang-t)", color: "var(--dang)" }}
+            className="text-center"
+            style={{
+              padding: "10px 14px",
+              borderRadius: 10,
+              fontSize: 13,
+              background: "var(--dang-t)",
+              color: "var(--dang)",
+            }}
           >
             {t("app.login.suspended")}
           </p>
         )}
-        {/* Logo + workspace name */}
-        <div className="mb-5 flex flex-col items-center gap-2.5">
-          <div
-            className="flex items-center justify-center font-bold text-white"
+
+        {/* Workspace identity — its logo when it has one, its initial otherwise. */}
+        <div className="flex flex-col items-center" style={{ gap: 12 }}>
+          {branding.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- tenant asset, arbitrary origin
+            <img
+              src={branding.logoUrl}
+              alt=""
+              style={{ width: 40, height: 40, borderRadius: 10, objectFit: "contain" }}
+            />
+          ) : (
+            <div
+              className="grid place-items-center font-bold text-white"
+              style={{ width: 40, height: 40, borderRadius: 10, background: accent, fontSize: 18 }}
+              aria-hidden
+            >
+              {tenant.name[0]?.toUpperCase()}
+            </div>
+          )}
+          <h1
+            className="text-center"
             style={{
-              width: 40,
-              height: 40,
-              borderRadius: 10,
-              background: accent,
-              fontSize: 18,
+              fontFamily: "var(--font-title)",
+              fontSize: 21,
+              fontWeight: 600,
+              letterSpacing: "-.015em",
             }}
-            aria-hidden
           >
-            {workspaceName[0]?.toUpperCase()}
-          </div>
-          <p style={{ fontSize: 15, fontWeight: 600 }}>{workspaceName}</p>
+            {tenant.name}
+          </h1>
+          <p style={{ fontSize: 13.5, color: "var(--ink-3)" }}>{host}</p>
         </div>
 
         <div
-          className="border shadow-sm"
           style={{
             background: "var(--panel)",
-            borderColor: "var(--line)",
-            borderRadius: 10,
+            border: "1px solid var(--line)",
+            borderRadius: 16,
             padding: 24,
+            boxShadow:
+              "0 2px 4px rgba(13,28,23,.04), 0 24px 48px -20px rgba(11,95,70,.25)",
           }}
         >
           {/* The provider is placed here: /login sits under no shell that
-            carries it, and the form is a client component. */}
-        <I18nProvider locale={t.locale} dict={t.dict}>
-          <LoginForm initialError={error} />
-        </I18nProvider>
+              carries it, and the form is a client component. */}
+          <I18nProvider locale={t.locale} dict={t.dict}>
+            <LoginForm initialError={error} />
+          </I18nProvider>
         </div>
 
-        <p className="mt-4 text-center" style={{ color: "var(--ink-3)", fontSize: 12 }}>
+        <p className="text-center" style={{ color: "var(--ink-3)", fontSize: 12.5 }}>
           {t("chrome.poweredBy", { product: "Open HelpDesk" })}
         </p>
       </div>

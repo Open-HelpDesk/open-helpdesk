@@ -1927,71 +1927,33 @@ export const bg: Dictionary = {
 
   /* ===================== AG-02 Onboarding ===================== */
 
-  "app.onboarding.asideTitle": "Настройване",
-  "app.onboarding.asideFooter":
-    "Ще можете да промените всички тези настройки по-късно в настройките.",
-  "app.onboarding.stepCounter": "Стъпка {step} от {total}",
-  "app.onboarding.continue": "Продължаване",
-  "app.onboarding.skip": "Пропускане на тази стъпка",
 
-  "app.onboarding.stepIdentity": "Идентичност",
-  "app.onboarding.stepIdentityHint": "Име, лого, цвят",
-  "app.onboarding.stepEmail": "Имейл",
-  "app.onboarding.stepEmailHint": "Адрес за получаване",
   "app.onboarding.stepTeam": "Екип",
   "app.onboarding.stepTeamHint": "Поканване на агентите",
-  "app.onboarding.stepTest": "Тест",
-  "app.onboarding.stepTestHint": "Първи тикет",
 
-  "app.onboarding.identityTitle": "Идентичност на Вашето работно пространство",
-  "app.onboarding.identityBody":
-    "Тези елементи ще се показват във Вашия клиентски портал и в имейлите, изпращани до Вашите клиенти.",
-  "app.onboarding.logoDrop": "Пуснете файл тук или щракнете, за да изберете",
-  "app.onboarding.logoRejected": "Файлът не е приет — PNG, SVG, JPEG или WebP, максимум 2 MB.",
-  "app.onboarding.previewSearch": "Търсене на статия…",
-  "app.onboarding.previewCaption": "Преглед на Вашия клиентски портал",
 
   "app.onboarding.emailTitle": "Получаване на Вашите имейли",
-  "app.onboarding.emailBody":
-    "Всички заявки, получени на този адрес, автоматично се превръщат в тикети.",
-  "app.onboarding.or": "ИЛИ",
-  "app.onboarding.copy": "Копиране",
-  "app.onboarding.copied": "Копирано ✓",
-  "app.onboarding.providedTitle": "Използвайте адреса, който предоставяме",
-  "app.onboarding.providedActive": "Активен — готов за получаване",
-  "app.onboarding.optional": "по избор",
-  "app.onboarding.forwardRemove": "Премахване",
-  "app.onboarding.ownAddressTitle": "Свързване на собствен адрес",
-  "app.onboarding.ownAddressBody":
-    "Пренасочете съществуващия си адрес ({example}) към предоставения по-горе адрес. Подробната конфигурация е в настройките.",
-  "app.onboarding.forwardLabel": "Адрес за пренасочване",
-  "app.onboarding.forwardPlaceholder": "support@firma.bg",
-  "app.onboarding.forwardConnect": "Свързване на този адрес",
-  "app.onboarding.forwardPending":
-    "Настройте при вашия имейл доставчик пренасочване от {address} към {target}.",
-  "app.onboarding.forwardWaiting": "Изчаква се първият препратен имейл…",
-  "app.onboarding.forwardVerified":
-    "{address} е потвърден: препратените имейли се превръщат в тикети.",
 
-  "app.onboarding.teamTitle": "Поканване на Вашия екип",
-  "app.onboarding.teamBody":
-    "Поканете агентите си сега или споделете линка за покана. Ролите Viewer не заемат място.",
-  "app.onboarding.invitePlaceholder": "kolega@firma.bg",
-  "app.onboarding.addRow": "+ Добавяне на ред",
-  "app.onboarding.sendInvites": "Изпращане на поканите",
 
-  "app.onboarding.testTitle": "Изпращане на първи тикет",
-  "app.onboarding.testBody":
-    "Проверете цялата верига, преди да отворите услугата за Вашите клиенти.",
-  "app.onboarding.readyTitle": "Вашето работно пространство е готово",
-  "app.onboarding.readyBody": "Изпратете имейл до {address}, за да създадете тестов тикет.",
   "app.onboarding.openInbox": "Отваряне на входящите",
+  "app.onboarding.setUp": "Настройване",
+  "app.onboarding.itemArticleTodo": "Базата знания отговаря, преди да се наложи агент.",
+  "app.onboarding.itemArticleDone": "Публикувано — порталът вече може да отговори без агент.",
+  "app.onboarding.itemArticle": "Публикувайте първата статия",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} отчита в {calendarZone}, а работното пространство живее в {tenantZone}.",
+  "app.onboarding.itemHoursDone": "Целите по SLA отчитат само работни часове, в {timezone}.",
+  "app.onboarding.itemHours": "Задайте работното време",
+  "app.onboarding.itemTeamTodo":
+    "Засега няма никой друг: автоматичното разпределяне няма на кого да даде тикет.",
+  "app.onboarding.itemTeamDone": "Вече в екипа: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Все още никой адрес не получава заявки — без него нищо не влиза в пощата.",
+  "app.onboarding.itemEmailDone": "{address} вече превръща получените имейли в тикети.",
+  "app.onboarding.checklistBody":
+    "Четири стъпки до първия тикет. Всичко може да се направи и по-късно от администрацията.",
+  "app.onboarding.welcome": "Добре дошли, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Идентичността е зададена",
-  "app.onboarding.checklistEmail": "Имейл адресът е конфигуриран",
-  "app.onboarding.checklistTeam": "Екипът е поканен",
-  "app.onboarding.checklistTicket": "Първият тикет е получен",
-  "app.onboarding.checklistSla": "SLA политиката е проверена",
 
 /* ================= Text formerly hard-coded in French ================= */
 

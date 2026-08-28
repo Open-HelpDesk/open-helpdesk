@@ -1740,69 +1740,35 @@ export const da: Dictionary = {
 
   /* ===================== AG-02 Onboarding ===================== */
 
-  "app.onboarding.asideTitle": "Opsætning",
-  "app.onboarding.asideFooter": "Alle disse indstillinger kan ændres senere under Indstillinger.",
-  "app.onboarding.stepCounter": "Trin {step} af {total}",
-  "app.onboarding.continue": "Fortsæt",
-  "app.onboarding.skip": "Spring dette trin over",
 
-  "app.onboarding.stepIdentity": "Identitet",
-  "app.onboarding.stepIdentityHint": "Navn, logo, farve",
-  "app.onboarding.stepEmail": "E-mail",
-  "app.onboarding.stepEmailHint": "Modtageradresse",
   "app.onboarding.stepTeam": "Team",
   "app.onboarding.stepTeamHint": "Invitér agenterne",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "Første sag",
 
-  "app.onboarding.identityTitle": "Dit arbejdsområdes identitet",
-  "app.onboarding.identityBody": "Disse elementer vises på din kundeportal og i de e-mails, der sendes til dine kunder.",
-  "app.onboarding.logoDrop": "Slip en fil her, eller klik for at vælge",
-  "app.onboarding.logoRejected":
-    "Filen blev ikke accepteret — PNG, SVG, JPEG eller WebP, højst 2 MB.",
-  "app.onboarding.previewSearch": "Søg efter en artikel…",
-  "app.onboarding.previewCaption": "Forhåndsvisning af din kundeportal",
 
   "app.onboarding.emailTitle": "Modtag dine e-mails",
-  "app.onboarding.emailBody": "Alle henvendelser, der modtages på denne adresse, bliver automatisk til sager.",
-  "app.onboarding.or": "ELLER",
-  "app.onboarding.copy": "Kopiér",
-  "app.onboarding.copied": "Kopieret ✓",
-  "app.onboarding.providedTitle": "Brug den adresse, vi giver dig",
-  "app.onboarding.providedActive": "Aktiv — klar til at modtage",
-  "app.onboarding.optional": "valgfrit",
-  "app.onboarding.forwardRemove": "Fjern",
-  "app.onboarding.ownAddressTitle": "Tilslut min egen adresse",
-  "app.onboarding.ownAddressBody": "Videresend din eksisterende adresse ({example}) til adressen ovenfor. Detaljeret opsætning under Indstillinger.",
-  "app.onboarding.forwardLabel": "Adresse, der skal videresendes",
-  "app.onboarding.forwardPlaceholder": "support@ditfirma.dk",
-  "app.onboarding.forwardConnect": "Forbind denne adresse",
-  "app.onboarding.forwardPending":
-    "Opsæt en videresendelse fra {address} til {target} hos din e-mailudbyder.",
-  "app.onboarding.forwardWaiting": "Venter på den første videresendte e-mail …",
-  "app.onboarding.forwardVerified":
-    "{address} er bekræftet: videresendte e-mails bliver til sager.",
 
-  "app.onboarding.teamTitle": "Invitér dit team",
-  "app.onboarding.teamBody":
-    "Invitér dine agenter nu, eller del invitationslinket. Viewer-roller bruger ikke en plads.",
-  "app.onboarding.invitePlaceholder": "kollega@virksomhed.dk",
-  "app.onboarding.addRow": "+ Tilføj en linje",
-  "app.onboarding.sendInvites": "Send invitationerne",
 
-  "app.onboarding.testTitle": "Send en første sag",
-  "app.onboarding.testBody": "Kontrollér hele kæden, før du åbner supporten for dine kunder.",
-  "app.onboarding.readyTitle": "Dit arbejdsområde er klar",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Send en e-mail til {address} for at oprette en testsag.",
   "app.onboarding.openInbox": "Åbn indbakken",
+  "app.onboarding.setUp": "Indstil",
+  "app.onboarding.itemArticleTodo": "Vidensbasen svarer, før en agent skal.",
+  "app.onboarding.itemArticleDone": "Udgivet — portalen kan allerede svare uden en agent.",
+  "app.onboarding.itemArticle": "Udgiv din første artikel",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} tæller i {calendarZone}, mens arbejdsrummet lever i {tenantZone}.",
+  "app.onboarding.itemHoursDone": "SLA-mål tæller kun arbejdstimer, i {timezone}.",
+  "app.onboarding.itemHours": "Angiv din åbningstid",
+  "app.onboarding.itemTeamTodo":
+    "Ingen andre endnu: den automatiske fordeling har ingen at give sager til.",
+  "app.onboarding.itemTeamDone": "Allerede med: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Ingen adresse modtager endnu henvendelser — uden den kommer intet i indbakken.",
+  "app.onboarding.itemEmailDone": "{address} laver allerede indkommende mail til sager.",
+  "app.onboarding.checklistBody":
+    "Fire trin til din første sag. Du kan også gøre det senere under administration.",
+  "app.onboarding.welcome": "Velkommen, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identiteten er defineret",
-  "app.onboarding.checklistEmail": "E-mailadressen er konfigureret",
-  "app.onboarding.checklistTeam": "Teamet er inviteret",
-  "app.onboarding.checklistTicket": "Første sag modtaget",
-  "app.onboarding.checklistSla": "SLA-politikken er kontrolleret",
 
   /* ================= Text formerly hard-coded in French ================= */
 

@@ -2169,75 +2169,35 @@ export const pl: Dictionary = {
      and the accent colour come from elsewhere; the Owner / Admin / Agent /
      Viewer roles are not translated. */
 
-  "app.onboarding.asideTitle": "Konfiguracja",
-  "app.onboarding.asideFooter":
-    "Wszystkie te ustawienia można później zmienić w Ustawieniach.",
-  "app.onboarding.stepCounter": "Krok {step} z {total}",
-  "app.onboarding.continue": "Kontynuuj",
-  "app.onboarding.skip": "Pomiń ten krok",
 
-  "app.onboarding.stepIdentity": "Tożsamość",
-  "app.onboarding.stepIdentityHint": "Nazwa, logo, kolor",
-  "app.onboarding.stepEmail": "E-mail",
-  "app.onboarding.stepEmailHint": "Adres odbiorczy",
   "app.onboarding.stepTeam": "Zespół",
   "app.onboarding.stepTeamHint": "Zaproszenie agentów",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "Pierwsze zgłoszenie",
 
-  "app.onboarding.identityTitle": "Tożsamość obszaru roboczego",
-  "app.onboarding.identityBody":
-    "Te elementy pojawią się na Państwa portalu klienta oraz w e-mailach wysyłanych do klientów.",
-  "app.onboarding.logoDrop": "Przeciągnij tu plik lub kliknij, aby wybrać",
-  "app.onboarding.logoRejected":
-    "Plik nie został przyjęty — PNG, SVG, JPEG lub WebP, maksymalnie 2 MB.",
-  "app.onboarding.previewSearch": "Szukaj artykułu…",
-  "app.onboarding.previewCaption": "Podgląd Państwa portalu klienta",
 
   "app.onboarding.emailTitle": "Odbieranie e-maili",
-  "app.onboarding.emailBody":
-    "Każda wiadomość odebrana na ten adres automatycznie staje się zgłoszeniem.",
-  "app.onboarding.or": "LUB",
-  "app.onboarding.copy": "Kopiuj",
-  "app.onboarding.copied": "Skopiowano ✓",
-  "app.onboarding.providedTitle": "Użycie udostępnionego adresu",
-  "app.onboarding.providedActive": "Aktywny — gotowy do odbioru",
-  "app.onboarding.optional": "opcjonalnie",
-  "app.onboarding.forwardRemove": "Usuń",
-  "app.onboarding.ownAddressTitle": "Podłączenie własnego adresu",
-  "app.onboarding.ownAddressBody":
-    "Prosimy przekierować istniejący adres ({example}) na adres podany powyżej. Szczegółową konfigurację opisano w ustawieniach.",
-  "app.onboarding.forwardLabel": "Adres do przekierowania",
-  "app.onboarding.forwardPlaceholder": "support@twoja-domena.pl",
-  "app.onboarding.forwardConnect": "Połącz ten adres",
-  "app.onboarding.forwardPending":
-    "Skonfiguruj u swojego dostawcy poczty przekierowanie z {address} na {target}.",
-  "app.onboarding.forwardWaiting": "Oczekiwanie na pierwszą przekazaną wiadomość…",
-  "app.onboarding.forwardVerified":
-    "Adres {address} został zweryfikowany: przekazywane wiadomości stają się zgłoszeniami.",
 
-  "app.onboarding.teamTitle": "Zaproszenie zespołu",
-  "app.onboarding.teamBody":
-    "Prosimy zaprosić agentów teraz lub udostępnić link zaproszenia. Rola Viewer nie zajmuje stanowiska.",
-  "app.onboarding.invitePlaceholder": "kolega@firma.pl",
-  "app.onboarding.addRow": "+ Dodaj wiersz",
-  "app.onboarding.sendInvites": "Wyślij zaproszenia",
 
-  "app.onboarding.testTitle": "Wysłanie pierwszego zgłoszenia",
-  "app.onboarding.testBody":
-    "Prosimy sprawdzić całą ścieżkę, zanim usługa zostanie udostępniona klientom.",
-  "app.onboarding.readyTitle": "Państwa obszar roboczy jest gotowy",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody":
-    "Prosimy wysłać e-mail na adres {address}, aby utworzyć zgłoszenie testowe.",
   "app.onboarding.openInbox": "Otwórz skrzynkę",
+  "app.onboarding.setUp": "Skonfiguruj",
+  "app.onboarding.itemArticleTodo": "Baza wiedzy odpowiada, zanim musi to zrobić agent.",
+  "app.onboarding.itemArticleDone": "Opublikowano — portal już potrafi odpowiedzieć bez agenta.",
+  "app.onboarding.itemArticle": "Opublikuj pierwszy artykuł",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} liczy w strefie {calendarZone}, a przestrzeń żyje w strefie {tenantZone}.",
+  "app.onboarding.itemHoursDone": "Cele SLA liczą tylko godziny pracy, w strefie {timezone}.",
+  "app.onboarding.itemHours": "Ustaw godziny pracy",
+  "app.onboarding.itemTeamTodo":
+    "Na razie nikogo więcej: automatyczne przypisanie nie ma komu przekazać zgłoszenia.",
+  "app.onboarding.itemTeamDone": "Już w zespole: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Żaden adres nie odbiera jeszcze zgłoszeń — bez niego nic nie trafi do skrzynki.",
+  "app.onboarding.itemEmailDone": "{address} już zamienia otrzymane wiadomości w zgłoszenia.",
+  "app.onboarding.checklistBody":
+    "Cztery kroki do pierwszego zgłoszenia. Wszystko można też zrobić później w administracji.",
+  "app.onboarding.welcome": "Witaj, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Tożsamość ustawiona",
-  "app.onboarding.checklistEmail": "Adres e-mail skonfigurowany",
-  "app.onboarding.checklistTeam": "Zespół zaproszony",
-  "app.onboarding.checklistTicket": "Pierwsze zgłoszenie odebrane",
-  "app.onboarding.checklistSla": "Zasada SLA sprawdzona",
 
   /* ================= Text formerly hard-coded in French ================= */
 

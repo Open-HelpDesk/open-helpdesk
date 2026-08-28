@@ -1753,75 +1753,36 @@ export const nb: Dictionary = {
      (home.title), the workspace name and the accent colour (ST-01), and the
      Owner / Admin / Agent / Viewer roles, which are not translated. */
 
-  "app.onboarding.asideTitle": "Oppsett",
-  "app.onboarding.asideFooter":
-    "Du kan endre alt dette senere under Innstillinger.",
-  "app.onboarding.stepCounter": "Trinn {step} av {total}",
-  "app.onboarding.continue": "Fortsett",
-  "app.onboarding.skip": "Hopp over dette trinnet",
 
-  "app.onboarding.stepIdentity": "Identitet",
-  "app.onboarding.stepIdentityHint": "Navn, logo, farge",
-  "app.onboarding.stepEmail": "E-post",
-  "app.onboarding.stepEmailHint": "Mottaksadresse",
   "app.onboarding.stepTeam": "Team",
   "app.onboarding.stepTeamHint": "Inviter agentene",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "Første henvendelse",
 
-  "app.onboarding.identityTitle": "Identiteten til arbeidsområdet ditt",
-  "app.onboarding.identityBody":
-    "Dette vises på kundeportalen din og i e-postene som sendes til kundene dine.",
-  "app.onboarding.logoDrop": "Slipp en fil her, eller klikk for å velge",
-  "app.onboarding.logoRejected": "Filen ble ikke godtatt — PNG, SVG, JPEG eller WebP, maks 2 MB.",
-  "app.onboarding.previewSearch": "Søk etter en artikkel…",
-  "app.onboarding.previewCaption": "Forhåndsvisning av kundeportalen din",
 
   "app.onboarding.emailTitle": "Motta e-postene dine",
   /* “request” and “ticket” are the same word in Norwegian: the sentence
      therefore says “e-poster” on one side and “henvendelser” on the other. */
-  "app.onboarding.emailBody":
-    "Alle e-poster som kommer inn til denne adressen, blir automatisk henvendelser.",
-  "app.onboarding.or": "ELLER",
-  "app.onboarding.copy": "Kopier",
-  "app.onboarding.copied": "Kopiert ✓",
-  "app.onboarding.providedTitle": "Bruk adressen vi gir deg",
-  "app.onboarding.providedActive": "Aktiv — klar til å motta",
-  "app.onboarding.optional": "valgfritt",
-  "app.onboarding.forwardRemove": "Fjern",
-  "app.onboarding.ownAddressTitle": "Koble til min egen adresse",
-  "app.onboarding.ownAddressBody":
-    "Videresend den eksisterende adressen din ({example}) til adressen ovenfor. Detaljert oppsett under Innstillinger.",
-  "app.onboarding.forwardLabel": "Adresse som skal videresendes",
-  "app.onboarding.forwardPlaceholder": "support@ditt-domene.no",
-  "app.onboarding.forwardConnect": "Koble til denne adressen",
-  "app.onboarding.forwardPending":
-    "Sett opp videresending fra {address} til {target} hos e-postleverandøren din.",
-  "app.onboarding.forwardWaiting": "Venter på den første videresendte e-posten …",
-  "app.onboarding.forwardVerified":
-    "{address} er bekreftet: videresendte e-poster blir henvendelser.",
 
-  "app.onboarding.teamTitle": "Inviter teamet ditt",
-  "app.onboarding.teamBody":
-    "Inviter agentene dine nå, eller del invitasjonslenken. Viewer-roller bruker ingen plass.",
-  "app.onboarding.invitePlaceholder": "kollega@bedrift.no",
-  "app.onboarding.addRow": "+ Legg til en rad",
-  "app.onboarding.sendInvites": "Send invitasjonene",
 
-  "app.onboarding.testTitle": "Send en første henvendelse",
-  "app.onboarding.testBody":
-    "Kontroller hele kjeden før du åpner tjenesten for kundene dine.",
-  "app.onboarding.readyTitle": "Arbeidsområdet ditt er klart",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Send en e-post til {address} for å opprette en testhenvendelse.",
   "app.onboarding.openInbox": "Åpne innboksen",
+  "app.onboarding.setUp": "Sett opp",
+  "app.onboarding.itemArticleTodo": "Kunnskapsbasen svarer før en agent må.",
+  "app.onboarding.itemArticleDone": "Publisert — portalen kan allerede svare uten en agent.",
+  "app.onboarding.itemArticle": "Publiser din første artikkel",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} teller i {calendarZone}, mens arbeidsrommet lever i {tenantZone}.",
+  "app.onboarding.itemHoursDone": "SLA-mål teller bare arbeidstimer, i {timezone}.",
+  "app.onboarding.itemHours": "Angi åpningstidene",
+  "app.onboarding.itemTeamTodo": "Ingen andre ennå: automatisk fordeling har ingen å tildele til.",
+  "app.onboarding.itemTeamDone": "Allerede med: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Ingen adresse mottar henvendelser ennå — uten den kommer ingenting inn.",
+  "app.onboarding.itemEmailDone": "{address} gjør allerede innkommende e-post til henvendelser.",
+  "app.onboarding.checklistBody":
+    "Fire steg til din første henvendelse. Du kan også gjøre det senere under administrasjon.",
+  "app.onboarding.welcome": "Velkommen, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identiteten er satt opp",
-  "app.onboarding.checklistEmail": "E-postadressen er konfigurert",
-  "app.onboarding.checklistTeam": "Teamet er invitert",
-  "app.onboarding.checklistTicket": "Første henvendelse er mottatt",
-  "app.onboarding.checklistSla": "SLA-policyen er kontrollert",
 
   /* ================= Text formerly hard-coded in French ================= */
 

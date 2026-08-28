@@ -1989,74 +1989,35 @@ export const el: Dictionary = {
      preview (home.title), the workspace name, the accent colour and the
      Owner / Admin / Agent / Viewer roles come from elsewhere. */
 
-  "app.onboarding.asideTitle": "Διαμόρφωση",
-  "app.onboarding.asideFooter":
-    "Θα μπορέσετε να αλλάξετε όλες αυτές τις επιλογές αργότερα, από τις ρυθμίσεις.",
-  "app.onboarding.stepCounter": "Βήμα {step} από {total}",
-  "app.onboarding.continue": "Συνέχεια",
-  "app.onboarding.skip": "Παράλειψη αυτού του βήματος",
 
-  "app.onboarding.stepIdentity": "Ταυτότητα",
-  "app.onboarding.stepIdentityHint": "Όνομα, λογότυπο, χρώμα",
-  "app.onboarding.stepEmail": "Email",
-  "app.onboarding.stepEmailHint": "Διεύθυνση λήψης",
   "app.onboarding.stepTeam": "Ομάδα",
   "app.onboarding.stepTeamHint": "Πρόσκληση των χειριστών",
-  "app.onboarding.stepTest": "Δοκιμή",
-  "app.onboarding.stepTestHint": "Πρώτο τικέτ",
 
-  "app.onboarding.identityTitle": "Η ταυτότητα του χώρου εργασίας σας",
-  "app.onboarding.identityBody":
-    "Αυτά τα στοιχεία θα εμφανίζονται στην πύλη πελατών σας και στα email που στέλνονται στους πελάτες σας.",
-  "app.onboarding.logoDrop": "Αφήστε εδώ ένα αρχείο ή κάντε κλικ για επιλογή",
-  "app.onboarding.logoRejected": "Το αρχείο δεν έγινε δεκτό — PNG, SVG, JPEG ή WebP, έως 2 MB.",
-  "app.onboarding.previewSearch": "Αναζήτηση άρθρου…",
-  "app.onboarding.previewCaption": "Προεπισκόπηση της πύλης πελατών σας",
 
   "app.onboarding.emailTitle": "Λήψη των email σας",
-  "app.onboarding.emailBody":
-    "Όλα τα αιτήματα που λαμβάνονται σε αυτήν τη διεύθυνση γίνονται αυτόματα τικέτ.",
-  "app.onboarding.or": "Ή",
-  "app.onboarding.copy": "Αντιγραφή",
-  "app.onboarding.copied": "Αντιγράφηκε ✓",
-  "app.onboarding.providedTitle": "Χρήση της διεύθυνσης που παρέχουμε",
-  "app.onboarding.providedActive": "Ενεργή — έτοιμη για λήψη",
-  "app.onboarding.optional": "προαιρετικό",
-  "app.onboarding.forwardRemove": "Αφαίρεση",
-  "app.onboarding.ownAddressTitle": "Σύνδεση της δικής μου διεύθυνσης",
-  "app.onboarding.ownAddressBody":
-    "Προωθήστε την υπάρχουσα διεύθυνσή σας ({example}) στη διεύθυνση που δίνεται παραπάνω. Αναλυτική διαμόρφωση στις ρυθμίσεις.",
-  "app.onboarding.forwardLabel": "Διεύθυνση προς προώθηση",
-  "app.onboarding.forwardPlaceholder": "support@to-domain-sas.gr",
-  "app.onboarding.forwardConnect": "Σύνδεση αυτής της διεύθυνσης",
-  "app.onboarding.forwardPending":
-    "Ρυθμίστε στον πάροχο email σας μια προώθηση από το {address} στο {target}.",
-  "app.onboarding.forwardWaiting": "Αναμονή για το πρώτο προωθημένο email…",
-  "app.onboarding.forwardVerified":
-    "Το {address} επαληθεύτηκε: τα προωθημένα email γίνονται τικέτ.",
 
-  "app.onboarding.teamTitle": "Προσκαλέστε την ομάδα σας",
-  "app.onboarding.teamBody":
-    "Προσκαλέστε τους χειριστές σας τώρα ή κοινοποιήστε τον σύνδεσμο πρόσκλησης. Οι ρόλοι Viewer δεν καταλαμβάνουν θέση.",
-  "app.onboarding.invitePlaceholder": "synergatis@etaireia.gr",
-  "app.onboarding.addRow": "+ Προσθήκη γραμμής",
-  "app.onboarding.sendInvites": "Αποστολή των προσκλήσεων",
 
-  "app.onboarding.testTitle": "Στείλτε ένα πρώτο τικέτ",
-  "app.onboarding.testBody":
-    "Ελέγξτε ολόκληρη τη διαδρομή προτού ανοίξετε την υπηρεσία στους πελάτες σας.",
-  "app.onboarding.readyTitle": "Ο χώρος εργασίας σας είναι έτοιμος",
   /* {address} is rendered in a monospace font: the sentence is split around
      the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody":
-    "Στείλτε ένα email στο {address} για να δημιουργήσετε ένα δοκιμαστικό τικέτ.",
   "app.onboarding.openInbox": "Άνοιγμα των εισερχομένων",
+  "app.onboarding.setUp": "Ρύθμιση",
+  "app.onboarding.itemArticleTodo": "Η βάση γνώσης απαντά πριν χρειαστεί κάποιος agent.",
+  "app.onboarding.itemArticleDone": "Δημοσιεύτηκε — η πύλη μπορεί ήδη να απαντήσει χωρίς agent.",
+  "app.onboarding.itemArticle": "Δημοσιεύστε το πρώτο άρθρο",
+  "app.onboarding.itemHoursTodo":
+    "Το {calendar} μετρά σε {calendarZone}, ενώ ο χώρος ζει σε {tenantZone}.",
+  "app.onboarding.itemHoursDone": "Οι στόχοι SLA μετρούν μόνο εργάσιμες ώρες, στη ζώνη {timezone}.",
+  "app.onboarding.itemHours": "Ορίστε τις ώρες λειτουργίας",
+  "app.onboarding.itemTeamTodo":
+    "Κανείς άλλος ακόμη: η αυτόματη ανάθεση δεν έχει σε ποιον να δώσει τικέτ.",
+  "app.onboarding.itemTeamDone": "Ήδη στην ομάδα: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Καμία διεύθυνση δεν λαμβάνει ακόμη αιτήματα — χωρίς αυτή, τίποτα δεν φτάνει στα εισερχόμενα.",
+  "app.onboarding.itemEmailDone": "Το {address} μετατρέπει ήδη τα εισερχόμενα email σε τικέτ.",
+  "app.onboarding.checklistBody":
+    "Τέσσερα βήματα για το πρώτο τικέτ. Όλα μπορούν να γίνουν και αργότερα από τη διαχείριση.",
+  "app.onboarding.welcome": "Καλώς ορίσατε, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Η ταυτότητα ορίστηκε",
-  "app.onboarding.checklistEmail": "Η διεύθυνση email ρυθμίστηκε",
-  "app.onboarding.checklistTeam": "Η ομάδα προσκλήθηκε",
-  "app.onboarding.checklistTicket": "Το πρώτο τικέτ ελήφθη",
-  "app.onboarding.checklistSla": "Η πολιτική SLA επαληθεύτηκε",
 
   /* ================= Text formerly hard-coded in French ================= */
 

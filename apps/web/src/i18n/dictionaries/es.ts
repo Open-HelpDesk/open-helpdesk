@@ -1765,75 +1765,39 @@ export const es: Dictionary = {
      and the accent colour (the same controls as in ST-01), and the Owner /
      Admin / Agent / Viewer roles, which are not translated. */
 
-  "app.onboarding.asideTitle": "Configuración",
-  "app.onboarding.asideFooter":
-    "Podrás modificar todas estas opciones más adelante en los ajustes.",
-  "app.onboarding.stepCounter": "Paso {step} de {total}",
-  "app.onboarding.continue": "Continuar",
-  "app.onboarding.skip": "Omitir este paso",
 
-  "app.onboarding.stepIdentity": "Identidad",
-  "app.onboarding.stepIdentityHint": "Nombre, logotipo, color",
-  "app.onboarding.stepEmail": "Correo electrónico",
-  "app.onboarding.stepEmailHint": "Dirección de recepción",
   "app.onboarding.stepTeam": "Equipo",
   "app.onboarding.stepTeamHint": "Invitar a los agentes",
-  "app.onboarding.stepTest": "Prueba",
-  "app.onboarding.stepTestHint": "Primera solicitud",
 
-  "app.onboarding.identityTitle": "Identidad de tu espacio de trabajo",
-  "app.onboarding.identityBody":
-    "Estos elementos aparecerán en tu portal del cliente y en los correos enviados a tus clientes.",
-  "app.onboarding.logoDrop": "Suelta un archivo aquí o haz clic para elegirlo",
-  "app.onboarding.logoRejected": "Archivo no aceptado: PNG, SVG, JPEG o WebP, 2 MB como máximo.",
-  "app.onboarding.previewSearch": "Buscar un artículo…",
-  "app.onboarding.previewCaption": "Vista previa de tu portal del cliente",
 
   "app.onboarding.emailTitle": "Recibir tus correos",
   /* “requests” and “tickets” are both said “solicitudes”: the sentence
      starts from the emails received so as not to say the word twice. */
-  "app.onboarding.emailBody":
-    "Todos los correos recibidos en esta dirección se convierten automáticamente en solicitudes.",
-  "app.onboarding.or": "O",
-  "app.onboarding.copy": "Copiar",
-  "app.onboarding.copied": "Copiado ✓",
-  "app.onboarding.providedTitle": "Usar la dirección facilitada",
-  "app.onboarding.providedActive": "Activa — lista para recibir",
-  "app.onboarding.optional": "opcional",
-  "app.onboarding.forwardRemove": "Quitar",
-  "app.onboarding.ownAddressTitle": "Conectar mi propia dirección",
-  "app.onboarding.ownAddressBody":
-    "Reenvía tu dirección actual ({example}) a la dirección facilitada más arriba. Configuración detallada en los ajustes.",
-  "app.onboarding.forwardLabel": "Dirección para reenviar",
-  "app.onboarding.forwardPlaceholder": "soporte@tu-dominio.es",
-  "app.onboarding.forwardConnect": "Conectar esta dirección",
-  "app.onboarding.forwardPending":
-    "Configura una redirección de {address} a {target} en tu proveedor de correo.",
-  "app.onboarding.forwardWaiting": "Esperando el primer correo reenviado…",
-  "app.onboarding.forwardVerified":
-    "{address} está verificada: los correos reenviados se convierten en solicitudes.",
 
-  "app.onboarding.teamTitle": "Invitar a tu equipo",
-  "app.onboarding.teamBody":
-    "Invita a tus agentes ahora o comparte el enlace de invitación. Los roles Viewer no ocupan puesto.",
-  "app.onboarding.invitePlaceholder": "colega@empresa.es",
-  "app.onboarding.addRow": "+ Añadir una fila",
-  "app.onboarding.sendInvites": "Enviar las invitaciones",
 
-  "app.onboarding.testTitle": "Enviar una primera solicitud",
-  "app.onboarding.testBody":
-    "Comprueba toda la cadena antes de abrir el servicio a tus clientes.",
-  "app.onboarding.readyTitle": "Tu espacio de trabajo está listo",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Envía un correo a {address} para crear una solicitud de prueba.",
   "app.onboarding.openInbox": "Abrir la bandeja de entrada",
+  "app.onboarding.setUp": "Configurar",
+  "app.onboarding.itemArticleTodo":
+    "La base de conocimiento responde antes de que lo tenga que hacer un agente.",
+  "app.onboarding.itemArticleDone": "Publicado: el portal ya puede responder sin un agente.",
+  "app.onboarding.itemArticle": "Publica tu primer artículo",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} cuenta en {calendarZone}, mientras que el espacio vive en {tenantZone}.",
+  "app.onboarding.itemHoursDone":
+    "Los objetivos de SLA solo cuentan horas laborables, en {timezone}.",
+  "app.onboarding.itemHours": "Define tu horario laboral",
+  "app.onboarding.itemTeamTodo":
+    "Nadie más por ahora: la asignación automática no tiene a quién repartir.",
+  "app.onboarding.itemTeamDone": "Ya en el equipo: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Ninguna dirección recibe solicitudes todavía: sin ella, nada llega a la bandeja.",
+  "app.onboarding.itemEmailDone": "{address} ya convierte los correos recibidos en solicitudes.",
+  "app.onboarding.checklistBody":
+    "Cuatro pasos para recibir tu primera solicitud. También puedes hacerlo más tarde desde la administración.",
+  "app.onboarding.welcome": "Te damos la bienvenida, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identidad definida",
-  "app.onboarding.checklistEmail": "Dirección de correo configurada",
-  "app.onboarding.checklistTeam": "Equipo invitado",
-  "app.onboarding.checklistTicket": "Primera solicitud recibida",
-  "app.onboarding.checklistSla": "Política de SLA verificada",
 
 
 /* ================= Text formerly hard-coded in French ================= */

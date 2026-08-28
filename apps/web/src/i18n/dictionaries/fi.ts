@@ -1754,74 +1754,36 @@ export const fi: Dictionary = {
      and the accent colour come from elsewhere; the Owner / Admin / Agent /
      Viewer roles are not translated. */
 
-  "app.onboarding.asideTitle": "Käyttöönotto",
-  "app.onboarding.asideFooter":
-    "Voit muuttaa kaikkia näitä valintoja myöhemmin asetuksissa.",
-  "app.onboarding.stepCounter": "Vaihe {step} / {total}",
-  "app.onboarding.continue": "Jatka",
-  "app.onboarding.skip": "Ohita tämä vaihe",
 
-  "app.onboarding.stepIdentity": "Identiteetti",
-  "app.onboarding.stepIdentityHint": "Nimi, logo, väri",
-  "app.onboarding.stepEmail": "Sähköposti",
-  "app.onboarding.stepEmailHint": "Vastaanotto-osoite",
   "app.onboarding.stepTeam": "Tiimi",
   "app.onboarding.stepTeamHint": "Kutsu agentit",
-  "app.onboarding.stepTest": "Testi",
-  "app.onboarding.stepTestHint": "Ensimmäinen pyyntö",
 
-  "app.onboarding.identityTitle": "Työtilasi identiteetti",
-  "app.onboarding.identityBody":
-    "Nämä näkyvät asiakasportaalissasi ja asiakkaillesi lähetetyissä sähköposteissa.",
-  "app.onboarding.logoDrop": "Pudota tiedosto tähän tai valitse napsauttamalla",
-  "app.onboarding.logoRejected":
-    "Tiedostoa ei hyväksytty — PNG, SVG, JPEG tai WebP, enintään 2 Mt.",
-  "app.onboarding.previewSearch": "Hae artikkelia…",
-  "app.onboarding.previewCaption": "Asiakasportaalisi esikatselu",
 
   "app.onboarding.emailTitle": "Sähköpostien vastaanotto",
-  "app.onboarding.emailBody":
-    "Kaikista tähän osoitteeseen saapuvista viesteistä tulee automaattisesti pyyntöjä.",
-  "app.onboarding.or": "TAI",
-  "app.onboarding.copy": "Kopioi",
-  "app.onboarding.copied": "Kopioitu ✓",
-  "app.onboarding.providedTitle": "Käytä antamaamme osoitetta",
-  "app.onboarding.providedActive": "Aktiivinen — valmis vastaanottamaan",
-  "app.onboarding.optional": "valinnainen",
-  "app.onboarding.forwardRemove": "Poista",
-  "app.onboarding.ownAddressTitle": "Yhdistä oma osoitteeni",
-  "app.onboarding.ownAddressBody":
-    "Välitä nykyiseen osoitteeseesi ({example}) saapuvat viestit yllä olevaan osoitteeseen. Tarkempi määritys löytyy asetuksista.",
-  "app.onboarding.forwardLabel": "Välitettävä osoite",
-  "app.onboarding.forwardPlaceholder": "tuki@yrityksesi.fi",
-  "app.onboarding.forwardConnect": "Yhdistä tämä osoite",
-  "app.onboarding.forwardPending":
-    "Määritä sähköpostipalvelussasi edelleenlähetys osoitteesta {address} osoitteeseen {target}.",
-  "app.onboarding.forwardWaiting": "Odotetaan ensimmäistä edelleenlähetettyä viestiä…",
-  "app.onboarding.forwardVerified":
-    "{address} on vahvistettu: edelleenlähetetyistä viesteistä tulee pyyntöjä.",
 
-  "app.onboarding.teamTitle": "Kutsu tiimisi",
-  "app.onboarding.teamBody":
-    "Kutsu agenttisi nyt tai jaa kutsulinkki. Viewer-roolit eivät vie paikkaa.",
-  "app.onboarding.invitePlaceholder": "kollega@yritys.fi",
-  "app.onboarding.addRow": "+ Lisää rivi",
-  "app.onboarding.sendInvites": "Lähetä kutsut",
 
-  "app.onboarding.testTitle": "Lähetä ensimmäinen pyyntö",
-  "app.onboarding.testBody":
-    "Testaa koko ketju, ennen kuin avaat palvelun asiakkaillesi.",
-  "app.onboarding.readyTitle": "Työtilasi on valmis",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Luo testipyyntö lähettämällä sähköposti osoitteeseen {address}.",
   "app.onboarding.openInbox": "Avaa saapuneet",
+  "app.onboarding.setUp": "Määritä",
+  "app.onboarding.itemArticleTodo": "Tietämyskanta vastaa ennen kuin agentin täytyy.",
+  "app.onboarding.itemArticleDone": "Julkaistu — portaali voi jo vastata ilman agenttia.",
+  "app.onboarding.itemArticle": "Julkaise ensimmäinen artikkeli",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} laskee vyöhykkeessä {calendarZone}, mutta työtila elää vyöhykkeessä {tenantZone}.",
+  "app.onboarding.itemHoursDone":
+    "SLA-tavoitteet laskevat vain työtunnit, aikavyöhykkeessä {timezone}.",
+  "app.onboarding.itemHours": "Määritä aukioloajat",
+  "app.onboarding.itemTeamTodo":
+    "Ei vielä muita: automaattisella jaolla ei ole ketään, jolle antaa pyyntö.",
+  "app.onboarding.itemTeamDone": "Jo mukana: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Mikään osoite ei vielä vastaanota pyyntöjä — ilman sitä saapuneisiin ei tule mitään.",
+  "app.onboarding.itemEmailDone": "{address} muuttaa saapuvat sähköpostit jo pyynnöiksi.",
+  "app.onboarding.checklistBody":
+    "Neljä vaihetta ensimmäiseen pyyntöön. Voit tehdä nämä myös myöhemmin hallinnasta.",
+  "app.onboarding.welcome": "Tervetuloa, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identiteetti määritetty",
-  "app.onboarding.checklistEmail": "Sähköpostiosoite määritetty",
-  "app.onboarding.checklistTeam": "Tiimi kutsuttu",
-  "app.onboarding.checklistTicket": "Ensimmäinen pyyntö vastaanotettu",
-  "app.onboarding.checklistSla": "SLA-käytäntö tarkistettu",
 
   /* ================= Text formerly hard-coded in French ================= */
 

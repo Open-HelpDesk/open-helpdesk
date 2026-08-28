@@ -2153,72 +2153,35 @@ export const sl: Dictionary = {
      controls as in ST-01), and the product roles Owner / Admin / Agent /
      Viewer, which are not translated. */
 
-  "app.onboarding.asideTitle": "Nastavitev",
-  "app.onboarding.asideFooter": "Vse te možnosti lahko pozneje spremenite v nastavitvah.",
-  "app.onboarding.stepCounter": "Korak {step} od {total}",
-  "app.onboarding.continue": "Naprej",
-  "app.onboarding.skip": "Preskoči ta korak",
 
-  "app.onboarding.stepIdentity": "Identiteta",
-  "app.onboarding.stepIdentityHint": "Ime, logotip, barva",
-  "app.onboarding.stepEmail": "E-pošta",
-  "app.onboarding.stepEmailHint": "Naslov za prejemanje",
   "app.onboarding.stepTeam": "Ekipa",
   "app.onboarding.stepTeamHint": "Povabite agente",
-  "app.onboarding.stepTest": "Preizkus",
-  "app.onboarding.stepTestHint": "Prvi zahtevek",
 
-  "app.onboarding.identityTitle": "Identiteta vašega delovnega prostora",
-  "app.onboarding.identityBody":
-    "To se bo prikazalo na vašem portalu za stranke in v e-poštnih sporočilih, ki jih prejmejo vaše stranke.",
-  "app.onboarding.logoDrop": "Spustite datoteko sem ali kliknite za izbiro",
-  "app.onboarding.logoRejected": "Datoteka ni sprejeta — PNG, SVG, JPEG ali WebP, največ 2 MB.",
-  "app.onboarding.previewSearch": "Iskanje članka…",
-  "app.onboarding.previewCaption": "Predogled vašega portala za stranke",
 
   "app.onboarding.emailTitle": "Prejemajte svojo e-pošto",
-  "app.onboarding.emailBody":
-    "Vse zahteve, prejete na ta naslov, samodejno postanejo zahtevki.",
-  "app.onboarding.or": "ALI",
-  "app.onboarding.copy": "Kopiraj",
-  "app.onboarding.copied": "Kopirano ✓",
-  "app.onboarding.providedTitle": "Uporabite naslov, ki ga ponujamo",
-  "app.onboarding.providedActive": "Aktiven — pripravljen za prejemanje",
-  "app.onboarding.optional": "izbirno",
-  "app.onboarding.forwardRemove": "Odstrani",
-  "app.onboarding.ownAddressTitle": "Povežite svoj lastni naslov",
-  "app.onboarding.ownAddressBody":
-    "Obstoječi naslov ({example}) preusmerite na zgoraj navedeni naslov. Podrobna navodila najdete v nastavitvah.",
-  "app.onboarding.forwardLabel": "Naslov za preusmeritev",
-  "app.onboarding.forwardPlaceholder": "podpora@vase-podjetje.si",
-  "app.onboarding.forwardConnect": "Poveži ta naslov",
-  "app.onboarding.forwardPending":
-    "Pri svojem ponudniku e-pošte nastavite posredovanje z naslova {address} na {target}.",
-  "app.onboarding.forwardWaiting": "Čakanje na prvo posredovano e-sporočilo…",
-  "app.onboarding.forwardVerified":
-    "Naslov {address} je potrjen: posredovana e-sporočila postanejo zahtevki.",
 
-  "app.onboarding.teamTitle": "Povabite svojo ekipo",
-  "app.onboarding.teamBody":
-    "Agente povabite zdaj ali delite povezavo za povabilo. Vloge Viewer ne zasedejo licence.",
-  "app.onboarding.invitePlaceholder": "sodelavec@podjetje.si",
-  "app.onboarding.addRow": "+ Dodaj vrstico",
-  "app.onboarding.sendInvites": "Pošlji povabila",
 
-  "app.onboarding.testTitle": "Pošljite prvi zahtevek",
-  "app.onboarding.testBody":
-    "Preverite celotno pot, preden storitev odprete svojim strankam.",
-  "app.onboarding.readyTitle": "Vaš delovni prostor je pripravljen",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Pošljite e-pošto na {address} in ustvarite preizkusni zahtevek.",
   "app.onboarding.openInbox": "Odpri Prejeto",
+  "app.onboarding.setUp": "Nastavi",
+  "app.onboarding.itemArticleTodo": "Baza znanja odgovori, preden mora to storiti agent.",
+  "app.onboarding.itemArticleDone": "Objavljeno — portal lahko že odgovori brez agenta.",
+  "app.onboarding.itemArticle": "Objavite prvi članek",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} šteje v pasu {calendarZone}, delovni prostor pa živi v pasu {tenantZone}.",
+  "app.onboarding.itemHoursDone": "Cilji SLA štejejo le delovne ure, v časovnem pasu {timezone}.",
+  "app.onboarding.itemHours": "Nastavite delovni čas",
+  "app.onboarding.itemTeamTodo":
+    "Zaenkrat nikogar drugega: samodejno dodeljevanje nima komu predati zahtevka.",
+  "app.onboarding.itemTeamDone": "Že v ekipi: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Noben naslov še ne prejema zahtevkov — brez njega v nabiralnik ne pride nič.",
+  "app.onboarding.itemEmailDone": "{address} prejeta e-poštna sporočila že spremeni v zahtevke.",
+  "app.onboarding.checklistBody":
+    "Štirje koraki do prvega zahtevka. Vse to lahko urediš tudi pozneje v administraciji.",
+  "app.onboarding.welcome": "Dobrodošli, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identiteta je določena",
-  "app.onboarding.checklistEmail": "E-poštni naslov je nastavljen",
-  "app.onboarding.checklistTeam": "Ekipa je povabljena",
-  "app.onboarding.checklistTicket": "Prvi zahtevek je prejet",
-  "app.onboarding.checklistSla": "Pravilnik SLA je preverjen",
 
 
 /* ================= Text formerly hard-coded in French ================= */

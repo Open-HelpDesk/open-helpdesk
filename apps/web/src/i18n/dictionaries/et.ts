@@ -1950,71 +1950,35 @@ export const et: Dictionary = {
      name and the accent colour (the same controls as in ST-01), and the
      Owner / Admin / Agent / Viewer roles, which are not translated. */
 
-  "app.onboarding.asideTitle": "Seadistamine",
-  "app.onboarding.asideFooter": "Kõiki neid seadeid saate hiljem seadetes muuta.",
-  "app.onboarding.stepCounter": "Samm {step} / {total}",
-  "app.onboarding.continue": "Jätka",
-  "app.onboarding.skip": "Jäta see samm vahele",
 
-  "app.onboarding.stepIdentity": "Identiteet",
-  "app.onboarding.stepIdentityHint": "Nimi, logo, värv",
-  "app.onboarding.stepEmail": "E-post",
-  "app.onboarding.stepEmailHint": "Vastuvõtuaadress",
   "app.onboarding.stepTeam": "Tiim",
   "app.onboarding.stepTeamHint": "Agentide kutsumine",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "Esimene pilet",
 
-  "app.onboarding.identityTitle": "Teie tööruumi identiteet",
-  "app.onboarding.identityBody":
-    "Need ilmuvad teie kliendiportaalis ja klientidele saadetavates e-kirjades.",
-  "app.onboarding.logoDrop": "Lohistage fail siia või klõpsake valimiseks",
-  "app.onboarding.logoRejected": "Faili ei võetud vastu — PNG, SVG, JPEG või WebP, kuni 2 MB.",
-  "app.onboarding.previewSearch": "Otsi artiklit…",
-  "app.onboarding.previewCaption": "Teie kliendiportaali eelvaade",
 
   "app.onboarding.emailTitle": "E-kirjade vastuvõtmine",
-  "app.onboarding.emailBody":
-    "Kõik sellele aadressile saadetud päringud muutuvad automaatselt piletiteks.",
-  "app.onboarding.or": "VÕI",
-  "app.onboarding.copy": "Kopeeri",
-  "app.onboarding.copied": "Kopeeritud ✓",
-  "app.onboarding.providedTitle": "Kasuta antud aadressi",
-  "app.onboarding.providedActive": "Aktiivne — valmis vastu võtma",
-  "app.onboarding.optional": "valikuline",
-  "app.onboarding.forwardRemove": "Eemalda",
-  "app.onboarding.ownAddressTitle": "Ühenda oma aadress",
-  "app.onboarding.ownAddressBody":
-    "Suunake oma olemasolev aadress ({example}) eespool antud aadressile. Üksikasjalik seadistus on seadetes.",
-  "app.onboarding.forwardLabel": "Suunatav aadress",
-  "app.onboarding.forwardPlaceholder": "tugi@teie-domeen.ee",
-  "app.onboarding.forwardConnect": "Ühenda see aadress",
-  "app.onboarding.forwardPending":
-    "Seadista oma e-posti teenusepakkuja juures edastus aadressilt {address} aadressile {target}.",
-  "app.onboarding.forwardWaiting": "Ootame esimest edastatud e-kirja…",
-  "app.onboarding.forwardVerified":
-    "{address} on kinnitatud: edastatud e-kirjadest saavad piletid.",
 
-  "app.onboarding.teamTitle": "Kutsuge oma tiim",
-  "app.onboarding.teamBody":
-    "Kutsuge agendid kohe või jagage kutselinki. Viewer-rollid ei võta kohta.",
-  "app.onboarding.invitePlaceholder": "kolleeg@ettevote.ee",
-  "app.onboarding.addRow": "+ Lisa rida",
-  "app.onboarding.sendInvites": "Saada kutsed",
 
-  "app.onboarding.testTitle": "Saatke esimene pilet",
-  "app.onboarding.testBody": "Kontrollige kogu ahelat, enne kui avate teenuse klientidele.",
-  "app.onboarding.readyTitle": "Teie tööruum on valmis",
   /* {address} is rendered in a monospace font: the sentence is split around
      the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Testpileti loomiseks saatke e-kiri aadressile {address}.",
   "app.onboarding.openInbox": "Ava sisendkast",
+  "app.onboarding.setUp": "Seadista",
+  "app.onboarding.itemArticleTodo": "Teadmusbaas vastab enne, kui agent peab.",
+  "app.onboarding.itemArticleDone": "Avaldatud — portaal saab juba vastata ilma agendita.",
+  "app.onboarding.itemArticle": "Avalda esimene artikkel",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} arvestab ajavööndis {calendarZone}, tööruum aga elab ajavööndis {tenantZone}.",
+  "app.onboarding.itemHoursDone": "SLA sihid arvestavad ainult tööaega, ajavööndis {timezone}.",
+  "app.onboarding.itemHours": "Määra tööajad",
+  "app.onboarding.itemTeamTodo":
+    "Veel kedagi teist pole: automaatsel jaotusel pole kellelegi määrata.",
+  "app.onboarding.itemTeamDone": "Juba liitunud: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Ükski aadress ei võta veel taotlusi vastu — ilma selleta ei jõua midagi postkasti.",
+  "app.onboarding.itemEmailDone": "{address} muudab saabuvad kirjad juba piletiteks.",
+  "app.onboarding.checklistBody":
+    "Neli sammu esimese pileti juurde. Saad need teha ka hiljem halduses.",
+  "app.onboarding.welcome": "Tere tulemast, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identiteet määratud",
-  "app.onboarding.checklistEmail": "E-posti aadress seadistatud",
-  "app.onboarding.checklistTeam": "Tiim kutsutud",
-  "app.onboarding.checklistTicket": "Esimene pilet saabunud",
-  "app.onboarding.checklistSla": "SLA-poliitika kontrollitud",
 
 
 /* ================= Text formerly hard-coded in French ================= */

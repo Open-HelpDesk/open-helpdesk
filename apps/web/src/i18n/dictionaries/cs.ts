@@ -2126,73 +2126,34 @@ export const cs: Dictionary = {
   "app.reset.missing": "Tomuto odkazu chybí jeho token. Vyžádejte si nový odkaz pro obnovení.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  "app.onboarding.asideTitle": "Nastavení",
-  "app.onboarding.asideFooter":
-    "Vše, co zde nastavíte, můžete později změnit v nastavení.",
-  "app.onboarding.stepCounter": "Krok {step} z {total}",
-  "app.onboarding.continue": "Pokračovat",
-  "app.onboarding.skip": "Přeskočit tento krok",
 
-  "app.onboarding.stepIdentity": "Identita",
-  "app.onboarding.stepIdentityHint": "Název, logo, barva",
-  "app.onboarding.stepEmail": "E-mail",
-  "app.onboarding.stepEmailHint": "Adresa pro příjem",
   "app.onboarding.stepTeam": "Tým",
   "app.onboarding.stepTeamHint": "Pozvat agenty",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "První tiket",
 
-  "app.onboarding.identityTitle": "Identita vašeho pracovního prostoru",
-  "app.onboarding.identityBody":
-    "Tyto prvky se zobrazí na vašem zákaznickém portálu a v e-mailech odesílaných zákazníkům.",
-  "app.onboarding.logoDrop": "Přetáhněte sem soubor nebo klikněte pro výběr",
-  "app.onboarding.logoRejected": "Soubor nebyl přijat — PNG, SVG, JPEG nebo WebP, maximálně 2 MB.",
-  "app.onboarding.previewSearch": "Hledat článek…",
-  "app.onboarding.previewCaption": "Náhled vašeho zákaznického portálu",
 
   "app.onboarding.emailTitle": "Příjem vašich e-mailů",
-  "app.onboarding.emailBody":
-    "Všechny požadavky doručené na tuto adresu se automaticky stanou tikety.",
-  "app.onboarding.or": "NEBO",
-  "app.onboarding.copy": "Kopírovat",
-  "app.onboarding.copied": "Zkopírováno ✓",
-  "app.onboarding.providedTitle": "Použít adresu, kterou poskytujeme",
-  "app.onboarding.providedActive": "Aktivní — připravena přijímat",
-  "app.onboarding.optional": "volitelné",
-  "app.onboarding.forwardRemove": "Odebrat",
-  "app.onboarding.ownAddressTitle": "Připojit vlastní adresu",
-  "app.onboarding.ownAddressBody":
-    "Nastavte přeposílání ze své existující adresy ({example}) na adresu uvedenou výše. Podrobnou konfiguraci najdete v nastavení.",
-  "app.onboarding.forwardLabel": "Přeposílaná adresa",
-  "app.onboarding.forwardPlaceholder": "podpora@vase-domena.cz",
-  "app.onboarding.forwardConnect": "Připojit tuto adresu",
-  "app.onboarding.forwardPending":
-    "U svého poskytovatele e-mailu nastavte přesměrování z {address} na {target}.",
-  "app.onboarding.forwardWaiting": "Čeká se na první přeposlaný e-mail…",
-  "app.onboarding.forwardVerified":
-    "Adresa {address} je ověřena: přeposlané e-maily se stávají tikety.",
 
-  "app.onboarding.teamTitle": "Pozvěte svůj tým",
-  "app.onboarding.teamBody":
-    "Pozvěte své agenty hned, nebo sdílejte odkaz s pozvánkou. Role Viewer nezabírají licenci.",
-  "app.onboarding.invitePlaceholder": "kolega@firma.cz",
-  "app.onboarding.addRow": "+ Přidat řádek",
-  "app.onboarding.sendInvites": "Odeslat pozvánky",
 
-  "app.onboarding.testTitle": "Odeslat první tiket",
-  "app.onboarding.testBody":
-    "Než službu otevřete zákazníkům, ověřte celý průběh.",
-  "app.onboarding.readyTitle": "Váš pracovní prostor je připraven",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Pošlete e-mail na {address} a vytvořte tak testovací tiket.",
   "app.onboarding.openInbox": "Otevřít Doručené",
+  "app.onboarding.setUp": "Nastavit",
+  "app.onboarding.itemArticleTodo": "Znalostní báze odpoví dřív, než to musí udělat agent.",
+  "app.onboarding.itemArticleDone": "Publikováno — portál už umí odpovědět bez agenta.",
+  "app.onboarding.itemArticle": "Publikujte první článek",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} počítá v zóně {calendarZone}, zatímco pracovní prostor žije v zóně {tenantZone}.",
+  "app.onboarding.itemHoursDone": "Cíle SLA počítají jen pracovní hodiny, v zóně {timezone}.",
+  "app.onboarding.itemHours": "Nastavte pracovní dobu",
+  "app.onboarding.itemTeamTodo": "Zatím nikdo další: automatické přidělování nemá komu tiket dát.",
+  "app.onboarding.itemTeamDone": "Už jsou tady: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Zatím žádná adresa nepřijímá požadavky — bez ní nic nedorazí do doručených.",
+  "app.onboarding.itemEmailDone": "{address} už mění doručené e-maily na tikety.",
+  "app.onboarding.checklistBody":
+    "Čtyři kroky k prvnímu tiketu. Vše lze udělat i později v administraci.",
+  "app.onboarding.welcome": "Vítejte, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identita nastavena",
-  "app.onboarding.checklistEmail": "E-mailová adresa nastavena",
-  "app.onboarding.checklistTeam": "Tým pozván",
-  "app.onboarding.checklistTicket": "První tiket přijat",
-  "app.onboarding.checklistSla": "Politika SLA zkontrolována",
 
   /* ================= Text formerly hard-coded in French ================= */
 

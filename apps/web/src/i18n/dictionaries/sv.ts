@@ -1763,72 +1763,35 @@ export const sv: Dictionary = {
      and the accent colour come from elsewhere; the Owner / Admin / Agent /
      Viewer roles are not translated. */
 
-  "app.onboarding.asideTitle": "Konfiguration",
-  "app.onboarding.asideFooter":
-    "Allt det här kan du ändra senare under Inställningar.",
-  "app.onboarding.stepCounter": "Steg {step} av {total}",
-  "app.onboarding.continue": "Fortsätt",
-  "app.onboarding.skip": "Hoppa över det här steget",
 
-  "app.onboarding.stepIdentity": "Identitet",
-  "app.onboarding.stepIdentityHint": "Namn, logotyp, färg",
-  "app.onboarding.stepEmail": "E-post",
-  "app.onboarding.stepEmailHint": "Mottagaradress",
   "app.onboarding.stepTeam": "Team",
   "app.onboarding.stepTeamHint": "Bjud in agenterna",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "Första ärendet",
 
-  "app.onboarding.identityTitle": "Arbetsytans identitet",
-  "app.onboarding.identityBody":
-    "Det här visas i din kundportal och i de e-postmeddelanden som skickas till dina kunder.",
-  "app.onboarding.logoDrop": "Släpp en fil här eller klicka för att välja",
-  "app.onboarding.logoRejected": "Filen godtogs inte — PNG, SVG, JPEG eller WebP, högst 2 MB.",
-  "app.onboarding.previewSearch": "Sök artikel…",
-  "app.onboarding.previewCaption": "Förhandsvisning av din kundportal",
 
   "app.onboarding.emailTitle": "Ta emot din e-post",
-  "app.onboarding.emailBody":
-    "Alla förfrågningar som kommer till den här adressen blir automatiskt ärenden.",
-  "app.onboarding.or": "ELLER",
-  "app.onboarding.copy": "Kopiera",
-  "app.onboarding.copied": "Kopierat ✓",
-  "app.onboarding.providedTitle": "Använd adressen vi tillhandahåller",
-  "app.onboarding.providedActive": "Aktiv — redo att ta emot",
-  "app.onboarding.optional": "valfritt",
-  "app.onboarding.forwardRemove": "Ta bort",
-  "app.onboarding.ownAddressTitle": "Koppla min egen adress",
-  "app.onboarding.ownAddressBody":
-    "Vidarebefordra din befintliga adress ({example}) till adressen ovan. Detaljerad konfiguration under Inställningar.",
-  "app.onboarding.forwardLabel": "Adress att vidarebefordra",
-  "app.onboarding.forwardPlaceholder": "support@ditt-foretag.se",
-  "app.onboarding.forwardConnect": "Anslut den här adressen",
-  "app.onboarding.forwardPending":
-    "Ställ in vidarebefordran från {address} till {target} hos din e-postleverantör.",
-  "app.onboarding.forwardWaiting": "Väntar på det första vidarebefordrade mejlet …",
-  "app.onboarding.forwardVerified": "{address} är verifierad: vidarebefordrade mejl blir ärenden.",
 
-  "app.onboarding.teamTitle": "Bjud in ditt team",
-  "app.onboarding.teamBody":
-    "Bjud in dina agenter nu, eller dela inbjudningslänken. Viewer-roller tar ingen plats.",
-  "app.onboarding.invitePlaceholder": "kollega@foretag.se",
-  "app.onboarding.addRow": "+ Lägg till en rad",
-  "app.onboarding.sendInvites": "Skicka inbjudningarna",
 
-  "app.onboarding.testTitle": "Skicka ett första ärende",
-  "app.onboarding.testBody":
-    "Kontrollera hela kedjan innan du öppnar tjänsten för dina kunder.",
-  "app.onboarding.readyTitle": "Din arbetsyta är klar",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Skicka ett e-postmeddelande till {address} för att skapa ett testärende.",
   "app.onboarding.openInbox": "Öppna inkorgen",
+  "app.onboarding.setUp": "Ställ in",
+  "app.onboarding.itemArticleTodo": "Kunskapsbasen svarar innan en agent behöver göra det.",
+  "app.onboarding.itemArticleDone": "Publicerad — portalen kan redan svara utan en agent.",
+  "app.onboarding.itemArticle": "Publicera din första artikel",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} räknar i {calendarZone}, medan arbetsytan lever i {tenantZone}.",
+  "app.onboarding.itemHoursDone": "SLA-mål räknar bara arbetstimmar, i {timezone}.",
+  "app.onboarding.itemHours": "Ange dina öppettider",
+  "app.onboarding.itemTeamTodo":
+    "Ingen annan än: automatisk fördelning har ingen att tilldela till.",
+  "app.onboarding.itemTeamDone": "Redan med: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Ingen adress tar emot ärenden än — utan den kommer inget in i inkorgen.",
+  "app.onboarding.itemEmailDone": "{address} gör redan inkommande e-post till ärenden.",
+  "app.onboarding.checklistBody":
+    "Fyra steg till ditt första ärende. Du kan också göra det senare under administration.",
+  "app.onboarding.welcome": "Välkommen, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identiteten är angiven",
-  "app.onboarding.checklistEmail": "E-postadressen är konfigurerad",
-  "app.onboarding.checklistTeam": "Teamet är inbjudet",
-  "app.onboarding.checklistTicket": "Första ärendet är mottaget",
-  "app.onboarding.checklistSla": "SLA-policyn är kontrollerad",
 
   /* ================= Text formerly hard-coded in French ================= */
 

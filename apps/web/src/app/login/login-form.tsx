@@ -1,9 +1,60 @@
 "use client";
 
+/**
+ * AG-01 form (V2): SSO first, then the separator, then email and password —
+ * the mockup's order, and the one an agent whose company runs SSO expects. The
+ * mockup draws a single provider; both ship, so both are here.
+ */
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { useT } from "@/i18n/client";
+
+/** SSO button — h44, radius 10, hairline that turns brand on hover. */
+const ssoButton: React.CSSProperties = {
+  height: 44,
+  border: "1px solid var(--line)",
+  borderRadius: 10,
+  background: "var(--panel)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 9,
+  fontSize: 14,
+  fontWeight: 600,
+};
+
+const labelStyle: React.CSSProperties = {
+  fontSize: 12.5,
+  fontWeight: 600,
+  color: "var(--ink-2)",
+};
+
+/**
+ * Provider marks in the mockup's own idiom — one monochrome glyph in the brand
+ * stroke. Deliberately not the official Google and Microsoft logos: those come
+ * with brand rules, and a redrawn approximation of them is worse than a plain
+ * mark that claims nothing.
+ */
+function TileMark() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--brand)" strokeWidth="2" aria-hidden="true">
+      <rect x="3" y="3" width="8" height="8" rx="1" />
+      <rect x="13" y="3" width="8" height="8" rx="1" />
+      <rect x="3" y="13" width="8" height="8" rx="1" />
+      <rect x="13" y="13" width="8" height="8" rx="1" />
+    </svg>
+  );
+}
+
+function CircleMark() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--brand)" strokeWidth="2" aria-hidden="true">
+      <path d="M20 12a8 8 0 1 1-2.6-5.9" />
+      <path d="M20 12h-6" />
+    </svg>
+  );
+}
 
 export function LoginForm({ initialError }: { initialError?: string }) {
   const t = useT();
@@ -59,13 +110,16 @@ export function LoginForm({ initialError }: { initialError?: string }) {
     if (error) setError(t("app.login.providerMissing"));
   }
 
-  const inputStyle = {
-    height: 36,
-    borderRadius: 6,
-    borderColor: badCredentials ? "var(--dang)" : "var(--line)",
-    background: "var(--bg)",
+  const inputStyle: React.CSSProperties = {
+    height: 42,
+    padding: "0 13px",
+    borderRadius: 10,
+    border: `1px solid ${badCredentials ? "var(--dang)" : "var(--line)"}`,
+    background: "var(--panel)",
     color: "var(--ink)",
-  } as const;
+    fontSize: 14,
+    width: "100%",
+  };
 
   return (
     // `method="post"` even though submission is intercepted in JavaScript: this
@@ -73,43 +127,68 @@ export function LoginForm({ initialError }: { initialError?: string }) {
     // no method goes out as GET, and both the email and the password end up in
     // URL parameters — hence in the address bar, the history and the server
     // access logs.
-    <form onSubmit={onSubmit} method="post" className="flex flex-col gap-3">
-      <label className="flex flex-col gap-1 text-[13px] font-medium">
-        {t("app.login.email")}
+    <form onSubmit={onSubmit} method="post" className="flex flex-col" style={{ gap: 14 }}>
+      <button
+        type="button"
+        onClick={() => onSocial("microsoft")}
+        className="ohd-hover-edge-ink"
+        style={ssoButton}
+      >
+        <TileMark />
+        {t("app.login.microsoft")}
+      </button>
+      <button
+        type="button"
+        onClick={() => onSocial("google")}
+        className="ohd-hover-edge-ink"
+        style={ssoButton}
+      >
+        <CircleMark />
+        {t("app.login.google")}
+      </button>
+
+      <div
+        className="flex items-center"
+        style={{ gap: 12, color: "var(--ink-3)", fontSize: 12 }}
+      >
+        <span className="h-px flex-1" style={{ background: "var(--line)" }} />
+        {t("app.login.or")}
+        <span className="h-px flex-1" style={{ background: "var(--line)" }} />
+      </div>
+
+      <label className="flex flex-col" style={{ gap: 6 }}>
+        <span style={labelStyle}>{t("app.login.email")}</span>
         <input
+          className="ohd-field outline-none"
           name="email"
           type="email"
           required
           autoComplete="email"
           placeholder={t("app.login.emailPlaceholder")}
-          className="border px-3 text-sm font-normal outline-none focus:ring-2"
           style={inputStyle}
         />
       </label>
-      <label className="flex flex-col gap-1 text-[13px] font-medium">
-        <span className="flex items-baseline justify-between">
-          {t("app.login.password")}
-          <a href="/forgot-password" className="ohd-link font-normal" style={{ fontSize: 12 }}>
-            {t("app.login.forgot")}
-          </a>
-        </span>
+      <label className="flex flex-col" style={{ gap: 6 }}>
+        <span style={labelStyle}>{t("app.login.password")}</span>
         <input
+          className="ohd-field outline-none"
           name="password"
           type="password"
           required
           autoComplete="current-password"
-          className="border px-3 text-sm font-normal outline-none focus:ring-2"
           style={inputStyle}
         />
       </label>
 
       {error && (
         <p
-          className="rounded-md border px-3 py-2 text-[13px]"
           style={{
+            padding: "10px 12px",
+            borderRadius: 10,
             background: "var(--dang-t)",
-            borderColor: "var(--dang)",
+            border: "1px solid var(--dang)",
             color: "var(--dang)",
+            fontSize: 13,
           }}
         >
           {error}
@@ -119,37 +198,21 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="mt-1 rounded-md text-sm font-semibold text-white disabled:opacity-60"
-        style={{ height: 38, background: "var(--acc)" }}
+        className="grid place-items-center text-white disabled:opacity-60"
+        style={{
+          height: 44,
+          borderRadius: 10,
+          background: "var(--brand)",
+          fontSize: 14,
+          fontWeight: 600,
+        }}
       >
         {pending ? t("app.login.pending") : t("app.login.submit")}
       </button>
 
-      <div
-        className="my-1 flex items-center gap-3 text-[11px] font-semibold"
-        style={{ color: "var(--ink-3)" }}
-      >
-        <span className="h-px flex-1" style={{ background: "var(--line)" }} />
-        {t("app.login.or")}
-        <span className="h-px flex-1" style={{ background: "var(--line)" }} />
-      </div>
-
-      <button
-        type="button"
-        onClick={() => onSocial("google")}
-        className="rounded-md border text-[13px] font-medium"
-        style={{ height: 36, borderColor: "var(--line)", background: "var(--bg)" }}
-      >
-        {t("app.login.google")}
-      </button>
-      <button
-        type="button"
-        onClick={() => onSocial("microsoft")}
-        className="rounded-md border text-[13px] font-medium"
-        style={{ height: 36, borderColor: "var(--line)", background: "var(--bg)" }}
-      >
-        {t("app.login.microsoft")}
-      </button>
+      <a href="/forgot-password" className="ohd-link text-center" style={{ fontSize: 13 }}>
+        {t("app.login.forgot")}
+      </a>
     </form>
   );
 }

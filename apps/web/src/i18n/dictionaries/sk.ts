@@ -2148,71 +2148,35 @@ export const sk: Dictionary = {
      preview and the Owner / Admin / Agent / Viewer roles come from elsewhere:
      they are not repeated here. */
 
-  "app.onboarding.asideTitle": "Nastavenie",
-  "app.onboarding.asideFooter": "Všetky tieto možnosti môžete neskôr zmeniť v nastaveniach.",
-  "app.onboarding.stepCounter": "Krok {step} z {total}",
-  "app.onboarding.continue": "Pokračovať",
-  "app.onboarding.skip": "Preskočiť tento krok",
 
-  "app.onboarding.stepIdentity": "Identita",
-  "app.onboarding.stepIdentityHint": "Názov, logo, farba",
-  "app.onboarding.stepEmail": "E-mail",
-  "app.onboarding.stepEmailHint": "Adresa na prijímanie",
   "app.onboarding.stepTeam": "Tím",
   "app.onboarding.stepTeamHint": "Pozvať agentov",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "Prvý tiket",
 
-  "app.onboarding.identityTitle": "Identita vášho pracovného priestoru",
-  "app.onboarding.identityBody":
-    "Tieto prvky sa zobrazia na vašom klientskom portáli a v e-mailoch odosielaných vašim klientom.",
-  "app.onboarding.logoDrop": "Presuňte sem súbor alebo kliknite a vyberte ho",
-  "app.onboarding.logoRejected": "Súbor nebol prijatý — PNG, SVG, JPEG alebo WebP, najviac 2 MB.",
-  "app.onboarding.previewSearch": "Hľadať článok…",
-  "app.onboarding.previewCaption": "Náhľad vášho klientskeho portálu",
 
   "app.onboarding.emailTitle": "Prijímanie vašich e-mailov",
-  "app.onboarding.emailBody":
-    "Všetky požiadavky prijaté na túto adresu sa automaticky stanú tiketmi.",
-  "app.onboarding.or": "ALEBO",
-  "app.onboarding.copy": "Kopírovať",
-  "app.onboarding.copied": "Skopírované ✓",
-  "app.onboarding.providedTitle": "Použiť poskytnutú adresu",
-  "app.onboarding.providedActive": "Aktívna — pripravená prijímať",
-  "app.onboarding.optional": "voliteľné",
-  "app.onboarding.forwardRemove": "Odstrániť",
-  "app.onboarding.ownAddressTitle": "Pripojiť vlastnú adresu",
-  "app.onboarding.ownAddressBody":
-    "Presmerujte svoju existujúcu adresu ({example}) na adresu uvedenú vyššie. Podrobné nastavenie nájdete v nastaveniach.",
-  "app.onboarding.forwardLabel": "Adresa na presmerovanie",
-  "app.onboarding.forwardPlaceholder": "podpora@vasa-domena.sk",
-  "app.onboarding.forwardConnect": "Pripojiť túto adresu",
-  "app.onboarding.forwardPending":
-    "U svojho poskytovateľa e-mailu nastavte presmerovanie z {address} na {target}.",
-  "app.onboarding.forwardWaiting": "Čaká sa na prvý preposlaný e-mail…",
-  "app.onboarding.forwardVerified":
-    "Adresa {address} je overená: preposlané e-maily sa stávajú tiketmi.",
 
-  "app.onboarding.teamTitle": "Pozvite svoj tím",
-  "app.onboarding.teamBody":
-    "Pozvite svojich agentov teraz alebo zdieľajte pozývací odkaz. Roly Viewer nezaberajú licenciu.",
-  "app.onboarding.invitePlaceholder": "kolega@firma.sk",
-  "app.onboarding.addRow": "+ Pridať riadok",
-  "app.onboarding.sendInvites": "Odoslať pozvánky",
 
-  "app.onboarding.testTitle": "Odošlite prvý tiket",
-  "app.onboarding.testBody": "Skôr než službu otvoríte klientom, overte celý priebeh.",
-  "app.onboarding.readyTitle": "Váš pracovný priestor je pripravený",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Pošlite e-mail na {address} a vytvorte tak testovací tiket.",
   "app.onboarding.openInbox": "Otvoriť Doručené",
+  "app.onboarding.setUp": "Nastaviť",
+  "app.onboarding.itemArticleTodo": "Znalostná báza odpovie skôr, ako to musí urobiť agent.",
+  "app.onboarding.itemArticleDone": "Publikované — portál už dokáže odpovedať bez agenta.",
+  "app.onboarding.itemArticle": "Publikujte prvý článok",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} počíta v zóne {calendarZone}, zatiaľ čo pracovný priestor žije v zóne {tenantZone}.",
+  "app.onboarding.itemHoursDone": "Ciele SLA počítajú len pracovné hodiny, v zóne {timezone}.",
+  "app.onboarding.itemHours": "Nastavte pracovný čas",
+  "app.onboarding.itemTeamTodo":
+    "Zatiaľ nikto ďalší: automatické prideľovanie nemá komu tiket dať.",
+  "app.onboarding.itemTeamDone": "Už sú tu: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Zatiaľ žiadna adresa neprijíma požiadavky — bez nej nič nedorazí do prijatých.",
+  "app.onboarding.itemEmailDone": "{address} už mení doručené e-maily na tikety.",
+  "app.onboarding.checklistBody":
+    "Štyri kroky k prvému tiketu. Všetko sa dá urobiť aj neskôr v administrácii.",
+  "app.onboarding.welcome": "Vitajte, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identita nastavená",
-  "app.onboarding.checklistEmail": "E-mailová adresa nastavená",
-  "app.onboarding.checklistTeam": "Tím pozvaný",
-  "app.onboarding.checklistTicket": "Prvý tiket prijatý",
-  "app.onboarding.checklistSla": "Politika SLA overená",
 
   /* ================= Text formerly hard-coded in French ================= */
 

@@ -1827,73 +1827,37 @@ export const fr: Dictionary = {
      controls as in ST-01), and the product roles Owner / Admin / Agent /
      Viewer, which are not translated. */
 
-  "app.onboarding.asideTitle": "Configuration",
-  "app.onboarding.asideFooter":
-    "Vous pourrez modifier tous ces réglages plus tard dans les paramètres.",
-  "app.onboarding.stepCounter": "Étape {step} sur {total}",
-  "app.onboarding.continue": "Continuer",
-  "app.onboarding.skip": "Passer cette étape",
 
-  "app.onboarding.stepIdentity": "Identité",
-  "app.onboarding.stepIdentityHint": "Nom, logo, couleur",
-  "app.onboarding.stepEmail": "Email",
-  "app.onboarding.stepEmailHint": "Adresse de réception",
   "app.onboarding.stepTeam": "Équipe",
   "app.onboarding.stepTeamHint": "Inviter les agents",
-  "app.onboarding.stepTest": "Essai",
-  "app.onboarding.stepTestHint": "Premier ticket",
 
-  "app.onboarding.identityTitle": "Identité de votre workspace",
-  "app.onboarding.identityBody":
-    "Ces éléments apparaîtront sur votre portail client et dans les emails envoyés à vos clients.",
-  "app.onboarding.logoDrop": "Déposez un fichier ici ou cliquez pour le choisir",
-  "app.onboarding.logoRejected": "Fichier refusé — PNG, SVG, JPEG ou WebP, 2 Mo maximum.",
-  "app.onboarding.previewSearch": "Rechercher un article…",
-  "app.onboarding.previewCaption": "Aperçu de votre portail client",
 
   "app.onboarding.emailTitle": "Recevoir vos emails",
-  "app.onboarding.emailBody":
-    "Toutes les demandes reçues à cette adresse deviennent automatiquement des tickets.",
-  "app.onboarding.or": "OU",
-  "app.onboarding.copy": "Copier",
-  "app.onboarding.copied": "Copié ✓",
-  "app.onboarding.providedTitle": "Utiliser l'adresse fournie",
-  "app.onboarding.providedActive": "Active — prête à recevoir",
-  "app.onboarding.optional": "facultatif",
-  "app.onboarding.forwardRemove": "Retirer",
-  "app.onboarding.ownAddressTitle": "Connecter ma propre adresse",
-  "app.onboarding.ownAddressBody":
-    "Transférez votre adresse existante ({example}) vers l'adresse fournie ci-dessus. Configuration détaillée dans les paramètres.",
-  "app.onboarding.forwardLabel": "Adresse à transférer",
-  "app.onboarding.forwardPlaceholder": "support@votre-domaine.fr",
-  "app.onboarding.forwardConnect": "Connecter cette adresse",
-  "app.onboarding.forwardPending":
-    "Mettez en place une redirection de {address} vers {target} chez votre fournisseur d'email.",
-  "app.onboarding.forwardWaiting": "En attente du premier email transféré…",
-  "app.onboarding.forwardVerified":
-    "{address} est vérifiée : les emails transférés deviennent des tickets.",
 
-  "app.onboarding.teamTitle": "Inviter votre équipe",
-  "app.onboarding.teamBody":
-    "Invitez vos agents maintenant, ou partagez le lien d'invitation. Les rôles Viewer ne consomment pas de siège.",
-  "app.onboarding.invitePlaceholder": "collegue@entreprise.fr",
-  "app.onboarding.addRow": "+ Ajouter une ligne",
-  "app.onboarding.sendInvites": "Envoyer les invitations",
 
-  "app.onboarding.testTitle": "Envoyer un premier ticket",
-  "app.onboarding.testBody":
-    "Vérifiez la chaîne complète avant d'ouvrir le service à vos clients.",
-  "app.onboarding.readyTitle": "Votre workspace est prêt",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Envoyez un email à {address} pour créer un ticket de test.",
   "app.onboarding.openInbox": "Ouvrir l'inbox",
+  "app.onboarding.setUp": "Configurer",
+  "app.onboarding.itemArticleTodo":
+    "La base de connaissances répond avant qu'un agent ait à le faire.",
+  "app.onboarding.itemArticleDone": "Publié — le portail peut déjà répondre sans agent.",
+  "app.onboarding.itemArticle": "Publier votre premier article",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} compte en {calendarZone}, alors que l'espace vit en {tenantZone}.",
+  "app.onboarding.itemHoursDone":
+    "Les cibles SLA ne comptent que les heures ouvrées, en {timezone}.",
+  "app.onboarding.itemHours": "Définir vos horaires ouvrés",
+  "app.onboarding.itemTeamTodo":
+    "Personne d'autre ici : l'attribution automatique n'a personne à qui distribuer.",
+  "app.onboarding.itemTeamDone": "Déjà à bord : {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Aucune adresse ne reçoit encore les demandes — sans elle, rien n'arrive dans la boîte.",
+  "app.onboarding.itemEmailDone": "{address} transforme déjà les emails reçus en tickets.",
+  "app.onboarding.checklistBody":
+    "Quatre étapes pour recevoir votre premier ticket. Tout se règle aussi plus tard, depuis l'administration.",
+  "app.onboarding.welcome": "Bienvenue, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identité définie",
-  "app.onboarding.checklistEmail": "Adresse email configurée",
-  "app.onboarding.checklistTeam": "Équipe invitée",
-  "app.onboarding.checklistTicket": "Premier ticket reçu",
-  "app.onboarding.checklistSla": "Politique SLA vérifiée",
 
 
 /* ================= Text formerly hard-coded in French ================= */

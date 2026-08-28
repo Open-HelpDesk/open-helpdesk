@@ -2231,74 +2231,38 @@ export const ga: Dictionary = {
      and the accent colour come from elsewhere; the Owner / Admin / Agent /
      Viewer roles are not translated. */
 
-  "app.onboarding.asideTitle": "Cumraíocht",
-  "app.onboarding.asideFooter":
-    "Beidh tú in ann na roghanna seo go léir a athrú níos déanaí sna socruithe.",
-  "app.onboarding.stepCounter": "Céim {step} as {total}",
-  "app.onboarding.continue": "Lean ar aghaidh",
-  "app.onboarding.skip": "Léim thar an gcéim seo",
 
-  "app.onboarding.stepIdentity": "Aitheantas",
-  "app.onboarding.stepIdentityHint": "Ainm, lógó, dath",
-  "app.onboarding.stepEmail": "Ríomhphost",
-  "app.onboarding.stepEmailHint": "Seoladh glactha",
   "app.onboarding.stepTeam": "Foireann",
   "app.onboarding.stepTeamHint": "Tabhair cuireadh do ghníomhairí",
-  "app.onboarding.stepTest": "Tástáil",
-  "app.onboarding.stepTestHint": "An chéad thicéad",
 
-  "app.onboarding.identityTitle": "Aitheantas do spáis oibre",
-  "app.onboarding.identityBody":
-    "Beidh na míreanna seo le feiceáil ar thairseach do chustaiméirí agus sna ríomhphoist a sheoltar chucu.",
-  "app.onboarding.logoDrop": "Scaoil comhad anseo, nó cliceáil chun ceann a roghnú",
-  "app.onboarding.logoRejected":
-    "Níor glacadh leis an gcomhad — PNG, SVG, JPEG nó WebP, 2 MB ar a mhéad.",
-  "app.onboarding.previewSearch": "Cuardaigh alt…",
-  "app.onboarding.previewCaption": "Réamhamharc ar thairseach do chustaiméirí",
 
   "app.onboarding.emailTitle": "Faigh do ríomhphoist",
-  "app.onboarding.emailBody":
-    "Déantar ticéad go huathoibríoch de gach iarratas a fhaightear ag an seoladh seo.",
-  "app.onboarding.or": "NÓ",
-  "app.onboarding.copy": "Cóipeáil",
-  "app.onboarding.copied": "Cóipeáilte ✓",
-  "app.onboarding.providedTitle": "Úsáid an seoladh a chuirimid ar fáil",
-  "app.onboarding.providedActive": "Gníomhach — réidh le glacadh",
-  "app.onboarding.optional": "roghnach",
-  "app.onboarding.forwardRemove": "Bain",
-  "app.onboarding.ownAddressTitle": "Ceangail mo sheoladh féin",
-  "app.onboarding.ownAddressBody":
-    "Cuir do sheoladh reatha ({example}) ar aghaidh chuig an seoladh atá tugtha thuas. Cumraíocht mhionsonraithe sna socruithe.",
-  "app.onboarding.forwardLabel": "An seoladh a chuirfear ar aghaidh",
-  "app.onboarding.forwardPlaceholder": "tacaiocht@do-fhearann.ie",
-  "app.onboarding.forwardConnect": "Ceangail an seoladh seo",
-  "app.onboarding.forwardPending":
-    "Socraigh athsheoladh ó {address} chuig {target} le do sholáthraí ríomhphoist.",
-  "app.onboarding.forwardWaiting": "Ag fanacht leis an gcéad ríomhphost athsheolta…",
-  "app.onboarding.forwardVerified":
-    "Tá {address} fíoraithe: déantar ticéid de na ríomhphoist athsheolta.",
 
-  "app.onboarding.teamTitle": "Tabhair cuireadh do d'fhoireann",
-  "app.onboarding.teamBody":
-    "Tabhair cuireadh do do ghníomhairí anois, nó roinn an nasc cuiridh. Ní úsáideann róil Viewer suíochán.",
-  "app.onboarding.invitePlaceholder": "comhghleacai@comhlacht.ie",
-  "app.onboarding.addRow": "+ Cuir líne leis",
-  "app.onboarding.sendInvites": "Seol na cuirí",
 
-  "app.onboarding.testTitle": "Seol an chéad thicéad",
-  "app.onboarding.testBody":
-    "Seiceáil an slabhra iomlán sula osclóidh tú an tseirbhís do do chustaiméirí.",
-  "app.onboarding.readyTitle": "Tá do spás oibre réidh",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Seol ríomhphost chuig {address} chun ticéad tástála a chruthú.",
   "app.onboarding.openInbox": "Oscail an bosca isteach",
+  "app.onboarding.setUp": "Socraigh",
+  "app.onboarding.itemArticleTodo":
+    "Freagraíonn an bunachar eolais sula gcaithfidh gníomhaire é a dhéanamh.",
+  "app.onboarding.itemArticleDone":
+    "Foilsithe — is féidir leis an tairseach freagra a thabhairt cheana gan gníomhaire.",
+  "app.onboarding.itemArticle": "Foilsigh an chéad alt",
+  "app.onboarding.itemHoursTodo":
+    "Comhaireann {calendar} i {calendarZone}, ach maireann an spás oibre i {tenantZone}.",
+  "app.onboarding.itemHoursDone":
+    "Ní chomhaireann spriocanna SLA ach uaireanta oibre, i {timezone}.",
+  "app.onboarding.itemHours": "Socraigh na huaireanta oibre",
+  "app.onboarding.itemTeamTodo":
+    "Níl aon duine eile fós: níl aon duine ag an sannadh uathoibríoch.",
+  "app.onboarding.itemTeamDone": "Ar bord cheana: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Níl aon seoladh ag fáil iarratas go fóill — dá cheal, ní shroicheann rud ar bith an bosca.",
+  "app.onboarding.itemEmailDone": "Déanann {address} ticéid de ríomhphoist isteach cheana féin.",
+  "app.onboarding.checklistBody":
+    "Ceithre chéim go dtí an chéad ticéad. Is féidir gach ceann díobh a dhéanamh níos déanaí sa riarachán.",
+  "app.onboarding.welcome": "Fáilte, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Aitheantas socraithe",
-  "app.onboarding.checklistEmail": "Seoladh ríomhphoist cumraithe",
-  "app.onboarding.checklistTeam": "Cuireadh tugtha don fhoireann",
-  "app.onboarding.checklistTicket": "An chéad thicéad faighte",
-  "app.onboarding.checklistSla": "Beartas SLA seiceáilte",
 
   /* ================= Text formerly hard-coded in French ================= */
 

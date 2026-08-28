@@ -2162,75 +2162,38 @@ export const lt: Dictionary = {
      as in ST-01), and the Owner / Admin / Agent / Viewer roles, which are not
      translated. */
 
-  "app.onboarding.asideTitle": "Sąranka",
-  "app.onboarding.asideFooter": "Visa tai vėliau galėsite pakeisti nustatymuose.",
-  "app.onboarding.stepCounter": "Žingsnis {step} iš {total}",
-  "app.onboarding.continue": "Tęsti",
-  "app.onboarding.skip": "Praleisti šį žingsnį",
 
-  "app.onboarding.stepIdentity": "Tapatybė",
-  "app.onboarding.stepIdentityHint": "Pavadinimas, logotipas, spalva",
-  "app.onboarding.stepEmail": "El. paštas",
-  "app.onboarding.stepEmailHint": "Gavimo adresas",
   "app.onboarding.stepTeam": "Komanda",
   "app.onboarding.stepTeamHint": "Pakviesti agentus",
-  "app.onboarding.stepTest": "Bandymas",
-  "app.onboarding.stepTestHint": "Pirmoji užklausa",
 
-  "app.onboarding.identityTitle": "Jūsų darbo erdvės tapatybė",
-  "app.onboarding.identityBody":
-    "Šie elementai bus rodomi jūsų klientų portale ir klientams siunčiamuose el. laiškuose.",
-  "app.onboarding.logoDrop": "Nuvilkite failą čia arba spustelėkite, kad pasirinktumėte",
-  "app.onboarding.logoRejected":
-    "Failas nepriimtas — PNG, SVG, JPEG arba WebP, ne daugiau kaip 2 MB.",
-  "app.onboarding.previewSearch": "Ieškoti straipsnio…",
-  "app.onboarding.previewCaption": "Jūsų klientų portalo peržiūra",
 
   "app.onboarding.emailTitle": "El. laiškų gavimas",
   /* “request” and “ticket” are both said “užklausa”: the sentence starts
      from the email received so as not to repeat itself. */
-  "app.onboarding.emailBody":
-    "Kiekvienas šiuo adresu gautas el. laiškas automatiškai tampa užklausa.",
-  "app.onboarding.or": "ARBA",
-  "app.onboarding.copy": "Kopijuoti",
-  "app.onboarding.copied": "Nukopijuota ✓",
-  "app.onboarding.providedTitle": "Naudoti mūsų suteiktą adresą",
-  "app.onboarding.providedActive": "Aktyvus — paruoštas gauti",
-  "app.onboarding.optional": "neprivaloma",
-  "app.onboarding.forwardRemove": "Pašalinti",
-  "app.onboarding.ownAddressTitle": "Prijungti savo adresą",
-  "app.onboarding.ownAddressBody":
-    "Peradresuokite savo esamą adresą ({example}) į aukščiau nurodytą adresą. Išsami sąranka — nustatymuose.",
-  "app.onboarding.forwardLabel": "Peradresuojamas adresas",
-  "app.onboarding.forwardPlaceholder": "pagalba@jusu-domenas.lt",
-  "app.onboarding.forwardConnect": "Prijungti šį adresą",
-  "app.onboarding.forwardPending":
-    "Savo el. pašto paslaugų teikėjo nustatymuose sukurkite persiuntimą iš {address} į {target}.",
-  "app.onboarding.forwardWaiting": "Laukiama pirmo persiųsto el. laiško…",
-  "app.onboarding.forwardVerified":
-    "{address} patvirtintas: persiųsti el. laiškai tampa užklausomis.",
 
-  "app.onboarding.teamTitle": "Pakvieskite savo komandą",
-  "app.onboarding.teamBody":
-    "Pakvieskite agentus dabar arba pasidalykite pakvietimo nuoroda. Viewer vaidmenys neužima vietos.",
-  "app.onboarding.invitePlaceholder": "kolega@imone.lt",
-  "app.onboarding.addRow": "+ Pridėti eilutę",
-  "app.onboarding.sendInvites": "Išsiųsti pakvietimus",
 
-  "app.onboarding.testTitle": "Išsiųskite pirmąją užklausą",
-  "app.onboarding.testBody": "Prieš atverdami paslaugą klientams patikrinkite visą kelią.",
-  "app.onboarding.readyTitle": "Jūsų darbo erdvė paruošta",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody":
-    "Išsiųskite el. laišką adresu {address}, kad sukurtumėte bandomąją užklausą.",
   "app.onboarding.openInbox": "Atverti gautuosius",
+  "app.onboarding.setUp": "Nustatyti",
+  "app.onboarding.itemArticleTodo": "Žinių bazė atsako anksčiau, nei tai turi padaryti agentas.",
+  "app.onboarding.itemArticleDone": "Paskelbta — portalas jau gali atsakyti be agento.",
+  "app.onboarding.itemArticle": "Paskelbkite pirmąjį straipsnį",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} skaičiuoja juostoje {calendarZone}, o darbo erdvė gyvena juostoje {tenantZone}.",
+  "app.onboarding.itemHoursDone":
+    "SLA tikslai skaičiuoja tik darbo laiką, laiko juostoje {timezone}.",
+  "app.onboarding.itemHours": "Nustatykite darbo laiką",
+  "app.onboarding.itemTeamTodo":
+    "Kol kas nieko daugiau: automatiniam paskirstymui nėra kam perduoti užklausos.",
+  "app.onboarding.itemTeamDone": "Jau prisijungė: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Kol kas nė vienas adresas negauna užklausų — be jo į gautuosius nieko neateis.",
+  "app.onboarding.itemEmailDone": "{address} jau paverčia gaunamus el. laiškus užklausomis.",
+  "app.onboarding.checklistBody":
+    "Keturi žingsniai iki pirmosios užklausos. Visa tai galima padaryti ir vėliau administravimo skydelyje.",
+  "app.onboarding.welcome": "Sveiki, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Tapatybė nustatyta",
-  "app.onboarding.checklistEmail": "El. pašto adresas sukonfigūruotas",
-  "app.onboarding.checklistTeam": "Komanda pakviesta",
-  "app.onboarding.checklistTicket": "Pirmoji užklausa gauta",
-  "app.onboarding.checklistSla": "SLA politika patikrinta",
 
 
 /* ================= Text formerly hard-coded in French ================= */

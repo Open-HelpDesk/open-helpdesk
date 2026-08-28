@@ -1755,74 +1755,35 @@ export const nl: Dictionary = {
      (home.title), the workspace name and the accent colour (the same controls
      as in ST-01), and the Owner / Admin / Agent / Viewer roles. */
 
-  "app.onboarding.asideTitle": "Configuratie",
-  "app.onboarding.asideFooter":
-    "U kunt al deze keuzes later nog aanpassen bij de instellingen.",
-  "app.onboarding.stepCounter": "Stap {step} van {total}",
-  "app.onboarding.continue": "Doorgaan",
-  "app.onboarding.skip": "Deze stap overslaan",
 
-  "app.onboarding.stepIdentity": "Identiteit",
-  "app.onboarding.stepIdentityHint": "Naam, logo, kleur",
-  "app.onboarding.stepEmail": "E-mail",
-  "app.onboarding.stepEmailHint": "Ontvangstadres",
   "app.onboarding.stepTeam": "Team",
   "app.onboarding.stepTeamHint": "Agents uitnodigen",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "Eerste ticket",
 
-  "app.onboarding.identityTitle": "Identiteit van uw werkruimte",
-  "app.onboarding.identityBody":
-    "Deze elementen verschijnen op uw klantportaal en in de e-mails die naar uw klanten worden verstuurd.",
-  "app.onboarding.logoDrop": "Sleep hier een bestand of klik om te kiezen",
-  "app.onboarding.logoRejected":
-    "Bestand niet geaccepteerd — PNG, SVG, JPEG of WebP, maximaal 2 MB.",
-  "app.onboarding.previewSearch": "Zoek een artikel…",
-  "app.onboarding.previewCaption": "Voorbeeld van uw klantportaal",
 
   "app.onboarding.emailTitle": "Uw e-mails ontvangen",
-  "app.onboarding.emailBody":
-    "Alle verzoeken die op dit adres binnenkomen, worden automatisch tickets.",
-  "app.onboarding.or": "OF",
-  "app.onboarding.copy": "Kopiëren",
-  "app.onboarding.copied": "Gekopieerd ✓",
-  "app.onboarding.providedTitle": "Het adres gebruiken dat wij aanbieden",
-  "app.onboarding.providedActive": "Actief — klaar om te ontvangen",
-  "app.onboarding.optional": "optioneel",
-  "app.onboarding.forwardRemove": "Verwijderen",
-  "app.onboarding.ownAddressTitle": "Mijn eigen adres koppelen",
-  "app.onboarding.ownAddressBody":
-    "Stuur uw bestaande adres ({example}) door naar het adres hierboven. De volledige configuratie vindt u bij de instellingen.",
-  "app.onboarding.forwardLabel": "Adres om door te sturen",
-  "app.onboarding.forwardPlaceholder": "support@uw-domein.nl",
-  "app.onboarding.forwardConnect": "Dit adres koppelen",
-  "app.onboarding.forwardPending":
-    "Stel bij uw e-mailprovider een doorsturing in van {address} naar {target}.",
-  "app.onboarding.forwardWaiting": "Wachten op de eerste doorgestuurde e-mail…",
-  "app.onboarding.forwardVerified":
-    "{address} is geverifieerd: doorgestuurde e-mails worden tickets.",
 
-  "app.onboarding.teamTitle": "Uw team uitnodigen",
-  "app.onboarding.teamBody":
-    "Nodig uw agents nu uit, of deel de uitnodigingslink. Viewer-rollen nemen geen licentie in beslag.",
-  "app.onboarding.invitePlaceholder": "collega@bedrijf.nl",
-  "app.onboarding.addRow": "+ Rij toevoegen",
-  "app.onboarding.sendInvites": "Uitnodigingen versturen",
 
-  "app.onboarding.testTitle": "Een eerste ticket versturen",
-  "app.onboarding.testBody":
-    "Controleer de volledige keten voordat u de dienst voor uw klanten opent.",
-  "app.onboarding.readyTitle": "Uw werkruimte is klaar",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Stuur een e-mail naar {address} om een testticket aan te maken.",
   "app.onboarding.openInbox": "Inbox openen",
+  "app.onboarding.setUp": "Instellen",
+  "app.onboarding.itemArticleTodo": "De kennisbank antwoordt voordat een agent dat moet doen.",
+  "app.onboarding.itemArticleDone": "Gepubliceerd — het portaal kan al antwoorden zonder agent.",
+  "app.onboarding.itemArticle": "Publiceer je eerste artikel",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} rekent in {calendarZone}, terwijl de werkruimte in {tenantZone} leeft.",
+  "app.onboarding.itemHoursDone": "SLA-doelen tellen alleen werkuren, in {timezone}.",
+  "app.onboarding.itemHours": "Stel je openingstijden in",
+  "app.onboarding.itemTeamTodo":
+    "Nog niemand anders: de automatische toewijzing heeft niemand om aan te wijzen.",
+  "app.onboarding.itemTeamDone": "Al aan boord: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Nog geen adres ontvangt aanvragen — zonder adres komt er niets in de inbox.",
+  "app.onboarding.itemEmailDone": "{address} zet inkomende e-mail al om in tickets.",
+  "app.onboarding.checklistBody":
+    "Vier stappen naar je eerste ticket. Je kunt dit ook later doen, via de administratie.",
+  "app.onboarding.welcome": "Welkom, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identiteit ingesteld",
-  "app.onboarding.checklistEmail": "E-mailadres geconfigureerd",
-  "app.onboarding.checklistTeam": "Team uitgenodigd",
-  "app.onboarding.checklistTicket": "Eerste ticket ontvangen",
-  "app.onboarding.checklistSla": "SLA-beleid gecontroleerd",
 
   /* ================= Text formerly hard-coded in French ================= */
 

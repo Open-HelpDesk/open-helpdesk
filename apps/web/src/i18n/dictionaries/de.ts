@@ -1749,74 +1749,36 @@ export const de: Dictionary = {
   "app.reset.missing": "Diesem Link fehlt sein Token. Fordern Sie einen neuen Link zum Zurücksetzen an.",
 
   /* ===================== AG-02 Onboarding ===================== */
-  "app.onboarding.asideTitle": "Einrichtung",
-  "app.onboarding.asideFooter":
-    "Alle diese Angaben können Sie später in den Einstellungen ändern.",
-  "app.onboarding.stepCounter": "Schritt {step} von {total}",
-  "app.onboarding.continue": "Weiter",
-  "app.onboarding.skip": "Diesen Schritt überspringen",
 
-  "app.onboarding.stepIdentity": "Identität",
-  "app.onboarding.stepIdentityHint": "Name, Logo, Farbe",
-  "app.onboarding.stepEmail": "E-Mail",
-  "app.onboarding.stepEmailHint": "Empfangsadresse",
   "app.onboarding.stepTeam": "Team",
   "app.onboarding.stepTeamHint": "Agenten einladen",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "Erstes Ticket",
 
-  "app.onboarding.identityTitle": "Identität Ihres Workspace",
-  "app.onboarding.identityBody":
-    "Diese Angaben erscheinen in Ihrem Kundenportal und in den E-Mails an Ihre Kunden.",
-  "app.onboarding.logoDrop": "Datei hier ablegen oder zum Auswählen klicken",
-  "app.onboarding.logoRejected":
-    "Datei nicht akzeptiert — PNG, SVG, JPEG oder WebP, höchstens 2 MB.",
-  "app.onboarding.previewSearch": "Artikel suchen…",
-  "app.onboarding.previewCaption": "Vorschau Ihres Kundenportals",
 
   "app.onboarding.emailTitle": "Ihre E-Mails empfangen",
-  "app.onboarding.emailBody":
-    "Alle Anfragen an diese Adresse werden automatisch zu Tickets.",
-  "app.onboarding.or": "ODER",
-  "app.onboarding.copy": "Kopieren",
-  "app.onboarding.copied": "Kopiert ✓",
-  "app.onboarding.providedTitle": "Bereitgestellte Adresse verwenden",
-  "app.onboarding.providedActive": "Aktiv — empfangsbereit",
-  "app.onboarding.optional": "optional",
-  "app.onboarding.forwardRemove": "Entfernen",
-  "app.onboarding.ownAddressTitle": "Eigene Adresse verbinden",
-  "app.onboarding.ownAddressBody":
-    "Leiten Sie Ihre bestehende Adresse ({example}) an die oben angegebene Adresse weiter. Die ausführliche Einrichtung finden Sie in den Einstellungen.",
-  "app.onboarding.forwardLabel": "Weiterzuleitende Adresse",
-  "app.onboarding.forwardPlaceholder": "support@ihre-domain.de",
-  "app.onboarding.forwardConnect": "Diese Adresse verbinden",
-  "app.onboarding.forwardPending":
-    "Richten Sie bei Ihrem E-Mail-Anbieter eine Weiterleitung von {address} an {target} ein.",
-  "app.onboarding.forwardWaiting": "Warten auf die erste weitergeleitete E-Mail …",
-  "app.onboarding.forwardVerified":
-    "{address} ist bestätigt: weitergeleitete E-Mails werden zu Tickets.",
 
-  "app.onboarding.teamTitle": "Ihr Team einladen",
-  "app.onboarding.teamBody":
-    "Laden Sie Ihre Agenten jetzt ein oder teilen Sie den Einladungslink. Viewer-Rollen belegen keinen Platz.",
-  "app.onboarding.invitePlaceholder": "kollege@firma.de",
-  "app.onboarding.addRow": "+ Zeile hinzufügen",
-  "app.onboarding.sendInvites": "Einladungen senden",
 
-  "app.onboarding.testTitle": "Erstes Ticket senden",
-  "app.onboarding.testBody":
-    "Prüfen Sie den gesamten Ablauf, bevor Sie den Support für Ihre Kunden öffnen.",
-  "app.onboarding.readyTitle": "Ihr Workspace ist bereit",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Senden Sie eine E-Mail an {address}, um ein Testticket zu erstellen.",
   "app.onboarding.openInbox": "Posteingang öffnen",
+  "app.onboarding.setUp": "Einrichten",
+  "app.onboarding.itemArticleTodo": "Die Wissensdatenbank antwortet, bevor ein Agent es muss.",
+  "app.onboarding.itemArticleDone":
+    "Veröffentlicht — das Portal kann bereits ohne Agent antworten.",
+  "app.onboarding.itemArticle": "Ersten Artikel veröffentlichen",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} zählt in {calendarZone}, der Workspace lebt aber in {tenantZone}.",
+  "app.onboarding.itemHoursDone": "SLA-Ziele zählen nur Arbeitszeiten, in {timezone}.",
+  "app.onboarding.itemHours": "Geschäftszeiten festlegen",
+  "app.onboarding.itemTeamTodo":
+    "Noch niemand sonst hier: die automatische Zuweisung hat niemanden.",
+  "app.onboarding.itemTeamDone": "Schon dabei: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Noch empfängt keine Adresse Anfragen — ohne sie erreicht nichts den Posteingang.",
+  "app.onboarding.itemEmailDone": "{address} verwandelt eingehende E-Mails bereits in Tickets.",
+  "app.onboarding.checklistBody":
+    "Vier Schritte bis zum ersten Ticket. Alles lässt sich auch später in der Administration erledigen.",
+  "app.onboarding.welcome": "Willkommen, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identität festgelegt",
-  "app.onboarding.checklistEmail": "E-Mail-Adresse eingerichtet",
-  "app.onboarding.checklistTeam": "Team eingeladen",
-  "app.onboarding.checklistTicket": "Erstes Ticket erhalten",
-  "app.onboarding.checklistSla": "SLA-Richtlinie geprüft",
 
   /* ================= Text formerly hard-coded in French ================= */
 

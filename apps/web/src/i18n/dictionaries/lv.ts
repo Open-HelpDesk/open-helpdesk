@@ -2092,74 +2092,35 @@ export const lv: Dictionary = {
      and the accent colour (the same controls as in ST-01), and the Owner /
      Admin / Agent / Viewer roles. */
 
-  "app.onboarding.asideTitle": "Iestatīšana",
-  "app.onboarding.asideFooter":
-    "Visus šos iestatījumus vēlāk varēsiet mainīt sadaļā Iestatījumi.",
-  "app.onboarding.stepCounter": "{step}. solis no {total}",
-  "app.onboarding.continue": "Turpināt",
-  "app.onboarding.skip": "Izlaist šo soli",
 
-  "app.onboarding.stepIdentity": "Identitāte",
-  "app.onboarding.stepIdentityHint": "Nosaukums, logotips, krāsa",
-  "app.onboarding.stepEmail": "E-pasts",
-  "app.onboarding.stepEmailHint": "Saņemšanas adrese",
   "app.onboarding.stepTeam": "Komanda",
   "app.onboarding.stepTeamHint": "Uzaicināt aģentus",
-  "app.onboarding.stepTest": "Pārbaude",
-  "app.onboarding.stepTestHint": "Pirmais pieteikums",
 
-  "app.onboarding.identityTitle": "Jūsu darbvietas identitāte",
-  "app.onboarding.identityBody":
-    "Šie elementi būs redzami jūsu klientu portālā un klientiem sūtītajos e-pastos.",
-  "app.onboarding.logoDrop": "Ievelciet failu šeit vai noklikšķiniet, lai izvēlētos",
-  "app.onboarding.logoRejected":
-    "Fails nav pieņemts — PNG, SVG, JPEG vai WebP, ne vairāk par 2 MB.",
-  "app.onboarding.previewSearch": "Meklēt rakstu…",
-  "app.onboarding.previewCaption": "Jūsu klientu portāla priekšskatījums",
 
   "app.onboarding.emailTitle": "Saņemiet savus e-pastus",
-  "app.onboarding.emailBody":
-    "Visi uz šo adresi saņemtie pieprasījumi automātiski kļūst par pieteikumiem.",
-  "app.onboarding.or": "VAI",
-  "app.onboarding.copy": "Kopēt",
-  "app.onboarding.copied": "Nokopēts ✓",
-  "app.onboarding.providedTitle": "Izmantot mūsu piešķirto adresi",
-  "app.onboarding.providedActive": "Aktīva — gatava saņemt",
-  "app.onboarding.optional": "neobligāti",
-  "app.onboarding.forwardRemove": "Noņemt",
-  "app.onboarding.ownAddressTitle": "Pievienot savu adresi",
-  "app.onboarding.ownAddressBody":
-    "Pārsūtiet savu esošo adresi ({example}) uz iepriekš norādīto adresi. Detalizēta konfigurācija — iestatījumos.",
-  "app.onboarding.forwardLabel": "Pārsūtāmā adrese",
-  "app.onboarding.forwardPlaceholder": "atbalsts@jusu-domens.lv",
-  "app.onboarding.forwardConnect": "Pievienot šo adresi",
-  "app.onboarding.forwardPending":
-    "Sava e-pasta pakalpojumu sniedzēja iestatījumos izveidojiet pāradresāciju no {address} uz {target}.",
-  "app.onboarding.forwardWaiting": "Gaidām pirmo pārsūtīto e-pastu…",
-  "app.onboarding.forwardVerified":
-    "{address} ir apstiprināta: pārsūtītie e-pasti kļūst par pieteikumiem.",
 
-  "app.onboarding.teamTitle": "Uzaiciniet savu komandu",
-  "app.onboarding.teamBody":
-    "Uzaiciniet savus aģentus tagad vai kopīgojiet uzaicinājuma saiti. Viewer lomas neaizņem licenci.",
-  "app.onboarding.invitePlaceholder": "kolegis@uznemums.lv",
-  "app.onboarding.addRow": "+ Pievienot rindu",
-  "app.onboarding.sendInvites": "Nosūtīt uzaicinājumus",
 
-  "app.onboarding.testTitle": "Nosūtiet pirmo pieteikumu",
-  "app.onboarding.testBody":
-    "Pārbaudiet visu ķēdi, pirms atverat pakalpojumu saviem klientiem.",
-  "app.onboarding.readyTitle": "Jūsu darbvieta ir gatava",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Nosūtiet e-pastu uz {address}, lai izveidotu pārbaudes pieteikumu.",
   "app.onboarding.openInbox": "Atvērt iesūtni",
+  "app.onboarding.setUp": "Iestatīt",
+  "app.onboarding.itemArticleTodo": "Zināšanu bāze atbild, pirms tas jādara aģentam.",
+  "app.onboarding.itemArticleDone": "Publicēts — portāls jau var atbildēt bez aģenta.",
+  "app.onboarding.itemArticle": "Publicējiet pirmo rakstu",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} skaita joslā {calendarZone}, bet darbvieta dzīvo joslā {tenantZone}.",
+  "app.onboarding.itemHoursDone": "SLA mērķi ieskaita tikai darba laiku, laika joslā {timezone}.",
+  "app.onboarding.itemHours": "Iestatiet darba laiku",
+  "app.onboarding.itemTeamTodo":
+    "Vēl neviena cita: automātiskajai sadalei nav kam nodot pieteikumu.",
+  "app.onboarding.itemTeamDone": "Jau pievienojušies: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Neviena adrese vēl nesaņem pieteikumus — bez tās iesūtnē neienāk nekas.",
+  "app.onboarding.itemEmailDone": "{address} jau pārvērš saņemtos e-pastus pieteikumos.",
+  "app.onboarding.checklistBody":
+    "Četri soļi līdz pirmajam pieteikumam. To visu var izdarīt arī vēlāk administrācijā.",
+  "app.onboarding.welcome": "Sveicināti, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identitāte definēta",
-  "app.onboarding.checklistEmail": "E-pasta adrese konfigurēta",
-  "app.onboarding.checklistTeam": "Komanda uzaicināta",
-  "app.onboarding.checklistTicket": "Pirmais pieteikums saņemts",
-  "app.onboarding.checklistSla": "SLA politika pārbaudīta",
 
 
 /* ================= Text formerly hard-coded in French ================= */

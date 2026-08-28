@@ -2105,74 +2105,36 @@ export const ro: Dictionary = {
      and the accent colour (the same controls as in ST-01), and the Owner /
      Admin / Agent / Viewer roles, which are not translated. */
 
-  "app.onboarding.asideTitle": "Configurare",
-  "app.onboarding.asideFooter":
-    "Veți putea modifica toate aceste opțiuni mai târziu, din Setări.",
-  "app.onboarding.stepCounter": "Pasul {step} din {total}",
-  "app.onboarding.continue": "Continuați",
-  "app.onboarding.skip": "Omiteți acest pas",
 
-  "app.onboarding.stepIdentity": "Identitate",
-  "app.onboarding.stepIdentityHint": "Nume, logo, culoare",
-  "app.onboarding.stepEmail": "Email",
-  "app.onboarding.stepEmailHint": "Adresă de recepție",
   "app.onboarding.stepTeam": "Echipă",
   "app.onboarding.stepTeamHint": "Invitați agenții",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "Primul tichet",
 
-  "app.onboarding.identityTitle": "Identitatea spațiului dvs. de lucru",
-  "app.onboarding.identityBody":
-    "Aceste elemente vor apărea în portalul dvs. client și în emailurile trimise clienților dvs.",
-  "app.onboarding.logoDrop": "Trageți aici un fișier sau faceți clic pentru a alege",
-  "app.onboarding.logoRejected": "Fișier neacceptat — PNG, SVG, JPEG sau WebP, maximum 2 MB.",
-  "app.onboarding.previewSearch": "Căutați un articol…",
-  "app.onboarding.previewCaption": "Previzualizarea portalului dvs. client",
 
   "app.onboarding.emailTitle": "Primirea emailurilor dvs.",
-  "app.onboarding.emailBody":
-    "Toate solicitările primite la această adresă devin automat tichete.",
-  "app.onboarding.or": "SAU",
-  "app.onboarding.copy": "Copiați",
-  "app.onboarding.copied": "Copiat ✓",
-  "app.onboarding.providedTitle": "Folosiți adresa pe care o oferim",
-  "app.onboarding.providedActive": "Activă — gata de primire",
-  "app.onboarding.optional": "opțional",
-  "app.onboarding.forwardRemove": "Elimină",
-  "app.onboarding.ownAddressTitle": "Conectați propria adresă",
-  "app.onboarding.ownAddressBody":
-    "Redirecționați adresa dvs. existentă ({example}) către adresa furnizată mai sus. Configurare detaliată în Setări.",
-  "app.onboarding.forwardLabel": "Adresa de redirecționat",
-  "app.onboarding.forwardPlaceholder": "suport@domeniul-dvs.ro",
-  "app.onboarding.forwardConnect": "Conectează această adresă",
-  "app.onboarding.forwardPending":
-    "Configurează la furnizorul tău de email o redirecționare de la {address} către {target}.",
-  "app.onboarding.forwardWaiting": "Se așteaptă primul email redirecționat…",
-  "app.onboarding.forwardVerified":
-    "{address} este verificată: emailurile redirecționate devin tichete.",
 
-  "app.onboarding.teamTitle": "Invitați echipa dvs.",
-  "app.onboarding.teamBody":
-    "Invitați agenții acum sau partajați linkul de invitație. Rolurile Viewer nu ocupă licențe.",
-  "app.onboarding.invitePlaceholder": "coleg@companie.ro",
-  "app.onboarding.addRow": "+ Adăugați un rând",
-  "app.onboarding.sendInvites": "Trimiteți invitațiile",
 
-  "app.onboarding.testTitle": "Trimiteți un prim tichet",
-  "app.onboarding.testBody":
-    "Verificați întregul lanț înainte de a deschide serviciul clienților dvs.",
-  "app.onboarding.readyTitle": "Spațiul dvs. de lucru este pregătit",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody":
-    "Trimiteți un email la {address} pentru a crea un tichet de test.",
   "app.onboarding.openInbox": "Deschideți inboxul",
+  "app.onboarding.setUp": "Configurați",
+  "app.onboarding.itemArticleTodo":
+    "Baza de cunoștințe răspunde înainte să fie nevoie de un agent.",
+  "app.onboarding.itemArticleDone": "Publicat — portalul poate răspunde deja fără un agent.",
+  "app.onboarding.itemArticle": "Publicați primul articol",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} numără în {calendarZone}, în timp ce spațiul trăiește în {tenantZone}.",
+  "app.onboarding.itemHoursDone": "Țintele SLA numără doar orele lucrate, în {timezone}.",
+  "app.onboarding.itemHours": "Stabiliți programul de lucru",
+  "app.onboarding.itemTeamTodo":
+    "Deocamdată nimeni altcineva: atribuirea automată nu are cui să dea tichetul.",
+  "app.onboarding.itemTeamDone": "Deja în echipă: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Nicio adresă nu primește încă solicitări — fără ea, nimic nu ajunge în inbox.",
+  "app.onboarding.itemEmailDone": "{address} transformă deja e-mailurile primite în tichete.",
+  "app.onboarding.checklistBody":
+    "Patru pași până la primul tichet. Toate se pot face și mai târziu, din administrare.",
+  "app.onboarding.welcome": "Bun venit, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identitate definită",
-  "app.onboarding.checklistEmail": "Adresă de email configurată",
-  "app.onboarding.checklistTeam": "Echipă invitată",
-  "app.onboarding.checklistTicket": "Primul tichet primit",
-  "app.onboarding.checklistSla": "Politică SLA verificată",
 
   /* ================= Text formerly hard-coded in French ================= */
 

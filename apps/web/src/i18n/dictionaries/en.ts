@@ -1755,72 +1755,35 @@ export const en = {
      and the accent colour come from elsewhere; the Owner / Admin / Agent /
      Viewer roles are not translated. */
 
-  "app.onboarding.asideTitle": "Setup",
-  "app.onboarding.asideFooter":
-    "You can change all of these settings later in Settings.",
-  "app.onboarding.stepCounter": "Step {step} of {total}",
-  "app.onboarding.continue": "Continue",
-  "app.onboarding.skip": "Skip this step",
 
-  "app.onboarding.stepIdentity": "Identity",
-  "app.onboarding.stepIdentityHint": "Name, logo, colour",
-  "app.onboarding.stepEmail": "Email",
-  "app.onboarding.stepEmailHint": "Receiving address",
   "app.onboarding.stepTeam": "Team",
   "app.onboarding.stepTeamHint": "Invite your agents",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "First ticket",
 
-  "app.onboarding.identityTitle": "Your workspace identity",
-  "app.onboarding.identityBody":
-    "These will appear on your customer portal and in the emails sent to your customers.",
-  "app.onboarding.logoDrop": "Drop a file here, or click to choose",
-  "app.onboarding.logoRejected": "File not accepted — PNG, SVG, JPEG or WebP, 2 MB maximum.",
-  "app.onboarding.previewSearch": "Search for an article…",
-  "app.onboarding.previewCaption": "Preview of your customer portal",
 
   "app.onboarding.emailTitle": "Receive your emails",
-  "app.onboarding.emailBody":
-    "Every request sent to this address automatically becomes a ticket.",
-  "app.onboarding.or": "OR",
-  "app.onboarding.copy": "Copy",
-  "app.onboarding.copied": "Copied ✓",
-  "app.onboarding.providedTitle": "Use the address we provide",
-  "app.onboarding.providedActive": "Active — ready to receive",
-  "app.onboarding.optional": "optional",
-  "app.onboarding.forwardRemove": "Remove",
-  "app.onboarding.ownAddressTitle": "Connect my own address",
-  "app.onboarding.ownAddressBody":
-    "Forward your existing address ({example}) to the address given above. Detailed setup in the settings.",
-  "app.onboarding.forwardLabel": "Address to forward",
-  "app.onboarding.forwardPlaceholder": "support@your-domain.co.uk",
-  "app.onboarding.forwardConnect": "Connect this address",
-  "app.onboarding.forwardPending":
-    "Set up a redirect from {address} to {target} with your email provider.",
-  "app.onboarding.forwardWaiting": "Waiting for the first forwarded email…",
-  "app.onboarding.forwardVerified": "{address} is verified: forwarded emails become tickets.",
 
-  "app.onboarding.teamTitle": "Invite your team",
-  "app.onboarding.teamBody":
-    "Invite your agents now, or share the invitation link. Viewer roles don't use a seat.",
-  "app.onboarding.invitePlaceholder": "colleague@company.co.uk",
-  "app.onboarding.addRow": "+ Add a row",
-  "app.onboarding.sendInvites": "Send the invitations",
 
-  "app.onboarding.testTitle": "Send a first ticket",
-  "app.onboarding.testBody":
-    "Check the whole chain before opening the service to your customers.",
-  "app.onboarding.readyTitle": "Your workspace is ready",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Send an email to {address} to create a test ticket.",
   "app.onboarding.openInbox": "Open the inbox",
+  "app.onboarding.setUp": "Set up",
+  "app.onboarding.itemArticleTodo": "The knowledge base is what answers before an agent has to.",
+  "app.onboarding.itemArticleDone": "Published — the portal can already answer without an agent.",
+  "app.onboarding.itemArticle": "Publish your first article",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} counts in {calendarZone}, while the workspace lives in {tenantZone}.",
+  "app.onboarding.itemHoursDone": "SLA targets count working hours only, in {timezone}.",
+  "app.onboarding.itemHours": "Set your business hours",
+  "app.onboarding.itemTeamTodo":
+    "Nobody else here yet: round-robin assignment has no one to hand a ticket to.",
+  "app.onboarding.itemTeamDone": "Already on board: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "No address receives requests yet — without one, nothing reaches the inbox.",
+  "app.onboarding.itemEmailDone": "{address} already turns incoming email into tickets.",
+  "app.onboarding.checklistBody":
+    "Four steps to your first ticket. You can also do any of it later, from the administration.",
+  "app.onboarding.welcome": "Welcome, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identity set",
-  "app.onboarding.checklistEmail": "Email address configured",
-  "app.onboarding.checklistTeam": "Team invited",
-  "app.onboarding.checklistTicket": "First ticket received",
-  "app.onboarding.checklistSla": "SLA policy checked",
 
   /* ================= Text formerly hard-coded in French ================= */
 

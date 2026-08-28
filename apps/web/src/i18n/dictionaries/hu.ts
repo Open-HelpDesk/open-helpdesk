@@ -1964,76 +1964,38 @@ export const hu: Dictionary = {
      and the accent colour come from elsewhere; the Owner / Admin / Agent /
      Viewer roles are not translated. */
 
-  "app.onboarding.asideTitle": "Beállítás",
-  "app.onboarding.asideFooter": "Mindezt később bármikor módosíthatja a beállításokban.",
-  "app.onboarding.stepCounter": "{step}. lépés / {total}",
-  "app.onboarding.continue": "Folytatás",
-  "app.onboarding.skip": "A lépés kihagyása",
 
-  "app.onboarding.stepIdentity": "Azonosság",
-  "app.onboarding.stepIdentityHint": "Név, logó, szín",
-  "app.onboarding.stepEmail": "E-mail",
-  "app.onboarding.stepEmailHint": "Fogadó cím",
   "app.onboarding.stepTeam": "Csapat",
   "app.onboarding.stepTeamHint": "Ügyintézők meghívása",
-  "app.onboarding.stepTest": "Teszt",
-  "app.onboarding.stepTestHint": "Első jegy",
 
-  "app.onboarding.identityTitle": "A munkaterület azonossága",
-  "app.onboarding.identityBody":
-    "Ezek jelennek meg az ügyfélportálon és az ügyfeleknek küldött e-mailekben.",
-  "app.onboarding.logoDrop": "Húzzon ide egy fájlt, vagy kattintson a kiválasztáshoz",
-  "app.onboarding.logoRejected":
-    "A fájl nem elfogadható — PNG, SVG, JPEG vagy WebP, legfeljebb 2 MB.",
-  "app.onboarding.previewSearch": "Cikk keresése…",
-  "app.onboarding.previewCaption": "Az ügyfélportál előnézete",
 
   "app.onboarding.emailTitle": "E-mailek fogadása",
-  "app.onboarding.emailBody":
-    "Az erre a címre beérkező összes kérésből automatikusan jegy lesz.",
-  "app.onboarding.or": "VAGY",
-  "app.onboarding.copy": "Másolás",
-  "app.onboarding.copied": "Másolva ✓",
-  "app.onboarding.providedTitle": "A megadott cím használata",
-  "app.onboarding.providedActive": "Aktív — fogadásra kész",
-  "app.onboarding.optional": "opcionális",
-  "app.onboarding.forwardRemove": "Eltávolítás",
-  "app.onboarding.ownAddressTitle": "Saját cím összekapcsolása",
-  "app.onboarding.ownAddressBody":
-    "Továbbítsa meglévő címét ({example}) a fent megadott címre. A részletes beállítás a beállításokban található.",
-  "app.onboarding.forwardLabel": "Továbbítandó cím",
-  "app.onboarding.forwardPlaceholder": "support@sajatdomain.hu",
-  "app.onboarding.forwardConnect": "Cím összekapcsolása",
-  "app.onboarding.forwardPending":
-    "Állítson be átirányítást a(z) {address} címről a(z) {target} címre az e-mail-szolgáltatójánál.",
-  "app.onboarding.forwardWaiting": "Várakozás az első továbbított e-mailre…",
-  "app.onboarding.forwardVerified":
-    "A(z) {address} cím ellenőrizve: a továbbított e-mailekből jegy lesz.",
 
-  "app.onboarding.teamTitle": "A csapat meghívása",
-  "app.onboarding.teamBody":
-    "Hívja meg most az ügyintézőit, vagy ossza meg a meghívó hivatkozást. A Viewer szerepkör nem foglal licencet.",
-  "app.onboarding.invitePlaceholder": "kollega@cegnev.hu",
-  "app.onboarding.addRow": "+ Sor hozzáadása",
-  "app.onboarding.sendInvites": "Meghívók elküldése",
 
-  "app.onboarding.testTitle": "Első jegy küldése",
-  "app.onboarding.testBody":
-    "Ellenőrizze a teljes folyamatot, mielőtt megnyitja a szolgáltatást az ügyfelei előtt.",
-  "app.onboarding.readyTitle": "A munkaterület készen áll",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. Hungarian
      suffixes its place complement: the sentence introduces the address with
      “a következő címre:”, which leaves the parameter intact. */
-  "app.onboarding.readyBody":
-    "Tesztjegy létrehozásához küldjön egy e-mailt a következő címre: {address}.",
   "app.onboarding.openInbox": "A beérkezettek megnyitása",
+  "app.onboarding.setUp": "Beállítás",
+  "app.onboarding.itemArticleTodo": "A tudásbázis válaszol, mielőtt egy agentnek kellene.",
+  "app.onboarding.itemArticleDone": "Közzétéve — a portál már agent nélkül is válaszol.",
+  "app.onboarding.itemArticle": "Tegye közzé az első cikket",
+  "app.onboarding.itemHoursTodo":
+    "A {calendar} a {calendarZone} zónában számol, a munkaterület viszont a {tenantZone} zónában él.",
+  "app.onboarding.itemHoursDone":
+    "Az SLA-célok csak a munkaórákat számolják, {timezone} időzónában.",
+  "app.onboarding.itemHours": "Állítsa be a munkaidőt",
+  "app.onboarding.itemTeamTodo":
+    "Egyelőre senki más: az automatikus kiosztásnak nincs kire bíznia a jegyet.",
+  "app.onboarding.itemTeamDone": "Már a csapatban: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Még egyetlen cím sem fogad kéréseket — nélküle semmi nem jut a beérkezettekbe.",
+  "app.onboarding.itemEmailDone": "A {address} már jeggyé alakítja a beérkező leveleket.",
+  "app.onboarding.checklistBody":
+    "Négy lépés az első jegyig. Mindezt később is elvégezheted az adminisztrációban.",
+  "app.onboarding.welcome": "Üdvözlünk, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Azonosság megadva",
-  "app.onboarding.checklistEmail": "E-mail-cím beállítva",
-  "app.onboarding.checklistTeam": "Csapat meghívva",
-  "app.onboarding.checklistTicket": "Első jegy beérkezett",
-  "app.onboarding.checklistSla": "SLA-szabályzat ellenőrizve",
 
   /* ================= Text formerly hard-coded in French ================= */
 

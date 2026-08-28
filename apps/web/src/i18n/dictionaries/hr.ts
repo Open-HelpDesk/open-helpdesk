@@ -2065,73 +2065,34 @@ export const hr: Dictionary = {
      ST-01 controls), and the Owner / Admin / Agent / Viewer roles, which are
      not translated. */
 
-  "app.onboarding.asideTitle": "Postavljanje",
-  "app.onboarding.asideFooter": "Sve ovo možete kasnije promijeniti u postavkama.",
-  "app.onboarding.stepCounter": "Korak {step} od {total}",
-  "app.onboarding.continue": "Nastavi",
-  "app.onboarding.skip": "Preskoči ovaj korak",
 
-  "app.onboarding.stepIdentity": "Identitet",
-  "app.onboarding.stepIdentityHint": "Naziv, logotip, boja",
-  "app.onboarding.stepEmail": "E-pošta",
-  "app.onboarding.stepEmailHint": "Adresa za primanje",
   "app.onboarding.stepTeam": "Tim",
   "app.onboarding.stepTeamHint": "Pozivanje agenata",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "Prvi tiket",
 
-  "app.onboarding.identityTitle": "Identitet vašeg radnog prostora",
-  "app.onboarding.identityBody":
-    "Ovi će se elementi pojaviti na vašem klijentskom portalu i u porukama e-pošte koje se šalju vašim klijentima.",
-  "app.onboarding.logoDrop": "Povucite datoteku ovdje ili kliknite za odabir",
-  "app.onboarding.logoRejected":
-    "Datoteka nije prihvaćena — PNG, SVG, JPEG ili WebP, najviše 2 MB.",
-  "app.onboarding.previewSearch": "Traži članak…",
-  "app.onboarding.previewCaption": "Pregled vašeg klijentskog portala",
 
   "app.onboarding.emailTitle": "Primajte svoju e-poštu",
-  "app.onboarding.emailBody":
-    "Svi zahtjevi primljeni na ovu adresu automatski postaju tiketi.",
-  "app.onboarding.or": "ILI",
-  "app.onboarding.copy": "Kopiraj",
-  "app.onboarding.copied": "Kopirano ✓",
-  "app.onboarding.providedTitle": "Koristi adresu koju pružamo",
-  "app.onboarding.providedActive": "Aktivna — spremna za primanje",
-  "app.onboarding.optional": "neobavezno",
-  "app.onboarding.forwardRemove": "Ukloni",
-  "app.onboarding.ownAddressTitle": "Povežite vlastitu adresu",
-  "app.onboarding.ownAddressBody":
-    "Preusmjerite svoju postojeću adresu ({example}) na adresu navedenu iznad. Detaljna konfiguracija nalazi se u postavkama.",
-  "app.onboarding.forwardLabel": "Adresa za preusmjeravanje",
-  "app.onboarding.forwardPlaceholder": "podrska@vasa-domena.hr",
-  "app.onboarding.forwardConnect": "Poveži ovu adresu",
-  "app.onboarding.forwardPending":
-    "Kod svog davatelja e-pošte postavite prosljeđivanje s {address} na {target}.",
-  "app.onboarding.forwardWaiting": "Čeka se prva proslijeđena e-poruka…",
-  "app.onboarding.forwardVerified":
-    "Adresa {address} je potvrđena: proslijeđene e-poruke postaju tiketi.",
 
-  "app.onboarding.teamTitle": "Pozovite svoj tim",
-  "app.onboarding.teamBody":
-    "Pozovite svoje agente sada ili podijelite vezu za pozivnicu. Uloge Viewer ne zauzimaju mjesto.",
-  "app.onboarding.invitePlaceholder": "kolega@firma.hr",
-  "app.onboarding.addRow": "+ Dodaj redak",
-  "app.onboarding.sendInvites": "Pošalji pozivnice",
 
-  "app.onboarding.testTitle": "Pošaljite prvi tiket",
-  "app.onboarding.testBody":
-    "Provjerite cijeli tok prije nego što uslugu otvorite svojim klijentima.",
-  "app.onboarding.readyTitle": "Vaš radni prostor je spreman",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Pošaljite e-poštu na {address} da kreirate testni tiket.",
   "app.onboarding.openInbox": "Otvori ulazni sandučić",
+  "app.onboarding.setUp": "Postavi",
+  "app.onboarding.itemArticleTodo": "Baza znanja odgovara prije nego što to mora učiniti agent.",
+  "app.onboarding.itemArticleDone": "Objavljeno — portal već može odgovoriti bez agenta.",
+  "app.onboarding.itemArticle": "Objavite prvi članak",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} računa u zoni {calendarZone}, dok radni prostor živi u zoni {tenantZone}.",
+  "app.onboarding.itemHoursDone": "Ciljevi SLA-a računaju samo radne sate, u zoni {timezone}.",
+  "app.onboarding.itemHours": "Postavite radno vrijeme",
+  "app.onboarding.itemTeamTodo": "Zasad nikoga drugog: automatska dodjela nema kome predati tiket.",
+  "app.onboarding.itemTeamDone": "Već u timu: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "Nijedna adresa još ne prima zahtjeve — bez nje ništa ne dolazi u sandučić.",
+  "app.onboarding.itemEmailDone": "{address} već pretvara primljene e-poruke u tikete.",
+  "app.onboarding.checklistBody":
+    "Četiri koraka do prvog tiketa. Sve se može urediti i kasnije u administraciji.",
+  "app.onboarding.welcome": "Dobro došli, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identitet je postavljen",
-  "app.onboarding.checklistEmail": "Adresa e-pošte je postavljena",
-  "app.onboarding.checklistTeam": "Tim je pozvan",
-  "app.onboarding.checklistTicket": "Prvi tiket je primljen",
-  "app.onboarding.checklistSla": "SLA politika je provjerena",
 
   /* ================= Text formerly hard-coded in French ================= */
 

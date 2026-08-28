@@ -1,438 +1,259 @@
 import { providedMailboxAddress } from "@openhelpdesk/config";
 import Link from "next/link";
-import { count, eq } from "drizzle-orm";
-import { db, mailboxes, tickets, users } from "@openhelpdesk/db";
+import { and, asc, count, eq, ne } from "drizzle-orm";
+import { businessHours, db, kbArticles, mailboxes, users } from "@openhelpdesk/db";
 import { redirect } from "next/navigation";
 import { isManager, requireAgent } from "@/lib/session";
 import { requireTenant } from "@/lib/tenant";
-import { connectForwardingAddress, removeForwardingAddress } from "./actions";
-import { CopyButton, IdentityForm, TeamInviteForm } from "./onboarding-client";
-import { I18nProvider } from "@/i18n/client";
+import { firstName } from "@/i18n/format";
 import { getT } from "@/i18n/server";
-import type { MessageKey } from "@/i18n/dictionaries/en";
 
 /**
- * AG-02 — Onboarding (agent space design): left column 320 px on canvas
- * background with a 4-step stepper, right column kicker + 26 px title + h38 CTA
- * "Skip this step". Navigation through ?step=1..4.
+ * AG-02 — Onboarding (V2): a checklist, not a wizard.
+ *
+ * The four-step wizard it replaces carried its own copies of screens the
+ * administration already owns — identity (ST-01), receiving address (ST-03),
+ * invitations (ST-02) — and its stepper let an owner walk past a step without
+ * doing it. The checklist keeps only what the wizard actually added: telling the
+ * owner what is still missing, and where to go and do it. Nothing is lost; the
+ * forms live at their one real address.
+ *
+ * Each item reads the workspace, never the URL: a step is done because the state
+ * says so. Of the four, "business hours" is the subtle one — provisioning seeds
+ * every workspace with a "Main office 9–18" calendar in UTC while the workspace
+ * itself has its own timezone, so SLA targets are counted in the wrong day
+ * until someone looks. That mismatch IS the item, which is why the description
+ * names both zones instead of repeating the mockup's generic sentence.
  */
 
-/** The stepper is a module constant: it carries KEYS, not words. */
-const STEPS: readonly { n: number; label: MessageKey; hint: MessageKey }[] = [
-  { n: 1, label: "app.onboarding.stepIdentity", hint: "app.onboarding.stepIdentityHint" },
-  { n: 2, label: "app.onboarding.stepEmail", hint: "app.onboarding.stepEmailHint" },
-  { n: 3, label: "app.onboarding.stepTeam", hint: "app.onboarding.stepTeamHint" },
-  { n: 4, label: "app.onboarding.stepTest", hint: "app.onboarding.stepTestHint" },
-];
+const CARD: React.CSSProperties = {
+  display: "flex",
+  gap: 14,
+  alignItems: "flex-start",
+  padding: "17px 18px",
+  background: "var(--panel)",
+  border: "1px solid var(--line)",
+  borderRadius: 14,
+  boxShadow: "0 1px 2px rgba(13,28,23,.03)",
+};
 
-export default async function OnboardingPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ step?: string; error?: string }>;
-}) {
+/** Item CTA — h34, radius 8, filled for the first thing left to do. */
+function ctaStyle(primary: boolean): React.CSSProperties {
+  return {
+    height: 34,
+    padding: "0 14px",
+    borderRadius: 8,
+    background: primary ? "var(--brand)" : "var(--panel)",
+    color: primary ? "#fff" : "var(--ink-2)",
+    border: `1px solid ${primary ? "var(--brand)" : "var(--line)"}`,
+    display: "flex",
+    alignItems: "center",
+    fontSize: 12.5,
+    fontWeight: 600,
+    whiteSpace: "nowrap",
+    flex: "none",
+  };
+}
+
+export default async function OnboardingPage() {
   const t = await getT();
   // Ahead of requireAgent, for the same reason as the agent layout: a 404 for an
   // invented subdomain rather than a detour through /login (see requireTenant).
   await requireTenant();
   const { tenant, agent } = await requireAgent();
-  // The initial setup screen is not a work screen: an agent has no business
-  // there, and its forms carry administration powers.
+  // The initial setup screen is not a work screen, and every item on it links
+  // into the administration: an agent has no business here.
   if (!isManager(agent.role)) redirect("/app/tickets");
-  const { step: stepParam, error } = await searchParams;
-  const step = Math.min(4, Math.max(1, Number(stepParam) || 1));
 
-  const branding = (tenant.branding ?? {}) as { accentColor?: string; logoUrl?: string };
-
-  const [mailboxRows, [userCount], [ticketCount]] = await Promise.all([
+  const [mailboxRows, colleagues, [publishedCount], calendars] = await Promise.all([
     db.select().from(mailboxes).where(eq(mailboxes.tenantId, tenant.id)),
-    db.select({ n: count() }).from(users).where(eq(users.tenantId, tenant.id)),
-    db.select({ n: count() }).from(tickets).where(eq(tickets.tenantId, tenant.id)),
+    db
+      .select({ name: users.name })
+      .from(users)
+      .where(and(eq(users.tenantId, tenant.id), ne(users.id, agent.id)))
+      .orderBy(asc(users.name)),
+    db
+      .select({ n: count() })
+      .from(kbArticles)
+      .where(and(eq(kbArticles.tenantId, tenant.id), eq(kbArticles.status, "published"))),
+    db
+      .select({ name: businessHours.name, timezone: businessHours.timezone })
+      .from(businessHours)
+      .where(eq(businessHours.tenantId, tenant.id))
+      .orderBy(asc(businessHours.position), asc(businessHours.name)),
   ]);
-  const providedMailbox = mailboxRows.find((m) => m.kind === "provided");
-  const mailbox = providedMailbox ?? mailboxRows[0];
-  const mailboxAddress = mailbox?.address ?? providedMailboxAddress(tenant.slug);
-  // The provided address works from the moment the workspace exists (it is the
-  // tenant domain's MX): step 2 needs no action to be satisfied, and the screen
-  // must say so rather than present it as a passive field to copy.
-  const providedActive = Boolean(providedMailbox?.verified);
-  // Step 2's "own address" option — one forwarding mailbox, verified by the
-  // first email that arrives through the customer's redirect (ST-03).
-  const forwarding = mailboxRows.find((m) => m.kind === "forwarding");
 
-  // The stepper and the step-4 checklist read the SAME reality: a step is done
-  // because the workspace says so, never because the URL happens to be further
-  // along. Deriving "done" from ?step= let a deep link (or the inbox CTA to
-  // step 2) tick steps the owner had never even seen.
-  const stepDone: Record<number, boolean> = {
-    1: Boolean(branding.accentColor),
-    2: Boolean(mailbox?.verified),
-    3: (userCount?.n ?? 0) > 1,
-    4: (ticketCount?.n ?? 0) > 0,
-  };
+  const verifiedMailbox = mailboxRows.find((m) => m.verified);
+  const mailboxAddress =
+    verifiedMailbox?.address ?? mailboxRows[0]?.address ?? providedMailboxAddress(tenant.slug);
+  const mainCalendar = calendars[0];
+  // No calendar at all is also "not set": there is nothing for a policy to point
+  // at, and the SLA screen is where one gets created.
+  const hoursAligned = mainCalendar ? mainCalendar.timezone === tenant.timezone : false;
 
-  const checklist: { label: MessageKey; done: boolean }[] = [
-    { label: "app.onboarding.checklistIdentity", done: stepDone[1]! },
-    { label: "app.onboarding.checklistEmail", done: stepDone[2]! },
-    { label: "app.onboarding.checklistTeam", done: stepDone[3]! },
-    { label: "app.onboarding.checklistTicket", done: stepDone[4]! },
-    { label: "app.onboarding.checklistSla", done: true },
+  const items: {
+    title: string;
+    desc: string;
+    done: boolean;
+    cta: string;
+    href: string;
+  }[] = [
+    {
+      title: t("app.onboarding.emailTitle"),
+      done: Boolean(verifiedMailbox),
+      desc: verifiedMailbox
+        ? t("app.onboarding.itemEmailDone", { address: mailboxAddress })
+        : t("app.onboarding.itemEmailTodo"),
+      cta: t("app.onboarding.setUp"),
+      href: "/app/settings/email",
+    },
+    {
+      title: t("app.onboarding.stepTeamHint"),
+      done: colleagues.length > 0,
+      desc:
+        colleagues.length > 0
+          ? t("app.onboarding.itemTeamDone", {
+              names: colleagues.slice(0, 3).map((c) => firstName(c.name)).join(", "),
+            })
+          : t("app.onboarding.itemTeamTodo"),
+      cta: t("app.settings.workspace.inviteAction"),
+      href: "/app/settings/team",
+    },
+    {
+      title: t("app.onboarding.itemHours"),
+      done: hoursAligned,
+      desc: hoursAligned
+        ? t("app.onboarding.itemHoursDone", { timezone: mainCalendar!.timezone })
+        : mainCalendar
+          ? t("app.onboarding.itemHoursTodo", {
+              calendar: mainCalendar.name,
+              calendarZone: mainCalendar.timezone,
+              tenantZone: tenant.timezone,
+            })
+          : t("app.onboarding.itemHoursDone", { timezone: tenant.timezone }),
+      cta: t("app.onboarding.setUp"),
+      href: "/app/settings/sla",
+    },
+    {
+      title: t("app.onboarding.itemArticle"),
+      done: (publishedCount?.n ?? 0) > 0,
+      desc:
+        (publishedCount?.n ?? 0) > 0
+          ? t("app.onboarding.itemArticleDone")
+          : t("app.onboarding.itemArticleTodo"),
+      cta: t("app.kb.newArticle"),
+      href: "/app/kb",
+    },
   ];
-  // The closing sentence inserts the address in a monospace font: it is split
-  // around the parameter to keep the word order of each language.
-  const [readyBefore, readyAfter] = t.parts("app.onboarding.readyBody", "address");
+
+  const done = items.filter((i) => i.done).length;
+  const firstTodo = items.findIndex((i) => !i.done);
 
   return (
-    <div className="ohd flex min-h-screen">
-      {/* Left column — 320 px stepper */}
-      <aside
-        className="hidden w-[320px] shrink-0 flex-col border-r p-8 md:flex"
-        style={{ background: "var(--canvas)", borderColor: "var(--line)" }}
+    <div
+      className="ohd min-h-screen overflow-auto"
+      style={{
+        padding: "44px 24px",
+        background: "linear-gradient(180deg,var(--brand-t) 0%,var(--canvas) 45%)",
+      }}
+    >
+      <div
+        className="ohd-rise flex flex-col"
+        style={{ width: 640, maxWidth: "100%", margin: "0 auto", gap: 18 }}
       >
-        <div className="mb-10 flex items-center gap-2.5">
-          <span
-            className="flex items-center justify-center font-bold text-white"
+        <div className="flex flex-col" style={{ gap: 8 }}>
+          <h1
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              background: branding.accentColor || "var(--acc)",
+              fontFamily: "var(--font-title)",
+              fontSize: 26,
+              fontWeight: 600,
+              letterSpacing: "-.015em",
             }}
-            aria-hidden
           >
-            {tenant.name[0]?.toUpperCase()}
-          </span>
-          <span className="text-sm font-semibold">{t("app.onboarding.asideTitle")}</span>
+            {t("app.onboarding.welcome", { name: firstName(agent.name) })}
+          </h1>
+          <p style={{ fontSize: 14.5, color: "var(--ink-2)", lineHeight: 1.5 }}>
+            {t("app.onboarding.checklistBody")}
+          </p>
         </div>
 
-        <ol className="flex flex-col gap-6">
-          {STEPS.map((s) => {
-            const done = stepDone[s.n] ?? false;
-            const current = s.n === step;
-            return (
-              <li key={s.n} className="flex items-start gap-3">
-                <span
-                  className="flex shrink-0 items-center justify-center rounded-full text-[11px] font-semibold"
+        <div className="flex items-center" style={{ gap: 14 }}>
+          <div
+            style={{
+              flex: 1,
+              height: 7,
+              borderRadius: 4,
+              background: "var(--sunk)",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: `${(done / items.length) * 100}%`,
+                height: "100%",
+                background: "var(--brand)",
+                borderRadius: 4,
+              }}
+            />
+          </div>
+          <span
+            className="tabular-nums"
+            style={{ fontSize: 12.5, fontWeight: 600, color: "var(--brand)" }}
+          >
+            {done} / {items.length}
+          </span>
+        </div>
+
+        <div className="flex flex-col" style={{ gap: 10 }}>
+          {items.map((item, i) => (
+            <div key={item.title} style={CARD}>
+              <div
+                className="grid place-items-center"
+                style={{
+                  width: 30,
+                  height: 30,
+                  flex: "none",
+                  borderRadius: "50%",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  background: item.done ? "var(--brand-t)" : "var(--sunk)",
+                  color: item.done ? "var(--brand)" : "var(--ink-3)",
+                }}
+                aria-hidden
+              >
+                {item.done ? "✓" : "○"}
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col" style={{ gap: 3 }}>
+                <p
                   style={{
-                    width: 22,
-                    height: 22,
-                    marginTop: 1,
-                    background: done ? "var(--acc)" : "transparent",
-                    color: done ? "#fff" : current ? "var(--acc)" : "var(--ink-3)",
-                    border: done
-                      ? "1px solid var(--acc)"
-                      : current
-                        ? "2px solid var(--acc)"
-                        : "1px solid var(--line)",
+                    fontSize: 14.5,
+                    fontWeight: 600,
+                    color: item.done ? "var(--ink-3)" : "var(--ink)",
                   }}
                 >
-                  {done ? "✓" : s.n}
-                </span>
-                <span className="flex flex-col">
-                  <Link
-                    href={`/onboarding?step=${s.n}`}
-                    className="text-[13.5px]"
-                    style={{ fontWeight: current ? 600 : 500, color: "var(--ink)" }}
-                  >
-                    {t(s.label)}
-                  </Link>
-                  <span className="text-[12px]" style={{ color: "var(--ink-3)" }}>
-                    {t(s.hint)}
-                  </span>
-                </span>
-              </li>
-            );
-          })}
-        </ol>
-
-        <p className="mt-auto pt-8 text-[12px] leading-relaxed" style={{ color: "var(--ink-3)" }}>
-          {t("app.onboarding.asideFooter")}
-        </p>
-      </aside>
-
-      {/* Right column */}
-      <main
-        className="ohd-rise min-w-0 flex-1 overflow-y-auto"
-        style={{ background: "var(--bg)", padding: "48px 56px" }}
-      >
-        <div style={{ maxWidth: 640 }}>
-          <p
-            className="mb-2 uppercase tracking-wider"
-            style={{ fontSize: 12, fontWeight: 600, color: "var(--acc-2)" }}
-          >
-            {t("app.onboarding.stepCounter", { step, total: 4 })}
-          </p>
-
-          {step === 1 && (
-            <>
-              <h1 className="mb-2" style={{ fontSize: 26, fontWeight: 600 }}>
-                {t("app.onboarding.identityTitle")}
-              </h1>
-              <p className="mb-7 text-sm" style={{ color: "var(--ink-2)" }}>
-                {t("app.onboarding.identityBody")}
-              </p>
-              <I18nProvider locale={t.locale} dict={t.dict}>
-                <IdentityForm
-                  initialName={tenant.name}
-                  initialAccent={branding.accentColor ?? "#0B5F46"}
-                  initialLogo={branding.logoUrl ?? null}
-                  error={error ?? null}
-                />
-              </I18nProvider>
-            </>
-          )}
-
-          {step === 2 && (
-            <>
-              <h1 className="mb-2" style={{ fontSize: 26, fontWeight: 600 }}>
-                {t("app.onboarding.emailTitle")}
-              </h1>
-              <p className="mb-7 text-sm" style={{ color: "var(--ink-2)" }}>
-                {t("app.onboarding.emailBody")}
-              </p>
-
-              {/* Provided address — active from the start, the default option. */}
-              <div
-                className="border p-4"
-                style={{ borderRadius: 8, borderColor: "var(--line)", maxWidth: 460 }}
-              >
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <span className="text-[13.5px] font-semibold">
-                    {t("app.onboarding.providedTitle")}
-                  </span>
-                  {providedActive && (
-                    <span
-                      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
-                      style={{ background: "var(--ok-t)", color: "var(--ok)" }}
-                    >
-                      <span
-                        className="flex items-center justify-center rounded-full text-[9px] text-white"
-                        style={{ width: 14, height: 14, background: "var(--ok)" }}
-                        aria-hidden
-                      >
-                        ✓
-                      </span>
-                      {t("app.onboarding.providedActive")}
-                    </span>
-                  )}
-                </div>
-                <div
-                  className="flex items-center gap-2 border p-3"
-                  style={{ borderRadius: 8, borderColor: "var(--line)", background: "var(--sunk)" }}
-                >
-                  <code
-                    className="min-w-0 flex-1 truncate text-[13px]"
-                    style={{ fontFamily: "var(--font-mono)" }}
-                  >
-                    {mailboxAddress}
-                  </code>
-                  <I18nProvider locale={t.locale} dict={t.dict}>
-                    <CopyButton value={mailboxAddress} />
-                  </I18nProvider>
-                </div>
-              </div>
-
-              {/* Own address — optional, and removable until it is verified: the
-                  step no longer traps the owner in a waiting state with no way
-                  back to the provided address. */}
-              <div
-                className="mt-4 border p-4"
-                style={{ borderRadius: 8, borderColor: "var(--line)", maxWidth: 460 }}
-              >
-                <p className="mb-1 text-[13.5px] font-semibold">
-                  {t("app.onboarding.ownAddressTitle")}{" "}
-                  <span className="font-normal" style={{ color: "var(--ink-3)" }}>
-                    · {t("app.onboarding.optional")}
-                  </span>
+                  {item.title}
                 </p>
-                {!forwarding ? (
-                  <>
-                    <p className="mb-3 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
-                      {t("app.onboarding.ownAddressBody", {
-                        example: t("app.onboarding.forwardPlaceholder"),
-                      })}
-                    </p>
-                    <form action={connectForwardingAddress} className="flex items-end gap-2">
-                      <label className="flex min-w-0 flex-1 flex-col gap-1 text-[12.5px] font-medium">
-                        {t("app.onboarding.forwardLabel")}
-                        <input
-                          name="address"
-                          type="email"
-                          required
-                          placeholder={t("app.onboarding.forwardPlaceholder")}
-                          className="border px-3 text-sm font-normal outline-none"
-                          style={{
-                            height: 34,
-                            borderRadius: 6,
-                            borderColor: "var(--line)",
-                            background: "var(--bg)",
-                          }}
-                        />
-                      </label>
-                      <button
-                        type="submit"
-                        className="shrink-0 rounded-md border px-3 text-[12.5px] font-semibold"
-                        style={{
-                          height: 34,
-                          borderColor: "var(--line)",
-                          background: "var(--panel)",
-                          color: "var(--ink)",
-                        }}
-                      >
-                        {t("app.onboarding.forwardConnect")}
-                      </button>
-                    </form>
-                  </>
-                ) : (
-                  <>
-                    {forwarding.verified ? (
-                      <p
-                        className="flex items-center gap-2 text-[12.5px]"
-                        style={{ color: "var(--ink-2)" }}
-                      >
-                        <span
-                          className="flex shrink-0 items-center justify-center rounded-full text-[10px] text-white"
-                          style={{ width: 18, height: 18, background: "var(--acc)" }}
-                        >
-                          ✓
-                        </span>
-                        {t("app.onboarding.forwardVerified", { address: forwarding.address })}
-                      </p>
-                    ) : (
-                      <>
-                        <p className="mb-3 text-[12.5px]" style={{ color: "var(--ink-2)" }}>
-                          {t("app.onboarding.forwardPending", {
-                            address: forwarding.address,
-                            target: mailboxAddress,
-                          })}
-                        </p>
-                        <p
-                          className="flex items-center gap-2 text-[12.5px] font-medium"
-                          style={{ color: "var(--ink-3)" }}
-                        >
-                          <span
-                            className="inline-block animate-pulse rounded-full"
-                            style={{ width: 8, height: 8, background: "var(--acc)" }}
-                          />
-                          {t("app.onboarding.forwardWaiting")}
-                        </p>
-                      </>
-                    )}
-                    <form action={removeForwardingAddress} className="mt-3">
-                      <button
-                        type="submit"
-                        className="rounded-md border px-3 text-[12px] font-semibold"
-                        style={{
-                          height: 30,
-                          borderColor: "var(--line)",
-                          background: "var(--panel)",
-                          color: "var(--ink-2)",
-                        }}
-                      >
-                        {t("app.onboarding.forwardRemove")}
-                      </button>
-                    </form>
-                  </>
-                )}
+                <p style={{ fontSize: 13, color: "var(--ink-3)", lineHeight: 1.5 }}>{item.desc}</p>
               </div>
-
-              <div className="mt-7 flex items-center gap-4">
-                <Link
-                  href="/onboarding?step=3"
-                  className="inline-flex items-center rounded-md px-5 text-sm font-semibold text-white"
-                  style={{ height: 38, background: "var(--acc)" }}
-                >
-                  {t("app.onboarding.continue")}
+              {/* A done item keeps no CTA — the mockup drops it, and the screen
+                  it led to is one click away in the administration anyway. */}
+              {!item.done && (
+                <Link href={item.href} style={ctaStyle(i === firstTodo)}>
+                  {item.cta}
                 </Link>
-                <Link href="/onboarding?step=3" className="text-[13px]" style={{ color: "var(--ink-3)" }}>
-                  {t("app.onboarding.skip")}
-                </Link>
-              </div>
-            </>
-          )}
-
-          {step === 3 && (
-            <>
-              <h1 className="mb-2" style={{ fontSize: 26, fontWeight: 600 }}>
-                {t("app.onboarding.teamTitle")}
-              </h1>
-              <p className="mb-7 text-sm" style={{ color: "var(--ink-2)" }}>
-                {t("app.onboarding.teamBody")}
-              </p>
-              <I18nProvider locale={t.locale} dict={t.dict}>
-                <TeamInviteForm />
-              </I18nProvider>
-            </>
-          )}
-
-          {step === 4 && (
-            <>
-              <h1 className="mb-2" style={{ fontSize: 26, fontWeight: 600 }}>
-                {t("app.onboarding.testTitle")}
-              </h1>
-              <p className="mb-7 text-sm" style={{ color: "var(--ink-2)" }}>
-                {t("app.onboarding.testBody")}
-              </p>
-
-              <div
-                className="mb-6 flex items-center gap-3 border p-4"
-                style={{
-                  borderRadius: 10,
-                  background: "var(--ok-t)",
-                  borderColor: "var(--acc-b)",
-                  maxWidth: 460,
-                }}
-              >
-                <span
-                  className="flex shrink-0 items-center justify-center rounded-full text-white"
-                  style={{ width: 26, height: 26, background: "var(--acc)" }}
-                >
-                  ✓
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[13.5px] font-semibold">
-                    {t("app.onboarding.readyTitle")}
-                  </p>
-                  <p className="text-[12.5px]" style={{ color: "var(--ink-2)" }}>
-                    {readyBefore}
-                    <span style={{ fontFamily: "var(--font-mono)" }}>{mailboxAddress}</span>
-                    {readyAfter}
-                  </p>
-                </div>
-              </div>
-
-              <ul className="mb-8 flex flex-col gap-2.5" style={{ maxWidth: 460 }}>
-                {checklist.map((item) => (
-                  <li key={item.label} className="flex items-center gap-2.5 text-[13.5px]">
-                    <span
-                      className="flex shrink-0 items-center justify-center rounded-full text-[10px]"
-                      style={{
-                        width: 18,
-                        height: 18,
-                        background: item.done ? "var(--acc)" : "transparent",
-                        color: item.done ? "#fff" : "var(--ink-3)",
-                        border: item.done ? "none" : "1.5px solid var(--line)",
-                      }}
-                    >
-                      {item.done ? "✓" : ""}
-                    </span>
-                    <span style={{ color: item.done ? "var(--ink)" : "var(--ink-2)" }}>
-                      {t(item.label)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href="/app/tickets"
-                className="inline-flex items-center rounded-md px-5 text-sm font-semibold text-white"
-                style={{ height: 38, background: "var(--acc)" }}
-              >
-                {t("app.onboarding.openInbox")}
-              </Link>
-            </>
-          )}
+              )}
+            </div>
+          ))}
         </div>
-      </main>
+
+        <Link
+          href="/app/tickets"
+          className="ohd-hover-edge-ink self-center"
+          style={{ fontSize: 13.5, color: "var(--ink-3)", padding: 8 }}
+        >
+          {t("app.onboarding.openInbox")} →
+        </Link>
+      </div>
     </div>
   );
 }

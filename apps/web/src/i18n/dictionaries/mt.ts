@@ -2230,73 +2230,35 @@ export const mt: Dictionary = {
      name and the accent colour (the same controls as in ST-01), and the
      Owner / Admin / Agent / Viewer roles, which are not translated. */
 
-  "app.onboarding.asideTitle": "Konfigurazzjoni",
-  "app.onboarding.asideFooter":
-    "Tista' tibdel dawn l-għażliet kollha aktar tard fl-Impostazzjonijiet.",
-  "app.onboarding.stepCounter": "Pass {step} minn {total}",
-  "app.onboarding.continue": "Kompli",
-  "app.onboarding.skip": "Aqbeż dan il-pass",
 
-  "app.onboarding.stepIdentity": "Identità",
-  "app.onboarding.stepIdentityHint": "Isem, logo, kulur",
-  "app.onboarding.stepEmail": "Email",
-  "app.onboarding.stepEmailHint": "Indirizz tal-irċevuta",
   "app.onboarding.stepTeam": "Tim",
   "app.onboarding.stepTeamHint": "Stieden l-aġenti",
-  "app.onboarding.stepTest": "Test",
-  "app.onboarding.stepTestHint": "L-ewwel ticket",
 
-  "app.onboarding.identityTitle": "Identità tal-ispazju tax-xogħol tiegħek",
-  "app.onboarding.identityBody":
-    "Dawn jidhru fuq il-portal tal-klijent tiegħek u fl-emails mibgħuta lill-klijenti tiegħek.",
-  "app.onboarding.logoDrop": "Waqqa' fajl hawn, jew agħfas biex tagħżel",
-  "app.onboarding.logoRejected":
-    "Il-fajl ma ġiex aċċettat — PNG, SVG, JPEG jew WebP, mhux aktar minn 2 MB.",
-  "app.onboarding.previewSearch": "Fittex artiklu…",
-  "app.onboarding.previewCaption": "Previżjoni tal-portal tal-klijent tiegħek",
 
   "app.onboarding.emailTitle": "Irċievi l-emails tiegħek",
-  "app.onboarding.emailBody":
-    "Kull talba li tasal f'dan l-indirizz issir ticket awtomatikament.",
-  "app.onboarding.or": "JEW",
-  "app.onboarding.copy": "Ikkopja",
-  "app.onboarding.copied": "Ikkupjat ✓",
-  "app.onboarding.providedTitle": "Uża l-indirizz li nipprovdu",
-  "app.onboarding.providedActive": "Attiv — lest biex jirċievi",
-  "app.onboarding.optional": "fakultattiv",
-  "app.onboarding.forwardRemove": "Neħħi",
-  "app.onboarding.ownAddressTitle": "Qabbad l-indirizz tiegħi stess",
-  "app.onboarding.ownAddressBody":
-    "Ittrasferixxi l-indirizz eżistenti tiegħek ({example}) lejn l-indirizz fornut hawn fuq. Konfigurazzjoni dettaljata fl-impostazzjonijiet.",
-  "app.onboarding.forwardLabel": "Indirizz tat-trasferiment",
-  "app.onboarding.forwardPlaceholder": "support@dominju-tieghek.com.mt",
-  "app.onboarding.forwardConnect": "Qabbad dan l-indirizz",
-  "app.onboarding.forwardPending":
-    "Waqqaf redirect minn {address} għal {target} mal-fornitur tal-email tiegħek.",
-  "app.onboarding.forwardWaiting": "Qed nistennew l-ewwel email mgħoddija…",
-  "app.onboarding.forwardVerified": "{address} huwa vverifikat: l-emails mgħoddija jsiru tickets.",
 
-  "app.onboarding.teamTitle": "Stieden it-tim tiegħek",
-  "app.onboarding.teamBody":
-    "Stieden l-aġenti tiegħek issa, jew aqsam il-link tal-istedina. Ir-rwoli Viewer ma jokkupawx post.",
-  "app.onboarding.invitePlaceholder": "kollega@kumpanija.com.mt",
-  "app.onboarding.addRow": "+ Żid linja",
-  "app.onboarding.sendInvites": "Ibgħat l-istediniet",
 
-  "app.onboarding.testTitle": "Ibgħat l-ewwel ticket",
-  "app.onboarding.testBody":
-    "Ivverifika l-katina sħiħa qabel tiftaħ is-servizz lill-klijenti tiegħek.",
-  "app.onboarding.readyTitle": "L-ispazju tax-xogħol tiegħek huwa lest",
   /* {address} is rendered in a monospace font: the sentence is split
      around the parameter, so it must remain a single sentence. */
-  "app.onboarding.readyBody": "Ibgħat email lil {address} biex toħloq ticket ta' test.",
   "app.onboarding.openInbox": "Iftaħ l-inbox",
+  "app.onboarding.setUp": "Ikkonfigura",
+  "app.onboarding.itemArticleTodo": "Il-bażi tal-għarfien twieġeb qabel ma jkun hemm bżonn aġent.",
+  "app.onboarding.itemArticleDone": "Ippubblikat — il-portal diġà jista' jwieġeb mingħajr aġent.",
+  "app.onboarding.itemArticle": "Ippubblika l-ewwel artiklu",
+  "app.onboarding.itemHoursTodo":
+    "{calendar} jgħodd f'{calendarZone}, imma l-workspace jgħix f'{tenantZone}.",
+  "app.onboarding.itemHoursDone": "Il-miri SLA jgħoddu biss il-ħinijiet tax-xogħol, f'{timezone}.",
+  "app.onboarding.itemHours": "Iddefinixxi l-ħinijiet tax-xogħol",
+  "app.onboarding.itemTeamTodo":
+    "Għadu ħadd ieħor: l-assenjazzjoni awtomatika ma għandhiex lil min tagħti ticket.",
+  "app.onboarding.itemTeamDone": "Diġà fit-tim: {names}.",
+  "app.onboarding.itemEmailTodo":
+    "L-ebda indirizz għadu ma jirċievi talbiet — mingħajru, xejn ma jasal fl-inbox.",
+  "app.onboarding.itemEmailDone": "{address} diġà jibdel l-emails li jaslu f'tickets.",
+  "app.onboarding.checklistBody":
+    "Erba' passi għall-ewwel ticket. Tista' tagħmel dan kollu wkoll aktar tard mill-amministrazzjoni.",
+  "app.onboarding.welcome": "Merħba, {name} 👋",
 
-  "app.onboarding.checklistIdentity": "Identità definita",
-  "app.onboarding.checklistEmail": "Indirizz email ikkonfigurat",
-  "app.onboarding.checklistTeam": "Tim mistieden",
-  "app.onboarding.checklistTicket": "L-ewwel ticket irċevut",
-  "app.onboarding.checklistSla": "Politika SLA verifikata",
 
   /* ================= Text formerly hard-coded in French ================= */
 
