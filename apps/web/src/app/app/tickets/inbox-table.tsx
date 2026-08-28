@@ -1,16 +1,31 @@
 "use client";
 
 /**
- * AG-03 — Inbox table (client part): j/k/↵/x keyboard navigation, multi-selection
- * with a floating bulk-actions bar wired to bulkUpdateTickets.
- * Exact grid: 34px 26px minmax(260px,1fr) 190px 108px 96px 120px 92px, min-width 940.
+ * AG-03 (V2) — the ticket list: cards, j/k/↵/x keyboard navigation, and a
+ * floating bulk-actions bar that appears only when something is selected.
+ *
+ * The V2 design replaces the dense table with one card per ticket and draws no
+ * selection column. `x` still selects and the bulk bar still works, so the
+ * capability survives the redesign without adding a checkbox to a resting state
+ * that does without one.
  */
 import { useEffect, useRef, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Avatar, SlaClock, StatusChip } from "@/components/ticket-bits";
-import { PRIORITY_COLORS, PRIORITY_KEYS, STATUS_KEYS } from "@/lib/format";
+import { Avatar } from "@/components/ticket-bits";
+import { PRIORITY_KEYS, STATUS_KEYS } from "@/lib/format";
 import { useT } from "@/i18n/client";
 import { bulkUpdateTickets, type BulkOp } from "./actions";
+
+/** Status → token family, so the pill picks up --new-t/--open-t/… by name. */
+const STATUS_TONE: Record<string, string> = {
+  new: "viol",
+  open: "open",
+  waiting: "wait",
+  on_hold: "pause",
+  resolved: "ok",
+  closed: "closed",
+};
 
 export type InboxRowData = {
   id: string;
@@ -28,8 +43,6 @@ export type InboxRowData = {
   activity: string;
   href: string;
 };
-
-const GRID = "34px 26px minmax(260px,1fr) 190px 108px 96px 120px 92px";
 
 function isTypingTarget(e: KeyboardEvent): boolean {
   const el = e.target as HTMLElement | null;
@@ -124,187 +137,108 @@ export function InboxTable({
 
   return (
     <div>
-      <div style={{ minWidth: 940 }}>
-        {/* Sticky header, h32, sunk background */}
-        <div
-          className="sticky top-0 z-10 grid items-center border-b font-semibold"
-          style={{
-            gridTemplateColumns: GRID,
-            height: 32,
-            padding: "0 14px",
-            fontSize: 11,
-            letterSpacing: ".03em",
-            background: "var(--sunk)",
-            borderColor: "var(--line)",
-            color: "var(--ink-3)",
-          }}
-        >
-          <span>
-            <input
-              type="checkbox"
-              checked={rows.length > 0 && selected.size === rows.length}
-              onChange={toggleAll}
-              className="block"
-              style={{ width: 14, height: 14, accentColor: "var(--acc)" }}
-              aria-label={t("app.tickets.selectAll")}
-            />
-          </span>
-          <span />
-          <span>{t("app.tickets.colSubject")}</span>
-          <span>{t("app.tickets.colContact")}</span>
-          <span>{t("app.tickets.status")}</span>
-          <span>{t("app.tickets.colSla")}</span>
-          <span>{t("app.tickets.assignee")}</span>
-          <span className="text-right">{t("app.tickets.activity")}</span>
-        </div>
-
+      {/* V2 — cards, not a table.
+          A row of thin cells made every ticket look like a database record; the
+          card gives the subject its own line and puts the two things an agent
+          triages on — the SLA and the status — at a fixed place on the right.
+          The selection column is gone with the table: `x` still selects, and the
+          bulk bar below still appears, so nothing was removed from the screen
+          except the always-visible checkbox the design does without. */}
+      <div className="flex flex-col" style={{ gap: 8, padding: "0 20px 20px" }}>
         {rows.map((row, i) => {
+          const st = STATUS_TONE[row.status] ?? STATUS_TONE.open;
           const isSelected = selected.has(row.id);
-          const priorityKey = PRIORITY_KEYS[row.priority];
+          // The border marks position and selection, not urgency: the SLA pill
+          // already carries the red, and a second red on the same card competes
+          // with it instead of adding anything.
+          const line = isSelected
+            ? "var(--brand)"
+            : i === cursor
+              ? "var(--brand-b)"
+              : "var(--line)";
           return (
             <div
               key={row.id}
               ref={(el) => {
                 rowRefs.current[i] = el;
               }}
-              onClick={() => router.push(row.href)}
-              className="grid cursor-pointer items-center border-b"
-              style={{
-                gridTemplateColumns: GRID,
-                minHeight: 44,
-                padding: "0 14px",
-                borderColor: "var(--line-2)",
-                background: isSelected
-                  ? "var(--acc-t)"
-                  : row.overdue
-                    ? "var(--dang-t)"
-                    : "var(--bg)",
-                boxShadow: i === cursor ? "inset 2px 0 0 var(--acc)" : undefined,
-              }}
             >
-              <span onClick={(e) => e.stopPropagation()}>
-                <input
-                  type="checkbox"
-                  checked={isSelected}
-                  onChange={() => toggle(row.id)}
-                  className="block"
-                  style={{ width: 14, height: 14, accentColor: "var(--acc)" }}
-                  aria-label={t("app.tickets.selectTicket", {
-                    number: String(row.number),
-                  })}
-                />
-              </span>
-              <span>
-                <span
-                  className="block rounded-full"
-                  style={{
-                    width: 7,
-                    height: 7,
-                    background: PRIORITY_COLORS[row.priority] ?? "var(--ink-3)",
-                  }}
-                  title={priorityKey ? t(priorityKey) : undefined}
-                />
-              </span>
-              <span
-                className="flex min-w-0 flex-col"
-                style={{ gap: 1, paddingRight: 16 }}
+              <Link
+                href={row.href}
+                onMouseEnter={() => setCursor(i)}
+                className="ohd-card flex items-center"
+                style={{
+                  gap: 14,
+                  padding: "13px 16px",
+                  background: isSelected ? "var(--brand-t)" : "var(--panel)",
+                  border: `1px solid ${line}`,
+                  borderRadius: 13,
+                  boxShadow: "0 1px 2px rgba(13,28,23,.03)",
+                }}
               >
-                <span className="flex min-w-0 items-center" style={{ gap: 7 }}>
-                  <span
-                    className="shrink-0"
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 11,
-                      color: "var(--ink-3)",
-                    }}
-                  >
-                    #{row.number}
-                  </span>
-                  <span
-                    className="truncate"
-                    style={{ fontSize: 13, fontWeight: row.isNew ? 600 : 500 }}
-                  >
-                    {row.subject}
-                  </span>
-                </span>
-                {row.excerpt && (
-                  <span className="truncate" style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                    {row.excerpt}
-                  </span>
-                )}
-              </span>
-              <span
-                className="flex min-w-0 flex-col"
-                style={{ gap: 1, paddingRight: 12 }}
-              >
-                <span className="truncate" style={{ fontSize: 12.5 }}>
-                  {row.contactName}
-                </span>
-                {row.orgName && (
-                  <span className="truncate" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-                    {row.orgName}
-                  </span>
-                )}
-              </span>
-              <span>
-                <StatusChip status={row.status} t={t} />
-              </span>
-              <span>
-                {row.sla && (
-                  <span
-                    className="inline-flex items-center whitespace-nowrap tabular-nums"
-                    style={{
-                      gap: 4,
-                      padding: "2px 7px",
-                      borderRadius: 5,
-                      fontSize: 11.5,
-                      fontWeight: 600,
-                      background:
-                        row.sla.tone === "neutral" ? "transparent" : `var(--${row.sla.tone}-t)`,
-                      color:
-                        row.sla.tone === "neutral" ? "var(--ink-3)" : `var(--${row.sla.tone})`,
-                      border: `1px solid ${
-                        row.sla.tone === "neutral" ? "var(--line)" : `var(--${row.sla.tone})`
-                      }`,
-                    }}
-                  >
-                    <SlaClock />
-                    {row.sla.text}
-                  </span>
-                )}
-              </span>
-              <span className="flex min-w-0 items-center" style={{ gap: 6 }}>
-                {row.assigneeName ? (
-                  <>
-                    <Avatar name={row.assigneeName} size={20} tone={i} />
-                    <span className="truncate" style={{ fontSize: 12, color: "var(--ink-2)" }}>
-                      {row.assigneeName}
-                    </span>
-                  </>
-                ) : (
-                  <>
+                <Avatar name={row.contactName} size={34} fontSize={11} />
+
+                <span className="flex min-w-0 flex-1 flex-col" style={{ gap: 2 }}>
+                  <span className="flex items-center" style={{ gap: 8 }}>
                     <span
-                      className="grid shrink-0 place-items-center rounded-full font-bold"
                       style={{
-                        width: 20,
-                        height: 20,
-                        fontSize: 9,
-                        background: "var(--sunk)",
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 11.5,
                         color: "var(--ink-3)",
                       }}
                     >
-                      ?
+                      #{row.number}
                     </span>
-                    <span style={{ fontSize: 12, color: "var(--ink-3)" }}>—</span>
-                  </>
+                    <span className="truncate" style={{ fontSize: 14, fontWeight: 600 }}>
+                      {row.subject}
+                    </span>
+                  </span>
+                  <span className="truncate" style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+                    {[row.contactName, row.orgName, row.excerpt].filter(Boolean).join(" · ")}
+                  </span>
+                </span>
+
+                {row.sla && (
+                  <span
+                    className="whitespace-nowrap"
+                    style={{
+                      padding: "3px 10px",
+                      borderRadius: 999,
+                      fontSize: 11.5,
+                      fontWeight: 600,
+                      background: row.sla.tone === "dang" ? "var(--dang-t)" : row.sla.tone === "wait" ? "var(--wait-t)" : "var(--sunk)",
+                      color: row.sla.tone === "dang" ? "var(--dang)" : row.sla.tone === "wait" ? "var(--wait)" : "var(--ink-2)",
+                    }}
+                  >
+                    {row.sla.text}
+                  </span>
                 )}
-              </span>
-              <span
-                className="whitespace-nowrap text-right tabular-nums"
-                style={{ fontSize: 12, color: "var(--ink-3)" }}
-              >
-                {row.activity}
-              </span>
+
+                <span
+                  className="inline-flex items-center whitespace-nowrap"
+                  style={{
+                    gap: 6,
+                    padding: "4px 11px 4px 9px",
+                    borderRadius: 999,
+                    background: `var(--${st}-t)`,
+                    color: `var(--${st})`,
+                    fontSize: 11.5,
+                    fontWeight: 600,
+                  }}
+                >
+                  <span
+                    style={{ width: 5, height: 5, borderRadius: "50%", background: `var(--${st})` }}
+                  />
+                  {t(STATUS_KEYS[row.status as keyof typeof STATUS_KEYS] ?? "app.status.open")}
+                </span>
+
+                <span
+                  className="tabular-nums text-right"
+                  style={{ width: 60, flex: "none", fontSize: 12, color: "var(--ink-3)" }}
+                >
+                  {row.activity}
+                </span>
+              </Link>
             </div>
           );
         })}

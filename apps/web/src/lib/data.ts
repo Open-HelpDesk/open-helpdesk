@@ -186,10 +186,25 @@ export type InboxFilters = {
   priority?: string;
   /** Agent uuid, or "none" for "unassigned". */
   assignee?: string;
-  sort?: "priority" | "recent";
+  /**
+   * V2 filter menu — multi-select with counts, three groups.
+   *
+   * Status and assignee are not among them and are not missing: the V2 views
+   * ("Unassigned", "Waiting on customer", "Solved this week") already express
+   * them, and a filter that repeats a view is a second way to reach the same
+   * list that then has to agree with it.
+   */
+  priorities?: string[];
+  channels?: string[];
+  /** Organisation uuids. */
+  orgs?: string[];
+  sort?: InboxSort;
   /** 1-based. */
   page?: number;
 };
+
+import type { InboxSort } from "./format";
+export { INBOX_SORTS, type InboxSort } from "./format";
 
 export const INBOX_PAGE_SIZE = 50;
 
@@ -228,7 +243,72 @@ async function inboxWhere(
   } else if (filters.assignee) {
     parts.push(eq(tickets.assigneeId, filters.assignee));
   }
+  // V2 multi-select groups. An empty selection means "no constraint", never
+  // "nothing matches" — a menu with every box clear has to show the whole view.
+  const priorities = (filters.priorities ?? []).filter((p) =>
+    ["low", "normal", "high", "urgent"].includes(p),
+  ) as ("low" | "normal" | "high" | "urgent")[];
+  if (priorities.length) parts.push(inArray(tickets.priority, priorities));
+
+  const channels = (filters.channels ?? []).filter((c) =>
+    ["email", "portal", "widget", "api"].includes(c),
+  ) as ("email" | "portal" | "widget" | "api")[];
+  if (channels.length) parts.push(inArray(tickets.channel, channels));
+
+  const orgs = (filters.orgs ?? []).filter((o) => UUID.test(o));
+  if (orgs.length) parts.push(inArray(tickets.organizationId, orgs));
+
   return and(...parts);
+}
+
+/** Guards the organisation ids that arrive from the query string. */
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Counts behind each box of the V2 filter menu.
+ *
+ * Scoped to the view and to the OTHER groups, not to the group being counted:
+ * with a priority selected, the priority counts must keep showing what the other
+ * priorities would bring, or the menu becomes a list of zeros as soon as you use
+ * it.
+ */
+export async function inboxFacets(
+  tenantId: string,
+  view: ViewKey | { teamViewId: string },
+  agentId: string,
+  filters: InboxFilters,
+) {
+  const scoped = (drop: "priorities" | "channels" | "orgs") =>
+    inboxWhere(tenantId, view, agentId, { ...filters, [drop]: [] });
+
+  const [byPriority, byChannel, byOrg] = await Promise.all([
+    scoped("priorities").then((w) =>
+      db
+        .select({ key: tickets.priority, n: count() })
+        .from(tickets)
+        .where(w)
+        .groupBy(tickets.priority),
+    ),
+    scoped("channels").then((w) =>
+      db.select({ key: tickets.channel, n: count() }).from(tickets).where(w).groupBy(tickets.channel),
+    ),
+    scoped("orgs").then((w) =>
+      db
+        .select({ key: tickets.organizationId, name: organizations.name, n: count() })
+        .from(tickets)
+        .innerJoin(organizations, eq(organizations.id, tickets.organizationId))
+        .where(w)
+        .groupBy(tickets.organizationId, organizations.name)
+        .orderBy(desc(count()))
+        .limit(6),
+    ),
+  ]);
+
+  return {
+    priorities: byPriority.map((r) => ({ key: r.key, count: r.n })),
+    channels: byChannel.map((r) => ({ key: r.key ?? "email", count: r.n })),
+    orgs: byOrg.map((r) => ({ key: r.key!, name: r.name, count: r.n })),
+  };
 }
 
 export type TicketRow = Awaited<ReturnType<typeof listTickets>>["rows"][number];
@@ -241,10 +321,24 @@ export async function listTickets(
 ) {
   const where = await inboxWhere(tenantId, view, agentId, filters);
   const page = Math.max(1, filters.page ?? 1);
+  /*
+   * The five V2 orders. "SLA" is the default and the one the design shows
+   * selected: soonest deadline first, and a ticket with no target sorts last
+   * rather than first — a null is not urgent.
+   */
   const orderBy =
     filters.sort === "recent"
-      ? [desc(tickets.updatedAt)]
-      : [PRIORITY_ORDER, desc(tickets.updatedAt)];
+      ? [desc(tickets.createdAt)]
+      : filters.sort === "oldest"
+        ? [asc(tickets.createdAt)]
+        : filters.sort === "priority"
+          ? [PRIORITY_ORDER, desc(tickets.updatedAt)]
+          : filters.sort === "lastReply"
+            ? [desc(tickets.updatedAt)]
+            : [
+                sql`coalesce(${tickets.resolveDueAt}, ${tickets.firstReplyDueAt}) asc nulls last`,
+                desc(tickets.updatedAt),
+              ];
 
   const assignee = users;
   const [rows, [totalRow]] = await Promise.all([

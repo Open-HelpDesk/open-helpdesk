@@ -7,15 +7,19 @@ import { requireAgent } from "@/lib/session";
 import {
   DEFAULT_VIEWS,
   INBOX_PAGE_SIZE,
+  INBOX_SORTS,
+  inboxFacets,
   listTeamViews,
   listTickets,
   viewCounts,
   type InboxFilters,
+  type InboxSort,
   type ViewKey,
 } from "@/lib/data";
-import { PRIORITY_KEYS, STATUS_KEYS, slaShort } from "@/lib/format";
+import { slaShort } from "@/lib/format";
 import { getT, type Translate } from "@/i18n/server";
 import { InboxTable, type InboxRowData } from "./inbox-table";
+import { InboxControls } from "./inbox-controls";
 
 /**
  * AG-03 — Inbox (agent space design): 240 px views panel with dots and counters,
@@ -29,18 +33,53 @@ type SearchParams = {
   status?: string;
   priority?: string;
   assignee?: string;
+  /** V2 multi-select groups — repeated params, hence string | string[]. */
+  prio?: string | string[];
+  chan?: string | string[];
+  org?: string | string[];
   sort?: string;
   page?: string;
 };
 
+/** A repeated query parameter reaches us as a string or as an array. */
+function many(value: string | string[] | undefined): string[] {
+  if (!value) return [];
+  return (Array.isArray(value) ? value : [value]).filter(Boolean);
+}
+
+/**
+ * Rebuilds the inbox URL with `patch` applied.
+ *
+ * Goes through URLSearchParams because the V2 filter groups repeat their key
+ * (`prio=urgent&prio=high`): flattening those into an object would have kept one
+ * value per group, so paging through a filtered inbox would quietly widen it.
+ */
 function buildQuery(params: SearchParams, patch: Record<string, string | undefined>) {
-  const merged: Record<string, string | undefined> = { ...params, ...patch };
-  if (!("page" in patch)) delete merged.page; // any filter change goes back to page 1
-  const q = Object.entries(merged)
-    .filter(([, v]) => v !== undefined && v !== "")
-    .map(([k, v]) => `${k}=${encodeURIComponent(v!)}`)
-    .join("&");
-  return `/app/tickets${q ? `?${q}` : ""}`;
+  const q = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (key in patch) continue;
+    for (const v of Array.isArray(value) ? value : [value]) {
+      if (v) q.append(key, v);
+    }
+  }
+  for (const [key, value] of Object.entries(patch)) {
+    if (value) q.set(key, value);
+  }
+  if (!("page" in patch)) q.delete("page"); // any filter change goes back to page 1
+  const query = q.toString();
+  return `/app/tickets${query ? `?${query}` : ""}`;
+}
+
+/** The query string minus what the V2 menus own, for their own links. */
+function baseQueryFor(params: SearchParams): string {
+  const q = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (["prio", "chan", "org", "sort", "page"].includes(key)) continue;
+    for (const v of Array.isArray(value) ? value : [value]) {
+      if (v) q.append(key, v);
+    }
+  }
+  return q.toString();
 }
 
 /** Group label of the views panel — 11px/600 uppercase letter-spacing .06em. */
@@ -67,78 +106,6 @@ const PAGER: React.CSSProperties = {
   borderRadius: 5,
 };
 
-/** Filter bar chip — h28, padding 0 9px, 12px, panel background. */
-const CHIP: React.CSSProperties = {
-  height: 28,
-  padding: "0 9px",
-  border: "1px solid var(--line)",
-  borderRadius: 6,
-  gap: 5,
-  fontSize: 12,
-  color: "var(--ink-2)",
-  background: "var(--panel)",
-};
-
-function FilterChip({
-  label,
-  value,
-  options,
-  params,
-  paramKey,
-  t,
-}: {
-  label: string;
-  value: string | undefined;
-  options: { value: string; label: string }[];
-  params: SearchParams;
-  paramKey: "status" | "priority" | "assignee";
-  t: Translate;
-}) {
-  const current = options.find((o) => o.value === value);
-  return (
-    <details className="relative">
-      <summary
-        className="ohd-hover-edge flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden"
-        style={{
-          ...CHIP,
-          borderColor: current ? "var(--acc-b)" : "var(--line)",
-          background: current ? "var(--acc-t)" : "var(--panel)",
-          color: current ? "var(--acc)" : "var(--ink-2)",
-        }}
-      >
-        {current
-          ? t("app.tickets.filterChipValue", { label, value: current.label })
-          : label}
-        <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
-      </summary>
-      <div
-        className="absolute left-0 top-full z-30 mt-1 flex min-w-40 flex-col rounded-md border py-1 shadow-md"
-        style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-      >
-        <Link
-          href={buildQuery(params, { [paramKey]: undefined })}
-          className="px-3 py-1.5 text-[12.5px]"
-          style={{ color: "var(--ink-2)" }}
-        >
-          {t("app.tickets.filterAll")}
-        </Link>
-        {options.map((o) => (
-          <Link
-            key={o.value}
-            href={buildQuery(params, { [paramKey]: o.value })}
-            className="px-3 py-1.5 text-[12.5px]"
-            style={{
-              color: o.value === value ? "var(--acc)" : "var(--ink)",
-              fontWeight: o.value === value ? 600 : 400,
-            }}
-          >
-            {o.label}
-          </Link>
-        ))}
-      </div>
-    </details>
-  );
-}
 
 export default async function TicketsPage({
   searchParams,
@@ -152,15 +119,25 @@ export default async function TicketsPage({
   const teamViewId = params.tv;
   const view: ViewKey = (DEFAULT_VIEWS.find((v) => v.key === params.view)?.key ??
     "mine") as ViewKey;
+  const selection = {
+    priorities: many(params.prio),
+    channels: many(params.chan),
+    orgs: many(params.org),
+  };
+  // "SLA" is the V2 default, and the design shows it selected.
+  const sort: InboxSort = (INBOX_SORTS as readonly string[]).includes(params.sort ?? "")
+    ? (params.sort as InboxSort)
+    : "sla";
   const filters: InboxFilters = {
     status: params.status,
     priority: params.priority,
     assignee: params.assignee,
-    sort: params.sort === "recent" ? "recent" : "priority",
+    ...selection,
+    sort,
     page: Math.max(1, Number(params.page) || 1),
   };
 
-  const [counts, teamViews, agents] = await Promise.all([
+  const [counts, teamViews, agents, facets] = await Promise.all([
     viewCounts(tenant.id, agent.id),
     listTeamViews(tenant.id),
     db
@@ -168,6 +145,7 @@ export default async function TicketsPage({
       .from(users)
       .where(and(eq(users.tenantId, tenant.id), ne(users.status, "disabled")))
       .orderBy(asc(users.name)),
+    inboxFacets(tenant.id, teamViewId ? { teamViewId } : view, agent.id, filters),
   ]);
 
   let rows: Awaited<ReturnType<typeof listTickets>>["rows"] = [];
@@ -239,31 +217,25 @@ export default async function TicketsPage({
   const from = total === 0 ? 0 : (page - 1) * INBOX_PAGE_SIZE + 1;
   const to = Math.min(page * INBOX_PAGE_SIZE, total);
 
-  const statusOptions = Object.entries(STATUS_KEYS).map(([value, key]) => ({
-    value,
-    label: t(key),
-  }));
-  const priorityOptions = Object.entries(PRIORITY_KEYS).map(([value, key]) => ({
-    value,
-    label: t(key),
-  }));
   const [firstLaunchBefore, firstLaunchAfter] = t.parts(
     "app.tickets.firstLaunchBody",
     "address",
   );
-  const assigneeOptions = [
-    { value: "none", label: t("app.tickets.unassigned") },
-    ...agents.map((a) => ({ value: a.id, label: a.name })),
-  ];
 
   return (
     <div className="flex h-full">
-      {/* Views panel — 240 px */}
+      {/* Views panel — 232 px (V2) */}
       <nav
         className="flex shrink-0 flex-col overflow-auto border-r"
-        style={{ width: 240, background: "var(--panel)", borderColor: "var(--line)" }}
+        style={{
+          width: 232,
+          padding: "16px 10px",
+          gap: 2,
+          background: "var(--panel)",
+          borderColor: "var(--line)",
+        }}
       >
-        <div style={{ ...VIEW_GROUP, padding: "14px 14px 8px" }}>
+        <div style={{ ...VIEW_GROUP, padding: "0 10px 8px" }}>
           {t("app.tickets.viewsGroup")}
         </div>
         {DEFAULT_VIEWS.map((v) => {
@@ -275,27 +247,21 @@ export default async function TicketsPage({
               className="ohd-row flex items-center"
               style={{
                 gap: 9,
-                margin: "0 8px 1px",
-                padding: "7px 9px",
-                borderRadius: 6,
-                fontSize: 13,
-                "--row-bg": active ? "var(--acc-t)" : "transparent",
-                color: active ? "var(--acc)" : "var(--ink-2)",
+                padding: "8px 10px",
+                borderRadius: 9,
+                fontSize: 13.5,
+                "--row-bg": active ? "var(--brand-t)" : "transparent",
+                color: active ? "var(--brand)" : "var(--ink-2)",
                 fontWeight: active ? 600 : 450,
               } as CSSProperties}
             >
-              <span
-                className="shrink-0 rounded-full"
-                style={{ width: 6, height: 6, background: `var(--${v.dot})` }}
-              />
+              {/* No status dot: V2 drops it. The view's name says what it holds,
+                  and six coloured dots down the panel competed with the pills in
+                  the list, which are the ones that carry status. */}
               <span className="min-w-0 flex-1 truncate">{t(v.labelKey)}</span>
               <span
                 className="tabular-nums"
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: active ? "var(--acc)" : "var(--ink-3)",
-                }}
+                style={{ fontSize: 11.5, color: "var(--ink-3)" }}
               >
                 {counts[v.key]}
               </span>
@@ -318,12 +284,11 @@ export default async function TicketsPage({
                   className="ohd-row flex items-center"
                   style={{
                     gap: 9,
-                    margin: "0 8px 1px",
-                    padding: "7px 9px",
-                    borderRadius: 6,
-                    fontSize: 13,
-                    "--row-bg": active ? "var(--acc-t)" : "transparent",
-                    color: active ? "var(--acc)" : "var(--ink-2)",
+                    padding: "8px 10px",
+                    borderRadius: 9,
+                    fontSize: 13.5,
+                    "--row-bg": active ? "var(--brand-t)" : "transparent",
+                    color: active ? "var(--brand)" : "var(--ink-2)",
                     fontWeight: active ? 600 : 450,
                   } as CSSProperties}
                 >
@@ -341,98 +306,61 @@ export default async function TicketsPage({
         )}
 
         <span className="flex-1" />
-        <button
-          type="button"
+        <Link
+          href="/app/tickets/views/new"
+          className="ohd-hover-edge-ink"
           style={{
-            margin: 8,
-            padding: "8px 9px",
-            border: "1px dashed var(--line)",
-            borderRadius: 6,
-            fontSize: 12,
-            color: "var(--ink-2)",
+            marginTop: 8,
+            padding: "8px 10px",
+            border: "1.5px dashed var(--line)",
+            borderRadius: 9,
+            fontSize: 12.5,
+            color: "var(--ink-3)",
             textAlign: "center",
           }}
         >
           {t("app.tickets.newView")}
-        </button>
+        </Link>
       </nav>
 
       {/* Table column */}
       <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        {/* Filter bar */}
-        <div
-          className="flex shrink-0 flex-wrap items-center border-b"
-          style={{ gap: 6, padding: "9px 14px", borderColor: "var(--line)" }}
-        >
-          <FilterChip
-            label={t("app.tickets.status")}
-            value={params.status}
-            options={statusOptions}
-            params={params}
-            paramKey="status"
-            t={t}
-          />
-          <FilterChip
-            label={t("app.tickets.priority")}
-            value={params.priority}
-            options={priorityOptions}
-            params={params}
-            paramKey="priority"
-            t={t}
-          />
-          <FilterChip
-            label={t("app.tickets.assignee")}
-            value={params.assignee}
-            options={assigneeOptions}
-            params={params}
-            paramKey="assignee"
-            t={t}
-          />
-          <button type="button" className="flex items-center" style={CHIP}>
-            {t("app.tickets.team")} <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
-          </button>
-          <button type="button" className="flex items-center" style={CHIP}>
-            {t("app.tickets.tags")} <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
-          </button>
-
-          <span className="flex-1" />
-          <span
-            className="whitespace-nowrap tabular-nums"
-            style={{ fontSize: 12, color: "var(--ink-3)" }}
+        {/* V2 header: the view's name in the title face, its count as a pill,
+            and the two menus. It replaces a row of single-value chips — see
+            inbox-controls.tsx for why the chips went. */}
+        <div className="flex flex-none items-center" style={{ gap: 12, padding: "14px 20px" }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-title)",
+              fontSize: 20,
+              fontWeight: 600,
+              letterSpacing: "-.015em",
+            }}
           >
-            {t("app.tickets.count", { count: total })}
+            {teamViewId
+              ? (teamViews.find((v) => v.id === teamViewId)?.name ?? t("app.tickets.viewsGroup"))
+              : t(DEFAULT_VIEWS.find((v) => v.key === view)!.labelKey)}
+          </h1>
+          <span
+            className="tabular-nums"
+            style={{
+              padding: "2px 9px",
+              borderRadius: 999,
+              background: "var(--brand-t)",
+              color: "var(--brand)",
+              fontSize: 12,
+              fontWeight: 600,
+            }}
+          >
+            {total}
           </span>
-          <details className="relative">
-            <summary
-              className="flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden"
-              style={CHIP}
-            >
-              {t("app.tickets.sortBy", {
-                value:
-                  filters.sort === "recent"
-                    ? t("app.tickets.activity")
-                    : t("app.tickets.priority"),
-              })}
-              <span style={{ opacity: 0.5, fontSize: 9 }}>▾</span>
-            </summary>
-            <div
-              className="absolute right-0 top-full z-30 mt-1 flex min-w-36 flex-col rounded-md border py-1 shadow-md"
-              style={{ background: "var(--panel)", borderColor: "var(--line)" }}
-            >
-              <Link
-                href={buildQuery(params, { sort: undefined })}
-                className="px-3 py-1.5 text-[12.5px]"
-              >
-                {t("app.tickets.priority")}
-              </Link>
-              <Link
-                href={buildQuery(params, { sort: "recent" })}
-                className="px-3 py-1.5 text-[12.5px]"
-              >
-                {t("app.tickets.sortRecentActivity")}
-              </Link>
-            </div>
-          </details>
+          <span className="flex-1" />
+          <InboxControls
+            sort={sort}
+            facets={facets}
+            selection={selection}
+            baseQuery={baseQueryFor(params)}
+          />
         </div>
 
         {/* Table */}

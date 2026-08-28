@@ -90,3 +90,14 @@ export const CHANNEL_KEYS: Record<string, MessageKey> = {
   widget: "app.channel.widget",
   api: "app.channel.api",
 };
+
+/**
+ * The five orders the V2 inbox sort menu offers, in its own order.
+ *
+ * Here and not in lib/data.ts: the menu is a client component, and lib/data
+ * imports the database client, so pulling the constant from there would drag the
+ * whole server module into the browser bundle. That is exactly what it did —
+ * "INBOX_SORTS is not defined" at runtime while the typecheck stayed silent.
+ */
+export const INBOX_SORTS = ["sla", "recent", "oldest", "priority", "lastReply"] as const;
+export type InboxSort = (typeof INBOX_SORTS)[number];
