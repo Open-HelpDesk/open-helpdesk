@@ -17,7 +17,7 @@ import {
 import { getT, type Translate } from "@/i18n/server";
 import { Avatar, SlaClock, StatusChip } from "@/components/ticket-bits";
 import { TopbarOverride } from "@/components/app-shell";
-import { ChipVisual, CopyLinkChip, MergeChip } from "./header-tools";
+import { ChipVisual, CopyLinkChip, MergeChip, chipStyle } from "./header-tools";
 import { MessageAttachments, type AttachmentData } from "./attachments";
 import { PropsForm } from "./props-panel";
 import { ReplyEditor } from "./reply-editor";
@@ -100,12 +100,12 @@ export default async function TicketPage({
   searchParams,
 }: {
   params: Promise<{ number: string }>;
-  searchParams: Promise<{ view?: string }>;
+  searchParams: Promise<{ view?: string; activity?: string }>;
 }) {
   const t = await getT();
   const { tenant, agent } = await requireAgent();
   const { number: numberParam } = await params;
-  const { view: viewParam } = await searchParams;
+  const { view: viewParam, activity: activityParam } = await searchParams;
   const number = Number(numberParam);
   if (!Number.isInteger(number)) notFound();
 
@@ -130,6 +130,20 @@ export default async function TicketPage({
     recentRequesterTickets,
     mergedIntoNumber,
   } = data;
+
+  /**
+   * The conversation and the activity log are two different things, and they
+   * used to be one stream: a fired rule, an SLA warning or a merge was pushed
+   * between two customer messages as a centred grey line. On a busy ticket that
+   * machine chatter is most of what you scroll through, and none of it is what
+   * the customer said. So the thread keeps the messages, and the rest moves
+   * behind the Activity chip — one click away, never in the way.
+   */
+  const showActivity = activityParam === "1";
+  const conversation = messages.filter((m) => m.kind !== "system_event");
+  const activity = messages.filter((m) => m.kind === "system_event");
+  const threadHref = (on: boolean) =>
+    `/app/tickets/${number}?view=${view}${on ? "&activity=1" : ""}`;
 
   const requesterName = requester.name ?? requester.email;
   const authorName = (authorId: string | null, authorType: string) => {
@@ -228,7 +242,24 @@ export default async function TicketPage({
               <ChipVisual label={t("app.ticket.chipLink")} />
               <ChipVisual label={t("app.ticket.chipToKb")} />
               <CopyLinkChip />
-              <ChipVisual label={t("app.ticket.chipHistory")} />
+              {/* A link and not a button: the state lives in the URL, so the
+                  view survives a reload, can be shared, and needs no client
+                  component to hold a boolean. */}
+              <Link
+                href={threadHref(!showActivity)}
+                style={{
+                  ...chipStyle,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  ...(showActivity
+                    ? { background: "var(--acc-t)", borderColor: "var(--acc-b)", color: "var(--acc-2)" }
+                    : {}),
+                }}
+                aria-pressed={showActivity}
+              >
+                {t("app.ticket.chipActivity")}
+                {activity.length > 0 && ` · ${activity.length}`}
+              </Link>
             </div>
             <div className="flex items-center" style={{ gap: 2, marginLeft: 4 }}>
               {prevNumber ? (
@@ -352,27 +383,66 @@ export default async function TicketPage({
           </div>
         )}
 
-        {/* Thread */}
+        {/* Thread — the conversation, or the activity log in its place */}
         <div
           className="flex min-h-0 flex-1 flex-col overflow-y-auto"
           style={{ padding: "18px 22px", gap: 14 }}
         >
-          {messages.map((m) => {
-            if (m.kind === "system_event") {
-              return (
-                <div
-                  key={m.id}
-                  className="flex items-center"
-                  style={{ gap: 9, padding: "2px 0", fontSize: 12, color: "var(--ink-3)" }}
-                >
-                  <span className="h-px flex-1" style={{ background: "var(--line-2)" }} />
-                  <span className="text-center">
-                    {m.bodyText} · {t.fmt.relative(m.createdAt)}
-                  </span>
-                  <span className="h-px flex-1" style={{ background: "var(--line-2)" }} />
-                </div>
-              );
-            }
+          {showActivity ? (
+            <>
+              {activity.length === 0 ? (
+                <p style={{ fontSize: 13, color: "var(--ink-3)", maxWidth: 460 }}>
+                  {t("app.ticket.activityEmpty")}
+                </p>
+              ) : (
+                /* A rail with one dot per entry: a timeline reads as a sequence,
+                   which is what these entries are — unlike the centred dividers
+                   they used to be, which read as breaks in the conversation. */
+                <ol className="flex flex-col" style={{ gap: 2, maxWidth: 620, flexShrink: 0 }}>
+                  {activity.map((m, i) => (
+                    <li key={m.id} className="flex" style={{ gap: 11 }}>
+                      <span
+                        className="flex shrink-0 flex-col items-center"
+                        style={{ width: 9 }}
+                        aria-hidden
+                      >
+                        <span
+                          style={{
+                            width: 7,
+                            height: 7,
+                            marginTop: 6,
+                            borderRadius: 999,
+                            background: "var(--line-2)",
+                            border: "1px solid var(--line)",
+                          }}
+                        />
+                        {i < activity.length - 1 && (
+                          <span className="w-px flex-1" style={{ background: "var(--line)" }} />
+                        )}
+                      </span>
+                      <span
+                        className="flex flex-wrap items-baseline"
+                        style={{ gap: 8, paddingBottom: 12, fontSize: 12.5 }}
+                      >
+                        <span style={{ color: "var(--ink-2)" }}>{m.bodyText}</span>
+                        <span className="whitespace-nowrap" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
+                          {t.fmt.relative(m.createdAt)}
+                        </span>
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              )}
+              <Link
+                href={threadHref(false)}
+                className="ohd-hover-acc self-start"
+                style={{ fontSize: 12.5, color: "var(--acc-2)" }}
+              >
+                ← {t("app.ticket.activityBack")}
+              </Link>
+            </>
+          ) : (
+            conversation.map((m) => {
             const isNote = m.kind === "internal_note";
             const isAgent = m.authorType === "agent";
             const name = authorName(m.authorId, m.authorType);
@@ -389,6 +459,14 @@ export default async function TicketPage({
                 style={{
                   borderRadius: 10,
                   border: `1px solid ${line}`,
+                  // Without this the thread crushes itself. These bubbles are
+                  // flex items, and a flex item whose overflow is not `visible`
+                  // loses its automatic minimum size (min-height: auto → 0): as
+                  // soon as the messages together exceeded the panel, every one
+                  // of them shrank — measured at 11 px for 105 px of text — and
+                  // `overflow: hidden` cut the rest off instead of letting the
+                  // container scroll. Long tickets showed empty bubbles.
+                  flexShrink: 0,
                   maxWidth: isNote ? "70%" : "82%",
                   alignSelf: isAgent && !isNote ? "flex-end" : "flex-start",
                   background: isNote
@@ -440,6 +518,12 @@ export default async function TicketPage({
                     fontSize: 13.5,
                     lineHeight: 1.55,
                     textWrap: "pretty",
+                    // Emails carry things that do not break at a space: tracking
+                    // URLs, internal references, base64. `normal` wrapping left
+                    // them running past the bubble, where `overflow: hidden`
+                    // clipped them — 570 px of a real message lost without a
+                    // scrollbar to hint at it.
+                    overflowWrap: "anywhere",
                   }}
                 >
                   {m.bodyText}
@@ -451,7 +535,8 @@ export default async function TicketPage({
                 />
               </article>
             );
-          })}
+            })
+          )}
         </div>
 
         {/* Composer */}

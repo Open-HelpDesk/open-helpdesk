@@ -397,7 +397,10 @@ export const de: Dictionary = {
   "app.ticket.nextTicket": "Nächstes Ticket",
   "app.ticket.chipLink": "Verknüpfen",
   "app.ticket.chipToKb": "Zur KB",
-  "app.ticket.chipHistory": "Verlauf",
+  "app.ticket.chipActivity": "Aktivität",
+  "app.ticket.activityEmpty":
+    "Noch nichts. Automatisierungen, SLA-Änderungen und Zusammenführungen werden hier festgehalten.",
+  "app.ticket.activityBack": "Zurück zum Gespräch",
   "app.ticket.slaOverdueBy": "SLA um {duration} überschritten",
   "app.ticket.slaRemaining": "SLA: noch {duration}",
   "app.ticket.channelCreated": "{channel} · erstellt {when}",
@@ -444,6 +447,8 @@ export const de: Dictionary = {
   "app.ticket.notePlaceholder": "Notiz, nur für Agenten sichtbar…",
   "app.ticket.replyPlaceholder": "An {name} antworten…",
   "app.ticket.attachTitle": "Dateien anhängen (max. 10 MB pro Datei)",
+  "app.ticket.attachRejected":
+    "Anhang abgelehnt — höchstens 10 MB pro Datei und 25 MB pro Nachricht.",
   "app.ticket.addNote": "Notiz hinzufügen",
   "app.ticket.send": "Senden",
   "app.ticket.sendAndStatus": "Senden & {status}",

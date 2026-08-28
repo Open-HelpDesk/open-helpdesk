@@ -11,6 +11,15 @@ import { STATUS_KEYS } from "@/lib/format";
 import { useT } from "@/i18n/client";
 import { sendReply } from "../actions";
 
+/**
+ * The two ceilings this composer enforces. Restated rather than imported:
+ * MAX_ATTACHMENT_BYTES lives next to the S3 client, which has no business in a
+ * browser bundle, and the per-message one is the Server Action body limit set in
+ * next.config.ts. Both are enforced again on the server.
+ */
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
+const MAX_MESSAGE_BYTES = 25 * 1024 * 1024;
+
 export type MacroOption = {
   id: string;
   name: string;
@@ -42,6 +51,7 @@ export function ReplyEditor({
   const [statusMenu, setStatusMenu] = useState(false);
   const [macroMenu, setMacroMenu] = useState(false);
   const [varMenu, setVarMenu] = useState(false);
+  const [attachError, setAttachError] = useState(false);
   const [draftSavedAt, setDraftSavedAt] = useState<number | null>(null);
   const [, forceTick] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -404,12 +414,38 @@ export function ReplyEditor({
       >
         <label
           className="inline-flex cursor-pointer items-center gap-1.5"
-          style={{ fontSize: 12, color: "var(--ink-2)" }}
+          style={{ fontSize: 12, color: attachError ? "var(--dang)" : "var(--ink-2)" }}
           title={t("app.ticket.attachTitle")}
         >
           <Paperclip size={15} strokeWidth={1.8} />
-          <input name="files" type="file" multiple className="max-w-44 text-[11px]" />
+          <input
+            name="files"
+            type="file"
+            multiple
+            className="max-w-44 text-[11px]"
+            /**
+             * Checked here, at pick time, because both ways of failing were
+             * mute: a file over the per-file ceiling was dropped by
+             * saveUploadedFiles without a word, and a selection over the request
+             * ceiling made the Server Action answer 413 — an "Application error"
+             * page that took the written reply with it. Saying no now is the only
+             * version of this the agent can act on.
+             */
+            onChange={(e) => {
+              const picked = [...(e.currentTarget.files ?? [])];
+              const total = picked.reduce((n, f) => n + f.size, 0);
+              const bad =
+                picked.some((f) => f.size > MAX_FILE_BYTES) || total > MAX_MESSAGE_BYTES;
+              setAttachError(bad);
+              if (bad) e.currentTarget.value = "";
+            }}
+          />
         </label>
+        {attachError && (
+          <span role="alert" style={{ fontSize: 11.5, color: "var(--dang)" }}>
+            {t("app.ticket.attachRejected")}
+          </span>
+        )}
         <span className="flex-1" />
 
         {isNote ? (

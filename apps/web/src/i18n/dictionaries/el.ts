@@ -389,7 +389,10 @@ export const el: Dictionary = {
   "app.ticket.nextTicket": "Επόμενο τικέτ",
   "app.ticket.chipLink": "Συσχέτιση",
   "app.ticket.chipToKb": "Στη βάση γνώσης",
-  "app.ticket.chipHistory": "Ιστορικό",
+  "app.ticket.chipActivity": "Δραστηριότητα",
+  "app.ticket.activityEmpty":
+    "Τίποτα ακόμη. Εδώ καταγράφονται οι αυτοματισμοί, οι αλλαγές SLA και οι συγχωνεύσεις.",
+  "app.ticket.activityBack": "Επιστροφή στη συνομιλία",
   "app.ticket.slaOverdueBy": "Υπέρβαση SLA κατά {duration}",
   "app.ticket.slaRemaining": "SLA: απομένουν {duration}",
   "app.ticket.channelCreated": "{channel} · δημιουργήθηκε {when}",
@@ -444,6 +447,8 @@ export const el: Dictionary = {
   "app.ticket.notePlaceholder": "Σημείωση ορατή μόνο στους χειριστές…",
   "app.ticket.replyPlaceholder": "Απάντηση προς {name}…",
   "app.ticket.attachTitle": "Επισύναψη αρχείων (10 MB κατά μέγιστο ανά αρχείο)",
+  "app.ticket.attachRejected":
+    "Το συνημμένο απορρίφθηκε — έως 10 MB ανά αρχείο και 25 MB ανά μήνυμα.",
   "app.ticket.addNote": "Προσθήκη της σημείωσης",
   "app.ticket.send": "Αποστολή",
   "app.ticket.sendAndStatus": "Αποστολή & {status}",

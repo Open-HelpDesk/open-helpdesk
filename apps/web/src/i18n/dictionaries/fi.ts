@@ -393,7 +393,10 @@ export const fi: Dictionary = {
   "app.ticket.nextTicket": "Seuraava pyyntö",
   "app.ticket.chipLink": "Linkitä",
   "app.ticket.chipToKb": "Tietopankkiin",
-  "app.ticket.chipHistory": "Historia",
+  "app.ticket.chipActivity": "Toiminta",
+  "app.ticket.activityEmpty":
+    "Ei vielä mitään. Automaatiot, SLA-muutokset ja yhdistämiset kirjataan tähän.",
+  "app.ticket.activityBack": "Takaisin keskusteluun",
   "app.ticket.slaOverdueBy": "SLA ylittynyt {duration}",
   "app.ticket.slaRemaining": "SLA: {duration} jäljellä",
   "app.ticket.channelCreated": "{channel} · luotu {when}",
@@ -440,6 +443,8 @@ export const fi: Dictionary = {
   "app.ticket.notePlaceholder": "Muistiinpano, jonka näkevät vain agentit…",
   "app.ticket.replyPlaceholder": "Vastaa henkilölle {name}…",
   "app.ticket.attachTitle": "Liitä tiedostoja (enintään 10 Mt per tiedosto)",
+  "app.ticket.attachRejected":
+    "Liitettä ei hyväksytty — enintään 10 Mt tiedostoa ja 25 Mt viestiä kohden.",
   "app.ticket.addNote": "Lisää muistiinpano",
   "app.ticket.send": "Lähetä",
   "app.ticket.sendAndStatus": "Lähetä ja {status}",

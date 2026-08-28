@@ -479,7 +479,10 @@ export const mt: Dictionary = {
   "app.ticket.nextTicket": "Ticket li jmiss",
   "app.ticket.chipLink": "Orbot",
   "app.ticket.chipToKb": "Lejn il-KB",
-  "app.ticket.chipHistory": "Storja",
+  "app.ticket.chipActivity": "Attività",
+  "app.ticket.activityEmpty":
+    "Xejn għalissa. L-awtomazzjonijiet, il-bidliet fl-SLA u l-għaqdiet jiġu rreġistrati hawn.",
+  "app.ticket.activityBack": "Lura għall-konversazzjoni",
   "app.ticket.slaOverdueBy": "SLA maqbuż b'{duration}",
   "app.ticket.slaRemaining": "SLA: fadal {duration}",
   "app.ticket.channelCreated": "{channel} · inħoloq {when}",
@@ -544,6 +547,8 @@ export const mt: Dictionary = {
   "app.ticket.notePlaceholder": "Nota viżibbli għall-aġenti biss…",
   "app.ticket.replyPlaceholder": "Wieġeb lil {name}…",
   "app.ticket.attachTitle": "Ehmeż fajls (massimu 10 MB kull fajl)",
+  "app.ticket.attachRejected":
+    "L-anness ġie rifjut — mhux aktar minn 10 MB għal kull fajl u 25 MB għal kull messaġġ.",
   "app.ticket.addNote": "Żid in-nota",
   "app.ticket.send": "Ibgħat",
   "app.ticket.sendAndStatus": "Ibgħat u {status}",

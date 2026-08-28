@@ -457,7 +457,10 @@ export const lt: Dictionary = {
   "app.ticket.nextTicket": "Tolesnė užklausa",
   "app.ticket.chipLink": "Susieti",
   "app.ticket.chipToKb": "Į žinių bazę",
-  "app.ticket.chipHistory": "Istorija",
+  "app.ticket.chipActivity": "Veikla",
+  "app.ticket.activityEmpty":
+    "Kol kas nieko. Čia registruojami automatiniai veiksmai, SLA pokyčiai ir sujungimai.",
+  "app.ticket.activityBack": "Atgal į pokalbį",
   "app.ticket.slaOverdueBy": "SLA vėluoja {duration}",
   "app.ticket.slaRemaining": "SLA: liko {duration}",
   "app.ticket.channelCreated": "{channel} · sukurta {when}",
@@ -520,6 +523,8 @@ export const lt: Dictionary = {
   "app.ticket.notePlaceholder": "Pastaba, matoma tik agentams…",
   "app.ticket.replyPlaceholder": "Atsakyti: {name}…",
   "app.ticket.attachTitle": "Prisegti failus (ne daugiau kaip 10 MB vienam failui)",
+  "app.ticket.attachRejected":
+    "Priedas atmestas — ne daugiau kaip 10 MB failui ir 25 MB pranešimui.",
   "app.ticket.addNote": "Įrašyti pastabą",
   "app.ticket.send": "Siųsti",
   "app.ticket.sendAndStatus": "Siųsti · {status}",

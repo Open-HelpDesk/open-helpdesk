@@ -375,7 +375,10 @@ export const bg: Dictionary = {
   "app.ticket.nextTicket": "Следващ тикет",
   "app.ticket.chipLink": "Свързване",
   "app.ticket.chipToKb": "Към БЗ",
-  "app.ticket.chipHistory": "История",
+  "app.ticket.chipActivity": "Активност",
+  "app.ticket.activityEmpty":
+    "Все още нищо. Тук се записват автоматизациите, промените по SLA и обединяванията.",
+  "app.ticket.activityBack": "Обратно към разговора",
   "app.ticket.slaOverdueBy": "SLA просрочен с {duration}",
   "app.ticket.slaRemaining": "SLA: остават {duration}",
   "app.ticket.channelCreated": "{channel} · създаден {when}",
@@ -428,6 +431,8 @@ export const bg: Dictionary = {
   "app.ticket.notePlaceholder": "Бележка, видима само за агентите…",
   "app.ticket.replyPlaceholder": "Отговор до {name}…",
   "app.ticket.attachTitle": "Прикачване на файлове (макс. 10 МБ на файл)",
+  "app.ticket.attachRejected":
+    "Прикачването е отказано — най-много 10 MB на файл и 25 MB на съобщение.",
   "app.ticket.addNote": "Добавяне на бележката",
   "app.ticket.send": "Изпращане",
   "app.ticket.sendAndStatus": "Изпращане и {status}",

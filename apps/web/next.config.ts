@@ -19,6 +19,17 @@ const nextConfig: NextConfig = {
   ],
   // postgres.js and better-auth stay on the Node side.
   serverExternalPackages: ["postgres", "nodemailer", "bullmq", "ioredis"],
+  experimental: {
+    /**
+     * Attachments travel through a Server Action, and that body defaults to 1 MB
+     * — so the 10 MB per file the product announces (MAX_ATTACHMENT_BYTES) was
+     * unreachable: two screenshots and the reply died on a 413 rendered as
+     * "Application error", losing what the agent had just written. The ceiling
+     * here is the per-message one; the per-file check stays in storage.ts, and
+     * the composer refuses beyond it rather than letting the request fail.
+     */
+    serverActions: { bodySizeLimit: "25mb" },
+  },
 };
 
 export default nextConfig;

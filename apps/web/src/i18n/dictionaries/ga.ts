@@ -482,7 +482,10 @@ export const ga: Dictionary = {
   "app.ticket.nextTicket": "An chéad ticéad eile",
   "app.ticket.chipLink": "Nasc",
   "app.ticket.chipToKb": "Chuig an KB",
-  "app.ticket.chipHistory": "Stair",
+  "app.ticket.chipActivity": "Gníomhaíocht",
+  "app.ticket.activityEmpty":
+    "Faic go fóill. Déantar uathoibrithe, athruithe SLA agus cumaisc a thaifeadadh anseo.",
+  "app.ticket.activityBack": "Ar ais chuig an gcomhrá",
   "app.ticket.slaOverdueBy": "SLA thar téarma faoi {duration}",
   "app.ticket.slaRemaining": "SLA: {duration} fágtha",
   "app.ticket.channelCreated": "{channel} · cruthaithe {when}",
@@ -548,6 +551,8 @@ export const ga: Dictionary = {
   "app.ticket.notePlaceholder": "Nóta le feiceáil ag gníomhairí amháin…",
   "app.ticket.replyPlaceholder": "Freagair {name}…",
   "app.ticket.attachTitle": "Ceangail comhaid (10 MB ar a mhéad in aghaidh an chomhaid)",
+  "app.ticket.attachRejected":
+    "Diúltaíodh an ceangaltán — 10 MB ar a mhéad in aghaidh an chomhaid, 25 MB in aghaidh na teachtaireachta.",
   "app.ticket.addNote": "Cuir an nóta leis",
   "app.ticket.send": "Seol",
   "app.ticket.sendAndStatus": "Seol & {status}",

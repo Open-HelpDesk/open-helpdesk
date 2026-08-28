@@ -119,7 +119,12 @@ export default async function RequestPage({ params }: { params: Promise<{ number
                     </div>
                     <div
                       className="whitespace-pre-wrap text-[15.5px] leading-[1.7]"
-                      style={{ textWrap: "pretty" }}
+                      // Same reason as the agent thread: a tracking URL or an
+                      // internal reference does not break at a space, and with
+                      // `normal` wrapping it pushed the whole portal sideways —
+                      // measured at 1948 px for a 1490 px viewport, which on a
+                      // phone means dragging the page around to read a message.
+                      style={{ textWrap: "pretty", overflowWrap: "anywhere" }}
                     >
                       {m.bodyText}
                       {files.length > 0 && (

@@ -385,7 +385,10 @@ export const hu: Dictionary = {
   "app.ticket.nextTicket": "Következő jegy",
   "app.ticket.chipLink": "Összekapcsolás",
   "app.ticket.chipToKb": "A tudásbázisba",
-  "app.ticket.chipHistory": "Előzmények",
+  "app.ticket.chipActivity": "Tevékenység",
+  "app.ticket.activityEmpty":
+    "Még semmi. Az automatizálások, az SLA-változások és az összevonások itt jelennek meg.",
+  "app.ticket.activityBack": "Vissza a beszélgetéshez",
   "app.ticket.slaOverdueBy": "SLA-túllépés: {duration}",
   "app.ticket.slaRemaining": "SLA: még {duration}",
   "app.ticket.channelCreated": "{channel} · létrehozva {when}",
@@ -439,6 +442,8 @@ export const hu: Dictionary = {
   "app.ticket.notePlaceholder": "Csak az ügyintézők számára látható megjegyzés…",
   "app.ticket.replyPlaceholder": "Válasz {name} részére…",
   "app.ticket.attachTitle": "Fájlok csatolása (fájlonként legfeljebb 10 MB)",
+  "app.ticket.attachRejected":
+    "A csatolmány elutasítva — legfeljebb 10 MB fájlonként és 25 MB üzenetenként.",
   "app.ticket.addNote": "Megjegyzés hozzáadása",
   "app.ticket.send": "Küldés",
   "app.ticket.sendAndStatus": "Küldés, majd {status}",

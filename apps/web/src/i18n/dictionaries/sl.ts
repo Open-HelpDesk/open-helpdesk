@@ -454,7 +454,10 @@ export const sl: Dictionary = {
   "app.ticket.nextTicket": "Naslednji zahtevek",
   "app.ticket.chipLink": "Poveži",
   "app.ticket.chipToKb": "V bazo znanja",
-  "app.ticket.chipHistory": "Zgodovina",
+  "app.ticket.chipActivity": "Dejavnost",
+  "app.ticket.activityEmpty":
+    "Še nič. Tu se zapisujejo avtomatizacije, spremembe SLA in združitve.",
+  "app.ticket.activityBack": "Nazaj na pogovor",
   "app.ticket.slaOverdueBy": "SLA presežen za {duration}",
   "app.ticket.slaRemaining": "SLA: še {duration}",
   "app.ticket.channelCreated": "{channel} · ustvarjeno {when}",
@@ -516,6 +519,8 @@ export const sl: Dictionary = {
   "app.ticket.notePlaceholder": "Opomba, vidna samo agentom…",
   "app.ticket.replyPlaceholder": "Napišite odgovor ({name})…",
   "app.ticket.attachTitle": "Pripnite datoteke (največ 10 MB na datoteko)",
+  "app.ticket.attachRejected":
+    "Priloga zavrnjena — največ 10 MB na datoteko in 25 MB na sporočilo.",
   "app.ticket.addNote": "Dodaj opombo",
   "app.ticket.send": "Pošlji",
   "app.ticket.sendAndStatus": "Pošlji in {status}",

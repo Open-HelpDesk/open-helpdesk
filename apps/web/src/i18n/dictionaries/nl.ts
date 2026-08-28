@@ -396,7 +396,10 @@ export const nl: Dictionary = {
   "app.ticket.nextTicket": "Volgend ticket",
   "app.ticket.chipLink": "Koppelen",
   "app.ticket.chipToKb": "Naar KB",
-  "app.ticket.chipHistory": "Geschiedenis",
+  "app.ticket.chipActivity": "Activiteit",
+  "app.ticket.activityEmpty":
+    "Nog niets. Automatiseringen, SLA-wijzigingen en samenvoegingen worden hier vastgelegd.",
+  "app.ticket.activityBack": "Terug naar het gesprek",
   "app.ticket.slaOverdueBy": "SLA {duration} overschreden",
   "app.ticket.slaRemaining": "SLA: nog {duration}",
   "app.ticket.channelCreated": "{channel} · aangemaakt {when}",
@@ -443,6 +446,8 @@ export const nl: Dictionary = {
   "app.ticket.notePlaceholder": "Notitie die alleen zichtbaar is voor agents…",
   "app.ticket.replyPlaceholder": "Antwoorden aan {name}…",
   "app.ticket.attachTitle": "Bestanden bijvoegen (max. 10 MB per bestand)",
+  "app.ticket.attachRejected":
+    "Bijlage geweigerd — maximaal 10 MB per bestand en 25 MB per bericht.",
   "app.ticket.addNote": "Notitie toevoegen",
   "app.ticket.send": "Versturen",
   "app.ticket.sendAndStatus": "Versturen & {status}",

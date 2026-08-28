@@ -5,8 +5,12 @@ import { useState } from "react";
 import { useT } from "@/i18n/client";
 import { mergeTicket } from "../actions";
 
-/** Header chip from the design: h28, padding 0 9px, 12px, panel background, line border. */
-const chipStyle = {
+/**
+ * Header chip from the design: h28, padding 0 9px, 12px, panel background, line
+ * border. Exported because the Activity chip is a plain link rendered on the
+ * server — it carries a URL, so it has no business being a client component.
+ */
+export const chipStyle = {
   height: 28,
   borderRadius: 6,
   border: "1px solid var(--line)",
