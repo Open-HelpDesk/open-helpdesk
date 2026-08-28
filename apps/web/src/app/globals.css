@@ -132,6 +132,17 @@ body {
   outline-offset: 2px;
 }
 
+/* V2 field: the focused state the mockups draw — the hairline turns brand and a
+   4px halo stands in for the ring. On `:focus`, not `:focus-visible`: this is a
+   field one types into, and clicking into it must look like tabbing into it.
+   `:focus-within` covers the box that borders a textarea or a toolbar. */
+.ohd-field:focus,
+.ohd-field:focus-within {
+  border-color: var(--brand) !important;
+  box-shadow: 0 0 0 4px var(--brand-t);
+  outline: none;
+}
+
 /* ---------- 34×20 switch ----------
  * Track 34×20 radius 11, white 16 knob from left 2 to left 16, drop shadow
  * 0 1px 3px. The design's only two transitions: the track on `background`, the

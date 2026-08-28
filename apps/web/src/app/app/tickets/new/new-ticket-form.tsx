@@ -1,9 +1,17 @@
 "use client";
 
 /**
- * AG-05 — "New ticket" form: real contact combobox (/api/search lookup,
- * "+ Create the contact"), Subject/Form grid, description with
- * toolbar, 4 selects, email callout, sunk footer.
+ * AG-05 — "New ticket" form (V2): fields 42 px tall on radius 10, labels
+ * 12.5/600, the description in a bordered box, and the canvas footer.
+ *
+ * The mockup asks for four fields (requester, type, priority, subject) plus a
+ * description. The form carries five more that the ticket really has — status,
+ * assignee, tag, the form template, and "send the reply by email" — so those sit
+ * in a metadata row under the description instead of being dropped: the mockup
+ * does not draw them, but it does not say the ticket has no assignee either.
+ *
+ * The mockup's "📎 Attach" in the footer IS dropped: nothing on this route
+ * uploads a file, and a control that does nothing is worse than a missing one.
  */
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -19,26 +27,38 @@ type ContactHit = {
   organizationName?: string | null;
 };
 
-/** Full-width field from the design: h36, padding 0 10px, 13.5px. */
-const inputStyle = {
-  height: 36,
-  borderRadius: 6,
+/** V2 field: h42, padding 0 12px, radius 10, 13.5px. */
+const fieldStyle = {
+  height: 42,
+  borderRadius: 10,
   border: "1px solid var(--line)",
-  background: "var(--bg)",
+  background: "var(--panel)",
   color: "var(--ink)",
   fontSize: 13.5,
-  padding: "0 10px",
+  padding: "0 12px",
   width: "100%",
 } as const;
 
-/** Selects of the 4-column grid: h34, padding 0 9px, 13px. */
-const selectStyle = { ...inputStyle, height: 34, fontSize: 13, padding: "0 9px" } as const;
-
-/** Field label: 12px/600 ink-2. */
-const labelStyle = { fontSize: 12, fontWeight: 600, color: "var(--ink-2)" } as const;
+/** Field label: 12.5px/600 ink-2. */
+const labelStyle = { fontSize: 12.5, fontWeight: 600, color: "var(--ink-2)" } as const;
 
 function Req() {
   return <span style={{ color: "var(--dang)" }}>*</span>;
+}
+
+function Field({ label, required, children }: {
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="flex min-w-0 flex-col" style={{ gap: 6 }}>
+      <span style={labelStyle}>
+        {label} {required && <Req />}
+      </span>
+      {children}
+    </label>
+  );
 }
 
 export function NewTicketForm({
@@ -134,21 +154,18 @@ export function NewTicketForm({
 
   return (
     <form action={createTicket} className="flex flex-col">
-      <div className="flex flex-col" style={{ padding: 18, gap: 15 }}>
-        {/* Contact — combobox */}
+      <div className="flex flex-col" style={{ padding: 20, gap: 14 }}>
+        {/* Requester — combobox */}
         <div ref={boxRef} className="relative flex flex-col" style={{ gap: 6 }}>
-          <label style={labelStyle}>
+          <span style={labelStyle}>
             {t("app.newTicket.contact")} <Req />
-          </label>
+          </span>
           {chosen ? (
-            <div
-              className="flex items-center gap-2"
-              style={{ ...inputStyle, display: "flex", padding: "0 10px" }}
-            >
-              <Avatar name={chosen.name ?? chosen.email} size={20} tone={1} />
-              <span className="min-w-0 flex-1 truncate" style={{ fontSize: 13.5 }}>
+            <div className="flex items-center" style={{ ...fieldStyle, gap: 9 }}>
+              <Avatar name={chosen.name ?? chosen.email} size={24} fontSize={9} tone={1} />
+              <span className="min-w-0 flex-1 truncate">
                 {chosen.name ?? chosen.email}
-                <span style={{ color: "var(--ink-3)" }}> · {chosen.email}</span>
+                <span style={{ color: "var(--ink-3)" }}> — {chosen.email}</span>
               </span>
               <button
                 type="button"
@@ -164,6 +181,7 @@ export function NewTicketForm({
             </div>
           ) : (
             <input
+              className="ohd-field outline-none"
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
@@ -171,18 +189,19 @@ export function NewTicketForm({
               }}
               onFocus={() => hits.length > 0 && setOpen(true)}
               placeholder={t("app.newTicket.contactPlaceholder")}
-              style={inputStyle}
+              style={fieldStyle}
               autoComplete="off"
             />
           )}
           {open && !chosen && query.trim().length >= 2 && (
             <div
-              className="absolute left-0 right-0 top-full z-30 mt-1 flex flex-col overflow-hidden shadow-lg"
+              className="absolute left-0 right-0 top-full z-30 mt-1 flex flex-col overflow-hidden"
               style={{
-                padding: 4,
-                borderRadius: 6,
+                padding: 5,
+                borderRadius: 12,
                 background: "var(--panel)",
                 border: "1px solid var(--line)",
+                boxShadow: "0 12px 32px rgba(0,0,0,.14)",
               }}
             >
               {hits.map((c) => (
@@ -193,12 +212,12 @@ export function NewTicketForm({
                     setChosen(c);
                     setOpen(false);
                   }}
-                  className="flex items-center text-left"
-                  style={{ gap: 8, padding: "7px 9px", borderRadius: 5 }}
+                  className="ohd-hover flex items-center text-left"
+                  style={{ gap: 9, padding: "8px 10px", borderRadius: 9 }}
                 >
-                  <Avatar name={c.name ?? c.email} size={22} tone={1} />
+                  <Avatar name={c.name ?? c.email} size={24} fontSize={9} tone={1} />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate" style={{ fontSize: 13 }}>
+                    <span className="block truncate" style={{ fontSize: 13.5 }}>
                       {c.name ?? c.email}
                     </span>
                     <span
@@ -217,13 +236,13 @@ export function NewTicketForm({
                   setCreateMode(true);
                   setOpen(false);
                 }}
-                className="text-left"
+                className="ohd-hover text-left"
                 style={{
-                  padding: "7px 9px",
-                  borderRadius: 5,
+                  padding: "8px 10px",
+                  borderRadius: 9,
                   fontSize: 13,
-                  fontWeight: 500,
-                  color: "var(--acc-2)",
+                  fontWeight: 600,
+                  color: "var(--brand)",
                 }}
               >
                 {t("app.newTicket.createContact", { name: query.trim() })}
@@ -231,43 +250,39 @@ export function NewTicketForm({
             </div>
           )}
           {createMode && !chosen && (
-            <div className="mt-1 grid grid-cols-2" style={{ gap: 12 }}>
-              <label className="flex flex-col" style={{ gap: 6 }}>
-                <span style={labelStyle}>
-                  {t("app.newTicket.newContactEmail")} <Req />
-                </span>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 2 }}>
+              <Field label={t("app.newTicket.newContactEmail")} required>
                 <input
+                  className="ohd-field outline-none"
                   name="email"
                   type="email"
                   required
                   defaultValue={query.includes("@") ? query.trim() : ""}
-                  style={inputStyle}
+                  style={fieldStyle}
                 />
-              </label>
-              <label className="flex flex-col" style={{ gap: 6 }}>
-                <span style={labelStyle}>{t("app.newTicket.newContactName")}</span>
+              </Field>
+              <Field label={t("app.newTicket.newContactName")}>
                 <input
+                  className="ohd-field outline-none"
                   name="name"
                   defaultValue={query.includes("@") ? "" : query.trim()}
-                  style={inputStyle}
+                  style={fieldStyle}
                 />
-              </label>
+              </Field>
             </div>
           )}
           {!createMode && <input type="hidden" name="email" value={emailValue} />}
         </div>
 
-        {/* Subject / Form — 1fr 220px grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 220px", gap: 12 }}>
-          <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>
-              {t("app.newTicket.subject")} <Req />
-            </span>
-            <input name="subject" required style={inputStyle} />
-          </label>
-          <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>{t("app.newTicket.form")}</span>
-            <select name="formId" defaultValue={forms[0]?.id ?? ""} style={inputStyle}>
+        {/* Type (form template) · Priority */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <Field label={t("app.newTicket.form")}>
+            <select
+              className="ohd-field outline-none"
+              name="formId"
+              defaultValue={forms[0]?.id ?? ""}
+              style={fieldStyle}
+            >
               {forms.length === 0 && <option value="">—</option>}
               {forms.map((f) => (
                 <option key={f.id} value={f.id}>
@@ -275,22 +290,41 @@ export function NewTicketForm({
                 </option>
               ))}
             </select>
-          </label>
+          </Field>
+          <Field label={t("app.newTicket.priority")}>
+            <select
+              className="ohd-field outline-none"
+              name="priority"
+              defaultValue="normal"
+              style={fieldStyle}
+            >
+              {Object.entries(PRIORITY_KEYS).map(([k, v]) => (
+                <option key={k} value={k}>
+                  {t(v)}
+                </option>
+              ))}
+            </select>
+          </Field>
         </div>
+
+        <Field label={t("app.newTicket.subject")} required>
+          <input className="ohd-field outline-none" name="subject" required style={fieldStyle} />
+        </Field>
 
         {/* Description: toolbar + body in a single bordered box */}
         <div className="flex flex-col" style={{ gap: 6 }}>
-          <label style={labelStyle}>{t("app.newTicket.description")}</label>
+          <span style={labelStyle}>{t("app.newTicket.description")}</span>
           <div
+            className="ohd-field"
             style={{
               border: "1px solid var(--line)",
-              borderRadius: 6,
-              background: "var(--bg)",
+              borderRadius: 10,
+              background: "var(--panel)",
             }}
           >
             <div
               className="flex"
-              style={{ gap: 1, padding: "5px 6px", borderBottom: "1px solid var(--line)" }}
+              style={{ gap: 1, padding: "6px 8px", borderBottom: "1px solid var(--line)" }}
             >
               {TOOLBAR.map((b) => (
                 <button
@@ -298,13 +332,13 @@ export function NewTicketForm({
                   type="button"
                   title={b.title}
                   onClick={b.run}
-                  className="grid place-items-center ohd-hover"
+                  className="ohd-hover grid place-items-center"
                   style={{
-                    width: 24,
-                    height: 24,
-                    borderRadius: 4,
+                    width: 26,
+                    height: 26,
+                    borderRadius: 6,
                     color: "var(--ink-2)",
-                    fontSize: 11.5,
+                    fontSize: 12,
                     fontWeight: b.label === "B" ? 700 : 400,
                     fontStyle: b.label === "I" ? "italic" : undefined,
                     textDecoration:
@@ -323,10 +357,10 @@ export function NewTicketForm({
               onChange={(e) => setBody(e.target.value)}
               className="w-full resize-y border-0 outline-none"
               style={{
-                padding: 11,
-                minHeight: 100,
+                padding: 12,
+                minHeight: 96,
                 fontSize: 13.5,
-                lineHeight: 1.55,
+                lineHeight: 1.6,
                 background: "transparent",
                 color: "var(--ink)",
               }}
@@ -334,30 +368,28 @@ export function NewTicketForm({
           </div>
         </div>
 
-        {/* 4 selects — repeat(4,1fr) gap 10 */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }}>
-          <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>{t("app.newTicket.status")}</span>
-            <select name="status" defaultValue="new" style={selectStyle}>
+        {/* Where the ticket lands: status, owner, tag */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }}>
+          <Field label={t("app.newTicket.status")}>
+            <select
+              className="ohd-field outline-none"
+              name="status"
+              defaultValue="new"
+              style={fieldStyle}
+            >
               <option value="new">{t("app.newTicket.statusNew")}</option>
               <option value="open">{t("app.newTicket.statusOpen")}</option>
               <option value="waiting">{t("app.newTicket.statusWaiting")}</option>
               <option value="on_hold">{t("app.newTicket.statusOnHold")}</option>
             </select>
-          </label>
-          <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>{t("app.newTicket.priority")}</span>
-            <select name="priority" defaultValue="normal" style={selectStyle}>
-              {Object.entries(PRIORITY_KEYS).map(([k, v]) => (
-                <option key={k} value={k}>
-                  {t(v)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>{t("app.newTicket.assignee")}</span>
-            <select name="assigneeId" defaultValue="me" style={selectStyle}>
+          </Field>
+          <Field label={t("app.newTicket.assignee")}>
+            <select
+              className="ohd-field outline-none"
+              name="assigneeId"
+              defaultValue="me"
+              style={fieldStyle}
+            >
               <option value="me">{t("app.newTicket.assigneeMe")}</option>
               <option value="">{t("app.newTicket.assigneeNone")}</option>
               {agents
@@ -368,10 +400,9 @@ export function NewTicketForm({
                   </option>
                 ))}
             </select>
-          </label>
-          <label className="flex flex-col" style={{ gap: 6 }}>
-            <span style={labelStyle}>{t("app.newTicket.tags")}</span>
-            <select name="tag" defaultValue="" style={selectStyle}>
+          </Field>
+          <Field label={t("app.newTicket.tags")}>
+            <select className="ohd-field outline-none" name="tag" defaultValue="" style={fieldStyle}>
               <option value="">{t("app.newTicket.tagNone")}</option>
               {tags.map((tag) => (
                 <option key={tag} value={tag}>
@@ -379,51 +410,51 @@ export function NewTicketForm({
                 </option>
               ))}
             </select>
-          </label>
+          </Field>
         </div>
 
         {/* Email callout */}
         <label
           className="flex cursor-pointer items-center"
           style={{
-            gap: 8,
-            padding: "9px 11px",
-            borderRadius: 7,
+            gap: 9,
+            padding: "11px 13px",
+            borderRadius: 10,
             fontSize: 13,
-            background: "var(--acc-t)",
-            border: "1px solid var(--acc-b)",
+            background: "var(--brand-t)",
+            border: "1px solid var(--brand-b)",
           }}
         >
           <input
             type="checkbox"
             name="sendEmail"
             defaultChecked
-            style={{ width: 15, height: 15, borderRadius: 4, accentColor: "var(--acc)" }}
+            style={{ width: 15, height: 15, borderRadius: 4, accentColor: "var(--brand)" }}
           />
           {t("app.newTicket.sendEmail")}
         </label>
       </div>
 
-      {/* Sunk footer */}
+      {/* Canvas footer */}
       <div
-        className="flex justify-end border-t"
+        className="flex items-center justify-end"
         style={{
-          gap: 8,
-          padding: "12px 18px",
-          background: "var(--sunk)",
-          borderColor: "var(--line)",
+          gap: 10,
+          padding: "13px 20px",
+          background: "var(--canvas)",
+          borderTop: "1px solid var(--line)",
         }}
       >
         <Link
           href="/app/tickets"
           className="ohd-hover-edge-ink grid place-items-center"
           style={{
-            height: 34,
-            padding: "0 14px",
+            height: 36,
+            padding: "0 15px",
             border: "1px solid var(--line)",
-            borderRadius: 6,
-            fontSize: 13,
+            borderRadius: 9,
             background: "var(--panel)",
+            fontSize: 13,
           }}
         >
           {t("app.newTicket.cancel")}
@@ -431,7 +462,13 @@ export function NewTicketForm({
         <button
           type="submit"
           className="grid place-items-center font-semibold text-white"
-          style={{ height: 34, padding: "0 16px", borderRadius: 6, background: "var(--acc)", fontSize: 13 }}
+          style={{
+            height: 36,
+            padding: "0 17px",
+            borderRadius: 9,
+            background: "var(--brand)",
+            fontSize: 13,
+          }}
         >
           {t("app.newTicket.submit")}
         </button>

@@ -1,10 +1,14 @@
 "use client";
 
 /**
- * AG-06 — ⌘K palette (agent space design): rgba(8,14,12,.42) overlay + 2 px blur,
- * 620 px panel, uppercase 10.5/700 groups, 22×22 tag icons colored by type,
- * meta on the right ("#4821 · Open", views, shortcut), Actions section, footer
- * "Filters: from: status: #tag" + "↑↓ navigate · ↵ open".
+ * AG-06 — ⌘K palette (V2): rgba(8,14,12,.42) overlay + 2 px blur, 620 px panel
+ * on radius 16, uppercase 10.5/600 groups spaced .12em, 22×22 tag icons coloured
+ * by type, meta on the right ("#4821 · Open", views, shortcut), Actions section,
+ * canvas footer.
+ *
+ * The mockup's third footer hint, "tab filter", is dropped: Tab filters nothing
+ * here. The two hints the palette does honour — the `from:`/`status:`/`#tag`
+ * prefixes and ↑↓/↵ — stay.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -204,24 +208,24 @@ export function CommandPalette({ edition }: { edition: Edition }) {
         className="ohd-rise-fast flex w-full flex-col overflow-hidden"
         style={{
           maxWidth: 620,
-          borderRadius: 12,
+          borderRadius: 16,
           background: "var(--panel)",
           border: "1px solid var(--line)",
-          boxShadow: "0 24px 64px rgba(0,0,0,.3)",
+          boxShadow: "0 32px 80px rgba(0,0,0,.35)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <div
           className="flex items-center"
-          style={{ gap: 10, padding: "13px 15px", borderBottom: "1px solid var(--line)" }}
+          style={{ gap: 11, padding: "14px 17px", borderBottom: "1px solid var(--line)" }}
         >
           <svg
             viewBox="0 0 24 24"
-            width="17"
-            height="17"
+            width="16"
+            height="16"
             fill="none"
             stroke="var(--ink-3)"
-            strokeWidth="1.9"
+            strokeWidth="2"
             className="shrink-0"
             aria-hidden="true"
           >
@@ -241,18 +245,18 @@ export function CommandPalette({ edition }: { edition: Edition }) {
             className="shrink-0"
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: 10,
-              padding: "2px 6px",
-              border: "1px solid var(--line)",
-              borderRadius: 4,
+              fontSize: 10.5,
+              padding: "2px 8px",
+              borderRadius: 6,
+              background: "var(--sunk)",
               color: "var(--ink-3)",
             }}
           >
-            ESC
+            esc
           </kbd>
         </div>
 
-        <div className="overflow-y-auto" style={{ maxHeight: 400, padding: 6 }}>
+        <div className="overflow-y-auto" style={{ maxHeight: "56vh", padding: 8 }}>
           {q.trim().length < 2 && (
             <p className="px-3 py-4 text-center text-[13px]" style={{ color: "var(--ink-3)" }}>
               {t("app.shell.paletteMinChars")}
@@ -272,10 +276,10 @@ export function CommandPalette({ edition }: { edition: Edition }) {
                   <p
                     className="uppercase"
                     style={{
-                      padding: "8px 9px 3px",
+                      padding: "8px 10px 4px",
                       fontSize: 10.5,
-                      fontWeight: 700,
-                      letterSpacing: ".07em",
+                      fontWeight: 600,
+                      letterSpacing: ".12em",
                       color: "var(--ink-3)",
                     }}
                   >
@@ -291,9 +295,9 @@ export function CommandPalette({ edition }: { edition: Edition }) {
                   }}
                   className="flex w-full items-center text-left"
                   style={{
-                    gap: 10,
-                    padding: "8px 9px",
-                    borderRadius: 7,
+                    gap: 11,
+                    padding: "9px 10px",
+                    borderRadius: 9,
                     color: "var(--ink)",
                     background: i === active ? "var(--sunk)" : "transparent",
                   }}
@@ -303,7 +307,7 @@ export function CommandPalette({ edition }: { edition: Edition }) {
                     style={{
                       width: 22,
                       height: 22,
-                      borderRadius: 5,
+                      borderRadius: 6,
                       fontSize: 10,
                       fontFamily: "var(--font-mono)",
                       background: item.tagBg,
@@ -332,12 +336,12 @@ export function CommandPalette({ edition }: { edition: Edition }) {
         <div
           className="flex items-center"
           style={{
-            gap: 14,
-            padding: "8px 14px",
+            gap: 16,
+            padding: "10px 17px",
             borderTop: "1px solid var(--line)",
-            background: "var(--sunk)",
+            background: "var(--canvas)",
             color: "var(--ink-3)",
-            fontSize: 11,
+            fontSize: 11.5,
           }}
         >
           <span>

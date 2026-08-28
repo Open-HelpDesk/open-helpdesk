@@ -6,9 +6,9 @@ import { getT } from "@/i18n/server";
 import { NewTicketForm } from "./new-ticket-form";
 
 /**
- * AG-05 — New ticket (agent space design): centered 720 px card radius 12,
- * real contact combobox, Subject/Form grid, description with toolbar,
- * 4 selects, "Send the reply by email" callout, sunk footer.
+ * AG-05 — New ticket (V2): the mockup draws a 600 px floating card over the
+ * inbox. This is a real route, not an overlay, so the card keeps its size,
+ * radius 18 and 7vh drop, and the scrim's job is done by the canvas behind it.
  */
 export default async function NewTicketPage() {
   const t = await getT();
@@ -33,28 +33,42 @@ export default async function NewTicketPage() {
   return (
     <div
       className="grid h-full overflow-auto"
-      style={{ padding: 26, placeItems: "start center", background: "var(--canvas)" }}
+      style={{
+        padding: "7vh 24px 40px",
+        placeItems: "start center",
+        background: "var(--canvas)",
+      }}
     >
       <div
         className="ohd-rise w-full overflow-hidden"
         style={{
-          maxWidth: 720,
-          borderRadius: 12,
+          maxWidth: 600,
+          borderRadius: 18,
           background: "var(--panel)",
           border: "1px solid var(--line)",
+          boxShadow: "0 18px 48px rgba(13,28,23,.10)",
         }}
       >
         {/* Card header */}
         <div
-          className="flex items-center border-b"
-          style={{ padding: "14px 18px", borderColor: "var(--line)" }}
+          className="flex items-center"
+          style={{ gap: 10, padding: "15px 20px", borderBottom: "1px solid var(--line)" }}
         >
-          <h1 style={{ fontSize: 15, fontWeight: 600 }}>{t("app.newTicket.title")}</h1>
+          <h1
+            style={{
+              fontFamily: "var(--font-title)",
+              fontSize: 16,
+              fontWeight: 600,
+              letterSpacing: "-.01em",
+            }}
+          >
+            {t("app.newTicket.title")}
+          </h1>
           <span className="flex-1" />
           <Link
             href="/app/tickets"
             title={t("app.newTicket.close")}
-            style={{ color: "var(--ink-3)" }}
+            style={{ color: "var(--ink-3)", fontSize: 15 }}
           >
             ✕
           </Link>
