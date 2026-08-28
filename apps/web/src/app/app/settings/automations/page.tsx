@@ -111,6 +111,26 @@ export default async function AutomationsPage({
         title={t("app.settings.rules.automationsTitle")}
         subtitle={t("app.settings.rules.automationsSubtitle")}
         tabs={tabs}
+        actions={
+          /* V2 puts the screen's main action in the page header. It used to sit
+             under the list, where a workspace with twenty rules hid it below the
+             fold. */
+          <Link
+            href="/app/settings/automations/new"
+            className="inline-flex items-center justify-center font-semibold"
+            style={{
+              color: "var(--on-brand)",
+              height: 38,
+              padding: "0 16px",
+              borderRadius: 9,
+              fontSize: 13.5,
+              background: "var(--brand)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {t("app.settings.rules.ruleNew")}
+          </Link>
+        }
       />
 
       {saved === "1" && (
@@ -273,13 +293,6 @@ export default async function AutomationsPage({
           </div>
         )}
 
-        <Link
-          href="/app/settings/automations/new"
-          className="inline-flex items-center justify-center self-start rounded-[9px] font-semibold"
-          style={{ color: "var(--on-brand)", height: 38, padding: "0 13px", fontSize: 13, background: "var(--acc)" }}
-        >
-          {t("app.settings.rules.ruleNew")}
-        </Link>
       </div>
     </PageShell>
   );
