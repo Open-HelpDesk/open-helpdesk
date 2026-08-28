@@ -71,7 +71,7 @@ export function RuleEditorBody({
     <div className="flex flex-col gap-4">
       {/* IF block */}
       <section
-        className="overflow-hidden rounded-[10px] border"
+        className="overflow-hidden rounded-[14px] border"
         style={{ borderColor: "var(--open)" }}
       >
         <div
@@ -128,7 +128,7 @@ export function RuleEditorBody({
 
       {/* THEN block */}
       <section
-        className="overflow-hidden rounded-[10px] border"
+        className="overflow-hidden rounded-[14px] border"
         style={{ borderColor: "var(--acc-b)" }}
       >
         <div
@@ -174,9 +174,9 @@ export function RuleEditorBody({
                 setResult(r);
               })
             }
-            className="rounded-md border font-semibold disabled:opacity-50"
+            className="rounded-[9px] border font-semibold disabled:opacity-50"
             style={{
-              height: 32,
+              height: 38,
               padding: "0 13px",
               fontSize: 13,
               borderColor: "var(--line)",

@@ -76,7 +76,7 @@ export default async function MacrosPage({
   });
 
   return (
-    <PageShell maxWidth={1000}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.rules.macrosTitle")}
         subtitle={t("app.settings.rules.macrosSubtitle")}
@@ -135,7 +135,7 @@ export default async function MacrosPage({
                 {category}
               </p>
               <div
-                className="overflow-hidden rounded-[10px] border"
+                className="overflow-hidden rounded-[14px] border"
                 style={{ background: "var(--panel)", borderColor: "var(--line)" }}
               >
                 {list.map((m) => {

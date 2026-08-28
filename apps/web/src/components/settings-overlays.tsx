@@ -81,9 +81,17 @@ export function Drawer({
             >
               <div
                 className="flex shrink-0 items-center justify-between border-b"
-                style={{ padding: "14px 18px", borderColor: "var(--line)" }}
+                style={{ padding: "15px 20px", borderColor: "var(--line)" }}
               >
-                <h2 className="font-semibold" style={{ fontSize: 15, color: "var(--ink)" }}>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-title)",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    letterSpacing: "-.01em",
+                    color: "var(--ink)",
+                  }}
+                >
                   {title}
                 </h2>
                 <button
@@ -95,7 +103,7 @@ export function Drawer({
                   <X size={16} />
                 </button>
               </div>
-              <div className="min-h-0 flex-1 overflow-y-auto" style={{ padding: 18 }}>
+              <div className="min-h-0 flex-1 overflow-y-auto" style={{ padding: 20 }}>
                 {children}
               </div>
             </div>
@@ -161,7 +169,7 @@ export function Modal({
               onClick={() => setOpen(false)}
             />
             <div
-              className="st-pop relative rounded-[10px] border"
+              className="st-pop relative rounded-[18px] border"
               style={{
                 width,
                 maxWidth: "94vw",
@@ -172,8 +180,16 @@ export function Modal({
               }}
               onSubmit={() => setOpen(false)}
             >
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="font-semibold" style={{ fontSize: 15, color: "var(--ink)" }}>
+              <div className="mb-4 flex items-center justify-between">
+                <h2
+                  style={{
+                    fontFamily: "var(--font-title)",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    letterSpacing: "-.01em",
+                    color: "var(--ink)",
+                  }}
+                >
                   {title}
                 </h2>
                 <button
@@ -235,8 +251,8 @@ export function SlugConfirmField({
       <button
         type="submit"
         disabled={!match}
-        className="inline-flex items-center justify-center rounded-md px-3.5 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
-        style={{ height: 32, fontSize: 13, background: "var(--dang)" }}
+        className="inline-flex items-center justify-center rounded-[9px] px-3.5 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+        style={{ height: 38, fontSize: 13, background: "var(--dang)" }}
       >
         {buttonLabel}
       </button>

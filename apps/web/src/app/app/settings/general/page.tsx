@@ -100,7 +100,7 @@ export default async function GeneralSettingsPage({
   const initial = tenant.name[0]?.toUpperCase() ?? "A";
 
   return (
-    <PageShell maxWidth={860}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.workspace.generalTitle")}
         subtitle={t("app.settings.workspace.generalSubtitle")}
@@ -274,9 +274,9 @@ export default async function GeneralSettingsPage({
                 </Select>
                 <button
                   type="submit"
-                  className="rounded-md border font-semibold"
+                  className="rounded-[9px] border font-semibold"
                   style={{
-                    height: 32,
+                    height: 38,
                     padding: "0 13px",
                     fontSize: 13,
                     borderColor: "var(--line)",
@@ -314,9 +314,9 @@ export default async function GeneralSettingsPage({
           <Modal
             title={t("app.settings.workspace.deleteWorkspaceTitle")}
             trigger={<>{t("app.settings.workspace.delete")}</>}
-            triggerClassName="rounded-md border font-semibold"
+            triggerClassName="rounded-[9px] border font-semibold"
             triggerStyle={{
-              height: 32,
+              height: 38,
               padding: "0 13px",
               fontSize: 13,
               borderColor: "var(--dang)",

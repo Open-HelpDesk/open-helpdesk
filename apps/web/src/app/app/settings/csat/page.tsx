@@ -45,7 +45,7 @@ export default async function CsatPage({
   const accent = branding.accentColor ?? "#0B5F46";
 
   return (
-    <PageShell maxWidth={900}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.portal.csatTitle")}
         subtitle={t("app.settings.portal.csatSubtitle")}

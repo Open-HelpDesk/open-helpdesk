@@ -55,14 +55,17 @@ function TableHead({ t }: { t: Translate }) {
   ];
   return (
     <div
-      className="grid items-center border-b font-bold"
+      className="grid items-center border-b"
       style={{
         gridTemplateColumns: AUDIT_GRID,
-        height: 34,
+        height: 40,
         padding: "0 14px",
-        background: "var(--sunk)",
+        background: "var(--canvas)",
         borderColor: "var(--line)",
         fontSize: 11,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: ".09em",
         color: "var(--ink-3)",
       }}
     >
@@ -98,7 +101,7 @@ export default async function AuditPage({
   if (!ent.auditLog) {
     const edition = getEdition();
     return (
-      <PageShell maxWidth={1040}>
+      <PageShell>
         {header}
         <LockedScreen
           variant={edition}
@@ -146,7 +149,7 @@ export default async function AuditPage({
   const agentNameById = new Map(agents.map((a) => [a.id, a.name]));
 
   return (
-    <PageShell maxWidth={1040}>
+    <PageShell>
       {header}
 
       <div className="st-rise flex flex-col" style={{ gap: 14 }}>

@@ -112,7 +112,7 @@ export default async function CustomerSsoPage({
   if (!ent.customerSso) {
     const edition = getEdition();
     return (
-      <PageShell maxWidth={1180}>
+      <PageShell>
         {header}
         <LockedScreen
           variant={edition}
@@ -291,7 +291,7 @@ export default async function CustomerSsoPage({
   ];
 
   return (
-    <PageShell maxWidth={1180}>
+    <PageShell>
       {header}
 
       <div className="st-rise flex flex-col" style={{ gap: 20 }}>
@@ -600,11 +600,14 @@ function ParkHead({ t }: { t: Translate }) {
       style={{
         gridTemplateColumns: PARK_GRID,
         minWidth: PARK_MIN_WIDTH,
-        height: 34,
+        height: 40,
         padding: "0 14px",
-        background: "var(--sunk)",
+        background: "var(--canvas)",
         borderColor: "var(--line)",
         fontSize: 10.5,
+                fontWeight: 600,
+                letterSpacing: ".09em",
+                textTransform: "uppercase",
         color: "var(--ink-3)",
       }}
     >
@@ -773,9 +776,9 @@ function OrgDetail({
           <input type="hidden" name="connectionId" value={connection.id} />
           <button
             type="submit"
-            className="ohd-hover-edge-ink w-full rounded-md border font-medium"
+            className="ohd-hover-edge-ink w-full rounded-[9px] border font-medium"
             style={{
-              height: 32,
+              height: 38,
               fontSize: 13,
               borderColor: "var(--dang)",
               color: "var(--dang)",

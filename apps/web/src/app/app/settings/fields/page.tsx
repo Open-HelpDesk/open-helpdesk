@@ -89,7 +89,7 @@ export default async function FieldsSettingsPage({
   ];
 
   return (
-    <PageShell maxWidth={1100}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.rules.fieldsTitle")}
         subtitle={t("app.settings.rules.fieldsSubtitle")}
@@ -103,7 +103,7 @@ export default async function FieldsSettingsPage({
       {activeTab === "fields" ? (
         <div className="st-rise flex flex-col" style={{ gap: 14 }}>
           <div
-            className="overflow-x-auto rounded-[10px] border"
+            className="overflow-x-auto rounded-[14px] border"
             style={{ background: "var(--panel)", borderColor: "var(--line)" }}
           >
             <div
@@ -112,11 +112,13 @@ export default async function FieldsSettingsPage({
                 gridTemplateColumns: FIELDS_GRID,
                 minWidth: 760,
                 padding: "0 14px",
-                height: 34,
-                background: "var(--sunk)",
+                height: 40,
+                background: "var(--canvas)",
                 borderColor: "var(--line)",
                 fontSize: 11,
-                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: ".09em",
+                fontWeight: 600,
                 color: "var(--ink-3)",
               }}
             >
@@ -177,9 +179,9 @@ export default async function FieldsSettingsPage({
           <Drawer
             title={t("app.settings.rules.fieldCreateTitle")}
             trigger={<>{t("app.settings.rules.fieldCreateButton")}</>}
-            triggerClassName="inline-flex items-center justify-center self-start rounded-md border font-semibold"
+            triggerClassName="inline-flex items-center justify-center self-start rounded-[9px] border font-semibold"
             triggerStyle={{
-              height: 32,
+              height: 38,
               padding: "0 13px",
               fontSize: 13,
               borderColor: "var(--line)",
@@ -223,9 +225,9 @@ export default async function FieldsSettingsPage({
               />
               <button
                 type="submit"
-                className="ohd-hover-edge-ink rounded-md border font-semibold"
+                className="ohd-hover-edge-ink rounded-[9px] border font-semibold"
                 style={{
-                  height: 32,
+                  height: 38,
                   padding: "0 13px",
                   fontSize: 12.5,
                   borderColor: "var(--line)",
@@ -240,7 +242,7 @@ export default async function FieldsSettingsPage({
 
           {!selectedForm ? (
             <div
-              className="rounded-[10px] border"
+              className="rounded-[14px] border"
               style={{ background: "var(--panel)", borderColor: "var(--line)", padding: 15 }}
             >
               <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
@@ -254,7 +256,7 @@ export default async function FieldsSettingsPage({
             >
               {/* Column 1 — available fields */}
               <div
-                className="overflow-hidden rounded-[10px] border"
+                className="overflow-hidden rounded-[14px] border"
                 style={{ background: "var(--panel)", borderColor: "var(--line)" }}
               >
                 <div
@@ -307,7 +309,7 @@ export default async function FieldsSettingsPage({
 
               {/* Column 2 — composition */}
               <div
-                className="overflow-hidden rounded-[10px] border"
+                className="overflow-hidden rounded-[14px] border"
                 style={{ background: "var(--panel)", borderColor: "var(--line)" }}
               >
                 <div
@@ -366,7 +368,7 @@ export default async function FieldsSettingsPage({
 
               {/* Column 3 — portal preview */}
               <div
-                className="overflow-hidden rounded-[10px] border"
+                className="overflow-hidden rounded-[14px] border"
                 style={{ background: "var(--panel)", borderColor: "var(--line)" }}
               >
                 <div

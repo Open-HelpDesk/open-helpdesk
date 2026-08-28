@@ -106,7 +106,7 @@ export default async function AutomationsPage({
   ];
 
   return (
-    <PageShell maxWidth={1000}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.rules.automationsTitle")}
         subtitle={t("app.settings.rules.automationsSubtitle")}
@@ -156,7 +156,7 @@ export default async function AutomationsPage({
           </div>
         ) : (
           <div
-            className="overflow-hidden rounded-[10px] border"
+            className="overflow-hidden rounded-[14px] border"
             style={{ background: "var(--panel)", borderColor: "var(--line)" }}
           >
             {rules.map((rule, index) => (
@@ -275,8 +275,8 @@ export default async function AutomationsPage({
 
         <Link
           href="/app/settings/automations/new"
-          className="inline-flex items-center justify-center self-start rounded-md font-semibold"
-          style={{ color: "var(--on-brand)", height: 32, padding: "0 13px", fontSize: 13, background: "var(--acc)" }}
+          className="inline-flex items-center justify-center self-start rounded-[9px] font-semibold"
+          style={{ color: "var(--on-brand)", height: 38, padding: "0 13px", fontSize: 13, background: "var(--acc)" }}
         >
           {t("app.settings.rules.ruleNew")}
         </Link>

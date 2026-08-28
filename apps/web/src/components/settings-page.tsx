@@ -20,23 +20,18 @@ import { useT } from "@/i18n/client";
 export type PageTab = { label: string; href: string; active: boolean };
 
 /**
- * Content column of an admin screen.
+ * Content column of an admin screen — 1040 px, centred.
  *
- * The design puts `max-width` on the container WITH its padding (26px 28px 40px) and
- * does not center it: the block starts flush with the navigation. Centering here
- * (the former `mx-auto`) shifted every screen to the right and widened it by 56 px.
+ * V1 pinned the column to the navigation and let each screen choose its own
+ * width, so no two admin screens started at the same x. V2 gives all eighteen
+ * one centred 1040 column, which is why `maxWidth` is no longer a prop: a width
+ * per screen is exactly what the redesign removes.
  */
-export function PageShell({
-  maxWidth,
-  children,
-}: {
-  maxWidth: number;
-  children: ReactNode;
-}) {
+export function PageShell({ children }: { children: ReactNode }) {
   return (
     <div
       className="flex w-full flex-col"
-      style={{ maxWidth, padding: "26px 28px 40px", gap: 22 }}
+      style={{ maxWidth: 1040, margin: "0 auto", padding: "26px 28px 44px", gap: 20 }}
     >
       {children}
     </div>
@@ -55,19 +50,22 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <header className="flex flex-wrap items-start gap-3">
-      <div className="min-w-0 flex-1">
+    <header className="flex flex-wrap items-start" style={{ gap: 16 }}>
+      <div className="flex min-w-0 flex-1 flex-col" style={{ gap: 5, minWidth: 280 }}>
         <h1
-          className="font-semibold"
-          style={{ fontSize: 20, letterSpacing: "-0.02em", color: "var(--ink)" }}
+          style={{
+            fontFamily: "var(--font-title)",
+            fontSize: 24,
+            fontWeight: 600,
+            letterSpacing: "-.015em",
+            color: "var(--ink)",
+          }}
         >
           {title}
         </h1>
-        <p className="mt-1" style={{ fontSize: 13.5, color: "var(--ink-2)", maxWidth: "70ch" }}>
-          {subtitle}
-        </p>
+        <p style={{ fontSize: 14, color: "var(--ink-2)", maxWidth: "64ch" }}>{subtitle}</p>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center" style={{ gap: 10 }}>
         {tabs && tabs.length > 0 && <SegTabs tabs={tabs} />}
         {actions}
       </div>
@@ -80,7 +78,7 @@ export function SegTabs({ tabs }: { tabs: PageTab[] }) {
   return (
     <div
       className="inline-flex items-center"
-      style={{ background: "var(--sunk)", borderRadius: 7, padding: 2 }}
+      style={{ background: "var(--sunk)", borderRadius: 9, padding: 3, gap: 2 }}
     >
       {tabs.map((t) => (
         <Link
@@ -88,13 +86,13 @@ export function SegTabs({ tabs }: { tabs: PageTab[] }) {
           href={t.href}
           className="ohd-hover-edge-ink whitespace-nowrap"
           style={{
-            padding: "6px 12px",
-            borderRadius: 5,
+            padding: "8px 14px",
+            borderRadius: 7,
             fontSize: 12.5,
-            fontWeight: t.active ? 600 : 400,
-            color: t.active ? "var(--ink)" : "var(--ink-2)",
+            fontWeight: t.active ? 600 : 450,
+            color: t.active ? "var(--ink)" : "var(--ink-3)",
             background: t.active ? "var(--panel)" : "transparent",
-            boxShadow: t.active ? "0 1px 2px rgba(17,33,28,.08)" : "none",
+            boxShadow: t.active ? "0 1px 2px rgba(13,28,23,.08)" : "none",
           }}
         >
           {t.label}
@@ -138,14 +136,29 @@ export function SaveBar({
       <Link
         href={cancelHref}
         className="ohd-hover-edge-ink inline-flex items-center rounded-md border px-3 font-medium"
-        style={{ height: 32, fontSize: 13, borderColor: "var(--line)", background: "var(--panel)", color: "var(--ink)" }}
+        style={{
+          height: 38,
+          borderRadius: 9,
+          padding: "0 15px",
+          fontSize: 13,
+          borderColor: "var(--line)",
+          background: "var(--panel)",
+          color: "var(--ink)",
+        }}
       >
         {t("app.settings.shell.cancel")}
       </Link>
       <button
         type="submit"
-        className="inline-flex items-center rounded-md px-3.5 font-semibold"
-        style={{ color: "var(--on-brand)", height: 32, fontSize: 13, background: "var(--acc)" }}
+        className="inline-flex items-center font-semibold"
+        style={{
+          color: "var(--on-brand)",
+          height: 38,
+          borderRadius: 9,
+          padding: "0 16px",
+          fontSize: 13.5,
+          background: "var(--brand)",
+        }}
       >
         {submitLabel ?? t("app.settings.shell.save")}
       </button>
@@ -153,7 +166,11 @@ export function SaveBar({
   );
 }
 
-/** Section card — panel, --line border, radius 10. */
+/**
+ * Section card — panel, radius 14, padding 20, its children stacked 16 apart.
+ * The stack is part of the card in V2: every screen was spelling its own gap,
+ * and no two cards breathed the same.
+ */
 export function Card({
   title,
   action,
@@ -172,25 +189,29 @@ export function Card({
   const flush = style?.padding === 0;
   return (
     <section
-      className="rounded-[10px] border"
+      className="flex flex-col"
       style={{
         background: "var(--panel)",
-        borderColor: danger ? "var(--dang)" : "var(--line)",
-        padding: 18,
+        border: `1px solid ${danger ? "var(--dang)" : "var(--line)"}`,
+        borderRadius: 14,
+        padding: 20,
+        gap: 16,
+        boxShadow: "0 1px 2px rgba(13,28,23,.03)",
         ...style,
       }}
     >
       {(title || action) && (
         <div
           className="flex items-center gap-2"
-          style={flush ? { padding: "14px 14px 12px" } : { marginBottom: 12 }}
+          style={flush ? { padding: "18px 20px 0" } : undefined}
         >
           {title && (
             <h2
-              className="font-mono font-bold uppercase"
+              className="uppercase"
               style={{
-                fontSize: 10.5,
-                letterSpacing: "0.07em",
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: ".12em",
                 color: danger ? "var(--dang)" : "var(--ink-3)",
               }}
             >
@@ -223,7 +244,7 @@ export function Field({
   style?: CSSProperties;
 }) {
   return (
-    <label className="flex flex-col gap-1.5" style={style}>
+    <label className="flex flex-col" style={{ gap: 6, ...style }}>
       <span className="font-semibold" style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
         {label}
       </span>
@@ -237,18 +258,17 @@ export function Field({
 
 export const inputStyle: CSSProperties = {
   borderColor: "var(--line)",
-  background: "var(--bg)",
+  background: "var(--panel)",
   color: "var(--ink)",
 };
 
 /*
- * Input field: h32, 13 px, radius 6, padding 0 10px — the most widespread
- * measurement of the admin mockups. `text-sm` was 14 px and a `py-1.5` let the
- * height follow the font: two neighboring fields did not land at the same
- * height. Only the authentication screens go up to h36/14px (see the AG-01
- * mockup).
+ * Input field: h40, 13.5 px, radius 9, padding 0 12px — the V2 measurement, up
+ * from V1's h32/13/radius-6. Still a fixed height and not a padding: `py-1.5`
+ * let the height follow the font, and two neighbouring fields did not land at
+ * the same height.
  */
-export const FIELD = "h-8 rounded-md border px-2.5 text-[13px]";
+export const FIELD = "h-10 rounded-[9px] border px-3 text-[13.5px] ohd-field outline-none";
 
 export function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   const { className, style, ...rest } = props;
@@ -373,13 +393,13 @@ export function LockedScreen({
 }) {
   const t = useT();
   return (
-    <div className="relative overflow-hidden rounded-[10px]" style={{ minHeight: 380 }}>
+    <div className="relative overflow-hidden rounded-[14px]" style={{ minHeight: 380 }}>
       <div aria-hidden style={{ filter: "blur(3px)", pointerEvents: "none", userSelect: "none" }}>
         {ghost}
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
         <div
-          className="rounded-[10px] border text-center"
+          className="rounded-[14px] border text-center"
           style={{
             width: 420,
             maxWidth: "90%",
@@ -399,8 +419,15 @@ export function LockedScreen({
           {variant === "cloud" && (
             <Link
               href="/app/settings/billing"
-              className="mt-4 inline-flex items-center rounded-md px-4 font-semibold"
-              style={{ color: "var(--on-brand)", height: 32, fontSize: 13, background: "var(--acc)" }}
+              className="mt-4 inline-flex items-center font-semibold"
+              style={{
+                color: "var(--on-brand)",
+                height: 38,
+                borderRadius: 9,
+                padding: "0 16px",
+                fontSize: 13.5,
+                background: "var(--brand)",
+              }}
             >
               {t("app.settings.shell.manageSubscription")}
             </Link>
@@ -422,7 +449,7 @@ export function EmptyState({
 }) {
   return (
     <div
-      className="flex flex-col items-center rounded-[12px] border border-dashed text-center"
+      className="flex flex-col items-center rounded-[14px] border border-dashed text-center"
       style={{
         borderColor: "var(--line)",
         padding: "40px 24px",
@@ -442,7 +469,7 @@ export function EmptyState({
 }
 
 /**
- * Grid table header — design: h34, --sunk background, 11px/700 ink-3.
+ * Grid table header — V2: h40, --canvas background, 11px/600 spaced .09em.
  * The `gap-3` is kept: body rows use it too, and it is what guarantees that the
  * columns land in the same place as in the header.
  */
@@ -455,16 +482,17 @@ export function GridHead({
 }) {
   return (
     <div
-      className="grid items-center gap-3 border-b font-bold"
+      className="grid items-center gap-3 border-b uppercase"
       style={{
         gridTemplateColumns: template,
-        minHeight: 34,
+        minHeight: 40,
         fontSize: 11,
-        letterSpacing: "0.03em",
+        fontWeight: 600,
+        letterSpacing: ".09em",
         color: "var(--ink-3)",
-        background: "var(--sunk)",
+        background: "var(--canvas)",
         borderColor: "var(--line)",
-        padding: "0 14px",
+        padding: "0 18px",
       }}
     >
       {columns.map((c, i) => (
@@ -489,7 +517,7 @@ export function StatusPill({
   return (
     <span
       className="inline-flex items-center whitespace-nowrap rounded-full font-semibold"
-      style={{ fontSize: 11.5, padding: "2px 8px", background: bg, color: fg }}
+      style={{ fontSize: 11.5, fontWeight: 600, padding: "3px 10px", background: bg, color: fg }}
     >
       {children}
     </span>

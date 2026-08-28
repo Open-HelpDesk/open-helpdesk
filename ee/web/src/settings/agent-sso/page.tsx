@@ -135,15 +135,18 @@ function TableHead({
 }) {
   return (
     <div
-      className="grid items-center border-b font-bold"
+      className="grid items-center border-b"
       style={{
         gridTemplateColumns: template,
         minWidth,
-        height: 34,
+        height: 40,
         padding: "0 15px",
-        background: "var(--sunk)",
+        background: "var(--canvas)",
         borderColor: "var(--line)",
         fontSize: 11,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: ".09em",
         color: "var(--ink-3)",
       }}
     >
@@ -184,7 +187,7 @@ export default async function AgentSsoPage({
   if (!ent.agentSso) {
     const edition = getEdition();
     return (
-      <PageShell maxWidth={1000}>
+      <PageShell>
         {header()}
         <LockedScreen
           variant={edition}
@@ -251,7 +254,7 @@ export default async function AgentSsoPage({
   ];
 
   return (
-    <PageShell maxWidth={1000}>
+    <PageShell>
       {/* Identity provider chips: selected state in CSS (hidden radio). */}
       <style>{`
         .sso-chip { position: relative; min-height: 38px; padding: 8px 14px; display: flex;
@@ -703,7 +706,7 @@ function GhostForm() {
       {Array.from({ length: 3 }).map((_, i) => (
         <div
           key={i}
-          className="rounded-[10px] border"
+          className="rounded-[14px] border"
           style={{ background: "var(--panel)", borderColor: "var(--line)", padding: 18 }}
         >
           <span className="mb-3 inline-block rounded" style={{ width: 140, height: 10, background: "var(--sunk)" }} />

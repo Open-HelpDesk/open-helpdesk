@@ -26,9 +26,9 @@ function RunButton({ label }: { label: string }) {
   return (
     <Link
       href="/app/settings/general?diag=1"
-      className="ohd-hover-edge-ink inline-flex items-center rounded-md border px-3 font-medium"
+      className="ohd-hover-edge-ink inline-flex items-center rounded-[9px] border px-3 font-medium"
       style={{
-        height: 32,
+        height: 38,
         fontSize: 12.5,
         borderColor: "var(--line)",
         background: "var(--panel)",

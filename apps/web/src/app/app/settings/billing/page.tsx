@@ -178,7 +178,7 @@ export default async function BillingPage({
           : t("app.settings.workspace.billingTrialSeats");
 
   return (
-    <PageShell maxWidth={1040}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.workspace.billingTitle")}
         subtitle={t("app.settings.workspace.billingSubtitle")}
@@ -241,9 +241,9 @@ export default async function BillingPage({
               href="/app/settings/team"
               className="ohd-hover-edge-ink grid place-items-center border font-semibold"
               style={{
-                height: 32,
+                height: 38,
                 padding: "0 12px",
-                borderRadius: 6,
+                borderRadius: 9,
                 fontSize: 12.5,
                 borderColor: "var(--line)",
                 background: "var(--panel)",
@@ -256,9 +256,9 @@ export default async function BillingPage({
               href="/app/settings/email"
               className="ohd-hover-edge-ink grid place-items-center border font-semibold"
               style={{
-                height: 32,
+                height: 38,
                 padding: "0 12px",
-                borderRadius: 6,
+                borderRadius: 9,
                 fontSize: 12.5,
                 borderColor: "var(--line)",
                 background: "var(--panel)",
@@ -278,9 +278,9 @@ export default async function BillingPage({
                 className="grid place-items-center font-semibold disabled:opacity-50"
                 style={{
                   color: "var(--on-brand)",
-                  height: 32,
+                  height: 38,
                   padding: "0 14px",
-                  borderRadius: 6,
+                  borderRadius: 9,
                   fontSize: 12.5,
                   background: "var(--acc)",
                 }}
@@ -470,14 +470,17 @@ export default async function BillingPage({
           >
             <div style={{ minWidth: 720 }}>
               <div
-                className="grid items-center border-b font-bold"
+                className="grid items-center border-b"
                 style={{
                   gridTemplateColumns: INVOICE_GRID,
-                  height: 34,
+                  height: 40,
                   padding: "0 14px",
-                  background: "var(--sunk)",
+                  background: "var(--canvas)",
                   borderColor: "var(--line)",
                   fontSize: 11,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: ".09em",
                   color: "var(--ink-3)",
                 }}
               >

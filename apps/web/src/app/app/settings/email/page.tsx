@@ -284,7 +284,7 @@ export default async function EmailSettingsPage({
   const [dnsBefore, dnsAfter] = t.parts("app.settings.email.dnsIntro", "domain");
 
   return (
-    <PageShell maxWidth={1040}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.email.title")}
         subtitle={t("app.settings.email.subtitle")}
@@ -672,9 +672,9 @@ export default async function EmailSettingsPage({
                 >
                   <form action={testEmailConnection}>
                     <button
-                      className="ohd-hover-edge-ink rounded-md border px-3 font-medium"
+                      className="ohd-hover-edge-ink rounded-[9px] border px-3 font-medium"
                       style={{
-                        height: 32,
+                        height: 38,
                         fontSize: 12.5,
                         borderColor: "var(--line)",
                         background: "var(--panel)",
@@ -686,8 +686,8 @@ export default async function EmailSettingsPage({
                   </form>
                   <form action={sendEmailTest}>
                     <button
-                      className="rounded-md px-3.5 font-semibold"
-                      style={{ color: "var(--on-brand)", height: 32, fontSize: 12.5, background: "var(--acc)" }}
+                      className="rounded-[9px] px-3.5 font-semibold"
+                      style={{ color: "var(--on-brand)", height: 38, fontSize: 12.5, background: "var(--acc)" }}
                     >
                       {t("app.settings.email.sendTest")}
                     </button>

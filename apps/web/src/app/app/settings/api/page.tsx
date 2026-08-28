@@ -109,7 +109,7 @@ export default async function ApiSettingsPage({
   ];
 
   return (
-    <PageShell maxWidth={1040}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.dev.title")}
         subtitle={t("app.settings.dev.subtitle")}
@@ -124,14 +124,17 @@ export default async function ApiSettingsPage({
           >
             <div style={{ minWidth: 820 }}>
               <div
-                className="grid items-center border-b font-bold"
+                className="grid items-center border-b"
                 style={{
                   gridTemplateColumns: KEYS_GRID,
-                  height: 34,
+                  height: 40,
                   padding: "0 14px",
-                  background: "var(--sunk)",
+                  background: "var(--canvas)",
                   borderColor: "var(--line)",
                   fontSize: 11,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: ".09em",
                   color: "var(--ink-3)",
                 }}
               >
@@ -293,14 +296,17 @@ export default async function ApiSettingsPage({
                 <div className="overflow-x-auto">
                   <div style={{ minWidth: 700 }}>
                     <div
-                      className="grid items-center border-b font-bold"
+                      className="grid items-center border-b"
                       style={{
                         gridTemplateColumns: DELIVERY_GRID,
-                        height: 30,
+                        height: 40,
                         padding: "0 15px",
-                        background: "var(--sunk)",
+                        background: "var(--canvas)",
                         borderColor: "var(--line-2)",
                         fontSize: 10.5,
+                fontWeight: 600,
+                letterSpacing: ".09em",
+                textTransform: "uppercase",
                         color: "var(--ink-3)",
                       }}
                     >
@@ -385,9 +391,9 @@ export default async function ApiSettingsPage({
               className="min-w-0 border font-mono"
               style={{
                 minWidth: 280,
-                height: 32,
+                height: 38,
                 padding: "0 11px",
-                borderRadius: 6,
+                borderRadius: 9,
                 fontSize: 12.5,
                 borderColor: "var(--line)",
                 background: "var(--bg)",
@@ -408,9 +414,9 @@ export default async function ApiSettingsPage({
               type="submit"
               className="ohd-hover-edge-ink grid place-items-center border font-semibold"
               style={{
-                height: 32,
+                height: 38,
                 padding: "0 13px",
-                borderRadius: 6,
+                borderRadius: 9,
                 fontSize: 13,
                 borderColor: "var(--line)",
                 background: "var(--panel)",

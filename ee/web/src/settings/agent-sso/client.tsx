@@ -273,15 +273,18 @@ export function ScimGroupsField({
         style={{ borderRadius: 10, borderColor: "var(--line)", background: "var(--panel)" }}
       >
         <div
-          className="grid items-center border-b font-bold"
+          className="grid items-center border-b"
           style={{
             gridTemplateColumns: GROUP_GRID,
             minWidth: 700,
-            height: 34,
+            height: 40,
             padding: "0 15px",
-            background: "var(--sunk)",
+            background: "var(--canvas)",
             borderColor: "var(--line)",
             fontSize: 11,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: ".09em",
             color: "var(--ink-3)",
           }}
         >

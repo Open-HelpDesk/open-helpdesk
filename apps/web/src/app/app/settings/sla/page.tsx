@@ -59,10 +59,10 @@ function TargetInput({ name, value }: { name: string; value?: number }) {
       placeholder="—"
       className="tabular-nums"
       style={{
-        height: 32,
+        height: 38,
         padding: "0 10px",
         border: "1px solid var(--line)",
-        borderRadius: 6,
+        borderRadius: 9,
         background: "var(--bg)",
         color: "var(--ink)",
         fontSize: 13,
@@ -197,15 +197,15 @@ export default async function SlaPage({
 
   const newPolicyTrigger = (
     <span
-      className="inline-flex items-center rounded-md px-3.5 font-semibold"
-      style={{ color: "var(--on-brand)", height: 32, fontSize: 13, background: "var(--acc)" }}
+      className="inline-flex items-center rounded-[9px] px-3.5 font-semibold"
+      style={{ color: "var(--on-brand)", height: 38, fontSize: 13, background: "var(--acc)" }}
     >
       {t("app.settings.sla.newPolicy")}
     </span>
   );
 
   return (
-    <PageShell maxWidth={1000}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.sla.title")}
         subtitle={t("app.settings.sla.subtitle")}
@@ -226,7 +226,7 @@ export default async function SlaPage({
                       height: 36,
                       padding: "0 11px",
                       border: "1px solid var(--line)",
-                      borderRadius: 6,
+                      borderRadius: 9,
                       background: "var(--bg)",
                       color: "var(--ink)",
                       fontSize: 13.5,
@@ -253,8 +253,8 @@ export default async function SlaPage({
                 </label>
                 <button
                   type="submit"
-                  className="self-start rounded-md px-3.5 font-semibold"
-                  style={{ height: 32, fontSize: 13, background: "var(--acc)" }}
+                  className="self-start rounded-[9px] px-3.5 font-semibold"
+                  style={{ height: 38, fontSize: 13, background: "var(--acc)" }}
                 >
                   {t("app.settings.sla.createPolicy")}
                 </button>
@@ -311,9 +311,9 @@ export default async function SlaPage({
                 <Drawer
                   trigger={
                     <span
-                      className="inline-flex items-center rounded-md border px-3 font-medium"
+                      className="inline-flex items-center rounded-[9px] border px-3 font-medium"
                       style={{
-                        height: 32,
+                        height: 38,
                         fontSize: 12.5,
                         borderColor: "var(--line)",
                         background: "var(--panel)",
@@ -362,8 +362,8 @@ export default async function SlaPage({
                     )}
                     <button
                       type="submit"
-                      className="self-start rounded-md px-3.5 font-semibold"
-                      style={{ color: "var(--on-brand)", height: 32, fontSize: 13, background: "var(--acc)" }}
+                      className="self-start rounded-[9px] px-3.5 font-semibold"
+                      style={{ color: "var(--on-brand)", height: 38, fontSize: 13, background: "var(--acc)" }}
                     >
                       {t("app.settings.sla.save")}
                     </button>
@@ -372,9 +372,9 @@ export default async function SlaPage({
                     <form action={deleteSlaPolicy} className="mt-2">
                       <input type="hidden" name="policyId" value={selected.id} />
                       <button
-                        className="ohd-hover-edge-ink rounded-md border px-3 font-medium"
+                        className="ohd-hover-edge-ink rounded-[9px] border px-3 font-medium"
                         style={{
-                          height: 32,
+                          height: 38,
                           fontSize: 12.5,
                           borderColor: "var(--dang)",
                           color: "var(--dang)",
@@ -405,12 +405,14 @@ export default async function SlaPage({
                       gridTemplateColumns: TARGET_GRID,
                       minWidth: TARGET_MIN_WIDTH,
                       padding: "0 15px",
-                      height: 36,
+                      height: 40,
                       alignItems: "center",
-                      background: "var(--sunk)",
+                      background: "var(--canvas)",
                       borderBottom: "1px solid var(--line)",
                       fontSize: 11,
-                      fontWeight: 700,
+                letterSpacing: ".09em",
+                textTransform: "uppercase",
+                      fontWeight: 600,
                       color: "var(--ink-3)",
                     }}
                   >
@@ -635,8 +637,8 @@ export default async function SlaPage({
                 </label>
                 <button
                   type="submit"
-                  className="self-start rounded-md px-3.5 font-semibold"
-                  style={{ color: "var(--on-brand)", height: 32, fontSize: 13, background: "var(--acc)" }}
+                  className="self-start rounded-[9px] px-3.5 font-semibold"
+                  style={{ color: "var(--on-brand)", height: 38, fontSize: 13, background: "var(--acc)" }}
                 >
                   {t("app.settings.sla.create")}
                 </button>
@@ -814,8 +816,8 @@ export default async function SlaPage({
                       </label>
                       <button
                         type="submit"
-                        className="self-start rounded-md px-3.5 font-semibold"
-                        style={{ color: "var(--on-brand)", height: 32, fontSize: 13, background: "var(--acc)" }}
+                        className="self-start rounded-[9px] px-3.5 font-semibold"
+                        style={{ color: "var(--on-brand)", height: 38, fontSize: 13, background: "var(--acc)" }}
                       >
                         {t("app.settings.sla.add")}
                       </button>

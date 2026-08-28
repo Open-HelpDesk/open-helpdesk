@@ -103,7 +103,7 @@ export default async function RuleEditorPage({
   ];
 
   return (
-    <PageShell maxWidth={1000}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.rules.automationsTitle")}
         subtitle={t("app.settings.rules.automationsSubtitle")}

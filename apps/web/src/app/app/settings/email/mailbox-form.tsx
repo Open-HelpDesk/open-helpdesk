@@ -162,9 +162,9 @@ export function MailboxForm({
           <button
             type="submit"
             formAction={deleteMailbox}
-            className="rounded-md border px-3 font-semibold"
+            className="rounded-[9px] border px-3 font-semibold"
             style={{
-              height: 32,
+              height: 38,
               fontSize: 13,
               borderColor: "var(--dang)",
               color: "var(--dang)",
@@ -177,8 +177,8 @@ export function MailboxForm({
         )}
         <button
           type="submit"
-          className="rounded-md px-3.5 font-semibold"
-          style={{ color: "var(--on-brand)", height: 32, fontSize: 13, background: "var(--acc)" }}
+          className="rounded-[9px] px-3.5 font-semibold"
+          style={{ color: "var(--on-brand)", height: 38, fontSize: 13, background: "var(--acc)" }}
         >
           {mailbox ? t("app.settings.email.save") : t("app.settings.email.add")}
         </button>

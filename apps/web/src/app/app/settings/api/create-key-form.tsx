@@ -56,9 +56,9 @@ export function CreateKeyForm({
           className="min-w-0 border"
           style={{
             minWidth: 250,
-            height: 32,
+            height: 38,
             padding: "0 11px",
-            borderRadius: 6,
+            borderRadius: 9,
             fontSize: 12.5,
             borderColor: "var(--line)",
             background: "var(--bg)",
@@ -70,9 +70,9 @@ export function CreateKeyForm({
           defaultValue="read"
           className="border"
           style={{
-            height: 32,
+            height: 38,
             padding: "0 9px",
-            borderRadius: 6,
+            borderRadius: 9,
             fontSize: 12.5,
             borderColor: "var(--line)",
             background: "var(--bg)",
@@ -88,9 +88,9 @@ export function CreateKeyForm({
           disabled={pending}
           className="ohd-hover-edge-ink grid place-items-center border font-semibold disabled:opacity-50"
           style={{
-            height: 32,
+            height: 38,
             padding: "0 13px",
-            borderRadius: 6,
+            borderRadius: 9,
             fontSize: 13,
             borderColor: "var(--line)",
             background: "var(--panel)",

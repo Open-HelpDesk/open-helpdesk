@@ -1,9 +1,17 @@
 "use client";
 
 /**
- * 220 px secondary navigation of the admin area (shared template):
- * "Settings" title 15px/600, 10.5px/700 uppercase groups, 13px items with EE
- * badges on the screens reserved for the Pro plan.
+ * 236 px secondary navigation of the admin area (V2): groups in 11px/700 ink
+ * spaced .12em, items on radius 9 that tint brand when current, EE badges on the
+ * screens the Enterprise edition unlocks.
+ *
+ * The V1 "Settings" heading at the top is gone: the shell's breadcrumb already
+ * says Administration, and the rail was repeating it.
+ *
+ * The mockup folds developers and billing into one "Developers & account" group.
+ * They stay apart here because self-hosted has no billing at all — a group whose
+ * title promises an account section that is not there reads worse than two
+ * groups that each say what they hold.
  */
 import type { CSSProperties } from "react";
 import Link from "next/link";
@@ -70,54 +78,58 @@ export function SettingsNav({ edition }: { edition: Edition }) {
 
   return (
     <nav
-      className="shrink-0 overflow-y-auto border-r"
-      style={{ width: 220, background: "var(--bg)", borderColor: "var(--line)", paddingBottom: 18 }}
+      className="flex shrink-0 flex-col overflow-y-auto border-r"
+      style={{
+        width: 236,
+        background: "var(--panel)",
+        borderColor: "var(--line)",
+        padding: "16px 10px",
+        gap: 16,
+      }}
     >
-      <p
-        className="font-semibold"
-        style={{ fontSize: 15, color: "var(--ink)", padding: "16px 16px 6px" }}
-      >
-        {t("app.shell.settings")}
-      </p>
       {groups.map((group) => (
-        <div key={group.titleKey}>
+        <div key={group.titleKey} className="flex flex-col" style={{ gap: 1 }}>
           <p
-            className="font-bold uppercase"
+            className="uppercase"
             style={{
-              fontSize: 10.5,
-              letterSpacing: "0.07em",
-              color: "var(--ink-3)",
-              padding: "12px 16px 5px",
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: ".12em",
+              color: "var(--ink)",
+              padding: "0 10px 7px",
             }}
           >
             {t(group.titleKey)}
           </p>
-          <ul className="flex flex-col" style={{ padding: "0 8px" }}>
+          <ul className="flex flex-col" style={{ gap: 1 }}>
             {group.items.map((item) => {
               const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="ohd-row flex items-center gap-2"
+                    className="ohd-row flex items-center"
                     style={{
-                      padding: "7px 9px",
-                      borderRadius: 6,
-                      fontSize: 13,
-                      fontWeight: active ? 600 : 400,
-                      "--row-bg": active ? "var(--acc-t)" : "transparent",
-                      color: active ? "var(--acc)" : "var(--ink)",
+                      gap: 8,
+                      padding: "8px 10px",
+                      borderRadius: 9,
+                      fontSize: 13.5,
+                      fontWeight: active ? 600 : 450,
+                      "--row-bg": active ? "var(--brand-t)" : "transparent",
+                      color: active ? "var(--brand)" : "var(--ink-2)",
                     } as CSSProperties}
                   >
                     <span className="min-w-0 flex-1 truncate">{t(item.labelKey)}</span>
                     {item.ee && (
                       <span
-                        className="rounded-full font-bold"
+                        className="font-bold"
                         style={{
                           fontSize: 9.5,
+                          letterSpacing: ".05em",
                           padding: "1px 6px",
-                          background: "var(--new-t)",
-                          color: "var(--new)",
+                          borderRadius: 5,
+                          background: "var(--viol-t)",
+                          color: "var(--viol)",
                         }}
                       >
                         EE

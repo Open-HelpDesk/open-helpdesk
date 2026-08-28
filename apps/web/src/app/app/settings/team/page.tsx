@@ -107,7 +107,7 @@ export default async function TeamPage({
   ];
 
   return (
-    <PageShell maxWidth={1100}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.workspace.teamTitle")}
         subtitle={t("app.settings.workspace.teamSubtitle")}
@@ -129,7 +129,7 @@ export default async function TeamPage({
               Hidden in self-hosted: no quota, and its CTA leads to ST-11. */}
           {quota !== null && (
           <div
-            className="flex flex-wrap items-center rounded-[10px] border"
+            className="flex flex-wrap items-center rounded-[14px] border"
             style={{
               padding: "13px 15px",
               gap: 14,
@@ -164,9 +164,9 @@ export default async function TeamPage({
             </span>
             <Link
               href="/app/settings/billing"
-              className="ohd-hover-edge-ink inline-flex items-center justify-center rounded-md border font-semibold"
+              className="ohd-hover-edge-ink inline-flex items-center justify-center rounded-[9px] border font-semibold"
               style={{
-                height: 32,
+                height: 38,
                 padding: "0 13px",
                 fontSize: 13,
                 borderColor: seatFull ? "var(--acc)" : "var(--line)",
@@ -183,7 +183,7 @@ export default async function TeamPage({
 
           {/* Agents table */}
           <div
-            className="overflow-x-auto rounded-[10px] border"
+            className="overflow-x-auto rounded-[14px] border"
             style={{ background: "var(--panel)", borderColor: "var(--line)" }}
           >
             <div
@@ -192,12 +192,13 @@ export default async function TeamPage({
                 gridTemplateColumns: AGENT_GRID,
                 minWidth: 880,
                 padding: "0 14px",
-                height: 34,
-                background: "var(--sunk)",
+                height: 40,
+                background: "var(--canvas)",
                 borderColor: "var(--line)",
                 fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: "0.03em",
+                textTransform: "uppercase",
+                fontWeight: 600,
+                letterSpacing: ".09em",
                 color: "var(--ink-3)",
               }}
             >
@@ -364,7 +365,7 @@ export default async function TeamPage({
           >
             {teamRows.length === 0 && (
               <div
-                className="rounded-[10px] border"
+                className="rounded-[14px] border"
                 style={{ background: "var(--panel)", borderColor: "var(--line)", padding: 15 }}
               >
                 <p style={{ fontSize: 13, color: "var(--ink-2)" }}>
@@ -383,7 +384,7 @@ export default async function TeamPage({
               return (
                 <div
                   key={team.id}
-                  className="overflow-hidden rounded-[10px] border"
+                  className="overflow-hidden rounded-[14px] border"
                   style={{ background: "var(--panel)", borderColor: "var(--line)" }}
                 >
                   <div
@@ -469,9 +470,9 @@ export default async function TeamPage({
           <Drawer
             title={t("app.settings.workspace.teamEditTitle")}
             trigger={<>{t("app.settings.workspace.teamCreate")}</>}
-            triggerClassName="inline-flex items-center justify-center self-start rounded-md border font-semibold"
+            triggerClassName="inline-flex items-center justify-center self-start rounded-[9px] border font-semibold"
             triggerStyle={{
-              height: 32,
+              height: 38,
               padding: "0 13px",
               fontSize: 13,
               borderColor: "var(--line)",

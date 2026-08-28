@@ -111,7 +111,7 @@ export default async function PortalSettingsPage({
   ];
 
   return (
-    <PageShell maxWidth={1100}>
+    <PageShell>
       <PageHeader
         title={t("app.settings.portal.title")}
         subtitle={t("app.settings.portal.subtitle")}
