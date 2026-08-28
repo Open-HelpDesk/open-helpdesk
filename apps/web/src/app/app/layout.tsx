@@ -13,19 +13,20 @@ import {
 import { isManager, requireAgent } from "@/lib/session";
 import { requireTenant } from "@/lib/tenant";
 import { billingOf } from "@/lib/entitlements";
-import { Avatar } from "@/components/ticket-bits";
+
 import { getEdition } from "@openhelpdesk/config";
 import { CommandPalette } from "@/components/command-palette";
-import { RailNav, TopBar, type ShellCounts } from "@/components/app-shell";
-import { SignOutButton } from "./sign-out-button";
+import { RailNav, TopBar, type ShellAgent, type ShellCounts } from "@/components/app-shell";
+import { agentNotifications } from "@/lib/notifications";
 import { I18nProvider } from "@/i18n/client";
 import { getT } from "@/i18n/server";
 
 /**
- * Shared shell for the agent workspace (AG-03 → AG-10): 64 px rail (32×32 logo, 7 icons
- * 40×40 with active states, red badge on Inbox = the agent's open tickets, 30×30 avatar
- * at the bottom) + 48 px topbar (dynamic title + subtitle, ⌘K, bell, "+ New
- * ticket").
+ * Shared shell for the agent workspace (AG-03 → AG-10), V2 layout.
+ *
+ * The 56 px topbar now spans the full width and the 60 px rail sits under it,
+ * which is what lets the breadcrumb and the centred search read as belonging to
+ * the whole workspace rather than to the pane on the right.
  */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   // Ahead of requireAgent, which would send an invented subdomain to /login
@@ -136,6 +137,37 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const t = await getT();
 
+  const notifications = await agentNotifications(
+    tenant.id,
+    agent.id,
+    agent.notificationsReadAt ?? null,
+    t,
+  );
+
+  const shellAgent: ShellAgent = {
+    name: agent.name,
+    email: agent.email,
+    roleLabel: t(
+      agent.role === "owner"
+        ? "app.settings.workspace.roleOwner"
+        : agent.role === "admin"
+          ? "app.settings.workspace.roleAdmin"
+          : agent.role === "viewer"
+            ? "app.settings.workspace.roleViewer"
+            : "app.settings.workspace.roleAgent",
+    ),
+    // Two letters from the name, the same rule the avatars use elsewhere.
+    initials:
+      agent.name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((w) => w[0]!.toUpperCase())
+        .join("") || agent.email[0]!.toUpperCase(),
+    available: agent.available,
+    isManager: isManager(agent.role),
+  };
+
   // Shell banners (ST-11): a failed payment shows its deadline in red; a trial
   // in its last three days shows its end date. Managers get the link to act.
   const billing = billingOf(tenant);
@@ -160,75 +192,40 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <I18nProvider locale={t.locale} dict={t.dict}>
-      <div className="ohd flex h-screen overflow-hidden">
-        {/* Rail 64 px */}
-        <aside
-          className="flex w-16 shrink-0 flex-col items-center border-r"
-          style={{ padding: "10px 0", background: "var(--panel)", borderColor: "var(--line)" }}
-        >
-          {/* The tenant logo (ST-01) takes the place of the initial square,
-              here just as in the portal header. */}
-          {branding.logoUrl ? (
-            /* eslint-disable-next-line @next/next/no-img-element -- an SVG or an
-               ICO uploaded by the tenant does not go through the image optimizer. */
-            <img
-              src={branding.logoUrl}
-              alt={tenant.name}
-              title={tenant.name}
-              className="mb-2 object-contain"
-              style={{ width: 32, height: 32, borderRadius: 8, background: "var(--sunk)" }}
-            />
-          ) : (
-            <div
-              className="mb-2 flex items-center justify-center font-bold text-white"
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 8,
-                fontSize: 14,
-                background: branding.accentColor || "var(--acc)",
-              }}
-              title={tenant.name}
-            >
-              {tenant.name[0]?.toUpperCase()}
-            </div>
-          )}
+      <div className="ohd flex h-screen flex-col overflow-hidden">
+        <Suspense fallback={<div style={{ height: 56 }} />}>
+          <TopBar
+            counts={counts}
+            agent={shellAgent}
+            notifications={notifications.items}
+            unread={notifications.unread}
+          />
+        </Suspense>
 
-          <RailNav inboxBadge={counts.inbox} />
-
-          <div className="mt-auto flex flex-col items-center gap-1.5">
-            <SignOutButton />
-            <Avatar name={agent.name} size={30} bordered />
+        {banner && (
+          <div
+            className="flex shrink-0 items-center justify-center gap-3 border-b px-4 text-center"
+            style={{
+              minHeight: 34,
+              fontSize: 12.5,
+              fontWeight: 600,
+              background: banner.tone === "dang" ? "var(--dang-t)" : "var(--brand-t)",
+              borderColor: banner.tone === "dang" ? "var(--dang)" : "var(--brand-b)",
+              color: banner.tone === "dang" ? "var(--dang)" : "var(--brand-2)",
+            }}
+          >
+            <span>{banner.text}</span>
+            {isManager(agent.role) && (
+              <a href="/app/settings/billing" className="underline" style={{ fontWeight: 700 }}>
+                {t("app.shell.bannerBillingCta")}
+              </a>
+            )}
           </div>
-        </aside>
+        )}
 
-        <div className="flex min-w-0 flex-1 flex-col">
-          <Suspense fallback={<div style={{ height: 48 }} />}>
-            <TopBar counts={counts} />
-          </Suspense>
-
-          {banner && (
-            <div
-              className="flex shrink-0 items-center justify-center gap-3 border-b px-4 text-center"
-              style={{
-                minHeight: 34,
-                fontSize: 12.5,
-                fontWeight: 600,
-                background: banner.tone === "dang" ? "var(--dang-t)" : "var(--acc-t)",
-                borderColor: banner.tone === "dang" ? "var(--dang)" : "var(--acc-b)",
-                color: banner.tone === "dang" ? "var(--dang)" : "var(--acc-2)",
-              }}
-            >
-              <span>{banner.text}</span>
-              {isManager(agent.role) && (
-                <a href="/app/settings/billing" className="underline" style={{ fontWeight: 700 }}>
-                  {t("app.shell.bannerBillingCta")}
-                </a>
-              )}
-            </div>
-          )}
-
-          <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
+        <div className="flex min-h-0 flex-1">
+          <RailNav inboxBadge={counts.inbox} />
+          <div className="min-w-0 flex-1 overflow-hidden">{children}</div>
         </div>
 
         <CommandPalette edition={getEdition()} />

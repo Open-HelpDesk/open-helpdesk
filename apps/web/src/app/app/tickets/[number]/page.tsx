@@ -16,7 +16,7 @@ import {
 } from "@/lib/format";
 import { getT, type Translate } from "@/i18n/server";
 import { Avatar, SlaClock, StatusChip } from "@/components/ticket-bits";
-import { TopbarOverride } from "@/components/app-shell";
+import { BreadcrumbLeaf } from "@/components/app-shell";
 import { ChipVisual, CopyLinkChip, MergeChip, chipStyle } from "./header-tools";
 import { MessageAttachments, type AttachmentData } from "./attachments";
 import { PropsForm } from "./props-panel";
@@ -201,7 +201,9 @@ export default async function TicketPage({
     // assignee, team, priority, type, SLA and contact record with no way at all
     // to reach them — not even a fallback.
     <div className="flex h-full max-xl:flex-col max-xl:overflow-y-auto">
-      <TopbarOverride title={t("app.ticket.topbarTitle")} subtitle={positionLabel} />
+      {/* V2: the topbar shows where you are — "Tickets / #4821" — and the
+          position in the view moved next to the ←/→ buttons, where it belongs. */}
+      <BreadcrumbLeaf leaf={`#${ticket.number}`} />
 
       {/* Conversation column */}
       <div className="flex min-w-0 flex-1 flex-col max-xl:min-h-0" style={{ background: "var(--bg)" }}>

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@openhelpdesk/ui/tokens.css";
+@import "@openhelpdesk/ui/fonts.css";
 
 body {
   background: var(--canvas);

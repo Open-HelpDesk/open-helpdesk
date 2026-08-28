@@ -9,37 +9,53 @@
  * Dark theme: stamp [data-theme="dark"] on <html>.
  */
 
-/* ---------- 1. Product — light ---------- */
+/* ---------- 1. Product — light (V2) ---------- */
 :root {
-  --acc: #0b5f46;
-  --acc-t: #e7f1ec;
-  --acc-b: #bfdbcf;
-  --canvas: #f6f8f7;
+  /* V2 renames the accent to --brand and pulls the neutrals onto the values the
+     customer portal already used, so the three product surfaces finally share
+     one palette instead of three near-identical ones. The --acc* names stay as
+     aliases: they are spelled across the whole app, and a rename would have been
+     a few hundred edits with nothing to show for them. */
+  --brand: #0b5f46;
+  --brand-2: #0e7a58;
+  --brand-t: #eaf3ee;
+  --brand-b: #c7ddd3;
+  --acc: var(--brand);
+  --acc-2: var(--brand-2);
+  --acc-t: var(--brand-t);
+  --acc-b: var(--brand-b);
+  --canvas: #f3f6f4;
   --bg: #ffffff;
   --panel: #ffffff;
-  --sunk: #f1f4f2;
+  --sunk: #f0f4f1;
   --hi: #fff9db;
-  --ink: #11211c;
-  --ink-2: #5b6b65;
-  --ink-3: #8a9993;
-  --mute: #5f6f68;
-  --line: #e2e7e4;
-  --line-2: #edf1ef;
-  --acc-2: #0e7a58;
+  --ink: #0d1c17;
+  --ink-2: #51625b;
+  --ink-3: #84948d;
+  --mute: #84948d;
+  --line: #e4e9e6;
+  --line-2: #eef2f0;
   /* Internal notes — always pale yellow + padlock (never ambiguous) */
-  --note: #fffbeb;
-  --note-line: #f5dfa0;
-  /* Ticket statuses: new / open / waiting / on hold / solved / closed */
-  --new: #6d28d9;
-  --new-t: #f1eafd;
+  --note: #fdf6dc;
+  --note-b: #efe3b0;
+  --note-line: var(--note-b);
+  /* Note ink: the V2 composer and the "internal note" chip use it for text on
+     --note, where --wait is too orange to read as the same family. */
+  --note-ink: #8a6d1a;
+  /* Ticket statuses: new / open / waiting / on hold / solved / closed.
+     V2 shifts "new" from indigo to violet and names it --viol. */
+  --viol: #7c3aed;
+  --viol-t: #f3e8fd;
+  --new: var(--viol);
+  --new-t: var(--viol-t);
   --open: #1d4ed8;
-  --open-t: #e8eefc;
+  --open-t: #e9eefc;
   --wait: #b45309;
-  --wait-t: #fdf1e1;
+  --wait-t: #fdf2e3;
   --pause: #546a7b;
   --pause-t: #edf1f4;
   --ok: #0e7a58;
-  --ok-t: #e4f1ea;
+  --ok-t: #e5f1ea;
   --closed: #6b7280;
   --closed-t: #f0f1f3;
   --dang: #c0342b;
@@ -49,9 +65,13 @@
   --chart-2: #2563eb;
   /* Public site */
   --site-dark: #08281e;
-  /* Typography */
-  --font-ui: "Inter", Inter, system-ui, sans-serif;
+  /* Typography — the faces are shipped by fonts.css, not merely named here. */
+  --font-ui: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* V2 sets titles in Bricolage Grotesque: screen headings, the wordmark, KPI
+     figures. Bricolage has no Cyrillic or Greek face, so those languages fall
+     back to Inter — which is why the fallback is Inter and not a generic. */
+  --font-title: "Bricolage Grotesque", "Inter", system-ui, sans-serif;
   /* Scrims — read off the agent and administration mockups. Four densities, one
      per kind of surface laid over the screen; the mockups hardcode them, hence
      identical in both themes (they are already near opaque).
@@ -62,14 +82,21 @@
   --scrim-viewer: rgba(6, 12, 10, 86%); /* attachment viewer */
   /* Disabled/locked panel: a veil in the color of the background, not a
      darkening — the content stays readable under the 3px blur. */
-  --veil: rgba(246, 248, 247, 60%);
+  --veil: rgba(243, 246, 244, 60%);
 }
 
 /* ---------- 1bis. Product — dark ---------- */
 [data-theme="dark"] {
-  --acc: #34c08d;
-  --acc-t: #12291f;
-  --acc-b: #1e4536;
+  /* V2 designs the light theme only. The dark one is a shipped feature, so it
+     keeps its own values and simply gains the new names — otherwise every V2
+     screen would lose its colours the moment the theme is switched. */
+  --brand: #34c08d;
+  --brand-2: #48d0a0;
+  --brand-t: #12291f;
+  --brand-b: #1e4536;
+  --acc: var(--brand);
+  --acc-t: var(--brand-t);
+  --acc-b: var(--brand-b);
   --canvas: #080c0b;
   --bg: #0e1413;
   --panel: #131b18;
@@ -81,12 +108,16 @@
   --mute: #96a59e;
   --line: #232e2a;
   --line-2: #1a2320;
-  --acc-2: #48d0a0;
+  --acc-2: var(--brand-2);
   --veil: rgba(8, 12, 11, 62%);
   --note: #251e0c;
-  --note-line: #5c4a16;
-  --new: #a98bf5;
-  --new-t: #241a3b;
+  --note-b: #5c4a16;
+  --note-line: var(--note-b);
+  --note-ink: #e0c46a;
+  --viol: #a98bf5;
+  --viol-t: #241a3b;
+  --new: var(--viol);
+  --new-t: var(--viol-t);
   --open: #7ba1f5;
   --open-t: #141f38;
   --wait: #e0a85c;

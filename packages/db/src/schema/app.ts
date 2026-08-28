@@ -55,6 +55,18 @@ export const messageAuthorType = app.enum("message_author_type", [
   "system",
 ]);
 export const viewShare = app.enum("view_share", ["private", "team", "everyone"]);
+/**
+ * V2 — how one ticket relates to another (AG-04, "Liés" panel).
+ *
+ * Only explicit links live in the table. "Same organisation" is not one of
+ * these: it is a fact the data already knows, and storing it would mean keeping
+ * a copy in step with every organisation change.
+ */
+export const ticketLinkRelation = app.enum("ticket_link_relation", [
+  "related",
+  "duplicate",
+  "incident",
+]);
 export const macroAvailability = app.enum("macro_availability", [
   "everyone",
   "team",
@@ -151,6 +163,23 @@ export const users = app.table(
     role: userRole("role").notNull().default("agent"),
     status: userStatus("status").notNull().default("invited"),
     avatarUrl: text("avatar_url"),
+    /**
+     * V2 — the agent says whether they are taking work.
+     *
+     * "Available" is the only state that receives an automatic assignment: a
+     * round-robin that keeps filling the queue of someone on leave is how a
+     * ticket sits untouched for a week with an owner's name on it.
+     */
+    available: boolean("available").notNull().default(true),
+    /**
+     * V2 — waterline of the notification feed.
+     *
+     * The feed is derived from what already happened (SLA breaches, rule
+     * assignments, customer replies, mentions) rather than stored as its own
+     * copy of those events, so "read" cannot mean anything but "everything up to
+     * this instant". Null = nothing read yet.
+     */
+    notificationsReadAt: timestamp("notifications_read_at", { withTimezone: true }),
     lastSeenAt: timestamp("last_seen_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -520,6 +549,89 @@ export const ticketMessages = app.table(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("messages_tenant_ticket").on(t.tenantId, t.ticketId)],
+);
+
+/**
+ * V2 — checklist carried by a ticket (AG-04, "Tasks" tab).
+ *
+ * Separate from messages on purpose: a task has a state and an owner, and the
+ * thread is a record of what was said. Resolving the ticket closes what is left
+ * open, which is why `done` is a column and not the absence of a row.
+ */
+export const ticketTasks = app.table(
+  "ticket_tasks",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    ticketId: uuid("ticket_id")
+      .notNull()
+      .references(() => tickets.id, { onDelete: "cascade" }),
+    label: text("label").notNull(),
+    /** Agent the task is on; null = nobody yet. */
+    assigneeId: uuid("assignee_id").references(() => users.id, { onDelete: "set null" }),
+    dueAt: timestamp("due_at", { withTimezone: true }),
+    done: boolean("done").notNull().default(false),
+    doneAt: timestamp("done_at", { withTimezone: true }),
+    createdById: uuid("created_by_id").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("ticket_tasks_tenant_ticket").on(t.tenantId, t.ticketId)],
+);
+
+/**
+ * V2 — notes pinned to a contact (AG-04, "Notes" panel).
+ *
+ * They belong to the person, not to the ticket: "in month-end close every month,
+ * be quick on anything touching invoicing" is worth reading on the next ticket
+ * too, which is exactly what a note buried in one thread never is.
+ */
+export const contactNotes = app.table(
+  "contact_notes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    contactId: uuid("contact_id")
+      .notNull()
+      .references(() => contacts.id, { onDelete: "cascade" }),
+    authorId: uuid("author_id").references(() => users.id, { onDelete: "set null" }),
+    body: text("body").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("contact_notes_tenant_contact").on(t.tenantId, t.contactId)],
+);
+
+/**
+ * V2 — explicit link between two tickets (AG-04, "Linked" panel).
+ *
+ * Stored one way round and read both ways: linking A to B has to surface on B,
+ * and two rows for one human fact is two chances to disagree.
+ */
+export const ticketLinks = app.table(
+  "ticket_links",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    ticketId: uuid("ticket_id")
+      .notNull()
+      .references(() => tickets.id, { onDelete: "cascade" }),
+    linkedTicketId: uuid("linked_ticket_id")
+      .notNull()
+      .references(() => tickets.id, { onDelete: "cascade" }),
+    relation: ticketLinkRelation("relation").notNull().default("related"),
+    createdById: uuid("created_by_id").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("ticket_links_tenant_ticket").on(t.tenantId, t.ticketId),
+    index("ticket_links_tenant_linked").on(t.tenantId, t.linkedTicketId),
+    uniqueIndex("ticket_links_pair").on(t.tenantId, t.ticketId, t.linkedTicketId),
+  ],
 );
 
 export const attachments = app.table("attachments", {

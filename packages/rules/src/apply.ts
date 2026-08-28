@@ -59,14 +59,27 @@ export async function applyActions(
         applied.push("team");
         break;
       case "assign_round_robin": {
-        // Active agent of the ticket's team with the fewest open tickets.
+        // Active AND available agent of the ticket's team with the fewest open
+        // tickets. Availability (V2) is the agent saying they are not taking
+        // work: keeping their queue filled while they are away is how a ticket
+        // sits for a week with an owner's name on it and nobody looking.
+        //
+        // If nobody on the team is available the ticket stays unassigned rather
+        // than being pushed onto someone: unassigned is a state the "Unassigned"
+        // view surfaces, an absent owner is one nothing surfaces.
         const teamId = patch.teamId ?? ticket.teamId;
         if (!teamId) break;
         const members = await db
           .select({ userId: teamMembers.userId })
           .from(teamMembers)
           .innerJoin(users, eq(users.id, teamMembers.userId))
-          .where(and(eq(teamMembers.teamId, teamId), eq(users.status, "active")));
+          .where(
+            and(
+              eq(teamMembers.teamId, teamId),
+              eq(users.status, "active"),
+              eq(users.available, true),
+            ),
+          );
         if (members.length === 0) break;
         const loads = await Promise.all(
           members.map(async (m) => {
