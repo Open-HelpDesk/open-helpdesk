@@ -497,6 +497,8 @@ export const lv: Dictionary = {
   "app.ticket.tabTasks": "Uzdevumi",
   "app.ticket.tabConversation": "Saruna",
   "app.ticket.internalNote": "Iekšēja piezīme",
+  "app.ticket.moreActions": "Vairāk darbību",
+  "app.ticket.reply": "Atbildēt",
   "app.ticket.formFieldsGroup": "Veidlapas lauki",
   "app.ticket.noFields": "Neviens lauks nav aizpildīts.",
   "app.ticket.slaGroup": "SLA",

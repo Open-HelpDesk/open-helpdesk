@@ -436,6 +436,8 @@ export const bg: Dictionary = {
   "app.ticket.tabTasks": "Задачи",
   "app.ticket.tabConversation": "Разговор",
   "app.ticket.internalNote": "Вътрешна бележка",
+  "app.ticket.moreActions": "Още действия",
+  "app.ticket.reply": "Отговори",
   "app.ticket.formFieldsGroup": "Полета на формуляра",
   "app.ticket.noFields": "Няма попълнени полета.",
   "app.ticket.slaGroup": "SLA",

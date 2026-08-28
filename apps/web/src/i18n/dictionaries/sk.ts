@@ -516,6 +516,8 @@ export const sk: Dictionary = {
   "app.ticket.tabTasks": "Úlohy",
   "app.ticket.tabConversation": "Konverzácia",
   "app.ticket.internalNote": "Interná poznámka",
+  "app.ticket.moreActions": "Ďalšie akcie",
+  "app.ticket.reply": "Odpovedať",
   "app.ticket.formFieldsGroup": "Polia formulára",
   "app.ticket.noFields": "Žiadne vyplnené polia.",
   "app.ticket.slaGroup": "SLA",

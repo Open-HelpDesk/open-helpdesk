@@ -492,6 +492,8 @@ export const ro: Dictionary = {
   "app.ticket.tabTasks": "Sarcini",
   "app.ticket.tabConversation": "Conversație",
   "app.ticket.internalNote": "Notă internă",
+  "app.ticket.moreActions": "Mai multe acțiuni",
+  "app.ticket.reply": "Răspunde",
   "app.ticket.formFieldsGroup": "Câmpurile formularului",
   "app.ticket.noFields": "Niciun câmp completat.",
   "app.ticket.slaGroup": "SLA",

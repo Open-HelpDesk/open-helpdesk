@@ -11,14 +11,12 @@ import {
 } from "@/lib/data";
 import {
   CHANNEL_KEYS,
-  PRIORITY_COLORS,
-  PRIORITY_KEYS,
   duration,
 } from "@/lib/format";
 import { getT, type Translate } from "@/i18n/server";
-import { Avatar, SlaClock, StatusChip } from "@/components/ticket-bits";
+import { Avatar } from "@/components/ticket-bits";
 import { BreadcrumbLeaf } from "@/components/app-shell";
-import { ChipVisual, CopyLinkChip, MergeChip, chipStyle } from "./header-tools";
+import { TicketMoreMenu } from "./header-tools";
 import { MessageAttachments, type AttachmentData } from "./attachments";
 import { PropsForm } from "./props-panel";
 import { TasksPanel, type TaskRow } from "./tasks-panel";
@@ -103,12 +101,12 @@ export default async function TicketPage({
   searchParams,
 }: {
   params: Promise<{ number: string }>;
-  searchParams: Promise<{ view?: string; tab?: string }>;
+  searchParams: Promise<{ view?: string; tab?: string; compose?: string }>;
 }) {
   const t = await getT();
   const { tenant, agent } = await requireAgent();
   const { number: numberParam } = await params;
-  const { view: viewParam, tab: tabParam } = await searchParams;
+  const { view: viewParam, tab: tabParam, compose } = await searchParams;
   const number = Number(numberParam);
   if (!Number.isInteger(number)) notFound();
 
@@ -178,10 +176,6 @@ export default async function TicketPage({
   const idx = viewNumbers.indexOf(number);
   const prevNumber = idx > 0 ? viewNumbers[idx - 1] : null;
   const nextNumber = idx >= 0 && idx < viewNumbers.length - 1 ? viewNumbers[idx + 1] : null;
-  const positionLabel =
-    idx >= 0
-      ? t("app.ticket.position", { index: idx + 1, total: viewNumbers.length })
-      : t("app.ticket.positionUnknown", { number: String(number) });
 
   // SLA badge of the header.
   const now = Date.now();
@@ -203,7 +197,6 @@ export default async function TicketPage({
 
   const [mergedBefore, mergedAfter] = t.parts("app.ticket.mergedBanner", "target");
 
-  const priorityKey = PRIORITY_KEYS[ticket.priority];
   const channelKey = CHANNEL_KEYS[ticket.channel];
 
   const customFields = (ticket.customFields ?? {}) as Record<string, unknown>;
@@ -229,132 +222,179 @@ export default async function TicketPage({
       {/* Conversation column */}
       <div className="flex min-w-0 flex-1 flex-col max-xl:min-h-0" style={{ background: "var(--bg)" }}>
         {/* Header — 2 rows, padding 12/18, gap 9 */}
+        {/* V2 header — three rows: state and actions, who and when, the tabs.
+            The subject moves into the title face and takes the room the chips
+            used to hold; merge and copy link fold into the ⋯ menu. */}
         <header
-          className="flex shrink-0 flex-col border-b"
-          style={{ padding: "12px 18px", gap: 9, borderColor: "var(--line)" }}
+          className="flex shrink-0 flex-col"
+          style={{ padding: "14px 22px 0", gap: 12, background: "var(--panel)" }}
         >
-          <div className="flex items-center" style={{ gap: 10 }}>
+          <div className="flex items-center" style={{ gap: 12 }}>
             <Link
               href={`/app/tickets?view=${view}`}
               title={t("app.ticket.backToInbox")}
-              className="grid shrink-0 place-items-center"
+              className="ohd-hover-edge-ink grid shrink-0 place-items-center"
               style={navBtnStyle}
             >
               ←
             </Link>
-            <span
-              className="shrink-0"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 12,
-                color: "var(--ink-3)",
-              }}
-            >
-              #{ticket.number}
-            </span>
-            <h1
-              className="min-w-0 flex-1 truncate"
-              style={{ fontSize: 16, fontWeight: 600, letterSpacing: "-.01em" }}
-            >
-              {ticket.subject}
-            </h1>
-            <div className="hidden items-center lg:flex" style={{ gap: 4 }}>
-              {!ticket.mergedIntoId && (
-                <MergeChip ticketId={ticket.id} ticketNumber={ticket.number} />
-              )}
-              <ChipVisual label={t("app.ticket.chipLink")} />
-              <ChipVisual label={t("app.ticket.chipToKb")} />
-              <CopyLinkChip />
-            </div>
-            <div className="flex items-center" style={{ gap: 2, marginLeft: 4 }}>
-              {prevNumber ? (
-                <Link
-                  href={`/app/tickets/${prevNumber}?view=${view}`}
-                  title={t("app.ticket.previousTicket")}
-                  className="flex items-center justify-center"
-                  style={navBtnStyle}
-                >
-                  ←
-                </Link>
-              ) : (
-                <span
-                  className="flex items-center justify-center"
-                  style={{ ...navBtnStyle, opacity: 0.4 }}
-                >
-                  ←
-                </span>
-              )}
-              {nextNumber ? (
-                <Link
-                  href={`/app/tickets/${nextNumber}?view=${view}`}
-                  title={t("app.ticket.nextTicket")}
-                  className="flex items-center justify-center"
-                  style={navBtnStyle}
-                >
-                  →
-                </Link>
-              ) : (
-                <span
-                  className="flex items-center justify-center"
-                  style={{ ...navBtnStyle, opacity: 0.4 }}
-                >
-                  →
-                </span>
-              )}
-            </div>
-          </div>
 
-          {/* Header — row 2 */}
-          <div className="flex flex-wrap items-center" style={{ gap: 7 }}>
-            <StatusChip status={ticket.status} t={t} />
-            <span
-              className="inline-flex items-center"
-              style={{ gap: 5, fontSize: 12.5, color: "var(--ink-2)" }}
-            >
-              <span
-                className="rounded-full"
-                style={{
-                  width: 7,
-                  height: 7,
-                  background: PRIORITY_COLORS[ticket.priority] ?? "var(--ink-3)",
-                }}
-              />
-              {priorityKey ? t(priorityKey) : ticket.priority}
-            </span>
+            {/* The SLA badge leads, before the subject: on an overdue ticket it is
+                the first thing that has to register. */}
             {isOpen && remaining !== null && (
               <span
-                className="inline-flex items-center tabular-nums"
+                className="whitespace-nowrap"
                 style={{
-                  gap: 4,
-                  padding: "2px 8px",
-                  borderRadius: 5,
-                  fontSize: 11.5,
-                  fontWeight: 600,
-                  ...(remaining < 0
-                    ? {
-                        background: "var(--dang-t)",
-                        color: "var(--dang)",
-                        border: "1px solid var(--dang)",
-                      }
-                    : remaining < 30 * 60_000
-                      ? {
-                          background: "var(--wait-t)",
-                          color: "var(--wait)",
-                          border: "1px solid var(--wait)",
-                        }
-                      : {
-                          color: "var(--ink-3)",
-                          border: "1px solid var(--line)",
-                        }),
+                  padding: "4px 12px",
+                  borderRadius: 999,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  background: remaining < 0 ? "var(--dang-t)" : "var(--wait-t)",
+                  color: remaining < 0 ? "var(--dang)" : "var(--wait)",
                 }}
               >
-                <SlaClock />
                 {remaining < 0
                   ? t("app.ticket.slaOverdueBy", { duration: duration(t, -remaining) })
                   : t("app.ticket.slaRemaining", { duration: duration(t, remaining) })}
               </span>
             )}
-            <span style={{ fontSize: 12, color: "var(--ink-3)" }}>
+
+            {/* The subject truncates so the actions keep their place: wrapping
+                pushed them under the title, where they read as belonging to the
+                subject rather than to the ticket. */}
+            <h1
+              className="min-w-0 flex-1 truncate"
+              style={{
+                fontFamily: "var(--font-title)",
+                fontSize: 21,
+                fontWeight: 600,
+                letterSpacing: "-.015em",
+              }}
+            >
+              {ticket.subject}
+            </h1>
+
+            <div className="flex flex-none items-center" style={{ gap: 8 }}>
+              {!ticket.mergedIntoId && (
+                <>
+                  <Link
+                    href={`/app/tickets/${ticket.number}?view=${view}#composer`}
+                    className="flex items-center font-semibold text-white"
+                    style={{
+                      height: 36,
+                      padding: "0 16px",
+                      borderRadius: 9,
+                      background: "var(--brand)",
+                      fontSize: 13.5,
+                    }}
+                  >
+                    {t("app.ticket.reply")}
+                  </Link>
+                  <Link
+                    href={`/app/tickets/${ticket.number}?view=${view}&compose=note#composer`}
+                    className="flex items-center"
+                    style={{
+                      height: 36,
+                      padding: "0 14px",
+                      border: "1px solid var(--note-b)",
+                      background: "var(--note)",
+                      borderRadius: 9,
+                      fontSize: 13.5,
+                      fontWeight: 500,
+                      color: "var(--note-ink)",
+                    }}
+                  >
+                    {t("app.ticket.internalNote")}
+                  </Link>
+                  <Link
+                    href={tabHref("resolution")}
+                    className="ohd-hover-edge-ink flex items-center"
+                    style={{
+                      height: 36,
+                      padding: "0 14px",
+                      border: "1px solid var(--line)",
+                      borderRadius: 9,
+                      background: "var(--panel)",
+                      fontSize: 13.5,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {t("app.ticket.tabResolution")}
+                  </Link>
+                  <TicketMoreMenu ticketId={ticket.id} ticketNumber={ticket.number} />
+                </>
+              )}
+
+              {/* Position in the view sits with the arrows that move through it. */}
+              <div
+                className="flex items-center overflow-hidden"
+                style={{ border: "1px solid var(--line)", borderRadius: 9 }}
+              >
+                {prevNumber ? (
+                  <Link
+                    href={`/app/tickets/${prevNumber}?view=${view}`}
+                    title={t("app.ticket.previousTicket")}
+                    className="ohd-row grid place-items-center"
+                    style={{ height: 36, width: 32, color: "var(--ink-2)" }}
+                  >
+                    ‹
+                  </Link>
+                ) : (
+                  <span
+                    className="grid place-items-center"
+                    style={{ height: 36, width: 32, color: "var(--ink-3)", opacity: 0.4 }}
+                  >
+                    ‹
+                  </span>
+                )}
+                <span
+                  className="flex items-center tabular-nums"
+                  style={{
+                    height: 36,
+                    padding: "0 8px",
+                    fontSize: 12,
+                    color: "var(--ink-3)",
+                    borderLeft: "1px solid var(--line-2)",
+                    borderRight: "1px solid var(--line-2)",
+                  }}
+                >
+                  {idx >= 0 ? `${idx + 1} / ${viewNumbers.length}` : `#${number}`}
+                </span>
+                {nextNumber ? (
+                  <Link
+                    href={`/app/tickets/${nextNumber}?view=${view}`}
+                    title={t("app.ticket.nextTicket")}
+                    className="ohd-row grid place-items-center"
+                    style={{ height: 36, width: 32, color: "var(--ink-2)" }}
+                  >
+                    ›
+                  </Link>
+                ) : (
+                  <span
+                    className="grid place-items-center"
+                    style={{ height: 36, width: 32, color: "var(--ink-3)", opacity: 0.4 }}
+                  >
+                    ›
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Who and when, in one line. Status and priority left the header: the
+              properties panel owns them, and they were being stated twice. */}
+          <div
+            className="flex flex-wrap items-center"
+            style={{ gap: 10, fontSize: 13, color: "var(--ink-3)" }}
+          >
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}>#{ticket.number}</span>
+            <span>·</span>
+            <span>
+              <strong style={{ color: "var(--ink-2)", fontWeight: 600 }}>{requesterName}</strong>
+              {organization ? ` — ${organization.name}` : ""}
+            </span>
+            <span>·</span>
+            <span>
               {t("app.ticket.channelCreated", {
                 channel: channelKey ? t(channelKey) : ticket.channel,
                 when: t.fmt.relative(ticket.createdAt),
@@ -599,99 +639,95 @@ export default async function TicketPage({
               </Link>
             </>
           ) : (
-            conversation.map((m) => {
-            const isNote = m.kind === "internal_note";
-            const isAgent = m.authorType === "agent";
-            const name = authorName(m.authorId, m.authorType);
-            const atts = (attachmentsByMessage.get(m.id) ?? []) as AttachmentData[];
-            const line = isNote
-              ? "var(--note-line)"
-              : isAgent
-                ? "var(--acc-b)"
-                : "var(--line)";
-            return (
-              <article
-                key={m.id}
-                className="overflow-hidden"
-                style={{
-                  borderRadius: 10,
-                  border: `1px solid ${line}`,
-                  // Without this the thread crushes itself. These bubbles are
-                  // flex items, and a flex item whose overflow is not `visible`
-                  // loses its automatic minimum size (min-height: auto → 0): as
-                  // soon as the messages together exceeded the panel, every one
-                  // of them shrank — measured at 11 px for 105 px of text — and
-                  // `overflow: hidden` cut the rest off instead of letting the
-                  // container scroll. Long tickets showed empty bubbles.
-                  flexShrink: 0,
-                  maxWidth: isNote ? "70%" : "82%",
-                  alignSelf: isAgent && !isNote ? "flex-end" : "flex-start",
-                  background: isNote
-                    ? "var(--note)"
-                    : isAgent
-                      ? "var(--acc-t)"
-                      : "var(--panel)",
-                }}
-              >
-                <div
-                  className="flex items-center"
-                  style={{
-                    gap: 8,
-                    padding: "8px 12px",
-                    borderBottom: `1px solid ${line}`,
-                  }}
-                >
-                  <Avatar name={name} size={22} fontSize={9.5} tone={isNote ? 3 : isAgent ? 2 : 0} />
-                  <span style={{ fontSize: 12.5, fontWeight: 600 }}>{name}</span>
-                  {isNote && (
-                    <span
-                      className="inline-flex items-center uppercase"
+            conversation.map((m, i) => {
+              const isNote = m.kind === "internal_note";
+              const isAgent = m.authorType === "agent";
+              const name = authorName(m.authorId, m.authorType);
+              const atts = (attachmentsByMessage.get(m.id) ?? []) as AttachmentData[];
+              const line = isNote ? "var(--note-b)" : isAgent ? "var(--brand-b)" : "var(--line)";
+              const badge = isNote
+                ? t("app.ticket.internalNote")
+                : isAgent
+                  ? t("app.ticket.authorAgent")
+                  : null;
+              return (
+                <div key={m.id} className="flex" style={{ gap: 12, flexShrink: 0 }}>
+                  {/* Avatar column with a rail: V2 threads every message onto one
+                      line instead of alternating left and right, so a long
+                      exchange reads as a single conversation rather than a chat. */}
+                  <div
+                    className="flex flex-none flex-col items-center"
+                    style={{ width: 32, gap: 6 }}
+                  >
+                    <Avatar name={name} size={32} fontSize={10.5} />
+                    {i < conversation.length - 1 && (
+                      <span className="w-px flex-1" style={{ background: "var(--line)" }} />
+                    )}
+                  </div>
+
+                  <article
+                    className="flex min-w-0 flex-1 flex-col"
+                    style={{
+                      gap: 7,
+                      border: `1px solid ${line}`,
+                      background: isNote ? "var(--note)" : "var(--panel)",
+                      borderRadius: 14,
+                      padding: "13px 16px",
+                      boxShadow: "0 1px 2px rgba(13,28,23,.03)",
+                    }}
+                  >
+                    <div className="flex items-center" style={{ gap: 9 }}>
+                      <span style={{ fontSize: 13.5, fontWeight: 600 }}>{name}</span>
+                      {badge && (
+                        <span
+                          className="uppercase"
+                          style={{
+                            padding: "2px 8px",
+                            borderRadius: 999,
+                            background: isNote ? "#f5e9be" : "var(--brand-t)",
+                            color: isNote ? "var(--note-ink)" : "var(--brand)",
+                            fontSize: 10.5,
+                            fontWeight: 700,
+                            letterSpacing: ".04em",
+                          }}
+                        >
+                          {badge}
+                        </span>
+                      )}
+                      <span className="flex-1" />
+                      <span
+                        className="whitespace-nowrap tabular-nums"
+                        style={{ fontSize: 12, color: "var(--ink-3)" }}
+                      >
+                        {t.fmt.relative(m.createdAt)}
+                      </span>
+                    </div>
+
+                    <p
+                      className="whitespace-pre-wrap"
                       style={{
-                        gap: 4,
-                        padding: "1px 7px",
-                        borderRadius: 4,
-                        fontSize: 10.5,
-                        fontWeight: 700,
-                        letterSpacing: ".03em",
-                        background: "var(--wait-t)",
-                        color: "var(--wait)",
+                        fontSize: 14,
+                        lineHeight: 1.65,
+                        color: "var(--ink)",
+                        textWrap: "pretty",
+                        // Emails carry things that do not break at a space —
+                        // tracking URLs, references, base64 — and `normal`
+                        // wrapping ran them past the bubble, where the overflow
+                        // was clipped without a scrollbar to hint at it.
+                        overflowWrap: "anywhere",
                       }}
                     >
-                      🔒 {t("app.ticket.internalNote")}
-                    </span>
-                  )}
-                  <span className="flex-1" />
-                  <span
-                    className="whitespace-nowrap"
-                    style={{ fontSize: 11.5, color: "var(--ink-3)" }}
-                  >
-                    {t.fmt.relative(m.createdAt)}
-                  </span>
+                      {m.bodyText}
+                    </p>
+
+                    <MessageAttachments
+                      attachments={atts}
+                      senderName={name}
+                      borderColor={line}
+                    />
+                  </article>
                 </div>
-                <p
-                  className="whitespace-pre-wrap"
-                  style={{
-                    padding: "11px 12px",
-                    fontSize: 13.5,
-                    lineHeight: 1.55,
-                    textWrap: "pretty",
-                    // Emails carry things that do not break at a space: tracking
-                    // URLs, internal references, base64. `normal` wrapping left
-                    // them running past the bubble, where `overflow: hidden`
-                    // clipped them — 570 px of a real message lost without a
-                    // scrollbar to hint at it.
-                    overflowWrap: "anywhere",
-                  }}
-                >
-                  {m.bodyText}
-                </p>
-                <MessageAttachments
-                  attachments={atts}
-                  senderName={name}
-                  borderColor={line}
-                />
-              </article>
-            );
+              );
             })
           )}
         </div>
@@ -703,6 +739,7 @@ export default async function TicketPage({
             ticketNumber={ticket.number}
             contactName={requesterName}
             macros={editorMacros}
+            initialKind={compose === "note" ? "internal_note" : "public_reply"}
           />
         )}
       </div>

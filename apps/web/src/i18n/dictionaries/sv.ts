@@ -455,6 +455,8 @@ export const sv: Dictionary = {
   "app.ticket.tabTasks": "Uppgifter",
   "app.ticket.tabConversation": "Konversation",
   "app.ticket.internalNote": "Intern anteckning",
+  "app.ticket.moreActions": "Fler åtgärder",
+  "app.ticket.reply": "Svara",
   "app.ticket.formFieldsGroup": "Formulärfält",
   "app.ticket.noFields": "Inga fält ifyllda.",
   "app.ticket.slaGroup": "SLA",

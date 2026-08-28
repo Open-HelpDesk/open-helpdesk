@@ -477,6 +477,8 @@ export const hr: Dictionary = {
   "app.ticket.tabTasks": "Zadaci",
   "app.ticket.tabConversation": "Razgovor",
   "app.ticket.internalNote": "Interna napomena",
+  "app.ticket.moreActions": "Više radnji",
+  "app.ticket.reply": "Odgovori",
   "app.ticket.formFieldsGroup": "Polja obrasca",
   "app.ticket.noFields": "Nijedno polje nije ispunjeno.",
   "app.ticket.slaGroup": "SLA",

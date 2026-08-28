@@ -520,6 +520,8 @@ export const lt: Dictionary = {
   "app.ticket.tabTasks": "Užduotys",
   "app.ticket.tabConversation": "Pokalbis",
   "app.ticket.internalNote": "Vidinė pastaba",
+  "app.ticket.moreActions": "Daugiau veiksmų",
+  "app.ticket.reply": "Atsakyti",
   "app.ticket.formFieldsGroup": "Formos laukai",
   "app.ticket.noFields": "Nė vienas laukas neužpildytas.",
   "app.ticket.slaGroup": "SLA",

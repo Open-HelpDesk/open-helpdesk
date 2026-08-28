@@ -454,6 +454,8 @@ export const nb: Dictionary = {
   "app.ticket.tabTasks": "Oppgaver",
   "app.ticket.tabConversation": "Samtale",
   "app.ticket.internalNote": "Internt notat",
+  "app.ticket.moreActions": "Flere handlinger",
+  "app.ticket.reply": "Svar",
   "app.ticket.formFieldsGroup": "Skjemafelter",
   "app.ticket.noFields": "Ingen felter er fylt ut.",
   "app.ticket.slaGroup": "SLA",

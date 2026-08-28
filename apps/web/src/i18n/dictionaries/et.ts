@@ -442,6 +442,8 @@ export const et: Dictionary = {
   "app.ticket.tabTasks": "Ülesanded",
   "app.ticket.tabConversation": "Vestlus",
   "app.ticket.internalNote": "Sisemine märkus",
+  "app.ticket.moreActions": "Rohkem toiminguid",
+  "app.ticket.reply": "Vasta",
   "app.ticket.formFieldsGroup": "Vormi väljad",
   "app.ticket.noFields": "Ühtegi välja pole täidetud.",
   "app.ticket.slaGroup": "SLA",

@@ -451,6 +451,8 @@ export const el: Dictionary = {
   "app.ticket.tabTasks": "Εργασίες",
   "app.ticket.tabConversation": "Συνομιλία",
   "app.ticket.internalNote": "Εσωτερική σημείωση",
+  "app.ticket.moreActions": "Περισσότερες ενέργειες",
+  "app.ticket.reply": "Απάντηση",
   "app.ticket.formFieldsGroup": "Πεδία της φόρμας",
   "app.ticket.noFields": "Δεν έχει συμπληρωθεί κανένα πεδίο.",
   "app.ticket.slaGroup": "SLA",

@@ -459,6 +459,8 @@ export const de: Dictionary = {
   "app.ticket.tabTasks": "Aufgaben",
   "app.ticket.tabConversation": "Konversation",
   "app.ticket.internalNote": "Interne Notiz",
+  "app.ticket.moreActions": "Weitere Aktionen",
+  "app.ticket.reply": "Antworten",
   "app.ticket.formFieldsGroup": "Formularfelder",
   "app.ticket.noFields": "Keine Felder ausgefüllt.",
   "app.ticket.slaGroup": "SLA",

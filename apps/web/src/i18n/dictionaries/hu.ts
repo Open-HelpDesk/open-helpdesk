@@ -448,6 +448,8 @@ export const hu: Dictionary = {
   "app.ticket.tabTasks": "Feladatok",
   "app.ticket.tabConversation": "Beszélgetés",
   "app.ticket.internalNote": "Belső megjegyzés",
+  "app.ticket.moreActions": "További műveletek",
+  "app.ticket.reply": "Válasz",
   "app.ticket.formFieldsGroup": "Az űrlap mezői",
   "app.ticket.noFields": "Nincs kitöltött mező.",
   "app.ticket.slaGroup": "SLA",

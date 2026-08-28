@@ -464,6 +464,8 @@ export const en = {
   "app.ticket.tabTasks": "Tasks",
   "app.ticket.tabConversation": "Conversation",
   "app.ticket.internalNote": "Internal note",
+  "app.ticket.moreActions": "More actions",
+  "app.ticket.reply": "Reply",
   "app.ticket.formFieldsGroup": "Form fields",
   "app.ticket.noFields": "No fields filled in.",
   "app.ticket.slaGroup": "SLA",

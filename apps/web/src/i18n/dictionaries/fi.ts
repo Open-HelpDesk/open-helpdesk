@@ -455,6 +455,8 @@ export const fi: Dictionary = {
   "app.ticket.tabTasks": "Tehtävät",
   "app.ticket.tabConversation": "Keskustelu",
   "app.ticket.internalNote": "Sisäinen muistiinpano",
+  "app.ticket.moreActions": "Lisää toimintoja",
+  "app.ticket.reply": "Vastaa",
   "app.ticket.formFieldsGroup": "Lomakkeen kentät",
   "app.ticket.noFields": "Ei täytettyjä kenttiä.",
   "app.ticket.slaGroup": "SLA",

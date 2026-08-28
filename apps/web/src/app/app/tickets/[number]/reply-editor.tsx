@@ -37,15 +37,22 @@ export function ReplyEditor({
   ticketNumber,
   contactName,
   macros,
+  initialKind = "public_reply",
 }: {
   ticketId: string;
   ticketNumber: number;
   contactName: string;
   macros: MacroOption[];
+  /**
+   * Which tab the composer opens on. The V2 header's "Internal note" button is
+   * a link carrying `compose=note`, so it has to land on the note tab — a button
+   * that scrolls to a composer showing the wrong tab is a button that misleads.
+   */
+  initialKind?: "public_reply" | "internal_note";
 }) {
   const t = useT();
   const [body, setBody] = useState("");
-  const [kind, setKind] = useState<"public_reply" | "internal_note">("public_reply");
+  const [kind, setKind] = useState<"public_reply" | "internal_note">(initialKind);
   const [nextStatus, setNextStatus] = useState("resolved");
   const [appliedMacroId, setAppliedMacroId] = useState("");
   const [statusMenu, setStatusMenu] = useState(false);
@@ -210,6 +217,7 @@ export function ReplyEditor({
 
   return (
     <form
+      id="composer"
       action={sendReply}
       onSubmit={() => {
         try {

@@ -455,6 +455,8 @@ export const da: Dictionary = {
   "app.ticket.tabTasks": "Opgaver",
   "app.ticket.tabConversation": "Samtale",
   "app.ticket.internalNote": "Intern note",
+  "app.ticket.moreActions": "Flere handlinger",
+  "app.ticket.reply": "Svar",
   "app.ticket.formFieldsGroup": "Formularfelter",
   "app.ticket.noFields": "Ingen felter udfyldt.",
   "app.ticket.slaGroup": "SLA",

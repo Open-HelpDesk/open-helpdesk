@@ -545,6 +545,8 @@ export const mt: Dictionary = {
   "app.ticket.tabTasks": "Kompiti",
   "app.ticket.tabConversation": "Konversazzjoni",
   "app.ticket.internalNote": "Nota interna",
+  "app.ticket.moreActions": "Aktar azzjonijiet",
+  "app.ticket.reply": "Wieġeb",
   "app.ticket.formFieldsGroup": "Kampi tal-formola",
   "app.ticket.noFields": "L-ebda kamp mimli.",
   "app.ticket.slaGroup": "SLA",

@@ -517,6 +517,8 @@ export const sl: Dictionary = {
   "app.ticket.tabTasks": "Naloge",
   "app.ticket.tabConversation": "Pogovor",
   "app.ticket.internalNote": "Interna opomba",
+  "app.ticket.moreActions": "Več dejanj",
+  "app.ticket.reply": "Odgovori",
   "app.ticket.formFieldsGroup": "Polja obrazca",
   "app.ticket.noFields": "Nobeno polje ni izpolnjeno.",
   "app.ticket.slaGroup": "SLA",

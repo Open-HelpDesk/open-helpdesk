@@ -545,6 +545,8 @@ export const ga: Dictionary = {
   "app.ticket.tabTasks": "Tascanna",
   "app.ticket.tabConversation": "Comhrá",
   "app.ticket.internalNote": "Nóta inmheánach",
+  "app.ticket.moreActions": "Tuilleadh gníomhartha",
+  "app.ticket.reply": "Freagair",
   "app.ticket.formFieldsGroup": "Réimsí na foirme",
   "app.ticket.noFields": "Níor líonadh isteach aon réimse.",
   "app.ticket.slaGroup": "SLA",
