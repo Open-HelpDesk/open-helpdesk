@@ -2007,6 +2007,7 @@ export const mt: Dictionary = {
   "app.settings.rules.journalNoAction": "l-ebda azzjoni",
   "app.settings.rules.duplicate": "Idduplika",
   "app.settings.rules.ruleNew": "+ Regola ġdida",
+  "app.settings.rules.ruleCreateTitle": "Regola ġdida",
   "app.settings.rules.ruleName": "Isem tar-regola",
   "app.settings.rules.ruleHintTrigger":
     "Trigger: jiġi evalwat ma' kull avveniment (ħolqien, aġġornament, messaġġ li jasal).",

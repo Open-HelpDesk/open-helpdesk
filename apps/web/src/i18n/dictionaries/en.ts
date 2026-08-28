@@ -1598,6 +1598,7 @@ export const en = {
   "app.settings.rules.journalNoAction": "no action",
   "app.settings.rules.duplicate": "Duplicate",
   "app.settings.rules.ruleNew": "+ New rule",
+  "app.settings.rules.ruleCreateTitle": "New rule",
   "app.settings.rules.ruleName": "Rule name",
   "app.settings.rules.ruleHintTrigger": "Trigger: evaluated on every event (creation, update, message received).",
   "app.settings.rules.ruleHintScheduled": "Scheduled rule: evaluated periodically by the worker (time-based conditions).",

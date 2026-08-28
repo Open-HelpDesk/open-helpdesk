@@ -1595,6 +1595,7 @@ export const nl: Dictionary = {
   "app.settings.rules.journalNoAction": "geen actie",
   "app.settings.rules.duplicate": "Dupliceren",
   "app.settings.rules.ruleNew": "+ Nieuwe regel",
+  "app.settings.rules.ruleCreateTitle": "Nieuwe regel",
   "app.settings.rules.ruleName": "Naam van de regel",
   "app.settings.rules.ruleHintTrigger": "Trigger: wordt bij elke gebeurtenis geëvalueerd (aanmaken, bijwerken, ontvangen bericht).",
   "app.settings.rules.ruleHintScheduled": "Tijdregel: wordt periodiek door de worker geëvalueerd (tijdsvoorwaarden).",

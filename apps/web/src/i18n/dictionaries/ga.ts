@@ -2010,6 +2010,7 @@ export const ga: Dictionary = {
   "app.settings.rules.journalNoAction": "gan gníomh",
   "app.settings.rules.duplicate": "Déan dúblach",
   "app.settings.rules.ruleNew": "+ Riail nua",
+  "app.settings.rules.ruleCreateTitle": "Riail nua",
   "app.settings.rules.ruleName": "Ainm na rialach",
   "app.settings.rules.ruleHintTrigger":
     "Truicear: measúnaítear é ar gach imeacht (cruthú, nuashonrú, teachtaireacht faighte).",

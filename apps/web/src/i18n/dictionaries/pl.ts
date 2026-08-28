@@ -1949,6 +1949,7 @@ export const pl: Dictionary = {
   "app.settings.rules.journalNoAction": "brak działań",
   "app.settings.rules.duplicate": "Duplikuj",
   "app.settings.rules.ruleNew": "+ Nowa reguła",
+  "app.settings.rules.ruleCreateTitle": "Nowa reguła",
   "app.settings.rules.ruleName": "Nazwa reguły",
   "app.settings.rules.ruleHintTrigger":
     "Wyzwalacz: oceniany przy każdym zdarzeniu (utworzenie, aktualizacja, odebrana wiadomość).",

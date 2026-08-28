@@ -1607,6 +1607,7 @@ export const sv: Dictionary = {
   "app.settings.rules.journalNoAction": "ingen åtgärd",
   "app.settings.rules.duplicate": "Duplicera",
   "app.settings.rules.ruleNew": "+ Ny regel",
+  "app.settings.rules.ruleCreateTitle": "Ny regel",
   "app.settings.rules.ruleName": "Regelns namn",
   "app.settings.rules.ruleHintTrigger": "Utlösare: utvärderas vid varje händelse (skapande, uppdatering, mottaget meddelande).",
   "app.settings.rules.ruleHintScheduled": "Tidsstyrd regel: utvärderas periodiskt av workern (tidsvillkor).",

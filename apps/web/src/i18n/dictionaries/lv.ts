@@ -1877,6 +1877,7 @@ export const lv: Dictionary = {
   "app.settings.rules.journalNoAction": "nav darbību",
   "app.settings.rules.duplicate": "Dublēt",
   "app.settings.rules.ruleNew": "+ Jauns noteikums",
+  "app.settings.rules.ruleCreateTitle": "Jauns noteikums",
   "app.settings.rules.ruleName": "Noteikuma nosaukums",
   "app.settings.rules.ruleHintTrigger":
     "Aktivizētājs: tiek izvērtēts pie katra notikuma (izveide, atjaunināšana, saņemts ziņojums).",

@@ -1624,6 +1624,7 @@ export const fr: Dictionary = {
   "app.settings.rules.journalNoAction": "aucune action",
   "app.settings.rules.duplicate": "Dupliquer",
   "app.settings.rules.ruleNew": "+ Nouvelle règle",
+  "app.settings.rules.ruleCreateTitle": "Nouvelle règle",
   "app.settings.rules.ruleName": "Nom de la règle",
   "app.settings.rules.ruleHintTrigger": "Déclencheur : évalué à chaque événement (création, mise à jour, message reçu).",
   "app.settings.rules.ruleHintScheduled": "Règle horaire : évaluée périodiquement par le worker (conditions temporelles).",

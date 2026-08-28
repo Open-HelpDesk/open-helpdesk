@@ -1756,6 +1756,7 @@ export const hu: Dictionary = {
   "app.settings.rules.journalNoAction": "nincs művelet",
   "app.settings.rules.duplicate": "Duplikálás",
   "app.settings.rules.ruleNew": "+ Új szabály",
+  "app.settings.rules.ruleCreateTitle": "Új szabály",
   "app.settings.rules.ruleName": "A szabály neve",
   "app.settings.rules.ruleHintTrigger":
     "Trigger: minden eseménynél kiértékeljük (létrehozás, frissítés, beérkező üzenet).",

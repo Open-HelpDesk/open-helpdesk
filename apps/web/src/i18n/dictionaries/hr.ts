@@ -1851,6 +1851,7 @@ export const hr: Dictionary = {
   "app.settings.rules.journalNoAction": "nema radnje",
   "app.settings.rules.duplicate": "Dupliciraj",
   "app.settings.rules.ruleNew": "+ Novo pravilo",
+  "app.settings.rules.ruleCreateTitle": "Novo pravilo",
   "app.settings.rules.ruleName": "Naziv pravila",
   "app.settings.rules.ruleHintTrigger":
     "Okidač: procjenjuje se pri svakom događaju (kreiranje, ažuriranje, primljena poruka).",

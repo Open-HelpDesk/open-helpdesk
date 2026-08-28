@@ -1887,6 +1887,7 @@ export const ro: Dictionary = {
   "app.settings.rules.journalNoAction": "nicio acțiune",
   "app.settings.rules.duplicate": "Duplicați",
   "app.settings.rules.ruleNew": "+ Regulă nouă",
+  "app.settings.rules.ruleCreateTitle": "Regulă nouă",
   "app.settings.rules.ruleName": "Numele regulii",
   "app.settings.rules.ruleHintTrigger":
     "Declanșator: evaluat la fiecare eveniment (creare, actualizare, mesaj primit).",

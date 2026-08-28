@@ -1948,6 +1948,7 @@ export const lt: Dictionary = {
   "app.settings.rules.journalNoAction": "jokių veiksmų",
   "app.settings.rules.duplicate": "Dubliuoti",
   "app.settings.rules.ruleNew": "+ Nauja taisyklė",
+  "app.settings.rules.ruleCreateTitle": "Nauja taisyklė",
   "app.settings.rules.ruleName": "Taisyklės pavadinimas",
   "app.settings.rules.ruleHintTrigger":
     "Paleidiklis: vertinamas per kiekvieną įvykį (sukūrimas, atnaujinimas, gautas pranešimas).",

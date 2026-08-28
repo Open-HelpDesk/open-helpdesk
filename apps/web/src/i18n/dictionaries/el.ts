@@ -1771,6 +1771,7 @@ export const el: Dictionary = {
   "app.settings.rules.journalNoAction": "καμία ενέργεια",
   "app.settings.rules.duplicate": "Δημιουργία αντιγράφου",
   "app.settings.rules.ruleNew": "+ Νέος κανόνας",
+  "app.settings.rules.ruleCreateTitle": "Νέος κανόνας",
   "app.settings.rules.ruleName": "Όνομα του κανόνα",
   "app.settings.rules.ruleHintTrigger":
     "Έναυσμα: αξιολογείται σε κάθε γεγονός (δημιουργία, ενημέρωση, λήψη μηνύματος).",

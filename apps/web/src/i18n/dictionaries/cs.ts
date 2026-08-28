@@ -1915,6 +1915,7 @@ export const cs: Dictionary = {
   "app.settings.rules.journalNoAction": "žádná akce",
   "app.settings.rules.duplicate": "Duplikovat",
   "app.settings.rules.ruleNew": "+ Nové pravidlo",
+  "app.settings.rules.ruleCreateTitle": "Nové pravidlo",
   "app.settings.rules.ruleName": "Název pravidla",
   "app.settings.rules.ruleHintTrigger":
     "Spouštěč: vyhodnocuje se při každé události (vytvoření, aktualizace, přijatá zpráva).",

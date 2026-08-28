@@ -1738,6 +1738,7 @@ export const et: Dictionary = {
   "app.settings.rules.journalNoAction": "toiminguid ei ole",
   "app.settings.rules.duplicate": "Dubleeri",
   "app.settings.rules.ruleNew": "+ Uus reegel",
+  "app.settings.rules.ruleCreateTitle": "Uus reegel",
   "app.settings.rules.ruleName": "Reegli nimi",
   "app.settings.rules.ruleHintTrigger":
     "Käivitaja: hinnatakse igal sündmusel (loomine, uuendamine, saabunud sõnum).",

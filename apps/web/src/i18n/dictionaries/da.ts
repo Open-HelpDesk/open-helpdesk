@@ -1587,6 +1587,7 @@ export const da: Dictionary = {
   "app.settings.rules.journalNoAction": "ingen handling",
   "app.settings.rules.duplicate": "Duplikér",
   "app.settings.rules.ruleNew": "+ Ny regel",
+  "app.settings.rules.ruleCreateTitle": "Ny regel",
   "app.settings.rules.ruleName": "Reglens navn",
   "app.settings.rules.ruleHintTrigger": "Udløser: evalueres ved hver hændelse (oprettelse, opdatering, modtaget besked).",
   "app.settings.rules.ruleHintScheduled": "Tidsstyret regel: evalueres jævnligt af workeren (tidsbetingelser).",

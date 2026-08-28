@@ -573,9 +573,9 @@ function TeamForm({
           <button
             type="submit"
             formAction={deleteTeam}
-            className="ohd-hover-edge-ink rounded-md border font-medium"
+            className="ohd-hover-edge-ink rounded-[9px] border font-medium"
             style={{
-              height: 34,
+              height: 38,
               padding: "0 14px",
               fontSize: 13,
               borderColor: "var(--dang)",
@@ -589,8 +589,8 @@ function TeamForm({
         <span className="flex-1" />
         <button
           type="submit"
-          className="rounded-md font-semibold"
-          style={{ color: "var(--on-brand)", height: 34, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
+          className="rounded-[9px] font-semibold"
+          style={{ color: "var(--on-brand)", height: 38, padding: "0 16px", fontSize: 13, background: "var(--acc)" }}
         >
           {t("app.settings.workspace.save")}
         </button>

@@ -378,9 +378,9 @@ export default async function BillingPage({
                   className="grid place-items-center font-semibold disabled:opacity-50"
                   style={{
                     color: "var(--on-brand)",
-                    height: 34,
+                    height: 38,
                     padding: "0 14px",
-                    borderRadius: 6,
+                    borderRadius: 9,
                     fontSize: 13,
                     background: "var(--acc)",
                     whiteSpace: "nowrap",
@@ -395,9 +395,9 @@ export default async function BillingPage({
                   title={gatewayConfigured() ? undefined : t("app.settings.workspace.requiresControlPlane")}
                   className="ohd-hover-edge-ink grid place-items-center border font-semibold disabled:opacity-50"
                   style={{
-                    height: 34,
+                    height: 38,
                     padding: "0 14px",
-                    borderRadius: 6,
+                    borderRadius: 9,
                     fontSize: 13,
                     borderColor: "var(--acc-b)",
                     background: "var(--panel)",

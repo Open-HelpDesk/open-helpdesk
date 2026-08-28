@@ -1594,6 +1594,7 @@ export const de: Dictionary = {
   "app.settings.rules.journalNoAction": "keine Aktion",
   "app.settings.rules.duplicate": "Duplizieren",
   "app.settings.rules.ruleNew": "+ Neue Regel",
+  "app.settings.rules.ruleCreateTitle": "Neue Regel",
   "app.settings.rules.ruleName": "Name der Regel",
   "app.settings.rules.ruleHintTrigger": "Auslöser: wird bei jedem Ereignis ausgewertet (Erstellung, Aktualisierung, eingegangene Nachricht).",
   "app.settings.rules.ruleHintScheduled": "Zeitregel: wird regelmäßig vom Worker ausgewertet (zeitliche Bedingungen).",

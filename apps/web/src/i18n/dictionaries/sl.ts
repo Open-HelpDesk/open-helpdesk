@@ -1936,6 +1936,7 @@ export const sl: Dictionary = {
   "app.settings.rules.journalNoAction": "brez dejanja",
   "app.settings.rules.duplicate": "Podvoji",
   "app.settings.rules.ruleNew": "+ Novo pravilo",
+  "app.settings.rules.ruleCreateTitle": "Novo pravilo",
   "app.settings.rules.ruleName": "Ime pravila",
   "app.settings.rules.ruleHintTrigger":
     "Prožilec: ovrednoten ob vsakem dogodku (ustvarjanje, posodobitev, prejeto sporočilo).",

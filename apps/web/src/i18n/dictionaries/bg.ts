@@ -1718,6 +1718,7 @@ export const bg: Dictionary = {
   "app.settings.rules.journalNoAction": "без действие",
   "app.settings.rules.duplicate": "Дублиране",
   "app.settings.rules.ruleNew": "+ Ново правило",
+  "app.settings.rules.ruleCreateTitle": "Ново правило",
   "app.settings.rules.ruleName": "Име на правилото",
   "app.settings.rules.ruleHintTrigger":
     "Тригер: оценява се при всяко събитие (създаване, обновяване, получено съобщение).",

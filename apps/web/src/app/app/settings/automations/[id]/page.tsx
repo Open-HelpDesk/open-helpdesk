@@ -118,10 +118,10 @@ export default async function RuleEditorPage({
       <SubCrumb
         parent={t("app.settings.rules.automationsTitle")}
         href="/app/settings/automations"
-        current={isNew ? t("app.settings.rules.ruleNew") : rule!.name}
+        current={isNew ? t("app.settings.rules.ruleCreateTitle") : rule!.name}
       />
       <PageHeader
-        title={isNew ? t("app.settings.rules.ruleNew") : rule!.name}
+        title={isNew ? t("app.settings.rules.ruleCreateTitle") : rule!.name}
         subtitle={t("app.settings.rules.automationsSubtitle")}
         tabs={tabs}
       />

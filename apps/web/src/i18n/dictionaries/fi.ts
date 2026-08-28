@@ -1598,6 +1598,7 @@ export const fi: Dictionary = {
   "app.settings.rules.journalNoAction": "ei toimintoja",
   "app.settings.rules.duplicate": "Monista",
   "app.settings.rules.ruleNew": "+ Uusi sääntö",
+  "app.settings.rules.ruleCreateTitle": "Uusi sääntö",
   "app.settings.rules.ruleName": "Säännön nimi",
   "app.settings.rules.ruleHintTrigger": "Triggeri: arvioidaan jokaisen tapahtuman yhteydessä (luonti, päivitys, saapunut viesti).",
   "app.settings.rules.ruleHintScheduled": "Aikataulusääntö: worker arvioi sen säännöllisin väliajoin (aikaan perustuvat ehdot).",
