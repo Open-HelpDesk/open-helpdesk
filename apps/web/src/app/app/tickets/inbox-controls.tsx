@@ -153,11 +153,11 @@ export function InboxControls({
                   : "app.priority.low",
           ),
           count: facets.priorities.find((f) => f.key === key)?.count ?? 0,
-        }))
-        // A box that would bring nothing is not offered, unless it is ticked —
-        // otherwise removing the last urgent ticket makes the filter you are
-        // using disappear from the menu.
-        .filter((i) => i.count > 0 || draft.priorities.includes(i.key)),
+        })),
+      // The four priorities are always offered, including at zero. They are a
+      // closed, ordered scale an agent knows by heart: hiding Urgent because
+      // this view holds none makes the menu change shape from view to view, and
+      // reads as "urgent no longer exists" rather than "none here".
     },
     {
       label: t("app.tickets.filterGroupChannel"),

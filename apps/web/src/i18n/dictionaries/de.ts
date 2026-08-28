@@ -1684,6 +1684,7 @@ export const de: Dictionary = {
   "app.unit.minutes": "{count} Min.",
   "app.unit.hours": "{count} Std.",
   "app.unit.hoursMinutes": "{hours} Std. {minutes}",
+  "app.unit.days": { one: "{count} Tag", other: "{count} Tage" },
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 

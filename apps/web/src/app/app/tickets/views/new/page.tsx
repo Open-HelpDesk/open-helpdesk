@@ -46,12 +46,14 @@ export default async function NewViewPage({
   ]);
 
   return (
+    /* Same layer treatment as "new ticket": scrim + blur, per the mockup. */
     <div
       className="grid h-full overflow-auto"
       style={{
         padding: "6vh 24px 40px",
         placeItems: "start center",
-        background: "var(--canvas)",
+        background: "var(--scrim-modal)",
+        backdropFilter: "blur(2px)",
       }}
     >
       <div
@@ -61,7 +63,7 @@ export default async function NewViewPage({
           borderRadius: 18,
           background: "var(--panel)",
           border: "1px solid var(--line)",
-          boxShadow: "0 18px 48px rgba(13,28,23,.10)",
+          boxShadow: "0 32px 80px rgba(0,0,0,.35)",
         }}
       >
         <div

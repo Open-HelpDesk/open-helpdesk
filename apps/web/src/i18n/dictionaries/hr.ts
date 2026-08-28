@@ -1993,6 +1993,7 @@ export const hr: Dictionary = {
   "app.unit.minutes": "{count} min",
   "app.unit.hours": "{count} h",
   "app.unit.hoursMinutes": "{hours} h {minutes}",
+  "app.unit.days": { one: "{count} dan", few: "{count} dana", other: "{count} dana" },
   "app.unit.kilobytes": "{count} kB",
   "app.unit.megabytes": "{value} MB",
 

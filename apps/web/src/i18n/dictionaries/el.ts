@@ -1916,6 +1916,7 @@ export const el: Dictionary = {
   "app.unit.minutes": "{count} λεπ.",
   "app.unit.hours": "{count} ώ.",
   "app.unit.hoursMinutes": "{hours} ώ. {minutes}",
+  "app.unit.days": { one: "{count} ημέρα", other: "{count} ημέρες" },
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 

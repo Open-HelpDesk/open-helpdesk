@@ -402,7 +402,9 @@ export default async function TicketsPage({
         {/* Table */}
         <div
           className="flex min-h-0 flex-1 flex-col overflow-auto"
-          style={{ background: "var(--bg)" }}
+          /* --canvas, not --bg: the V2 inbox is white cards on a grey ground,
+             and on white they lost their edges. */
+          style={{ background: "var(--canvas)" }}
         >
           {loadError ? (
             <div className="grid flex-1 place-items-center">

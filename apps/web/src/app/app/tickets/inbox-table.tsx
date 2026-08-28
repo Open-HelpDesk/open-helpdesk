@@ -13,7 +13,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Avatar } from "@/components/ticket-bits";
-import { PRIORITY_KEYS, STATUS_KEYS } from "@/lib/format";
+import { PRIORITY_COLORS, PRIORITY_KEYS, STATUS_KEYS } from "@/lib/format";
 import { useT } from "@/i18n/client";
 import { bulkUpdateTickets, type BulkOp } from "./actions";
 
@@ -163,9 +163,12 @@ export function InboxTable({
                 rowRefs.current[i] = el;
               }}
             >
+              {/* No onMouseEnter moving the cursor: the keyboard position is the
+                  keyboard's, and having it follow the mouse meant crossing the
+                  list on the way to something else silently re-aimed j/k and
+                  Enter. Hovering now only lifts the card (.ohd-card). */}
               <Link
                 href={row.href}
-                onMouseEnter={() => setCursor(i)}
                 className="ohd-card flex items-center"
                 style={{
                   gap: 14,
@@ -180,6 +183,20 @@ export function InboxTable({
 
                 <span className="flex min-w-0 flex-1 flex-col" style={{ gap: 2 }}>
                   <span className="flex items-center" style={{ gap: 8 }}>
+                    {/* Priority as a dot, ahead of the number: it is the one
+                        attribute of a ticket the row was not saying at all, and
+                        a dot says it without competing with the SLA pill. */}
+                    <span
+                      title={t(PRIORITY_KEYS[row.priority] ?? PRIORITY_KEYS.normal!)}
+                      aria-label={t(PRIORITY_KEYS[row.priority] ?? PRIORITY_KEYS.normal!)}
+                      style={{
+                        width: 7,
+                        height: 7,
+                        flex: "none",
+                        borderRadius: "50%",
+                        background: PRIORITY_COLORS[row.priority] ?? "var(--ink-3)",
+                      }}
+                    />
                     <span
                       style={{
                         fontFamily: "var(--font-mono)",

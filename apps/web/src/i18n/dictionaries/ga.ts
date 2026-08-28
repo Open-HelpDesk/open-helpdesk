@@ -2156,6 +2156,13 @@ export const ga: Dictionary = {
   "app.unit.minutes": "{count} min",
   "app.unit.hours": "{count} h",
   "app.unit.hoursMinutes": "{hours} h {minutes}",
+  "app.unit.days": {
+    one: "{count} lá",
+    two: "{count} lá",
+    few: "{count} lá",
+    many: "{count} lá",
+    other: "{count} lá",
+  },
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 

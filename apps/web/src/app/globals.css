@@ -101,6 +101,23 @@ body {
   border-color: var(--acc-b) !important;
 }
 
+/* Inbox card (AG-03): the mockup lifts the card on hover — brand hairline and a
+   soft drop shadow — and changes nothing else. The class was being applied with
+   no rule behind it, so the only visible reaction to the mouse was the keyboard
+   cursor moving, which is a different thing entirely. */
+.ohd-card {
+  transition:
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.ohd-card:hover {
+  border-color: var(--brand-b) !important;
+  box-shadow:
+    0 1px 2px rgba(13, 28, 23, 0.03),
+    0 8px 20px -12px rgba(13, 28, 23, 0.15) !important;
+}
+
 /* Bordered secondary button: hairline and label both go to the accent. */
 .ohd-hover-edge-ink:hover {
   border-color: var(--acc-b) !important;

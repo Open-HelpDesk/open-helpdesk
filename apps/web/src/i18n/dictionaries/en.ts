@@ -1688,6 +1688,7 @@ export const en = {
   "app.unit.minutes": "{count} min",
   "app.unit.hours": "{count} h",
   "app.unit.hoursMinutes": "{hours} h {minutes}",
+  "app.unit.days": { one: "{count} d", other: "{count} d" },
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 

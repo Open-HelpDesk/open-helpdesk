@@ -20,8 +20,15 @@ const HOUR = 60 * MIN;
 const DAY = 24 * HOUR;
 
 /** "2 h 30", "45 min" — positive remaining duration, in the tenant's language. */
+/**
+ * A delay, in the largest unit that still says something.
+ *
+ * Past 48 hours it switches to days: "291 h 21" is a number nobody converts in
+ * their head, and the minutes on it are noise at that scale.
+ */
 export function duration(t: Tr, ms: number): string {
   if (ms < HOUR) return t("app.unit.minutes", { count: Math.max(1, Math.floor(ms / MIN)) });
+  if (ms >= 48 * HOUR) return t("app.unit.days", { count: Math.floor(ms / (24 * HOUR)) });
   const h = Math.floor(ms / HOUR);
   const m = Math.floor((ms % HOUR) / MIN);
   return m > 0

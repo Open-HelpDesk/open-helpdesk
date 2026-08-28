@@ -2076,6 +2076,12 @@ export const sk: Dictionary = {
   "app.unit.minutes": "{count} min",
   "app.unit.hours": "{count} h",
   "app.unit.hoursMinutes": "{hours} h {minutes}",
+  "app.unit.days": {
+    one: "{count} deň",
+    few: "{count} dni",
+    many: "{count} dňa",
+    other: "{count} dní",
+  },
   "app.unit.kilobytes": "{count} kB",
   "app.unit.megabytes": "{value} MB",
 

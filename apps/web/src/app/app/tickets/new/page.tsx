@@ -31,12 +31,17 @@ export default async function NewTicketPage() {
   ]);
 
   return (
+    /* The mockup floats this card on a scrim over the inbox. It is a real route,
+       so the inbox is not behind it — but the scrim and the blur are what say
+       "this is a layer you close", and on a flat canvas the card read as a page
+       that had lost its furniture. */
     <div
       className="grid h-full overflow-auto"
       style={{
         padding: "7vh 24px 40px",
         placeItems: "start center",
-        background: "var(--canvas)",
+        background: "var(--scrim-modal)",
+        backdropFilter: "blur(2px)",
       }}
     >
       <div
@@ -46,7 +51,7 @@ export default async function NewTicketPage() {
           borderRadius: 18,
           background: "var(--panel)",
           border: "1px solid var(--line)",
-          boxShadow: "0 18px 48px rgba(13,28,23,.10)",
+          boxShadow: "0 32px 80px rgba(0,0,0,.35)",
         }}
       >
         {/* Card header */}

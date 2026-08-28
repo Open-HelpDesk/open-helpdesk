@@ -1892,6 +1892,7 @@ export const hu: Dictionary = {
   "app.unit.minutes": "{count} perc",
   "app.unit.hours": "{count} óra",
   "app.unit.hoursMinutes": "{hours} ó {minutes} p",
+  "app.unit.days": { one: "{count} nap", other: "{count} nap" },
   "app.unit.kilobytes": "{count} KB",
   "app.unit.megabytes": "{value} MB",
 

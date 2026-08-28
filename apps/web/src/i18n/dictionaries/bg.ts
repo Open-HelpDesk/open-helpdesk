@@ -1859,6 +1859,7 @@ export const bg: Dictionary = {
   "app.unit.minutes": "{count} мин",
   "app.unit.hours": "{count} ч",
   "app.unit.hoursMinutes": "{hours} ч {minutes}",
+  "app.unit.days": { one: "{count} ден", other: "{count} дни" },
   "app.unit.kilobytes": "{count} КБ",
   "app.unit.megabytes": "{value} МБ",
 

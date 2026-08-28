@@ -1688,6 +1688,7 @@ export const fi: Dictionary = {
   "app.unit.minutes": "{count} min",
   "app.unit.hours": "{count} t",
   "app.unit.hoursMinutes": "{hours} t {minutes}",
+  "app.unit.days": { one: "{count} pv", other: "{count} pv" },
   "app.unit.kilobytes": "{count} kt",
   "app.unit.megabytes": "{value} Mt",
 

@@ -119,13 +119,30 @@ export function SlaClock() {
 }
 
 /** Tone rotation of the design's avatars (open, new, acc, wait, pause). */
+/** The seven tones the mockup gives its avatars, in its order. */
 const AVATAR_TONES = [
   ["var(--open-t)", "var(--open)"],
-  ["var(--new-t)", "var(--new)"],
-  ["var(--acc-t)", "var(--acc)"],
   ["var(--wait-t)", "var(--wait)"],
+  ["var(--brand-t)", "var(--brand)"],
+  ["var(--viol-t)", "var(--viol)"],
+  ["var(--ok-t)", "var(--ok)"],
+  ["var(--dang-t)", "var(--dang)"],
   ["var(--pause-t)", "var(--pause)"],
 ] as const;
+
+/**
+ * Tone of a person, derived from their name.
+ *
+ * The mockup gives each contact their own colour — Julien blue, Sofia orange,
+ * Marc green — and keeps it. Deriving from the name is what makes it *theirs*:
+ * a tone taken from the row index repaints someone the moment the list is
+ * sorted differently, which is the opposite of a recognisable face.
+ */
+function toneOf(name: string): number {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) | 0;
+  return Math.abs(h) % AVATAR_TONES.length;
+}
 
 /** Initials avatar — `tone` applies the design's tone rotation (row index). */
 export function Avatar({
@@ -143,7 +160,7 @@ export function Avatar({
 }) {
   const toneIndex =
     tone === undefined
-      ? 2 // accent tone by default
+      ? toneOf(name)
       : ((tone % AVATAR_TONES.length) + AVATAR_TONES.length) % AVATAR_TONES.length;
   const [bg, ink] = AVATAR_TONES[toneIndex] ?? AVATAR_TONES[2];
   return (
