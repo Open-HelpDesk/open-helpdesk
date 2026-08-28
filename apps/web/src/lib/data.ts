@@ -1,10 +1,12 @@
 import {
+  contactNotes,
   contacts,
   db,
   organizations,
   teams,
   tickets,
   ticketFields,
+  ticketLinks,
   ticketMessages,
   ticketTasks,
   users,
@@ -587,5 +589,84 @@ export async function listTicketTasks(tenantId: string, ticketId: string) {
     .leftJoin(assignee, eq(assignee.id, ticketTasks.assigneeId))
     .where(and(eq(ticketTasks.tenantId, tenantId), eq(ticketTasks.ticketId, ticketId)))
     .orderBy(asc(ticketTasks.done), asc(ticketTasks.createdAt));
+}
+
+/** Notes pinned to a contact (AG-04, "Notes" panel), newest first. */
+export async function listContactNotes(tenantId: string, contactId: string) {
+  const author = alias(users, "note_author");
+  return db
+    .select({
+      id: contactNotes.id,
+      body: contactNotes.body,
+      createdAt: contactNotes.createdAt,
+      authorName: author.name,
+    })
+    .from(contactNotes)
+    .leftJoin(author, eq(author.id, contactNotes.authorId))
+    .where(and(eq(contactNotes.tenantId, tenantId), eq(contactNotes.contactId, contactId)))
+    .orderBy(desc(contactNotes.createdAt));
+}
+
+/**
+ * Tickets linked to this one (AG-04, "Linked" panel).
+ *
+ * Read in both directions from a single row: linking A to B has to surface on B,
+ * and writing two rows for one human fact is two chances to disagree.
+ */
+export async function listTicketLinks(tenantId: string, ticketId: string) {
+  const other = alias(tickets, "linked_ticket");
+  const rows = await db
+    .select({
+      id: ticketLinks.id,
+      relation: ticketLinks.relation,
+      number: other.number,
+      subject: other.subject,
+      status: other.status,
+    })
+    .from(ticketLinks)
+    .innerJoin(
+      other,
+      or(
+        and(eq(ticketLinks.ticketId, ticketId), eq(other.id, ticketLinks.linkedTicketId)),
+        and(eq(ticketLinks.linkedTicketId, ticketId), eq(other.id, ticketLinks.ticketId)),
+      ),
+    )
+    .where(
+      and(
+        eq(ticketLinks.tenantId, tenantId),
+        or(eq(ticketLinks.ticketId, ticketId), eq(ticketLinks.linkedTicketId, ticketId)),
+      ),
+    )
+    .orderBy(desc(ticketLinks.createdAt));
+  return rows;
+}
+
+/**
+ * Other open tickets of the same organisation.
+ *
+ * Derived, never stored: "same organisation" is a fact the data already knows,
+ * and a row saying so would need keeping in step with every organisation change.
+ */
+export async function sameOrgTickets(
+  tenantId: string,
+  organizationId: string | null,
+  excludeTicketId: string,
+) {
+  if (!organizationId) return [];
+  return db
+    .select({ number: tickets.number, subject: tickets.subject, status: tickets.status })
+    .from(tickets)
+    .where(
+      and(
+        eq(tickets.tenantId, tenantId),
+        eq(tickets.organizationId, organizationId),
+        ne(tickets.id, excludeTicketId),
+        isNull(tickets.deletedAt),
+        isNull(tickets.mergedIntoId),
+        inArray(tickets.status, [...OPEN_STATUSES]),
+      ),
+    )
+    .orderBy(desc(tickets.updatedAt))
+    .limit(4);
 }
 

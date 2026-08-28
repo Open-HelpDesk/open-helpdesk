@@ -162,6 +162,16 @@ export async function updateTicketProps(formData: FormData) {
     patch.status = status as typeof tickets.$inferInsert.status;
     if (status === "resolved") patch.resolvedAt = new Date();
     if (status === "closed") patch.closedAt = new Date();
+    /*
+     * Reopening clears the instants that said it was finished. Without this the
+     * SLA timeline showed "ticket resolved" on a ticket that was open again, and
+     * "resolved on <date>" on the Resolution tab — a record of something that had
+     * been undone, presented as current.
+     */
+    if (["new", "open", "waiting", "on_hold"].includes(status)) {
+      patch.resolvedAt = null;
+      patch.closedAt = null;
+    }
   }
 
   // Read the status before writing: ticket.solved must fire on the transition,

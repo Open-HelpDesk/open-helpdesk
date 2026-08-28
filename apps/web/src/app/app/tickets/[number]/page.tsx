@@ -4,8 +4,11 @@ import { isManager, requireAgent } from "@/lib/session";
 import {
   DEFAULT_VIEWS,
   getTicketByNumber,
+  listContactNotes,
   listMacrosForEditor,
+  listTicketLinks,
   listTicketTasks,
+  sameOrgTickets,
   viewTicketNumbers,
   type ViewKey,
 } from "@/lib/data";
@@ -20,6 +23,12 @@ import { TicketMoreMenu } from "./header-tools";
 import { MessageAttachments, type AttachmentData } from "./attachments";
 import { PropsForm } from "./props-panel";
 import { TasksPanel, type TaskRow } from "./tasks-panel";
+import {
+  SidePanels,
+  type LinkedTicket,
+  type PinnedNote,
+  type SlaEvent,
+} from "./side-panels";
 import { updateTicketProps } from "../actions";
 import { ReplyEditor } from "./reply-editor";
 
@@ -151,6 +160,76 @@ export default async function TicketPage({
     `/app/tickets/${number}?view=${view}${next === "conversation" ? "" : `&tab=${next}`}`;
 
   const csatEnabled = (tenant.csatConfig as { enabled?: boolean } | null)?.enabled === true;
+
+  const [noteRows, linkRows, orgTickets] = await Promise.all([
+    listContactNotes(tenant.id, requester.id),
+    listTicketLinks(tenant.id, ticket.id),
+    sameOrgTickets(tenant.id, ticket.organizationId, ticket.id),
+  ]);
+
+  const pinnedNotes: PinnedNote[] = noteRows.map((n) => ({
+    id: n.id,
+    body: n.body,
+    authorName: n.authorName,
+    when: t.fmt.relative(n.createdAt),
+  }));
+
+  /*
+   * Explicit links first, then the tickets that merely share an organisation.
+   * A ticket someone deliberately linked outranks one the data happens to
+   * relate, and a ticket already linked is not repeated as "same organisation".
+   */
+  const explicitNumbers = new Set(linkRows.map((l) => l.number));
+  const linkedTickets: LinkedTicket[] = [
+    ...linkRows.map((l) => ({
+      id: l.id,
+      number: l.number,
+      subject: l.subject,
+      status: l.status,
+      relation: l.relation as string,
+    })),
+    ...orgTickets
+      .filter((o) => !explicitNumbers.has(o.number))
+      .map((o) => ({
+        id: null,
+        number: o.number,
+        subject: o.subject,
+        status: o.status,
+        relation: null,
+      })),
+  ];
+
+  /*
+   * The SLA timeline, read off the ticket's own timestamps. No new storage: each
+   * of these instants is already a column, and the panel is a reading of them.
+   */
+  const slaEvents: SlaEvent[] = [
+    ticket.slaBreachedAt && {
+      when: t.fmt.dateLong(ticket.slaBreachedAt),
+      label: t("app.ticket.slaEventBreached"),
+      tone: "dang" as const,
+    },
+    ticket.slaWarnedAt && {
+      when: t.fmt.dateLong(ticket.slaWarnedAt),
+      label: t("app.ticket.slaEventWarned"),
+      tone: "mute" as const,
+    },
+    ticket.firstRepliedAt && {
+      when: t.fmt.dateLong(ticket.firstRepliedAt),
+      label: t("app.ticket.slaEventFirstReply"),
+      tone: "ok" as const,
+    },
+    ticket.resolvedAt && {
+      when: t.fmt.dateLong(ticket.resolvedAt),
+      label: t("app.ticket.slaEventResolved"),
+      tone: "ok" as const,
+    },
+    {
+      when: t.fmt.dateLong(ticket.createdAt),
+      label: t("app.ticket.slaEventCreated"),
+      tone: "mute" as const,
+    },
+  ].filter((e): e is SlaEvent => Boolean(e));
   const taskRows = await listTicketTasks(tenant.id, ticket.id);
   const openTasks = taskRows.filter((task) => !task.done).length;
   const tasks: TaskRow[] = taskRows.map((task) => ({
@@ -744,156 +823,123 @@ export default async function TicketPage({
         )}
       </div>
 
-      {/* Properties panel — 320 px */}
-      <aside
-        // The width goes through the classes and not through the inline style: an
-        // inline `width` would win over the responsive rule.
-        className="flex w-full shrink-0 flex-col overflow-y-auto border-l border-t xl:w-80 xl:border-t-0 max-xl:border-l-0"
-        style={{
-          padding: "14px 16px",
-          gap: 16,
-          background: "var(--panel)",
-          borderColor: "var(--line)",
+      {/* V2 — five panels behind five icons. The details panel keeps what
+          the single column used to hold; the requester, pinned notes, the
+          SLA timeline and linked tickets each get their own. */}
+      <SidePanels
+        number={ticket.number}
+        ticketId={ticket.id}
+        requester={{
+          id: requester.id,
+          name: requesterName,
+          email: requester.email,
+          phone: requester.phone,
+          organizationName: organization?.name ?? null,
+          ticketCount: requesterTicketCount,
+          recent: recentRequesterTickets.map((r) => ({
+            number: r.number,
+            subject: r.subject,
+            status: r.status,
+            when: t.fmt.relative(r.updatedAt),
+          })),
         }}
-      >
-        <PropsForm
-          ticketId={ticket.id}
-          number={ticket.number}
-          assigneeId={ticket.assigneeId}
-          teamId={ticket.teamId}
-          priority={ticket.priority}
-          type={ticket.type}
-          channel={ticket.channel}
-          tags={ticket.tags}
-          agents={agents}
-          teams={teams}
-        />
-
-        {/* Form fields */}
-        <section className="flex flex-col" style={{ gap: 8 }}>
-          <p style={PANEL_GROUP}>{t("app.ticket.formFieldsGroup")}</p>
-          {fieldEntries.length === 0 ? (
-            <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>{t("app.ticket.noFields")}</p>
-          ) : (
-            fieldEntries.map((f) => (
-              <div
-                key={f.label}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "96px 1fr",
-                  alignItems: "center",
-                  gap: 8,
-                  minHeight: 26,
-                  fontSize: 12.5,
-                }}
-              >
-                <span style={{ color: "var(--ink-3)" }}>{f.label}</span>
-                <span className="min-w-0 truncate" style={{ fontWeight: 500 }}>
-                  {f.value}
-                </span>
-              </div>
-            ))
-          )}
-        </section>
-
-        {/* SLA — boxed, rows separated by --line-2 */}
-        <section className="flex flex-col" style={{ gap: 8 }}>
-          <p style={PANEL_GROUP}>{t("app.ticket.slaGroup")}</p>
-          <div
-            className="overflow-hidden"
-            style={{ border: "1px solid var(--line)", borderRadius: 8 }}
-          >
-            <SlaRow
-              label={t("app.ticket.slaFirstReply")}
-              due={ticket.firstReplyDueAt}
-              doneAt={ticket.firstRepliedAt}
-              createdAt={ticket.createdAt}
-              now={now}
-              t={t}
-            />
-            <SlaRow
-              label={t("app.ticket.slaResolution")}
-              due={ticket.resolveDueAt}
-              doneAt={ticket.resolvedAt}
-              createdAt={ticket.createdAt}
-              now={now}
-              t={t}
-            />
-          </div>
-        </section>
-
-        {/* Contact */}
-        <section className="flex flex-col" style={{ gap: 8 }}>
-          <p style={PANEL_GROUP}>{t("app.ticket.contactGroup")}</p>
-          <div
-            className="flex flex-col"
-            style={{ border: "1px solid var(--line)", borderRadius: 8, padding: 11, gap: 9 }}
-          >
-            <div className="flex items-center" style={{ gap: 9 }}>
-              <Avatar name={requesterName} size={32} fontSize={11} tone={0} />
-              <div className="min-w-0">
-                <p className="truncate" style={{ fontSize: 13, fontWeight: 600 }}>
-                  {requesterName}
-                </p>
-                <p className="truncate" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-                  {requester.email}
-                </p>
-              </div>
-            </div>
-            <div style={{ height: 1, background: "var(--line-2)" }} />
-            <p style={{ fontSize: 12, color: "var(--ink-2)" }}>
-              {t("app.ticket.recentCount", { count: requesterTicketCount })}
-              {organization ? ` · ${organization.name}` : ""}
-            </p>
-            {recentRequesterTickets.map((rt) => (
-              <Link
-                key={rt.number}
-                href={`/app/tickets/${rt.number}`}
-                className="flex items-center"
-                style={{ gap: 7, fontSize: 12 }}
-              >
-                <span
+        notes={pinnedNotes}
+        linked={linkedTickets}
+        slaEvents={slaEvents}
+        details={
+          <>
+          <PropsForm
+            ticketId={ticket.id}
+            number={ticket.number}
+            assigneeId={ticket.assigneeId}
+            teamId={ticket.teamId}
+            priority={ticket.priority}
+            type={ticket.type}
+            channel={ticket.channel}
+            tags={ticket.tags}
+            agents={agents}
+            teams={teams}
+          />
+          {/* Form fields */}
+          <section className="flex flex-col" style={{ gap: 8 }}>
+            <p style={PANEL_GROUP}>{t("app.ticket.formFieldsGroup")}</p>
+            {fieldEntries.length === 0 ? (
+              <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>{t("app.ticket.noFields")}</p>
+            ) : (
+              fieldEntries.map((f) => (
+                <div
+                  key={f.label}
                   style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 10.5,
-                    color: "var(--ink-3)",
+                    display: "grid",
+                    gridTemplateColumns: "96px 1fr",
+                    alignItems: "center",
+                    gap: 8,
+                    minHeight: 26,
+                    fontSize: 12.5,
                   }}
                 >
-                  #{rt.number}
-                </span>
-                <span className="min-w-0 flex-1 truncate" style={{ color: "var(--ink-2)" }}>
-                  {rt.subject}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Capture a resolution — the knowledge of a closed ticket is otherwise
-            lost. Restricted to the roles that can write to the knowledge base: the link
-            leads to the editor, which would refuse them anyway. */}
-        {!isOpen && isManager(agent.role) && (
-          <section className="flex flex-col" style={{ gap: 8 }}>
-            <p style={PANEL_GROUP}>{t("app.ticket.kbGroup")}</p>
-            <Link
-              href={`/app/kb/new?from=${ticket.number}`}
-              className="ohd-hover-edge-ink inline-flex items-center justify-center rounded-md border font-medium"
-              style={{
-                height: 30,
-                fontSize: 12.5,
-                borderColor: "var(--line)",
-                background: "var(--bg)",
-                color: "var(--ink)",
-              }}
-            >
-              {t("app.ticket.kbConvert")}
-            </Link>
-            <p style={{ fontSize: 12, color: "var(--ink-3)", textWrap: "pretty" }}>
-              {t("app.ticket.kbConvertHint")}
-            </p>
+                  <span style={{ color: "var(--ink-3)" }}>{f.label}</span>
+                  <span className="min-w-0 truncate" style={{ fontWeight: 500 }}>
+                    {f.value}
+                  </span>
+                </div>
+              ))
+            )}
           </section>
-        )}
-      </aside>
+
+          {/* SLA — boxed, rows separated by --line-2 */}
+          <section className="flex flex-col" style={{ gap: 8 }}>
+            <p style={PANEL_GROUP}>{t("app.ticket.slaGroup")}</p>
+            <div
+              className="overflow-hidden"
+              style={{ border: "1px solid var(--line)", borderRadius: 8 }}
+            >
+              <SlaRow
+                label={t("app.ticket.slaFirstReply")}
+                due={ticket.firstReplyDueAt}
+                doneAt={ticket.firstRepliedAt}
+                createdAt={ticket.createdAt}
+                now={now}
+                t={t}
+              />
+              <SlaRow
+                label={t("app.ticket.slaResolution")}
+                due={ticket.resolveDueAt}
+                doneAt={ticket.resolvedAt}
+                createdAt={ticket.createdAt}
+                now={now}
+                t={t}
+              />
+            </div>
+          </section>
+
+          {/* Capture a resolution — the knowledge of a closed ticket is otherwise
+              lost. Restricted to the roles that can write to the knowledge base: the link
+              leads to the editor, which would refuse them anyway. */}
+          {!isOpen && isManager(agent.role) && (
+            <section className="flex flex-col" style={{ gap: 8 }}>
+              <p style={PANEL_GROUP}>{t("app.ticket.kbGroup")}</p>
+              <Link
+                href={`/app/kb/new?from=${ticket.number}`}
+                className="ohd-hover-edge-ink inline-flex items-center justify-center rounded-md border font-medium"
+                style={{
+                  height: 30,
+                  fontSize: 12.5,
+                  borderColor: "var(--line)",
+                  background: "var(--bg)",
+                  color: "var(--ink)",
+                }}
+              >
+                {t("app.ticket.kbConvert")}
+              </Link>
+              <p style={{ fontSize: 12, color: "var(--ink-3)", textWrap: "pretty" }}>
+                {t("app.ticket.kbConvertHint")}
+              </p>
+            </section>
+          )}
+          </>
+        }
+      />
     </div>
   );
 }
