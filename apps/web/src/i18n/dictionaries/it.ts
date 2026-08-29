@@ -1803,6 +1803,8 @@ export const it: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nessun indirizzo riceve ancora le richieste: senza, nulla arriva nella casella.",
   "app.onboarding.itemEmailDone": "{address} trasforma già le email ricevute in richieste.",
+  "app.onboarding.itemEmailOwn":
+    "Preferisce usare il proprio indirizzo? Inoltri support@lasuaazienda.it qui e mantenga l'indirizzo che i suoi clienti già conoscono.",
   "app.onboarding.checklistBody":
     "Quattro passaggi per il primo ticket. Puoi farlo anche più tardi, dall'amministrazione.",
   "app.onboarding.welcome": "Ti diamo il benvenuto, {name} 👋",

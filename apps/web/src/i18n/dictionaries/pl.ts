@@ -2229,6 +2229,8 @@ export const pl: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Żaden adres nie odbiera jeszcze zgłoszeń — bez niego nic nie trafi do skrzynki.",
   "app.onboarding.itemEmailDone": "{address} już zamienia otrzymane wiadomości w zgłoszenia.",
+  "app.onboarding.itemEmailOwn":
+    "Wolisz własny adres? Przekieruj support@twojafirma.pl tutaj i zachowaj adres, który klienci już znają.",
   "app.onboarding.checklistBody":
     "Cztery kroki do pierwszego zgłoszenia. Wszystko można też zrobić później w administracji.",
   "app.onboarding.welcome": "Witaj, {name} 👋",

@@ -1793,6 +1793,8 @@ export const da: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ingen adresse modtager endnu henvendelser — uden den kommer intet i indbakken.",
   "app.onboarding.itemEmailDone": "{address} laver allerede indkommende mail til sager.",
+  "app.onboarding.itemEmailOwn":
+    "Vil du hellere bruge din egen adresse? Videresend support@ditfirma.dk hertil og behold den adresse, kunderne kender.",
   "app.onboarding.checklistBody":
     "Fire trin til din første sag. Du kan også gøre det senere under administration.",
   "app.onboarding.welcome": "Velkommen, {name} 👋",

@@ -2225,6 +2225,8 @@ export const lt: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Kol kas nė vienas adresas negauna užklausų — be jo į gautuosius nieko neateis.",
   "app.onboarding.itemEmailDone": "{address} jau paverčia gaunamus el. laiškus užklausomis.",
+  "app.onboarding.itemEmailOwn":
+    "Norite naudoti savo adresą? Peradresuokite support@jusuimone.lt čia ir išsaugokite adresą, kurį klientai jau žino.",
   "app.onboarding.checklistBody":
     "Keturi žingsniai iki pirmosios užklausos. Visa tai galima padaryti ir vėliau administravimo skydelyje.",
   "app.onboarding.welcome": "Sveiki, {name} 👋",

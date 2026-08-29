@@ -2146,6 +2146,8 @@ export const lv: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Neviena adrese vēl nesaņem pieteikumus — bez tās iesūtnē neienāk nekas.",
   "app.onboarding.itemEmailDone": "{address} jau pārvērš saņemtos e-pastus pieteikumos.",
+  "app.onboarding.itemEmailOwn":
+    "Vēlaties izmantot savu adresi? Pārsūtiet support@jusuuznemums.lv uz šo un saglabājiet adresi, ko klienti jau pazīst.",
   "app.onboarding.checklistBody":
     "Četri soļi līdz pirmajam pieteikumam. To visu var izdarīt arī vēlāk administrācijā.",
   "app.onboarding.welcome": "Sveicināti, {name} 👋",

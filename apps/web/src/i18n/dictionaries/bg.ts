@@ -1978,6 +1978,8 @@ export const bg: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Все още никой адрес не получава заявки — без него нищо не влиза в пощата.",
   "app.onboarding.itemEmailDone": "{address} вече превръща получените имейли в тикети.",
+  "app.onboarding.itemEmailOwn":
+    "Предпочитате собствен адрес? Пренасочете support@вашата-фирма.com към този и запазете адреса, който клиентите вече познават.",
   "app.onboarding.checklistBody":
     "Четири стъпки до първия тикет. Всичко може да се направи и по-късно от администрацията.",
   "app.onboarding.welcome": "Добре дошли, {name} 👋",

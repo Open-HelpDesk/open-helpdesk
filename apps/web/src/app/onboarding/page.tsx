@@ -86,6 +86,20 @@ export default async function OnboardingPage() {
   const verifiedMailbox = mailboxRows.find((m) => m.verified);
   const mailboxAddress =
     verifiedMailbox?.address ?? mailboxRows[0]?.address ?? providedMailboxAddress(tenant.slug);
+  /*
+   * The provided address is created verified at provisioning, so this item is
+   * ticked before the owner has seen the screen — and a ticked item drops its
+   * CTA. That is how the second option disappeared: a workspace can also
+   * receive on its OWN address (support@theircompany.com forwarded here, or
+   * IMAP), and nothing on the checklist ever said so.
+   *
+   * It stays done, because it genuinely is — mail arrives. But while the only
+   * address is the one we handed out, the item carries the choice and a way to
+   * act on it. Once the workspace receives on an address of its own, there is
+   * nothing left to offer and the note goes away.
+   */
+  const onlyProvidedAddress =
+    Boolean(verifiedMailbox) && mailboxRows.every((m) => m.kind === "provided");
   const mainCalendar = calendars[0];
   // No calendar at all is also "not set": there is nothing for a policy to point
   // at, and the SLA screen is where one gets created.
@@ -97,6 +111,8 @@ export default async function OnboardingPage() {
     done: boolean;
     cta: string;
     href: string;
+    /** Shown even when the item is done — an option still open, not a task. */
+    note?: string;
   }[] = [
     {
       title: t("app.onboarding.emailTitle"),
@@ -104,6 +120,7 @@ export default async function OnboardingPage() {
       desc: verifiedMailbox
         ? t("app.onboarding.itemEmailDone", { address: mailboxAddress })
         : t("app.onboarding.itemEmailTodo"),
+      note: onlyProvidedAddress ? t("app.onboarding.itemEmailOwn") : undefined,
       cta: t("app.onboarding.setUp"),
       href: "/app/settings/email",
     },
@@ -234,9 +251,23 @@ export default async function OnboardingPage() {
                   {item.title}
                 </p>
                 <p style={{ fontSize: 13, color: "var(--ink-3)", lineHeight: 1.5 }}>{item.desc}</p>
+                {item.note && (
+                  <p style={{ fontSize: 13, color: "var(--ink-2)", lineHeight: 1.5 }}>
+                    {item.note}{" "}
+                    <Link
+                      href={item.href}
+                      className="hover:underline"
+                      style={{ color: "var(--brand-2)", fontWeight: 500 }}
+                    >
+                      {item.cta}
+                    </Link>
+                  </p>
+                )}
               </div>
               {/* A done item keeps no CTA — the mockup drops it, and the screen
-                  it led to is one click away in the administration anyway. */}
+                  it led to is one click away in the administration anyway. An
+                  item carrying a note is the exception: its link lives in the
+                  sentence, where the option is explained. */}
               {!item.done && (
                 <Link href={item.href} style={ctaStyle(i === firstTodo)}>
                   {item.cta}

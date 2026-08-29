@@ -1807,6 +1807,8 @@ export const nb: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ingen adresse mottar henvendelser ennå — uten den kommer ingenting inn.",
   "app.onboarding.itemEmailDone": "{address} gjør allerede innkommende e-post til henvendelser.",
+  "app.onboarding.itemEmailOwn":
+    "Vil du heller bruke din egen adresse? Videresend support@dittfirma.no hit og behold adressen kundene allerede kjenner.",
   "app.onboarding.checklistBody":
     "Fire steg til din første henvendelse. Du kan også gjøre det senere under administrasjon.",
   "app.onboarding.welcome": "Velkommen, {name} 👋",

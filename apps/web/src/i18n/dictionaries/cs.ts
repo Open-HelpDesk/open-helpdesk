@@ -2185,6 +2185,8 @@ export const cs: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Zatím žádná adresa nepřijímá požadavky — bez ní nic nedorazí do doručených.",
   "app.onboarding.itemEmailDone": "{address} už mění doručené e-maily na tikety.",
+  "app.onboarding.itemEmailOwn":
+    "Chcete raději vlastní adresu? Přesměrujte support@vasefirma.cz na tuto a zachovejte adresu, kterou zákazníci znají.",
   "app.onboarding.checklistBody":
     "Čtyři kroky k prvnímu tiketu. Vše lze udělat i později v administraci.",
   "app.onboarding.welcome": "Vítejte, {name} 👋",

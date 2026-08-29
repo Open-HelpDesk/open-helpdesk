@@ -2296,6 +2296,8 @@ export const ga: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Níl aon seoladh ag fáil iarratas go fóill — dá cheal, ní shroicheann rud ar bith an bosca.",
   "app.onboarding.itemEmailDone": "Déanann {address} ticéid de ríomhphoist isteach cheana féin.",
+  "app.onboarding.itemEmailOwn":
+    "Ar mhaith leat do sheoladh féin a úsáid? Cuir support@dochuideachta.ie ar aghaidh anseo agus coinnigh an seoladh atá ar eolas ag do chuid custaiméirí.",
   "app.onboarding.checklistBody":
     "Ceithre chéim go dtí an chéad ticéad. Is féidir gach ceann díobh a dhéanamh níos déanaí sa riarachán.",
   "app.onboarding.welcome": "Fáilte, {name} 👋",

@@ -1808,6 +1808,8 @@ export const fi: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Mikään osoite ei vielä vastaanota pyyntöjä — ilman sitä saapuneisiin ei tule mitään.",
   "app.onboarding.itemEmailDone": "{address} muuttaa saapuvat sähköpostit jo pyynnöiksi.",
+  "app.onboarding.itemEmailOwn":
+    "Haluatko käyttää omaa osoitettasi? Ohjaa support@yrityksesi.fi tänne ja säilytä osoite, jonka asiakkaasi jo tuntevat.",
   "app.onboarding.checklistBody":
     "Neljä vaihetta ensimmäiseen pyyntöön. Voit tehdä nämä myös myöhemmin hallinnasta.",
   "app.onboarding.welcome": "Tervetuloa, {name} 👋",

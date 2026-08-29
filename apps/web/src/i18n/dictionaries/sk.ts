@@ -2208,6 +2208,8 @@ export const sk: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Zatiaľ žiadna adresa neprijíma požiadavky — bez nej nič nedorazí do prijatých.",
   "app.onboarding.itemEmailDone": "{address} už mení doručené e-maily na tikety.",
+  "app.onboarding.itemEmailOwn":
+    "Chcete radšej vlastnú adresu? Presmerujte support@vasafirma.sk sem a zachovajte adresu, ktorú zákazníci poznajú.",
   "app.onboarding.checklistBody":
     "Štyri kroky k prvému tiketu. Všetko sa dá urobiť aj neskôr v administrácii.",
   "app.onboarding.welcome": "Vitajte, {name} 👋",

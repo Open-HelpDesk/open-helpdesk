@@ -1882,6 +1882,8 @@ export const fr: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Aucune adresse ne reçoit encore les demandes — sans elle, rien n'arrive dans la boîte.",
   "app.onboarding.itemEmailDone": "{address} transforme déjà les emails reçus en tickets.",
+  "app.onboarding.itemEmailOwn":
+    "Vous préférez votre propre adresse ? Redirigez support@votresociete.com vers celle-ci et gardez l'adresse que vos clients connaissent déjà.",
   "app.onboarding.checklistBody":
     "Quatre étapes pour recevoir votre premier ticket. Tout se règle aussi plus tard, depuis l'administration.",
   "app.onboarding.welcome": "Bienvenue, {name} 👋",

@@ -2213,6 +2213,8 @@ export const sl: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Noben naslov še ne prejema zahtevkov — brez njega v nabiralnik ne pride nič.",
   "app.onboarding.itemEmailDone": "{address} prejeta e-poštna sporočila že spremeni v zahtevke.",
+  "app.onboarding.itemEmailOwn":
+    "Raje uporabljate svoj naslov? Preusmerite support@vasepodjetje.si sem in obdržite naslov, ki ga stranke že poznajo.",
   "app.onboarding.checklistBody":
     "Štirje koraki do prvega zahtevka. Vse to lahko urediš tudi pozneje v administraciji.",
   "app.onboarding.welcome": "Dobrodošli, {name} 👋",

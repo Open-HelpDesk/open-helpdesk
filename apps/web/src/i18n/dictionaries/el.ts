@@ -2042,6 +2042,8 @@ export const el: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Καμία διεύθυνση δεν λαμβάνει ακόμη αιτήματα — χωρίς αυτή, τίποτα δεν φτάνει στα εισερχόμενα.",
   "app.onboarding.itemEmailDone": "Το {address} μετατρέπει ήδη τα εισερχόμενα email σε τικέτ.",
+  "app.onboarding.itemEmailOwn":
+    "Προτιμάτε τη δική σας διεύθυνση; Προωθήστε το support@etaireiasas.gr εδώ και κρατήστε τη διεύθυνση που ξέρουν οι πελάτες σας.",
   "app.onboarding.checklistBody":
     "Τέσσερα βήματα για το πρώτο τικέτ. Όλα μπορούν να γίνουν και αργότερα από τη διαχείριση.",
   "app.onboarding.welcome": "Καλώς ορίσατε, {name} 👋",

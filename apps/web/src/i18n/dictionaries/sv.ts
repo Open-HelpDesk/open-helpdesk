@@ -1816,6 +1816,8 @@ export const sv: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ingen adress tar emot ärenden än — utan den kommer inget in i inkorgen.",
   "app.onboarding.itemEmailDone": "{address} gör redan inkommande e-post till ärenden.",
+  "app.onboarding.itemEmailOwn":
+    "Vill du hellre använda din egen adress? Vidarebefordra support@dittforetag.se hit och behåll adressen som dina kunder redan känner till.",
   "app.onboarding.checklistBody":
     "Fyra steg till ditt första ärende. Du kan också göra det senare under administration.",
   "app.onboarding.welcome": "Välkommen, {name} 👋",

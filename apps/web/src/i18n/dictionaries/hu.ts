@@ -2020,6 +2020,8 @@ export const hu: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Még egyetlen cím sem fogad kéréseket — nélküle semmi nem jut a beérkezettekbe.",
   "app.onboarding.itemEmailDone": "A {address} már jeggyé alakítja a beérkező leveleket.",
+  "app.onboarding.itemEmailOwn":
+    "Inkább a saját címét használná? Irányítsa át ide a support@azoncege.hu címet, és tartsa meg azt a címet, amelyet ügyfelei már ismernek.",
   "app.onboarding.checklistBody":
     "Négy lépés az első jegyig. Mindezt később is elvégezheted az adminisztrációban.",
   "app.onboarding.welcome": "Üdvözlünk, {name} 👋",

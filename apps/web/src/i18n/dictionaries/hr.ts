@@ -2118,6 +2118,8 @@ export const hr: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nijedna adresa još ne prima zahtjeve — bez nje ništa ne dolazi u sandučić.",
   "app.onboarding.itemEmailDone": "{address} već pretvara primljene e-poruke u tikete.",
+  "app.onboarding.itemEmailOwn":
+    "Radije koristite vlastitu adresu? Proslijedite support@vasatvrtka.hr ovamo i zadržite adresu koju vaši kupci već znaju.",
   "app.onboarding.checklistBody":
     "Četiri koraka do prvog tiketa. Sve se može urediti i kasnije u administraciji.",
   "app.onboarding.welcome": "Dobro došli, {name} 👋",

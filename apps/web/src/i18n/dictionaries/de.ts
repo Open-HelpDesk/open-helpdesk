@@ -1803,6 +1803,8 @@ export const de: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Noch empfängt keine Adresse Anfragen — ohne sie erreicht nichts den Posteingang.",
   "app.onboarding.itemEmailDone": "{address} verwandelt eingehende E-Mails bereits in Tickets.",
+  "app.onboarding.itemEmailOwn":
+    "Lieber die eigene Adresse? Leiten Sie support@ihrefirma.de hierher weiter und behalten Sie die Adresse, die Ihre Kunden kennen.",
   "app.onboarding.checklistBody":
     "Vier Schritte bis zum ersten Ticket. Alles lässt sich auch später in der Administration erledigen.",
   "app.onboarding.welcome": "Willkommen, {name} 👋",

@@ -1816,6 +1816,8 @@ export const pt: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nenhum endereço recebe pedidos ainda — sem ele, nada chega à caixa.",
   "app.onboarding.itemEmailDone": "{address} já transforma os emails recebidos em pedidos.",
+  "app.onboarding.itemEmailOwn":
+    "Prefere usar o seu próprio endereço? Reencaminhe support@asuaempresa.pt para aqui e mantenha o endereço que os seus clientes já conhecem.",
   "app.onboarding.checklistBody":
     "Quatro passos para o primeiro pedido. Também pode fazê-lo mais tarde, na administração.",
   "app.onboarding.welcome": "Boas-vindas, {name} 👋",

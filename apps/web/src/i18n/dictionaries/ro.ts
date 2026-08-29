@@ -2160,6 +2160,8 @@ export const ro: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nicio adresă nu primește încă solicitări — fără ea, nimic nu ajunge în inbox.",
   "app.onboarding.itemEmailDone": "{address} transformă deja e-mailurile primite în tichete.",
+  "app.onboarding.itemEmailOwn":
+    "Preferați propria adresă? Redirecționați support@companiadvs.ro aici și păstrați adresa pe care clienții o cunosc deja.",
   "app.onboarding.checklistBody":
     "Patru pași până la primul tichet. Toate se pot face și mai târziu, din administrare.",
   "app.onboarding.welcome": "Bun venit, {name} 👋",

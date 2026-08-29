@@ -1808,6 +1808,8 @@ export const en = {
   "app.onboarding.itemEmailTodo":
     "No address receives requests yet — without one, nothing reaches the inbox.",
   "app.onboarding.itemEmailDone": "{address} already turns incoming email into tickets.",
+  "app.onboarding.itemEmailOwn":
+    "Would you rather use your own address? Forward support@yourcompany.com here and keep the address your customers already know.",
   "app.onboarding.checklistBody":
     "Four steps to your first ticket. You can also do any of it later, from the administration.",
   "app.onboarding.welcome": "Welcome, {name} 👋",

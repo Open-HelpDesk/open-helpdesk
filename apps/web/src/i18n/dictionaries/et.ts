@@ -2003,6 +2003,8 @@ export const et: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ükski aadress ei võta veel taotlusi vastu — ilma selleta ei jõua midagi postkasti.",
   "app.onboarding.itemEmailDone": "{address} muudab saabuvad kirjad juba piletiteks.",
+  "app.onboarding.itemEmailOwn":
+    "Eelistate oma aadressi? Suunake support@teiefirma.ee siia ja säilitage aadress, mida kliendid juba teavad.",
   "app.onboarding.checklistBody":
     "Neli sammu esimese pileti juurde. Saad need teha ka hiljem halduses.",
   "app.onboarding.welcome": "Tere tulemast, {name} 👋",

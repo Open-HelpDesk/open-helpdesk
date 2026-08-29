@@ -2292,6 +2292,8 @@ export const mt: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "L-ebda indirizz għadu ma jirċievi talbiet — mingħajru, xejn ma jasal fl-inbox.",
   "app.onboarding.itemEmailDone": "{address} diġà jibdel l-emails li jaslu f'tickets.",
+  "app.onboarding.itemEmailOwn":
+    "Tippreferi tuża l-indirizz tiegħek? Għaddi support@ilkumpanijatieghek.mt hawn u żomm l-indirizz li l-klijenti tiegħek diġà jafu.",
   "app.onboarding.checklistBody":
     "Erba' passi għall-ewwel ticket. Tista' tagħmel dan kollu wkoll aktar tard mill-amministrazzjoni.",
   "app.onboarding.welcome": "Merħba, {name} 👋",

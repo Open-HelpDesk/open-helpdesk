@@ -1822,6 +1822,8 @@ export const es: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ninguna dirección recibe solicitudes todavía: sin ella, nada llega a la bandeja.",
   "app.onboarding.itemEmailDone": "{address} ya convierte los correos recibidos en solicitudes.",
+  "app.onboarding.itemEmailOwn":
+    "¿Prefiere usar su propia dirección? Redirija support@suempresa.com aquí y conserve la dirección que sus clientes ya conocen.",
   "app.onboarding.checklistBody":
     "Cuatro pasos para recibir tu primera solicitud. También puedes hacerlo más tarde desde la administración.",
   "app.onboarding.welcome": "Te damos la bienvenida, {name} 👋",
