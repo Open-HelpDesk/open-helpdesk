@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { db, tenants, users } from "@openhelpdesk/db";
+import { db, relocalizeDefaults, tenants, users } from "@openhelpdesk/db";
 import { and, eq } from "drizzle-orm";
 import { requireManager } from "../guard";
 import { DEFAULT_LOCALE, isLocaleCode } from "@/i18n/locales";
@@ -99,6 +99,16 @@ export async function saveGeneral(formData: FormData) {
       updatedAt: new Date(),
     })
     .where(eq(tenants.id, tenant.id));
+
+  /* The example content installed at creation — calendars, teams, SLA policies,
+     macros, automation rules — was written in the language of the day. Changing
+     the workspace language leaves it behind, and the administrator reads a
+     French interface listing "Premium customers". Rows still carrying a seeded
+     default follow the new language; anything renamed here is left alone. */
+  const nextLocale = isLocaleCode(locale) ? locale : DEFAULT_LOCALE;
+  if (nextLocale !== tenant.locale) {
+    await relocalizeDefaults(tenant.id, nextLocale);
+  }
 
   if ((logoUrl || removeLogo) && typeof previous.logoUrl === "string") {
     await deleteBrandAsset(previous.logoUrl);

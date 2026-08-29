@@ -6,6 +6,7 @@
  */
 import { eq } from "drizzle-orm";
 import { db } from "../client";
+import { seedText } from "./defaults-i18n";
 import {
   automationRules,
   businessHours,
@@ -30,14 +31,17 @@ const WEEK_9_18 = {
  * the feature, each of them observed across most of Europe. An administrator
  * replaces them with the ones their team actually takes (ST-07).
  */
-const EXAMPLE_HOLIDAYS = [
-  { date: "2026-01-01", label: "New Year's Day" },
-  { date: "2026-04-06", label: "Easter Monday" },
-  { date: "2026-05-01", label: "Labour Day" },
-  { date: "2026-12-25", label: "Christmas Day" },
+const EXAMPLE_HOLIDAYS: [string, string][] = [
+  ["2026-01-01", "hol.newYear"],
+  ["2026-04-06", "hol.easterMonday"],
+  ["2026-05-01", "hol.labour"],
+  ["2026-12-25", "hol.christmas"],
 ];
 
-export async function installDefaults(tenantId: string): Promise<boolean> {
+export async function installDefaults(tenantId: string, locale = "en"): Promise<boolean> {
+  /** The example content, in the workspace's language. */
+  const T = (key: string) => seedText(key, locale);
+
   const [existing] = await db
     .select({ id: businessHours.id })
     .from(businessHours)
@@ -50,18 +54,18 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     .insert(businessHours)
     .values({
       tenantId,
-      name: "Main office 9–18",
+      name: T("cal.main"),
       position: 0,
       timezone: "UTC",
       weeklyHours: WEEK_9_18,
-      holidays: EXAMPLE_HOLIDAYS,
+      holidays: EXAMPLE_HOLIDAYS.map(([date, key]) => ({ date, label: T(key) })),
     })
     .returning();
   const [onCall] = await db
     .insert(businessHours)
     .values({
       tenantId,
-      name: "On-call 24/7",
+      name: T("cal.oncall"),
       position: 1,
       timezone: "UTC",
       weeklyHours: {},
@@ -70,7 +74,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     .returning();
   await db.insert(businessHours).values({
     tenantId,
-    name: "European office 9–17:30",
+    name: T("cal.europe"),
     position: 2,
     timezone: "Europe/Brussels",
     weeklyHours: {
@@ -87,19 +91,24 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
   const teamRows = await db
     .insert(teams)
     .values([
-      { tenantId, name: "Tier 1", businessHoursId: mainOffice!.id },
-      { tenantId, name: "Escalation", businessHoursId: onCall!.id },
-      { tenantId, name: "Sales", businessHoursId: mainOffice!.id },
-      { tenantId, name: "Product", businessHoursId: mainOffice!.id },
+      { tenantId, name: T("team.tier1"), businessHoursId: mainOffice!.id },
+      { tenantId, name: T("team.escalation"), businessHoursId: onCall!.id },
+      { tenantId, name: T("team.sales"), businessHoursId: mainOffice!.id },
+      { tenantId, name: T("team.product"), businessHoursId: mainOffice!.id },
     ])
     .returning();
-  const teamId = (name: string) => teamRows.find((t) => t.name === name)!.id;
+  /* Looked up by rank, not by name: the names are translated, and matching on
+     "Tier 1" stopped finding anything the day a workspace was created in
+     another language. */
+  const TEAM_ORDER = ["tier1", "escalation", "sales", "product"] as const;
+  const teamId = (slug: (typeof TEAM_ORDER)[number]) =>
+    teamRows[TEAM_ORDER.indexOf(slug)]!.id;
 
   /* ---------- SLA policies (order matters — the first match wins) ---------- */
   await db.insert(slaPolicies).values([
     {
       tenantId,
-      name: "Premium customers",
+      name: T("sla.premium"),
       position: 0,
       // Carried by the "premium" ticket tag as long as organizations have no tags.
       conditions: [{ field: "tags", operator: "includes", value: "premium" }],
@@ -113,7 +122,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     },
     {
       tenantId,
-      name: "Production incidents",
+      name: T("sla.incidents"),
       position: 1,
       conditions: [{ field: "type", operator: "is", value: "Incident" }],
       targets: {
@@ -126,7 +135,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     },
     {
       tenantId,
-      name: "Default policy",
+      name: T("sla.default"),
       position: 2,
       isDefault: true,
       conditions: [],
@@ -144,80 +153,68 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
   await db.insert(macros).values([
     {
       tenantId,
-      name: "Acknowledgement",
-      category: "Common replies",
+      name: T("macro.ack"),
+      category: T("macroCat.common"),
       availability: "everyone",
       actions: [
         {
           type: "insert_text",
-          value:
-            "Hello {{contact.name}}, we have received your request and will get " +
-            "back to you within 4 business hours.",
+          value: T("macroText.ack"),
         },
         { type: "set_status", value: "open" },
       ],
     },
     {
       tenantId,
-      name: "Request for details",
-      category: "Common replies",
+      name: T("macro.details"),
+      category: T("macroCat.common"),
       availability: "everyone",
       actions: [
         {
           type: "insert_text",
-          value:
-            "Hello {{contact.name}}, to move your request forward, could you spell out " +
-            "the exact steps that lead to the problem, and attach a screenshot if you " +
-            "have one? Thank you!",
+          value: T("macroText.details"),
         },
         { type: "set_status", value: "waiting" },
       ],
     },
     {
       tenantId,
-      name: "Resolution confirmed",
-      category: "Common replies",
+      name: T("macro.resolved"),
+      category: T("macroCat.common"),
       availability: "everyone",
       actions: [
         {
           type: "insert_text",
-          value:
-            "Hello {{contact.name}}, the problem is fixed on our side. Do reply to " +
-            "this email if anything still does not work as expected — the request " +
-            "will be reopened automatically.",
+          value: T("macroText.resolved"),
         },
         { type: "set_status", value: "resolved" },
       ],
     },
     {
       tenantId,
-      name: "Escalate to tier 2",
-      category: "Escalation",
+      name: T("macro.escalate"),
+      category: T("team.escalation"),
       availability: "team",
-      teamId: teamId("Tier 1"),
+      teamId: teamId("tier1"),
       actions: [
         {
           type: "insert_note",
-          value:
-            "Escalated to tier 2: tier 1 diagnosis done, see the exchanges above. " +
-            "Please take over.",
+          value: T("macroText.escalate"),
         },
-        { type: "assign_team", value: teamId("Escalation") },
+        { type: "assign_team", value: teamId("escalation") },
         { type: "set_priority", value: "high" },
       ],
     },
     {
       tenantId,
-      name: "Major incident",
-      category: "Escalation",
+      name: T("macro.major"),
+      category: T("team.escalation"),
       availability: "team",
-      teamId: teamId("Escalation"),
+      teamId: teamId("escalation"),
       actions: [
         {
           type: "insert_note",
-          value:
-            "Major incident declared: several customers are likely affected. Alert " +
-            "the on-call lead and open a dedicated channel.",
+          value: T("macroText.major"),
         },
         { type: "set_priority", value: "urgent" },
         { type: "add_tags", value: ["incident"] },
@@ -225,32 +222,28 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     },
     {
       tenantId,
-      name: "Send an invoice",
-      category: "Billing",
+      name: T("macro.invoice"),
+      category: T("macroCat.billing"),
       availability: "team",
-      teamId: teamId("Sales"),
+      teamId: teamId("sales"),
       actions: [
         {
           type: "insert_text",
-          value:
-            "Hello {{contact.name}}, the invoice you asked for is attached. It also " +
-            "stays available at any time from your customer area.",
+          value: T("macroText.invoice"),
         },
         { type: "add_tags", value: ["billing"] },
       ],
     },
     {
       tenantId,
-      name: "Refund approved",
-      category: "Billing",
+      name: T("macro.refund"),
+      category: T("macroCat.billing"),
       availability: "team",
-      teamId: teamId("Sales"),
+      teamId: teamId("sales"),
       actions: [
         {
           type: "insert_text",
-          value:
-            "Hello {{contact.name}}, your refund request is approved. The amount will " +
-            "be credited back to your payment method within 5 to 10 business days.",
+          value: T("macroText.refund"),
         },
         { type: "set_status", value: "resolved" },
       ],
@@ -262,37 +255,34 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     {
       tenantId,
       kind: "trigger",
-      name: "Acknowledge receipt",
+      name: T("rule.ack"),
       position: 0,
       active: true,
       conditionsAll: [{ field: "event", operator: "is", value: "ticket.created" }],
       actions: [
         {
           type: "email_contact",
-          value:
-            "Hello {{contact.name}},\n\nWe have received your request " +
-            "“{{ticket.subject}}” (ticket #{{ticket.number}}) and will get back to " +
-            "you within 4 business hours.\n\nThe support team",
+          value: T("ruleText.ack"),
         },
       ],
     },
     {
       tenantId,
       kind: "trigger",
-      name: "Urgent escalation",
+      name: T("rule.urgent"),
       position: 1,
       active: true,
       conditionsAll: [{ field: "priority", operator: "is", value: "urgent" }],
-      actions: [{ type: "assign_team", value: teamId("Escalation") }],
+      actions: [{ type: "assign_team", value: teamId("escalation") }],
     },
     {
       tenantId,
       kind: "trigger",
-      name: "Round-robin tier 1",
+      name: T("rule.roundRobin"),
       position: 2,
       active: false,
       conditionsAll: [
-        { field: "team", operator: "is", value: teamId("Tier 1") },
+        { field: "team", operator: "is", value: teamId("tier1") },
         { field: "assignee", operator: "empty" },
       ],
       actions: [{ type: "assign_round_robin" }],
@@ -300,7 +290,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
     {
       tenantId,
       kind: "scheduled",
-      name: "Customer reminder after 48 h",
+      name: T("rule.reminder"),
       position: 3,
       active: true,
       conditionsAll: [
@@ -310,17 +300,14 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
       actions: [
         {
           type: "email_contact",
-          value:
-            "Hello {{contact.name}},\n\nWe are still waiting for your reply on the " +
-            "request “{{ticket.subject}}” (#{{ticket.number}}). Without an answer from " +
-            "you, it will be resolved automatically in a few days.\n\nThe support team",
+          value: T("ruleText.reminder"),
         },
       ],
     },
     {
       tenantId,
       kind: "scheduled",
-      name: "Auto-close after 4 days",
+      name: T("rule.autoclose"),
       position: 4,
       active: true,
       conditionsAll: [
@@ -338,9 +325,15 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
       {
         tenantId,
         key: "module",
-        label: "Module concerned",
+        label: T("field.module"),
         type: "select",
-        options: ["Billing", "Account & access", "Exports", "Integrations", "Other"],
+        options: [
+          T("macroCat.billing"),
+          T("opt.module.account"),
+          T("opt.module.exports"),
+          T("opt.module.integrations"),
+          T("opt.module.other"),
+        ],
         portalVisible: true,
         required: true,
         position: 0,
@@ -348,9 +341,9 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
       {
         tenantId,
         key: "urgency",
-        label: "Urgency",
+        label: T("field.urgency"),
         type: "select",
-        options: ["Low", "Normal", "High"],
+        options: [T("opt.urgency.low"), T("opt.urgency.normal"), T("opt.urgency.high")],
         portalVisible: true,
         required: false,
         position: 1,
@@ -358,7 +351,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
       {
         tenantId,
         key: "version",
-        label: "Product version",
+        label: T("field.version"),
         type: "text",
         portalVisible: false,
         position: 2,
@@ -366,7 +359,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
       {
         tenantId,
         key: "order_number",
-        label: "Order number",
+        label: T("field.orderNumber"),
         type: "number",
         portalVisible: true,
         position: 3,
@@ -374,7 +367,7 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
       {
         tenantId,
         key: "preferred_date",
-        label: "Preferred date",
+        label: T("field.preferredDate"),
         type: "date",
         portalVisible: true,
         position: 4,
@@ -382,16 +375,16 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
       {
         tenantId,
         key: "environment",
-        label: "Environment",
+        label: T("field.environment"),
         type: "multi_select",
-        options: ["Production", "Staging", "Development"],
+        options: [T("opt.env.production"), T("opt.env.staging"), T("opt.env.development")],
         portalVisible: false,
         position: 5,
       },
       {
         tenantId,
         key: "support_contract",
-        label: "Support contract",
+        label: T("field.supportContract"),
         type: "checkbox",
         portalVisible: false,
         position: 6,
@@ -403,24 +396,26 @@ export async function installDefaults(tenantId: string): Promise<boolean> {
   const formRows = await db
     .insert(ticketForms)
     .values([
-      { tenantId, name: "General support", portalVisible: true, position: 0 },
-      { tenantId, name: "Billing", portalVisible: true, position: 1 },
-      { tenantId, name: "Sales", portalVisible: false, position: 2 },
+      { tenantId, name: T("form.general"), portalVisible: true, position: 0 },
+      { tenantId, name: T("macroCat.billing"), portalVisible: true, position: 1 },
+      { tenantId, name: T("team.sales"), portalVisible: false, position: 2 },
     ])
     .returning();
-  const formId = (name: string) => formRows.find((f) => f.name === name)!.id;
+  /* By rank, like the teams: the names are translated. */
+  const FORM_ORDER = ["general", "billing", "sales"] as const;
+  const formId = (slug: (typeof FORM_ORDER)[number]) => formRows[FORM_ORDER.indexOf(slug)]!.id;
 
   await db.insert(formFields).values([
-    { tenantId, formId: formId("General support"), fieldId: fieldId("module"), position: 0 },
-    { tenantId, formId: formId("General support"), fieldId: fieldId("urgency"), position: 1 },
-    { tenantId, formId: formId("General support"), fieldId: fieldId("version"), position: 2 },
-    { tenantId, formId: formId("General support"), fieldId: fieldId("environment"), position: 3 },
-    { tenantId, formId: formId("Billing"), fieldId: fieldId("module"), position: 0 },
-    { tenantId, formId: formId("Billing"), fieldId: fieldId("order_number"), position: 1 },
-    { tenantId, formId: formId("Billing"), fieldId: fieldId("urgency"), position: 2 },
-    { tenantId, formId: formId("Sales"), fieldId: fieldId("module"), position: 0 },
-    { tenantId, formId: formId("Sales"), fieldId: fieldId("preferred_date"), position: 1 },
-    { tenantId, formId: formId("Sales"), fieldId: fieldId("support_contract"), position: 2 },
+    { tenantId, formId: formId("general"), fieldId: fieldId("module"), position: 0 },
+    { tenantId, formId: formId("general"), fieldId: fieldId("urgency"), position: 1 },
+    { tenantId, formId: formId("general"), fieldId: fieldId("version"), position: 2 },
+    { tenantId, formId: formId("general"), fieldId: fieldId("environment"), position: 3 },
+    { tenantId, formId: formId("billing"), fieldId: fieldId("module"), position: 0 },
+    { tenantId, formId: formId("billing"), fieldId: fieldId("order_number"), position: 1 },
+    { tenantId, formId: formId("billing"), fieldId: fieldId("urgency"), position: 2 },
+    { tenantId, formId: formId("sales"), fieldId: fieldId("module"), position: 0 },
+    { tenantId, formId: formId("sales"), fieldId: fieldId("preferred_date"), position: 1 },
+    { tenantId, formId: formId("sales"), fieldId: fieldId("support_contract"), position: 2 },
   ]);
 
   return true;

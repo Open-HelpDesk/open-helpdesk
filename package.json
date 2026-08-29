@@ -15,6 +15,7 @@
     "db:generate": "pnpm --filter @openhelpdesk/db db:generate",
     "db:migrate": "pnpm --filter @openhelpdesk/db db:migrate",
     "db:seed": "pnpm --filter @openhelpdesk/db db:seed",
+    "db:relocalize": "pnpm --filter @openhelpdesk/db db:relocalize",
     "db:seed:auth": "pnpm --filter @openhelpdesk/auth seed"
   },
   "devDependencies": {

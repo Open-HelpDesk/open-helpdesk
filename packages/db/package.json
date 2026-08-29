@@ -14,6 +14,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx src/seed/demo.ts",
+    "db:relocalize": "tsx src/seed/relocalize.ts",
     "db:rls": "tsx src/apply-rls.ts"
   },
   "dependencies": {

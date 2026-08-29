@@ -53,6 +53,11 @@ async function ensureMailbox(tenantId: string) {
 
 /* ---------- Design defaults: purge the old ad hoc seed, then install ---------- */
 async function resetAndInstallDefaults(tenantId: string) {
+  // The example content follows the workspace's language, not the seed's.
+  const [row] = await db
+    .select({ locale: tenants.locale })
+    .from(tenants)
+    .where(eq(tenants.id, tenantId));
   const [marker] = await db
     .select({ id: slaPolicies.id })
     .from(slaPolicies)
@@ -74,7 +79,7 @@ async function resetAndInstallDefaults(tenantId: string) {
   await db.delete(teams).where(eq(teams.tenantId, tenantId));
   await db.delete(businessHours).where(eq(businessHours.tenantId, tenantId));
 
-  await installDefaults(tenantId);
+  await installDefaults(tenantId, row?.locale ?? "en");
 }
 
 /* ---------- Team memberships (ST-02 design) ---------- */
