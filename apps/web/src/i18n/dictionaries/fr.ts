@@ -600,7 +600,7 @@ export const fr: Dictionary = {
   "app.newTicket.placeholderCode": "code",
   "app.newTicket.status": "Statut",
   "app.newTicket.statusNew": "Nouveau",
-  "app.newTicket.statusOpen": "Ouvert",
+  "app.newTicket.statusOpen": "En cours",
   "app.newTicket.statusWaiting": "En attente",
   "app.newTicket.statusOnHold": "En pause",
   "app.newTicket.priority": "Priorité",
@@ -1746,7 +1746,7 @@ export const fr: Dictionary = {
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nouveau",
-  "app.status.open": "Ouvert",
+  "app.status.open": "En cours",
   "app.status.waiting": "En attente",
   "app.status.onHold": "En pause",
   "app.status.resolved": "Résolu",
