@@ -504,6 +504,10 @@ export const el: Dictionary = {
   "app.ticket.slaMet": "Τηρήθηκε · {duration}",
   "app.ticket.slaMissed": "Παραβιάστηκε · -{duration}",
   "app.ticket.slaPending": "Προς τήρηση · {duration}",
+  "app.ticket.slaTargetMissed": "στόχος εκπρόθεσμος: {target}",
+  "app.ticket.slaTargetPending": "στόχος: {target}",
+  "app.ticket.slaTargetDone": "{when} — στόχος {target}",
+  "app.ticket.requesterFullRecord": "Προβολή πλήρους καρτέλας",
   "app.ticket.contactGroup": "Επαφή",
   "app.ticket.recentCount": { one: "{count} πρόσφατο τικέτ", other: "{count} πρόσφατα τικέτ" },
   "app.ticket.kbGroup": "Βάση γνώσης",
@@ -511,6 +515,7 @@ export const el: Dictionary = {
   "app.ticket.kbConvertHint":
     "Μεταφέρει το αίτημα και την απάντηση σε ένα πρόχειρο, για να το ελέγξετε.",
   "app.ticket.tabReply": "Απάντηση",
+  "app.ticket.threadNotePlaceholder": "Σημείωση ορατή μόνο στην ομάδα σας…",
   "app.ticket.draftSavedSeconds": {
     one: "Το πρόχειρο αποθηκεύτηκε πριν από {count} δευτ.",
     other: "Το πρόχειρο αποθηκεύτηκε πριν από {count} δευτ.",

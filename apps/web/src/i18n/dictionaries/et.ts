@@ -495,6 +495,10 @@ export const et: Dictionary = {
   "app.ticket.slaMet": "Täidetud · {duration}",
   "app.ticket.slaMissed": "Ületatud · -{duration}",
   "app.ticket.slaPending": "Täitmisel · {duration}",
+  "app.ticket.slaTargetMissed": "eesmärk ületatud: {target}",
+  "app.ticket.slaTargetPending": "eesmärk: {target}",
+  "app.ticket.slaTargetDone": "{when} — eesmärk {target}",
+  "app.ticket.requesterFullRecord": "Vaata täielikku kaarti",
   "app.ticket.contactGroup": "Kontakt",
   "app.ticket.recentCount": {
     one: "{count} hiljutine pilet",
@@ -504,6 +508,7 @@ export const et: Dictionary = {
   "app.ticket.kbConvert": "Tee artikliks",
   "app.ticket.kbConvertHint": "Võtab päringu ja vastuse mustandisse ülevaatamiseks.",
   "app.ticket.tabReply": "Vastus",
+  "app.ticket.threadNotePlaceholder": "Märkus, mida näeb ainult teie tiim…",
   "app.ticket.draftSavedSeconds": {
     one: "Mustand salvestatud {count} s tagasi",
     other: "Mustand salvestatud {count} s tagasi",

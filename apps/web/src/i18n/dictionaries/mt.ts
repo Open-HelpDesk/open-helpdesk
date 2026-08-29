@@ -599,6 +599,10 @@ export const mt: Dictionary = {
   "app.ticket.slaMet": "Milħuq · {duration}",
   "app.ticket.slaMissed": "Maqbuż · -{duration}",
   "app.ticket.slaPending": "Dovut · {duration}",
+  "app.ticket.slaTargetMissed": "mira maqbuża: {target}",
+  "app.ticket.slaTargetPending": "mira: {target}",
+  "app.ticket.slaTargetDone": "{when} — mira {target}",
+  "app.ticket.requesterFullRecord": "Ara r-rekord sħiħ",
   "app.ticket.contactGroup": "Kuntatt",
   "app.ticket.recentCount": {
     one: "{count} ticket riċenti",
@@ -611,6 +615,7 @@ export const mt: Dictionary = {
   "app.ticket.kbConvert": "Ibdel f'artiklu",
   "app.ticket.kbConvertHint": "Jieħu t-talba u t-tweġiba f'abbozz biex tirrevedih.",
   "app.ticket.tabReply": "Tweġiba",
+  "app.ticket.threadNotePlaceholder": "Nota viżibbli biss għat-tim tiegħek…",
   "app.ticket.draftSavedSeconds": {
     one: "Abbozz maħżun {count} s ilu",
     two: "Abbozz maħżun {count} s ilu",

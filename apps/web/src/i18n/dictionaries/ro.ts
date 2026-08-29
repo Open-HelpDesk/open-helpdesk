@@ -545,6 +545,10 @@ export const ro: Dictionary = {
   "app.ticket.slaMet": "Respectat · {duration}",
   "app.ticket.slaMissed": "Depășit · -{duration}",
   "app.ticket.slaPending": "De respectat · {duration}",
+  "app.ticket.slaTargetMissed": "țintă depășită: {target}",
+  "app.ticket.slaTargetPending": "țintă: {target}",
+  "app.ticket.slaTargetDone": "{when} — țintă {target}",
+  "app.ticket.requesterFullRecord": "Vezi fișa completă",
   "app.ticket.contactGroup": "Contact",
   "app.ticket.recentCount": {
     one: "{count} tichet recent",
@@ -555,6 +559,7 @@ export const ro: Dictionary = {
   "app.ticket.kbConvert": "Transformați în articol",
   "app.ticket.kbConvertHint": "Preia solicitarea și răspunsul într-o ciornă de revizuit.",
   "app.ticket.tabReply": "Răspuns",
+  "app.ticket.threadNotePlaceholder": "Notă vizibilă doar pentru echipa ta…",
   "app.ticket.draftSavedSeconds": {
     one: "Ciornă salvată acum {count} s",
     few: "Ciornă salvată acum {count} s",

@@ -567,6 +567,10 @@ export const cs: Dictionary = {
   "app.ticket.slaMet": "Splněno · {duration}",
   "app.ticket.slaMissed": "Nesplněno · -{duration}",
   "app.ticket.slaPending": "Termín · {duration}",
+  "app.ticket.slaTargetMissed": "cíl překročen: {target}",
+  "app.ticket.slaTargetPending": "cíl: {target}",
+  "app.ticket.slaTargetDone": "{when} — cíl {target}",
+  "app.ticket.requesterFullRecord": "Zobrazit celý záznam",
   "app.ticket.contactGroup": "Kontakt",
   "app.ticket.recentCount": {
     one: "{count} nedávný tiket",
@@ -578,6 +582,7 @@ export const cs: Dictionary = {
   "app.ticket.kbConvert": "Převést na článek",
   "app.ticket.kbConvertHint": "Převezme požadavek i odpověď do konceptu k revizi.",
   "app.ticket.tabReply": "Odpověď",
+  "app.ticket.threadNotePlaceholder": "Poznámka viditelná jen pro váš tým…",
   "app.ticket.draftSavedSeconds": {
     one: "Koncept uložen před {count} s",
     few: "Koncept uložen před {count} s",

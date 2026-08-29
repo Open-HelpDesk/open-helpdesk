@@ -16,10 +16,14 @@ import {
 } from "@/lib/data";
 import {
   CHANNEL_KEYS,
+  PRIORITY_KEYS,
+  PRIORITY_TOKEN,
+  STATUS_KEYS,
+  STATUS_TOKEN,
   duration,
 } from "@/lib/format";
 import { getT, type Translate } from "@/i18n/server";
-import { Avatar } from "@/components/ticket-bits";
+import { Avatar, PANEL_CARD, PANEL_GROUP } from "@/components/ticket-bits";
 import { BreadcrumbLeaf } from "@/components/app-shell";
 import { TicketMoreMenu } from "./header-tools";
 import { MessageAttachments, type AttachmentData } from "./attachments";
@@ -38,19 +42,18 @@ import { ReplyEditor } from "./reply-editor";
 /**
  * AG-04 — Ticket detail (agent space design): 2-row header with chips and
  * ←/→ navigation, customer/agent/note/events thread, attachments with viewer,
- * tabbed composer with split button, 320 px properties panel.
+ * tabbed composer with split button, 304 px properties panel.
  */
 
-/** Group title of the properties panel — 11px/600 uppercase, letter-spacing .06em. */
-const PANEL_GROUP: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 600,
-  letterSpacing: ".06em",
-  textTransform: "uppercase",
-  color: "var(--ink-3)",
-};
-
-function SlaRow({
+/**
+ * One SLA target of the details card: a name, a verdict badge, the bar of what
+ * is left of the clock, and the instants underneath.
+ *
+ * The bar only appears while there is something to watch. A target that was met
+ * is a fact, not a countdown — drawing a full green bar under it would ask the
+ * agent to read a gauge whose answer the badge already gives.
+ */
+function SlaFact({
   label,
   due,
   doneAt,
@@ -59,50 +62,68 @@ function SlaRow({
   t,
 }: {
   label: string;
-  due: Date | null;
+  due: Date;
   doneAt: Date | null;
   createdAt: Date;
   now: number;
   t: Translate;
 }) {
-  let text = "—";
-  let color = "var(--ink-3)";
-  if (due) {
-    if (doneAt) {
-      if (doneAt.getTime() <= due.getTime()) {
-        text = t("app.ticket.slaMet", {
-          duration: duration(t, Math.max(60_000, doneAt.getTime() - createdAt.getTime())),
-        });
-        color = "var(--ok)";
-      } else {
-        text = t("app.ticket.slaMissed", {
-          duration: duration(t, doneAt.getTime() - due.getTime()),
-        });
-        color = "var(--dang)";
-      }
-    } else {
-      const remaining = due.getTime() - now;
-      if (remaining >= 0) {
-        text = t("app.ticket.slaPending", { duration: duration(t, remaining) });
-        color = remaining < 30 * 60_000 ? "var(--wait)" : "var(--ink-2)";
-      } else {
-        text = t("app.ticket.slaMissed", { duration: duration(t, -remaining) });
-        color = "var(--dang)";
-      }
-    }
-  }
+  const missed = doneAt ? doneAt.getTime() > due.getTime() : due.getTime() < now;
+  const met = doneAt !== null && !missed;
+  const remaining = due.getTime() - now;
+  const urgent = !doneAt && !missed && remaining < 30 * 60_000;
+
+  const tone = missed ? "dang" : met ? "ok" : urgent ? "wait" : "ok";
+  const badge = met
+    ? t("app.ticket.slaMet", {
+        duration: duration(t, Math.max(60_000, doneAt.getTime() - createdAt.getTime())),
+      })
+    : missed
+      ? t("app.ticket.slaMissed", {
+          duration: duration(t, (doneAt ? doneAt.getTime() : now) - due.getTime()),
+        })
+      : t("app.ticket.slaPending", { duration: duration(t, remaining) });
+
+  const span = due.getTime() - createdAt.getTime();
+  const elapsed = (doneAt ? doneAt.getTime() : now) - createdAt.getTime();
+  const filled = missed ? 100 : Math.min(100, Math.max(2, (elapsed / Math.max(1, span)) * 100));
+
   return (
-    <div
-      className="flex items-center justify-between"
-      style={{
-        padding: "8px 10px",
-        borderBottom: "1px solid var(--line-2)",
-        fontSize: 12.5,
-      }}
-    >
-      <span style={{ color: "var(--ink-2)" }}>{label}</span>
-      <span className="whitespace-nowrap tabular-nums" style={{ fontWeight: 600, color }}>
-        {text}
+    <div className="flex flex-col" style={{ gap: 4 }}>
+      <div className="flex items-center justify-between" style={{ gap: 8 }}>
+        <span style={{ fontSize: 12, color: "var(--ink-3)" }}>{label}</span>
+        <span
+          className="whitespace-nowrap tabular-nums"
+          style={{
+            padding: "2px 8px",
+            borderRadius: 999,
+            background: `var(--${tone}-t)`,
+            color: `var(--${tone})`,
+            fontSize: 11,
+            fontWeight: 600,
+          }}
+        >
+          {badge}
+        </span>
+      </div>
+      {!met && (
+        <div
+          className="overflow-hidden"
+          style={{ height: 5, borderRadius: 3, background: "var(--sunk)" }}
+          aria-hidden
+        >
+          <div style={{ width: `${filled}%`, height: "100%", background: `var(--${tone})` }} />
+        </div>
+      )}
+      <span style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+        {doneAt
+          ? t("app.ticket.slaTargetDone", {
+              when: t.fmt.messageTime(doneAt),
+              target: t.fmt.messageTime(due),
+            })
+          : missed
+            ? t("app.ticket.slaTargetMissed", { target: t.fmt.messageTime(due) })
+            : t("app.ticket.slaTargetPending", { target: t.fmt.messageTime(due) })}
       </span>
     </div>
   );
@@ -288,6 +309,8 @@ export default async function TicketPage({
   const [mergedBefore, mergedAfter] = t.parts("app.ticket.mergedBanner", "target");
 
   const channelKey = CHANNEL_KEYS[ticket.channel];
+  const statusToken = STATUS_TOKEN[ticket.status] ?? "closed";
+  const priorityToken = PRIORITY_TOKEN[ticket.priority] ?? "open";
 
   const customFields = (ticket.customFields ?? {}) as Record<string, unknown>;
   const fieldEntries = data.ticketFields
@@ -300,229 +323,208 @@ export default async function TicketPage({
     }));
 
   return (
-    // Below xl, the two columns stack instead of sitting side by side: the
-    // properties panel was simply absent from the DOM, and the agent lost
-    // assignee, team, priority, type, SLA and contact record with no way at all
-    // to reach them — not even a fallback.
-    <div className="flex h-full max-xl:flex-col max-xl:overflow-y-auto">
+    /* The header spans the whole screen and the two columns live under it, as
+       the design draws it. Confined to the conversation column it was 300 px
+       narrower, and the subject was the thing that gave way — truncated so the
+       actions could keep their place.
+       The thread lies on --canvas and the header floats above it on --panel: on
+       a white ground the message cards were a hairline apart from their own
+       background, which is why the screen read as a flat list. */
+    <div className="flex h-full flex-col" style={{ background: "var(--canvas)" }}>
       {/* V2: the topbar shows where you are — "Tickets / #4821" — and the
           position in the view moved next to the ←/→ buttons, where it belongs. */}
       <BreadcrumbLeaf leaf={`#${ticket.number}`} />
 
-      {/* Conversation column */}
-      <div className="flex min-w-0 flex-1 flex-col max-xl:min-h-0" style={{ background: "var(--bg)" }}>
-        {/* Header — 2 rows, padding 12/18, gap 9 */}
-        {/* V2 header — three rows: state and actions, who and when, the tabs.
-            The subject moves into the title face and takes the room the chips
-            used to hold; merge and copy link fold into the ⋯ menu. */}
-        <header
-          className="flex shrink-0 flex-col"
-          style={{ padding: "14px 22px 0", gap: 12, background: "var(--panel)" }}
-        >
-          <div className="flex items-center" style={{ gap: 12 }}>
-            <Link
-              href={`/app/tickets?view=${view}`}
-              title={t("app.ticket.backToInbox")}
-              className="ohd-hover-edge-ink grid shrink-0 place-items-center"
-              style={navBtnStyle}
-            >
-              ←
-            </Link>
+      {/* V2 header — three rows: state and actions, who and when, the tabs.
+          The subject moves into the title face and takes the room the chips
+          used to hold; merge and copy link fold into the ⋯ menu. */}
+      <header
+        className="flex shrink-0 flex-col border-b"
+        style={{
+          padding: "14px 22px 0",
+          gap: 12,
+          background: "var(--panel)",
+          borderColor: "var(--line)",
+        }}
+      >
+        {/* Wraps rather than truncates: the subject is what the ticket IS, and
+            "Import CSV rejeté sans mes…" was the one line of the screen an
+            agent could not do without. Below ~1100 px the actions take a
+            second line and the title keeps its own. */}
+        <div className="flex flex-wrap items-center" style={{ gap: 12 }}>
+          <Link
+            href={`/app/tickets?view=${view}`}
+            title={t("app.ticket.backToInbox")}
+            className="ohd-hover-edge-ink grid shrink-0 place-items-center"
+            style={navBtnStyle}
+          >
+            ←
+          </Link>
 
-            {/* The SLA badge leads, before the subject: on an overdue ticket it is
-                the first thing that has to register. */}
-            {isOpen && remaining !== null && (
-              <span
-                className="whitespace-nowrap"
-                style={{
-                  padding: "4px 12px",
-                  borderRadius: 999,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  background: remaining < 0 ? "var(--dang-t)" : "var(--wait-t)",
-                  color: remaining < 0 ? "var(--dang)" : "var(--wait)",
-                }}
-              >
-                {remaining < 0
-                  ? t("app.ticket.slaOverdueBy", { duration: duration(t, -remaining) })
-                  : t("app.ticket.slaRemaining", { duration: duration(t, remaining) })}
-              </span>
-            )}
-
-            {/* The subject truncates so the actions keep their place: wrapping
-                pushed them under the title, where they read as belonging to the
-                subject rather than to the ticket. */}
-            <h1
-              className="min-w-0 flex-1 truncate"
+          {/* The SLA badge leads, before the subject: on an overdue ticket it is
+              the first thing that has to register. */}
+          {isOpen && remaining !== null && (
+            <span
+              className="whitespace-nowrap"
               style={{
-                fontFamily: "var(--font-title)",
-                fontSize: 21,
-                fontWeight: 600,
-                letterSpacing: "-.015em",
+                padding: "4px 12px",
+                borderRadius: 999,
+                fontSize: 12,
+                fontWeight: 700,
+                background: remaining < 0 ? "var(--dang-t)" : "var(--wait-t)",
+                color: remaining < 0 ? "var(--dang)" : "var(--wait)",
               }}
             >
-              {ticket.subject}
-            </h1>
-
-            <div className="flex flex-none items-center" style={{ gap: 8 }}>
-              {!ticket.mergedIntoId && (
-                <>
-                  <Link
-                    href={`/app/tickets/${ticket.number}?view=${view}#composer`}
-                    className="flex items-center font-semibold"
-                    style={{
-                      height: 36,
-                      padding: "0 16px",
-                      borderRadius: 9,
-                      background: "var(--brand)",
-                      fontSize: 13.5,
-                    }}
-                  >
-                    {t("app.ticket.reply")}
-                  </Link>
-                  <Link
-                    href={`/app/tickets/${ticket.number}?view=${view}&compose=note#composer`}
-                    className="flex items-center"
-                    style={{
-                      height: 36,
-                      padding: "0 14px",
-                      border: "1px solid var(--note-b)",
-                      background: "var(--note)",
-                      borderRadius: 9,
-                      fontSize: 13.5,
-                      fontWeight: 500,
-                      color: "var(--note-ink)",
-                    }}
-                  >
-                    {t("app.ticket.internalNote")}
-                  </Link>
-                  <Link
-                    href={tabHref("resolution")}
-                    className="ohd-hover-edge-ink flex items-center"
-                    style={{
-                      height: 36,
-                      padding: "0 14px",
-                      border: "1px solid var(--line)",
-                      borderRadius: 9,
-                      background: "var(--panel)",
-                      fontSize: 13.5,
-                      fontWeight: 500,
-                    }}
-                  >
-                    {t("app.ticket.tabResolution")}
-                  </Link>
-                  <TicketMoreMenu ticketId={ticket.id} ticketNumber={ticket.number} />
-                </>
-              )}
-
-              {/* Position in the view sits with the arrows that move through it. */}
-              <div
-                className="flex items-center overflow-hidden"
-                style={{ border: "1px solid var(--line)", borderRadius: 9 }}
-              >
-                {prevNumber ? (
-                  <Link
-                    href={`/app/tickets/${prevNumber}?view=${view}`}
-                    title={t("app.ticket.previousTicket")}
-                    className="ohd-row grid place-items-center"
-                    style={{ height: 36, width: 32, color: "var(--ink-2)" }}
-                  >
-                    ‹
-                  </Link>
-                ) : (
-                  <span
-                    className="grid place-items-center"
-                    style={{ height: 36, width: 32, color: "var(--ink-3)", opacity: 0.4 }}
-                  >
-                    ‹
-                  </span>
-                )}
-                <span
-                  className="flex items-center tabular-nums"
-                  style={{
-                    height: 36,
-                    padding: "0 8px",
-                    fontSize: 12,
-                    color: "var(--ink-3)",
-                    borderLeft: "1px solid var(--line-2)",
-                    borderRight: "1px solid var(--line-2)",
-                  }}
-                >
-                  {idx >= 0 ? `${idx + 1} / ${viewNumbers.length}` : `#${number}`}
-                </span>
-                {nextNumber ? (
-                  <Link
-                    href={`/app/tickets/${nextNumber}?view=${view}`}
-                    title={t("app.ticket.nextTicket")}
-                    className="ohd-row grid place-items-center"
-                    style={{ height: 36, width: 32, color: "var(--ink-2)" }}
-                  >
-                    ›
-                  </Link>
-                ) : (
-                  <span
-                    className="grid place-items-center"
-                    style={{ height: 36, width: 32, color: "var(--ink-3)", opacity: 0.4 }}
-                  >
-                    ›
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Who and when, in one line. Status and priority left the header: the
-              properties panel owns them, and they were being stated twice. */}
-          <div
-            className="flex flex-wrap items-center"
-            style={{ gap: 10, fontSize: 13, color: "var(--ink-3)" }}
-          >
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}>#{ticket.number}</span>
-            <span>·</span>
-            <span>
-              <strong style={{ color: "var(--ink-2)", fontWeight: 600 }}>{requesterName}</strong>
-              {organization ? ` — ${organization.name}` : ""}
+              {remaining < 0
+                ? t("app.ticket.slaOverdueBy", { duration: duration(t, -remaining) })
+                : t("app.ticket.slaRemaining", { duration: duration(t, remaining) })}
             </span>
-            <span>·</span>
-            <span>
-              {t("app.ticket.channelCreated", {
-                channel: channelKey ? t(channelKey) : ticket.channel,
-                when: t.fmt.relative(ticket.createdAt),
-              })}
-            </span>
-          </div>
-        </header>
+          )}
 
-        {/* Merge banner */}
-        {ticket.mergedIntoId && (
-          <div
-            className="flex shrink-0 items-center border-b"
+          <h1
+            className="min-w-0"
             style={{
-              gap: 8,
-              padding: "9px 18px",
-              fontSize: 13,
-              background: "var(--pause-t)",
-              borderColor: "var(--line)",
-              color: "var(--ink-2)",
+              fontFamily: "var(--font-title)",
+              fontSize: 21,
+              fontWeight: 600,
+              letterSpacing: "-.015em",
+              textWrap: "pretty",
             }}
           >
-            {mergedBefore}
-            {mergedIntoNumber ? (
-              <Link href={`/app/tickets/${mergedIntoNumber}`} className="font-semibold underline">
-                #{mergedIntoNumber}
-              </Link>
-            ) : (
-              t("app.ticket.mergedUnknownTarget")
-            )}
-            {mergedAfter}
-          </div>
-        )}
+            {ticket.subject}
+          </h1>
 
-        {/* V2 tab bar */}
-        <nav
-          className="flex flex-none items-center border-b"
-          style={{ gap: 4, padding: "0 22px", borderColor: "var(--line)" }}
+          <div className="ml-auto flex flex-none items-center" style={{ gap: 8 }}>
+            {!ticket.mergedIntoId && (
+              <>
+                <Link
+                  href={`/app/tickets/${ticket.number}?view=${view}#composer`}
+                  className="flex items-center font-semibold"
+                  style={{
+                    height: 36,
+                    padding: "0 16px",
+                    borderRadius: 9,
+                    background: "var(--brand)",
+                    fontSize: 13.5,
+                  }}
+                >
+                  {t("app.ticket.reply")}
+                </Link>
+                <Link
+                  href={`/app/tickets/${ticket.number}?view=${view}&compose=note#composer`}
+                  className="flex items-center"
+                  style={{
+                    height: 36,
+                    padding: "0 14px",
+                    border: "1px solid var(--note-b)",
+                    background: "var(--note)",
+                    borderRadius: 9,
+                    fontSize: 13.5,
+                    fontWeight: 500,
+                    color: "var(--note-ink)",
+                  }}
+                >
+                  {t("app.ticket.internalNote")}
+                </Link>
+                <Link
+                  href={tabHref("resolution")}
+                  className="ohd-hover-edge-ink flex items-center"
+                  style={{
+                    height: 36,
+                    padding: "0 14px",
+                    border: "1px solid var(--line)",
+                    borderRadius: 9,
+                    background: "var(--panel)",
+                    fontSize: 13.5,
+                    fontWeight: 500,
+                  }}
+                >
+                  {t("app.ticket.tabResolution")}
+                </Link>
+                <TicketMoreMenu ticketId={ticket.id} ticketNumber={ticket.number} />
+              </>
+            )}
+
+            {/* Position in the view sits with the arrows that move through it. */}
+            <div
+              className="flex items-center overflow-hidden"
+              style={{ border: "1px solid var(--line)", borderRadius: 9 }}
+            >
+              {prevNumber ? (
+                <Link
+                  href={`/app/tickets/${prevNumber}?view=${view}`}
+                  title={t("app.ticket.previousTicket")}
+                  className="ohd-row grid place-items-center"
+                  style={{ height: 36, width: 32, color: "var(--ink-2)" }}
+                >
+                  ‹
+                </Link>
+              ) : (
+                <span
+                  className="grid place-items-center"
+                  style={{ height: 36, width: 32, color: "var(--ink-3)", opacity: 0.4 }}
+                >
+                  ‹
+                </span>
+              )}
+              <span
+                className="flex items-center tabular-nums"
+                style={{
+                  height: 36,
+                  padding: "0 8px",
+                  fontSize: 12,
+                  color: "var(--ink-3)",
+                  borderLeft: "1px solid var(--line-2)",
+                  borderRight: "1px solid var(--line-2)",
+                }}
+              >
+                {idx >= 0 ? `${idx + 1} / ${viewNumbers.length}` : `#${number}`}
+              </span>
+              {nextNumber ? (
+                <Link
+                  href={`/app/tickets/${nextNumber}?view=${view}`}
+                  title={t("app.ticket.nextTicket")}
+                  className="ohd-row grid place-items-center"
+                  style={{ height: 36, width: 32, color: "var(--ink-2)" }}
+                >
+                  ›
+                </Link>
+              ) : (
+                <span
+                  className="grid place-items-center"
+                  style={{ height: 36, width: 32, color: "var(--ink-3)", opacity: 0.4 }}
+                >
+                  ›
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Who and when, in one line. Status and priority left the header: the
+            properties panel owns them, and they were being stated twice. */}
+        <div
+          className="flex flex-wrap items-center"
+          style={{ gap: 10, fontSize: 13, color: "var(--ink-3)" }}
         >
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}>#{ticket.number}</span>
+          <span>·</span>
+          <span>
+            <strong style={{ color: "var(--ink-2)", fontWeight: 600 }}>{requesterName}</strong>
+            {organization ? ` — ${organization.name}` : ""}
+          </span>
+          <span>·</span>
+          <span>
+            {t("app.ticket.channelCreated", {
+              channel: channelKey ? t(channelKey) : ticket.channel,
+              when: t.fmt.relative(ticket.createdAt),
+            })}
+          </span>
+        </div>
+
+        {/* V2 tab bar — the third row of the header block, sitting ON its
+            bottom edge (hence the -1 px) instead of a strip of its own. */}
+        <nav className="flex items-center" style={{ gap: 2, marginBottom: -1 }}>
           {TABS.map((key) => {
             const on = key === tab;
             const label = t(
@@ -546,12 +548,11 @@ export default async function TicketPage({
                 href={tabHref(key)}
                 aria-current={on ? "page" : undefined}
                 style={{
-                  padding: "13px 10px",
+                  padding: "10px 15px",
                   fontSize: 13.5,
                   fontWeight: on ? 600 : 450,
                   color: on ? "var(--brand)" : "var(--ink-3)",
                   borderBottom: `2px solid ${on ? "var(--brand)" : "transparent"}`,
-                  marginBottom: -1,
                 }}
               >
                 {label}
@@ -564,10 +565,46 @@ export default async function TicketPage({
             );
           })}
         </nav>
+      </header>
 
+      {/* Merge banner */}
+      {ticket.mergedIntoId && (
         <div
-          className="flex min-h-0 flex-1 flex-col overflow-y-auto"
-          style={{ padding: "18px 22px", gap: 14 }}
+          className="flex shrink-0 items-center border-b"
+          style={{
+            gap: 8,
+            padding: "9px 18px",
+            fontSize: 13,
+            background: "var(--pause-t)",
+            borderColor: "var(--line)",
+            color: "var(--ink-2)",
+          }}
+        >
+          {mergedBefore}
+          {mergedIntoNumber ? (
+            <Link href={`/app/tickets/${mergedIntoNumber}`} className="font-semibold underline">
+              #{mergedIntoNumber}
+            </Link>
+          ) : (
+            t("app.ticket.mergedUnknownTarget")
+          )}
+          {mergedAfter}
+        </div>
+      )}
+
+      {/* Below xl the two columns stack instead of sitting side by side — the
+          properties panel used to be absent from the DOM entirely, and the
+          agent lost assignee, team, priority, SLA and contact record with no
+          fallback at all. Stacked, the row stops being a flex box: the thread
+          then takes the height of its own content and the panel follows it,
+          instead of both fighting over one screenful. */}
+      <div className="flex min-h-0 flex-1 overflow-hidden max-xl:block max-xl:overflow-y-auto">
+        {/* The thread and the other three tabs share this scroll. Each sets its
+            own measure inside it — 860 for the thread: full width, a reply ran
+            past 1000 px and the eye lost the start of the next line. */}
+        <div
+          className="flex min-w-0 flex-1 flex-col overflow-y-auto max-xl:overflow-y-visible"
+          style={{ padding: "20px 22px 28px" }}
         >
           {tab === "tasks" ? (
             <TasksPanel number={ticket.number} tasks={tasks} agents={agents} meId={agent.id} />
@@ -767,7 +804,7 @@ export default async function TicketPage({
               )}
             </div>
           ) : tab === "activity" ? (
-            <>
+            <div className="flex flex-col" style={{ gap: 14 }}>
               {activity.length === 0 ? (
                 <p style={{ fontSize: 13, color: "var(--ink-3)", maxWidth: 460 }}>
                   {t("app.ticket.activityEmpty")}
@@ -775,20 +812,35 @@ export default async function TicketPage({
               ) : (
                 /* A rail with one dot per entry: a timeline reads as a sequence,
                    which is what these entries are — unlike the centred dividers
-                   they used to be, which read as breaks in the conversation. */
-                <ol className="flex flex-col" style={{ gap: 2, maxWidth: 620, flexShrink: 0 }}>
+                   they used to be, which read as breaks in the conversation.
+                   The hour takes its own column and the entry a card: on the
+                   grey ground of V2 a bare line of text had nothing to sit on. */
+                /* A grid, not a stack of rows: the hour column then takes the
+                   width of the longest instant, so the rail stays plumb
+                   whatever the language writes into it. */
+                <ol
+                  className="grid"
+                  style={{
+                    maxWidth: 760,
+                    flexShrink: 0,
+                    gridTemplateColumns: "max-content 9px minmax(0,1fr)",
+                    columnGap: 12,
+                  }}
+                >
                   {activity.map((m, i) => (
-                    <li key={m.id} className="flex" style={{ gap: 11 }}>
+                    <li key={m.id} className="contents">
                       <span
-                        className="flex shrink-0 flex-col items-center"
-                        style={{ width: 9 }}
-                        aria-hidden
+                        className="whitespace-nowrap text-right tabular-nums"
+                        style={{ paddingTop: 10, fontSize: 12, color: "var(--ink-3)" }}
                       >
+                        {t.fmt.messageTime(m.createdAt)}
+                      </span>
+                      <span className="flex flex-col items-center" aria-hidden>
                         <span
                           style={{
                             width: 7,
                             height: 7,
-                            marginTop: 6,
+                            marginTop: 13,
                             borderRadius: 999,
                             background: "var(--line-2)",
                             border: "1px solid var(--line)",
@@ -798,13 +850,21 @@ export default async function TicketPage({
                           <span className="w-px flex-1" style={{ background: "var(--line)" }} />
                         )}
                       </span>
-                      <span
-                        className="flex flex-wrap items-baseline"
-                        style={{ gap: 8, paddingBottom: 12, fontSize: 12.5 }}
-                      >
-                        <span style={{ color: "var(--ink-2)" }}>{m.bodyText}</span>
-                        <span className="whitespace-nowrap" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
-                          {t.fmt.relative(m.createdAt)}
+                      <span className="min-w-0" style={{ paddingBottom: 10 }}>
+                        <span
+                          className="block"
+                          style={{
+                            border: "1px solid var(--line)",
+                            borderRadius: 11,
+                            background: "var(--panel)",
+                            padding: "10px 14px",
+                            fontSize: 13,
+                            lineHeight: 1.55,
+                            color: "var(--ink-2)",
+                            textWrap: "pretty",
+                          }}
+                        >
+                          {m.bodyText}
                         </span>
                       </span>
                     </li>
@@ -813,14 +873,15 @@ export default async function TicketPage({
               )}
               <Link
                 href={tabHref("conversation")}
-                className="ohd-hover-acc self-start"
+                className="self-start hover:underline"
                 style={{ fontSize: 12.5, color: "var(--brand-2)" }}
               >
                 ← {t("app.ticket.activityBack")}
               </Link>
-            </>
+            </div>
           ) : (
-            conversation.map((m, i) => {
+            <div className="flex flex-col" style={{ maxWidth: 860, gap: 12 }}>
+            {conversation.map((m, i) => {
               const isNote = m.kind === "internal_note";
               const isAgent = m.authorType === "agent";
               const name = authorName(m.authorId, m.authorType);
@@ -865,7 +926,11 @@ export default async function TicketPage({
                           style={{
                             padding: "2px 8px",
                             borderRadius: 999,
-                            background: isNote ? "#f5e9be" : "var(--brand-t)",
+                            // --note-b and --note-ink: the design's fixed
+                            // #F5E9BE was a pale yellow under a pale yellow ink
+                            // once the dark theme was on. The pair is valued per
+                            // theme and contrasts in both.
+                            background: isNote ? "var(--note-b)" : "var(--brand-t)",
                             color: isNote ? "var(--note-ink)" : "var(--brand)",
                             fontSize: 10.5,
                             fontWeight: 700,
@@ -876,11 +941,15 @@ export default async function TicketPage({
                         </span>
                       )}
                       <span className="flex-1" />
+                      {/* The hour, not "last week": on a ticket whose SLA is
+                          counted in hours, when a reply went out is the fact
+                          being read — and the relative form threw it away. */}
                       <span
                         className="whitespace-nowrap tabular-nums"
                         style={{ fontSize: 12, color: "var(--ink-3)" }}
+                        title={t.fmt.relative(m.createdAt)}
                       >
-                        {t.fmt.relative(m.createdAt)}
+                        {t.fmt.messageTime(m.createdAt)}
                       </span>
                     </div>
 
@@ -909,139 +978,211 @@ export default async function TicketPage({
                   </article>
                 </div>
               );
-            })
+            })}
+
+            {/* The composer closes the thread instead of being docked under it:
+                it is the next card of the same stack. */}
+            {!ticket.mergedIntoId && (
+              <ReplyEditor
+                ticketId={ticket.id}
+                ticketNumber={ticket.number}
+                contactName={requesterName}
+                agentName={agent.name ?? agent.email}
+                macros={editorMacros}
+                initialKind={compose === "note" ? "internal_note" : "public_reply"}
+              />
+            )}
+            </div>
           )}
         </div>
 
-        {/* Composer */}
-        {!ticket.mergedIntoId && (
-          <ReplyEditor
-            ticketId={ticket.id}
-            ticketNumber={ticket.number}
-            contactName={requesterName}
-            macros={editorMacros}
-            initialKind={compose === "note" ? "internal_note" : "public_reply"}
-          />
-        )}
-      </div>
-
-      {/* V2 — five panels behind five icons. The details panel keeps what
-          the single column used to hold; the requester, pinned notes, the
-          SLA timeline and linked tickets each get their own. */}
-      <SidePanels
-        number={ticket.number}
-        ticketId={ticket.id}
-        requester={{
-          id: requester.id,
-          name: requesterName,
-          email: requester.email,
-          phone: requester.phone,
-          organizationName: organization?.name ?? null,
-          ticketCount: requesterTicketCount,
-          recent: recentRequesterTickets.map((r) => ({
-            number: r.number,
-            subject: r.subject,
-            status: r.status,
-            when: t.fmt.relative(r.updatedAt),
-          })),
-        }}
-        notes={pinnedNotes}
-        linked={linkedTickets}
-        slaEvents={slaEvents}
-        details={
-          <>
-          <PropsForm
-            ticketId={ticket.id}
-            number={ticket.number}
-            assigneeId={ticket.assigneeId}
-            teamId={ticket.teamId}
-            priority={ticket.priority}
-            type={ticket.type}
-            channel={ticket.channel}
-            tags={ticket.tags}
-            agents={agents}
-            teams={teams}
-          />
-          {/* Form fields */}
-          <section className="flex flex-col" style={{ gap: 8 }}>
-            <p style={PANEL_GROUP}>{t("app.ticket.formFieldsGroup")}</p>
-            {fieldEntries.length === 0 ? (
-              <p style={{ fontSize: 12.5, color: "var(--ink-3)" }}>{t("app.ticket.noFields")}</p>
-            ) : (
-              fieldEntries.map((f) => (
-                <div
-                  key={f.label}
+        {/* V2 — five panels behind five icons. The details panel keeps what
+            the single column used to hold; the requester, pinned notes, the
+            SLA timeline and linked tickets each get their own. */}
+        <SidePanels
+          number={ticket.number}
+          ticketId={ticket.id}
+          requester={{
+            id: requester.id,
+            name: requesterName,
+            email: requester.email,
+            phone: requester.phone,
+            organizationName: organization?.name ?? null,
+            ticketCount: requesterTicketCount,
+            recent: recentRequesterTickets.map((r) => ({
+              number: r.number,
+              subject: r.subject,
+              status: r.status,
+              when: t.fmt.relative(r.updatedAt),
+            })),
+          }}
+          notes={pinnedNotes}
+          linked={linkedTickets}
+          slaEvents={slaEvents}
+          details={
+            <>
+            {/* 1. Where the ticket stands: the two pills, then the clocks. */}
+            <section className="flex flex-col" style={{ ...PANEL_CARD, padding: "15px 16px", gap: 12 }}>
+              <div className="flex flex-wrap items-center" style={{ gap: 9 }}>
+                <span
+                  className="inline-flex items-center whitespace-nowrap"
                   style={{
-                    display: "grid",
-                    gridTemplateColumns: "96px 1fr",
-                    alignItems: "center",
-                    gap: 8,
-                    minHeight: 26,
-                    fontSize: 12.5,
+                    gap: 6,
+                    padding: "4px 11px 4px 9px",
+                    borderRadius: 999,
+                    background: `var(--${statusToken}-t)`,
+                    color: `var(--${statusToken})`,
+                    fontSize: 12,
+                    fontWeight: 600,
                   }}
                 >
-                  <span style={{ color: "var(--ink-3)" }}>{f.label}</span>
-                  <span className="min-w-0 truncate" style={{ fontWeight: 500 }}>
-                    {f.value}
-                  </span>
+                  <span
+                    style={{
+                      width: 5,
+                      height: 5,
+                      borderRadius: "50%",
+                      background: `var(--${statusToken})`,
+                    }}
+                  />
+                  {t(STATUS_KEYS[ticket.status] ?? "app.status.open")}
+                </span>
+                <span
+                  className="inline-flex items-center whitespace-nowrap"
+                  style={{
+                    gap: 6,
+                    padding: "4px 11px",
+                    borderRadius: 999,
+                    background: `var(--${priorityToken}-t)`,
+                    color: `var(--${priorityToken})`,
+                    fontSize: 12,
+                    fontWeight: 600,
+                  }}
+                >
+                  <span
+                    style={{ width: 6, height: 6, background: `var(--${priorityToken})` }}
+                  />
+                  {t(PRIORITY_KEYS[ticket.priority] ?? "app.priority.normal")}
+                </span>
+              </div>
+
+              {(ticket.firstReplyDueAt || ticket.resolveDueAt) && (
+                <div
+                  className="flex flex-col border-t"
+                  style={{ gap: 9, paddingTop: 11, borderColor: "var(--line-2)" }}
+                >
+                  {ticket.firstReplyDueAt && (
+                    <SlaFact
+                      label={t("app.ticket.slaFirstReply")}
+                      due={ticket.firstReplyDueAt}
+                      doneAt={ticket.firstRepliedAt}
+                      createdAt={ticket.createdAt}
+                      now={now}
+                      t={t}
+                    />
+                  )}
+                  {ticket.resolveDueAt && (
+                    <SlaFact
+                      label={t("app.ticket.slaResolution")}
+                      due={ticket.resolveDueAt}
+                      doneAt={ticket.resolvedAt}
+                      createdAt={ticket.createdAt}
+                      now={now}
+                      t={t}
+                    />
+                  )}
                 </div>
-              ))
-            )}
-          </section>
-
-          {/* SLA — boxed, rows separated by --line-2 */}
-          <section className="flex flex-col" style={{ gap: 8 }}>
-            <p style={PANEL_GROUP}>{t("app.ticket.slaGroup")}</p>
-            <div
-              className="overflow-hidden"
-              style={{ border: "1px solid var(--line)", borderRadius: 8 }}
-            >
-              <SlaRow
-                label={t("app.ticket.slaFirstReply")}
-                due={ticket.firstReplyDueAt}
-                doneAt={ticket.firstRepliedAt}
-                createdAt={ticket.createdAt}
-                now={now}
-                t={t}
-              />
-              <SlaRow
-                label={t("app.ticket.slaResolution")}
-                due={ticket.resolveDueAt}
-                doneAt={ticket.resolvedAt}
-                createdAt={ticket.createdAt}
-                now={now}
-                t={t}
-              />
-            </div>
-          </section>
-
-          {/* Capture a resolution — the knowledge of a closed ticket is otherwise
-              lost. Restricted to the roles that can write to the knowledge base: the link
-              leads to the editor, which would refuse them anyway. */}
-          {!isOpen && isManager(agent.role) && (
-            <section className="flex flex-col" style={{ gap: 8 }}>
-              <p style={PANEL_GROUP}>{t("app.ticket.kbGroup")}</p>
-              <Link
-                href={`/app/kb/new?from=${ticket.number}`}
-                className="ohd-hover-edge-ink inline-flex items-center justify-center rounded-md border font-medium"
-                style={{
-                  height: 30,
-                  fontSize: 12.5,
-                  borderColor: "var(--line)",
-                  background: "var(--bg)",
-                  color: "var(--ink)",
-                }}
-              >
-                {t("app.ticket.kbConvert")}
-              </Link>
-              <p style={{ fontSize: 12, color: "var(--ink-3)", textWrap: "pretty" }}>
-                {t("app.ticket.kbConvertHint")}
-              </p>
+              )}
             </section>
-          )}
-          </>
-        }
-      />
+
+            {/* 2. Who is asking — the summary; the full record is one click away,
+                   either in the requester panel or on the contact page. */}
+            <section className="flex flex-col" style={{ ...PANEL_CARD, padding: "15px 16px", gap: 11 }}>
+              <p style={PANEL_GROUP}>{t("app.ticket.panelRequester")}</p>
+              <div className="flex items-center" style={{ gap: 11 }}>
+                <Avatar name={requesterName} size={36} fontSize={12} />
+                <div className="min-w-0">
+                  <div className="truncate" style={{ fontSize: 14, fontWeight: 600 }}>
+                    {requesterName}
+                  </div>
+                  <div className="truncate" style={{ fontSize: 12.5, color: "var(--ink-3)" }}>
+                    {[organization?.name, t("app.tickets.count", { count: requesterTicketCount })]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </div>
+                </div>
+              </div>
+              <Link
+                href={`/app/contacts/${requester.id}`}
+                className="hover:underline"
+                style={{ fontSize: 13, color: "var(--brand-2)", fontWeight: 500 }}
+              >
+                {t("app.ticket.requesterFullRecord")}
+              </Link>
+            </section>
+
+            {/* 3. What the ticket is — every field editable in place. */}
+            <section className="flex flex-col" style={{ ...PANEL_CARD, padding: "15px 16px", gap: 11 }}>
+              <p style={PANEL_GROUP}>{t("app.ticket.panelDetails")}</p>
+              <PropsForm
+                ticketId={ticket.id}
+                number={ticket.number}
+                status={ticket.status}
+                assigneeId={ticket.assigneeId}
+                teamId={ticket.teamId}
+                priority={ticket.priority}
+                type={ticket.type}
+                channel={ticket.channel}
+                tags={ticket.tags}
+                agents={agents}
+                teams={teams}
+              />
+            </section>
+
+            {/* The tenant's own fields, when the form carries any. Silent
+                otherwise: an empty card is one more thing to read past. */}
+            {fieldEntries.length > 0 && (
+              <section className="flex flex-col" style={{ ...PANEL_CARD, padding: "15px 16px", gap: 9 }}>
+                <p style={PANEL_GROUP}>{t("app.ticket.formFieldsGroup")}</p>
+                {fieldEntries.map((f) => (
+                  <div key={f.label} className="flex flex-col" style={{ gap: 2 }}>
+                    <span style={{ fontSize: 12, color: "var(--ink-3)" }}>{f.label}</span>
+                    <span style={{ fontSize: 13, fontWeight: 500, textWrap: "pretty" }}>
+                      {f.value}
+                    </span>
+                  </div>
+                ))}
+              </section>
+            )}
+
+            {/* Capture a resolution — the knowledge of a closed ticket is otherwise
+                lost. Restricted to the roles that can write to the knowledge base: the link
+                leads to the editor, which would refuse them anyway. */}
+            {!isOpen && isManager(agent.role) && (
+              <section className="flex flex-col" style={{ ...PANEL_CARD, padding: "15px 16px", gap: 9 }}>
+                <p style={PANEL_GROUP}>{t("app.ticket.kbGroup")}</p>
+                <Link
+                  href={`/app/kb/new?from=${ticket.number}`}
+                  className="ohd-hover-edge-ink flex items-center justify-center font-medium"
+                  style={{
+                    height: 36,
+                    borderRadius: 9,
+                    border: "1px solid var(--line)",
+                    fontSize: 13,
+                    background: "var(--panel)",
+                    color: "var(--ink)",
+                  }}
+                >
+                  {t("app.ticket.kbConvert")}
+                </Link>
+                <p style={{ fontSize: 12, color: "var(--ink-3)", textWrap: "pretty" }}>
+                  {t("app.ticket.kbConvertHint")}
+                </p>
+              </section>
+            )}
+            </>
+          }
+        />
+      </div>
     </div>
   );
 }

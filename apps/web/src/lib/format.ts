@@ -91,6 +91,19 @@ export const PRIORITY_COLORS: Record<string, string> = {
   urgent: "#C0342B",
 };
 
+/**
+ * Priority → CSS token key, the counterpart of STATUS_TOKEN. PRIORITY_COLORS are
+ * fixed hexes because a dot has no background to contrast with; a tinted pill
+ * does, and a fixed hex on a dark panel is either invisible or garish. The token
+ * pair (--dang / --dang-t) is valued per theme, so the pill reads in both.
+ */
+export const PRIORITY_TOKEN: Record<string, string> = {
+  low: "closed",
+  normal: "open",
+  high: "wait",
+  urgent: "dang",
+};
+
 export const CHANNEL_KEYS: Record<string, MessageKey> = {
   email: "app.channel.email",
   portal: "app.channel.portal",

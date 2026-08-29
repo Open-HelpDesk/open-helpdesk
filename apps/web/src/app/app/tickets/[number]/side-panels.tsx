@@ -14,7 +14,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useT } from "@/i18n/client";
-import { Avatar } from "@/components/ticket-bits";
+import { Avatar, PANEL_CARD, PANEL_GROUP } from "@/components/ticket-bits";
 import { STATUS_KEYS } from "@/lib/format";
 import { pinContactNote, unpinContactNote, linkTicket, unlinkTicket } from "./panel-actions";
 
@@ -62,20 +62,10 @@ const ICONS: { key: Panel; d: string }[] = [
   },
 ];
 
-const CARD: React.CSSProperties = {
-  border: "1px solid var(--line)",
-  borderRadius: 14,
-  background: "var(--panel)",
-  boxShadow: "0 1px 2px rgba(13,28,23,.03)",
-};
-
-const GROUP: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 600,
-  letterSpacing: ".12em",
-  textTransform: "uppercase",
-  color: "var(--ink-3)",
-};
+/* Same card and same group title as the details panel — one definition, in
+   ticket-bits, so the five panels cannot drift apart. */
+const CARD = PANEL_CARD;
+const GROUP = PANEL_GROUP;
 
 function StatusPill({ status, label }: { status: string; label: string }) {
   const tone =
@@ -139,11 +129,12 @@ export function SidePanels({
   };
 
   return (
-    <div className="flex min-h-0">
+    <div className="flex min-h-0 max-xl:w-full">
+      {/* 304 px beside the thread; stacked below xl it takes the width it is
+          given, minus the rail that switches it. */}
       <aside
-        className="flex shrink-0 flex-col overflow-auto border-l"
+        className="flex w-[304px] shrink-0 flex-col overflow-auto border-l max-xl:w-auto max-xl:flex-1 max-xl:overflow-visible"
         style={{
-          width: 304,
           padding: 16,
           gap: 12,
           background: "var(--canvas)",

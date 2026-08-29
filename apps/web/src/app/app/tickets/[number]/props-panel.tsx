@@ -1,12 +1,19 @@
 "use client";
 
 /**
- * AG-04 — Properties panel (client part): Assignment and Classification groups,
- * selects applied automatically through updateTicketProps (96px / 1fr rows).
+ * AG-04 — Properties panel (client part).
+ *
+ * V2 turns the two-column rows (label left, control right, 96 px apart) into a
+ * stack of labelled fields: the label sits above a framed h36 control. At 304 px
+ * the old rows left the selects about 190 px wide, which truncated half the
+ * agent names; the label above gives the control the full width of the card.
+ *
+ * Every change applies on its own through updateTicketProps — there is no Save
+ * button, and the panel dims while the transition runs.
  */
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { CHANNEL_KEYS, PRIORITY_COLORS, PRIORITY_KEYS } from "@/lib/format";
+import { CHANNEL_KEYS, PRIORITY_KEYS, STATUS_KEYS } from "@/lib/format";
 import { useT } from "@/i18n/client";
 import { updateTicketProps } from "../actions";
 
@@ -25,9 +32,42 @@ const TYPES = [
   { value: "Other", key: "app.ticket.typeOther" },
 ] as const;
 
+/**
+ * The statuses an agent picks by hand. "closed" is missing on purpose: it is
+ * reached by the automatic closure that follows a resolution, and offering it
+ * here would let an agent skip the CSAT window the resolution opens.
+ */
+const STATUSES = ["new", "open", "waiting", "on_hold", "resolved"] as const;
+
+/** Framed control of the design: h36, r9, hairline, panel ground. */
+const FIELD: React.CSSProperties = {
+  height: 36,
+  width: "100%",
+  borderRadius: 9,
+  border: "1px solid var(--line)",
+  background: "var(--panel)",
+  color: "var(--ink)",
+  fontSize: 13,
+  padding: "0 9px",
+};
+
+const LABEL: React.CSSProperties = { fontSize: 12, color: "var(--ink-3)" };
+
+/** Declared here and not inside PropsForm: a component redefined on every render
+ *  is a new type, and React would remount the select — losing its focus. */
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="flex flex-col" style={{ gap: 5 }}>
+      <span style={LABEL}>{label}</span>
+      {children}
+    </label>
+  );
+}
+
 export function PropsForm({
   ticketId,
   number,
+  status,
   assigneeId,
   teamId,
   priority,
@@ -39,6 +79,7 @@ export function PropsForm({
 }: {
   ticketId: string;
   number: number;
+  status: string;
   assigneeId: string | null;
   teamId: string | null;
   priority: string;
@@ -63,144 +104,114 @@ export function PropsForm({
     });
   }
 
-  const selectStyle = {
-    height: 26,
-    width: "100%",
-    borderRadius: 6,
-    border: "1px solid var(--line)",
-    background: "var(--bg)",
-    color: "var(--ink)",
-    fontSize: 12.5,
-    fontWeight: 500,
-    padding: "0 6px",
-  } as const;
-
-  const labelStyle = { fontSize: 12.5, color: "var(--ink-3)" } as const;
-  const rowStyle = {
-    display: "grid",
-    gridTemplateColumns: "96px 1fr",
-    alignItems: "center",
-    gap: 8,
-    minHeight: 26,
-  } as const;
-  const groupStyle = {
-    fontSize: 11,
-    fontWeight: 600,
-    letterSpacing: ".06em",
-    textTransform: "uppercase",
-    color: "var(--ink-3)",
-  } as const;
-
   return (
-    <div className="flex flex-col" style={{ gap: 16, opacity: pending ? 0.6 : 1 }}>
-      <section className="flex flex-col" style={{ gap: 8 }}>
-        <p style={groupStyle}>{t("app.ticket.assignmentGroup")}</p>
-        <div className="flex flex-col" style={{ gap: 8 }}>
-          <div style={rowStyle}>
-            <span style={labelStyle}>{t("app.ticket.assignee")}</span>
-            <select
-              value={assigneeId ?? ""}
-              onChange={(e) => apply("assigneeId", e.target.value)}
-              style={selectStyle}
-            >
-              <option value="">{t("app.ticket.unassigned")}</option>
-              {agents.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div style={rowStyle}>
-            <span style={labelStyle}>{t("app.ticket.team")}</span>
-            <select
-              value={teamId ?? ""}
-              onChange={(e) => apply("teamId", e.target.value)}
-              style={selectStyle}
-            >
-              <option value="">{t("app.ticket.noTeam")}</option>
-              {teams.map((team) => (
-                <option key={team.id} value={team.id}>
-                  {team.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </section>
+    <div className="flex flex-col" style={{ gap: 11, opacity: pending ? 0.6 : 1 }}>
+      <Field label={t("app.tickets.status")}>
+        <select
+          value={status}
+          onChange={(e) => apply("status", e.target.value)}
+          style={FIELD}
+        >
+          {STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {t(STATUS_KEYS[s]!)}
+            </option>
+          ))}
+          {/* A closed ticket still has to show what it is, even though the
+              picker does not offer that value. */}
+          {status === "closed" && <option value="closed">{t("app.status.closed")}</option>}
+        </select>
+      </Field>
 
-      <section className="flex flex-col" style={{ gap: 8 }}>
-        <p style={groupStyle}>{t("app.ticket.classificationGroup")}</p>
-        <div className="flex flex-col" style={{ gap: 8 }}>
-          <div style={rowStyle}>
-            <span style={labelStyle}>{t("app.ticket.priority")}</span>
-            <div className="flex items-center" style={{ gap: 6 }}>
+      <Field label={t("app.ticket.priority")}>
+        <select
+          value={priority}
+          onChange={(e) => apply("priority", e.target.value)}
+          style={FIELD}
+        >
+          {Object.entries(PRIORITY_KEYS).map(([k, v]) => (
+            <option key={k} value={k}>
+              {t(v)}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      <Field label={t("app.ticket.assignee")}>
+        <select
+          value={assigneeId ?? ""}
+          onChange={(e) => apply("assigneeId", e.target.value)}
+          style={FIELD}
+        >
+          <option value="">{t("app.ticket.unassigned")}</option>
+          {agents.map((a) => (
+            <option key={a.id} value={a.id}>
+              {a.name}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      <Field label={t("app.ticket.team")}>
+        <select
+          value={teamId ?? ""}
+          onChange={(e) => apply("teamId", e.target.value)}
+          style={FIELD}
+        >
+          <option value="">{t("app.ticket.noTeam")}</option>
+          {teams.map((team) => (
+            <option key={team.id} value={team.id}>
+              {team.name}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      <Field label={t("app.ticket.type")}>
+        <select
+          value={type ?? ""}
+          onChange={(e) => apply("type", e.target.value)}
+          style={FIELD}
+        >
+          <option value="">—</option>
+          {TYPES.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {t(opt.key)}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      {/* Channel and tags are read here, not set: the channel is how the ticket
+          arrived, and tags are written by the rules and the macros. */}
+      <div className="flex items-baseline" style={{ gap: 8 }}>
+        <span style={LABEL}>{t("app.ticket.channel")}</span>
+        <span style={{ fontSize: 13, fontWeight: 500 }}>
+          {CHANNEL_KEYS[channel] ? t(CHANNEL_KEYS[channel]) : channel}
+        </span>
+      </div>
+
+      {tags.length > 0 && (
+        <div className="flex flex-col" style={{ gap: 5 }}>
+          <span style={LABEL}>{t("app.ticket.tags")}</span>
+          <span className="flex flex-wrap items-center" style={{ gap: 6 }}>
+            {tags.map((tag) => (
               <span
-                className="shrink-0 rounded-full"
+                key={tag}
+                className="rounded border px-1.5 py-0.5"
                 style={{
-                  width: 7,
-                  height: 7,
-                  background: PRIORITY_COLORS[priority] ?? "var(--ink-3)",
+                  fontSize: 11,
+                  fontFamily: "var(--font-mono)",
+                  background: "var(--sunk)",
+                  borderColor: "var(--line)",
                 }}
-              />
-              <select
-                value={priority}
-                onChange={(e) => apply("priority", e.target.value)}
-                style={selectStyle}
               >
-                {Object.entries(PRIORITY_KEYS).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {t(v)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div style={rowStyle}>
-            <span style={labelStyle}>{t("app.ticket.type")}</span>
-            <select
-              value={type ?? ""}
-              onChange={(e) => apply("type", e.target.value)}
-              style={selectStyle}
-            >
-              <option value="">—</option>
-              {TYPES.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {t(opt.key)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div style={rowStyle}>
-            <span style={labelStyle}>{t("app.ticket.channel")}</span>
-            <span style={{ fontSize: 12.5, fontWeight: 500 }}>
-              {CHANNEL_KEYS[channel] ? t(CHANNEL_KEYS[channel]) : channel}
-            </span>
-          </div>
-          <div style={{ ...rowStyle, alignItems: "start" }}>
-            <span style={{ ...labelStyle, paddingTop: 3 }}>{t("app.ticket.tags")}</span>
-            <span className="flex flex-wrap items-center" style={{ gap: 6, paddingTop: 3 }}>
-              {tags.length === 0 && (
-                <span style={{ fontSize: 12.5, color: "var(--ink-3)" }}>—</span>
-              )}
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded border px-1.5 py-0.5"
-                  style={{
-                    fontSize: 11,
-                    fontFamily: "var(--font-mono)",
-                    background: "var(--sunk)",
-                    borderColor: "var(--line)",
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </span>
-          </div>
+                {tag}
+              </span>
+            ))}
+          </span>
         </div>
-      </section>
+      )}
     </div>
   );
 }

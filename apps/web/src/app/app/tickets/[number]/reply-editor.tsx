@@ -4,10 +4,16 @@
  * AG-04 — Composer: Reply / Internal note tabs, timestamped localStorage draft,
  * markdown toolbar B I U S ≔ ⛓ ❝ ‹›, "/ Macros" menu, {{var}} variables,
  * "Send & {status} | ▾" split button (Resolved / Waiting / Open / no change).
+ *
+ * V2 gives it the shape of a message rather than that of a chat bar. It used to
+ * be docked at the bottom of the column, separated from the thread by a rule; it
+ * is now the last card OF the thread, behind the agent's own avatar — what you
+ * are about to write sits where it will end up.
  */
 import { useEffect, useRef, useState } from "react";
 import { Paperclip } from "lucide-react";
 import { STATUS_KEYS } from "@/lib/format";
+import { Avatar } from "@/components/ticket-bits";
 import { useT } from "@/i18n/client";
 import { sendReply } from "../actions";
 
@@ -36,12 +42,15 @@ export function ReplyEditor({
   ticketId,
   ticketNumber,
   contactName,
+  agentName,
   macros,
   initialKind = "public_reply",
 }: {
   ticketId: string;
   ticketNumber: number;
   contactName: string;
+  /** Whose avatar heads the card — the agent writing, not the requester. */
+  agentName: string;
   macros: MacroOption[];
   /**
    * Which tab the composer opens on. The V2 header's "Internal note" button is
@@ -176,19 +185,25 @@ export function ReplyEditor({
     color: "var(--ink-2)",
     fontSize: 12,
   } as const;
+  /* The card takes the colour of what is being written: a note is yellow all
+     through, exactly like the note cards above it in the thread. */
   const editorLine = isNote ? "var(--note-line)" : "var(--line)";
-  const editorBg = isNote ? "var(--note)" : "var(--bg)";
-  const sendBg = isNote ? "var(--wait)" : "var(--acc)";
+  const editorBg = isNote ? "var(--note)" : "var(--panel)";
+  /* Ink and fill of the send button, as a pair that contrasts in both themes:
+     --note-ink on --note is a dark yellow on a pale one in the light theme and
+     the reverse in the dark one — white would only work in the first. */
+  const sendBg = isNote ? "var(--note-ink)" : "var(--brand)";
+  const sendInk = isNote ? "var(--note)" : "var(--on-brand)";
+  /** Tab of the card head — underlined when active, in the tab's own colour. */
   const tabStyle = (active: boolean, note: boolean) =>
     ({
       padding: "6px 12px",
-      borderRadius: "6px 6px 0 0",
-      fontSize: 13,
+      fontSize: 12.5,
       fontWeight: 600,
-      color: active ? (note ? "var(--wait)" : "var(--ink)") : "var(--ink-3)",
-      background: active ? (note ? "var(--note)" : "var(--bg)") : "transparent",
-      border: `1px solid ${active ? (note ? "var(--note-line)" : "var(--line)") : "transparent"}`,
-      borderBottom: "none",
+      color: active ? (note ? "var(--note-ink)" : "var(--brand)") : "var(--ink-3)",
+      borderBottom: `2px solid ${
+        active ? (note ? "var(--note-ink)" : "var(--brand)") : "transparent"
+      }`,
     }) as const;
 
   const mdText = t("app.ticket.mdPlaceholderText");
@@ -216,7 +231,14 @@ export function ReplyEditor({
   ];
 
   return (
-    <form
+    /* Same two columns as a message of the thread: a 32 px avatar lane, then the
+       card. No rail below the avatar — nothing follows the composer. */
+    <div className="flex shrink-0" style={{ gap: 12, marginTop: 4 }}>
+      <div className="flex flex-none justify-center" style={{ width: 32 }}>
+        <Avatar name={agentName} size={32} fontSize={10.5} />
+      </div>
+
+      <form
       id="composer"
       action={sendReply}
       onSubmit={() => {
@@ -226,8 +248,13 @@ export function ReplyEditor({
           /* ignored */
         }
       }}
-      className="shrink-0 border-t"
-      style={{ background: "var(--panel)", borderColor: "var(--line)" }}
+      className="min-w-0 flex-1"
+      style={{
+        border: `1px solid ${editorLine}`,
+        borderRadius: 14,
+        background: editorBg,
+        boxShadow: "0 1px 2px rgba(13,28,23,.03)",
+      }}
     >
       <input type="hidden" name="ticketId" value={ticketId} />
       <input type="hidden" name="kind" value={kind} />
@@ -235,7 +262,7 @@ export function ReplyEditor({
       <input type="hidden" name="nextStatus" value={isNote ? "" : nextStatus} />
 
       {/* Tabs + draft */}
-      <div className="flex" style={{ gap: 2, padding: "8px 18px 0" }}>
+      <div className="flex" style={{ gap: 2, padding: "8px 10px 0" }}>
         <button type="button" onClick={() => setKind("public_reply")} style={tabStyle(!isNote, false)}>
           {t("app.ticket.tabReply")}
         </button>
@@ -267,18 +294,10 @@ export function ReplyEditor({
         )}
       </div>
 
-      <div
-        style={{
-          margin: "0 18px 12px",
-          border: `1px solid ${editorLine}`,
-          borderRadius: "0 8px 8px 8px",
-          background: editorBg,
-        }}
-      >
       {/* Toolbar */}
       <div
         className="flex items-center"
-        style={{ gap: 1, padding: "6px 8px", borderBottom: `1px solid ${editorLine}` }}
+        style={{ gap: 1, padding: "6px 10px", borderBottom: `1px solid ${editorLine}` }}
       >
         {TOOLBAR.map((b) => (
           <button
@@ -402,15 +421,22 @@ export function ReplyEditor({
         onChange={(e) => setBody(e.target.value)}
         placeholder={
           isNote
-            ? t("app.ticket.notePlaceholder")
+            ? // Not app.ticket.notePlaceholder — that one asks "what should we
+              // know about this contact?", which belongs to the pinned note of
+              // the contact record, not to a note on a ticket.
+              t("app.ticket.threadNotePlaceholder")
             : t("app.ticket.replyPlaceholder", { name: contactName })
         }
         className="w-full resize-y border-0 outline-none"
         style={{
-          padding: 12,
-          minHeight: 86,
-          fontSize: 13.5,
-          lineHeight: 1.55,
+          display: "block",
+          padding: "12px 14px",
+          minHeight: 96,
+          // Read at the size it will be read at once sent: the thread sets a
+          // message body in 14/1.6, and the composer used to be half a point
+          // smaller — enough for a reply to look different once posted.
+          fontSize: 14,
+          lineHeight: 1.6,
           background: "transparent",
           color: "var(--ink)",
         }}
@@ -418,7 +444,15 @@ export function ReplyEditor({
 
       <div
         className="flex items-center"
-        style={{ gap: 8, padding: "8px 10px", borderTop: `1px solid ${editorLine}` }}
+        style={{
+          gap: 8,
+          padding: "9px 12px",
+          borderTop: `1px solid ${editorLine}`,
+          // The foot of the card is set back, as in the design — except on a
+          // note, where the yellow has to run to the bottom edge.
+          background: isNote ? "transparent" : "var(--canvas)",
+          borderRadius: "0 0 13px 13px",
+        }}
       >
         <label
           className="inline-flex cursor-pointer items-center gap-1.5"
@@ -459,18 +493,31 @@ export function ReplyEditor({
         {isNote ? (
           <button
             type="submit"
-            className="grid place-items-center font-semibold text-white"
-            style={{ height: 32, padding: "0 14px", borderRadius: 6, background: sendBg, fontSize: 13 }}
+            className="grid place-items-center font-semibold"
+            style={{
+              height: 32,
+              padding: "0 16px",
+              borderRadius: 8,
+              background: sendBg,
+              color: sendInk,
+              fontSize: 12.5,
+            }}
           >
             {t("app.ticket.addNote")}
           </button>
         ) : (
           <div className="relative">
-            <div className="flex overflow-hidden" style={{ borderRadius: 6 }}>
+            <div className="flex overflow-hidden" style={{ borderRadius: 8 }}>
               <button
                 type="submit"
-                className="grid place-items-center whitespace-nowrap font-semibold text-white"
-                style={{ height: 32, padding: "0 14px", background: sendBg, fontSize: 13 }}
+                className="grid place-items-center whitespace-nowrap font-semibold"
+                style={{
+                  height: 32,
+                  padding: "0 16px",
+                  background: sendBg,
+                  color: sendInk,
+                  fontSize: 12.5,
+                }}
               >
                 {sendLabel(nextStatus)}
               </button>
@@ -483,8 +530,14 @@ export function ReplyEditor({
                   setMacroMenu(false);
                   setVarMenu(false);
                 }}
-                className="grid place-items-center text-white"
-                style={{ height: 32, padding: "0 9px", background: sendBg, fontSize: 10 }}
+                className="grid place-items-center"
+                style={{
+                  height: 32,
+                  padding: "0 9px",
+                  background: sendBg,
+                  color: sendInk,
+                  fontSize: 10,
+                }}
               >
                 ▾
               </button>
@@ -516,7 +569,7 @@ export function ReplyEditor({
           </div>
         )}
       </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }

@@ -573,6 +573,10 @@ export const lt: Dictionary = {
   "app.ticket.slaMet": "Įvykdyta · {duration}",
   "app.ticket.slaMissed": "Nesilaikyta · -{duration}",
   "app.ticket.slaPending": "Iki termino · {duration}",
+  "app.ticket.slaTargetMissed": "tikslas viršytas: {target}",
+  "app.ticket.slaTargetPending": "tikslas: {target}",
+  "app.ticket.slaTargetDone": "{when} — tikslas {target}",
+  "app.ticket.requesterFullRecord": "Peržiūrėti visą kortelę",
   "app.ticket.contactGroup": "Kontaktas",
   "app.ticket.recentCount": {
     one: "{count} naujausia užklausa",
@@ -585,6 +589,7 @@ export const lt: Dictionary = {
   "app.ticket.kbConvertHint":
     "Užklausa ir atsakymas perkeliami į juodraštį, kurį reikės peržiūrėti.",
   "app.ticket.tabReply": "Atsakymas",
+  "app.ticket.threadNotePlaceholder": "Pastaba, matoma tik jūsų komandai…",
   "app.ticket.draftSavedSeconds": {
     one: "Juodraštis įrašytas prieš {count} s",
     few: "Juodraštis įrašytas prieš {count} s",

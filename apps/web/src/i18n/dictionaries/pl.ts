@@ -576,6 +576,10 @@ export const pl: Dictionary = {
   "app.ticket.slaMet": "Dotrzymane · {duration}",
   "app.ticket.slaMissed": "Przekroczone · -{duration}",
   "app.ticket.slaPending": "Do dotrzymania · {duration}",
+  "app.ticket.slaTargetMissed": "cel przekroczony: {target}",
+  "app.ticket.slaTargetPending": "cel: {target}",
+  "app.ticket.slaTargetDone": "{when} — cel {target}",
+  "app.ticket.requesterFullRecord": "Zobacz pełną kartę",
   "app.ticket.contactGroup": "Kontakt",
   "app.ticket.recentCount": {
     one: "{count} ostatnie zgłoszenie",
@@ -588,6 +592,7 @@ export const pl: Dictionary = {
   "app.ticket.kbConvertHint":
     "Przenosi zgłoszenie i odpowiedź do wersji roboczej do sprawdzenia.",
   "app.ticket.tabReply": "Odpowiedź",
+  "app.ticket.threadNotePlaceholder": "Notatka widoczna tylko dla Twojego zespołu…",
   "app.ticket.draftSavedSeconds": {
     one: "Wersja robocza zapisana {count} s temu",
     few: "Wersja robocza zapisana {count} s temu",

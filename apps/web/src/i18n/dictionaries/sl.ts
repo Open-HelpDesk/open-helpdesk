@@ -570,6 +570,10 @@ export const sl: Dictionary = {
   "app.ticket.slaMet": "Izpolnjeno · {duration}",
   "app.ticket.slaMissed": "Preseženo · -{duration}",
   "app.ticket.slaPending": "Rok · {duration}",
+  "app.ticket.slaTargetMissed": "cilj presežen: {target}",
+  "app.ticket.slaTargetPending": "cilj: {target}",
+  "app.ticket.slaTargetDone": "{when} — cilj {target}",
+  "app.ticket.requesterFullRecord": "Prikaži celoten zapis",
   "app.ticket.contactGroup": "Stik",
   "app.ticket.recentCount": {
     one: "{count} nedaven zahtevek",
@@ -581,6 +585,7 @@ export const sl: Dictionary = {
   "app.ticket.kbConvert": "Pretvori v članek",
   "app.ticket.kbConvertHint": "Zahtevo in odgovor prenese v osnutek za pregled.",
   "app.ticket.tabReply": "Odgovor",
+  "app.ticket.threadNotePlaceholder": "Opomba, vidna samo vaši ekipi…",
   "app.ticket.draftSavedSeconds": {
     one: "Osnutek shranjen pred {count} s",
     two: "Osnutek shranjen pred {count} s",

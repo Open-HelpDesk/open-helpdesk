@@ -550,6 +550,10 @@ export const lv: Dictionary = {
   "app.ticket.slaMet": "Izpildīts · {duration}",
   "app.ticket.slaMissed": "Pārsniegts · -{duration}",
   "app.ticket.slaPending": "Jāizpilda · {duration}",
+  "app.ticket.slaTargetMissed": "mērķis nokavēts: {target}",
+  "app.ticket.slaTargetPending": "mērķis: {target}",
+  "app.ticket.slaTargetDone": "{when} — mērķis {target}",
+  "app.ticket.requesterFullRecord": "Skatīt pilnu kartīti",
   "app.ticket.contactGroup": "Kontaktpersona",
   "app.ticket.recentCount": {
     zero: "{count} nesenu pieteikumu",
@@ -560,6 +564,7 @@ export const lv: Dictionary = {
   "app.ticket.kbConvert": "Pārveidot par rakstu",
   "app.ticket.kbConvertHint": "Pārņem pieprasījumu un atbildi melnrakstā, ko varat pārlasīt.",
   "app.ticket.tabReply": "Atbilde",
+  "app.ticket.threadNotePlaceholder": "Piezīme, redzama tikai jūsu komandai…",
   "app.ticket.draftSavedSeconds": {
     zero: "Melnraksts saglabāts pirms {count} s",
     one: "Melnraksts saglabāts pirms {count} s",

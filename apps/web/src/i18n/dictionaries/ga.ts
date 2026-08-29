@@ -599,6 +599,10 @@ export const ga: Dictionary = {
   "app.ticket.slaMet": "Comhlíonta · {duration}",
   "app.ticket.slaMissed": "Caillte · -{duration}",
   "app.ticket.slaPending": "Dlite · {duration}",
+  "app.ticket.slaTargetMissed": "sprioc caillte: {target}",
+  "app.ticket.slaTargetPending": "sprioc: {target}",
+  "app.ticket.slaTargetDone": "{when} — sprioc {target}",
+  "app.ticket.requesterFullRecord": "Féach ar an taifead iomlán",
   "app.ticket.contactGroup": "Teagmhálaí",
   "app.ticket.recentCount": {
     one: "{count} ticéad le déanaí",
@@ -612,6 +616,7 @@ export const ga: Dictionary = {
   "app.ticket.kbConvertHint":
     "Tarraingíonn an iarratas agus an freagra isteach i ndréacht le hathbhreithniú.",
   "app.ticket.tabReply": "Freagra",
+  "app.ticket.threadNotePlaceholder": "Nóta nach bhfeiceann ach d'fhoireann…",
   "app.ticket.draftSavedSeconds": {
     one: "Dréacht sábháilte {count} s ó shin",
     two: "Dréacht sábháilte {count} s ó shin",

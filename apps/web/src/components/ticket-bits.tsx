@@ -17,6 +17,28 @@ import type { MessageKey } from "@/i18n/dictionaries/en";
  */
 type Tr = (key: MessageKey, params?: MessageParams) => string;
 
+/**
+ * The card of the ticket screen's right column — r14 on --panel, hairline and a
+ * resting shadow. V2 lays that column on --canvas, so a card is what makes a
+ * group of facts a group; the flat rows it replaced ran into each other.
+ * Shared because the column is rendered from both sides of the client boundary.
+ */
+export const PANEL_CARD: React.CSSProperties = {
+  border: "1px solid var(--line)",
+  borderRadius: 14,
+  background: "var(--panel)",
+  boxShadow: "0 1px 2px rgba(13,28,23,.03)",
+};
+
+/** Title of a group inside those cards — 11px/600 uppercase, tracking .12em. */
+export const PANEL_GROUP: React.CSSProperties = {
+  fontSize: 11,
+  fontWeight: 600,
+  letterSpacing: ".12em",
+  textTransform: "uppercase",
+  color: "var(--ink-3)",
+};
+
 /** Status pill — agent space design: padding 2px 8px, radius 20, 11.5px/600. */
 export function StatusChip({ status, t }: { status: string; t: Tr }) {
   const key = STATUS_TOKEN[status] ?? "closed";
