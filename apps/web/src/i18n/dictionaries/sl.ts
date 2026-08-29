@@ -1395,6 +1395,10 @@ export const sl: Dictionary = {
   "app.settings.sla.closed": "Zaprto",
   "app.settings.sla.dragToReorder": "Povlecite za prerazvrstitev",
   "app.settings.sla.defaultBadge": "PRIVZETO",
+  "app.settings.sla.statusActive": "Aktivna",
+  "app.settings.sla.statusInactive": "Onemogočena",
+  "app.settings.sla.deactivatePolicy": "Onemogoči",
+  "app.settings.sla.activatePolicy": "Omogoči",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Portal za stranke in widget",

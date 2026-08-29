@@ -1394,6 +1394,10 @@ export const sk: Dictionary = {
   "app.settings.sla.closed": "Zatvorené",
   "app.settings.sla.dragToReorder": "Presunutím zmeníte poradie",
   "app.settings.sla.defaultBadge": "PREDVOLENÁ",
+  "app.settings.sla.statusActive": "Aktívna",
+  "app.settings.sla.statusInactive": "Vypnutá",
+  "app.settings.sla.deactivatePolicy": "Vypnúť",
+  "app.settings.sla.activatePolicy": "Zapnúť",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Klientsky portál a widget",

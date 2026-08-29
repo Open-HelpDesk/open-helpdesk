@@ -134,6 +134,13 @@
       "when": 1787948849872,
       "tag": "0018_slow_micromacro",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1788041542999,
+      "tag": "0019_typical_spacker_dave",
+      "breakpoints": true
     }
   ]
 }

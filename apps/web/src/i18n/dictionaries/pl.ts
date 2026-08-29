@@ -1404,6 +1404,10 @@ export const pl: Dictionary = {
   "app.settings.sla.closed": "Zamknięte",
   "app.settings.sla.dragToReorder": "Przeciągnij, aby zmienić kolejność",
   "app.settings.sla.defaultBadge": "DOMYŚLNA",
+  "app.settings.sla.statusActive": "Aktywna",
+  "app.settings.sla.statusInactive": "Wyłączona",
+  "app.settings.sla.deactivatePolicy": "Wyłącz",
+  "app.settings.sla.activatePolicy": "Włącz",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Portal klienta i widget",

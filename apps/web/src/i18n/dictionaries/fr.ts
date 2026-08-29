@@ -1165,6 +1165,10 @@ export const fr: Dictionary = {
   "app.settings.sla.closed": "Fermé",
   "app.settings.sla.dragToReorder": "Glisser pour réordonner",
   "app.settings.sla.defaultBadge": "PAR DÉFAUT",
+  "app.settings.sla.statusActive": "Active",
+  "app.settings.sla.statusInactive": "Désactivée",
+  "app.settings.sla.deactivatePolicy": "Désactiver",
+  "app.settings.sla.activatePolicy": "Activer",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Portail client & widget",

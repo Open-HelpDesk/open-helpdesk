@@ -1345,6 +1345,10 @@ export const lv: Dictionary = {
   "app.settings.sla.closed": "Slēgts",
   "app.settings.sla.dragToReorder": "Velciet, lai mainītu secību",
   "app.settings.sla.defaultBadge": "NOKLUSĒJUMS",
+  "app.settings.sla.statusActive": "Aktīva",
+  "app.settings.sla.statusInactive": "Atspējota",
+  "app.settings.sla.deactivatePolicy": "Atspējot",
+  "app.settings.sla.activatePolicy": "Iespējot",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Klientu portāls un logrīks",

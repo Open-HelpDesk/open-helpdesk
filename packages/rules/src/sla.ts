@@ -40,10 +40,12 @@ function dueLabel(due: Date): string {
 }
 
 async function matchPolicy(ticket: typeof tickets.$inferSelect) {
+  // A deactivated policy is skipped, not deleted: the ticket falls through to
+  // the next one that matches, and ultimately to the default policy.
   const policies = await db
     .select()
     .from(slaPolicies)
-    .where(eq(slaPolicies.tenantId, ticket.tenantId))
+    .where(and(eq(slaPolicies.tenantId, ticket.tenantId), eq(slaPolicies.active, true)))
     .orderBy(asc(slaPolicies.position));
   for (const policy of policies) {
     const conditions = (policy.conditions as Condition[]) ?? [];

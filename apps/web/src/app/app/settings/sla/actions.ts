@@ -51,18 +51,16 @@ export async function saveSlaTargets(formData: FormData) {
     }
     if (Object.keys(entry).length > 0) targets[prio] = entry;
   }
-  const reminder = Number(formData.get("reminderMin") ?? 0);
-  if (Number.isFinite(reminder) && reminder > 0) targets.reminderMin = reminder;
+  // The calendar and the reminder are edited with the name and the conditions,
+  // where the mock-up puts them — this form no longer carries them. `targets` is
+  // rebuilt from scratch on every save, so the reminder has to be carried over
+  // explicitly or saving a duration would silently drop it.
+  const previous = (existing.targets ?? {}) as { reminderMin?: number };
+  if (previous.reminderMin) targets.reminderMin = previous.reminderMin;
 
   await db
     .update(slaPolicies)
-    .set({
-      targets,
-      businessHoursId: await resolveCalendarId(
-        tenant.id,
-        String(formData.get("businessHoursId") ?? ""),
-      ),
-    })
+    .set({ targets })
     .where(eq(slaPolicies.id, existing.id));
 
   revalidatePath("/app/settings/sla");
@@ -82,11 +80,23 @@ export async function savePolicyMeta(formData: FormData) {
     .where(and(eq(slaPolicies.tenantId, tenant.id), eq(slaPolicies.id, policyId)));
   if (!existing) return;
 
+  // The applied calendar and the reminder travel with the name: the mock-up
+  // edits them where a policy is defined, not next to its durations.
+  const targets = { ...((existing.targets ?? {}) as Record<string, unknown>) };
+  const reminder = Number(formData.get("reminderMin") ?? 0);
+  if (Number.isFinite(reminder) && reminder > 0) targets.reminderMin = reminder;
+  else delete targets.reminderMin;
+
   await db
     .update(slaPolicies)
     .set({
       name,
       conditions: existing.isDefault ? [] : parseConditions(formData.get("conditions")),
+      targets,
+      businessHoursId: await resolveCalendarId(
+        tenant.id,
+        String(formData.get("businessHoursId") ?? ""),
+      ),
     })
     .where(eq(slaPolicies.id, existing.id));
 
@@ -159,6 +169,29 @@ export async function reorderSlaPolicies(ids: string[]) {
     if (!owned.has(id)) continue;
     await db.update(slaPolicies).set({ position: position++ }).where(eq(slaPolicies.id, id));
   }
+  revalidatePath("/app/settings/sla");
+}
+
+/**
+ * Takes a policy out of the running, or puts it back. The default policy is
+ * excluded: it is what every ticket falls through to, and deactivating it would
+ * leave the workspace with tickets and no target at all — which is why the
+ * screen shows it a plain badge rather than a switch.
+ */
+export async function toggleSlaPolicy(formData: FormData) {
+  const { tenant } = await requireManager();
+  const policyId = String(formData.get("policyId") ?? "");
+  const [existing] = await db
+    .select({ active: slaPolicies.active, isDefault: slaPolicies.isDefault })
+    .from(slaPolicies)
+    .where(and(eq(slaPolicies.tenantId, tenant.id), eq(slaPolicies.id, policyId)));
+  if (!existing || existing.isDefault) return;
+
+  await db
+    .update(slaPolicies)
+    .set({ active: !existing.active })
+    .where(eq(slaPolicies.id, policyId));
+
   revalidatePath("/app/settings/sla");
 }
 

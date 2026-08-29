@@ -1329,6 +1329,10 @@ export const hr: Dictionary = {
   "app.settings.sla.closed": "Zatvoreno",
   "app.settings.sla.dragToReorder": "Povuci za promjenu redoslijeda",
   "app.settings.sla.defaultBadge": "ZADANO",
+  "app.settings.sla.statusActive": "Aktivna",
+  "app.settings.sla.statusInactive": "Deaktivirana",
+  "app.settings.sla.deactivatePolicy": "Isključi",
+  "app.settings.sla.activatePolicy": "Uključi",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Klijentski portal i widget",

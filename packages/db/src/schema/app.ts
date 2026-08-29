@@ -445,6 +445,13 @@ export const slaPolicies = app.table("sla_policies", {
   /** null = 24/7. */
   businessHoursId: uuid("business_hours_id").references(() => businessHours.id),
   isDefault: boolean("is_default").notNull().default(false),
+  /**
+   * A policy taken out of the running without being deleted: matching skips it,
+   * so tickets fall through to the next one. The default policy is the
+   * fall-through itself and stays active — deactivating it would leave a
+   * workspace with tickets and no target at all.
+   */
+  active: boolean("active").notNull().default(true),
 });
 
 /* ---------- Fields & forms ---------- */

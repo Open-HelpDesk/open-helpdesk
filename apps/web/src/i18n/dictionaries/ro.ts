@@ -1351,6 +1351,10 @@ export const ro: Dictionary = {
   "app.settings.sla.closed": "Închis",
   "app.settings.sla.dragToReorder": "Trageți pentru a reordona",
   "app.settings.sla.defaultBadge": "IMPLICITĂ",
+  "app.settings.sla.statusActive": "Activă",
+  "app.settings.sla.statusInactive": "Dezactivată",
+  "app.settings.sla.deactivatePolicy": "Dezactivați",
+  "app.settings.sla.activatePolicy": "Activați",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Portal client și widget",

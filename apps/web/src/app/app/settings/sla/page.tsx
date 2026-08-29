@@ -2,13 +2,6 @@ import Link from "next/link";
 import { requireAgent } from "@/lib/session";
 import { businessHours, db, slaPolicies } from "@openhelpdesk/db";
 import { asc, eq } from "drizzle-orm";
-import {
-  addBusinessMinutes,
-  formatBusinessMoment,
-  zonedParts,
-  zonedTimeToInstant,
-  type BusinessCalendar,
-} from "@openhelpdesk/rules";
 import { conditionsSummary, formatDurationTokens } from "@/lib/rule-labels";
 import { PRIORITY_COLORS, PRIORITY_KEYS } from "@/lib/format";
 import { PageHeader, PageShell, SaveBar } from "@/components/settings-page";
@@ -27,9 +20,11 @@ import {
   saveCalendar,
   savePolicyMeta,
   saveSlaTargets,
+  toggleSlaPolicy,
 } from "./actions";
 
-const TARGET_GRID = "130px 1fr 1fr 1fr";
+/** Mock-up grid: a fixed priority column, then the three targets in equal share. */
+const TARGET_GRID = "110px 1fr 1fr 1fr";
 const TARGET_MIN_WIDTH = 560;
 const PRIORITY_ORDER = ["urgent", "high", "normal", "low"] as const;
 
@@ -38,37 +33,79 @@ type Targets = Record<
   { firstReplyMin?: number; nextReplyMin?: number; resolveMin?: number }
 > & { reminderMin?: number };
 
-/**
- * Renders a translated sentence several segments of which are emphasized: the
- * sentence stays a single key, the segments to be bolded are wrapped in
- * asterisks in it (the translator moves them along with the words, the order
- * changes from one language to another).
- */
-function emphasize(sentence: string) {
-  return sentence
-    .split("*")
-    .map((part, index) => (index % 2 === 1 ? <strong key={index}>{part}</strong> : part));
-}
-
-/** Target field: same box as the design (h32, bordered, tabular-nums). */
+/** Target field, to the mock-up's measure: h36, 0 12px, r9, 13 px, mono. */
 function TargetInput({ name, value }: { name: string; value?: number }) {
   return (
     <input
       name={name}
       defaultValue={formatDurationTokens(value)}
       placeholder="—"
-      className="tabular-nums"
+      className="font-mono tabular-nums"
       style={{
-        height: 38,
-        padding: "0 10px",
+        height: 36,
+        padding: "0 12px",
         border: "1px solid var(--line)",
         borderRadius: 9,
-        background: "var(--bg)",
+        background: "var(--panel)",
         color: "var(--ink)",
         fontSize: 13,
         width: "100%",
       }}
     />
+  );
+}
+
+/** The mock-up's status pill: 3px 10px, r999, 11.5/600. */
+function pillStyle(tone: "active" | "inactive" | "default"): React.CSSProperties {
+  const ink = {
+    active: ["var(--ok-t)", "var(--ok)"],
+    inactive: ["var(--sunk)", "var(--ink-3)"],
+    default: ["var(--sunk)", "var(--ink-3)"],
+  }[tone];
+  return {
+    padding: "3px 10px",
+    borderRadius: 999,
+    fontSize: 11.5,
+    fontWeight: 600,
+    whiteSpace: "nowrap",
+    background: ink[0],
+    color: ink[1],
+  };
+}
+
+/** Column heading of a target grid: 10.5 px, 600, spaced small caps. */
+function ColumnHead({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        color: "var(--ink-3)",
+        fontWeight: 600,
+        letterSpacing: ".08em",
+        textTransform: "uppercase",
+        fontSize: 10.5,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** The clock of the business-hours strip — 15 px, stroke 1.9, as drawn. */
+function ClockIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="15"
+      height="15"
+      fill="none"
+      stroke="var(--ink-3)"
+      strokeWidth="1.9"
+      style={{ flex: "none" }}
+      aria-hidden
+    >
+      <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z" />
+      <path d="M12 6v6l4 2" />
+    </svg>
   );
 }
 
@@ -155,46 +192,6 @@ export default async function SlaPage({
     [120, t("app.settings.sla.reminderHours", { count: 2 })],
   ];
 
-  /* ---------- Worked example: Friday 5 pm of the current week ---------- */
-  let example: { first: string; resolve: string } | null = null;
-  if (selected) {
-    const targets = (selected.targets ?? {}) as Targets;
-    const urgent = targets.urgent;
-    const row = selected.businessHoursId ? calendarById.get(selected.businessHoursId) : undefined;
-    const calendar: BusinessCalendar | null = row
-      ? {
-          timezone: row.timezone,
-          weeklyHours: (row.weeklyHours ?? {}) as BusinessCalendar["weeklyHours"],
-          holidays: (row.holidays ?? []) as BusinessCalendar["holidays"],
-        }
-      : null;
-    if (urgent?.firstReplyMin || urgent?.resolveMin) {
-      const tz = calendar?.timezone ?? tenant.timezone;
-      // Design reference point: the last Friday at 5 pm, wall-clock time of the
-      // calendar (zonedTimeToInstant handles the summer/winter offset).
-      const today = zonedParts(new Date(), tz);
-      const noon = new Date(Date.UTC(today.year, today.month - 1, today.day, 12));
-      const daysSinceFriday = (noon.getUTCDay() + 2) % 7;
-      const fridayDate = new Date(noon.getTime() - daysSinceFriday * 86_400_000);
-      const friday = zonedTimeToInstant(
-        tz,
-        fridayDate.getUTCFullYear(),
-        fridayDate.getUTCMonth() + 1,
-        fridayDate.getUTCDate(),
-        17,
-        0,
-      );
-      example = {
-        first: urgent.firstReplyMin
-          ? formatBusinessMoment(addBusinessMinutes(friday, urgent.firstReplyMin, calendar), tz)
-          : "—",
-        resolve: urgent.resolveMin
-          ? formatBusinessMoment(addBusinessMinutes(friday, urgent.resolveMin, calendar), tz)
-          : "—",
-      };
-    }
-  }
-
   /* V2 sends "New policy" to a page of its own (sla/new): the conditions
      builder is a three-column grid, and the 420 px drawer folded it in half. */
   const newPolicyLink = (
@@ -225,68 +222,101 @@ export default async function SlaPage({
       />
 
       {activeTab === "policies" ? (
-        <div className="flex flex-col gap-4">
-          {/* Evaluation order banner */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "10px 13px",
-              background: "var(--open-t)",
-              borderRadius: 9,
-              fontSize: 12.5,
-              color: "var(--open)",
-            }}
-          >
-            {t("app.settings.sla.orderHint")}
-          </div>
+        /* The mock-up drops the evaluation-order banner: the drag handles and
+           the 01/02/03 numbering already say that order matters, and the page
+           subtitle carries the rule in words. */
+        <PolicyRows
+          policies={policies.map((p) => {
+            const targets = (p.targets ?? {}) as Targets;
+            const calendarName = p.businessHoursId
+              ? (calendarById.get(p.businessHoursId)?.name ?? "—")
+              : t("app.settings.sla.calendarNone");
 
-          <PolicyRows
-            selectedId={selected?.id ?? ""}
-            policies={policies.map((p) => ({
+            return {
               id: p.id,
               name: p.name,
-              conditions: p.isDefault
+              scope: p.isDefault
                 ? t("app.settings.sla.allRemainingTickets")
                 : ((p.conditions as never[]) ?? []).length > 0
                   ? conditionsSummary(t, (p.conditions as never[]) ?? [], [])
                   : t("app.settings.sla.allTickets"),
-              calendar: p.businessHoursId
-                ? (calendarById.get(p.businessHoursId)?.name ?? "—")
-                : "24/7",
-              locked: p.isDefault,
-            }))}
-          />
-
-          {selected && (
-            <div className="flex flex-col gap-4">
-              {/* Targets title + name/conditions editing. The drawer carries
-                  its own <form>: it stays outside the targets form. */}
-              <div className="flex flex-wrap items-center gap-2">
-                <div style={{ fontSize: 14.5, fontWeight: 600 }}>
-                  {t("app.settings.sla.targetsFor", { name: selected.name })}
-                </div>
-                <span className="flex-1" />
+              status: p.isDefault ? (
+                <span key={`${p.id}-badge`} style={pillStyle("default")}>
+                  {t("app.settings.sla.defaultBadge")}
+                </span>
+              ) : (
+                <form key={`${p.id}-toggle`} action={toggleSlaPolicy} className="flex">
+                  <input type="hidden" name="policyId" value={p.id} />
+                  <button
+                    type="submit"
+                    aria-pressed={p.active}
+                    title={
+                      p.active
+                        ? t("app.settings.sla.deactivatePolicy")
+                        : t("app.settings.sla.activatePolicy")
+                    }
+                    className="ohd-hover-edge"
+                    style={{
+                      ...pillStyle(p.active ? "active" : "inactive"),
+                      border: "1px solid transparent",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {p.active
+                      ? t("app.settings.sla.statusActive")
+                      : t("app.settings.sla.statusInactive")}
+                  </button>
+                </form>
+              ),
+              save: (
+                <button
+                  key={`${p.id}-save`}
+                  type="submit"
+                  form={`sla-targets-${p.id}`}
+                  style={{
+                    height: 32,
+                    flex: "none",
+                    padding: "0 14px",
+                    borderRadius: 8,
+                    background: "var(--brand)",
+                    color: "var(--on-brand)",
+                    fontSize: 12.5,
+                    fontWeight: 600,
+                    whiteSpace: "nowrap",
+                    cursor: "pointer",
+                  }}
+                >
+                  {t("app.settings.sla.save")}
+                </button>
+              ),
+              edit: (
                 <Drawer
+                  key={p.id}
                   trigger={
                     <span
-                      className="inline-flex items-center rounded-[9px] border px-3 font-medium"
+                      aria-label={t("app.settings.sla.editNameConditions")}
+                      title={t("app.settings.sla.editNameConditions")}
                       style={{
-                        height: 38,
-                        fontSize: 12.5,
-                        borderColor: "var(--line)",
+                        width: 32,
+                        height: 32,
+                        flex: "none",
+                        border: "1px solid var(--line)",
+                        borderRadius: 8,
                         background: "var(--panel)",
-                        color: "var(--ink)",
+                        display: "grid",
+                        placeItems: "center",
+                        fontSize: 12,
+                        color: "var(--ink-3)",
+                        cursor: "pointer",
                       }}
                     >
-                      {t("app.settings.sla.editNameConditions")}
+                      ✎
                     </span>
                   }
-                  title={t("app.settings.sla.policyDrawerTitle", { name: selected.name })}
+                  title={t("app.settings.sla.policyDrawerTitle", { name: p.name })}
                 >
                   <form action={savePolicyMeta} className="flex flex-col gap-4">
-                    <input type="hidden" name="policyId" value={selected.id} />
+                    <input type="hidden" name="policyId" value={p.id} />
                     <label className="flex flex-col gap-1.5">
                       <span
                         className="font-semibold"
@@ -297,19 +327,62 @@ export default async function SlaPage({
                       <input
                         name="name"
                         required
-                        defaultValue={selected.name}
+                        defaultValue={p.name}
                         style={{
-                          height: 36,
-                          padding: "0 11px",
+                          height: 40,
+                          padding: "0 12px",
                           border: "1px solid var(--line)",
-                          borderRadius: 6,
-                          background: "var(--bg)",
+                          borderRadius: 9,
+                          background: "var(--panel)",
                           color: "var(--ink)",
                           fontSize: 13.5,
                         }}
                       />
                     </label>
-                    {selected.isDefault ? (
+
+                    {/* The calendar sits with the name, as on the mock-up's
+                        "New policy" screen — a policy's durations are read
+                        against it, so it belongs to the policy, not to the grid. */}
+                    <label className="flex flex-col gap-1.5">
+                      <span
+                        className="font-semibold"
+                        style={{ fontSize: 12.5, color: "var(--ink-2)" }}
+                      >
+                        {t("app.settings.sla.calendarApplied")}
+                      </span>
+                      <SelectBox
+                        name="businessHoursId"
+                        defaultValue={p.businessHoursId ?? ""}
+                      >
+                        <option value="">{t("app.settings.sla.calendarNone")}</option>
+                        {calendars.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </SelectBox>
+                    </label>
+
+                    <label className="flex flex-col gap-1.5">
+                      <span
+                        className="font-semibold"
+                        style={{ fontSize: 12.5, color: "var(--ink-2)" }}
+                      >
+                        {t("app.settings.sla.reminderLabel")}
+                      </span>
+                      <SelectBox
+                        name="reminderMin"
+                        defaultValue={String(((p.targets ?? {}) as Targets).reminderMin ?? 30)}
+                      >
+                        {reminders.map(([value, label]) => (
+                          <option key={value} value={value}>
+                            {label}
+                          </option>
+                        ))}
+                      </SelectBox>
+                    </label>
+
+                    {p.isDefault ? (
                       <p style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
                         {t("app.settings.sla.defaultPolicyNote")}
                       </p>
@@ -317,20 +390,25 @@ export default async function SlaPage({
                       <ConditionsBuilder
                         name="conditions"
                         label={t("app.settings.sla.conditionsLabel")}
-                        initial={(selected.conditions as never[]) ?? []}
+                        initial={(p.conditions as never[]) ?? []}
                       />
                     )}
                     <button
                       type="submit"
-                      className="self-start rounded-[9px] px-3.5 font-semibold"
-                      style={{ color: "var(--on-brand)", height: 38, fontSize: 13, background: "var(--acc)" }}
+                      className="self-start rounded-[9px] px-4 font-semibold"
+                      style={{
+                        color: "var(--on-brand)",
+                        height: 38,
+                        fontSize: 13.5,
+                        background: "var(--brand)",
+                      }}
                     >
                       {t("app.settings.sla.save")}
                     </button>
                   </form>
-                  {!selected.isDefault && (
+                  {!p.isDefault && (
                     <form action={deleteSlaPolicy} className="mt-2">
-                      <input type="hidden" name="policyId" value={selected.id} />
+                      <input type="hidden" name="policyId" value={p.id} />
                       <button
                         className="ohd-hover-edge-ink rounded-[9px] border px-3 font-medium"
                         style={{
@@ -346,175 +424,115 @@ export default async function SlaPage({
                     </form>
                   )}
                 </Drawer>
-              </div>
-
-              {/* Targets of the selected policy */}
-              <form action={saveSlaTargets} className="flex flex-col gap-2.5">
-                <input type="hidden" name="policyId" value={selected.id} />
+              ),
+              body: (
                 <div
+                  key={p.id}
                   style={{
-                    border: "1px solid var(--line)",
-                    borderRadius: 10,
-                    background: "var(--panel)",
-                    overflow: "auto",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: TARGET_GRID,
-                      minWidth: TARGET_MIN_WIDTH,
-                      padding: "0 15px",
-                      height: 40,
-                      alignItems: "center",
-                      background: "var(--canvas)",
-                      borderBottom: "1px solid var(--line)",
-                      fontSize: 11,
-                letterSpacing: ".09em",
-                textTransform: "uppercase",
-                      fontWeight: 600,
-                      color: "var(--ink-3)",
-                    }}
-                  >
-                    <div>{t("app.settings.sla.colPriority")}</div>
-                    <div>{t("app.settings.sla.colFirstReply")}</div>
-                    <div>{t("app.settings.sla.colNextReplies")}</div>
-                    <div>{t("app.settings.sla.colResolve")}</div>
-                  </div>
-                  {PRIORITY_ORDER.map((prio, index) => {
-                    const targets = ((selected.targets ?? {}) as Targets)[prio];
-                    return (
-                      <div
-                        key={prio}
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: TARGET_GRID,
-                          minWidth: TARGET_MIN_WIDTH,
-                          padding: "0 15px",
-                          height: 48,
-                          alignItems: "center",
-                          gap: 9,
-                          borderBottom:
-                            index === PRIORITY_ORDER.length - 1
-                              ? "none"
-                              : "1px solid var(--line-2)",
-                        }}
-                      >
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
-                          <span
-                            style={{
-                              width: 7,
-                              height: 7,
-                              borderRadius: "50%",
-                              background: PRIORITY_COLORS[prio],
-                            }}
-                          />
-                          {t(PRIORITY_KEYS[prio]!)}
-                        </div>
-                        <TargetInput name={`t_${prio}_firstReplyMin`} value={targets?.firstReplyMin} />
-                        <TargetInput name={`t_${prio}_nextReplyMin`} value={targets?.nextReplyMin} />
-                        <TargetInput name={`t_${prio}_resolveMin`} value={targets?.resolveMin} />
-                      </div>
-                    );
-                  })}
-                </div>
-                <p style={{ fontSize: 12, color: "var(--ink-3)" }}>
-                  {t("app.settings.sla.durationHint")}
-                </p>
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
-                    gap: 13,
-                  }}
-                >
-                  <label className="flex flex-col gap-1.5">
-                    <span
-                      className="font-semibold"
-                      style={{ fontSize: 12.5, color: "var(--ink-2)" }}
-                    >
-                      {t("app.settings.sla.calendarApplied")}
-                    </span>
-                    <SelectBox
-                      name="businessHoursId"
-                      defaultValue={selected.businessHoursId ?? ""}
-                    >
-                      <option value="">{t("app.settings.sla.calendarNone")}</option>
-                      {calendars.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </SelectBox>
-                  </label>
-                  <label className="flex flex-col gap-1.5">
-                    <span
-                      className="font-semibold"
-                      style={{ fontSize: 12.5, color: "var(--ink-2)" }}
-                    >
-                      {t("app.settings.sla.reminderLabel")}
-                    </span>
-                    <SelectBox
-                      name="reminderMin"
-                      defaultValue={String(((selected.targets ?? {}) as Targets).reminderMin ?? 30)}
-                    >
-                      {reminders.map(([value, label]) => (
-                        <option key={value} value={value}>
-                          {label}
-                        </option>
-                      ))}
-                    </SelectBox>
-                  </label>
-                </div>
-                {/* Worked example — under the targets grid, full width */}
-                <div
-                  style={{
-                    border: "1px solid var(--acc-b)",
-                    background: "var(--acc-t)",
-                    borderRadius: 10,
-                    padding: 15,
+                    borderTop: "1px solid var(--line-2)",
+                    padding: "16px 18px",
                     display: "flex",
                     flexDirection: "column",
-                    gap: 9,
-                    marginTop: 4,
+                    gap: 12,
                   }}
                 >
-                  <div
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      letterSpacing: ".05em",
-                      textTransform: "uppercase",
-                      color: "var(--acc)",
-                    }}
+                  <form
+                    id={`sla-targets-${p.id}`}
+                    action={saveSlaTargets}
+                    className="flex flex-col"
+                    style={{ gap: 12 }}
                   >
-                    {t("app.settings.sla.exampleTitle")}
-                  </div>
-                  {example ? (
-                    <div style={{ fontSize: 13.5, lineHeight: 1.6, textWrap: "pretty" }}>
-                      {emphasize(
-                        t("app.settings.sla.exampleSentence", {
-                          first: example.first,
-                          resolve: example.resolve,
-                        }),
-                      )}
-                    </div>
-                  ) : (
-                    <div style={{ fontSize: 13.5, lineHeight: 1.6 }}>
-                      {t("app.settings.sla.exampleEmpty")}
-                    </div>
-                  )}
-                  <div style={{ fontSize: 12.5, color: "var(--ink-2)", textWrap: "pretty" }}>
-                    {t("app.settings.sla.exampleNote")}
-                  </div>
-                </div>
+                    <input type="hidden" name="policyId" value={p.id} />
 
-                <SaveBar saved={saved === "1"} cancelHref="/app/settings/sla" />
-              </form>
-            </div>
-          )}
-        </div>
+                    <div style={{ overflowX: "auto" }}>
+                      <div className="flex flex-col" style={{ gap: 12, minWidth: TARGET_MIN_WIDTH }}>
+                        <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: TARGET_GRID,
+                            gap: 10,
+                          }}
+                        >
+                          <ColumnHead>{t("app.settings.sla.colPriority")}</ColumnHead>
+                          <ColumnHead>{t("app.settings.sla.colFirstReply")}</ColumnHead>
+                          <ColumnHead>{t("app.settings.sla.colNextReplies")}</ColumnHead>
+                          <ColumnHead>{t("app.settings.sla.colResolve")}</ColumnHead>
+                        </div>
+                        {PRIORITY_ORDER.map((prio) => {
+                          const row = targets[prio];
+                          return (
+                            <div
+                              key={prio}
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns: TARGET_GRID,
+                                gap: 10,
+                                alignItems: "center",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: 7,
+                                  fontSize: 13,
+                                  fontWeight: 600,
+                                  color: PRIORITY_COLORS[prio],
+                                }}
+                              >
+                                {/* Square, not a disc: the mock-up marks priority
+                                    with an 8 px chip rounded to 2. */}
+                                <span
+                                  style={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: 2,
+                                    background: PRIORITY_COLORS[prio],
+                                  }}
+                                />
+                                {t(PRIORITY_KEYS[prio]!)}
+                              </span>
+                              <TargetInput
+                                name={`t_${prio}_firstReplyMin`}
+                                value={row?.firstReplyMin}
+                              />
+                              <TargetInput
+                                name={`t_${prio}_nextReplyMin`}
+                                value={row?.nextReplyMin}
+                              />
+                              <TargetInput
+                                name={`t_${prio}_resolveMin`}
+                                value={row?.resolveMin}
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Business-hours strip, as drawn: sunk, r10, clock 15 px. */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "11px 14px",
+                        background: "var(--sunk)",
+                        borderRadius: 10,
+                        fontSize: 13,
+                        color: "var(--ink-2)",
+                        textWrap: "pretty",
+                      }}
+                    >
+                      <ClockIcon />
+                      {t("app.settings.sla.calendarApplied")} : {calendarName}
+                    </div>
+                  </form>
+                </div>
+              ),
+            };
+          })}
+        />
       ) : (
         <div className="flex flex-col gap-4">
           {/* Calendar chips */}

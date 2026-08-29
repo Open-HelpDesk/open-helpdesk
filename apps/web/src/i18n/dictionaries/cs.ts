@@ -1388,6 +1388,10 @@ export const cs: Dictionary = {
   "app.settings.sla.closed": "Zavřeno",
   "app.settings.sla.dragToReorder": "Přetažením změníte pořadí",
   "app.settings.sla.defaultBadge": "VÝCHOZÍ",
+  "app.settings.sla.statusActive": "Aktivní",
+  "app.settings.sla.statusInactive": "Vypnuto",
+  "app.settings.sla.deactivatePolicy": "Vypnout",
+  "app.settings.sla.activatePolicy": "Zapnout",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Zákaznický portál a widget",

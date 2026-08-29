@@ -1228,6 +1228,10 @@ export const bg: Dictionary = {
   "app.settings.sla.closed": "Затворено",
   "app.settings.sla.dragToReorder": "Плъзнете, за да промените реда",
   "app.settings.sla.defaultBadge": "ПО ПОДРАЗБИРАНЕ",
+  "app.settings.sla.statusActive": "Активна",
+  "app.settings.sla.statusInactive": "Изключена",
+  "app.settings.sla.deactivatePolicy": "Изключване",
+  "app.settings.sla.activatePolicy": "Включване",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Клиентски портал и уиджет",

@@ -1246,6 +1246,10 @@ export const hu: Dictionary = {
   "app.settings.sla.closed": "Zárva",
   "app.settings.sla.dragToReorder": "Húzza az átrendezéshez",
   "app.settings.sla.defaultBadge": "ALAPÉRTELMEZETT",
+  "app.settings.sla.statusActive": "Aktív",
+  "app.settings.sla.statusInactive": "Kikapcsolva",
+  "app.settings.sla.deactivatePolicy": "Kikapcsolás",
+  "app.settings.sla.activatePolicy": "Bekapcsolás",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Ügyfélportál és widget",

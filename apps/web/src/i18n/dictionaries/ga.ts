@@ -1446,6 +1446,10 @@ export const ga: Dictionary = {
   "app.settings.sla.closed": "Dúnta",
   "app.settings.sla.dragToReorder": "Tarraing chun athordú",
   "app.settings.sla.defaultBadge": "RÉAMHSHOCRAITHE",
+  "app.settings.sla.statusActive": "Gníomhach",
+  "app.settings.sla.statusInactive": "Díchumasaithe",
+  "app.settings.sla.deactivatePolicy": "Díchumasaigh",
+  "app.settings.sla.activatePolicy": "Cumasaigh",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Tairseach chustaiméirí & giuirléid",

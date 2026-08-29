@@ -1400,6 +1400,10 @@ export const lt: Dictionary = {
   "app.settings.sla.closed": "Nedirbama",
   "app.settings.sla.dragToReorder": "Vilkite, kad pertvarkytumėte",
   "app.settings.sla.defaultBadge": "NUMATYTOJI",
+  "app.settings.sla.statusActive": "Aktyvi",
+  "app.settings.sla.statusInactive": "Išjungta",
+  "app.settings.sla.deactivatePolicy": "Išjungti",
+  "app.settings.sla.activatePolicy": "Įjungti",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Klientų portalas ir valdiklis",

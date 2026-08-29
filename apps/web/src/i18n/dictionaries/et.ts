@@ -1232,6 +1232,10 @@ export const et: Dictionary = {
   "app.settings.sla.closed": "Suletud",
   "app.settings.sla.dragToReorder": "Lohistage järjestuse muutmiseks",
   "app.settings.sla.defaultBadge": "VAIKIMISI",
+  "app.settings.sla.statusActive": "Aktiivne",
+  "app.settings.sla.statusInactive": "Välja lülitatud",
+  "app.settings.sla.deactivatePolicy": "Keela",
+  "app.settings.sla.activatePolicy": "Luba",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Kliendiportaal ja vidin",

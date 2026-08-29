@@ -1,0 +1,1 @@
+ALTER TABLE "app"."sla_policies" ADD COLUMN "active" boolean DEFAULT true NOT NULL;

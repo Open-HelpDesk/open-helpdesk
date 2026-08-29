@@ -1451,6 +1451,10 @@ export const mt: Dictionary = {
   "app.settings.sla.closed": "Magħluq",
   "app.settings.sla.dragToReorder": "Iġbed biex terġa' tordna",
   "app.settings.sla.defaultBadge": "DEFAULT",
+  "app.settings.sla.statusActive": "Attiva",
+  "app.settings.sla.statusInactive": "Diżattivata",
+  "app.settings.sla.deactivatePolicy": "Diżattiva",
+  "app.settings.sla.activatePolicy": "Attiva",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Portal tal-klijent u widget",

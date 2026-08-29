@@ -1258,6 +1258,10 @@ export const el: Dictionary = {
   "app.settings.sla.closed": "Κλειστά",
   "app.settings.sla.dragToReorder": "Σύρετε για αναδιάταξη",
   "app.settings.sla.defaultBadge": "ΠΡΟΕΠΙΛΟΓΗ",
+  "app.settings.sla.statusActive": "Ενεργή",
+  "app.settings.sla.statusInactive": "Απενεργοποιημένη",
+  "app.settings.sla.deactivatePolicy": "Απενεργοποίηση",
+  "app.settings.sla.activatePolicy": "Ενεργοποίηση",
 
   /* --- settings.portal --- */
   "app.settings.portal.title": "Πύλη πελατών και widget",
