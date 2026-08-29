@@ -7,6 +7,10 @@ import { isManager, requireAgent } from "@/lib/session";
 import { requireTenant } from "@/lib/tenant";
 import { firstName } from "@/i18n/format";
 import { getT } from "@/i18n/server";
+// This route lives outside /app, whose layout mounts the provider: a client
+// component that calls useT() has to be given the dictionary here.
+import { I18nProvider } from "@/i18n/client";
+import { CopyButton } from "@/components/settings-overlays";
 
 /**
  * AG-02 — Onboarding (V2): a checklist, not a wizard.
@@ -111,8 +115,13 @@ export default async function OnboardingPage() {
     done: boolean;
     cta: string;
     href: string;
-    /** Shown even when the item is done — an option still open, not a task. */
-    note?: string;
+    /**
+     * Shown even when the item is done — an option still open, not a task.
+     * Carries the gestures, not a summary: this is the majority path, and a
+     * sentence saying "you can also forward your own address" leaves the reader
+     * to guess the one thing they need, which is where to forward it TO.
+     */
+    howTo?: { title: string; lede: string; steps: string[]; copy: string };
   }[] = [
     {
       title: t("app.onboarding.emailTitle"),
@@ -120,7 +129,18 @@ export default async function OnboardingPage() {
       desc: verifiedMailbox
         ? t("app.onboarding.itemEmailDone", { address: mailboxAddress })
         : t("app.onboarding.itemEmailTodo"),
-      note: onlyProvidedAddress ? t("app.onboarding.itemEmailOwn") : undefined,
+      howTo: onlyProvidedAddress
+        ? {
+            title: t("app.onboarding.ownAddressTitle"),
+            lede: t("app.onboarding.ownAddressLede"),
+            steps: [
+              t("app.onboarding.ownAddressStep1"),
+              t("app.onboarding.ownAddressStep2"),
+              t("app.onboarding.ownAddressStep3"),
+            ],
+            copy: mailboxAddress,
+          }
+        : undefined,
       cta: t("app.onboarding.setUp"),
       href: "/app/settings/email",
     },
@@ -251,17 +271,93 @@ export default async function OnboardingPage() {
                   {item.title}
                 </p>
                 <p style={{ fontSize: 13, color: "var(--ink-3)", lineHeight: 1.5 }}>{item.desc}</p>
-                {item.note && (
-                  <p style={{ fontSize: 13, color: "var(--ink-2)", lineHeight: 1.5 }}>
-                    {item.note}{" "}
+
+                {item.howTo && (
+                  <div
+                    className="flex flex-col"
+                    style={{
+                      marginTop: 6,
+                      padding: "14px 16px",
+                      gap: 10,
+                      borderRadius: 10,
+                      border: "1px solid var(--line)",
+                      background: "var(--canvas)",
+                    }}
+                  >
+                    <p style={{ fontSize: 13.5, fontWeight: 600, color: "var(--ink)" }}>
+                      {item.howTo.title}
+                    </p>
+                    <p style={{ fontSize: 13, color: "var(--ink-2)", lineHeight: 1.55 }}>
+                      {item.howTo.lede}
+                    </p>
+
+                    <ol className="flex flex-col" style={{ gap: 8, margin: 0, padding: 0 }}>
+                      {item.howTo.steps.map((step, n) => (
+                        <li key={step} className="flex" style={{ gap: 9, listStyle: "none" }}>
+                          <span
+                            className="grid flex-none place-items-center"
+                            style={{
+                              width: 19,
+                              height: 19,
+                              marginTop: 1,
+                              borderRadius: "50%",
+                              background: "var(--brand-t)",
+                              color: "var(--brand)",
+                              fontSize: 11,
+                              fontWeight: 700,
+                            }}
+                            aria-hidden
+                          >
+                            {n + 1}
+                          </span>
+                          <span
+                            className="min-w-0 flex-1"
+                            style={{ fontSize: 13, color: "var(--ink-2)", lineHeight: 1.55 }}
+                          >
+                            {step}
+                            {/* The address goes under the step that asks for it,
+                                not in a corner: it is the single value the
+                                reader has to carry to another product, and
+                                retyping it is how a forward silently fails. */}
+                            {n === 1 && (
+                              <span
+                                className="mt-2 flex items-center"
+                                style={{
+                                  gap: 8,
+                                  padding: "7px 10px",
+                                  borderRadius: 8,
+                                  border: "1px solid var(--line)",
+                                  background: "var(--panel)",
+                                }}
+                              >
+                                <code
+                                  className="min-w-0 flex-1 truncate"
+                                  style={{
+                                    fontFamily: "var(--font-mono)",
+                                    fontSize: 12.5,
+                                    color: "var(--ink)",
+                                  }}
+                                >
+                                  {item.howTo!.copy}
+                                </code>
+                                <I18nProvider locale={t.locale} dict={t.dict}>
+                                  <CopyButton text={item.howTo!.copy} />
+                                </I18nProvider>
+                              </span>
+                            )}
+                          </span>
+                        </li>
+                      ))}
+                    </ol>
+
                     <Link
                       href={item.href}
-                      className="hover:underline"
-                      style={{ color: "var(--brand-2)", fontWeight: 500 }}
+                      className="self-start hover:underline"
+                      style={{ fontSize: 13, color: "var(--brand-2)", fontWeight: 500 }}
                     >
-                      {item.cta}
+                      {item.cta} →
                     </Link>
-                  </p>
+                  </div>
                 )}
               </div>
               {/* A done item keeps no CTA — the mockup drops it, and the screen

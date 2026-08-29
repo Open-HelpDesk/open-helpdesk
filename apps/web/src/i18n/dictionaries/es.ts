@@ -1822,8 +1822,14 @@ export const es: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ninguna dirección recibe solicitudes todavía: sin ella, nada llega a la bandeja.",
   "app.onboarding.itemEmailDone": "{address} ya convierte los correos recibidos en solicitudes.",
-  "app.onboarding.itemEmailOwn":
-    "¿Prefiere usar su propia dirección? Redirija support@suempresa.com aquí y conserve la dirección que sus clientes ya conocen.",
+  "app.onboarding.ownAddressStep3":
+    "Envíe un mensaje de prueba: el primer correo que llegue confirma la dirección y crea un ticket.",
+  "app.onboarding.ownAddressStep2": "Añada un reenvío a esta dirección:",
+  "app.onboarding.ownAddressStep1":
+    "Abra la configuración del buzón al que escriben sus clientes (Gmail, Microsoft 365, su proveedor…).",
+  "app.onboarding.ownAddressLede":
+    "La mayoría de los equipos conserva la dirección que sus clientes ya conocen y la redirige aquí. Para el cliente no cambia nada.",
+  "app.onboarding.ownAddressTitle": "Use su propia dirección de soporte",
   "app.onboarding.checklistBody":
     "Cuatro pasos para recibir tu primera solicitud. También puedes hacerlo más tarde desde la administración.",
   "app.onboarding.welcome": "Te damos la bienvenida, {name} 👋",

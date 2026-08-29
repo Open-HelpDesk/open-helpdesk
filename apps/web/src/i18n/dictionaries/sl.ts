@@ -2213,8 +2213,14 @@ export const sl: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Noben naslov še ne prejema zahtevkov — brez njega v nabiralnik ne pride nič.",
   "app.onboarding.itemEmailDone": "{address} prejeta e-poštna sporočila že spremeni v zahtevke.",
-  "app.onboarding.itemEmailOwn":
-    "Raje uporabljate svoj naslov? Preusmerite support@vasepodjetje.si sem in obdržite naslov, ki ga stranke že poznajo.",
+  "app.onboarding.ownAddressStep3":
+    "Pošljite testno sporočilo: prvo prejeto e-poštno sporočilo potrdi naslov in odpre zahtevek.",
+  "app.onboarding.ownAddressStep2": "Dodajte preusmeritev na ta naslov:",
+  "app.onboarding.ownAddressStep1":
+    "Odprite nastavitve nabiralnika, na katerega vam pišejo stranke (Gmail, Microsoft 365, vaš gostitelj…).",
+  "app.onboarding.ownAddressLede":
+    "Večina ekip obdrži naslov, ki ga stranke že poznajo, in ga preusmeri sem. Za stranko se nič ne spremeni.",
+  "app.onboarding.ownAddressTitle": "Uporabite svoj naslov podpore",
   "app.onboarding.checklistBody":
     "Štirje koraki do prvega zahtevka. Vse to lahko urediš tudi pozneje v administraciji.",
   "app.onboarding.welcome": "Dobrodošli, {name} 👋",

@@ -1793,8 +1793,14 @@ export const da: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ingen adresse modtager endnu henvendelser — uden den kommer intet i indbakken.",
   "app.onboarding.itemEmailDone": "{address} laver allerede indkommende mail til sager.",
-  "app.onboarding.itemEmailOwn":
-    "Vil du hellere bruge din egen adresse? Videresend support@ditfirma.dk hertil og behold den adresse, kunderne kender.",
+  "app.onboarding.ownAddressStep3":
+    "Send en testmail: den første besked, der kommer frem, bekræfter adressen og opretter en sag.",
+  "app.onboarding.ownAddressStep2": "Tilføj en videresendelse til denne adresse:",
+  "app.onboarding.ownAddressStep1":
+    "Åbn indstillingerne for den postkasse, jeres kunder skriver til (Gmail, Microsoft 365, jeres hosting…).",
+  "app.onboarding.ownAddressLede":
+    "De fleste teams beholder den adresse, kunderne kender, og videresender den hertil. Kunden mærker ingen forskel.",
+  "app.onboarding.ownAddressTitle": "Brug jeres egen supportadresse",
   "app.onboarding.checklistBody":
     "Fire trin til din første sag. Du kan også gøre det senere under administration.",
   "app.onboarding.welcome": "Velkommen, {name} 👋",

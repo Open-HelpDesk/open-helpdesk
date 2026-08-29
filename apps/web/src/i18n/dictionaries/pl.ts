@@ -2229,8 +2229,14 @@ export const pl: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Żaden adres nie odbiera jeszcze zgłoszeń — bez niego nic nie trafi do skrzynki.",
   "app.onboarding.itemEmailDone": "{address} już zamienia otrzymane wiadomości w zgłoszenia.",
-  "app.onboarding.itemEmailOwn":
-    "Wolisz własny adres? Przekieruj support@twojafirma.pl tutaj i zachowaj adres, który klienci już znają.",
+  "app.onboarding.ownAddressStep3":
+    "Wyślij wiadomość testową: pierwszy e-mail, który dotrze, potwierdza adres i tworzy zgłoszenie.",
+  "app.onboarding.ownAddressStep2": "Dodaj przekierowanie na ten adres:",
+  "app.onboarding.ownAddressStep1":
+    "Otwórz ustawienia skrzynki, na którą piszą klienci (Gmail, Microsoft 365, twój hosting…).",
+  "app.onboarding.ownAddressLede":
+    "Większość zespołów zachowuje adres, który klienci już znają, i przekierowuje go tutaj. Dla klienta nic się nie zmienia.",
+  "app.onboarding.ownAddressTitle": "Używaj własnego adresu wsparcia",
   "app.onboarding.checklistBody":
     "Cztery kroki do pierwszego zgłoszenia. Wszystko można też zrobić później w administracji.",
   "app.onboarding.welcome": "Witaj, {name} 👋",

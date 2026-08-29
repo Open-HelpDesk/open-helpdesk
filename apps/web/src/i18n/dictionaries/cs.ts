@@ -2185,8 +2185,14 @@ export const cs: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Zatím žádná adresa nepřijímá požadavky — bez ní nic nedorazí do doručených.",
   "app.onboarding.itemEmailDone": "{address} už mění doručené e-maily na tikety.",
-  "app.onboarding.itemEmailOwn":
-    "Chcete raději vlastní adresu? Přesměrujte support@vasefirma.cz na tuto a zachovejte adresu, kterou zákazníci znají.",
+  "app.onboarding.ownAddressStep3":
+    "Pošlete zkušební e-mail: první doručená zpráva adresu potvrdí a vytvoří tiket.",
+  "app.onboarding.ownAddressStep2": "Přidejte přesměrování na tuto adresu:",
+  "app.onboarding.ownAddressStep1":
+    "Otevřete nastavení schránky, na kterou vám zákazníci píší (Gmail, Microsoft 365, váš hosting…).",
+  "app.onboarding.ownAddressLede":
+    "Většina týmů si ponechá adresu, kterou zákazníci znají, a přesměruje ji sem. Pro zákazníka se nic nemění.",
+  "app.onboarding.ownAddressTitle": "Používejte vlastní adresu podpory",
   "app.onboarding.checklistBody":
     "Čtyři kroky k prvnímu tiketu. Vše lze udělat i později v administraci.",
   "app.onboarding.welcome": "Vítejte, {name} 👋",

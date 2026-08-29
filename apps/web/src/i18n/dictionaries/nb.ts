@@ -1807,8 +1807,14 @@ export const nb: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ingen adresse mottar henvendelser ennå — uten den kommer ingenting inn.",
   "app.onboarding.itemEmailDone": "{address} gjør allerede innkommende e-post til henvendelser.",
-  "app.onboarding.itemEmailOwn":
-    "Vil du heller bruke din egen adresse? Videresend support@dittfirma.no hit og behold adressen kundene allerede kjenner.",
+  "app.onboarding.ownAddressStep3":
+    "Send en testmelding: den første e-posten som kommer fram, bekrefter adressen og oppretter en sak.",
+  "app.onboarding.ownAddressStep2": "Legg til en videresending til denne adressen:",
+  "app.onboarding.ownAddressStep1":
+    "Åpne innstillingene for postkassen kundene skriver til (Gmail, Microsoft 365, leverandøren deres…).",
+  "app.onboarding.ownAddressLede":
+    "De fleste team beholder adressen kundene kjenner, og videresender den hit. Ingenting endres for kunden.",
+  "app.onboarding.ownAddressTitle": "Bruk deres egen supportadresse",
   "app.onboarding.checklistBody":
     "Fire steg til din første henvendelse. Du kan også gjøre det senere under administrasjon.",
   "app.onboarding.welcome": "Velkommen, {name} 👋",

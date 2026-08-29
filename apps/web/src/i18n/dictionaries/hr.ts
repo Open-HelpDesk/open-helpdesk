@@ -2118,8 +2118,14 @@ export const hr: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nijedna adresa još ne prima zahtjeve — bez nje ništa ne dolazi u sandučić.",
   "app.onboarding.itemEmailDone": "{address} već pretvara primljene e-poruke u tikete.",
-  "app.onboarding.itemEmailOwn":
-    "Radije koristite vlastitu adresu? Proslijedite support@vasatvrtka.hr ovamo i zadržite adresu koju vaši kupci već znaju.",
+  "app.onboarding.ownAddressStep3":
+    "Pošaljite probnu poruku: prva pristigla e-pošta potvrđuje adresu i otvara tiket.",
+  "app.onboarding.ownAddressStep2": "Dodajte prosljeđivanje na ovu adresu:",
+  "app.onboarding.ownAddressStep1":
+    "Otvorite postavke sandučića na koji vam kupci pišu (Gmail, Microsoft 365, vaš hosting…).",
+  "app.onboarding.ownAddressLede":
+    "Većina timova zadrži adresu koju kupci već znaju i proslijedi je ovamo. Za kupca se ništa ne mijenja.",
+  "app.onboarding.ownAddressTitle": "Koristite vlastitu adresu podrške",
   "app.onboarding.checklistBody":
     "Četiri koraka do prvog tiketa. Sve se može urediti i kasnije u administraciji.",
   "app.onboarding.welcome": "Dobro došli, {name} 👋",

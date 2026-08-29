@@ -1808,8 +1808,14 @@ export const en = {
   "app.onboarding.itemEmailTodo":
     "No address receives requests yet — without one, nothing reaches the inbox.",
   "app.onboarding.itemEmailDone": "{address} already turns incoming email into tickets.",
-  "app.onboarding.itemEmailOwn":
-    "Would you rather use your own address? Forward support@yourcompany.com here and keep the address your customers already know.",
+  "app.onboarding.ownAddressStep3":
+    "Send a test message: the first email that arrives confirms the address and opens a ticket.",
+  "app.onboarding.ownAddressStep2": "Add a forward to this address:",
+  "app.onboarding.ownAddressStep1":
+    "Open the settings of the mailbox your customers write to (Gmail, Microsoft 365, your host…).",
+  "app.onboarding.ownAddressLede":
+    "Most teams keep the address their customers already know and forward it here. Nothing changes for the customer.",
+  "app.onboarding.ownAddressTitle": "Use your own support address",
   "app.onboarding.checklistBody":
     "Four steps to your first ticket. You can also do any of it later, from the administration.",
   "app.onboarding.welcome": "Welcome, {name} 👋",

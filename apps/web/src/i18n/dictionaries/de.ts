@@ -1803,8 +1803,14 @@ export const de: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Noch empfängt keine Adresse Anfragen — ohne sie erreicht nichts den Posteingang.",
   "app.onboarding.itemEmailDone": "{address} verwandelt eingehende E-Mails bereits in Tickets.",
-  "app.onboarding.itemEmailOwn":
-    "Lieber die eigene Adresse? Leiten Sie support@ihrefirma.de hierher weiter und behalten Sie die Adresse, die Ihre Kunden kennen.",
+  "app.onboarding.ownAddressStep3":
+    "Senden Sie eine Testnachricht: Die erste eintreffende E-Mail bestätigt die Adresse und erzeugt ein Ticket.",
+  "app.onboarding.ownAddressStep2": "Richten Sie eine Weiterleitung an diese Adresse ein:",
+  "app.onboarding.ownAddressStep1":
+    "Öffnen Sie die Einstellungen des Postfachs, an das Ihre Kunden schreiben (Gmail, Microsoft 365, Ihr Hoster …).",
+  "app.onboarding.ownAddressLede":
+    "Die meisten Teams behalten die Adresse, die ihre Kunden kennen, und leiten sie hierher weiter. Für den Kunden ändert sich nichts.",
+  "app.onboarding.ownAddressTitle": "Ihre eigene Support-Adresse verwenden",
   "app.onboarding.checklistBody":
     "Vier Schritte bis zum ersten Ticket. Alles lässt sich auch später in der Administration erledigen.",
   "app.onboarding.welcome": "Willkommen, {name} 👋",

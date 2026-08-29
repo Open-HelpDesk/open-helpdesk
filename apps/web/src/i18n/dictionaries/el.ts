@@ -2042,8 +2042,14 @@ export const el: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Καμία διεύθυνση δεν λαμβάνει ακόμη αιτήματα — χωρίς αυτή, τίποτα δεν φτάνει στα εισερχόμενα.",
   "app.onboarding.itemEmailDone": "Το {address} μετατρέπει ήδη τα εισερχόμενα email σε τικέτ.",
-  "app.onboarding.itemEmailOwn":
-    "Προτιμάτε τη δική σας διεύθυνση; Προωθήστε το support@etaireiasas.gr εδώ και κρατήστε τη διεύθυνση που ξέρουν οι πελάτες σας.",
+  "app.onboarding.ownAddressStep3":
+    "Στείλτε ένα δοκιμαστικό μήνυμα: το πρώτο που θα φτάσει επιβεβαιώνει τη διεύθυνση και δημιουργεί αίτημα.",
+  "app.onboarding.ownAddressStep2": "Προσθέστε προώθηση προς αυτή τη διεύθυνση:",
+  "app.onboarding.ownAddressStep1":
+    "Ανοίξτε τις ρυθμίσεις του γραμματοκιβωτίου στο οποίο γράφουν οι πελάτες σας (Gmail, Microsoft 365, ο πάροχός σας…).",
+  "app.onboarding.ownAddressLede":
+    "Οι περισσότερες ομάδες κρατούν τη διεύθυνση που ξέρουν οι πελάτες τους και την προωθούν εδώ. Για τον πελάτη δεν αλλάζει τίποτα.",
+  "app.onboarding.ownAddressTitle": "Χρησιμοποιήστε τη δική σας διεύθυνση υποστήριξης",
   "app.onboarding.checklistBody":
     "Τέσσερα βήματα για το πρώτο τικέτ. Όλα μπορούν να γίνουν και αργότερα από τη διαχείριση.",
   "app.onboarding.welcome": "Καλώς ορίσατε, {name} 👋",

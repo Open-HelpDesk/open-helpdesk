@@ -1882,8 +1882,14 @@ export const fr: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Aucune adresse ne reçoit encore les demandes — sans elle, rien n'arrive dans la boîte.",
   "app.onboarding.itemEmailDone": "{address} transforme déjà les emails reçus en tickets.",
-  "app.onboarding.itemEmailOwn":
-    "Vous préférez votre propre adresse ? Redirigez support@votresociete.com vers celle-ci et gardez l'adresse que vos clients connaissent déjà.",
+  "app.onboarding.ownAddressStep3":
+    "Envoyez un message de test : le premier email reçu confirme l'adresse et crée un ticket.",
+  "app.onboarding.ownAddressStep2": "Ajoutez une redirection vers cette adresse :",
+  "app.onboarding.ownAddressStep1":
+    "Ouvrez les réglages de la boîte à laquelle vos clients écrivent (Gmail, Microsoft 365, votre hébergeur…).",
+  "app.onboarding.ownAddressLede":
+    "La plupart des équipes gardent l'adresse que leurs clients connaissent déjà et la redirigent ici. Rien ne change pour le client.",
+  "app.onboarding.ownAddressTitle": "Utiliser votre propre adresse de support",
   "app.onboarding.checklistBody":
     "Quatre étapes pour recevoir votre premier ticket. Tout se règle aussi plus tard, depuis l'administration.",
   "app.onboarding.welcome": "Bienvenue, {name} 👋",

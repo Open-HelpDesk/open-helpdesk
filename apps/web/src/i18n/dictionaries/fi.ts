@@ -1808,8 +1808,14 @@ export const fi: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Mikään osoite ei vielä vastaanota pyyntöjä — ilman sitä saapuneisiin ei tule mitään.",
   "app.onboarding.itemEmailDone": "{address} muuttaa saapuvat sähköpostit jo pyynnöiksi.",
-  "app.onboarding.itemEmailOwn":
-    "Haluatko käyttää omaa osoitettasi? Ohjaa support@yrityksesi.fi tänne ja säilytä osoite, jonka asiakkaasi jo tuntevat.",
+  "app.onboarding.ownAddressStep3":
+    "Lähetä testiviesti: ensimmäinen saapuva viesti vahvistaa osoitteen ja luo tiketin.",
+  "app.onboarding.ownAddressStep2": "Lisää edelleenlähetys tähän osoitteeseen:",
+  "app.onboarding.ownAddressStep1":
+    "Avaa sen postilaatikon asetukset, johon asiakkaasi kirjoittavat (Gmail, Microsoft 365, palveluntarjoajasi…).",
+  "app.onboarding.ownAddressLede":
+    "Useimmat tiimit säilyttävät osoitteen, jonka asiakkaat tuntevat, ja ohjaavat sen tänne. Asiakkaalle mikään ei muutu.",
+  "app.onboarding.ownAddressTitle": "Käytä omaa tukiosoitettasi",
   "app.onboarding.checklistBody":
     "Neljä vaihetta ensimmäiseen pyyntöön. Voit tehdä nämä myös myöhemmin hallinnasta.",
   "app.onboarding.welcome": "Tervetuloa, {name} 👋",

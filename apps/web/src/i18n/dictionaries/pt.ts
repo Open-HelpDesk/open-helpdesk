@@ -1816,8 +1816,14 @@ export const pt: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nenhum endereço recebe pedidos ainda — sem ele, nada chega à caixa.",
   "app.onboarding.itemEmailDone": "{address} já transforma os emails recebidos em pedidos.",
-  "app.onboarding.itemEmailOwn":
-    "Prefere usar o seu próprio endereço? Reencaminhe support@asuaempresa.pt para aqui e mantenha o endereço que os seus clientes já conhecem.",
+  "app.onboarding.ownAddressStep3":
+    "Envie uma mensagem de teste: o primeiro email que chegar confirma o endereço e abre um ticket.",
+  "app.onboarding.ownAddressStep2": "Adicione um reencaminhamento para este endereço:",
+  "app.onboarding.ownAddressStep1":
+    "Abra as definições da caixa de correio para a qual os seus clientes escrevem (Gmail, Microsoft 365, o seu alojamento…).",
+  "app.onboarding.ownAddressLede":
+    "A maioria das equipas mantém o endereço que os clientes já conhecem e reencaminha-o para aqui. Para o cliente nada muda.",
+  "app.onboarding.ownAddressTitle": "Use o seu próprio endereço de suporte",
   "app.onboarding.checklistBody":
     "Quatro passos para o primeiro pedido. Também pode fazê-lo mais tarde, na administração.",
   "app.onboarding.welcome": "Boas-vindas, {name} 👋",

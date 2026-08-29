@@ -2003,8 +2003,14 @@ export const et: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ükski aadress ei võta veel taotlusi vastu — ilma selleta ei jõua midagi postkasti.",
   "app.onboarding.itemEmailDone": "{address} muudab saabuvad kirjad juba piletiteks.",
-  "app.onboarding.itemEmailOwn":
-    "Eelistate oma aadressi? Suunake support@teiefirma.ee siia ja säilitage aadress, mida kliendid juba teavad.",
+  "app.onboarding.ownAddressStep3":
+    "Saatke testkiri: esimene saabuv kiri kinnitab aadressi ja loob pileti.",
+  "app.onboarding.ownAddressStep2": "Lisage edasisuunamine sellele aadressile:",
+  "app.onboarding.ownAddressStep1":
+    "Avage postkasti seaded, kuhu kliendid kirjutavad (Gmail, Microsoft 365, teie teenusepakkuja…).",
+  "app.onboarding.ownAddressLede":
+    "Enamik meeskondi säilitab aadressi, mida kliendid juba teavad, ja suunab selle siia. Kliendi jaoks ei muutu midagi.",
+  "app.onboarding.ownAddressTitle": "Kasutage oma tugiaadressi",
   "app.onboarding.checklistBody":
     "Neli sammu esimese pileti juurde. Saad need teha ka hiljem halduses.",
   "app.onboarding.welcome": "Tere tulemast, {name} 👋",

@@ -2160,8 +2160,14 @@ export const ro: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nicio adresă nu primește încă solicitări — fără ea, nimic nu ajunge în inbox.",
   "app.onboarding.itemEmailDone": "{address} transformă deja e-mailurile primite în tichete.",
-  "app.onboarding.itemEmailOwn":
-    "Preferați propria adresă? Redirecționați support@companiadvs.ro aici și păstrați adresa pe care clienții o cunosc deja.",
+  "app.onboarding.ownAddressStep3":
+    "Trimiteți un mesaj de test: primul email primit confirmă adresa și creează un tichet.",
+  "app.onboarding.ownAddressStep2": "Adăugați o redirecționare către această adresă:",
+  "app.onboarding.ownAddressStep1":
+    "Deschideți setările căsuței la care vă scriu clienții (Gmail, Microsoft 365, găzduirea dvs…).",
+  "app.onboarding.ownAddressLede":
+    "Majoritatea echipelor păstrează adresa pe care clienții o cunosc deja și o redirecționează aici. Pentru client nu se schimbă nimic.",
+  "app.onboarding.ownAddressTitle": "Folosiți propria adresă de suport",
   "app.onboarding.checklistBody":
     "Patru pași până la primul tichet. Toate se pot face și mai târziu, din administrare.",
   "app.onboarding.welcome": "Bun venit, {name} 👋",

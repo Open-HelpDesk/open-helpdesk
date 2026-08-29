@@ -1808,8 +1808,14 @@ export const nl: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nog geen adres ontvangt aanvragen — zonder adres komt er niets in de inbox.",
   "app.onboarding.itemEmailDone": "{address} zet inkomende e-mail al om in tickets.",
-  "app.onboarding.itemEmailOwn":
-    "Liever uw eigen adres? Stuur support@uwbedrijf.nl hierheen door en behoud het adres dat uw klanten al kennen.",
+  "app.onboarding.ownAddressStep3":
+    "Stuur een testbericht: de eerste e-mail die binnenkomt bevestigt het adres en maakt een ticket aan.",
+  "app.onboarding.ownAddressStep2": "Voeg een doorstuurregel naar dit adres toe:",
+  "app.onboarding.ownAddressStep1":
+    "Open de instellingen van de mailbox waar uw klanten naartoe schrijven (Gmail, Microsoft 365, uw hoster…).",
+  "app.onboarding.ownAddressLede":
+    "De meeste teams behouden het adres dat hun klanten al kennen en sturen het hierheen door. Voor de klant verandert er niets.",
+  "app.onboarding.ownAddressTitle": "Gebruik uw eigen supportadres",
   "app.onboarding.checklistBody":
     "Vier stappen naar je eerste ticket. Je kunt dit ook later doen, via de administratie.",
   "app.onboarding.welcome": "Welkom, {name} 👋",

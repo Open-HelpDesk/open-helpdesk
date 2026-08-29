@@ -2146,8 +2146,14 @@ export const lv: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Neviena adrese vēl nesaņem pieteikumus — bez tās iesūtnē neienāk nekas.",
   "app.onboarding.itemEmailDone": "{address} jau pārvērš saņemtos e-pastus pieteikumos.",
-  "app.onboarding.itemEmailOwn":
-    "Vēlaties izmantot savu adresi? Pārsūtiet support@jusuuznemums.lv uz šo un saglabājiet adresi, ko klienti jau pazīst.",
+  "app.onboarding.ownAddressStep3":
+    "Nosūtiet testa ziņojumu: pirmā saņemtā vēstule apstiprina adresi un izveido pieteikumu.",
+  "app.onboarding.ownAddressStep2": "Pievienojiet pārsūtīšanu uz šo adresi:",
+  "app.onboarding.ownAddressStep1":
+    "Atveriet tās pastkastes iestatījumus, uz kuru raksta jūsu klienti (Gmail, Microsoft 365, jūsu pakalpojumu sniedzējs…).",
+  "app.onboarding.ownAddressLede":
+    "Lielākā daļa komandu saglabā adresi, ko klienti jau pazīst, un pārsūta to uz šejieni. Klientam nekas nemainās.",
+  "app.onboarding.ownAddressTitle": "Izmantojiet savu atbalsta adresi",
   "app.onboarding.checklistBody":
     "Četri soļi līdz pirmajam pieteikumam. To visu var izdarīt arī vēlāk administrācijā.",
   "app.onboarding.welcome": "Sveicināti, {name} 👋",

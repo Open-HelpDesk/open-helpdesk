@@ -2296,8 +2296,14 @@ export const ga: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Níl aon seoladh ag fáil iarratas go fóill — dá cheal, ní shroicheann rud ar bith an bosca.",
   "app.onboarding.itemEmailDone": "Déanann {address} ticéid de ríomhphoist isteach cheana féin.",
-  "app.onboarding.itemEmailOwn":
-    "Ar mhaith leat do sheoladh féin a úsáid? Cuir support@dochuideachta.ie ar aghaidh anseo agus coinnigh an seoladh atá ar eolas ag do chuid custaiméirí.",
+  "app.onboarding.ownAddressStep3":
+    "Seol teachtaireacht tástála: deimhníonn an chéad ríomhphost a thagann isteach an seoladh agus osclaíonn sé ticéad.",
+  "app.onboarding.ownAddressStep2": "Cuir seoladh ar aghaidh chuig an seoladh seo:",
+  "app.onboarding.ownAddressStep1":
+    "Oscail socruithe an bhosca poist a scríobhann do chuid custaiméirí chuige (Gmail, Microsoft 365, do óstach…).",
+  "app.onboarding.ownAddressLede":
+    "Coinníonn formhór na bhfoirne an seoladh atá ar eolas ag a gcuid custaiméirí agus cuireann siad ar aghaidh anseo é. Ní athraíonn aon rud don chustaiméir.",
+  "app.onboarding.ownAddressTitle": "Úsáid do sheoladh tacaíochta féin",
   "app.onboarding.checklistBody":
     "Ceithre chéim go dtí an chéad ticéad. Is féidir gach ceann díobh a dhéanamh níos déanaí sa riarachán.",
   "app.onboarding.welcome": "Fáilte, {name} 👋",

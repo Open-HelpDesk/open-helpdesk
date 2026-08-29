@@ -2292,8 +2292,14 @@ export const mt: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "L-ebda indirizz għadu ma jirċievi talbiet — mingħajru, xejn ma jasal fl-inbox.",
   "app.onboarding.itemEmailDone": "{address} diġà jibdel l-emails li jaslu f'tickets.",
-  "app.onboarding.itemEmailOwn":
-    "Tippreferi tuża l-indirizz tiegħek? Għaddi support@ilkumpanijatieghek.mt hawn u żomm l-indirizz li l-klijenti tiegħek diġà jafu.",
+  "app.onboarding.ownAddressStep3":
+    "Ibgħat messaġġ ta' prova: l-ewwel email li tasal tikkonferma l-indirizz u tiftaħ tikit.",
+  "app.onboarding.ownAddressStep2": "Żid forward għal dan l-indirizz:",
+  "app.onboarding.ownAddressStep1":
+    "Iftaħ is-settings tal-kaxxa postali li jiktbulek fiha l-klijenti (Gmail, Microsoft 365, il-host tiegħek…).",
+  "app.onboarding.ownAddressLede":
+    "Ħafna timijiet iżommu l-indirizz li l-klijenti diġà jafu u jgħadduh hawn. Xejn ma jinbidel għall-klijent.",
+  "app.onboarding.ownAddressTitle": "Uża l-indirizz ta' appoġġ tiegħek",
   "app.onboarding.checklistBody":
     "Erba' passi għall-ewwel ticket. Tista' tagħmel dan kollu wkoll aktar tard mill-amministrazzjoni.",
   "app.onboarding.welcome": "Merħba, {name} 👋",

@@ -2225,8 +2225,14 @@ export const lt: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Kol kas nė vienas adresas negauna užklausų — be jo į gautuosius nieko neateis.",
   "app.onboarding.itemEmailDone": "{address} jau paverčia gaunamus el. laiškus užklausomis.",
-  "app.onboarding.itemEmailOwn":
-    "Norite naudoti savo adresą? Peradresuokite support@jusuimone.lt čia ir išsaugokite adresą, kurį klientai jau žino.",
+  "app.onboarding.ownAddressStep3":
+    "Išsiųskite bandomąjį laišką: pirmas gautas laiškas patvirtina adresą ir sukuria bilietą.",
+  "app.onboarding.ownAddressStep2": "Pridėkite peradresavimą į šį adresą:",
+  "app.onboarding.ownAddressStep1":
+    "Atverkite pašto dėžutės, į kurią rašo klientai, nustatymus (Gmail, Microsoft 365, jūsų tiekėjas…).",
+  "app.onboarding.ownAddressLede":
+    "Dauguma komandų pasilieka adresą, kurį klientai jau žino, ir peradresuoja jį čia. Klientui niekas nesikeičia.",
+  "app.onboarding.ownAddressTitle": "Naudokite savo pagalbos adresą",
   "app.onboarding.checklistBody":
     "Keturi žingsniai iki pirmosios užklausos. Visa tai galima padaryti ir vėliau administravimo skydelyje.",
   "app.onboarding.welcome": "Sveiki, {name} 👋",

@@ -1978,8 +1978,14 @@ export const bg: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Все още никой адрес не получава заявки — без него нищо не влиза в пощата.",
   "app.onboarding.itemEmailDone": "{address} вече превръща получените имейли в тикети.",
-  "app.onboarding.itemEmailOwn":
-    "Предпочитате собствен адрес? Пренасочете support@вашата-фирма.com към този и запазете адреса, който клиентите вече познават.",
+  "app.onboarding.ownAddressStep3":
+    "Изпратете тестово писмо: първото пристигнало съобщение потвърждава адреса и създава билет.",
+  "app.onboarding.ownAddressStep2": "Добавете пренасочване към този адрес:",
+  "app.onboarding.ownAddressStep1":
+    "Отворете настройките на пощенската кутия, на която пишат клиентите ви (Gmail, Microsoft 365, вашия хостинг…).",
+  "app.onboarding.ownAddressLede":
+    "Повечето екипи запазват адреса, който клиентите вече познават, и го пренасочват насам. Нищо не се променя за клиента.",
+  "app.onboarding.ownAddressTitle": "Използвайте собствения си адрес за поддръжка",
   "app.onboarding.checklistBody":
     "Четири стъпки до първия тикет. Всичко може да се направи и по-късно от администрацията.",
   "app.onboarding.welcome": "Добре дошли, {name} 👋",
