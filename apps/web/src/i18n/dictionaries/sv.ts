@@ -1382,8 +1382,8 @@ export const sv: Dictionary = {
   "app.settings.workspace.offersPerMonth": "per månad",
   "app.settings.workspace.offersPerMonthYearly": "per månad, faktureras årsvis",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Den första platsen ingår, sedan {price} € per extra plats och månad.",
-    other: "De första {count} platserna ingår, sedan {price} € per extra plats och månad.",
+    one: "Gratis upp till {count} plats. Därefter faktureras alla platser med {price} € per månad.",
+    other: "Gratis upp till {count} platser. Därefter faktureras alla platser med {price} € per månad.",
   },
   "app.settings.workspace.offersFreeNote":
     "Inget abonnemang och inget kort — så länge arbetsytan ryms inom gränserna.",

@@ -1688,10 +1688,10 @@ export const sl: Dictionary = {
   "app.settings.workspace.offersPerMonth": "na mesec",
   "app.settings.workspace.offersPerMonthYearly": "na mesec, obračunano letno",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Prva licenca je vključena, nato {price} € na mesec za vsako dodatno licenco.",
-    two: "Prvi {count} licenci sta vključeni, nato {price} € na mesec za vsako dodatno licenco.",
-    few: "Prve {count} licence so vključene, nato {price} € na mesec za vsako dodatno licenco.",
-    other: "Prvih {count} licenc je vključenih, nato {price} € na mesec za vsako dodatno licenco.",
+    one: "Brezplačno do {count} licence. Nato se vse licence obračunajo po {price} € na mesec.",
+    two: "Brezplačno do {count} licenc. Nato se vse licence obračunajo po {price} € na mesec.",
+    few: "Brezplačno do {count} licenc. Nato se vse licence obračunajo po {price} € na mesec.",
+    other: "Brezplačno do {count} licenc. Nato se vse licence obračunajo po {price} € na mesec.",
   },
   "app.settings.workspace.offersFreeNote":
     "Brez naročnine in brez kartice — dokler workspace ostaja znotraj omejitev.",

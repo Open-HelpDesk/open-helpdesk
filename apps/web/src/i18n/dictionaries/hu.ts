@@ -1521,8 +1521,8 @@ export const hu: Dictionary = {
   "app.settings.workspace.offersPerMonth": "havonta",
   "app.settings.workspace.offersPerMonthYearly": "havonta, éves számlázással",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Az első licenc benne van, utána {price} € további licencenként havonta.",
-    other: "Az első {count} licenc benne van, utána {price} € további licencenként havonta.",
+    one: "Ingyenes {count} licencig. Utána az összes licencet {price} € havidíjjal számlázzuk.",
+    other: "Ingyenes {count} licencig. Utána az összes licencet {price} € havidíjjal számlázzuk.",
   },
   "app.settings.workspace.offersFreeNote":
     "Előfizetés és bankkártya nélkül — amíg a workspace belefér a keretekbe.",

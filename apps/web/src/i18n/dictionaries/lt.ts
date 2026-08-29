@@ -1698,10 +1698,10 @@ export const lt: Dictionary = {
   "app.settings.workspace.offersPerMonth": "per mėnesį",
   "app.settings.workspace.offersPerMonthYearly": "per mėnesį, apmokestinama kasmet",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Pirmoji vieta įskaičiuota, toliau {price} € už kiekvieną papildomą vietą per mėnesį.",
-    few: "Pirmosios {count} vietos įskaičiuotos, toliau {price} € už kiekvieną papildomą vietą per mėnesį.",
-    many: "Pirmosios {count} vietos įskaičiuotos, toliau {price} € už kiekvieną papildomą vietą per mėnesį.",
-    other: "Pirmosios {count} vietų įskaičiuotos, toliau {price} € už kiekvieną papildomą vietą per mėnesį.",
+    one: "Nemokama iki {count} vietos. Vėliau visos vietos apmokestinamos po {price} € per mėnesį.",
+    few: "Nemokama iki {count} vietų. Vėliau visos vietos apmokestinamos po {price} € per mėnesį.",
+    many: "Nemokama iki {count} vietų. Vėliau visos vietos apmokestinamos po {price} € per mėnesį.",
+    other: "Nemokama iki {count} vietų. Vėliau visos vietos apmokestinamos po {price} € per mėnesį.",
   },
   "app.settings.workspace.offersFreeNote":
     "Be prenumeratos ir be kortelės — kol darbo erdvė telpa į ribas.",

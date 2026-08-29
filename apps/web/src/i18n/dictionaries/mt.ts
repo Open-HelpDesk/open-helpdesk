@@ -1756,11 +1756,11 @@ export const mt: Dictionary = {
   "app.settings.workspace.offersPerMonth": "fix-xahar",
   "app.settings.workspace.offersPerMonthYearly": "fix-xahar, iffatturat kull sena",
   "app.settings.workspace.offersSeatsRule": {
-    one: "L-ewwel post huwa inkluż, imbagħad €{price} għal kull post żejjed fix-xahar.",
-    two: "L-ewwel {count} postijiet huma inklużi, imbagħad €{price} għal kull post żejjed fix-xahar.",
-    few: "L-ewwel {count} postijiet huma inklużi, imbagħad €{price} għal kull post żejjed fix-xahar.",
-    many: "L-ewwel {count} post huwa inkluż, imbagħad €{price} għal kull post żejjed fix-xahar.",
-    other: "L-ewwel {count} post huwa inkluż, imbagħad €{price} għal kull post żejjed fix-xahar.",
+    one: "B'xejn sa {count} post. Wara, il-postijiet kollha jiġu ffatturati €{price} fix-xahar.",
+    two: "B'xejn sa {count} postijiet. Wara, il-postijiet kollha jiġu ffatturati €{price} fix-xahar.",
+    few: "B'xejn sa {count} postijiet. Wara, il-postijiet kollha jiġu ffatturati €{price} fix-xahar.",
+    many: "B'xejn sa {count} post. Wara, il-postijiet kollha jiġu ffatturati €{price} fix-xahar.",
+    other: "B'xejn sa {count} post. Wara, il-postijiet kollha jiġu ffatturati €{price} fix-xahar.",
   },
   "app.settings.workspace.offersFreeNote":
     "L-ebda abbonament u l-ebda karta — sakemm il-workspace jibqa' fil-limiti.",

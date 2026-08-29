@@ -1757,11 +1757,11 @@ export const ga: Dictionary = {
   "app.settings.workspace.offersPerMonth": "sa mhí",
   "app.settings.workspace.offersPerMonthYearly": "sa mhí, billeáilte go bliantúil",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Tá an chéad suíochán san áireamh, ansin €{price} ar gach suíochán breise sa mhí.",
-    two: "Tá an chéad {count} shuíochán san áireamh, ansin €{price} ar gach suíochán breise sa mhí.",
-    few: "Tá an chéad {count} shuíochán san áireamh, ansin €{price} ar gach suíochán breise sa mhí.",
-    many: "Tá an chéad {count} suíochán san áireamh, ansin €{price} ar gach suíochán breise sa mhí.",
-    other: "Tá an chéad {count} suíochán san áireamh, ansin €{price} ar gach suíochán breise sa mhí.",
+    one: "Saor in aisce suas le {count} suíochán. Ina dhiaidh sin, gearrtar €{price} sa mhí ar gach suíochán.",
+    two: "Saor in aisce suas le {count} shuíochán. Ina dhiaidh sin, gearrtar €{price} sa mhí ar gach suíochán.",
+    few: "Saor in aisce suas le {count} shuíochán. Ina dhiaidh sin, gearrtar €{price} sa mhí ar gach suíochán.",
+    many: "Saor in aisce suas le {count} suíochán. Ina dhiaidh sin, gearrtar €{price} sa mhí ar gach suíochán.",
+    other: "Saor in aisce suas le {count} suíochán. Ina dhiaidh sin, gearrtar €{price} sa mhí ar gach suíochán.",
   },
   "app.settings.workspace.offersFreeNote":
     "Gan síntiús gan chárta — fad a fhanann an workspace laistigh de na teorainneacha.",

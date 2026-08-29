@@ -1639,9 +1639,9 @@ export const ro: Dictionary = {
   "app.settings.workspace.offersPerMonth": "pe lună",
   "app.settings.workspace.offersPerMonthYearly": "pe lună, facturat anual",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Prima licență este inclusă, apoi {price} € pe lună pentru fiecare licență suplimentară.",
-    few: "Primele {count} licențe sunt incluse, apoi {price} € pe lună pentru fiecare licență suplimentară.",
-    other: "Primele {count} de licențe sunt incluse, apoi {price} € pe lună pentru fiecare licență suplimentară.",
+    one: "Gratuit până la {count} licență. Peste acest număr, toate licențele sunt facturate cu {price} € pe lună.",
+    few: "Gratuit până la {count} licențe. Peste acest număr, toate licențele sunt facturate cu {price} € pe lună.",
+    other: "Gratuit până la {count} de licențe. Peste acest număr, toate licențele sunt facturate cu {price} € pe lună.",
   },
   "app.settings.workspace.offersFreeNote":
     "Fără abonament și fără card — atât timp cât workspace-ul se încadrează în limite.",

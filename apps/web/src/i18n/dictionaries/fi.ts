@@ -1386,8 +1386,8 @@ export const fi: Dictionary = {
   "app.settings.workspace.offersPerMonth": "kuukaudessa",
   "app.settings.workspace.offersPerMonthYearly": "kuukaudessa, laskutetaan vuosittain",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Ensimmäinen paikka sisältyy hintaan, sen jälkeen {price} € jokaiselta lisäpaikalta kuukaudessa.",
-    other: "Ensimmäiset {count} paikkaa sisältyvät hintaan, sen jälkeen {price} € jokaiselta lisäpaikalta kuukaudessa.",
+    one: "Ilmainen {count} paikkaan asti. Sen jälkeen kaikki paikat laskutetaan hintaan {price} € kuukaudessa.",
+    other: "Ilmainen {count} paikkaan asti. Sen jälkeen kaikki paikat laskutetaan hintaan {price} € kuukaudessa.",
   },
   "app.settings.workspace.offersFreeNote":
     "Ei tilausta eikä korttia — niin kauan kuin työtila pysyy rajoissa.",

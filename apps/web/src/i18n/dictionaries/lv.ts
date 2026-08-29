@@ -1633,8 +1633,8 @@ export const lv: Dictionary = {
   "app.settings.workspace.offersPerMonthYearly": "mēnesī, norēķins reizi gadā",
   "app.settings.workspace.offersSeatsRule": {
     zero: "Pirmās {count} licences ir iekļautas, pēc tam {price} € par katru papildu licenci mēnesī.",
-    one: "Pirmā licence ir iekļauta, pēc tam {price} € par katru papildu licenci mēnesī.",
-    other: "Pirmās {count} licences ir iekļautas, pēc tam {price} € par katru papildu licenci mēnesī.",
+    one: "Bez maksas līdz {count} licencei. Pēc tam visas licences tiek rēķinātas par {price} € mēnesī.",
+    other: "Bez maksas līdz {count} licencēm. Pēc tam visas licences tiek rēķinātas par {price} € mēnesī.",
   },
   "app.settings.workspace.offersFreeNote":
     "Bez abonementa un bez kartes — kamēr darbvieta iekļaujas ierobežojumos.",

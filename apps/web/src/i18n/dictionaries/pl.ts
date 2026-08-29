@@ -1703,10 +1703,10 @@ export const pl: Dictionary = {
   "app.settings.workspace.offersPerMonth": "miesięcznie",
   "app.settings.workspace.offersPerMonthYearly": "miesięcznie, rozliczane rocznie",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Pierwsze stanowisko jest w cenie, potem {price} € za każde dodatkowe stanowisko miesięcznie.",
-    few: "Pierwsze {count} stanowiska są w cenie, potem {price} € za każde dodatkowe stanowisko miesięcznie.",
-    many: "Pierwszych {count} stanowisk jest w cenie, potem {price} € za każde dodatkowe stanowisko miesięcznie.",
-    other: "Pierwsze {count} stanowiska są w cenie, potem {price} € za każde dodatkowe stanowisko miesięcznie.",
+    one: "Bezpłatnie do {count} stanowiska. Powyżej tej liczby wszystkie stanowiska kosztują {price} € miesięcznie.",
+    few: "Bezpłatnie do {count} stanowisk. Powyżej tej liczby wszystkie stanowiska kosztują {price} € miesięcznie.",
+    many: "Bezpłatnie do {count} stanowisk. Powyżej tej liczby wszystkie stanowiska kosztują {price} € miesięcznie.",
+    other: "Bezpłatnie do {count} stanowisk. Powyżej tej liczby wszystkie stanowiska kosztują {price} € miesięcznie.",
   },
   "app.settings.workspace.offersFreeNote":
     "Bez subskrypcji i bez karty — tak długo, jak workspace mieści się w limitach.",

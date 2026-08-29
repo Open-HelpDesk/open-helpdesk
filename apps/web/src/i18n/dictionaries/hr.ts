@@ -1611,9 +1611,9 @@ export const hr: Dictionary = {
   "app.settings.workspace.offersPerMonth": "mjesečno",
   "app.settings.workspace.offersPerMonthYearly": "mjesečno, naplaćuje se godišnje",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Prvo mjesto je uključeno, zatim {price} € po dodatnom mjestu mjesečno.",
-    few: "Prva {count} mjesta su uključena, zatim {price} € po dodatnom mjestu mjesečno.",
-    other: "Prvih {count} mjesta je uključeno, zatim {price} € po dodatnom mjestu mjesečno.",
+    one: "Besplatno do {count} mjesta. Nakon toga se sva mjesta naplaćuju {price} € mjesečno.",
+    few: "Besplatno do {count} mjesta. Nakon toga se sva mjesta naplaćuju {price} € mjesečno.",
+    other: "Besplatno do {count} mjesta. Nakon toga se sva mjesta naplaćuju {price} € mjesečno.",
   },
   "app.settings.workspace.offersFreeNote":
     "Bez pretplate i bez kartice — dokle god workspace ostaje unutar ograničenja.",

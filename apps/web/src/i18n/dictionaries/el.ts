@@ -1540,8 +1540,8 @@ export const el: Dictionary = {
   "app.settings.workspace.offersPerMonth": "τον μήνα",
   "app.settings.workspace.offersPerMonthYearly": "τον μήνα, με ετήσια χρέωση",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Η πρώτη θέση περιλαμβάνεται, έπειτα {price} € ανά επιπλέον θέση τον μήνα.",
-    other: "Οι πρώτες {count} θέσεις περιλαμβάνονται, έπειτα {price} € ανά επιπλέον θέση τον μήνα.",
+    one: "Δωρεάν έως {count} θέση. Στη συνέχεια, όλες οι θέσεις χρεώνονται {price} € τον μήνα.",
+    other: "Δωρεάν έως {count} θέσεις. Στη συνέχεια, όλες οι θέσεις χρεώνονται {price} € τον μήνα.",
   },
   "app.settings.workspace.offersFreeNote":
     "Χωρίς συνδρομή και χωρίς κάρτα — όσο το workspace χωράει στα όρια.",

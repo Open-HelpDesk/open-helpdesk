@@ -1502,8 +1502,8 @@ export const bg: Dictionary = {
   "app.settings.workspace.offersPerMonth": "на месец",
   "app.settings.workspace.offersPerMonthYearly": "на месец, фактурирано годишно",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Първото място е включено, след това {price} € на допълнително място на месец.",
-    other: "Първите {count} места са включени, след това {price} € на допълнително място на месец.",
+    one: "Безплатно до {count} място. След това всички места се таксуват по {price} € на месец.",
+    other: "Безплатно до {count} места. След това всички места се таксуват по {price} € на месец.",
   },
   "app.settings.workspace.offersFreeNote":
     "Без абонамент и без карта — докато работното пространство се побира в лимитите.",

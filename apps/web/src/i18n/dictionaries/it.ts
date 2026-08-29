@@ -1389,8 +1389,8 @@ export const it: Dictionary = {
   "app.settings.workspace.offersPerMonth": "al mese",
   "app.settings.workspace.offersPerMonthYearly": "al mese, con fatturazione annuale",
   "app.settings.workspace.offersSeatsRule": {
-    one: "La prima postazione è inclusa, poi {price} € per ogni postazione aggiuntiva al mese.",
-    other: "Le prime {count} postazioni sono incluse, poi {price} € per ogni postazione aggiuntiva al mese.",
+    one: "Gratis fino a {count} postazione. Oltre, tutte le postazioni sono fatturate {price} € al mese.",
+    other: "Gratis fino a {count} postazioni. Oltre, tutte le postazioni sono fatturate {price} € al mese.",
   },
   "app.settings.workspace.offersFreeNote":
     "Nessun abbonamento e nessuna carta — finché il workspace resta entro i limiti.",

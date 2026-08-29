@@ -1389,8 +1389,8 @@ export const nl: Dictionary = {
   "app.settings.workspace.offersPerMonth": "per maand",
   "app.settings.workspace.offersPerMonthYearly": "per maand, jaarlijks gefactureerd",
   "app.settings.workspace.offersSeatsRule": {
-    one: "De eerste licentie is inbegrepen, daarna € {price} per extra licentie per maand.",
-    other: "De eerste {count} licenties zijn inbegrepen, daarna € {price} per extra licentie per maand.",
+    one: "Gratis tot {count} licentie. Daarna worden alle licenties gefactureerd voor € {price} per maand.",
+    other: "Gratis tot {count} licenties. Daarna worden alle licenties gefactureerd voor € {price} per maand.",
   },
   "app.settings.workspace.offersFreeNote":
     "Zonder abonnement en zonder kaart — zolang de workspace binnen de limieten blijft.",

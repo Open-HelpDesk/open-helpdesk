@@ -1505,8 +1505,8 @@ export const et: Dictionary = {
   "app.settings.workspace.offersPerMonth": "kuus",
   "app.settings.workspace.offersPerMonthYearly": "kuus, arveldatakse kord aastas",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Esimene koht sisaldub hinnas, seejärel {price} € iga lisakoha kohta kuus.",
-    other: "Esimesed {count} kohta sisalduvad hinnas, seejärel {price} € iga lisakoha kohta kuus.",
+    one: "Tasuta kuni {count} koht. Pärast seda arveldatakse kõik kohad hinnaga {price} € kuus.",
+    other: "Tasuta kuni {count} kohta. Pärast seda arveldatakse kõik kohad hinnaga {price} € kuus.",
   },
   "app.settings.workspace.offersFreeNote":
     "Ilma tellimuse ja kaardita — seni, kuni tööruum piiridesse mahub.",
