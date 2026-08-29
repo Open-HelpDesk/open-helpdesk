@@ -397,6 +397,9 @@ export default async function TicketPage({
           <div className="ml-auto flex flex-none items-center" style={{ gap: 8 }}>
             {!ticket.mergedIntoId && (
               <>
+                {/* The only --brand fill the --on-brand sweep missed: it names
+                    no colour at all, so the label was inheriting --ink — near
+                    black on deep green, 2.3:1. */}
                 <Link
                   href={`/app/tickets/${ticket.number}?view=${view}#composer`}
                   className="flex items-center font-semibold"
@@ -405,6 +408,7 @@ export default async function TicketPage({
                     padding: "0 16px",
                     borderRadius: 9,
                     background: "var(--brand)",
+                    color: "var(--on-brand)",
                     fontSize: 13.5,
                   }}
                 >
@@ -421,7 +425,11 @@ export default async function TicketPage({
                     borderRadius: 9,
                     fontSize: 13.5,
                     fontWeight: 500,
-                    color: "var(--note-ink)",
+                    // Plain ink, as the design has it. --note-ink is the colour
+                    // of a note's own text ON its yellow — used for a button
+                    // label it made mustard on cream, and the button read as
+                    // disabled next to its two neighbours.
+                    color: "var(--ink)",
                   }}
                 >
                   {t("app.ticket.internalNote")}
