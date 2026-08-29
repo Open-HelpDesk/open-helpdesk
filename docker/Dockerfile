@@ -18,6 +18,11 @@ ENV NODE_ENV=production HOSTNAME=0.0.0.0 PORT=3000
 WORKDIR /app
 COPY --from=build /repo/apps/web/.next/standalone ./
 COPY --from=build /repo/apps/web/.next/static ./apps/web/.next/static
+# `public/` is NOT part of the standalone output — Next expects the image to
+# carry it. Without this line the sixteen self-hosted woff2 answer 404 and every
+# screen silently falls back to system fonts, and so does the favicon. Nothing
+# fails loudly; the product simply stops looking like itself.
+COPY --from=build /repo/apps/web/public ./apps/web/public
 EXPOSE 3000
 CMD ["node", "apps/web/server.js"]
 
