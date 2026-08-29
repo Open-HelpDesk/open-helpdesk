@@ -9,21 +9,36 @@
  * inline styles only, no external CSS, no web font, no JavaScript. Widths in
  * pixels, because percentages collapse in Outlook.
  *
- * The mark is drawn in SVG-free HTML — a bordered rounded square carrying the
- * asterisk as text — rather than an <img>: most clients block remote images by
- * default, and a logo that appears as a broken frame is worse than no logo. The
- * brand still reads because the colour and the shape survive image blocking.
+ * The wordmark is a hosted PNG when the caller supplies one (`logoUrl`), since
+ * the real logo is an SVG and no client renders SVG. It degrades on purpose:
+ * with no URL — a self-hosted instance has no public host — the header falls
+ * back to the mark drawn in HTML, which survives the image blocking most
+ * clients apply by default.
  *
  * Everything here is plain data in, string out: no database, no request, so the
  * same function serves the product and the control plane.
  */
 
-/** Deep green of the brand — the one value both themes and print agree on. */
-const BRAND = "#0b5f46";
-const INK = "#0d1c17";
-const INK_2 = "#51625b";
-const LINE = "#e4e9e6";
-const CANVAS = "#f3f6f4";
+/*
+ * The public site's palette, read off its own tokens and converted to hex: the
+ * site defines them in oklch, which no email client understands. Keep these in
+ * step with apps/www/src/styles.css if the brand moves.
+ */
+const BRAND = "#168961"; // --brand, the accent of the logo
+const DEEP = "#06170f"; // --deep, the near-black green of the bar and footer
+const INK = "#101a14";
+const INK_2 = "#4c5550";
+const LINE = "#e0e4e2";
+const CANVAS = "#f4f8f6"; // --surface-2
+
+/*
+ * The site sets IBM Plex Sans. Naming it here is worth doing and worth being
+ * honest about: email clients strip @font-face — Gmail, Outlook and Yahoo all
+ * do — so the family applies only where the reader already has it installed.
+ * Everyone else gets the fallback, which is why the fallback is a real stack
+ * and not an afterthought.
+ */
+const FONT = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Arial, sans-serif";
 
 export type EmailButton = { label: string; url: string };
 
@@ -45,6 +60,13 @@ export type BrandedEmail = {
   footnote?: string;
   /** Sender name shown in the footer, usually the workspace or the product. */
   signature: string;
+  /**
+   * Absolute URL of the wordmark, ~340 px wide. Optional on purpose: a
+   * self-hosted instance has no public host to serve it from, and most clients
+   * block remote images anyway — without it the header falls back to the mark
+   * drawn in HTML, which survives that blocking.
+   */
+  logoUrl?: string;
 };
 
 /** Escapes text interpolated into the HTML — a workspace name is user input. */
@@ -133,20 +155,25 @@ export function brandedHtml(mail: BrandedEmail): string {
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560"
              style="width:560px;max-width:100%">
 
-        <tr><td style="padding:0 0 20px">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-              <td style="background:${BRAND};border-radius:8px;width:32px;height:32px;text-align:center;
-                         vertical-align:middle;color:#ffffff;font-size:20px;font-family:Arial,Helvetica,sans-serif;
-                         font-weight:700;line-height:32px">&#10033;</td>
-              <td style="padding-left:10px;color:${INK};font-size:17px;font-weight:700;
-                         font-family:Arial,Helvetica,sans-serif">Open&#42;HelpDesk</td>
-            </tr>
-          </table>
+        <tr><td style="padding:0 0 22px">
+          ${
+            mail.logoUrl
+              ? `<img src="${esc(mail.logoUrl)}" alt="Open*HelpDesk" width="170"
+                      style="display:block;width:170px;height:auto;border:0;outline:none;text-decoration:none">`
+              : `<table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                   <tr>
+                     <td style="background:${DEEP};border-radius:8px;width:32px;height:32px;text-align:center;
+                                vertical-align:middle;color:#ffffff;font-size:20px;font-family:${FONT};
+                                font-weight:700;line-height:32px">&#10033;</td>
+                     <td style="padding-left:10px;color:${INK};font-size:17px;font-weight:700;
+                                font-family:${FONT}">Open<span style="color:${BRAND}">&#42;</span>HelpDesk</td>
+                   </tr>
+                 </table>`
+          }
         </td></tr>
 
         <tr><td style="background:#ffffff;border:1px solid ${LINE};border-radius:14px;padding:32px 32px 26px;
-                       font-family:Arial,Helvetica,sans-serif">
+                       font-family:${FONT}">
           <h1 style="margin:0 0 18px;color:${INK};font-size:24px;line-height:31px;font-weight:700">${esc(mail.title)}</h1>
           ${mail.intro
             .map(
@@ -165,7 +192,7 @@ export function brandedHtml(mail: BrandedEmail): string {
         </td></tr>
 
         <tr><td style="padding:18px 8px 0;color:${INK_2};font-size:12px;line-height:18px;
-                       font-family:Arial,Helvetica,sans-serif">
+                       font-family:${FONT}">
           ${esc(mail.signature)}
         </td></tr>
 
