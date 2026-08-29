@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!--
+    The wordmark's asterisk — the default favicon of a workspace that has not
+    uploaded its own (ST-01 replaces it per tenant).
+
+    It lives in public/ and NOT in app/: `app/icon.svg` is a Next convention that
+    emits its own <link rel="icon"> and wins over the one generateMetadata
+    declares, which would paint this mark over every customer's brand. Here it is
+    an ordinary asset, and the layout points at it only when there is nothing
+    else to point at.
+
+    Same three strokes as <Asterisk> in components/app-shell.tsx, scaled 0.82
+    about the centre so the round caps clear the tile; the stroke keeps its ratio
+    to the arms (8/32), which is what makes it read as the logo. The tile is not
+    decoration: a bare mark is a deep green on the browser's own chrome, which is
+    dark in a dark theme.
+  -->
+  <rect width="48" height="48" rx="11" fill="#0b5f46" />
+  <g stroke="#ffffff" stroke-width="6.6" stroke-linecap="round">
+    <path d="M24 10.9v26.2" />
+    <path d="M12.6 17.4l22.8 13.1" />
+    <path d="M35.4 17.4L12.6 30.6" />
+  </g>
+</svg>
