@@ -151,11 +151,17 @@ export default async function BillingPage({
   const storageBytes = Number(storageRow?.total ?? 0);
 
   // Everything comes from the control plane: the product has no price grid and no
-  // calculation rule. Included seats are subtracted from the amount due — without
-  // that information nothing is billable, and the screen shows it as such.
+  // calculation rule.
+  //
+  // The allowance is a THRESHOLD, not a discount: at or below it nothing is due,
+  // and past it every seat is billed — the same volume tiering Stripe applies.
+  // Subtracting the allowance instead would announce 9 € on a subscription
+  // Stripe invoices at 36 €, which is the screen contradicting the bank.
   const label = subscriptionLabel(tenant);
   const seatPrice = (billing.seatPriceCents ?? 0) / 100;
-  const billedSeats = Math.max(0, (billing.seats ?? 0) - (billing.includedSeats ?? 0));
+  const subscribedSeats = billing.seats ?? 0;
+  const billedSeats =
+    subscribedSeats > (billing.includedSeats ?? 0) ? subscribedSeats : 0;
   const monthly = seatPrice * billedSeats;
   // Without a subscription, the honest seat line is the PLAN's allowance, not
   // the occupied count ("1 seat included" on a Free plan that includes 3 read
@@ -168,8 +174,8 @@ export default async function BillingPage({
           price: t.fmt.amount(seatPrice),
         })
       : billing.seats != null
-        ? // Paid subscription still inside the included tier (e.g. 1 seat on
-          // graduated pricing): the included allowance, not a trial wording.
+        ? // Subscribed but still under the threshold, so nothing is due: say what
+          // the allowance is, not a trial wording.
           t("app.settings.workspace.seatsIncluded", {
             count: billing.includedSeats ?? billing.seats,
           })
