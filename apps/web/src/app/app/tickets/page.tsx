@@ -108,6 +108,15 @@ const PAGER: React.CSSProperties = {
   borderRadius: 5,
 };
 
+/**
+ * How long a ticket keeps announcing itself as new.
+ *
+ * "Nouveau" is a freshness badge, not a state to settle into: it means nobody
+ * has looked yet, and a day later that is no longer news — what speaks then is
+ * the SLA chip. Past this the row stops claiming it; the status in the database
+ * is untouched, and the ticket screen still shows it for what it is.
+ */
+const NEW_BADGE_MS = 24 * 60 * 60 * 1000;
 
 export default async function TicketsPage({
   searchParams,
@@ -207,7 +216,7 @@ export default async function TicketsPage({
       number: row.number,
       subject: row.subject,
       excerpt: row.excerpt,
-      isNew: row.status === "new",
+      isNew: row.status === "new" && now - row.createdAt.getTime() < NEW_BADGE_MS,
       priority: row.priority,
       contactName: row.requesterName ?? row.requesterEmail,
       orgName: row.organizationName,

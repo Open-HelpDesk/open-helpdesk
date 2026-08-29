@@ -13,7 +13,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Avatar } from "@/components/ticket-bits";
-import { PRIORITY_COLORS, PRIORITY_KEYS, STATUS_KEYS } from "@/lib/format";
+import { PRIORITY_KEYS, PRIORITY_TOKEN, STATUS_KEYS } from "@/lib/format";
 import { useT } from "@/i18n/client";
 import { bulkUpdateTickets, type BulkOp } from "./actions";
 
@@ -26,6 +26,9 @@ const STATUS_TONE: Record<string, string> = {
   resolved: "ok",
   closed: "closed",
 };
+
+/** The priorities a row names out loud. The other two are the ordinary case. */
+const PRIORITY_FLAGGED = new Set(["high", "urgent"]);
 
 export type InboxRowData = {
   id: string;
@@ -183,20 +186,6 @@ export function InboxTable({
 
                 <span className="flex min-w-0 flex-1 flex-col" style={{ gap: 2 }}>
                   <span className="flex items-center" style={{ gap: 8 }}>
-                    {/* Priority as a dot, ahead of the number: it is the one
-                        attribute of a ticket the row was not saying at all, and
-                        a dot says it without competing with the SLA pill. */}
-                    <span
-                      title={t(PRIORITY_KEYS[row.priority] ?? PRIORITY_KEYS.normal!)}
-                      aria-label={t(PRIORITY_KEYS[row.priority] ?? PRIORITY_KEYS.normal!)}
-                      style={{
-                        width: 7,
-                        height: 7,
-                        flex: "none",
-                        borderRadius: "50%",
-                        background: PRIORITY_COLORS[row.priority] ?? "var(--ink-3)",
-                      }}
-                    />
                     <span
                       style={{
                         fontFamily: "var(--font-mono)",
@@ -215,6 +204,34 @@ export function InboxTable({
                   </span>
                 </span>
 
+                {/* Priority, but only the two levels that ask for a decision.
+                    A dot on every row said "this ticket has a priority", which
+                    is true of all of them; a named pill on the top two says
+                    which rows to look at first, and leaves the rest quiet. */}
+                {PRIORITY_FLAGGED.has(row.priority) && (
+                  <span
+                    className="inline-flex flex-none items-center whitespace-nowrap"
+                    style={{
+                      gap: 6,
+                      padding: "4px 11px",
+                      borderRadius: 999,
+                      background: `var(--${PRIORITY_TOKEN[row.priority]}-t)`,
+                      color: `var(--${PRIORITY_TOKEN[row.priority]})`,
+                      fontSize: 11.5,
+                      fontWeight: 600,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 6,
+                        height: 6,
+                        background: `var(--${PRIORITY_TOKEN[row.priority]})`,
+                      }}
+                    />
+                    {t(PRIORITY_KEYS[row.priority]!)}
+                  </span>
+                )}
+
                 {row.sla && (
                   <span
                     className="whitespace-nowrap"
@@ -231,23 +248,28 @@ export function InboxTable({
                   </span>
                 )}
 
-                <span
-                  className="inline-flex items-center whitespace-nowrap"
-                  style={{
-                    gap: 6,
-                    padding: "4px 11px 4px 9px",
-                    borderRadius: 999,
-                    background: `var(--${st}-t)`,
-                    color: `var(--${st})`,
-                    fontSize: 11.5,
-                    fontWeight: 600,
-                  }}
-                >
+                {/* A ticket still in `new` after a day stops saying so — see
+                    NEW_BADGE_MS. It keeps its SLA chip and its priority, which
+                    is what is actually worth reading by then. */}
+                {(row.status !== "new" || row.isNew) && (
                   <span
-                    style={{ width: 5, height: 5, borderRadius: "50%", background: `var(--${st})` }}
-                  />
-                  {t(STATUS_KEYS[row.status as keyof typeof STATUS_KEYS] ?? "app.status.open")}
-                </span>
+                    className="inline-flex items-center whitespace-nowrap"
+                    style={{
+                      gap: 6,
+                      padding: "4px 11px 4px 9px",
+                      borderRadius: 999,
+                      background: `var(--${st}-t)`,
+                      color: `var(--${st})`,
+                      fontSize: 11.5,
+                      fontWeight: 600,
+                    }}
+                  >
+                    <span
+                      style={{ width: 5, height: 5, borderRadius: "50%", background: `var(--${st})` }}
+                    />
+                    {t(STATUS_KEYS[row.status as keyof typeof STATUS_KEYS] ?? "app.status.open")}
+                  </span>
+                )}
 
                 <span
                   className="tabular-nums text-right"

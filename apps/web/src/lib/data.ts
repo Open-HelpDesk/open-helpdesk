@@ -490,6 +490,7 @@ export async function listTickets(
         subject: tickets.subject,
         status: tickets.status,
         priority: tickets.priority,
+        createdAt: tickets.createdAt,
         updatedAt: tickets.updatedAt,
         firstRepliedAt: tickets.firstRepliedAt,
         firstReplyDueAt: tickets.firstReplyDueAt,
