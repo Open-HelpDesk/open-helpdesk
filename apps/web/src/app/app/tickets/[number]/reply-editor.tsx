@@ -68,6 +68,9 @@ export function ReplyEditor({
   const [macroMenu, setMacroMenu] = useState(false);
   const [varMenu, setVarMenu] = useState(false);
   const [attachError, setAttachError] = useState(false);
+  /** How many files are staged — the only feedback left once the native
+   *  control is out of sight. */
+  const [attachCount, setAttachCount] = useState(0);
   const [draftSavedAt, setDraftSavedAt] = useState<number | null>(null);
   const [, forceTick] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -454,17 +457,30 @@ export function ReplyEditor({
           borderRadius: "0 0 13px 13px",
         }}
       >
+        {/* The paperclip IS the control, as the design draws it. The native
+            input is kept in the form but taken out of sight: a browser renders
+            its "Choose file / No file chosen" in ITS OWN language, not the
+            page's, so an English workspace on a French machine read
+            "Aucun fichier choisi" in the middle of the composer. The count needs
+            no translation, and the label carries the wording for a screen
+            reader. */}
         <label
-          className="inline-flex cursor-pointer items-center gap-1.5"
+          className="ohd-focus inline-flex cursor-pointer items-center gap-1.5"
           style={{ fontSize: 12, color: attachError ? "var(--dang)" : "var(--ink-2)" }}
           title={t("app.ticket.attachTitle")}
+          aria-label={t("app.ticket.attachTitle")}
         >
           <Paperclip size={15} strokeWidth={1.8} />
+          {attachCount > 0 && (
+            <span className="tabular-nums" style={{ fontWeight: 600 }}>
+              {attachCount}
+            </span>
+          )}
           <input
             name="files"
             type="file"
             multiple
-            className="max-w-44 text-[11px]"
+            className="sr-only"
             /**
              * Checked here, at pick time, because both ways of failing were
              * mute: a file over the per-file ceiling was dropped by
@@ -480,6 +496,7 @@ export function ReplyEditor({
                 picked.some((f) => f.size > MAX_FILE_BYTES) || total > MAX_MESSAGE_BYTES;
               setAttachError(bad);
               if (bad) e.currentTarget.value = "";
+              setAttachCount(bad ? 0 : picked.length);
             }}
           />
         </label>
