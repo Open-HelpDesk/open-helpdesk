@@ -66,11 +66,21 @@ export const STATUS_KEYS: Record<string, MessageKey> = {
   closed: "app.status.closed",
 };
 
-/** Status → CSS token key (--new, --open, --wait, --pause, --ok, --closed). */
+/**
+ * Status → CSS token key (--new, --open, --pause, --ok, --closed).
+ *
+ * The one place the agent space decides what a status looks like. "waiting"
+ * deliberately shares the blue of "open": both are tickets in flight, and the
+ * amber it used to wear read as a warning next to a red SLA chip that was the
+ * only real one. The two are told apart by their label.
+ *
+ * The customer portal keeps its own mapping (PT-05): there, "waiting" means
+ * "waiting for YOU", and the amber is a nudge rather than a state.
+ */
 export const STATUS_TOKEN: Record<string, string> = {
   new: "new",
   open: "open",
-  waiting: "wait",
+  waiting: "open",
   on_hold: "pause",
   resolved: "ok",
   closed: "closed",

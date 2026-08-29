@@ -13,19 +13,9 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Avatar } from "@/components/ticket-bits";
-import { PRIORITY_KEYS, PRIORITY_TOKEN, STATUS_KEYS } from "@/lib/format";
+import { PRIORITY_KEYS, PRIORITY_TOKEN, STATUS_KEYS, STATUS_TOKEN } from "@/lib/format";
 import { useT } from "@/i18n/client";
 import { bulkUpdateTickets, type BulkOp } from "./actions";
-
-/** Status → token family, so the pill picks up --new-t/--open-t/… by name. */
-const STATUS_TONE: Record<string, string> = {
-  new: "viol",
-  open: "open",
-  waiting: "wait",
-  on_hold: "pause",
-  resolved: "ok",
-  closed: "closed",
-};
 
 /** The priorities a row names out loud. The other two are the ordinary case. */
 const PRIORITY_FLAGGED = new Set(["high", "urgent"]);
@@ -149,7 +139,7 @@ export function InboxTable({
           except the always-visible checkbox the design does without. */}
       <div className="flex flex-col" style={{ gap: 8, padding: "0 20px 20px" }}>
         {rows.map((row, i) => {
-          const st = STATUS_TONE[row.status] ?? STATUS_TONE.open;
+          const st = STATUS_TOKEN[row.status] ?? "open";
           const isSelected = selected.has(row.id);
           // The border marks position and selection, not urgency: the SLA pill
           // already carries the red, and a second red on the same card competes

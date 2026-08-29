@@ -15,7 +15,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useT } from "@/i18n/client";
 import { Avatar, PANEL_CARD, PANEL_GROUP } from "@/components/ticket-bits";
-import { STATUS_KEYS } from "@/lib/format";
+import { STATUS_KEYS, STATUS_TOKEN } from "@/lib/format";
 import { pinContactNote, unpinContactNote, linkTicket, unlinkTicket } from "./panel-actions";
 
 type Panel = "details" | "requester" | "notes" | "history" | "linked";
@@ -68,18 +68,7 @@ const CARD = PANEL_CARD;
 const GROUP = PANEL_GROUP;
 
 function StatusPill({ status, label }: { status: string; label: string }) {
-  const tone =
-    status === "new"
-      ? "viol"
-      : status === "open"
-        ? "open"
-        : status === "waiting"
-          ? "wait"
-          : status === "on_hold"
-            ? "pause"
-            : status === "resolved"
-              ? "ok"
-              : "closed";
+  const tone = STATUS_TOKEN[status] ?? "closed";
   return (
     <span
       className="whitespace-nowrap"
