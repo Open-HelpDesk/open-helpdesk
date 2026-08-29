@@ -1392,8 +1392,8 @@ export const en = {
   "app.settings.workspace.offersPerMonth": "per month",
   "app.settings.workspace.offersPerMonthYearly": "per month, billed yearly",
   "app.settings.workspace.offersSeatsRule": {
-    one: "The first seat is included, then €{price} per extra seat per month.",
-    other: "The first {count} seats are included, then €{price} per extra seat per month.",
+    one: "Free up to {count} seat. Past that, every seat is billed at €{price} per month.",
+    other: "Free up to {count} seats. Past that, every seat is billed at €{price} per month.",
   },
   "app.settings.workspace.offersFreeNote":
     "No subscription and no card — for as long as the workspace fits the allowance.",

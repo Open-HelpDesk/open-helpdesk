@@ -129,8 +129,15 @@ export function OfferPicker({
           };
           const paid = offer.monthlyPriceCents > 0;
           const current = offer.id === currentPlanId;
-          // Graduated pricing: seats within the included allowance cost nothing.
-          const billable = paid ? Math.max(0, seats - offer.includedSeats) : 0;
+          /*
+           * Volume pricing, not graduated: the free allowance is a threshold,
+           * not a discount kept forever. Up to `includedSeats` the workspace
+           * pays nothing; the seat that crosses the line makes EVERY seat
+           * billable — four agents are four seats at full price, not one.
+           * Stripe computes the same way (tiers_mode: "volume"), and this
+           * estimate has to agree with the invoice to the cent.
+           */
+          const billable = paid && seats > offer.includedSeats ? seats : 0;
           const perSeatCents =
             interval === "year" ? offer.yearlyPriceCents / 12 : offer.monthlyPriceCents;
           const totalMonthlyCents = billable * perSeatCents;

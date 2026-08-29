@@ -1412,8 +1412,8 @@ export const fr: Dictionary = {
   "app.settings.workspace.offersPerMonth": "par mois",
   "app.settings.workspace.offersPerMonthYearly": "par mois, facturé à l'année",
   "app.settings.workspace.offersSeatsRule": {
-    one: "Le premier siège est compris, puis {price} € par siège supplémentaire et par mois.",
-    other: "Les {count} premiers sièges sont compris, puis {price} € par siège supplémentaire et par mois.",
+    one: "Gratuit jusqu'à {count} siège. Au-delà, ils sont tous facturés {price} € par mois.",
+    other: "Gratuit jusqu'à {count} sièges. Au-delà, ils sont tous facturés {price} € par mois.",
   },
   "app.settings.workspace.offersFreeNote":
     "Sans abonnement ni carte — tant que le workspace tient dans les limites.",
