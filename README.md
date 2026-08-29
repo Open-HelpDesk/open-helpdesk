@@ -1,18 +1,74 @@
 # Open HelpDesk
 
-**Open-core helpdesk you can actually self-host.** Ticketing, email channel,
-automations, SLA, CSAT, knowledge base and customer portal — an AGPL-3.0 core,
-with commercially licensed features in [`ee/`](ee/).
+**The free, open-source alternative to Zendesk and Freshdesk.** A complete
+customer support desk — ticketing, email, automations, SLA, CSAT, knowledge base
+and customer portal — that runs on your own servers, with **unlimited agents**
+and no per-seat bill.
 
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 [![CI](https://github.com/open-helpdesk/open-helpdesk/actions/workflows/ci.yml/badge.svg)](https://github.com/open-helpdesk/open-helpdesk/actions/workflows/ci.yml)
 [![Status: Alpha](https://img.shields.io/badge/status-alpha-orange)](CHANGELOG.md)
 
-> **Alpha.** The core product (roadmap milestones 0–3) works end-to-end and
-> is covered by a Playwright smoke suite, but APIs, schema and screens still
-> move fast. Not production-ready yet — a good time to try it and open issues.
+![The ticket screen](.github/assets/ticket.png)
 
-![Ticket view](.github/assets/ticket.png)
+## Why Open HelpDesk
+
+- **Unlimited agents.** Seats are not a licence lever here. Add the whole team,
+  add the interns, add the people who answer three tickets a month.
+- **Your data stays yours.** One `docker compose up`, your PostgreSQL, your
+  storage, your email transport. Nothing leaves the machine you chose.
+- **Not a toy.** The email channel is bidirectional, the SLA clock respects
+  business hours, the automations run on real triggers, and the customer portal
+  is a real portal with magic-link accounts and search deflection.
+- **Open core, honest boundary.** Everything you need to run a support desk is
+  AGPL-3.0. The commercial licence covers exactly three features — agent SSO,
+  delegated customer-organization SSO, the advanced audit log — and they live in
+  one directory you can read: [`ee/`](ee/).
+- **25 languages** out of the box, with dictionary parity enforced at compile
+  time — a missing translation fails the build, it does not ship as English.
+
+> **Alpha.** The product works end to end and is covered by a Playwright smoke
+> suite, but APIs, schema and screens still move. Not production-ready yet — a
+> very good time to try it and open issues.
+
+## What it looks like
+
+### The inbox — keyboard-first, and it tells you what needs you
+
+Saved views down the left, and every row says the same three things in the same
+place: the priority when it is High or Urgent, the SLA countdown, the status.
+`j`/`k` to move, `↵` to open, `x` to select.
+
+![The agent inbox](.github/assets/inbox.png)
+
+### Automations — "when X, then Y", and a dry run before you commit
+
+Conditions, actions in order, and a **Test on an existing ticket** panel that
+simulates the rule against real data without changing anything.
+
+![The rule editor](.github/assets/automations.png)
+
+### SLA — targets per priority, on working hours
+
+Ordered policies, the first match wins. Targets per priority for the first
+reply, the following replies and the resolution — counted against the calendar
+you define, not against wall-clock time.
+
+![SLA policies](.github/assets/sla.png)
+
+### Reports — the numbers a support lead actually asks for
+
+Volumes, median first reply, median resolution, SLA compliance, CSAT, breakdown
+by channel, and a volume heat map by hour and weekday. CSV export included.
+
+![Reports](.github/assets/reports.png)
+
+### The customer portal — a real help centre, not a form
+
+Public articles with search, an embeddable widget, magic-link accounts so a
+customer can follow their own requests, and article voting.
+
+![The help centre](.github/assets/portal.png)
 
 ## Features
 
@@ -76,15 +132,6 @@ Open HelpDesk is open-core, and the licence boundary is the `ee/` directory:
 English documentation is planned. In the meantime, [CONTRIBUTING.md](CONTRIBUTING.md)
 covers the development setup, and the diagnostics card (Settings → General)
 covers the installation.
-
-## Roadmap
-
-| | |
-|---|---|
-| ✅ Milestones 0–3 | Core ticketing, email, automations/SLA/CSAT, portal & KB — this release |
-| 🔜 Next | Enterprise identity — SAML/SCIM runtime, delegated customer-organization SSO |
-| 🔜 Next | AI — triage, reply suggestions, thread summaries |
-| 🔜 Later | Custom domains, multi-brand, public documentation |
 
 ## Security
 

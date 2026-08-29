@@ -4,6 +4,61 @@ All notable changes to this project are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2-alpha] - 2026-08-29
+
+The redesign release: all 29 screens of the agent workspace and the
+administration were rebuilt against the V2 design. Nothing about self-hosting
+changes — this is what the product looks like and how it reads.
+
+### Added
+
+- **A V2 foundation** shared by every screen: one palette valued per theme, the
+  shipped typefaces, a shell with a full-width top bar, a breadcrumb, derived
+  notifications, and administration primitives (a 236 px rail, one centred
+  1040 column, r14 cards, h40 fields) that the eighteen settings screens now go
+  through instead of each choosing its own measurements.
+- **The inbox becomes cards** with five orders and faceted filters that say how
+  many tickets each value would bring. A row names its priority only when it is
+  High or Urgent — the two levels that ask for a decision — and a ticket nobody
+  has touched shows *New* for its first twenty-four hours, then stops saying so.
+- **The ticket screen** gains four tabs (Conversation, Tasks, Activity,
+  Resolution), real tasks, five side panels behind five icons — requester,
+  pinned notes, SLA timeline, linked tickets, properties — and a Resolution tab
+  that records the cause, the article to propose and the summary sent to the
+  customer.
+- **The view builder**, the ⌘K palette, the sign-in card and an onboarding that
+  became a checklist instead of a wizard.
+- **A default favicon**: a workspace that has not uploaded its own now shows the
+  product's mark instead of nothing.
+
+### Changed
+
+- **The ticket thread lies on the canvas**, so its cards read as cards; the
+  composer is no longer a bar docked at the bottom but the last card of the
+  thread, behind the agent's own avatar, with its Reply / Internal note tabs at
+  its head. The header spans the whole screen, which is what stopped the subject
+  being truncated.
+- **The properties panel becomes three cards** — status and priority as pills,
+  each SLA with its verdict, its bar and its instants, then the requester and
+  the editable properties. Status is editable there at last.
+- **The attachment control is the paperclip**, not the browser's native file
+  widget: a browser draws that one in its own language, not the workspace's.
+- French names the `open` status **En cours**, and *Waiting* joins the blue of
+  *Open* — both are tickets in flight, and the amber read as a second warning
+  next to a red SLA badge.
+
+### Fixed
+
+- **Contrast on filled buttons**: `--brand` was serving as both a text colour
+  and a button fill, which made white on mint 2.3:1 in the dark theme. Tokens
+  `--on-brand` and `--on-ok` split the roles across 47 elements; two header
+  buttons that were reading their own background followed.
+- The inbox no longer moves the keyboard cursor when the mouse crosses it, and
+  the card hover class finally has a rule behind it.
+- Delays past 48 h are said in days, and chart deltas are formatted in the
+  reader's locale rather than a hardcoded `fr-FR`.
+- Below `xl` the ticket screen's two columns no longer overlap.
+
 ## [0.2.0-alpha] - 2026-08-21
 
 Control-plane-ready release — the groundwork an external control plane hooks
