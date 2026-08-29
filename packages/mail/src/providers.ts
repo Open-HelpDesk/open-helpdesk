@@ -68,6 +68,7 @@ export function smtpTransport(config: SmtpConfig): MailTransport {
         replyTo: mail.replyTo,
         subject: mail.subject,
         text: mail.text,
+        html: mail.html,
         headers: mail.headers,
       });
       return { messageId: info.messageId };
@@ -101,6 +102,7 @@ export function resendTransport(apiKey: string): MailTransport {
           reply_to: mail.replyTo,
           subject: mail.subject,
           text: mail.text,
+          html: mail.html,
           headers: mail.headers,
         }),
       });
@@ -140,6 +142,7 @@ export function brevoTransport(apiKey: string): MailTransport {
           replyTo: mail.replyTo ? { email: splitAddress(mail.replyTo).email } : undefined,
           subject: mail.subject,
           textContent: mail.text,
+          htmlContent: mail.html,
           headers: mail.headers,
         }),
       });
@@ -182,6 +185,7 @@ export function mailjetTransport(apiKey: string, apiSecret: string): MailTranspo
               ReplyTo: mail.replyTo ? { Email: splitAddress(mail.replyTo).email } : undefined,
               Subject: mail.subject,
               TextPart: mail.text,
+              HTMLPart: mail.html,
               Headers: mail.headers,
             },
           ],

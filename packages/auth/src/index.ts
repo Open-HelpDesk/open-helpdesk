@@ -7,7 +7,12 @@
  * checked on every request via app.users (email), on the apps/web side.
  */
 import { betterAuth } from "better-auth";
-import { sendInstanceEmail } from "@openhelpdesk/mail";
+import {
+  brandedHtml,
+  brandedText,
+  sendInstanceEmail,
+  type BrandedEmail,
+} from "@openhelpdesk/mail";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
   authAccounts,
@@ -127,16 +132,49 @@ export const auth = betterAuth({
       // confirms the address, and says what happens if it never is.
       const deadline =
         Number.isFinite(verificationDeadlineDays) && verificationDeadlineDays > 0
-          ? `\nConfirm within ${verificationDeadlineDays} days, or access will be suspended until you do.\n`
+          ? `Confirm within ${verificationDeadlineDays} days, or access will be suspended until you do.`
           : "";
+
+      /*
+       * Where the link LANDS, once the address is confirmed.
+       *
+       * Better Auth sends the visitor to its own default afterwards, which is
+       * the apex — the marketing site. People clicked, saw the home page, and
+       * concluded nothing had happened. Unlike the password reset, the host
+       * cannot tell us the workspace: signing up happens on the apex, and the
+       * workspace is created moments later, so at this point there may not be
+       * one yet. The sign-in page is the right destination — it looks the
+       * account up and sends it to its own workspace.
+       */
+      const withCallback = (() => {
+        try {
+          const link = new URL(url);
+          link.searchParams.set("callbackURL", `${link.origin}/connexion`);
+          return link.toString();
+        } catch {
+          return url;
+        }
+      })();
+
+      const mail: BrandedEmail = {
+        title: "Confirm your email address",
+        intro: [
+          "One click and your Open HelpDesk account is confirmed. It tells us this mailbox is really yours — the address your customers will see replies come from.",
+          ...(deadline ? [deadline] : []),
+        ],
+        button: { label: "Confirm my address", url: withCallback },
+        footnote:
+          "If you did not create an Open HelpDesk account, ignore this email — nothing will happen.",
+        signature: "Open HelpDesk",
+      };
+
       await sendInstanceEmail({
         to: user.email,
         // Sent from a package: no access to the i18n dictionaries (apps/web/src/i18n),
         // and the account has no tenant yet at this point — hence English only.
         subject: "Confirm your email address",
-        text:
-          `Confirm this address for your Open HelpDesk account:\n${url}\n${deadline}\n` +
-          `If you did not request this, please ignore this email.`,
+        text: brandedText(mail),
+        html: brandedHtml(mail),
       });
     },
   },

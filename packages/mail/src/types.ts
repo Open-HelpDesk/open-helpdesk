@@ -41,7 +41,14 @@ export type OutgoingEmail = {
   to: string;
   replyTo?: string;
   subject: string;
+  /**
+   * Always present, and never a stripped-down afterthought when `html` is set:
+   * it is what a text-only client, a screen reader and most spam filters read.
+   * A mail with no text part scores worse and is sometimes shown blank.
+   */
   text: string;
+  /** Optional rich part. When set, the mail goes out as multipart alternative. */
+  html?: string;
   headers?: Record<string, string>;
 };
 

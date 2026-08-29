@@ -39,8 +39,8 @@ const processors: Record<QueueName, Processor> = {
     return result;
   },
   "mail-send": async (job) => {
-    const { deliveryId, text, headers } = job.data as MailSendJob;
-    const result = await deliverEmail(deliveryId, { text, headers });
+    const { deliveryId, text, html, headers } = job.data as MailSendJob;
+    const result = await deliverEmail(deliveryId, { text, html, headers });
     // Throwing the error lets BullMQ retry with its exponential backoff.
     if (!result.sent) throw new Error(result.error ?? "send failed");
     console.log(`[mail-send] delivery ${deliveryId} sent (${result.messageId ?? "no id"})`);

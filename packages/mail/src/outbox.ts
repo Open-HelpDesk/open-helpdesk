@@ -17,6 +17,8 @@ export type SendTenantEmailInput = {
   to: string;
   subject: string;
   text: string;
+  /** Rich part. The text above stays mandatory — see OutgoingEmail. */
+  html?: string;
   kind?: MailKind;
   headers?: Record<string, string>;
   ticketId?: string;
@@ -41,6 +43,7 @@ export type SendTenantEmailResult = {
 export type MailSendJob = {
   deliveryId: string;
   text: string;
+  html?: string;
   headers?: Record<string, string>;
 };
 
@@ -98,13 +101,14 @@ export async function sendTenantEmail(
 
   if (
     !input.immediate &&
-    (await enqueue({ deliveryId, text: input.text, headers: input.headers }))
+    (await enqueue({ deliveryId, text: input.text, html: input.html, headers: input.headers }))
   ) {
     return { deliveryId, queued: true, sent: false, from: config.from };
   }
 
   const result = await deliverEmail(deliveryId, {
     text: input.text,
+    html: input.html,
     headers: input.headers,
   });
   return { deliveryId, queued: false, ...result };
@@ -113,7 +117,7 @@ export async function sendTenantEmail(
 /** Performs the send of a logged delivery. Called directly or by the worker. */
 export async function deliverEmail(
   deliveryId: string,
-  body: { text: string; headers?: Record<string, string> },
+  body: { text: string; html?: string; headers?: Record<string, string> },
 ): Promise<{ sent: boolean; messageId?: string; error?: string; from: string }> {
   const [delivery] = await db
     .select()
@@ -147,7 +151,7 @@ export async function deliverEmail(
   }
 
   const config = await resolveMailConfig(delivery.tenantId);
-  const { text, headers } = body;
+  const { text, html, headers } = body;
 
   try {
     const { messageId } = await config.transport.send({
@@ -156,6 +160,7 @@ export async function deliverEmail(
       replyTo: config.replyTo,
       subject: delivery.subject,
       text,
+      html,
       headers,
     });
     await db

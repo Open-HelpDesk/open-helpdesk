@@ -33,6 +33,13 @@ export {
   type SendTenantEmailInput,
   type SendTenantEmailResult,
 } from "./outbox";
+export {
+  brandedHtml,
+  brandedText,
+  type BrandedEmail,
+  type EmailButton,
+  type EmailFact,
+} from "./template";
 export { dnsRecordsFor, domainOf, type DnsRecord } from "./dns";
 export { sendTicketReplyEmail } from "./send";
 export {
