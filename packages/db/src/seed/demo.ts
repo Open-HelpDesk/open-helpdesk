@@ -58,11 +58,17 @@ async function resetAndInstallDefaults(tenantId: string) {
     .select({ locale: tenants.locale })
     .from(tenants)
     .where(eq(tenants.id, tenantId));
+  /* Defaults already in place. Recognised by the presence of a calendar, not by
+     the name of a policy: the names are translated now, and looking for
+     "Premium customers" stopped recognising a workspace in any other language —
+     the seed would then wipe and reinstall its defaults on every single run,
+     detaching the demo tickets from their policy each time. */
   const [marker] = await db
-    .select({ id: slaPolicies.id })
-    .from(slaPolicies)
-    .where(and(eq(slaPolicies.tenantId, tenantId), eq(slaPolicies.name, "Premium customers")));
-  if (marker) return; // defaults already in place
+    .select({ id: businessHours.id })
+    .from(businessHours)
+    .where(eq(businessHours.tenantId, tenantId))
+    .limit(1);
+  if (marker) return;
 
   // Detach the tickets from the old policies/teams/forms before the purge.
   await db
