@@ -83,7 +83,7 @@ async function enqueue(job: MailSendJob): Promise<boolean> {
 export async function sendTenantEmail(
   input: SendTenantEmailInput,
 ): Promise<SendTenantEmailResult> {
-  const config = await resolveMailConfig(input.tenantId);
+  const config = await resolveMailConfig(input.tenantId, input.kind);
 
   const [delivery] = await db
     .insert(emailDeliveries)
@@ -150,7 +150,7 @@ export async function deliverEmail(
     return { sent: true, from: "" };
   }
 
-  const config = await resolveMailConfig(delivery.tenantId);
+  const config = await resolveMailConfig(delivery.tenantId, delivery.kind as MailKind);
   const { text, html, headers } = body;
 
   try {

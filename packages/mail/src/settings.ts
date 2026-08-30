@@ -32,7 +32,7 @@ import {
   smtpTransport,
   type MailProvider,
 } from "./providers";
-import type { MailTransport } from "./types";
+import type { MailKind, MailTransport } from "./types";
 
 export type ResolvedMailConfig = {
   provider: MailProvider;
@@ -80,6 +80,12 @@ export function transportFor(row: EmailSettingsRow): MailTransport {
   }
 }
 
+/** The instance's own sender — the one the provider has been told about. */
+export function instanceFrom(): string {
+  const domain = (process.env.BASE_DOMAIN ?? "open-helpdesk.local").split(":")[0];
+  return process.env.MAIL_FROM ?? `no-reply@${domain}`;
+}
+
 /**
  * PRE-tenant transactional send (email verification at signup, invitation
  * before the first sign-in…): instance transport, console fallback in dev.
@@ -92,8 +98,7 @@ export async function sendInstanceEmail(input: {
 }): Promise<{ ok: boolean; error?: string }> {
   const instance = instanceConfig();
   const transport = instance?.transport ?? consoleTransport;
-  const domain = (process.env.BASE_DOMAIN ?? "open-helpdesk.local").split(":")[0];
-  const from = process.env.MAIL_FROM ?? `no-reply@${domain}`;
+  const from = instanceFrom();
   try {
     await transport.send({
       from,
@@ -177,9 +182,29 @@ async function resolveFrom(
   };
 }
 
-export async function resolveMailConfig(tenantId: string): Promise<ResolvedMailConfig> {
+export async function resolveMailConfig(
+  tenantId: string,
+  /**
+   * `admin` — le produit qui écrit aux gens du workspace À PROPOS du workspace
+   * (bienvenue, fin d'essai, impayé, suspension). Ces messages partent de
+   * l'expéditeur de l'INSTANCE, jamais de l'adresse du workspace.
+   *
+   * Ce n'est pas un détail de présentation : l'adresse d'un espace fraîchement
+   * créé — support@{slug}.{domaine} — n'est authentifiée nulle part au moment
+   * où l'email de bienvenue part, et le fournisseur la refuse. Constaté sur la
+   * staging, où Brevo rejetait « the sender you used … is not valid » : le
+   * journal disait « envoyé », le message ne partait pas, et personne ne
+   * recevait ni sa bienvenue ni son avis de suspension. Les réponses aux
+   * clients, elles, gardent l'adresse du workspace — c'est la sienne qu'un
+   * client doit voir.
+   */
+  kind?: MailKind,
+): Promise<ResolvedMailConfig> {
   const row = await getEmailSettings(tenantId);
-  const { from, replyTo } = await resolveFrom(tenantId, row);
+  const { from, replyTo } =
+    kind === "admin"
+      ? { from: instanceFrom(), replyTo: undefined }
+      : await resolveFrom(tenantId, row);
 
   // Cloud: the instance transport, always. A stored tenant provider (from before
   // this rule, or from a forged request) is ignored rather than honoured.
