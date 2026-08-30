@@ -126,6 +126,7 @@ export function RailNav({ inboxBadge }: { inboxBadge: number }) {
 
   return (
     <nav
+      data-tour="rail"
       className="flex shrink-0 flex-col items-center border-r"
       style={{
         width: 60,
@@ -370,6 +371,7 @@ export function TopBar({
           text input here would have been a second search to keep in step. */}
       <button
         type="button"
+        data-tour="search"
         onClick={() => window.dispatchEvent(new Event("ohd:open-search"))}
         className="ohd-hover-edge-ink flex items-center border"
         style={{
@@ -408,6 +410,7 @@ export function TopBar({
 
       <Link
         href="/app/tickets/new"
+        data-tour="new"
         className="flex items-center whitespace-nowrap font-semibold"
         style={{
           color: "var(--on-brand)",

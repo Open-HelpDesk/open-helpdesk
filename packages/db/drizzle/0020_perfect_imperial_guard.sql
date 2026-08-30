@@ -1,0 +1,1 @@
+ALTER TABLE "app"."users" ADD COLUMN "tour_seen_at" timestamp with time zone;

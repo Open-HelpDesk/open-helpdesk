@@ -195,6 +195,12 @@ export const users = app.table(
      * this instant". Null = nothing read yet.
      */
     notificationsReadAt: timestamp("notifications_read_at", { withTimezone: true }),
+    /**
+     * The guided tour of the inbox is shown once, to whoever has not seen it.
+     * Per agent and not per workspace: the second agent to join arrives on the
+     * same screen knowing no more than the first did.
+     */
+    tourSeenAt: timestamp("tour_seen_at", { withTimezone: true }),
     lastSeenAt: timestamp("last_seen_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },

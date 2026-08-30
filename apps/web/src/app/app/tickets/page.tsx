@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { and, asc, count, eq, ne } from "drizzle-orm";
 import { db, mailboxes, tickets, users } from "@openhelpdesk/db";
+import { InboxTour } from "@/components/inbox-tour";
 import { requireAgent } from "@/lib/session";
 import {
   DEFAULT_VIEWS,
@@ -188,20 +189,12 @@ export default async function TicketsPage({
 
   // First launch: no ticket in the workspace.
   let firstLaunch = false;
-  let mailboxAddress = "";
   if (!loadError && total === 0 && !params.status && !params.priority && !params.assignee) {
     const [row] = await db
       .select({ n: count() })
       .from(tickets)
       .where(eq(tickets.tenantId, tenant.id));
-    if ((row?.n ?? 0) === 0) {
-      firstLaunch = true;
-      const [mailbox] = await db
-        .select({ address: mailboxes.address })
-        .from(mailboxes)
-        .where(eq(mailboxes.tenantId, tenant.id));
-      mailboxAddress = mailbox?.address ?? providedMailboxAddress(tenant.slug);
-    }
+    firstLaunch = (row?.n ?? 0) === 0;
   }
 
   const now = Date.now();
@@ -239,15 +232,11 @@ export default async function TicketsPage({
   const from = total === 0 ? 0 : (page - 1) * INBOX_PAGE_SIZE + 1;
   const to = Math.min(page * INBOX_PAGE_SIZE, total);
 
-  const [firstLaunchBefore, firstLaunchAfter] = t.parts(
-    "app.tickets.firstLaunchBody",
-    "address",
-  );
-
   return (
     <div className="flex h-full">
       {/* Views panel — 232 px (V2) */}
       <nav
+        data-tour="views"
         className="flex shrink-0 flex-col overflow-auto border-r"
         style={{
           width: 232,
@@ -346,7 +335,7 @@ export default async function TicketsPage({
       </nav>
 
       {/* Table column */}
-      <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <section data-tour="table" className="flex min-w-0 flex-1 flex-col overflow-hidden">
         {/* V2 header: the view's name in the title face, its count as a pill,
             and the two menus. It replaces a row of single-value chips — see
             inbox-controls.tsx for why the chips went. */}
@@ -501,41 +490,16 @@ export default async function TicketsPage({
                   </svg>
                 </span>
 
-                <div className="flex flex-col" style={{ gap: 6 }}>
-                  <p style={{ fontSize: 16.5, fontWeight: 600, letterSpacing: "-0.01em" }}>
-                    {t("app.tickets.firstLaunchTitle")}
-                  </p>
-                  <p style={{ fontSize: 13.5, color: "var(--ink-2)", textWrap: "pretty" }}>
-                    {firstLaunchBefore}
-                    <span
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 12.5,
-                        background: "var(--sunk)",
-                        padding: "2px 6px",
-                        borderRadius: 5,
-                        border: "1px solid var(--line-2)",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {mailboxAddress}
-                    </span>
-                    {firstLaunchAfter}
-                  </p>
-                </div>
+                {/* Title and action, nothing between. The receiving address and
+                    the reason to finish the setup were both explained a click
+                    ago, on the onboarding screen, and the guided tour that opens
+                    on top of this screen says the rest — a paragraph here
+                    repeated the one and competed with the other. */}
+                <p style={{ fontSize: 16.5, fontWeight: 600, letterSpacing: "-0.01em" }}>
+                  {t("app.tickets.firstLaunchTitle")}
+                </p>
 
-                <div
-                  className="flex flex-col items-center"
-                  style={{
-                    gap: 10,
-                    width: "100%",
-                    paddingTop: 14,
-                    borderTop: "1px solid var(--line-2)",
-                  }}
-                >
-                  <p style={{ fontSize: 12.5, color: "var(--ink-3)", textWrap: "pretty" }}>
-                    {t("app.tickets.firstLaunchHint")}
-                  </p>
+                <div className="flex flex-col items-center" style={{ gap: 10, width: "100%" }}>
                   <Link
                     href="/app/settings/general"
                     className="ohd-hover-acc grid place-items-center font-semibold"
@@ -650,6 +614,9 @@ export default async function TicketsPage({
           </span>
         </div>
       </section>
+      {/* First arrival in the inbox: the tour points at the controls rather
+          than describing them. Per agent — see users.tourSeenAt. */}
+      {!agent.tourSeenAt && <InboxTour />}
     </div>
   );
 }
