@@ -367,11 +367,21 @@ export const et: Dictionary = {
   "app.tickets.loadErrorBody": "Ühendus serveriga ebaõnnestus.",
   "app.tickets.retry": "Proovi uuesti",
   "app.tickets.firstLaunchTitle": "Teie sisendkast on valmis",
-  "app.tickets.firstLaunchBody":
-    "Kõik, mis saadetakse aadressile {address}, jõuab automaatselt siia.",
-  "app.tickets.firstLaunchHint":
-    "Kuni ootate esimest piletit, viige oma tööruumi seadistamine lõpuni.",
   "app.tickets.configureEmail": "Lõpeta seadistamine",
+  "app.tour.railTitle": "Teie alad",
+  "app.tour.railBody": "Postkast, kontaktid, organisatsioonid, aruanded ja teadmusbaas.",
+  "app.tour.viewsTitle": "Teie vaated",
+  "app.tour.viewsBody":
+    "Postkasti filtreeritud loendid. Lisage omad selle jaoks, mida teie tiim jälgib.",
+  "app.tour.tableTitle": "Teie piletid",
+  "app.tour.tableBody": "Iga saabunud e-kiri jõuab siia piletina koos oleku ja tähtajaga.",
+  "app.tour.searchTitle": "Leidke kõik",
+  "app.tour.searchBody": "Piletid, kontaktid, artiklid ja toimingud — ⌘K avab selle kõikjalt.",
+  "app.tour.newTitle": "Loo pilet",
+  "app.tour.newBody": "Päringu jaoks, mis tuli telefoni teel või kohapeal.",
+  "app.tour.skip": "Jäta vahele",
+  "app.tour.next": "Edasi",
+  "app.tour.finish": "Selge",
   "app.tickets.emptyTitle": "Selles vaates pole pileteid",
   "app.tickets.emptyBody": "Kõik on läbi töötatud. Uued e-kirjad jõuavad siia automaatselt.",
   "app.tickets.pageRange": "{from}–{to} / {total}",
@@ -2007,13 +2017,13 @@ export const et: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ükski aadress ei võta veel taotlusi vastu — ilma selleta ei jõua midagi postkasti.",
   "app.onboarding.itemEmailDone": "{address} muudab saabuvad kirjad juba piletiteks.",
-  "app.onboarding.ownAddressStep3":
-    "Saatke testkiri: esimene saabuv kiri kinnitab aadressi ja loob pileti.",
-  "app.onboarding.ownAddressStep2": "Lisage edasisuunamine sellele aadressile:",
+  "app.onboarding.ownAddressStep2":
+    "Saatke testkiri: esimene saabunud e-kiri kinnitab edasisaatmise.",
+  "app.onboarding.ownAddressLabel": "Open HelpDeski tugiaadress",
   "app.onboarding.ownAddressStep1":
-    "Avage postkasti seaded, kuhu kliendid kirjutavad (Gmail, Microsoft 365, teie teenusepakkuja…).",
+    "Selle postkasti seadetes (Gmail, Microsoft 365…) lisage edasisaatmine aadressile:",
   "app.onboarding.ownAddressLede":
-    "Enamik meeskondi säilitab aadressi, mida kliendid juba teavad, ja suunab selle siia. Kliendi jaoks ei muutu midagi.",
+    "Säilitage aadress, mida kliendid juba teavad: suunake see siia, nende jaoks ei muutu midagi.",
   "app.onboarding.ownAddressTitle": "Kasutage oma tugiaadressi",
   "app.onboarding.checklistBody":
     "Neli sammu esimese pileti juurde. Saad need teha ka hiljem halduses.",

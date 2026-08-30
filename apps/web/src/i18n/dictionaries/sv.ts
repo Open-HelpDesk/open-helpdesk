@@ -385,9 +385,22 @@ export const sv: Dictionary = {
   "app.tickets.loadErrorBody": "Anslutningen till servern misslyckades.",
   "app.tickets.retry": "Försök igen",
   "app.tickets.firstLaunchTitle": "Din inkorg är klar",
-  "app.tickets.firstLaunchBody": "Allt som skickas till {address} hamnar här automatiskt.",
-  "app.tickets.firstLaunchHint": "Medan du väntar på det första ärendet kan du slutföra konfigurationen av din arbetsyta.",
   "app.tickets.configureEmail": "Slutför konfigurationen",
+  "app.tour.railTitle": "Dina utrymmen",
+  "app.tour.railBody": "Inkorg, kontakter, organisationer, rapporter och kunskapsbas.",
+  "app.tour.viewsTitle": "Dina vyer",
+  "app.tour.viewsBody": "Filtrerade listor över inkorgen. Lägg till egna för det teamet bevakar.",
+  "app.tour.tableTitle": "Dina ärenden",
+  "app.tour.tableBody":
+    "Varje mejl som kommer in hamnar här som ett ärende, med status och deadline.",
+  "app.tour.searchTitle": "Hitta allt",
+  "app.tour.searchBody":
+    "Ärenden, kontakter, artiklar och åtgärder — ⌘K öppnar det varifrån som helst.",
+  "app.tour.newTitle": "Skapa ett ärende",
+  "app.tour.newBody": "För en förfrågan som kom per telefon eller personligen.",
+  "app.tour.skip": "Hoppa över",
+  "app.tour.next": "Nästa",
+  "app.tour.finish": "Uppfattat",
   "app.tickets.emptyTitle": "Inga ärenden i den här vyn",
   "app.tickets.emptyBody": "Allt är hanterat. Nya mejl hamnar här automatiskt.",
   "app.tickets.pageRange": "{from}–{to} av {total}",
@@ -1820,13 +1833,13 @@ export const sv: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ingen adress tar emot ärenden än — utan den kommer inget in i inkorgen.",
   "app.onboarding.itemEmailDone": "{address} gör redan inkommande e-post till ärenden.",
-  "app.onboarding.ownAddressStep3":
-    "Skicka ett testmeddelande: det första mejlet som kommer fram bekräftar adressen och skapar ett ärende.",
-  "app.onboarding.ownAddressStep2": "Lägg till en vidarebefordran till den här adressen:",
+  "app.onboarding.ownAddressStep2":
+    "Skicka ett testmeddelande: det första mejlet som kommer in bekräftar vidarebefordran.",
+  "app.onboarding.ownAddressLabel": "Open HelpDesk-supportadress",
   "app.onboarding.ownAddressStep1":
-    "Öppna inställningarna för brevlådan som era kunder skriver till (Gmail, Microsoft 365, er leverantör…).",
+    "Lägg till en vidarebefordran i den brevlådans inställningar (Gmail, Microsoft 365…) till:",
   "app.onboarding.ownAddressLede":
-    "De flesta team behåller adressen som kunderna redan känner till och vidarebefordrar den hit. För kunden ändras ingenting.",
+    "Behåll adressen som dina kunder redan känner till: vidarebefordra den hit, inget förändras för dem.",
   "app.onboarding.ownAddressTitle": "Använd er egen supportadress",
   "app.onboarding.checklistBody":
     "Fyra steg till ditt första ärende. Du kan också göra det senare under administration.",

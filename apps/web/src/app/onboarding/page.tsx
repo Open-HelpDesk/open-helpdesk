@@ -1,7 +1,13 @@
 import { providedMailboxAddress } from "@openhelpdesk/config";
 import Link from "next/link";
 import { and, asc, count, eq, ne } from "drizzle-orm";
-import { businessHours, db, kbArticles, mailboxes, users } from "@openhelpdesk/db";
+import {
+  businessHours,
+  db,
+  kbArticles,
+  mailboxes,
+  users,
+} from "@openhelpdesk/db";
 import { redirect } from "next/navigation";
 import { isManager, requireAgent } from "@/lib/session";
 import { requireTenant } from "@/lib/tenant";
@@ -69,27 +75,35 @@ export default async function OnboardingPage() {
   // into the administration: an agent has no business here.
   if (!isManager(agent.role)) redirect("/app/tickets");
 
-  const [mailboxRows, colleagues, [publishedCount], calendars] = await Promise.all([
-    db.select().from(mailboxes).where(eq(mailboxes.tenantId, tenant.id)),
-    db
-      .select({ name: users.name })
-      .from(users)
-      .where(and(eq(users.tenantId, tenant.id), ne(users.id, agent.id)))
-      .orderBy(asc(users.name)),
-    db
-      .select({ n: count() })
-      .from(kbArticles)
-      .where(and(eq(kbArticles.tenantId, tenant.id), eq(kbArticles.status, "published"))),
-    db
-      .select({ name: businessHours.name, timezone: businessHours.timezone })
-      .from(businessHours)
-      .where(eq(businessHours.tenantId, tenant.id))
-      .orderBy(asc(businessHours.position), asc(businessHours.name)),
-  ]);
+  const [mailboxRows, colleagues, [publishedCount], calendars] =
+    await Promise.all([
+      db.select().from(mailboxes).where(eq(mailboxes.tenantId, tenant.id)),
+      db
+        .select({ name: users.name })
+        .from(users)
+        .where(and(eq(users.tenantId, tenant.id), ne(users.id, agent.id)))
+        .orderBy(asc(users.name)),
+      db
+        .select({ n: count() })
+        .from(kbArticles)
+        .where(
+          and(
+            eq(kbArticles.tenantId, tenant.id),
+            eq(kbArticles.status, "published"),
+          ),
+        ),
+      db
+        .select({ name: businessHours.name, timezone: businessHours.timezone })
+        .from(businessHours)
+        .where(eq(businessHours.tenantId, tenant.id))
+        .orderBy(asc(businessHours.position), asc(businessHours.name)),
+    ]);
 
   const verifiedMailbox = mailboxRows.find((m) => m.verified);
   const mailboxAddress =
-    verifiedMailbox?.address ?? mailboxRows[0]?.address ?? providedMailboxAddress(tenant.slug);
+    verifiedMailbox?.address ??
+    mailboxRows[0]?.address ??
+    providedMailboxAddress(tenant.slug);
   /*
    * The provided address is created verified at provisioning, so this item is
    * ticked before the owner has seen the screen — and a ticked item drops its
@@ -107,7 +121,9 @@ export default async function OnboardingPage() {
   const mainCalendar = calendars[0];
   // No calendar at all is also "not set": there is nothing for a policy to point
   // at, and the SLA screen is where one gets created.
-  const hoursAligned = mainCalendar ? mainCalendar.timezone === tenant.timezone : false;
+  const hoursAligned = mainCalendar
+    ? mainCalendar.timezone === tenant.timezone
+    : false;
 
   const items: {
     title: string;
@@ -121,7 +137,13 @@ export default async function OnboardingPage() {
      * sentence saying "you can also forward your own address" leaves the reader
      * to guess the one thing they need, which is where to forward it TO.
      */
-    howTo?: { title: string; lede: string; steps: string[]; copy: string };
+    howTo?: {
+      title: string;
+      lede: string;
+      steps: string[];
+      copyLabel: string;
+      copy: string;
+    };
   }[] = [
     {
       title: t("app.onboarding.emailTitle"),
@@ -136,8 +158,8 @@ export default async function OnboardingPage() {
             steps: [
               t("app.onboarding.ownAddressStep1"),
               t("app.onboarding.ownAddressStep2"),
-              t("app.onboarding.ownAddressStep3"),
             ],
+            copyLabel: t("app.onboarding.ownAddressLabel"),
             copy: mailboxAddress,
           }
         : undefined,
@@ -150,7 +172,10 @@ export default async function OnboardingPage() {
       desc:
         colleagues.length > 0
           ? t("app.onboarding.itemTeamDone", {
-              names: colleagues.slice(0, 3).map((c) => firstName(c.name)).join(", "),
+              names: colleagues
+                .slice(0, 3)
+                .map((c) => firstName(c.name))
+                .join(", "),
             })
           : t("app.onboarding.itemTeamTodo"),
       cta: t("app.settings.workspace.inviteAction"),
@@ -160,7 +185,9 @@ export default async function OnboardingPage() {
       title: t("app.onboarding.itemHours"),
       done: hoursAligned,
       desc: hoursAligned
-        ? t("app.onboarding.itemHoursDone", { timezone: mainCalendar!.timezone })
+        ? t("app.onboarding.itemHoursDone", {
+            timezone: mainCalendar!.timezone,
+          })
         : mainCalendar
           ? t("app.onboarding.itemHoursTodo", {
               calendar: mainCalendar.name,
@@ -191,7 +218,8 @@ export default async function OnboardingPage() {
       className="ohd min-h-screen overflow-auto"
       style={{
         padding: "44px 24px",
-        background: "linear-gradient(180deg,var(--brand-t) 0%,var(--canvas) 45%)",
+        background:
+          "linear-gradient(180deg,var(--brand-t) 0%,var(--canvas) 45%)",
       }}
     >
       <div
@@ -270,7 +298,15 @@ export default async function OnboardingPage() {
                 >
                   {item.title}
                 </p>
-                <p style={{ fontSize: 13, color: "var(--ink-3)", lineHeight: 1.5 }}>{item.desc}</p>
+                <p
+                  style={{
+                    fontSize: 13,
+                    color: "var(--ink-3)",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {item.desc}
+                </p>
 
                 {item.howTo && (
                   <div
@@ -284,16 +320,35 @@ export default async function OnboardingPage() {
                       background: "var(--canvas)",
                     }}
                   >
-                    <p style={{ fontSize: 13.5, fontWeight: 600, color: "var(--ink)" }}>
+                    <p
+                      style={{
+                        fontSize: 13.5,
+                        fontWeight: 600,
+                        color: "var(--ink)",
+                      }}
+                    >
                       {item.howTo.title}
                     </p>
-                    <p style={{ fontSize: 13, color: "var(--ink-2)", lineHeight: 1.55 }}>
+                    <p
+                      style={{
+                        fontSize: 13,
+                        color: "var(--ink-2)",
+                        lineHeight: 1.55,
+                      }}
+                    >
                       {item.howTo.lede}
                     </p>
 
-                    <ol className="flex flex-col" style={{ gap: 8, margin: 0, padding: 0 }}>
+                    <ol
+                      className="flex flex-col"
+                      style={{ gap: 8, margin: 0, padding: 0 }}
+                    >
                       {item.howTo.steps.map((step, n) => (
-                        <li key={step} className="flex" style={{ gap: 9, listStyle: "none" }}>
+                        <li
+                          key={step}
+                          className="flex"
+                          style={{ gap: 9, listStyle: "none" }}
+                        >
                           <span
                             className="grid flex-none place-items-center"
                             style={{
@@ -312,51 +367,68 @@ export default async function OnboardingPage() {
                           </span>
                           <span
                             className="min-w-0 flex-1"
-                            style={{ fontSize: 13, color: "var(--ink-2)", lineHeight: 1.55 }}
+                            style={{
+                              fontSize: 13,
+                              color: "var(--ink-2)",
+                              lineHeight: 1.55,
+                            }}
                           >
                             {step}
                             {/* The address goes under the step that asks for it,
                                 not in a corner: it is the single value the
                                 reader has to carry to another product, and
                                 retyping it is how a forward silently fails. */}
-                            {n === 1 && (
+                            {n === 0 && (
                               <span
-                                className="mt-2 flex items-center"
-                                style={{
-                                  gap: 8,
-                                  padding: "7px 10px",
-                                  borderRadius: 8,
-                                  border: "1px solid var(--line)",
-                                  background: "var(--panel)",
-                                }}
+                                className="mt-2 flex flex-col"
+                                style={{ gap: 4 }}
                               >
-                                <code
-                                  className="min-w-0 flex-1 truncate"
+                                {/* Which address this is, said plainly. The
+                                    workspace has two candidates in the reader's
+                                    head — the one their customers write to, and
+                                    this one — and the whole step is about
+                                    pointing the first at the second. */}
+                                <span
                                   style={{
-                                    fontFamily: "var(--font-mono)",
-                                    fontSize: 12.5,
-                                    color: "var(--ink)",
+                                    fontSize: 11,
+                                    fontWeight: 600,
+                                    letterSpacing: ".06em",
+                                    textTransform: "uppercase",
+                                    color: "var(--ink-3)",
                                   }}
                                 >
-                                  {item.howTo!.copy}
-                                </code>
-                                <I18nProvider locale={t.locale} dict={t.dict}>
-                                  <CopyButton text={item.howTo!.copy} />
-                                </I18nProvider>
+                                  {item.howTo!.copyLabel}
+                                </span>
+                                <span
+                                  className="flex items-center"
+                                  style={{
+                                    gap: 8,
+                                    padding: "7px 10px",
+                                    borderRadius: 8,
+                                    border: "1px solid var(--line)",
+                                    background: "var(--panel)",
+                                  }}
+                                >
+                                  <code
+                                    className="min-w-0 flex-1 truncate"
+                                    style={{
+                                      fontFamily: "var(--font-mono)",
+                                      fontSize: 12.5,
+                                      color: "var(--ink)",
+                                    }}
+                                  >
+                                    {item.howTo!.copy}
+                                  </code>
+                                  <I18nProvider locale={t.locale} dict={t.dict}>
+                                    <CopyButton text={item.howTo!.copy} />
+                                  </I18nProvider>
+                                </span>
                               </span>
                             )}
                           </span>
                         </li>
                       ))}
                     </ol>
-
-                    <Link
-                      href={item.href}
-                      className="self-start hover:underline"
-                      style={{ fontSize: 13, color: "var(--brand-2)", fontWeight: 500 }}
-                    >
-                      {item.cta} →
-                    </Link>
                   </div>
                 )}
               </div>

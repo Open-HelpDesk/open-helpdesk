@@ -435,11 +435,21 @@ export const sk: Dictionary = {
   "app.tickets.loadErrorBody": "Pripojenie k serveru sa nepodarilo.",
   "app.tickets.retry": "Skúsiť znova",
   "app.tickets.firstLaunchTitle": "Vaša schránka je pripravená",
-  "app.tickets.firstLaunchBody":
-    "Všetko, čo niekto pošle na adresu {address}, tu pribudne automaticky.",
-  "app.tickets.firstLaunchHint":
-    "Kým čakáte na prvý tiket, dokončite nastavenie pracovného priestoru.",
   "app.tickets.configureEmail": "Dokončiť nastavenie",
+  "app.tour.railTitle": "Vaše priestory",
+  "app.tour.railBody": "Doručená pošta, kontakty, organizácie, prehľady a znalostná báza.",
+  "app.tour.viewsTitle": "Vaše zobrazenia",
+  "app.tour.viewsBody":
+    "Filtrované zoznamy doručenej pošty. Pridajte si vlastné podľa toho, čo tím sleduje.",
+  "app.tour.tableTitle": "Vaše tikety",
+  "app.tour.tableBody": "Každý prijatý e-mail sem príde ako tiket, so stavom a termínom.",
+  "app.tour.searchTitle": "Nájdite čokoľvek",
+  "app.tour.searchBody": "Tikety, kontakty, články a akcie — ⌘K to otvorí odkiaľkoľvek.",
+  "app.tour.newTitle": "Vytvoriť tiket",
+  "app.tour.newBody": "Pre požiadavku, ktorá prišla telefonicky alebo osobne.",
+  "app.tour.skip": "Preskočiť",
+  "app.tour.next": "Ďalej",
+  "app.tour.finish": "Rozumiem",
   "app.tickets.emptyTitle": "V tomto zobrazení nie sú žiadne tikety",
   "app.tickets.emptyBody": "Všetko je vyriešené. Nové e-maily tu pribudnú automaticky.",
   "app.tickets.pageRange": "{from}–{to} z {total}",
@@ -2212,13 +2222,13 @@ export const sk: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Zatiaľ žiadna adresa neprijíma požiadavky — bez nej nič nedorazí do prijatých.",
   "app.onboarding.itemEmailDone": "{address} už mení doručené e-maily na tikety.",
-  "app.onboarding.ownAddressStep3":
-    "Pošlite skúšobný e-mail: prvá doručená správa potvrdí adresu a vytvorí tiket.",
-  "app.onboarding.ownAddressStep2": "Pridajte presmerovanie na túto adresu:",
+  "app.onboarding.ownAddressStep2":
+    "Pošlite skúšobnú správu: prvý prijatý e-mail potvrdí presmerovanie.",
+  "app.onboarding.ownAddressLabel": "Adresa podpory Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Otvorte nastavenia schránky, na ktorú vám zákazníci píšu (Gmail, Microsoft 365, váš hosting…).",
+    "V nastaveniach tejto schránky (Gmail, Microsoft 365…) pridajte presmerovanie na:",
   "app.onboarding.ownAddressLede":
-    "Väčšina tímov si ponechá adresu, ktorú zákazníci poznajú, a presmeruje ju sem. Pre zákazníka sa nič nemení.",
+    "Ponechajte adresu, ktorú vaši zákazníci poznajú: presmerujte ju sem, pre nich sa nič nemení.",
   "app.onboarding.ownAddressTitle": "Používajte vlastnú adresu podpory",
   "app.onboarding.checklistBody":
     "Štyri kroky k prvému tiketu. Všetko sa dá urobiť aj neskôr v administrácii.",

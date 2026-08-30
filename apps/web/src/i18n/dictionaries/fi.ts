@@ -384,9 +384,23 @@ export const fi: Dictionary = {
   "app.tickets.loadErrorBody": "Yhteys palvelimeen epäonnistui.",
   "app.tickets.retry": "Yritä uudelleen",
   "app.tickets.firstLaunchTitle": "Saapuneet on valmis",
-  "app.tickets.firstLaunchBody": "Kaikki osoitteeseen {address} lähetetty saapuu tänne automaattisesti.",
-  "app.tickets.firstLaunchHint": "Voit viimeistellä työtilasi käyttöönoton sillä aikaa, kun odotat ensimmäistä pyyntöä.",
   "app.tickets.configureEmail": "Viimeistele käyttöönotto",
+  "app.tour.railTitle": "Työtilasi",
+  "app.tour.railBody": "Saapuneet, yhteystiedot, organisaatiot, raportit ja tietämyskanta.",
+  "app.tour.viewsTitle": "Näkymäsi",
+  "app.tour.viewsBody":
+    "Suodatettuja listoja saapuneista. Lisää omasi siihen, mitä tiimisi seuraa.",
+  "app.tour.tableTitle": "Tikettisi",
+  "app.tour.tableBody":
+    "Jokainen saapunut sähköposti päätyy tänne tikettinä, tilan ja määräajan kanssa.",
+  "app.tour.searchTitle": "Löydä mitä vain",
+  "app.tour.searchBody":
+    "Tiketit, yhteystiedot, artikkelit ja toiminnot — ⌘K avaa sen mistä tahansa.",
+  "app.tour.newTitle": "Luo tiketti",
+  "app.tour.newBody": "Pyynnölle, joka tuli puhelimitse tai kasvokkain.",
+  "app.tour.skip": "Ohita",
+  "app.tour.next": "Seuraava",
+  "app.tour.finish": "Selvä",
   "app.tickets.emptyTitle": "Ei pyyntöjä tässä näkymässä",
   "app.tickets.emptyBody": "Kaikki on käsitelty. Uudet sähköpostit ilmestyvät tänne automaattisesti.",
   "app.tickets.pageRange": "{from}–{to} / {total}",
@@ -1812,13 +1826,13 @@ export const fi: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Mikään osoite ei vielä vastaanota pyyntöjä — ilman sitä saapuneisiin ei tule mitään.",
   "app.onboarding.itemEmailDone": "{address} muuttaa saapuvat sähköpostit jo pyynnöiksi.",
-  "app.onboarding.ownAddressStep3":
-    "Lähetä testiviesti: ensimmäinen saapuva viesti vahvistaa osoitteen ja luo tiketin.",
-  "app.onboarding.ownAddressStep2": "Lisää edelleenlähetys tähän osoitteeseen:",
+  "app.onboarding.ownAddressStep2":
+    "Lähetä testiviesti: ensimmäinen saapunut sähköposti vahvistaa edelleenlähetyksen.",
+  "app.onboarding.ownAddressLabel": "Open HelpDesk -tukiosoite",
   "app.onboarding.ownAddressStep1":
-    "Avaa sen postilaatikon asetukset, johon asiakkaasi kirjoittavat (Gmail, Microsoft 365, palveluntarjoajasi…).",
+    "Lisää kyseisen postilaatikon asetuksissa (Gmail, Microsoft 365…) edelleenlähetys osoitteeseen:",
   "app.onboarding.ownAddressLede":
-    "Useimmat tiimit säilyttävät osoitteen, jonka asiakkaat tuntevat, ja ohjaavat sen tänne. Asiakkaalle mikään ei muutu.",
+    "Säilytä osoite, jonka asiakkaasi jo tuntevat: ohjaa se tänne, heille ei muutu mikään.",
   "app.onboarding.ownAddressTitle": "Käytä omaa tukiosoitettasi",
   "app.onboarding.checklistBody":
     "Neljä vaihetta ensimmäiseen pyyntöön. Voit tehdä nämä myös myöhemmin hallinnasta.",

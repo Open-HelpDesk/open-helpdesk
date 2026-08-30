@@ -376,10 +376,22 @@ export const el: Dictionary = {
   "app.tickets.loadErrorBody": "Η σύνδεση με τον διακομιστή απέτυχε.",
   "app.tickets.retry": "Δοκιμάστε ξανά",
   "app.tickets.firstLaunchTitle": "Τα εισερχόμενά σας είναι έτοιμα",
-  "app.tickets.firstLaunchBody": "Ό,τι στέλνεται στο {address} καταλήγει εδώ αυτόματα.",
-  "app.tickets.firstLaunchHint":
-    "Όσο περιμένετε το πρώτο τικέτ, ολοκληρώστε τη διαμόρφωση του χώρου εργασίας σας.",
   "app.tickets.configureEmail": "Ολοκλήρωση διαμόρφωσης",
+  "app.tour.railTitle": "Οι χώροι σας",
+  "app.tour.railBody": "Εισερχόμενα, επαφές, οργανισμοί, αναφορές και βάση γνώσης.",
+  "app.tour.viewsTitle": "Οι προβολές σας",
+  "app.tour.viewsBody":
+    "Φιλτραρισμένες λίστες των εισερχομένων. Προσθέστε δικές σας για όσα παρακολουθεί η ομάδα.",
+  "app.tour.tableTitle": "Τα αιτήματά σας",
+  "app.tour.tableBody":
+    "Κάθε email που λαμβάνεται φτάνει εδώ ως αίτημα, με κατάσταση και προθεσμία.",
+  "app.tour.searchTitle": "Βρείτε τα πάντα",
+  "app.tour.searchBody": "Αιτήματα, επαφές, άρθρα και ενέργειες — το ⌘K το ανοίγει από παντού.",
+  "app.tour.newTitle": "Δημιουργία αιτήματος",
+  "app.tour.newBody": "Για αίτημα που ήρθε τηλεφωνικά ή αυτοπροσώπως.",
+  "app.tour.skip": "Παράλειψη",
+  "app.tour.next": "Επόμενο",
+  "app.tour.finish": "Κατάλαβα",
   "app.tickets.emptyTitle": "Κανένα τικέτ σε αυτήν την προβολή",
   "app.tickets.emptyBody": "Όλα έχουν διεκπεραιωθεί. Τα νέα email θα καταλήγουν εδώ αυτόματα.",
   "app.tickets.pageRange": "{from}–{to} από {total}",
@@ -2046,13 +2058,13 @@ export const el: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Καμία διεύθυνση δεν λαμβάνει ακόμη αιτήματα — χωρίς αυτή, τίποτα δεν φτάνει στα εισερχόμενα.",
   "app.onboarding.itemEmailDone": "Το {address} μετατρέπει ήδη τα εισερχόμενα email σε τικέτ.",
-  "app.onboarding.ownAddressStep3":
-    "Στείλτε ένα δοκιμαστικό μήνυμα: το πρώτο που θα φτάσει επιβεβαιώνει τη διεύθυνση και δημιουργεί αίτημα.",
-  "app.onboarding.ownAddressStep2": "Προσθέστε προώθηση προς αυτή τη διεύθυνση:",
+  "app.onboarding.ownAddressStep2":
+    "Στείλτε ένα δοκιμαστικό μήνυμα: το πρώτο email που θα ληφθεί επιβεβαιώνει την προώθηση.",
+  "app.onboarding.ownAddressLabel": "Διεύθυνση υποστήριξης Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Ανοίξτε τις ρυθμίσεις του γραμματοκιβωτίου στο οποίο γράφουν οι πελάτες σας (Gmail, Microsoft 365, ο πάροχός σας…).",
+    "Στις ρυθμίσεις αυτού του γραμματοκιβωτίου (Gmail, Microsoft 365…) προσθέστε προώθηση προς:",
   "app.onboarding.ownAddressLede":
-    "Οι περισσότερες ομάδες κρατούν τη διεύθυνση που ξέρουν οι πελάτες τους και την προωθούν εδώ. Για τον πελάτη δεν αλλάζει τίποτα.",
+    "Κρατήστε τη διεύθυνση που ήδη γνωρίζουν οι πελάτες σας: προωθήστε την εδώ, για εκείνους δεν αλλάζει τίποτα.",
   "app.onboarding.ownAddressTitle": "Χρησιμοποιήστε τη δική σας διεύθυνση υποστήριξης",
   "app.onboarding.checklistBody":
     "Τέσσερα βήματα για το πρώτο τικέτ. Όλα μπορούν να γίνουν και αργότερα από τη διαχείριση.",

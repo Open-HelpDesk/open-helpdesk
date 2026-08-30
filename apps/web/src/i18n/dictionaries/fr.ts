@@ -379,9 +379,21 @@ export const fr: Dictionary = {
   "app.tickets.loadErrorBody": "La connexion au serveur a échoué.",
   "app.tickets.retry": "Réessayer",
   "app.tickets.firstLaunchTitle": "Votre inbox est prête",
-  "app.tickets.firstLaunchBody": "Tout ce qui est envoyé à {address} arrive ici automatiquement.",
-  "app.tickets.firstLaunchHint": "En attendant le premier ticket, terminez la configuration de votre workspace.",
   "app.tickets.configureEmail": "Terminer la configuration",
+  "app.tour.railTitle": "Vos espaces",
+  "app.tour.railBody": "Inbox, contacts, organisations, rapports et base de connaissances.",
+  "app.tour.viewsTitle": "Vos vues",
+  "app.tour.viewsBody":
+    "Des listes filtrées de l'inbox. Ajoutez les vôtres pour ce que votre équipe surveille.",
+  "app.tour.tableTitle": "Vos tickets",
+  "app.tour.tableBody": "Chaque email reçu arrive ici en ticket, avec son statut et son échéance.",
+  "app.tour.searchTitle": "Tout retrouver",
+  "app.tour.searchBody": "Tickets, contacts, articles et actions — ⌘K l'ouvre depuis n'importe où.",
+  "app.tour.newTitle": "Créer un ticket",
+  "app.tour.newBody": "Pour une demande arrivée par téléphone ou de vive voix.",
+  "app.tour.skip": "Passer",
+  "app.tour.next": "Suivant",
+  "app.tour.finish": "J'ai compris",
   "app.tickets.emptyTitle": "Aucun ticket dans cette vue",
   "app.tickets.emptyBody": "Tout est traité. Les nouveaux emails arriveront ici automatiquement.",
   "app.tickets.pageRange": "{from}–{to} sur {total}",
@@ -1886,13 +1898,13 @@ export const fr: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Aucune adresse ne reçoit encore les demandes — sans elle, rien n'arrive dans la boîte.",
   "app.onboarding.itemEmailDone": "{address} transforme déjà les emails reçus en tickets.",
-  "app.onboarding.ownAddressStep3":
-    "Envoyez un message de test : le premier email reçu confirme l'adresse et crée un ticket.",
-  "app.onboarding.ownAddressStep2": "Ajoutez une redirection vers cette adresse :",
+  "app.onboarding.ownAddressStep2":
+    "Envoyez un message de test : le premier email reçu confirme la redirection.",
+  "app.onboarding.ownAddressLabel": "Adresse de support Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Ouvrez les réglages de la boîte à laquelle vos clients écrivent (Gmail, Microsoft 365, votre hébergeur…).",
+    "Dans les réglages de cette boîte (Gmail, Microsoft 365…), ajoutez une redirection vers :",
   "app.onboarding.ownAddressLede":
-    "La plupart des équipes gardent l'adresse que leurs clients connaissent déjà et la redirigent ici. Rien ne change pour le client.",
+    "Gardez l'adresse que vos clients connaissent : redirigez-la ici, rien ne change pour eux.",
   "app.onboarding.ownAddressTitle": "Utiliser votre propre adresse de support",
   "app.onboarding.checklistBody":
     "Quatre étapes pour recevoir votre premier ticket. Tout se règle aussi plus tard, depuis l'administration.",

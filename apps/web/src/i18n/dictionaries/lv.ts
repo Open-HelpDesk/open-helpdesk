@@ -418,11 +418,22 @@ export const lv: Dictionary = {
   "app.tickets.loadErrorBody": "Savienojums ar serveri neizdevās.",
   "app.tickets.retry": "Mēģināt vēlreiz",
   "app.tickets.firstLaunchTitle": "Jūsu iesūtne ir gatava",
-  "app.tickets.firstLaunchBody":
-    "Viss, kas nosūtīts uz {address}, nonāks šeit automātiski.",
-  "app.tickets.firstLaunchHint":
-    "Kamēr gaidāt pirmo pieteikumu, pabeidziet darbvietas iestatīšanu.",
   "app.tickets.configureEmail": "Pabeigt iestatīšanu",
+  "app.tour.railTitle": "Jūsu telpas",
+  "app.tour.railBody": "Iesūtne, kontakti, organizācijas, atskaites un zināšanu bāze.",
+  "app.tour.viewsTitle": "Jūsu skati",
+  "app.tour.viewsBody":
+    "Filtrēti iesūtnes saraksti. Pievienojiet savus tam, ko jūsu komanda uzrauga.",
+  "app.tour.tableTitle": "Jūsu pieteikumi",
+  "app.tour.tableBody": "Katrs saņemtais e-pasts nonāk šeit kā pieteikums ar statusu un termiņu.",
+  "app.tour.searchTitle": "Atrodiet visu",
+  "app.tour.searchBody":
+    "Pieteikumi, kontakti, raksti un darbības — ⌘K to atver no jebkuras vietas.",
+  "app.tour.newTitle": "Izveidot pieteikumu",
+  "app.tour.newBody": "Pieprasījumam, kas saņemts pa tālruni vai klātienē.",
+  "app.tour.skip": "Izlaist",
+  "app.tour.next": "Tālāk",
+  "app.tour.finish": "Sapratu",
   "app.tickets.emptyTitle": "Šajā skatā nav neviena pieteikuma",
   "app.tickets.emptyBody": "Viss ir apstrādāts. Jaunie e-pasti nonāks šeit automātiski.",
   "app.tickets.pageRange": "{from}–{to} no {total}",
@@ -2150,13 +2161,13 @@ export const lv: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Neviena adrese vēl nesaņem pieteikumus — bez tās iesūtnē neienāk nekas.",
   "app.onboarding.itemEmailDone": "{address} jau pārvērš saņemtos e-pastus pieteikumos.",
-  "app.onboarding.ownAddressStep3":
-    "Nosūtiet testa ziņojumu: pirmā saņemtā vēstule apstiprina adresi un izveido pieteikumu.",
-  "app.onboarding.ownAddressStep2": "Pievienojiet pārsūtīšanu uz šo adresi:",
+  "app.onboarding.ownAddressStep2":
+    "Nosūtiet testa ziņojumu: pirmais saņemtais e-pasts apstiprinās pāradresāciju.",
+  "app.onboarding.ownAddressLabel": "Open HelpDesk atbalsta adrese",
   "app.onboarding.ownAddressStep1":
-    "Atveriet tās pastkastes iestatījumus, uz kuru raksta jūsu klienti (Gmail, Microsoft 365, jūsu pakalpojumu sniedzējs…).",
+    "Šīs pastkastes iestatījumos (Gmail, Microsoft 365…) pievienojiet pāradresāciju uz:",
   "app.onboarding.ownAddressLede":
-    "Lielākā daļa komandu saglabā adresi, ko klienti jau pazīst, un pārsūta to uz šejieni. Klientam nekas nemainās.",
+    "Saglabājiet adresi, ko klienti jau zina: pāradresējiet to šurp, viņiem nekas nemainīsies.",
   "app.onboarding.ownAddressTitle": "Izmantojiet savu atbalsta adresi",
   "app.onboarding.checklistBody":
     "Četri soļi līdz pirmajam pieteikumam. To visu var izdarīt arī vēlāk administrācijā.",

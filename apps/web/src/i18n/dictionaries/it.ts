@@ -388,9 +388,21 @@ export const it: Dictionary = {
   "app.tickets.loadErrorBody": "Connessione al server non riuscita.",
   "app.tickets.retry": "Riprova",
   "app.tickets.firstLaunchTitle": "La tua inbox è pronta",
-  "app.tickets.firstLaunchBody": "Tutto ciò che viene inviato a {address} arriva qui automaticamente.",
-  "app.tickets.firstLaunchHint": "Mentre attendi la prima richiesta, completa la configurazione della tua area di lavoro.",
   "app.tickets.configureEmail": "Completa la configurazione",
+  "app.tour.railTitle": "I suoi spazi",
+  "app.tour.railBody": "Posta in arrivo, contatti, organizzazioni, report e knowledge base.",
+  "app.tour.viewsTitle": "Le sue viste",
+  "app.tour.viewsBody":
+    "Elenchi filtrati della posta in arrivo. Aggiunga i suoi per ciò che il team sorveglia.",
+  "app.tour.tableTitle": "I suoi ticket",
+  "app.tour.tableBody": "Ogni email ricevuta arriva qui come ticket, con stato e scadenza.",
+  "app.tour.searchTitle": "Trovare tutto",
+  "app.tour.searchBody": "Ticket, contatti, articoli e azioni: ⌘K lo apre da qualsiasi punto.",
+  "app.tour.newTitle": "Creare un ticket",
+  "app.tour.newBody": "Per una richiesta arrivata per telefono o di persona.",
+  "app.tour.skip": "Salta",
+  "app.tour.next": "Avanti",
+  "app.tour.finish": "Ho capito",
   "app.tickets.emptyTitle": "Nessuna richiesta in questa vista",
   "app.tickets.emptyBody": "Tutto è stato gestito. Le nuove email arriveranno qui automaticamente.",
   "app.tickets.pageRange": "{from}–{to} di {total}",
@@ -1807,13 +1819,13 @@ export const it: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nessun indirizzo riceve ancora le richieste: senza, nulla arriva nella casella.",
   "app.onboarding.itemEmailDone": "{address} trasforma già le email ricevute in richieste.",
-  "app.onboarding.ownAddressStep3":
-    "Invia un messaggio di prova: la prima email che arriva conferma l'indirizzo e apre un ticket.",
-  "app.onboarding.ownAddressStep2": "Aggiungi un inoltro verso questo indirizzo:",
+  "app.onboarding.ownAddressStep2":
+    "Invii un messaggio di prova: la prima email ricevuta conferma l'inoltro.",
+  "app.onboarding.ownAddressLabel": "Indirizzo di assistenza Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Apri le impostazioni della casella a cui scrivono i tuoi clienti (Gmail, Microsoft 365, il tuo hosting…).",
+    "Nelle impostazioni di quella casella (Gmail, Microsoft 365…), aggiunga un inoltro a:",
   "app.onboarding.ownAddressLede":
-    "La maggior parte dei team conserva l'indirizzo che i clienti già conoscono e lo inoltra qui. Per il cliente non cambia nulla.",
+    "Mantenga l'indirizzo che i suoi clienti già conoscono: lo inoltri qui, per loro non cambia nulla.",
   "app.onboarding.ownAddressTitle": "Usa il tuo indirizzo di assistenza",
   "app.onboarding.checklistBody":
     "Quattro passaggi per il primo ticket. Puoi farlo anche più tardi, dall'amministrazione.",

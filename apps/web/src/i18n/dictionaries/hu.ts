@@ -371,11 +371,22 @@ export const hu: Dictionary = {
   "app.tickets.loadErrorBody": "A kiszolgálóhoz való kapcsolódás nem sikerült.",
   "app.tickets.retry": "Újra",
   "app.tickets.firstLaunchTitle": "A beérkezettek készen állnak",
-  "app.tickets.firstLaunchBody":
-    "Minden, amit a(z) {address} címre küldenek, automatikusan itt jelenik meg.",
-  "app.tickets.firstLaunchHint":
-    "Amíg az első jegyre vár, fejezze be a munkaterület beállítását.",
   "app.tickets.configureEmail": "Beállítás befejezése",
+  "app.tour.railTitle": "Munkaterületei",
+  "app.tour.railBody": "Beérkezett üzenetek, kapcsolatok, szervezetek, jelentések és tudásbázis.",
+  "app.tour.viewsTitle": "Nézetei",
+  "app.tour.viewsBody":
+    "A beérkezett üzenetek szűrt listái. Vegyen fel sajátokat arra, amit a csapata figyel.",
+  "app.tour.tableTitle": "Hibajegyei",
+  "app.tour.tableBody":
+    "Minden beérkező e-mail hibajegyként kerül ide, állapotával és határidejével.",
+  "app.tour.searchTitle": "Bármit megtalál",
+  "app.tour.searchBody": "Hibajegyek, kapcsolatok, cikkek és műveletek — a ⌘K bárhonnan megnyitja.",
+  "app.tour.newTitle": "Hibajegy létrehozása",
+  "app.tour.newBody": "Telefonon vagy személyesen érkezett kéréshez.",
+  "app.tour.skip": "Kihagyás",
+  "app.tour.next": "Tovább",
+  "app.tour.finish": "Értem",
   "app.tickets.emptyTitle": "Ebben a nézetben nincs jegy",
   "app.tickets.emptyBody": "Minden elintézve. Az új e-mailek automatikusan itt jelennek meg.",
   "app.tickets.pageRange": "{from}–{to} / {total}",
@@ -2024,13 +2035,13 @@ export const hu: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Még egyetlen cím sem fogad kéréseket — nélküle semmi nem jut a beérkezettekbe.",
   "app.onboarding.itemEmailDone": "A {address} már jeggyé alakítja a beérkező leveleket.",
-  "app.onboarding.ownAddressStep3":
-    "Küldjön tesztüzenetet: az első beérkező e-mail megerősíti a címet, és jegyet nyit.",
-  "app.onboarding.ownAddressStep2": "Adjon hozzá átirányítást erre a címre:",
+  "app.onboarding.ownAddressStep2":
+    "Küldjön tesztüzenetet: az első beérkező e-mail visszaigazolja a továbbítást.",
+  "app.onboarding.ownAddressLabel": "Open HelpDesk támogatási cím",
   "app.onboarding.ownAddressStep1":
-    "Nyissa meg annak a postafióknak a beállításait, amelyre az ügyfelei írnak (Gmail, Microsoft 365, a szolgáltatója…).",
+    "Az adott postafiók beállításaiban (Gmail, Microsoft 365…) adjon hozzá továbbítást ide:",
   "app.onboarding.ownAddressLede":
-    "A legtöbb csapat megtartja az ügyfelei által ismert címet, és ide irányítja át. Az ügyfél számára semmi sem változik.",
+    "Tartsa meg a címet, amelyet ügyfelei már ismernek: irányítsa át ide, számukra semmi sem változik.",
   "app.onboarding.ownAddressTitle": "Használja saját ügyfélszolgálati címét",
   "app.onboarding.checklistBody":
     "Négy lépés az első jegyig. Mindezt később is elvégezheted az adminisztrációban.",

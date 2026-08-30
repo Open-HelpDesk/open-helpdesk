@@ -388,9 +388,21 @@ export const de: Dictionary = {
   "app.tickets.loadErrorBody": "Die Verbindung zum Server ist fehlgeschlagen.",
   "app.tickets.retry": "Erneut versuchen",
   "app.tickets.firstLaunchTitle": "Ihr Posteingang ist bereit",
-  "app.tickets.firstLaunchBody": "Alles, was an {address} gesendet wird, landet automatisch hier.",
-  "app.tickets.firstLaunchHint": "Schließen Sie die Einrichtung Ihres Workspace ab, während Sie auf das erste Ticket warten.",
   "app.tickets.configureEmail": "Einrichtung abschließen",
+  "app.tour.railTitle": "Ihre Bereiche",
+  "app.tour.railBody": "Posteingang, Kontakte, Organisationen, Berichte und Wissensdatenbank.",
+  "app.tour.viewsTitle": "Ihre Ansichten",
+  "app.tour.viewsBody":
+    "Gefilterte Listen des Posteingangs. Legen Sie eigene an für das, was Ihr Team im Blick hat.",
+  "app.tour.tableTitle": "Ihre Tickets",
+  "app.tour.tableBody": "Jede eingehende E-Mail landet hier als Ticket, mit Status und Frist.",
+  "app.tour.searchTitle": "Alles finden",
+  "app.tour.searchBody": "Tickets, Kontakte, Artikel und Aktionen — ⌘K öffnet das von überall.",
+  "app.tour.newTitle": "Ticket erstellen",
+  "app.tour.newBody": "Für eine Anfrage, die telefonisch oder persönlich kam.",
+  "app.tour.skip": "Überspringen",
+  "app.tour.next": "Weiter",
+  "app.tour.finish": "Alles klar",
   "app.tickets.emptyTitle": "Keine Tickets in dieser Ansicht",
   "app.tickets.emptyBody": "Alles bearbeitet. Neue E-Mails landen automatisch hier.",
   "app.tickets.pageRange": "{from}–{to} von {total}",
@@ -1807,13 +1819,13 @@ export const de: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Noch empfängt keine Adresse Anfragen — ohne sie erreicht nichts den Posteingang.",
   "app.onboarding.itemEmailDone": "{address} verwandelt eingehende E-Mails bereits in Tickets.",
-  "app.onboarding.ownAddressStep3":
-    "Senden Sie eine Testnachricht: Die erste eintreffende E-Mail bestätigt die Adresse und erzeugt ein Ticket.",
-  "app.onboarding.ownAddressStep2": "Richten Sie eine Weiterleitung an diese Adresse ein:",
+  "app.onboarding.ownAddressStep2":
+    "Senden Sie eine Testnachricht: Die erste eingehende E-Mail bestätigt die Weiterleitung.",
+  "app.onboarding.ownAddressLabel": "Open-HelpDesk-Supportadresse",
   "app.onboarding.ownAddressStep1":
-    "Öffnen Sie die Einstellungen des Postfachs, an das Ihre Kunden schreiben (Gmail, Microsoft 365, Ihr Hoster …).",
+    "Fügen Sie in den Einstellungen dieses Postfachs (Gmail, Microsoft 365…) eine Weiterleitung hinzu an:",
   "app.onboarding.ownAddressLede":
-    "Die meisten Teams behalten die Adresse, die ihre Kunden kennen, und leiten sie hierher weiter. Für den Kunden ändert sich nichts.",
+    "Behalten Sie die Adresse, die Ihre Kunden kennen: leiten Sie sie hierher weiter, für sie ändert sich nichts.",
   "app.onboarding.ownAddressTitle": "Ihre eigene Support-Adresse verwenden",
   "app.onboarding.checklistBody":
     "Vier Schritte bis zum ersten Ticket. Alles lässt sich auch später in der Administration erledigen.",

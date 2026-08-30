@@ -388,9 +388,23 @@ export const pt: Dictionary = {
   "app.tickets.loadErrorBody": "A ligação ao servidor falhou.",
   "app.tickets.retry": "Tentar novamente",
   "app.tickets.firstLaunchTitle": "A sua caixa de entrada está pronta",
-  "app.tickets.firstLaunchBody": "Tudo o que for enviado para {address} chega aqui automaticamente.",
-  "app.tickets.firstLaunchHint": "Enquanto aguarda o primeiro pedido, conclua a configuração do seu espaço de trabalho.",
   "app.tickets.configureEmail": "Concluir a configuração",
+  "app.tour.railTitle": "Os seus espaços",
+  "app.tour.railBody":
+    "Caixa de entrada, contactos, organizações, relatórios e base de conhecimento.",
+  "app.tour.viewsTitle": "As suas vistas",
+  "app.tour.viewsBody":
+    "Listas filtradas da caixa de entrada. Adicione as suas para o que a equipa acompanha.",
+  "app.tour.tableTitle": "Os seus pedidos",
+  "app.tour.tableBody": "Cada e-mail recebido chega aqui como pedido, com estado e prazo.",
+  "app.tour.searchTitle": "Encontrar tudo",
+  "app.tour.searchBody":
+    "Pedidos, contactos, artigos e ações — ⌘K abre-o a partir de qualquer lado.",
+  "app.tour.newTitle": "Criar um pedido",
+  "app.tour.newBody": "Para um pedido que chegou por telefone ou presencialmente.",
+  "app.tour.skip": "Ignorar",
+  "app.tour.next": "Seguinte",
+  "app.tour.finish": "Percebi",
   "app.tickets.emptyTitle": "Nenhum pedido nesta vista",
   "app.tickets.emptyBody": "Está tudo tratado. Os novos e-mails chegarão aqui automaticamente.",
   "app.tickets.pageRange": "{from}–{to} de {total}",
@@ -1820,13 +1834,13 @@ export const pt: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nenhum endereço recebe pedidos ainda — sem ele, nada chega à caixa.",
   "app.onboarding.itemEmailDone": "{address} já transforma os emails recebidos em pedidos.",
-  "app.onboarding.ownAddressStep3":
-    "Envie uma mensagem de teste: o primeiro email que chegar confirma o endereço e abre um ticket.",
-  "app.onboarding.ownAddressStep2": "Adicione um reencaminhamento para este endereço:",
+  "app.onboarding.ownAddressStep2":
+    "Envie uma mensagem de teste: o primeiro e-mail recebido confirma o reencaminhamento.",
+  "app.onboarding.ownAddressLabel": "Endereço de apoio Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Abra as definições da caixa de correio para a qual os seus clientes escrevem (Gmail, Microsoft 365, o seu alojamento…).",
+    "Nas definições dessa caixa (Gmail, Microsoft 365…), adicione um reencaminhamento para:",
   "app.onboarding.ownAddressLede":
-    "A maioria das equipas mantém o endereço que os clientes já conhecem e reencaminha-o para aqui. Para o cliente nada muda.",
+    "Mantenha o endereço que os seus clientes já conhecem: reencaminhe-o para aqui, nada muda para eles.",
   "app.onboarding.ownAddressTitle": "Use o seu próprio endereço de suporte",
   "app.onboarding.checklistBody":
     "Quatro passos para o primeiro pedido. Também pode fazê-lo mais tarde, na administração.",

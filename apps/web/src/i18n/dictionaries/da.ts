@@ -385,9 +385,21 @@ export const da: Dictionary = {
   "app.tickets.loadErrorBody": "Forbindelsen til serveren mislykkedes.",
   "app.tickets.retry": "Prøv igen",
   "app.tickets.firstLaunchTitle": "Din indbakke er klar",
-  "app.tickets.firstLaunchBody": "Alt, der sendes til {address}, lander automatisk her.",
-  "app.tickets.firstLaunchHint": "Mens du venter på den første sag, kan du færdiggøre opsætningen af dit arbejdsområde.",
   "app.tickets.configureEmail": "Færdiggør opsætningen",
+  "app.tour.railTitle": "Dine områder",
+  "app.tour.railBody": "Indbakke, kontakter, organisationer, rapporter og vidensbase.",
+  "app.tour.viewsTitle": "Dine visninger",
+  "app.tour.viewsBody":
+    "Filtrerede lister over indbakken. Tilføj dine egne til det, teamet holder øje med.",
+  "app.tour.tableTitle": "Dine sager",
+  "app.tour.tableBody": "Hver modtaget mail lander her som en sag med status og frist.",
+  "app.tour.searchTitle": "Find alt",
+  "app.tour.searchBody": "Sager, kontakter, artikler og handlinger — ⌘K åbner det overalt fra.",
+  "app.tour.newTitle": "Opret en sag",
+  "app.tour.newBody": "Til en henvendelse, der kom pr. telefon eller personligt.",
+  "app.tour.skip": "Spring over",
+  "app.tour.next": "Næste",
+  "app.tour.finish": "Forstået",
   "app.tickets.emptyTitle": "Ingen sager i denne visning",
   "app.tickets.emptyBody": "Alt er behandlet. Nye e-mails lander her automatisk.",
   "app.tickets.pageRange": "{from}–{to} af {total}",
@@ -1797,13 +1809,13 @@ export const da: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ingen adresse modtager endnu henvendelser — uden den kommer intet i indbakken.",
   "app.onboarding.itemEmailDone": "{address} laver allerede indkommende mail til sager.",
-  "app.onboarding.ownAddressStep3":
-    "Send en testmail: den første besked, der kommer frem, bekræfter adressen og opretter en sag.",
-  "app.onboarding.ownAddressStep2": "Tilføj en videresendelse til denne adresse:",
+  "app.onboarding.ownAddressStep2":
+    "Send en testbesked: den første modtagne mail bekræfter videresendelsen.",
+  "app.onboarding.ownAddressLabel": "Open HelpDesk-supportadresse",
   "app.onboarding.ownAddressStep1":
-    "Åbn indstillingerne for den postkasse, jeres kunder skriver til (Gmail, Microsoft 365, jeres hosting…).",
+    "I den postkasses indstillinger (Gmail, Microsoft 365…) tilføj en videresendelse til:",
   "app.onboarding.ownAddressLede":
-    "De fleste teams beholder den adresse, kunderne kender, og videresender den hertil. Kunden mærker ingen forskel.",
+    "Behold den adresse, dine kunder allerede kender: videresend den hertil, intet ændrer sig for dem.",
   "app.onboarding.ownAddressTitle": "Brug jeres egen supportadresse",
   "app.onboarding.checklistBody":
     "Fire trin til din første sag. Du kan også gøre det senere under administration.",

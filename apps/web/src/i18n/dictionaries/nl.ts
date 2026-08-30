@@ -387,9 +387,22 @@ export const nl: Dictionary = {
   "app.tickets.loadErrorBody": "De verbinding met de server is mislukt.",
   "app.tickets.retry": "Opnieuw proberen",
   "app.tickets.firstLaunchTitle": "Uw inbox is klaar",
-  "app.tickets.firstLaunchBody": "Alles wat naar {address} wordt gestuurd, komt hier automatisch binnen.",
-  "app.tickets.firstLaunchHint": "Terwijl u op het eerste ticket wacht, kunt u de configuratie van uw werkruimte afronden.",
   "app.tickets.configureEmail": "Configuratie afronden",
+  "app.tour.railTitle": "Uw werkruimten",
+  "app.tour.railBody": "Postvak, contacten, organisaties, rapporten en kennisbank.",
+  "app.tour.viewsTitle": "Uw weergaven",
+  "app.tour.viewsBody":
+    "Gefilterde lijsten van het postvak. Voeg eigen weergaven toe voor wat uw team volgt.",
+  "app.tour.tableTitle": "Uw tickets",
+  "app.tour.tableBody":
+    "Elke ontvangen e-mail komt hier binnen als ticket, met status en deadline.",
+  "app.tour.searchTitle": "Alles vinden",
+  "app.tour.searchBody": "Tickets, contacten, artikelen en acties — ⌘K opent het overal vandaan.",
+  "app.tour.newTitle": "Ticket aanmaken",
+  "app.tour.newBody": "Voor een verzoek dat telefonisch of persoonlijk binnenkwam.",
+  "app.tour.skip": "Overslaan",
+  "app.tour.next": "Volgende",
+  "app.tour.finish": "Begrepen",
   "app.tickets.emptyTitle": "Geen tickets in deze weergave",
   "app.tickets.emptyBody": "Alles is afgehandeld. Nieuwe e-mails komen hier automatisch binnen.",
   "app.tickets.pageRange": "{from}–{to} van {total}",
@@ -1812,13 +1825,13 @@ export const nl: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nog geen adres ontvangt aanvragen — zonder adres komt er niets in de inbox.",
   "app.onboarding.itemEmailDone": "{address} zet inkomende e-mail al om in tickets.",
-  "app.onboarding.ownAddressStep3":
-    "Stuur een testbericht: de eerste e-mail die binnenkomt bevestigt het adres en maakt een ticket aan.",
-  "app.onboarding.ownAddressStep2": "Voeg een doorstuurregel naar dit adres toe:",
+  "app.onboarding.ownAddressStep2":
+    "Stuur een testbericht: de eerste ontvangen e-mail bevestigt de doorstuurregel.",
+  "app.onboarding.ownAddressLabel": "Open HelpDesk-supportadres",
   "app.onboarding.ownAddressStep1":
-    "Open de instellingen van de mailbox waar uw klanten naartoe schrijven (Gmail, Microsoft 365, uw hoster…).",
+    "Voeg in de instellingen van die mailbox (Gmail, Microsoft 365…) een doorstuurregel toe naar:",
   "app.onboarding.ownAddressLede":
-    "De meeste teams behouden het adres dat hun klanten al kennen en sturen het hierheen door. Voor de klant verandert er niets.",
+    "Behoud het adres dat uw klanten al kennen: stuur het hierheen door, voor hen verandert er niets.",
   "app.onboarding.ownAddressTitle": "Gebruik uw eigen supportadres",
   "app.onboarding.checklistBody":
     "Vier stappen naar je eerste ticket. Je kunt dit ook later doen, via de administratie.",

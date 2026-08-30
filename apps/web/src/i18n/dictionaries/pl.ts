@@ -440,11 +440,21 @@ export const pl: Dictionary = {
   "app.tickets.loadErrorBody": "Połączenie z serwerem nie powiodło się.",
   "app.tickets.retry": "Ponów próbę",
   "app.tickets.firstLaunchTitle": "Skrzynka jest gotowa",
-  "app.tickets.firstLaunchBody":
-    "Wszystko, co zostanie wysłane na adres {address}, pojawi się tutaj automatycznie.",
-  "app.tickets.firstLaunchHint":
-    "W oczekiwaniu na pierwsze zgłoszenie warto dokończyć konfigurację obszaru roboczego.",
   "app.tickets.configureEmail": "Dokończ konfigurację",
+  "app.tour.railTitle": "Twoje przestrzenie",
+  "app.tour.railBody": "Skrzynka, kontakty, organizacje, raporty i baza wiedzy.",
+  "app.tour.viewsTitle": "Twoje widoki",
+  "app.tour.viewsBody": "Filtrowane listy skrzynki. Dodaj własne dla tego, co śledzi Twój zespół.",
+  "app.tour.tableTitle": "Twoje zgłoszenia",
+  "app.tour.tableBody": "Każdy odebrany e-mail trafia tu jako zgłoszenie, ze statusem i terminem.",
+  "app.tour.searchTitle": "Znajdź wszystko",
+  "app.tour.searchBody":
+    "Zgłoszenia, kontakty, artykuły i akcje — ⌘K otwiera to z dowolnego miejsca.",
+  "app.tour.newTitle": "Utwórz zgłoszenie",
+  "app.tour.newBody": "Dla zgłoszenia przyjętego telefonicznie lub osobiście.",
+  "app.tour.skip": "Pomiń",
+  "app.tour.next": "Dalej",
+  "app.tour.finish": "Rozumiem",
   "app.tickets.emptyTitle": "Brak zgłoszeń w tym widoku",
   "app.tickets.emptyBody": "Wszystko obsłużone. Nowe e-maile pojawią się tutaj automatycznie.",
   "app.tickets.pageRange": "{from}–{to} z {total}",
@@ -2233,13 +2243,13 @@ export const pl: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Żaden adres nie odbiera jeszcze zgłoszeń — bez niego nic nie trafi do skrzynki.",
   "app.onboarding.itemEmailDone": "{address} już zamienia otrzymane wiadomości w zgłoszenia.",
-  "app.onboarding.ownAddressStep3":
-    "Wyślij wiadomość testową: pierwszy e-mail, który dotrze, potwierdza adres i tworzy zgłoszenie.",
-  "app.onboarding.ownAddressStep2": "Dodaj przekierowanie na ten adres:",
+  "app.onboarding.ownAddressStep2":
+    "Wyślij wiadomość testową: pierwszy odebrany e-mail potwierdzi przekierowanie.",
+  "app.onboarding.ownAddressLabel": "Adres wsparcia Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Otwórz ustawienia skrzynki, na którą piszą klienci (Gmail, Microsoft 365, twój hosting…).",
+    "W ustawieniach tej skrzynki (Gmail, Microsoft 365…) dodaj przekierowanie na:",
   "app.onboarding.ownAddressLede":
-    "Większość zespołów zachowuje adres, który klienci już znają, i przekierowuje go tutaj. Dla klienta nic się nie zmienia.",
+    "Zachowaj adres, który klienci już znają: przekieruj go tutaj, dla nich nic się nie zmienia.",
   "app.onboarding.ownAddressTitle": "Używaj własnego adresu wsparcia",
   "app.onboarding.checklistBody":
     "Cztery kroki do pierwszego zgłoszenia. Wszystko można też zrobić później w administracji.",

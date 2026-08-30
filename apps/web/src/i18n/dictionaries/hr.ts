@@ -399,10 +399,21 @@ export const hr: Dictionary = {
   "app.tickets.loadErrorBody": "Povezivanje sa serverom nije uspjelo.",
   "app.tickets.retry": "Pokušaj ponovno",
   "app.tickets.firstLaunchTitle": "Vaš ulazni sandučić je spreman",
-  "app.tickets.firstLaunchBody": "Sve što se pošalje na {address} automatski dolazi ovamo.",
-  "app.tickets.firstLaunchHint":
-    "Dok čekate prvi tiket, dovršite postavljanje svojeg radnog prostora.",
   "app.tickets.configureEmail": "Dovrši postavljanje",
+  "app.tour.railTitle": "Vaši prostori",
+  "app.tour.railBody": "Pristigla pošta, kontakti, organizacije, izvještaji i baza znanja.",
+  "app.tour.viewsTitle": "Vaši prikazi",
+  "app.tour.viewsBody":
+    "Filtrirani popisi pristigle pošte. Dodajte vlastite za ono što vaš tim prati.",
+  "app.tour.tableTitle": "Vaši zahtjevi",
+  "app.tour.tableBody": "Svaki primljeni e-mail stiže ovdje kao zahtjev, sa statusom i rokom.",
+  "app.tour.searchTitle": "Pronađite sve",
+  "app.tour.searchBody": "Zahtjevi, kontakti, članci i radnje — ⌘K ga otvara odasvud.",
+  "app.tour.newTitle": "Stvorite zahtjev",
+  "app.tour.newBody": "Za zahtjev koji je stigao telefonom ili osobno.",
+  "app.tour.skip": "Preskoči",
+  "app.tour.next": "Dalje",
+  "app.tour.finish": "Razumijem",
   "app.tickets.emptyTitle": "Nema tiketa u ovom prikazu",
   "app.tickets.emptyBody": "Sve je obrađeno. Nove poruke e-pošte automatski će dolaziti ovamo.",
   "app.tickets.pageRange": "{from}–{to} od {total}",
@@ -2122,13 +2133,13 @@ export const hr: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nijedna adresa još ne prima zahtjeve — bez nje ništa ne dolazi u sandučić.",
   "app.onboarding.itemEmailDone": "{address} već pretvara primljene e-poruke u tikete.",
-  "app.onboarding.ownAddressStep3":
-    "Pošaljite probnu poruku: prva pristigla e-pošta potvrđuje adresu i otvara tiket.",
-  "app.onboarding.ownAddressStep2": "Dodajte prosljeđivanje na ovu adresu:",
+  "app.onboarding.ownAddressStep2":
+    "Pošaljite probnu poruku: prvi primljeni e-mail potvrđuje preusmjeravanje.",
+  "app.onboarding.ownAddressLabel": "Adresa podrške Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Otvorite postavke sandučića na koji vam kupci pišu (Gmail, Microsoft 365, vaš hosting…).",
+    "U postavkama tog sandučića (Gmail, Microsoft 365…) dodajte preusmjeravanje na:",
   "app.onboarding.ownAddressLede":
-    "Većina timova zadrži adresu koju kupci već znaju i proslijedi je ovamo. Za kupca se ništa ne mijenja.",
+    "Zadržite adresu koju vaši korisnici već znaju: preusmjerite je ovamo, za njih se ništa ne mijenja.",
   "app.onboarding.ownAddressTitle": "Koristite vlastitu adresu podrške",
   "app.onboarding.checklistBody":
     "Četiri koraka do prvog tiketa. Sve se može urediti i kasnije u administraciji.",

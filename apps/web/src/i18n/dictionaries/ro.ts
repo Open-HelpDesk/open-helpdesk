@@ -411,11 +411,21 @@ export const ro: Dictionary = {
   "app.tickets.loadErrorBody": "Conexiunea la server a eșuat.",
   "app.tickets.retry": "Încercați din nou",
   "app.tickets.firstLaunchTitle": "Inboxul dvs. este gata",
-  "app.tickets.firstLaunchBody":
-    "Tot ce este trimis către {address} ajunge aici automat.",
-  "app.tickets.firstLaunchHint":
-    "În timp ce așteptați primul tichet, finalizați configurarea spațiului de lucru.",
   "app.tickets.configureEmail": "Finalizați configurarea",
+  "app.tour.railTitle": "Spațiile dumneavoastră",
+  "app.tour.railBody": "Inbox, contacte, organizații, rapoarte și bază de cunoștințe.",
+  "app.tour.viewsTitle": "Vizualizările dumneavoastră",
+  "app.tour.viewsBody":
+    "Liste filtrate ale inboxului. Adăugați-le pe ale dumneavoastră pentru ce urmărește echipa.",
+  "app.tour.tableTitle": "Tichetele dumneavoastră",
+  "app.tour.tableBody": "Fiecare e-mail primit ajunge aici ca tichet, cu starea și termenul său.",
+  "app.tour.searchTitle": "Găsiți orice",
+  "app.tour.searchBody": "Tichete, contacte, articole și acțiuni — ⌘K îl deschide de oriunde.",
+  "app.tour.newTitle": "Creați un tichet",
+  "app.tour.newBody": "Pentru o solicitare primită telefonic sau personal.",
+  "app.tour.skip": "Omite",
+  "app.tour.next": "Următorul",
+  "app.tour.finish": "Am înțeles",
   "app.tickets.emptyTitle": "Niciun tichet în această vizualizare",
   "app.tickets.emptyBody": "Totul este tratat. Emailurile noi vor ajunge aici automat.",
   "app.tickets.pageRange": "{from}–{to} din {total}",
@@ -2164,13 +2174,13 @@ export const ro: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Nicio adresă nu primește încă solicitări — fără ea, nimic nu ajunge în inbox.",
   "app.onboarding.itemEmailDone": "{address} transformă deja e-mailurile primite în tichete.",
-  "app.onboarding.ownAddressStep3":
-    "Trimiteți un mesaj de test: primul email primit confirmă adresa și creează un tichet.",
-  "app.onboarding.ownAddressStep2": "Adăugați o redirecționare către această adresă:",
+  "app.onboarding.ownAddressStep2":
+    "Trimiteți un mesaj de test: primul e-mail primit confirmă redirecționarea.",
+  "app.onboarding.ownAddressLabel": "Adresa de asistență Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Deschideți setările căsuței la care vă scriu clienții (Gmail, Microsoft 365, găzduirea dvs…).",
+    "În setările acelei căsuțe (Gmail, Microsoft 365…), adăugați o redirecționare către:",
   "app.onboarding.ownAddressLede":
-    "Majoritatea echipelor păstrează adresa pe care clienții o cunosc deja și o redirecționează aici. Pentru client nu se schimbă nimic.",
+    "Păstrați adresa pe care clienții o știu deja: redirecționați-o aici, pentru ei nu se schimbă nimic.",
   "app.onboarding.ownAddressTitle": "Folosiți propria adresă de suport",
   "app.onboarding.checklistBody":
     "Patru pași până la primul tichet. Toate se pot face și mai târziu, din administrare.",

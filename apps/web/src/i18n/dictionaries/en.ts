@@ -395,9 +395,21 @@ export const en = {
   // address works from the start, so the inbox is connected and simply empty.
   // It now states that, and points at the settings for the rest of the setup.
   "app.tickets.firstLaunchTitle": "Your inbox is ready",
-  "app.tickets.firstLaunchBody": "Anything sent to {address} lands here automatically.",
-  "app.tickets.firstLaunchHint": "While you wait for the first one, finish setting up your workspace.",
   "app.tickets.configureEmail": "Finish setup",
+  "app.tour.railTitle": "Your spaces",
+  "app.tour.railBody": "Inbox, contacts, organisations, reports and knowledge base.",
+  "app.tour.viewsTitle": "Your views",
+  "app.tour.viewsBody": "Filtered lists of the inbox. Add your own for what your team watches.",
+  "app.tour.tableTitle": "Your tickets",
+  "app.tour.tableBody":
+    "Every email received lands here as a ticket, with its status and deadline.",
+  "app.tour.searchTitle": "Find anything",
+  "app.tour.searchBody": "Tickets, contacts, articles and actions — ⌘K opens it from anywhere.",
+  "app.tour.newTitle": "Create a ticket",
+  "app.tour.newBody": "For a request that came in by phone or in person.",
+  "app.tour.skip": "Skip",
+  "app.tour.next": "Next",
+  "app.tour.finish": "Got it",
   "app.tickets.emptyTitle": "No tickets in this view",
   "app.tickets.emptyBody": "Everything is handled. New emails will land here automatically.",
   "app.tickets.pageRange": "{from}–{to} of {total}",
@@ -1812,13 +1824,13 @@ export const en = {
   "app.onboarding.itemEmailTodo":
     "No address receives requests yet — without one, nothing reaches the inbox.",
   "app.onboarding.itemEmailDone": "{address} already turns incoming email into tickets.",
-  "app.onboarding.ownAddressStep3":
-    "Send a test message: the first email that arrives confirms the address and opens a ticket.",
-  "app.onboarding.ownAddressStep2": "Add a forward to this address:",
+  "app.onboarding.ownAddressStep2":
+    "Send a test message: the first email received confirms the forward.",
+  "app.onboarding.ownAddressLabel": "Open HelpDesk support address",
   "app.onboarding.ownAddressStep1":
-    "Open the settings of the mailbox your customers write to (Gmail, Microsoft 365, your host…).",
+    "In that mailbox's settings (Gmail, Microsoft 365…), add a forward to:",
   "app.onboarding.ownAddressLede":
-    "Most teams keep the address their customers already know and forward it here. Nothing changes for the customer.",
+    "Keep the address your customers already know: forward it here, nothing changes for them.",
   "app.onboarding.ownAddressTitle": "Use your own support address",
   "app.onboarding.checklistBody":
     "Four steps to your first ticket. You can also do any of it later, from the administration.",

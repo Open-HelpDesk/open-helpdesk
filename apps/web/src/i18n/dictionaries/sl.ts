@@ -436,11 +436,22 @@ export const sl: Dictionary = {
   "app.tickets.loadErrorBody": "Povezava s strežnikom je bila neuspešna.",
   "app.tickets.retry": "Poskusi znova",
   "app.tickets.firstLaunchTitle": "Vaš poštni predal je pripravljen",
-  "app.tickets.firstLaunchBody":
-    "Vse, kar je poslano na {address}, samodejno prispe sem.",
-  "app.tickets.firstLaunchHint":
-    "Medtem ko čakate na prvi zahtevek, dokončajte nastavitev delovnega prostora.",
   "app.tickets.configureEmail": "Dokončaj nastavitev",
+  "app.tour.railTitle": "Vaši prostori",
+  "app.tour.railBody": "Prejeto, stiki, organizacije, poročila in baza znanja.",
+  "app.tour.viewsTitle": "Vaši pogledi",
+  "app.tour.viewsBody":
+    "Filtrirani seznami prejete pošte. Dodajte svoje za tisto, kar vaša ekipa spremlja.",
+  "app.tour.tableTitle": "Vaši zahtevki",
+  "app.tour.tableBody":
+    "Vsako prejeto e-poštno sporočilo pride sem kot zahtevek, s stanjem in rokom.",
+  "app.tour.searchTitle": "Poiščite vse",
+  "app.tour.searchBody": "Zahtevki, stiki, članki in dejanja — ⌘K ga odpre od koder koli.",
+  "app.tour.newTitle": "Ustvarite zahtevek",
+  "app.tour.newBody": "Za zahtevo, ki je prišla po telefonu ali osebno.",
+  "app.tour.skip": "Preskoči",
+  "app.tour.next": "Naprej",
+  "app.tour.finish": "Razumem",
   "app.tickets.emptyTitle": "V tem pogledu ni zahtevkov",
   "app.tickets.emptyBody": "Vse je obdelano. Nova e-pošta bo prispela sem samodejno.",
   "app.tickets.pageRange": "{from}–{to} od {total}",
@@ -2217,13 +2228,13 @@ export const sl: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Noben naslov še ne prejema zahtevkov — brez njega v nabiralnik ne pride nič.",
   "app.onboarding.itemEmailDone": "{address} prejeta e-poštna sporočila že spremeni v zahtevke.",
-  "app.onboarding.ownAddressStep3":
-    "Pošljite testno sporočilo: prvo prejeto e-poštno sporočilo potrdi naslov in odpre zahtevek.",
-  "app.onboarding.ownAddressStep2": "Dodajte preusmeritev na ta naslov:",
+  "app.onboarding.ownAddressStep2":
+    "Pošljite testno sporočilo: prvo prejeto e-poštno sporočilo potrdi preusmeritev.",
+  "app.onboarding.ownAddressLabel": "Naslov podpore Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Odprite nastavitve nabiralnika, na katerega vam pišejo stranke (Gmail, Microsoft 365, vaš gostitelj…).",
+    "V nastavitvah tega nabiralnika (Gmail, Microsoft 365…) dodajte preusmeritev na:",
   "app.onboarding.ownAddressLede":
-    "Večina ekip obdrži naslov, ki ga stranke že poznajo, in ga preusmeri sem. Za stranko se nič ne spremeni.",
+    "Obdržite naslov, ki ga vaše stranke že poznajo: preusmerite ga sem, zanje se nič ne spremeni.",
   "app.onboarding.ownAddressTitle": "Uporabite svoj naslov podpore",
   "app.onboarding.checklistBody":
     "Štirje koraki do prvega zahtevka. Vse to lahko urediš tudi pozneje v administraciji.",

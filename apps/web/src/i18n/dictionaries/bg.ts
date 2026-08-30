@@ -363,10 +363,21 @@ export const bg: Dictionary = {
   "app.tickets.loadErrorBody": "Връзката със сървъра се провали.",
   "app.tickets.retry": "Нов опит",
   "app.tickets.firstLaunchTitle": "Вашата входяща поща е готова",
-  "app.tickets.firstLaunchBody": "Всичко, изпратено до {address}, пристига тук автоматично.",
-  "app.tickets.firstLaunchHint":
-    "Докато чакате първия тикет, довършете настройката на Вашето работно пространство.",
   "app.tickets.configureEmail": "Завършване на настройката",
+  "app.tour.railTitle": "Вашите пространства",
+  "app.tour.railBody": "Входяща поща, контакти, организации, отчети и база знания.",
+  "app.tour.viewsTitle": "Вашите изгледи",
+  "app.tour.viewsBody":
+    "Филтрирани списъци от входящата поща. Добавете свои за това, което екипът следи.",
+  "app.tour.tableTitle": "Вашите тикети",
+  "app.tour.tableBody": "Всеки получен имейл идва тук като тикет, със своя статус и краен срок.",
+  "app.tour.searchTitle": "Намерете всичко",
+  "app.tour.searchBody": "Тикети, контакти, статии и действия — ⌘K го отваря отвсякъде.",
+  "app.tour.newTitle": "Създаване на тикет",
+  "app.tour.newBody": "За заявка, постъпила по телефона или на място.",
+  "app.tour.skip": "Пропускане",
+  "app.tour.next": "Напред",
+  "app.tour.finish": "Разбрах",
   "app.tickets.emptyTitle": "Няма тикети в този изглед",
   "app.tickets.emptyBody": "Всичко е обработено. Новите имейли ще пристигат тук автоматично.",
   "app.tickets.pageRange": "{from}–{to} от {total}",
@@ -1982,13 +1993,13 @@ export const bg: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Все още никой адрес не получава заявки — без него нищо не влиза в пощата.",
   "app.onboarding.itemEmailDone": "{address} вече превръща получените имейли в тикети.",
-  "app.onboarding.ownAddressStep3":
-    "Изпратете тестово писмо: първото пристигнало съобщение потвърждава адреса и създава билет.",
-  "app.onboarding.ownAddressStep2": "Добавете пренасочване към този адрес:",
+  "app.onboarding.ownAddressStep2":
+    "Изпратете тестово съобщение: първият получен имейл потвърждава пренасочването.",
+  "app.onboarding.ownAddressLabel": "Адрес за поддръжка Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Отворете настройките на пощенската кутия, на която пишат клиентите ви (Gmail, Microsoft 365, вашия хостинг…).",
+    "В настройките на тази пощенска кутия (Gmail, Microsoft 365…) добавете пренасочване към:",
   "app.onboarding.ownAddressLede":
-    "Повечето екипи запазват адреса, който клиентите вече познават, и го пренасочват насам. Нищо не се променя за клиента.",
+    "Запазете адреса, който клиентите ви вече знаят: пренасочете го тук, за тях нищо не се променя.",
   "app.onboarding.ownAddressTitle": "Използвайте собствения си адрес за поддръжка",
   "app.onboarding.checklistBody":
     "Четири стъпки до първия тикет. Всичко може да се направи и по-късно от администрацията.",

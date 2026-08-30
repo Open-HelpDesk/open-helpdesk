@@ -462,11 +462,24 @@ export const ga: Dictionary = {
   "app.tickets.loadErrorBody": "Theip ar an gceangal leis an bhfreastalaí.",
   "app.tickets.retry": "Bain triail eile as",
   "app.tickets.firstLaunchTitle": "Tá do bhosca isteach réidh",
-  "app.tickets.firstLaunchBody":
-    "Tagann gach rud a sheoltar chuig {address} isteach anseo go huathoibríoch.",
-  "app.tickets.firstLaunchHint":
-    "Agus tú ag fanacht ar an gcéad ticéad, cuir cumraíocht do spáis oibre i gcrích.",
   "app.tickets.configureEmail": "Críochnaigh an chumraíocht",
+  "app.tour.railTitle": "Do spásanna",
+  "app.tour.railBody":
+    "Bosca isteach, teagmhálaithe, eagraíochtaí, tuairiscí agus bunachar eolais.",
+  "app.tour.viewsTitle": "Do radhairc",
+  "app.tour.viewsBody":
+    "Liostaí scagtha den bhosca isteach. Cuir do chinn féin leis don rud a bhíonn d'fhoireann ag faire.",
+  "app.tour.tableTitle": "Do thicéid",
+  "app.tour.tableBody":
+    "Tagann gach ríomhphost a fhaightear anseo mar thicéad, lena stádas agus a spriocam.",
+  "app.tour.searchTitle": "Aimsigh rud ar bith",
+  "app.tour.searchBody":
+    "Ticéid, teagmhálaithe, ailt agus gníomhartha — osclaíonn ⌘K é ó áit ar bith.",
+  "app.tour.newTitle": "Cruthaigh ticéad",
+  "app.tour.newBody": "D'iarratas a tháinig ar an nguthán nó go pearsanta.",
+  "app.tour.skip": "Scipeáil",
+  "app.tour.next": "Ar aghaidh",
+  "app.tour.finish": "Tuigim",
   "app.tickets.emptyTitle": "Gan ticéid san amharc seo",
   "app.tickets.emptyBody":
     "Tá gach rud láimhseáilte. Tiocfaidh ríomhphoist nua isteach anseo go huathoibríoch.",
@@ -2300,13 +2313,13 @@ export const ga: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Níl aon seoladh ag fáil iarratas go fóill — dá cheal, ní shroicheann rud ar bith an bosca.",
   "app.onboarding.itemEmailDone": "Déanann {address} ticéid de ríomhphoist isteach cheana féin.",
-  "app.onboarding.ownAddressStep3":
-    "Seol teachtaireacht tástála: deimhníonn an chéad ríomhphost a thagann isteach an seoladh agus osclaíonn sé ticéad.",
-  "app.onboarding.ownAddressStep2": "Cuir seoladh ar aghaidh chuig an seoladh seo:",
+  "app.onboarding.ownAddressStep2":
+    "Seol teachtaireacht tástála: deimhníonn an chéad ríomhphost a fhaightear an seoladh ar aghaidh.",
+  "app.onboarding.ownAddressLabel": "Seoladh tacaíochta Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Oscail socruithe an bhosca poist a scríobhann do chuid custaiméirí chuige (Gmail, Microsoft 365, do óstach…).",
+    "I socruithe an bhosca sin (Gmail, Microsoft 365…), cuir seoladh ar aghaidh leis:",
   "app.onboarding.ownAddressLede":
-    "Coinníonn formhór na bhfoirne an seoladh atá ar eolas ag a gcuid custaiméirí agus cuireann siad ar aghaidh anseo é. Ní athraíonn aon rud don chustaiméir.",
+    "Coinnigh an seoladh atá ar eolas ag do chuid custaiméirí cheana: cuir ar aghaidh anseo é, ní athraíonn aon rud dóibh.",
   "app.onboarding.ownAddressTitle": "Úsáid do sheoladh tacaíochta féin",
   "app.onboarding.checklistBody":
     "Ceithre chéim go dtí an chéad ticéad. Is féidir gach ceann díobh a dhéanamh níos déanaí sa riarachán.",

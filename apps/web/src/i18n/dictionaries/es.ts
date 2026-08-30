@@ -388,9 +388,22 @@ export const es: Dictionary = {
   "app.tickets.loadErrorBody": "Ha fallado la conexión con el servidor.",
   "app.tickets.retry": "Reintentar",
   "app.tickets.firstLaunchTitle": "Tu bandeja de entrada está lista",
-  "app.tickets.firstLaunchBody": "Todo lo que se envíe a {address} llega aquí automáticamente.",
-  "app.tickets.firstLaunchHint": "Mientras esperas la primera solicitud, termina de configurar tu espacio de trabajo.",
   "app.tickets.configureEmail": "Terminar la configuración",
+  "app.tour.railTitle": "Tus espacios",
+  "app.tour.railBody": "Bandeja, contactos, organizaciones, informes y base de conocimiento.",
+  "app.tour.viewsTitle": "Tus vistas",
+  "app.tour.viewsBody":
+    "Listas filtradas de la bandeja. Añade las tuyas para lo que vigila tu equipo.",
+  "app.tour.tableTitle": "Tus tickets",
+  "app.tour.tableBody": "Cada correo recibido llega aquí como ticket, con su estado y su plazo.",
+  "app.tour.searchTitle": "Encuéntralo todo",
+  "app.tour.searchBody":
+    "Tickets, contactos, artículos y acciones: ⌘K lo abre desde cualquier sitio.",
+  "app.tour.newTitle": "Crear un ticket",
+  "app.tour.newBody": "Para una solicitud que ha llegado por teléfono o en persona.",
+  "app.tour.skip": "Omitir",
+  "app.tour.next": "Siguiente",
+  "app.tour.finish": "Entendido",
   "app.tickets.emptyTitle": "Ninguna solicitud en esta vista",
   "app.tickets.emptyBody": "Todo está atendido. Los nuevos correos llegarán aquí automáticamente.",
   "app.tickets.pageRange": "{from}–{to} de {total}",
@@ -1826,13 +1839,13 @@ export const es: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Ninguna dirección recibe solicitudes todavía: sin ella, nada llega a la bandeja.",
   "app.onboarding.itemEmailDone": "{address} ya convierte los correos recibidos en solicitudes.",
-  "app.onboarding.ownAddressStep3":
-    "Envíe un mensaje de prueba: el primer correo que llegue confirma la dirección y crea un ticket.",
-  "app.onboarding.ownAddressStep2": "Añada un reenvío a esta dirección:",
+  "app.onboarding.ownAddressStep2":
+    "Envía un mensaje de prueba: el primer correo recibido confirma el reenvío.",
+  "app.onboarding.ownAddressLabel": "Dirección de soporte de Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Abra la configuración del buzón al que escriben sus clientes (Gmail, Microsoft 365, su proveedor…).",
+    "En los ajustes de ese buzón (Gmail, Microsoft 365…), añade un reenvío a:",
   "app.onboarding.ownAddressLede":
-    "La mayoría de los equipos conserva la dirección que sus clientes ya conocen y la redirige aquí. Para el cliente no cambia nada.",
+    "Conserva la dirección que tus clientes ya conocen: redirígela aquí, para ellos no cambia nada.",
   "app.onboarding.ownAddressTitle": "Use su propia dirección de soporte",
   "app.onboarding.checklistBody":
     "Cuatro pasos para recibir tu primera solicitud. También puedes hacerlo más tarde desde la administración.",

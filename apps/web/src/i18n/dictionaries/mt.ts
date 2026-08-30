@@ -459,11 +459,21 @@ export const mt: Dictionary = {
   "app.tickets.loadErrorBody": "Il-konnessjoni mas-server falliet.",
   "app.tickets.retry": "Erġa' pprova",
   "app.tickets.firstLaunchTitle": "L-inbox tiegħek lest",
-  "app.tickets.firstLaunchBody":
-    "Kull ma jintbagħat lil {address} jasal hawn awtomatikament.",
-  "app.tickets.firstLaunchHint":
-    "Waqt li tistenna l-ewwel ticket, temm il-konfigurazzjoni tal-spazju tax-xogħol tiegħek.",
   "app.tickets.configureEmail": "Temm il-konfigurazzjoni",
+  "app.tour.railTitle": "L-ispazji tiegħek",
+  "app.tour.railBody": "Inbox, kuntatti, organizzazzjonijiet, rapporti u bażi ta' għarfien.",
+  "app.tour.viewsTitle": "Il-fehmiet tiegħek",
+  "app.tour.viewsBody": "Listi ffiltrati tal-inbox. Żid tiegħek għal dak li t-tim tiegħek isegwi.",
+  "app.tour.tableTitle": "It-tickets tiegħek",
+  "app.tour.tableBody":
+    "Kull email li tasal tinżel hawn bħala ticket, bl-istatus u l-iskadenza tagħha.",
+  "app.tour.searchTitle": "Sib kollox",
+  "app.tour.searchBody": "Tickets, kuntatti, artikli u azzjonijiet — ⌘K jiftħu minn kullimkien.",
+  "app.tour.newTitle": "Oħloq ticket",
+  "app.tour.newBody": "Għal talba li waslet bit-telefon jew personalment.",
+  "app.tour.skip": "Aqbeż",
+  "app.tour.next": "Li jmiss",
+  "app.tour.finish": "Fhimt",
   "app.tickets.emptyTitle": "L-ebda ticket f'din il-vista",
   "app.tickets.emptyBody": "Kollox ittrattat. L-emails ġodda jaslu hawn awtomatikament.",
   "app.tickets.pageRange": "{from}–{to} minn {total}",
@@ -2296,13 +2306,13 @@ export const mt: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "L-ebda indirizz għadu ma jirċievi talbiet — mingħajru, xejn ma jasal fl-inbox.",
   "app.onboarding.itemEmailDone": "{address} diġà jibdel l-emails li jaslu f'tickets.",
-  "app.onboarding.ownAddressStep3":
-    "Ibgħat messaġġ ta' prova: l-ewwel email li tasal tikkonferma l-indirizz u tiftaħ tikit.",
-  "app.onboarding.ownAddressStep2": "Żid forward għal dan l-indirizz:",
+  "app.onboarding.ownAddressStep2":
+    "Ibgħat messaġġ ta' prova: l-ewwel email li tasal tikkonferma l-forward.",
+  "app.onboarding.ownAddressLabel": "Indirizz tas-support Open HelpDesk",
   "app.onboarding.ownAddressStep1":
-    "Iftaħ is-settings tal-kaxxa postali li jiktbulek fiha l-klijenti (Gmail, Microsoft 365, il-host tiegħek…).",
+    "Fis-settings ta' dik il-kaxxa (Gmail, Microsoft 365…), żid forward lejn:",
   "app.onboarding.ownAddressLede":
-    "Ħafna timijiet iżommu l-indirizz li l-klijenti diġà jafu u jgħadduh hawn. Xejn ma jinbidel għall-klijent.",
+    "Żomm l-indirizz li l-klijenti tiegħek diġà jafu: għaddih hawn, għalihom ma jinbidel xejn.",
   "app.onboarding.ownAddressTitle": "Uża l-indirizz ta' appoġġ tiegħek",
   "app.onboarding.checklistBody":
     "Erba' passi għall-ewwel ticket. Tista' tagħmel dan kollu wkoll aktar tard mill-amministrazzjoni.",

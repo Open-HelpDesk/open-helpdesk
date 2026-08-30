@@ -439,11 +439,21 @@ export const lt: Dictionary = {
   "app.tickets.loadErrorBody": "Nepavyko prisijungti prie serverio.",
   "app.tickets.retry": "Bandyti dar kartą",
   "app.tickets.firstLaunchTitle": "Jūsų gautieji paruošti",
-  "app.tickets.firstLaunchBody":
-    "Viskas, kas išsiųsta adresu {address}, čia atsiras automatiškai.",
-  "app.tickets.firstLaunchHint":
-    "Kol laukiate pirmosios užklausos, užbaikite darbo erdvės sąranką.",
   "app.tickets.configureEmail": "Užbaigti sąranką",
+  "app.tour.railTitle": "Jūsų sritys",
+  "app.tour.railBody": "Gauta, kontaktai, organizacijos, ataskaitos ir žinių bazė.",
+  "app.tour.viewsTitle": "Jūsų rodiniai",
+  "app.tour.viewsBody":
+    "Filtruoti gautų laiškų sąrašai. Pridėkite savo tam, ką stebi jūsų komanda.",
+  "app.tour.tableTitle": "Jūsų užklausos",
+  "app.tour.tableBody": "Kiekvienas gautas laiškas čia patenka kaip užklausa su būsena ir terminu.",
+  "app.tour.searchTitle": "Raskite viską",
+  "app.tour.searchBody": "Užklausos, kontaktai, straipsniai ir veiksmai — ⌘K atveria iš bet kur.",
+  "app.tour.newTitle": "Sukurti užklausą",
+  "app.tour.newBody": "Užklausai, gautai telefonu arba asmeniškai.",
+  "app.tour.skip": "Praleisti",
+  "app.tour.next": "Toliau",
+  "app.tour.finish": "Supratau",
   "app.tickets.emptyTitle": "Šiame rodinyje užklausų nėra",
   "app.tickets.emptyBody": "Viskas sutvarkyta. Nauji el. laiškai čia atsiras automatiškai.",
   "app.tickets.pageRange": "{from}–{to} iš {total}",
@@ -2229,13 +2239,13 @@ export const lt: Dictionary = {
   "app.onboarding.itemEmailTodo":
     "Kol kas nė vienas adresas negauna užklausų — be jo į gautuosius nieko neateis.",
   "app.onboarding.itemEmailDone": "{address} jau paverčia gaunamus el. laiškus užklausomis.",
-  "app.onboarding.ownAddressStep3":
-    "Išsiųskite bandomąjį laišką: pirmas gautas laiškas patvirtina adresą ir sukuria bilietą.",
-  "app.onboarding.ownAddressStep2": "Pridėkite peradresavimą į šį adresą:",
+  "app.onboarding.ownAddressStep2":
+    "Išsiųskite bandomąjį laišką: pirmasis gautas el. laiškas patvirtins peradresavimą.",
+  "app.onboarding.ownAddressLabel": "Open HelpDesk pagalbos adresas",
   "app.onboarding.ownAddressStep1":
-    "Atverkite pašto dėžutės, į kurią rašo klientai, nustatymus (Gmail, Microsoft 365, jūsų tiekėjas…).",
+    "Tos pašto dėžutės nustatymuose (Gmail, Microsoft 365…) pridėkite peradresavimą į:",
   "app.onboarding.ownAddressLede":
-    "Dauguma komandų pasilieka adresą, kurį klientai jau žino, ir peradresuoja jį čia. Klientui niekas nesikeičia.",
+    "Palikite adresą, kurį klientai jau žino: peradresuokite jį čia, jiems niekas nepasikeis.",
   "app.onboarding.ownAddressTitle": "Naudokite savo pagalbos adresą",
   "app.onboarding.checklistBody":
     "Keturi žingsniai iki pirmosios užklausos. Visa tai galima padaryti ir vėliau administravimo skydelyje.",
