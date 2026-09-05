@@ -44,6 +44,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Machine health (Prometheus, every 30 s) is tenant-free too: a prober knows
+  // the machine, not a workspace, and a 404 here would read as an outage.
+  if (request.nextUrl.pathname === "/api/health") {
+    return NextResponse.next();
+  }
+
   const host = request.headers.get("host") ?? "";
   const slug = resolveTenantSlug(host);
 
