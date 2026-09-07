@@ -13,7 +13,11 @@
 
 /* ---------- Building blocks ---------- */
 
-const uuid = { type: "string", format: "uuid" } as const;
+const uuid = {
+  type: "string",
+  format: "uuid",
+  examples: ["3f2a1c94-8e5b-4d17-9f60-2c7b1a0d5e83"],
+} as const;
 const dateTime = { type: "string", format: "date-time", nullable: true } as const;
 const jsonObject = { type: "object", additionalProperties: true } as const;
 
@@ -322,10 +326,10 @@ function buildPaths() {
                 type: "object",
                 required: ["requester_email", "subject", "message"],
                 properties: {
-                  requester_email: { type: "string", format: "email" },
-                  requester_name: { type: "string" },
-                  subject: { type: "string", maxLength: 500 },
-                  message: { type: "string" },
+                  requester_email: { type: "string", format: "email", examples: ["julien.lambert@nordfil.fr"] },
+                  requester_name: { type: "string", examples: ["Julien Lambert"] },
+                  subject: { type: "string", maxLength: 500, examples: ["Cannot export invoices as PDF"] },
+                  message: { type: "string", examples: ["Hello, the PDF export has been failing since this morning."] },
                   priority: { type: "string", enum: ["low", "normal", "high", "urgent"], default: "normal" },
                   organization_id: uuid,
                   tags: { type: "array", items: { type: "string" }, maxItems: 30 },
@@ -399,7 +403,7 @@ function buildPaths() {
                 type: "object",
                 required: ["body"],
                 properties: {
-                  body: { type: "string" },
+                  body: { type: "string", examples: ["We have shipped a fix — could you try again?"] },
                   internal: { type: "boolean", default: false },
                   agent_id: { ...uuid, description: "The agent the message is attributed to." },
                 },
@@ -452,9 +456,9 @@ function buildPaths() {
                 type: "object",
                 required: ["email"],
                 properties: {
-                  email: { type: "string", format: "email" },
-                  name: { type: "string" },
-                  phone: { type: "string" },
+                  email: { type: "string", format: "email", examples: ["julien.lambert@nordfil.fr"] },
+                  name: { type: "string", examples: ["Julien Lambert"] },
+                  phone: { type: "string", examples: ["+33 1 23 45 67 89"] },
                 },
               },
             },
@@ -522,8 +526,12 @@ function buildPaths() {
                 type: "object",
                 required: ["name"],
                 properties: {
-                  name: { type: "string", maxLength: 200 },
-                  email_domains: { type: "array", items: { type: "string" }, maxItems: 50 },
+                  name: { type: "string", maxLength: 200, examples: ["Nordfil SAS"] },
+                  email_domains: {
+                    type: "array",
+                    items: { type: "string", examples: ["nordfil.fr"] },
+                    maxItems: 50,
+                  },
                   shared_tickets: { type: "boolean" },
                   notes: { type: "string" },
                   custom_fields: jsonObject,
@@ -604,9 +612,9 @@ function buildPaths() {
                 type: "object",
                 required: ["title", "category_id"],
                 properties: {
-                  title: { type: "string", maxLength: 300 },
+                  title: { type: "string", maxLength: 300, examples: ["Exporting your invoices"] },
                   category_id: uuid,
-                  body_html: { type: "string" },
+                  body_html: { type: "string", examples: ["<p>Open <strong>Billing</strong>, then…</p>"] },
                   slug: { type: "string", description: "Derived from the title when omitted." },
                   status: { type: "string", enum: ["draft", "published"], default: "draft" },
                 },

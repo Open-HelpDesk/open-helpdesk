@@ -9,6 +9,7 @@
  */
 import { writeFileSync } from "node:fs";
 import { openApiDocument } from "./index";
+import { toPostmanCollection } from "./postman";
 
 function flag(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -25,7 +26,23 @@ const origin = flag("origin") ?? "https://{workspace}.open-helpdesk.com";
 const local = flag("local");
 const extra = local ? [local] : [];
 
-writeFileSync(out, JSON.stringify(openApiDocument(origin, extra), null, 2) + "\n");
+const doc = openApiDocument(origin, extra);
+writeFileSync(out, JSON.stringify(doc, null, 2) + "\n");
 console.log(
   `OpenAPI written to ${out} (servers: ${[origin, ...extra].map((o) => `${o}/api/v1`).join(", ")})`,
 );
+
+/**
+ * The Postman collection, beside it and from the same document.
+ *
+ * `--postman <path>` because the documentation site wants it as a static asset;
+ * skipped when nobody asks, so the API's own openapi.json route stays a pure
+ * read.
+ */
+const postman = flag("postman");
+if (postman) {
+  const collection = toPostmanCollection(doc as unknown as Record<string, unknown>);
+  writeFileSync(postman, JSON.stringify(collection, null, 2) + "\n");
+  const count = (collection["item"] as { item: unknown[] }[]).reduce((n, f) => n + f.item.length, 0);
+  console.log(`Postman collection written to ${postman} (${count} requests)`);
+}
