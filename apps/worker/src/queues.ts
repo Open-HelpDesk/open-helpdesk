@@ -7,6 +7,7 @@
  * - automations   : time-based rules (follow-ups, auto-close at D+4)
  * - webhook-dispatch : outbound webhooks (ST-10), signed POST with retries
  * - housekeeping  : purges (SsoAuthEvent 90 d, ticket trash 30 d, domain recheck 24 h)
+ * - import-run    : history import from another product (packages/import)
  */
 export const QUEUE_NAMES = [
   "sla-timers",
@@ -16,6 +17,7 @@ export const QUEUE_NAMES = [
   "automations",
   "webhook-dispatch",
   "housekeeping",
+  "import-run",
 ] as const;
 
 export type QueueName = (typeof QUEUE_NAMES)[number];

@@ -100,9 +100,14 @@ export default async function ContactsPage({
               }}
             />
           </form>
-          <button type="button" style={secondaryAction}>
-            {t("app.contacts.importCsv")}
-          </button>
+          {/*
+            Was a button that did nothing: no handler, no route, no importer
+            behind it. Now a link to the screen that does the work — the label
+            follows, since what arrives there is a Zendesk export, not a CSV.
+          */}
+          <Link href="/app/settings/import" style={secondaryAction}>
+            {t("app.settingsNav.itemImport")}
+          </Link>
           <NewContactButton />
         </div>
 

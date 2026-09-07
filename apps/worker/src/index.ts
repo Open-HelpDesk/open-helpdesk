@@ -11,7 +11,24 @@ import {
 } from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated, runScheduledRules, scanSlaTimers } from "@openhelpdesk/rules";
 import { deliverWebhookJob, type WebhookJob } from "@openhelpdesk/webhooks";
+import { executeRun, parseZendeskExport, reapStaleRuns, type ImportSource } from "@openhelpdesk/import";
 import { QUEUE_NAMES, type QueueName } from "./queues";
+
+/**
+ * An import queued by the admin screen.
+ *
+ * The export travels in the job rather than being re-fetched: a run must import
+ * exactly what the customer approved during the rehearsal, not whatever the
+ * other product happens to return an hour later.
+ */
+type ImportRunJob = {
+  runId: string;
+  tenantId: string;
+  source: ImportSource;
+  dryRun: boolean;
+  startedById?: string | null;
+  payload: Parameters<typeof parseZendeskExport>[0];
+};
 
 const connection = new IORedis(process.env.REDIS_URL ?? "redis://localhost:6380", {
   // Required by BullMQ: commands must not be dropped during a reconnection.
@@ -85,6 +102,22 @@ const processors: Record<QueueName, Processor> = {
       .where(lt(rejectedEmails.createdAt, new Date(Date.now() - 30 * DAY_MS)));
     console.log("[housekeeping] purges done");
   },
+  "import-run": async (job) => {
+    const data = job.data as ImportRunJob;
+    const { data: parsed, anomalies } = parseZendeskExport(data.payload);
+    const report = await executeRun(data.runId, parsed, {
+      tenantId: data.tenantId,
+      source: data.source,
+      dryRun: data.dryRun,
+      startedById: data.startedById ?? null,
+    });
+    const total = report.tickets.created + report.tickets.skipped;
+    console.log(
+      `[import-run] ${data.runId}${data.dryRun ? " (rehearsal)" : ""}: ` +
+        `${total} ticket(s), ${report.messages.created} message(s), ` +
+        `${report.anomalies.length + anomalies.length} anomaly(ies)`,
+    );
+  },
 };
 
 const workers = QUEUE_NAMES.map(
@@ -118,6 +151,15 @@ async function registerSchedulers() {
 }
 
 await registerSchedulers();
+
+/*
+ * An import interrupted by a restart leaves a row saying "running" that nothing
+ * will ever finish, and a screen that spins for ever. Closed at start-up, on
+ * the same principle as the mail outbox.
+ */
+const reaped = await reapStaleRuns();
+if (reaped) console.log(`[import-run] ${reaped} interrupted run(s) closed`);
+
 console.log(`Open HelpDesk worker started — queues: ${QUEUE_NAMES.join(", ")}`);
 
 async function shutdown() {

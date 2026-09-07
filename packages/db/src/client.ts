@@ -29,3 +29,14 @@ export async function withTenant<T>(
     return fn(tx);
   });
 }
+
+/**
+ * Closes the pool so a command-line process can end on its own.
+ *
+ * Long-lived servers never call this. Scripts do: without it they must resort
+ * to process.exit(), which discards whatever is still buffered on stdout — the
+ * failure mode that made the first data export write an empty file.
+ */
+export async function closeDb(): Promise<void> {
+  await queryClient.end({ timeout: 5 });
+}

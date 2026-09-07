@@ -4,6 +4,7 @@
  * Every table (except `tenants`) carries `tenant_id`; isolation is guaranteed by the
  * RLS policies of sql/rls.sql, activated via `withTenant()` (client.ts).
  */
+import { sql } from "drizzle-orm";
 import {
   boolean,
   date,
@@ -55,6 +56,15 @@ export const messageAuthorType = app.enum("message_author_type", [
   "system",
 ]);
 export const viewShare = app.enum("view_share", ["private", "team", "everyone"]);
+/**
+ * Where an imported row came from.
+ *
+ * Paired with `imported_id` (the identifier the other product used), it is what
+ * makes an import resumable and repeatable: a run that dies halfway can be
+ * relaunched, and rows already written are recognised instead of duplicated.
+ * Both columns are null for everything the product created itself.
+ */
+export const importSource = app.enum("import_source", ["zendesk", "freshdesk", "csv"]);
 /**
  * V2 — how one ticket relates to another (AG-04, "Liés" panel).
  *
@@ -233,20 +243,31 @@ export const teamMembers = app.table(
   (t) => [primaryKey({ columns: [t.teamId, t.userId] })],
 );
 
-export const organizations = app.table("organizations", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  tenantId: uuid("tenant_id")
-    .notNull()
-    .references(() => tenants.id, { onDelete: "cascade" }),
-  name: text("name").notNull(),
-  /** Auto-attachment domains — the key to domain-based discovery (HRD, v1.1). */
-  emailDomains: text("email_domains").array().notNull().default([]),
-  /** "Contacts can see their organisation's tickets" (AG-08 / PT-08). */
-  sharedTickets: boolean("shared_tickets").notNull().default(false),
-  notes: text("notes"),
-  customFields: jsonb("custom_fields").notNull().default({}),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-});
+export const organizations = app.table(
+  "organizations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    /** Auto-attachment domains — the key to domain-based discovery (HRD, v1.1). */
+    emailDomains: text("email_domains").array().notNull().default([]),
+    /** "Contacts can see their organisation's tickets" (AG-08 / PT-08). */
+    sharedTickets: boolean("shared_tickets").notNull().default(false),
+    notes: text("notes"),
+    customFields: jsonb("custom_fields").notNull().default({}),
+    /** Import provenance — see importSource. */
+    importSource: importSource("import_source"),
+    importedId: text("imported_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("organizations_tenant_import")
+      .on(t.tenantId, t.importSource, t.importedId)
+      .where(sql`${t.importedId} is not null`),
+  ],
+);
 
 export const contacts = app.table(
   "contacts",
@@ -265,9 +286,17 @@ export const contacts = app.table(
     authMethod: contactAuthMethod("auth_method").notNull().default("magic_link"),
     /** OIDC sub or SAML NameID. */
     externalId: text("external_id"),
+    /** Import provenance — see importSource. */
+    importSource: importSource("import_source"),
+    importedId: text("imported_id"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [uniqueIndex("contacts_tenant_email").on(t.tenantId, t.email)],
+  (t) => [
+    uniqueIndex("contacts_tenant_email").on(t.tenantId, t.email),
+    uniqueIndex("contacts_tenant_import")
+      .on(t.tenantId, t.importSource, t.importedId)
+      .where(sql`${t.importedId} is not null`),
+  ],
 );
 
 export const contactOrganizations = app.table(
@@ -555,6 +584,9 @@ export const tickets = app.table(
     closedAt: timestamp("closed_at", { withTimezone: true }),
     /** Merged ticket: read-only, banner pointing to the target (AG-04). */
     mergedIntoId: uuid("merged_into_id"),
+    /** Where this row came from, when it was imported (see importSource). */
+    importSource: importSource("import_source"),
+    importedId: text("imported_id"),
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
@@ -564,6 +596,9 @@ export const tickets = app.table(
     index("tickets_tenant_status").on(t.tenantId, t.status),
     index("tickets_tenant_assignee").on(t.tenantId, t.assigneeId),
     index("tickets_tenant_requester").on(t.tenantId, t.requesterId),
+    uniqueIndex("tickets_tenant_import")
+      .on(t.tenantId, t.importSource, t.importedId)
+      .where(sql`${t.importedId} is not null`),
   ],
 );
 
@@ -586,9 +621,17 @@ export const ticketMessages = app.table(
     source: ticketChannel("source"),
     /** Original email headers (Message-ID, In-Reply-To…) for threading. */
     emailMeta: jsonb("email_meta"),
+    /** Import provenance — see importSource. */
+    importSource: importSource("import_source"),
+    importedId: text("imported_id"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [index("messages_tenant_ticket").on(t.tenantId, t.ticketId)],
+  (t) => [
+    index("messages_tenant_ticket").on(t.tenantId, t.ticketId),
+    uniqueIndex("messages_tenant_import")
+      .on(t.tenantId, t.importSource, t.importedId)
+      .where(sql`${t.importedId} is not null`),
+  ],
 );
 
 /**
@@ -981,4 +1024,52 @@ export const ssoAuthEvents = app.table(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("sso_auth_events_tenant_org").on(t.tenantId, t.organizationId)],
+);
+
+/* ---------- Data import ---------- */
+
+export const importRunStatus = app.enum("import_run_status", [
+  "pending",
+  "running",
+  "succeeded",
+  "failed",
+  "cancelled",
+]);
+
+/**
+ * One attempt at importing a customer's history from another product.
+ *
+ * The row is the memory of the run: which objects were seen, written, skipped
+ * and why. It exists so a run that dies halfway can be relaunched without
+ * asking the operator what already happened — and so the customer can be shown
+ * what did not come across, which is the part they actually care about.
+ *
+ * `dryRun` writes nothing and reports what would happen: the rehearsal we ask
+ * every customer to look at before the real thing.
+ */
+export const importRuns = app.table(
+  "import_runs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    source: importSource("source").notNull(),
+    status: importRunStatus("status").notNull().default("pending"),
+    dryRun: boolean("dry_run").notNull().default(false),
+    /** Per-object tallies: { tickets: { seen, created, skipped, failed }, … }. */
+    counts: jsonb("counts").notNull().default({}),
+    /**
+     * What could not be brought across, and why — the report the customer
+     * reads. Capped when written: a run with 40 000 broken rows must not turn
+     * one database row into a megabyte of JSON.
+     */
+    anomalies: jsonb("anomalies").notNull().default([]),
+    error: text("error"),
+    startedById: uuid("started_by_id").references(() => users.id, { onDelete: "set null" }),
+    startedAt: timestamp("started_at", { withTimezone: true }),
+    finishedAt: timestamp("finished_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("import_runs_tenant_created").on(t.tenantId, t.createdAt)],
 );

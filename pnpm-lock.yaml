@@ -35,12 +35,21 @@ importers:
       '@openhelpdesk/ee-web':
         specifier: workspace:*
         version: link:../../ee/web
+      '@openhelpdesk/export':
+        specifier: workspace:*
+        version: link:../../packages/export
+      '@openhelpdesk/import':
+        specifier: workspace:*
+        version: link:../../packages/import
       '@openhelpdesk/mail':
         specifier: workspace:*
         version: link:../../packages/mail
       '@openhelpdesk/rules':
         specifier: workspace:*
         version: link:../../packages/rules
+      '@openhelpdesk/storage':
+        specifier: workspace:*
+        version: link:../../packages/storage
       '@openhelpdesk/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -114,6 +123,9 @@ importers:
       '@openhelpdesk/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@openhelpdesk/import':
+        specifier: workspace:*
+        version: link:../../packages/import
       '@openhelpdesk/mail':
         specifier: workspace:*
         version: link:../../packages/mail
@@ -239,6 +251,47 @@ importers:
         specifier: ^5.8.0
         version: 5.9.3
 
+  packages/export:
+    dependencies:
+      '@openhelpdesk/db':
+        specifier: workspace:*
+        version: link:../db
+      drizzle-orm:
+        specifier: ^0.44.0
+        version: 0.44.7(kysely@0.29.5)(postgres@3.4.9)
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
+      tsx:
+        specifier: ^4.19.0
+        version: 4.23.12
+      typescript:
+        specifier: ^5.8.0
+        version: 5.9.3
+
+  packages/import:
+    dependencies:
+      '@openhelpdesk/db':
+        specifier: workspace:*
+        version: link:../db
+      '@openhelpdesk/storage':
+        specifier: workspace:*
+        version: link:../storage
+      drizzle-orm:
+        specifier: ^0.44.0
+        version: 0.44.7(kysely@0.29.5)(postgres@3.4.9)
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
+      tsx:
+        specifier: ^4.19.0
+        version: 4.23.12
+      typescript:
+        specifier: ^5.8.0
+        version: 5.9.3
+
   packages/mail:
     dependencies:
       '@openhelpdesk/config':
@@ -250,6 +303,9 @@ importers:
       '@openhelpdesk/db':
         specifier: workspace:*
         version: link:../db
+      '@openhelpdesk/storage':
+        specifier: workspace:*
+        version: link:../storage
       bullmq:
         specifier: ^5.44.0
         version: 5.81.3
@@ -312,6 +368,25 @@ importers:
       '@playwright/test':
         specifier: ^1.62.1
         version: 1.62.1
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
+      typescript:
+        specifier: ^5.8.0
+        version: 5.9.3
+
+  packages/storage:
+    dependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.1111.0
+        version: 3.1111.0
+      '@openhelpdesk/db':
+        specifier: workspace:*
+        version: link:../db
+      drizzle-orm:
+        specifier: ^0.44.0
+        version: 0.44.7(kysely@0.29.5)(postgres@3.4.9)
+    devDependencies:
       '@types/node':
         specifier: ^22.0.0
         version: 22.20.1

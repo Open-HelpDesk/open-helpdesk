@@ -29,6 +29,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { labelKey: "app.settingsNav.itemGeneral", href: "/app/settings/general" },
       { labelKey: "app.settingsNav.itemTeam", href: "/app/settings/team" },
+      { labelKey: "app.settingsNav.itemImport", href: "/app/settings/import" },
     ],
   },
   {

@@ -148,6 +148,13 @@
       "when": 1788099445997,
       "tag": "0020_perfect_imperial_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1788773876600,
+      "tag": "0021_great_owl",
+      "breakpoints": true
     }
   ]
 }
