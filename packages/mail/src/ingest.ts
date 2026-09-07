@@ -19,6 +19,7 @@ import {
   tickets,
 } from "@openhelpdesk/db";
 import { and, arrayContains, desc, eq, inArray, sql } from "drizzle-orm";
+import { storeAttachments } from "@openhelpdesk/storage";
 import type { InboundEmail, IngestResult } from "./types";
 
 const REOPEN_FROM = new Set(["waiting", "on_hold", "resolved"]);
@@ -91,6 +92,27 @@ async function logRejection(
     });
   } catch (err) {
     console.error("[mail] could not log the rejection:", err);
+  }
+}
+
+/**
+ * Stores what the sender attached.
+ *
+ * Never allowed to fail the ingestion: an email whose ticket exists but whose
+ * screenshot could not be written is a nuisance; an email rejected because S3
+ * hiccuped is a lost customer request, and the provider will replay it in a
+ * loop.
+ */
+async function saveInboundFiles(
+  tenantId: string,
+  messageId: string,
+  mail: InboundEmail,
+): Promise<void> {
+  if (!mail.attachments?.length) return;
+  try {
+    await storeAttachments(tenantId, messageId, mail.attachments);
+  } catch (err) {
+    console.error("[mail] attachments could not be stored:", err);
   }
 }
 
@@ -216,17 +238,21 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
 
   // 5a. Append to the existing thread
   if (ticket && !ticket.mergedIntoId && ticket.status !== "closed") {
-    await db.insert(ticketMessages).values({
-      tenantId,
-      ticketId: ticket.id,
-      kind: "public_reply",
-      authorType: "contact",
-      authorId: contact!.id,
-      bodyText: bodyText || null,
-      bodyHtml: mail.html ?? null,
-      source: "email",
-      emailMeta,
-    });
+    const [appended] = await db
+      .insert(ticketMessages)
+      .values({
+        tenantId,
+        ticketId: ticket.id,
+        kind: "public_reply",
+        authorType: "contact",
+        authorId: contact!.id,
+        bodyText: bodyText || null,
+        bodyHtml: mail.html ?? null,
+        source: "email",
+        emailMeta,
+      })
+      .returning({ id: ticketMessages.id });
+    await saveInboundFiles(tenantId, appended!.id, mail);
     const patch: Partial<typeof tickets.$inferInsert> = { updatedAt: new Date() };
     if (REOPEN_FROM.has(ticket.status)) {
       patch.status = "open";
@@ -254,17 +280,21 @@ export async function ingestEmail(mail: InboundEmail): Promise<IngestResult> {
     })
     .returning();
 
-  await db.insert(ticketMessages).values({
-    tenantId,
-    ticketId: created!.id,
-    kind: "public_reply",
-    authorType: "contact",
-    authorId: contact!.id,
-    bodyText: bodyText || null,
-    bodyHtml: mail.html ?? null,
-    source: "email",
-    emailMeta,
-  });
+  const [firstMessage] = await db
+    .insert(ticketMessages)
+    .values({
+      tenantId,
+      ticketId: created!.id,
+      kind: "public_reply",
+      authorType: "contact",
+      authorId: contact!.id,
+      bodyText: bodyText || null,
+      bodyHtml: mail.html ?? null,
+      source: "email",
+      emailMeta,
+    })
+    .returning({ id: ticketMessages.id });
+  await saveInboundFiles(tenantId, firstMessage!.id, mail);
 
   return { outcome: "created", ticketId: created!.id, number, tenantId };
 }

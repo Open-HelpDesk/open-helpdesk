@@ -20,6 +20,22 @@ export type InboundEmail = {
    * transport that does not provide them is still ingested normally.
    */
   headers?: Record<string, string>;
+  /**
+   * Files the sender attached, already in memory.
+   *
+   * Optional because not every transport hands them over the same way: the
+   * IMAP poller parses them itself, while the providers' inbound webhooks send
+   * a download token instead of the bytes, and fetching those is a second,
+   * authenticated round trip per file (see README). A transport that leaves
+   * this empty ingests exactly as before.
+   */
+  attachments?: InboundAttachment[];
+};
+
+export type InboundAttachment = {
+  filename: string;
+  contentType?: string | null;
+  content: Uint8Array;
 };
 
 export type RejectionReason =

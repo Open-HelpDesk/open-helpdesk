@@ -106,6 +106,17 @@ async function parseSource(source: Buffer, mailboxAddress: string): Promise<Inbo
     if (colon > 0) headers[key.toLowerCase()] = line.slice(colon + 1).trim();
   }
 
+  // Inline images (a signature logo, a quoted screenshot) carry a Content-ID
+  // and belong to the HTML body, not to the file list: attaching them would
+  // hang a logo under every reply from that sender.
+  const files = (parsed.attachments ?? [])
+    .filter((a) => a.contentDisposition !== "inline" && !a.cid)
+    .map((a) => ({
+      filename: a.filename ?? "file",
+      contentType: a.contentType ?? null,
+      content: new Uint8Array(a.content),
+    }));
+
   return {
     // The email landed in THIS mailbox: that is what routes, not the To header
     // (mailing lists, Bcc and aliases often rewrite the To).
@@ -118,6 +129,7 @@ async function parseSource(source: Buffer, mailboxAddress: string): Promise<Inbo
     inReplyTo: parsed.inReplyTo ?? undefined,
     references,
     headers,
+    attachments: files,
   };
 }
 

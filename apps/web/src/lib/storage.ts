@@ -12,9 +12,10 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import { attachments, db } from "@openhelpdesk/db";
+import { db } from "@openhelpdesk/db";
+import { MAX_ATTACHMENT_BYTES, storeAttachments } from "@openhelpdesk/storage";
 
-export const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024;
+export { MAX_ATTACHMENT_BYTES };
 
 const BUCKET = process.env.S3_BUCKET ?? "attachments";
 
@@ -77,33 +78,24 @@ export async function saveUploadedFiles(
   messageId: string,
   files: File[],
 ): Promise<number> {
-  const valid = files.filter(
-    (f) => f && typeof f.arrayBuffer === "function" && f.size > 0 && f.size <= MAX_ATTACHMENT_BYTES,
-  );
-  if (valid.length === 0) return 0;
-  await ensureBucket();
+  const usable = files.filter((f) => f && typeof f.arrayBuffer === "function" && f.size > 0);
+  if (usable.length === 0) return 0;
 
-  for (const file of valid) {
-    const filename = sanitizeFilename(file.name);
-    const key = `${tenantId}/${messageId}/${randomUUID()}-${filename}`;
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: BUCKET,
-        Key: key,
-        Body: Buffer.from(await file.arrayBuffer()),
-        ContentType: file.type || "application/octet-stream",
-      }),
-    );
-    await db.insert(attachments).values({
-      tenantId,
-      messageId,
-      storageKey: key,
-      filename,
-      contentType: file.type || "application/octet-stream",
-      sizeBytes: file.size,
-    });
-  }
-  return valid.length;
+  // Delegated to @openhelpdesk/storage so the app, the mail pipeline and an
+  // import all write attachments the same way — the divergence is what let
+  // inbound email drop files for months without anyone noticing.
+  const { stored } = await storeAttachments(
+    tenantId,
+    messageId,
+    await Promise.all(
+      usable.map(async (file) => ({
+        filename: file.name,
+        contentType: file.type,
+        content: new Uint8Array(await file.arrayBuffer()),
+      })),
+    ),
+  );
+  return stored.length;
 }
 
 export async function getAttachmentBody(storageKey: string) {
