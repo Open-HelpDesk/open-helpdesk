@@ -91,11 +91,11 @@ const SCHEMAS = {
   Ticket: {
     type: "object",
     properties: {
-      number: { type: "integer", description: "Per-workspace ticket number, the one agents see." },
-      subject: { type: "string" },
-      status: { type: "string", enum: ["new", "open", "waiting", "on_hold", "resolved", "closed"] },
-      priority: { type: "string", enum: ["low", "normal", "high", "urgent"] },
-      channel: { type: "string", enum: ["email", "portal", "widget", "api"] },
+      number: { type: "integer", description: "Per-workspace ticket number, the one agents see.", examples: [4821] },
+      subject: { type: "string", examples: ["Cannot export invoices as PDF"] },
+      status: { type: "string", enum: ["new", "open", "waiting", "on_hold", "resolved", "closed"], examples: ["open"] },
+      priority: { type: "string", enum: ["low", "normal", "high", "urgent"], examples: ["high"] },
+      channel: { type: "string", enum: ["email", "portal", "widget", "api"], examples: ["email"] },
       type: { type: "string", nullable: true },
       requester: {
         type: "object",
@@ -115,7 +115,7 @@ const SCHEMAS = {
       kind: { type: "string", enum: ["public_reply", "internal_note", "system_event"] },
       author_type: { type: "string", enum: ["agent", "contact", "system"] },
       author_id: { ...uuid, nullable: true },
-      body_text: { type: "string", nullable: true },
+      body_text: { type: "string", nullable: true, examples: ["Hello, the PDF export fails since this morning."] },
       body_html: { type: "string", nullable: true },
       source: { type: "string", nullable: true },
       created_at: dateTime,
@@ -125,10 +125,10 @@ const SCHEMAS = {
     type: "object",
     properties: {
       id: uuid,
-      email: { type: "string", format: "email" },
-      name: { type: "string", nullable: true },
-      phone: { type: "string", nullable: true },
-      locale: { type: "string", nullable: true },
+      email: { type: "string", format: "email", examples: ["julien.lambert@nordfil.fr"] },
+      name: { type: "string", nullable: true, examples: ["Julien Lambert"] },
+      phone: { type: "string", nullable: true, examples: ["+33 1 23 45 67 89"] },
+      locale: { type: "string", nullable: true, examples: ["fr"] },
       blocked: { type: "boolean" },
       custom_fields: jsonObject,
       created_at: dateTime,
@@ -138,7 +138,7 @@ const SCHEMAS = {
     type: "object",
     properties: {
       id: uuid,
-      name: { type: "string" },
+      name: { type: "string", examples: ["Nordfil SAS"] },
       email_domains: {
         type: "array",
         items: { type: "string" },
@@ -219,7 +219,10 @@ const SCHEMAS = {
   },
   Tag: {
     type: "object",
-    properties: { name: { type: "string" }, ticket_count: { type: "integer" } },
+    properties: {
+      name: { type: "string", examples: ["billing"] },
+      ticket_count: { type: "integer", examples: [128] },
+    },
   },
   KbCategory: {
     type: "object",
@@ -237,9 +240,9 @@ const SCHEMAS = {
     properties: {
       id: uuid,
       category_id: { ...uuid, nullable: true },
-      title: { type: "string" },
-      slug: { type: "string" },
-      body_html: { type: "string" },
+      title: { type: "string", examples: ["Exporting your invoices"] },
+      slug: { type: "string", examples: ["exporting-your-invoices"] },
+      body_html: { type: "string", examples: ["<p>Open <strong>Billing</strong>, then…</p>"] },
       status: { type: "string", enum: ["draft", "published"] },
       author_id: { ...uuid, nullable: true },
       published_at: dateTime,
@@ -685,7 +688,29 @@ export function openApiDocument(origin: string) {
       ].join("\n"),
       license: { name: "AGPL-3.0-only", identifier: "AGPL-3.0-only" },
     },
-    servers: [{ url: `${origin}/api/v1`, description: "This workspace." }],
+    servers: [
+      /*
+       * A templated host when the caller asks for one.
+       *
+       * The documentation site is served from a domain of its own, so it cannot
+       * infer which workspace a reader belongs to. Declaring `workspace` as a
+       * server variable lets the reference's playground offer a field instead of
+       * a wrong default — and OpenAPI requires the declaration, without which
+       * `{workspace}` is just a broken URL.
+       */
+      origin.includes("{workspace}")
+        ? {
+            url: `${origin}/api/v1`,
+            description: "Your workspace.",
+            variables: {
+              workspace: {
+                default: "acme",
+                description: "The subdomain of your workspace.",
+              },
+            },
+          }
+        : { url: `${origin}/api/v1`, description: "This workspace." },
+    ],
     tags: [
       { name: "Tickets", description: "Requests, their conversations and their files." },
       { name: "Contacts", description: "The people who write in." },
