@@ -656,7 +656,7 @@ function buildPaths() {
 
 /* ---------- The document ---------- */
 
-export function openApiDocument(origin: string) {
+export function openApiDocument(origin: string, extraServers: string[] = []) {
   const errorResponse = (description: string) => ({
     description,
     content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } },
@@ -710,6 +710,12 @@ export function openApiDocument(origin: string) {
             },
           }
         : { url: `${origin}/api/v1`, description: "This workspace." },
+      /*
+       * Extra servers the caller wants offered — a local instance while writing
+       * the documentation, so the reference's "Test" button hits something that
+       * exists instead of a production host nobody has a key for.
+       */
+      ...extraServers.map((url) => ({ url: `${url}/api/v1`, description: "Local instance." })),
     ],
     tags: [
       { name: "Tickets", description: "Requests, their conversations and their files." },

@@ -17,5 +17,15 @@ function flag(name: string): string | undefined {
 
 const out = flag("out") ?? "openapi.json";
 const origin = flag("origin") ?? "https://{workspace}.open-helpdesk.com";
-writeFileSync(out, JSON.stringify(openApiDocument(origin), null, 2) + "\n");
-console.log(`OpenAPI written to ${out} (server: ${origin}/api/v1)`);
+/**
+ * `--local <origin>` adds a second server to the document. Used when serving
+ * the documentation on a laptop: the playground then offers the running
+ * instance, and "Test" does something.
+ */
+const local = flag("local");
+const extra = local ? [local] : [];
+
+writeFileSync(out, JSON.stringify(openApiDocument(origin, extra), null, 2) + "\n");
+console.log(
+  `OpenAPI written to ${out} (servers: ${[origin, ...extra].map((o) => `${o}/api/v1`).join(", ")})`,
+);
