@@ -4,6 +4,70 @@ All notable changes to this project are documented in this file. The format is
 based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3-alpha] - 2026-09-07
+
+The integration release: a REST API that reaches the whole workspace, an MCP
+server so an assistant can use it, a generated reference, and a way in and out
+of the product for the data itself.
+
+### Added
+
+- **A complete REST API.** It covered tickets and contacts; it now reaches
+  organizations, agents, teams, macros, SLA policies, views, custom fields,
+  tags, satisfaction responses, the knowledge base and the files on a ticket —
+  **32 operations across 21 routes**. Every collection is keyset-paginated
+  (`{ data, next_cursor }`) rather than offset-paginated, because an integration
+  walking two hundred thousand tickets while agents keep working would otherwise
+  skip rows and repeat others without saying so. Ticket listing filters by
+  status, priority, assignee, organization, requester, tag and `updated_since`,
+  which is what an incremental sync needs. Keys are rate-limited to 600 requests
+  a minute, and answer `429` with `Retry-After` rather than failing obscurely.
+- **An OpenAPI 3.1 document** built from one module and served by every instance
+  at `/api/v1/openapi.json`, so what you fetch is what that instance implements.
+  The same module generates the reference and the Postman collection — the
+  documentation cannot describe a route the product does not have.
+- **An MCP server** (`packages/mcp`): nine tools that let an assistant search
+  tickets, read a thread with its internal notes, look up the knowledge base,
+  find a contact, and — when asked — reply. It talks to the public API rather
+  than the database, so it inherits the key's scopes, its rate limit and its
+  workspace isolation, and cannot reach round the rules engine. Replies default
+  to an internal note; the two tools that reach a customer say so.
+- **Import from Zendesk** (`packages/import`), with a screen in
+  **Settings → Import**. It writes to the tables directly, which is the only way
+  to keep the original ticket numbers, the real dates, and each message
+  attributed to whoever actually wrote it. Above all it does **not** run the
+  rules engine on an import: bringing thirty thousand closed tickets in through
+  the API would have sent thirty thousand acknowledgement emails to real people
+  and started as many SLA clocks. Runs are idempotent by
+  `(import_source, imported_id)`, so a run that dies halfway is relaunched
+  rather than restarted, and a rehearsal reports exactly what a real run would
+  do without writing anything.
+- **Export** (`packages/export`): the whole history as NDJSON — tickets with
+  their numbers and dates, conversations, internal notes, contacts,
+  organizations, agents, and the index of attachments. Streamed with
+  back-pressure, so a workspace of any size downloads without the server holding
+  it in memory. Owner and Admin only, and every export writes an audit event
+  before the first byte leaves.
+- **Attachments now travel both ways.** A new `packages/storage` makes
+  attachment writing reachable from the mail pipeline and from an import, not
+  only from the web app.
+
+### Fixed
+
+- **Files attached to an inbound email were parsed, then thrown away.** The IMAP
+  poller read them and dropped them, silently, because the only code that could
+  store an attachment lived inside the web app. Screenshots customers sent had
+  been disappearing for as long as the channel has existed.
+- **The "Import CSV" button on the contacts list did nothing** — no handler, no
+  route, no importer behind it. It now leads to the screen that does the work.
+- **The knowledge base's empty state promised importing articles** from a
+  Zendesk or Notion export. That import does not exist and is not planned; the
+  sentence is now one the product can keep.
+- **Checking whether a workspace name was free could fail** on a bundled
+  deployment: the check loaded the mail package, which loaded the storage
+  package, which built an S3 client at module load. Clients are built on first
+  use now, and the mail pipeline only loads storage when there is a file.
+
 ## [0.2.2-alpha] - 2026-08-29
 
 The redesign release: all 29 screens of the agent workspace and the
