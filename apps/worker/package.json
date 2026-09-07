@@ -15,6 +15,7 @@
     "@openhelpdesk/db": "workspace:*",
     "@openhelpdesk/import": "workspace:*",
     "@openhelpdesk/mail": "workspace:*",
+    "@openhelpdesk/push": "workspace:*",
     "@openhelpdesk/rules": "workspace:*",
     "@openhelpdesk/webhooks": "workspace:*",
     "bullmq": "^5.44.0",

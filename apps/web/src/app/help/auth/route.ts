@@ -21,7 +21,16 @@ export async function GET(request: NextRequest) {
   const tenant = await getPortalTenant();
   const token = request.nextUrl.searchParams.get("token") ?? "";
   const to = request.nextUrl.searchParams.get("to") ?? "/help/requests";
-  const safeTo = to.startsWith("/help") ? to : "/help/requests";
+  /*
+   * Two destinations only: a portal page, or the mobile handover that turns
+   * this browser session into an app session (MC-00). Anything else falls back
+   * to the requests list — a magic link that forwards wherever its query string
+   * says would be an open redirect signed by us.
+   */
+  const safeTo =
+    to.startsWith("/help") || to.startsWith("/api/v1/portal/auth/handoff")
+      ? to
+      : "/help/requests";
 
   if (!tenant) return NextResponse.redirect(new URL("/help/login", base));
   const contactId = verifyPortalToken(tenant.id, token);

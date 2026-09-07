@@ -1,0 +1,1 @@
+ALTER TABLE "app"."contacts" ADD COLUMN "notifications_read_at" timestamp with time zone;

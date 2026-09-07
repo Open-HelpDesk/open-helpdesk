@@ -70,21 +70,25 @@ function sanitizeFilename(name: string): string {
 }
 
 /**
- * Saves the files of a FormData (`files` field): S3 object + attachments row.
- * Empty or oversized files are silently ignored (the UI displays the limit).
+ * Saves uploaded files against a message: S3 object + attachments row.
+ *
+ * Returns what was stored and what was left behind, because a caller that can
+ * answer "two of your three files came through" is more useful than one that
+ * answers "two" — which is what the REST API needs in order to say so (the web
+ * forms display the limit up front and ignore the detail).
  */
-export async function saveUploadedFiles(
+export async function storeFilesOnMessage(
   tenantId: string,
   messageId: string,
   files: File[],
-): Promise<number> {
+) {
   const usable = files.filter((f) => f && typeof f.arrayBuffer === "function" && f.size > 0);
-  if (usable.length === 0) return 0;
+  if (usable.length === 0) return { stored: [], skipped: [] };
 
   // Delegated to @openhelpdesk/storage so the app, the mail pipeline and an
   // import all write attachments the same way — the divergence is what let
   // inbound email drop files for months without anyone noticing.
-  const { stored } = await storeAttachments(
+  return storeAttachments(
     tenantId,
     messageId,
     await Promise.all(
@@ -95,6 +99,15 @@ export async function saveUploadedFiles(
       })),
     ),
   );
+}
+
+/** The same write, for callers that only need the count. */
+export async function saveUploadedFiles(
+  tenantId: string,
+  messageId: string,
+  files: File[],
+): Promise<number> {
+  const { stored } = await storeFilesOnMessage(tenantId, messageId, files);
   return stored.length;
 }
 

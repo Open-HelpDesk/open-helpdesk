@@ -80,7 +80,7 @@ customer can follow their own requests, and article voting.
 
 ### The API — the whole workspace, scriptable
 
-Thirty-two operations, keys scoped in **Settings → API & webhooks**, and an
+Fifty-six operations, keys scoped in **Settings → API & webhooks**, and an
 OpenAPI 3.1 document every instance serves at `/api/v1/openapi.json` — so the
 description you read is the one that instance implements.
 
@@ -169,10 +169,21 @@ readable by anything.
 - **Knowledge base & portal** — public help center, embeddable widget,
   magic-link customer accounts, article voting and search deflection
 - **Reports** — operational dashboard, CSV export
-- **REST API** — 32 operations over tickets, contacts, organizations, the
+- **REST API** — 56 operations over tickets, contacts, organizations, the
   knowledge base and the workspace's configuration; cursor pagination, scoped
   API keys, signed outbound webhooks, and an OpenAPI 3.1 document served by the
   instance itself
+- **Mobile-ready** — an agent signs in on a device (password or SSO) and gets a
+  token bound to that phone, revocable on its own, with `/me`, full-text
+  `/search`, a notification feed and per-agent unread state behind it; push
+  notifications go out through APNs and FCM (assignment, customer reply, SLA),
+  carrying a localisation key so the app writes the sentence in its own
+  language
+- **Customer API** — customers sign in by emailed link and read, submit and
+  answer their own requests under `/api/v1/portal`; a namespace of its own, so
+  internal notes and other people's tickets are out of reach by routing rather
+  than by filtering. Files travel with the message that describes them:
+  `multipart/form-data` on both sides of the desk
 - **MCP server** — nine tools that let an AI assistant search, read and answer
   through the API, with the same key, the same scopes and the same limits
 - **Migration & portability** — import a Zendesk history keeping its ticket

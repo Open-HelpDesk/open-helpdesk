@@ -18,13 +18,29 @@ import { getT } from "@/i18n/server";
  * reproduced: the agent workspace has no second factor. Announcing one would
  * promise a protection nobody gets.
  */
+/**
+ * Where to land after signing in, when the caller asked for somewhere specific.
+ *
+ * Only two destinations are honoured: a screen of the workspace, and the mobile
+ * app's SSO handover (see /api/v1/auth/authorize), which is why the parameter
+ * exists at all — the app opens this page in a browser and needs the session to
+ * end up back on its own code exchange. Anything else, including an absolute
+ * URL or a protocol-relative one, is dropped: a login page that forwards to
+ * whatever a query string names is an open redirect, and this one is already the
+ * page a phishing kit would most like to borrow.
+ */
+function safeNext(raw: string | undefined): string | undefined {
+  if (!raw || !raw.startsWith("/") || raw.startsWith("//")) return undefined;
+  return /^\/(app\/|api\/v1\/auth\/authorize(\?|$))/.test(raw) ? raw : undefined;
+}
+
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; accepted?: string }>;
+  searchParams: Promise<{ error?: string; accepted?: string; next?: string }>;
 }) {
   const t = await getT();
-  const { error, accepted } = await searchParams;
+  const { error, accepted, next } = await searchParams;
   // The one page that must never render for a workspace that does not exist:
   // a password field plus Google and Microsoft buttons, reachable under any
   // invented subdomain, is a phishing page wearing our certificate. It used to
@@ -121,7 +137,7 @@ export default async function LoginPage({
           {/* The provider is placed here: /login sits under no shell that
               carries it, and the form is a client component. */}
           <I18nProvider locale={t.locale} dict={t.dict}>
-            <LoginForm initialError={error} />
+            <LoginForm initialError={error} next={safeNext(next)} />
           </I18nProvider>
         </div>
 

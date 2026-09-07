@@ -6,6 +6,7 @@
  * - imap-poll     : collection from the connected IMAP mailboxes (ST-03)
  * - automations   : time-based rules (follow-ups, auto-close at D+4)
  * - webhook-dispatch : outbound webhooks (ST-10), signed POST with retries
+ * - push-dispatch : mobile notifications (MO-xx), APNs/FCM with retries
  * - housekeeping  : purges (SsoAuthEvent 90 d, ticket trash 30 d, domain recheck 24 h)
  * - import-run    : history import from another product (packages/import)
  */
@@ -16,6 +17,7 @@ export const QUEUE_NAMES = [
   "imap-poll",
   "automations",
   "webhook-dispatch",
+  "push-dispatch",
   "housekeeping",
   "import-run",
 ] as const;

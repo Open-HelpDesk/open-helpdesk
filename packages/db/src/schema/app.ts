@@ -7,6 +7,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   date,
   integer,
   jsonb,
@@ -56,6 +57,14 @@ export const messageAuthorType = app.enum("message_author_type", [
   "system",
 ]);
 export const viewShare = app.enum("view_share", ["private", "team", "everyone"]);
+/**
+ * The two mobile platforms the app ships on (MO-xx).
+ *
+ * An enum rather than free text because the value decides which push gateway a
+ * notification goes through — APNs or FCM. A typo there is a device that never
+ * hears anything again, and nothing in the product would notice.
+ */
+export const devicePlatform = app.enum("device_platform", ["ios", "android"]);
 /**
  * Where an imported row came from.
  *
@@ -282,6 +291,13 @@ export const contacts = app.table(
     locale: text("locale"),
     customFields: jsonb("custom_fields").notNull().default({}),
     blocked: boolean("blocked").notNull().default(false),
+    /**
+     * Waterline of the customer's notification feed (MC-04) — the same shape as
+     * `users.notifications_read_at`, for the same reason: the feed is derived
+     * from what happened, so "read" can only mean "everything up to this
+     * instant". Null = nothing read yet.
+     */
+    notificationsReadAt: timestamp("notifications_read_at", { withTimezone: true }),
     // v1.1 — SSO
     authMethod: contactAuthMethod("auth_method").notNull().default("magic_link"),
     /** OIDC sub or SAML NameID. */
@@ -871,6 +887,182 @@ export const apiKeys = app.table("api_keys", {
   revokedAt: timestamp("revoked_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+/**
+ * When each agent last read each ticket (MA-01, the unread dot).
+ *
+ * The notification feed answers "what happened to me", which is a different
+ * question from "have I seen this thread": the feed holds eight lines and drops
+ * everything older, while an inbox row has to say unread or not for every
+ * ticket on the screen. Hence a row per pair rather than a second waterline.
+ *
+ * Per agent and not per workspace: a colleague opening a ticket does not mean I
+ * have read it. Rows exist only for tickets somebody has actually opened —
+ * absence means "never read", which is the honest default for an inbox nobody
+ * has been through yet.
+ */
+export const ticketReads = app.table(
+  "ticket_reads",
+  {
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    ticketId: uuid("ticket_id")
+      .notNull()
+      .references(() => tickets.id, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    readAt: timestamp("read_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.ticketId, t.userId] }),
+    index("ticket_reads_agent").on(t.tenantId, t.userId),
+  ],
+);
+
+/* ---------- Mobile app (MO-xx) ---------- */
+
+/**
+ * One row per phone somebody is signed in on — an agent, or a customer.
+ *
+ * The workspace API key cannot be what the mobile app carries: it is a
+ * workspace-wide credential with no person behind it, so it could not answer
+ * "my tickets", and a stolen phone would mean rotating a key every integration
+ * shares. A session is per device instead — mint one at sign-in, revoke that
+ * one, and nothing else in the workspace notices.
+ *
+ * Agents and customers share the table because everything about the row is the
+ * same — a hashed token, a device, a sliding expiry — and only the owner
+ * differs. They do NOT share a token prefix (`ohd_app_` against `ohd_ptl_`),
+ * and the two are resolved by different code paths: what a customer may read is
+ * a different question from what an agent may, and one credential type
+ * accidentally satisfying the other's check is the mistake worth designing out.
+ *
+ * Only the SHA-256 of the token is stored, like `api_keys.hashed_key`: a dump of
+ * this table hands over no working credential.
+ *
+ * `expiresAt` slides forward on use (see apps/web/src/lib/api.ts). Someone who
+ * opens the app every day is never signed out; a phone left in a drawer stops
+ * being a way in.
+ */
+export const deviceSessions = app.table(
+  "device_sessions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    /** The agent (MA-xx), or null on a customer's session. */
+    userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+    /** The customer (MC-xx), or null on an agent's session. */
+    contactId: uuid("contact_id").references(() => contacts.id, { onDelete: "cascade" }),
+    hashedToken: text("hashed_token").notNull(),
+    /** What the owner sees in the session list — "Sarah's iPhone". */
+    deviceName: text("device_name"),
+    platform: devicePlatform("platform"),
+    appVersion: text("app_version"),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("device_sessions_token").on(t.hashedToken),
+    index("device_sessions_user").on(t.tenantId, t.userId),
+    index("device_sessions_contact").on(t.tenantId, t.contactId),
+    /*
+     * Exactly one owner, enforced by the database.
+     * A session with both would be an agent's reach under a customer's identity;
+     * one with neither would authenticate nobody while still passing a
+     * "not revoked, not expired" test.
+     */
+    check(
+      "device_sessions_one_owner",
+      sql`(${t.userId} is null) <> (${t.contactId} is null)`,
+    ),
+  ],
+);
+
+/**
+ * The one-time code that carries a browser sign-in over to the app.
+ *
+ * A native app cannot read the session cookie that an identity provider's
+ * redirect — or a magic link opened in the mail app — lands on, so the browser
+ * leg ends on a code the app exchanges for a device session. Short-lived,
+ * single-use, and bound to a PKCE challenge the app kept to itself: a custom
+ * URL scheme is not exclusive to one installed app, so a code intercepted on
+ * its way back is worthless without the verifier.
+ *
+ * Both handovers use it — an agent's SSO round trip and a customer's magic
+ * link — with the same "exactly one owner" rule as the sessions it mints.
+ */
+export const deviceAuthCodes = app.table(
+  "device_auth_codes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+    contactId: uuid("contact_id").references(() => contacts.id, { onDelete: "cascade" }),
+    hashedCode: text("hashed_code").notNull(),
+    /** base64url(SHA-256(verifier)) — PKCE S256, the only method accepted. */
+    codeChallenge: text("code_challenge").notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("device_auth_codes_code").on(t.hashedCode),
+    check(
+      "device_auth_codes_one_owner",
+      sql`(${t.userId} is null) <> (${t.contactId} is null)`,
+    ),
+  ],
+);
+
+/**
+ * A push registration — the APNs or FCM token a notification is addressed to.
+ *
+ * Separate from `device_sessions` because the two die at different moments: a
+ * push token is rotated by the operating system while the session lives on, and
+ * a session can be revoked while the app stays installed. The pair is unique per
+ * workspace, so re-registering the same token updates it instead of leaving
+ * duplicates that would deliver the same notification twice.
+ *
+ * `contactId` is here for the client app (MC-xx), which signs in by magic link
+ * rather than password; exactly one of the two owners is set.
+ */
+export const pushDevices = app.table(
+  "push_devices",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    /** Set when the registration came from an agent session — revoked with it. */
+    sessionId: uuid("session_id").references(() => deviceSessions.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+    contactId: uuid("contact_id").references(() => contacts.id, { onDelete: "cascade" }),
+    platform: devicePlatform("platform").notNull(),
+    pushToken: text("push_token").notNull(),
+    deviceName: text("device_name"),
+    appVersion: text("app_version"),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("push_devices_tenant_token").on(t.tenantId, t.pushToken),
+    index("push_devices_user").on(t.tenantId, t.userId),
+    index("push_devices_contact").on(t.tenantId, t.contactId),
+    check(
+      "push_devices_one_owner",
+      sql`(${t.userId} is null) <> (${t.contactId} is null)`,
+    ),
+  ],
+);
 
 export const webhooks = app.table("webhooks", {
   id: uuid("id").primaryKey().defaultRandom(),

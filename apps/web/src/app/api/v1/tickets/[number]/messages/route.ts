@@ -15,7 +15,10 @@ import {
   apiError,
   apiJson,
   apiList,
+  attachFilesToMessage,
+  isMultipart,
   readJson,
+  readMultipart,
   readPage,
   serializeMessage,
   withApi,
@@ -80,12 +83,29 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.number, n)));
     if (!ticket) return apiError(404, "not_found", "No ticket with that number.");
 
-    const body = await readJson(request);
-    if (body instanceof Response) return body;
+    /*
+     * JSON or multipart, the same message either way: the app's composer
+     * (MA-02) attaches a screenshot in the same gesture that sends the reply,
+     * and a two-step "post, then upload" would leave a message with a promise
+     * of a file that a dropped connection never keeps.
+     */
+    let files: File[] = [];
+    let body: Record<string, unknown>;
+    if (isMultipart(request)) {
+      const form = await readMultipart(request);
+      if (form instanceof Response) return form;
+      body = form.fields;
+      files = form.files;
+    } else {
+      const json = await readJson(request);
+      if (json instanceof Response) return json;
+      body = json;
+    }
 
     const text = String(body.body ?? "").trim();
     if (!text) return apiError(400, "invalid_body_text", "body is required.");
-    const internal = body.internal === true;
+    // A multipart field arrives as the string "true".
+    const internal = body.internal === true || body.internal === "true";
 
     const agentId = body.agent_id ? String(body.agent_id) : null;
     if (agentId) {
@@ -109,6 +129,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       })
       .returning({ id: ticketMessages.id, createdAt: ticketMessages.createdAt });
 
+    // Files first: the rules engine can send this message out by email, and a
+    // reply that leaves before its attachment is stored goes out without it.
+    const stored = await attachFilesToMessage(tenant.id, msg!.id, files);
+
     await db.update(tickets).set({ updatedAt: new Date() }).where(eq(tickets.id, ticket.id));
 
     // Only a public reply is an outbound event worth firing triggers for
@@ -123,6 +147,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         ticket_number: ticket.number,
         internal,
         created_at: msg!.createdAt?.toISOString() ?? null,
+        attachments: stored.attachments,
+        ...(stored.skipped.length ? { skipped_files: stored.skipped } : {}),
       },
       201,
     );

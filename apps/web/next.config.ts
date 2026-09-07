@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     "@openhelpdesk/auth",
     "@openhelpdesk/mail",
     "@openhelpdesk/rules",
+    "@openhelpdesk/push",
     "@openhelpdesk/import",
     "@openhelpdesk/storage",
     "@openhelpdesk/export",

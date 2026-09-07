@@ -3,84 +3,22 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import {
-  contactOrganizations,
-  contacts,
-  db,
-  kbArticles,
-  nextTicketNumber,
-  organizations,
-  tickets,
-  ticketMessages,
-} from "@openhelpdesk/db";
-import { and, arrayContains, eq, sql } from "drizzle-orm";
-import { sendTenantEmail } from "@openhelpdesk/mail";
-import { onContactMessage, onTicketCreated } from "@openhelpdesk/rules";
+import { db, kbArticles, tickets } from "@openhelpdesk/db";
+import { and, eq, sql } from "drizzle-orm";
 import {
   PORTAL_COOKIE,
   getPortalContact,
   getPortalTenant,
-  magicLinkToken,
+  sendPortalMagicLink,
 } from "@/lib/portal-auth";
-import { saveUploadedFiles } from "@/lib/storage";
+import {
+  createPortalRequest,
+  findOrCreateContact,
+  replyToPortalRequest,
+} from "@/lib/portal-write";
 
-import { getT, type Translate } from "@/i18n/server";
+import { getT } from "@/i18n/server";
 import type { MessageKey } from "@/i18n/dictionaries/en";
-
-const BASE_DOMAIN = process.env.BASE_DOMAIN ?? "localhost:3000";
-const PROTOCOL = BASE_DOMAIN.includes("localhost") ? "http" : "https";
-
-async function findOrCreateContact(tenantId: string, email: string, name?: string) {
-  let [contact] = await db
-    .select()
-    .from(contacts)
-    .where(and(eq(contacts.tenantId, tenantId), eq(contacts.email, email)));
-  if (!contact) {
-    [contact] = await db
-      .insert(contacts)
-      .values({ tenantId, email, name: name || null })
-      .returning();
-    const domain = email.split("@")[1] ?? "";
-    const [org] = domain
-      ? await db
-          .select()
-          .from(organizations)
-          .where(
-            and(eq(organizations.tenantId, tenantId), arrayContains(organizations.emailDomains, [domain])),
-          )
-      : [];
-    if (contact && org) {
-      await db.insert(contactOrganizations).values({
-        tenantId,
-        contactId: contact.id,
-        organizationId: org.id,
-      });
-    }
-  }
-  return contact!;
-}
-
-/**
- * PT-07 — the sign-in email. Subject and body come from the dictionary: the
- * workspace's language is the customer's language too, and this message used to
- * leave in French whatever the tenant was set to.
- */
-async function sendMagicLinkEmail(
-  t: Translate,
-  tenant: { id: string; slug: string; name: string },
-  contact: { id: string; email: string },
-  redirectTo: string,
-) {
-  const token = magicLinkToken(tenant.id, contact.id);
-  const url = `${PROTOCOL}://${tenant.slug}.${BASE_DOMAIN}/help/auth?token=${token}&to=${encodeURIComponent(redirectTo)}`;
-  await sendTenantEmail({
-    tenantId: tenant.id,
-    to: contact.email,
-    kind: "magic_link",
-    subject: t("login.emailSubject", { workspace: tenant.name }),
-    text: t("login.emailBody", { url, workspace: tenant.name }),
-  });
-}
 
 /** PT-07 — magic link dispatch. The account is created implicitly. */
 export async function requestMagicLink(formData: FormData) {
@@ -94,7 +32,7 @@ export async function requestMagicLink(formData: FormData) {
     redirect(sentUrl); // same response — no oracle on blocked accounts
   }
   const t = await getT();
-  await sendMagicLinkEmail(t, tenant, contact, "/help/requests");
+  await sendPortalMagicLink(t, tenant, contact, "/help/requests");
   redirect(sentUrl);
 }
 
@@ -146,49 +84,21 @@ export async function submitRequest(formData: FormData) {
   const contact = session?.contact ?? (await findOrCreateContact(tenant.id, email));
   if (contact.blocked) redirect("/help/requests/submitted");
 
-  const [orgLink] = await db
-    .select({ organizationId: contactOrganizations.organizationId })
-    .from(contactOrganizations)
-    .where(eq(contactOrganizations.contactId, contact.id))
-    .limit(1);
-
-  const number = await nextTicketNumber(tenant.id);
-  const [ticket] = await db
-    .insert(tickets)
-    .values({
-      tenantId: tenant.id,
-      number,
-      subject,
-      status: "new",
-      priority,
-      channel: "portal",
-      type,
-      requesterId: contact.id,
-      organizationId: orgLink?.organizationId ?? null,
-      customFields: moduleValue ? { module: moduleValue } : {},
-    })
-    .returning();
-  const [message] = await db
-    .insert(ticketMessages)
-    .values({
-      tenantId: tenant.id,
-      ticketId: ticket!.id,
-      kind: "public_reply",
-      authorType: "contact",
-      authorId: contact.id,
-      bodyText: body,
-      source: "portal",
-    })
-    .returning();
-  const files = formData.getAll("files").filter((f): f is File => f instanceof File);
-  if (files.length > 0 && message) {
-    await saveUploadedFiles(tenant.id, message.id, files);
-  }
-  await onTicketCreated(tenant.id, ticket!.id);
+  const { ticket } = await createPortalRequest({
+    tenantId: tenant.id,
+    contact,
+    subject,
+    body,
+    type,
+    priority,
+    customFields: moduleValue ? { module: moduleValue } : {},
+    files: formData.getAll("files").filter((f): f is File => f instanceof File),
+  });
+  const number = ticket.number;
 
   if (!session) {
     // Not signed in: magic link to follow up on the request (PT-04 specs).
-    await sendMagicLinkEmail(t, tenant, contact, `/help/requests/${number}`);
+    await sendPortalMagicLink(t, tenant, contact, `/help/requests/${number}`);
   }
   redirect(
     session
@@ -215,28 +125,13 @@ export async function replyToRequest(formData: FormData) {
     .where(and(eq(tickets.tenantId, session.tenant.id), eq(tickets.number, number)));
   if (!ticket || ticket.requesterId !== session.contact.id) return;
 
-  const [message] = await db
-    .insert(ticketMessages)
-    .values({
-      tenantId: session.tenant.id,
-      ticketId: ticket.id,
-      kind: "public_reply",
-      authorType: "contact",
-      authorId: session.contact.id,
-      bodyText: body,
-      source: "portal",
-    })
-    .returning();
-  const files = formData.getAll("files").filter((f): f is File => f instanceof File);
-  if (files.length > 0 && message) {
-    await saveUploadedFiles(session.tenant.id, message.id, files);
-  }
-  const reopen = ["waiting", "on_hold", "resolved"].includes(ticket.status);
-  await db
-    .update(tickets)
-    .set({ updatedAt: new Date(), ...(reopen ? { status: "open", resolvedAt: null } : {}) })
-    .where(eq(tickets.id, ticket.id));
-  await onContactMessage(session.tenant.id, ticket.id);
+  await replyToPortalRequest({
+    tenantId: session.tenant.id,
+    contact: session.contact,
+    ticket,
+    body,
+    files: formData.getAll("files").filter((f): f is File => f instanceof File),
+  });
   revalidatePath(`/help/requests/${number}`);
 }
 

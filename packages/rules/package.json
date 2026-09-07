@@ -14,6 +14,7 @@
   "dependencies": {
     "@openhelpdesk/db": "workspace:*",
     "@openhelpdesk/mail": "workspace:*",
+    "@openhelpdesk/push": "workspace:*",
     "@openhelpdesk/webhooks": "workspace:*",
     "drizzle-orm": "^0.44.0"
   },

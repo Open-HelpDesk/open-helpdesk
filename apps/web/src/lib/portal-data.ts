@@ -314,6 +314,33 @@ export async function listContactRequests(
   });
 }
 
+/**
+ * The organization a customer belongs to, as they may see it (MC-05).
+ *
+ * The first link only: a contact attached to two companies is an edge the
+ * portal has never drawn, and picking one at random beats inventing a screen
+ * for it here. `shared_tickets` travels with it because it is what tells the
+ * app whether to offer the organization tab at all.
+ */
+export async function contactOrganization(
+  tenantId: string,
+  contactId: string,
+): Promise<{ id: string; name: string; shared_tickets: boolean } | null> {
+  const [row] = await db
+    .select({
+      id: organizations.id,
+      name: organizations.name,
+      sharedTickets: organizations.sharedTickets,
+    })
+    .from(contactOrganizations)
+    .innerJoin(organizations, eq(organizations.id, contactOrganizations.organizationId))
+    .where(
+      and(eq(contactOrganizations.tenantId, tenantId), eq(contactOrganizations.contactId, contactId)),
+    )
+    .limit(1);
+  return row ? { id: row.id, name: row.name, shared_tickets: row.sharedTickets } : null;
+}
+
 /** Does the contact have access to the organization tab? */
 export async function hasSharedOrganization(contactId: string): Promise<boolean> {
   const [row] = await db

@@ -9,6 +9,7 @@ import {
 } from "@openhelpdesk/db";
 import { and, count, eq, inArray } from "drizzle-orm";
 import { sendTicketReplyEmail } from "@openhelpdesk/mail";
+import { notifyAssignee } from "@openhelpdesk/push";
 import { maybeSendCsat } from "./csat";
 import type { RuleAction } from "./types";
 
@@ -135,6 +136,16 @@ export async function applyActions(
       .update(tickets)
       .set(patch)
       .where(and(eq(tickets.tenantId, ticket.tenantId), eq(tickets.id, ticket.id)));
+  }
+
+  /*
+   * A rule that hands a ticket to somebody notifies them (MO-xx): an assignment
+   * an agent has not asked for is precisely the news a phone is for. Only when
+   * the owner actually changed — a rule that reassigns to the same person on
+   * every update would otherwise buzz on every update.
+   */
+  if (patch.assigneeId && patch.assigneeId !== ticket.assigneeId) {
+    await notifyAssignee(ticket.tenantId, ticket.id, "ticket.assigned");
   }
 
   await db.insert(automationRuns).values({

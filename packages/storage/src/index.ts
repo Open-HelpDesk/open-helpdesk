@@ -79,6 +79,8 @@ export type IncomingFile = {
 };
 
 export type StoredAttachment = {
+  /** The row's own id — what a download URL is built from. */
+  id: string;
   storageKey: string;
   filename: string;
   contentType: string;
@@ -133,8 +135,11 @@ export async function storeAttachments(
       contentType,
       sizeBytes: file.content.byteLength,
     };
-    await db.insert(attachments).values(row);
-    stored.push(row);
+    // Returning the id rather than only what we sent: a caller that has just
+    // stored a file usually has to name it back to a client, and looking the
+    // row up again by storage key is a query for something we already knew.
+    const [inserted] = await db.insert(attachments).values(row).returning({ id: attachments.id });
+    stored.push({ id: inserted!.id, ...row });
   }
   return { stored, skipped };
 }

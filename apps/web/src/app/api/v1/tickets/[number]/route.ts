@@ -10,6 +10,8 @@ import { and, eq } from "drizzle-orm";
 import { contacts, db, organizations, tickets, users } from "@openhelpdesk/db";
 import { dispatchTicketChanged } from "@openhelpdesk/webhooks";
 import { apiError, apiJson, readJson, serializeTicket, withApi } from "@/lib/api";
+import { isTicketUnread } from "@/lib/ticket-reads";
+import { notifyAssignee } from "@openhelpdesk/push";
 
 const STATUSES = ["new", "open", "waiting", "on_hold", "resolved", "closed"] as const;
 const PRIORITIES = ["low", "normal", "high", "urgent"] as const;
@@ -34,16 +36,29 @@ async function withRequester(tenantId: string, requesterId: string | null) {
 }
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ number: string }> }) {
-  return withApi(request, "read", async ({ tenant }) => {
+  return withApi(request, "read", async (auth) => {
+    const { tenant } = auth;
     const { number } = await params;
     const ticket = await loadTicket(tenant.id, number);
     if (!ticket) return apiError(404, "not_found", "No ticket with that number.");
-    return apiJson(serializeTicket(ticket, await withRequester(tenant.id, ticket.requesterId)));
+    /*
+     * Reading the ticket does not mark it read: a GET that changes state cannot
+     * be retried, prefetched or cached without side effects. The app says so
+     * explicitly (POST ./read) when the agent has actually looked at the thread.
+     */
+    const unread = auth.agent
+      ? await isTicketUnread(tenant.id, auth.agent.id, ticket.id)
+      : null;
+    return apiJson({
+      ...serializeTicket(ticket, await withRequester(tenant.id, ticket.requesterId)),
+      ...(unread === null ? {} : { unread }),
+    });
   });
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ number: string }> }) {
-  return withApi(request, "write", async ({ tenant }) => {
+  return withApi(request, "write", async (auth) => {
+    const { tenant } = auth;
     const { number } = await params;
     const ticket = await loadTicket(tenant.id, number);
     if (!ticket) return apiError(404, "not_found", "No ticket with that number.");
@@ -133,6 +148,15 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       .returning();
 
     await dispatchTicketChanged(tenant.id, ticket.id, ticket.status, updated!.status);
+    /*
+     * A ticket handed to somebody over the API wakes their phone, unless the
+     * caller is that somebody assigning it to themselves from the app.
+     */
+    if (patch.assigneeId && patch.assigneeId !== ticket.assigneeId) {
+      await notifyAssignee(tenant.id, ticket.id, "ticket.assigned", {
+        exceptUserId: auth.agent?.id ?? null,
+      });
+    }
 
     return apiJson(serializeTicket(updated!, await withRequester(tenant.id, updated!.requesterId)));
   });

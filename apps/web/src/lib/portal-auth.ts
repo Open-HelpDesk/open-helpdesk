@@ -7,8 +7,10 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { contacts, db, tenants } from "@openhelpdesk/db";
+import { sendTenantEmail } from "@openhelpdesk/mail";
 import { getOrgAdminOrg } from "@/lib/portal-data";
 import { and, eq } from "drizzle-orm";
+import type { Translate } from "@/i18n/server";
 
 const SECRET = process.env.BETTER_AUTH_SECRET ?? "dev-secret-change-me";
 export const PORTAL_COOKIE = "ohd_portal";
@@ -35,6 +37,37 @@ export function magicLinkToken(tenantId: string, contactId: string): string {
 
 export function sessionToken(tenantId: string, contactId: string): string {
   return portalToken(tenantId, contactId, SESSION_TTL_MS);
+}
+
+/**
+ * The sign-in email (PT-07), and where its link lands.
+ *
+ * `redirectTo` is what makes one email serve both surfaces: the web portal
+ * sends the customer to their requests, and the mobile app sends them to the
+ * handover route that hands the session over to the app. The landing route
+ * (/help/auth) decides which destinations it will honour — this only carries
+ * the one it was given.
+ *
+ * Subject and body come from the dictionary: the workspace's language is the
+ * customer's language too.
+ */
+export async function sendPortalMagicLink(
+  t: Translate,
+  tenant: { id: string; slug: string; name: string },
+  contact: { id: string; email: string },
+  redirectTo: string,
+): Promise<void> {
+  const baseDomain = process.env.BASE_DOMAIN ?? "localhost:3000";
+  const protocol = baseDomain.includes("localhost") ? "http" : "https";
+  const token = magicLinkToken(tenant.id, contact.id);
+  const url = `${protocol}://${tenant.slug}.${baseDomain}/help/auth?token=${token}&to=${encodeURIComponent(redirectTo)}`;
+  await sendTenantEmail({
+    tenantId: tenant.id,
+    to: contact.email,
+    kind: "magic_link",
+    subject: t("login.emailSubject", { workspace: tenant.name }),
+    text: t("login.emailBody", { url, workspace: tenant.name }),
+  });
 }
 
 export function verifyPortalToken(tenantId: string, token: string): string | null {

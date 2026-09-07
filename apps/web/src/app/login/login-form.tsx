@@ -56,9 +56,34 @@ function CircleMark() {
   );
 }
 
-export function LoginForm({ initialError }: { initialError?: string }) {
+export function LoginForm({
+  initialError,
+  next,
+}: {
+  initialError?: string;
+  /**
+   * Validated by the page (safeNext) — the workspace screen to open, or the
+   * mobile app's SSO handover when the browser was opened by the app.
+   */
+  next?: string;
+}) {
   const t = useT();
   const router = useRouter();
+  const destination = next ?? "/app/tickets";
+
+  /**
+   * The handover is a route handler, not a page: the client router would fetch
+   * it as an RSC payload and get a redirect to a URL scheme it cannot follow.
+   * A full navigation is what lets the browser hand off to the app.
+   */
+  function goTo(url: string) {
+    if (url.startsWith("/api/")) {
+      window.location.assign(url);
+      return;
+    }
+    router.push(url);
+    router.refresh();
+  }
   const [error, setError] = useState<string | null>(
     initialError === "not-a-member" ? t("app.login.notAMember") : null,
   );
@@ -96,8 +121,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
       setPending(false);
       return;
     }
-    router.push("/app/tickets");
-    router.refresh();
+    goTo(destination);
   }
 
   async function onSocial(provider: "google" | "microsoft") {
@@ -105,7 +129,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
     setBadCredentials(false);
     const { error } = await authClient.signIn.social({
       provider,
-      callbackURL: "/app/tickets",
+      callbackURL: destination,
     });
     if (error) setError(t("app.login.providerMissing"));
   }

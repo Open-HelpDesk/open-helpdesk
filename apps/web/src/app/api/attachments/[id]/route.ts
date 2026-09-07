@@ -8,10 +8,11 @@ import { and, eq } from "drizzle-orm";
 import { apiAgent } from "@/lib/session";
 import { getPortalContact } from "@/lib/portal-auth";
 import { getContactRequest } from "@/lib/portal-data";
+import { portalBearerSession } from "@/lib/portal-api";
 import { getAttachmentBody } from "@/lib/storage";
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
@@ -22,9 +23,12 @@ export async function GET(
   const agentSession = await apiAgent();
   let allowed = agentSession?.tenant.id === attachment.tenantId;
 
-  // 2. Otherwise, portal contact with access to the message's ticket.
+  // 2. Otherwise, portal contact with access to the message's ticket — signed
+  //    in with the portal cookie, or with a customer app session (MC-02, whose
+  //    thread lists files and whose client has no cookie jar).
   if (!allowed && attachment.messageId) {
-    const portalSession = await getPortalContact();
+    const portalSession =
+      (await getPortalContact()) ?? (await portalBearerSession(request));
     if (portalSession && portalSession.tenant.id === attachment.tenantId) {
       const [message] = await db
         .select({ ticketId: ticketMessages.ticketId, kind: ticketMessages.kind })

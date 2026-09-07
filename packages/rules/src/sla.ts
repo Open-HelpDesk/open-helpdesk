@@ -5,6 +5,7 @@
  * at T-30 min, breach — each only once (sla_warned_at / sla_breached_at).
  */
 import { businessHours, db, slaPolicies, ticketMessages, tickets } from "@openhelpdesk/db";
+import { notifyAssignee } from "@openhelpdesk/push";
 import { and, asc, eq, inArray, isNull, isNotNull, or } from "drizzle-orm";
 import { evaluateConditions } from "./evaluate";
 import { addBusinessMinutes, type BusinessCalendar } from "./business-hours";
@@ -164,6 +165,7 @@ export async function scanSlaTimers(now: Date = new Date()): Promise<{ warned: n
 
     if (remaining <= 0 && !ticket.slaBreachedAt) {
       await db.update(tickets).set({ slaBreachedAt: now }).where(eq(tickets.id, ticket.id));
+      await notifyAssignee(ticket.tenantId, ticket.id, "sla.breached");
       await db.insert(ticketMessages).values({
         tenantId: ticket.tenantId,
         ticketId: ticket.id,
@@ -174,6 +176,7 @@ export async function scanSlaTimers(now: Date = new Date()): Promise<{ warned: n
       breached += 1;
     } else if (remaining > 0 && remaining <= WARN_BEFORE_MS && !ticket.slaWarnedAt) {
       await db.update(tickets).set({ slaWarnedAt: now }).where(eq(tickets.id, ticket.id));
+      await notifyAssignee(ticket.tenantId, ticket.id, "sla.warning");
       await db.insert(ticketMessages).values({
         tenantId: ticket.tenantId,
         ticketId: ticket.id,

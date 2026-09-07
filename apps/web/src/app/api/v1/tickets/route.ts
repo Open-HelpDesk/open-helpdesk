@@ -14,11 +14,15 @@ import type { NextRequest } from "next/server";
 import { and, arrayContains, desc, eq, gte, inArray, lt } from "drizzle-orm";
 import { contacts, db, nextTicketNumber, ticketMessages, tickets } from "@openhelpdesk/db";
 import { onTicketCreated } from "@openhelpdesk/rules";
+import { unreadByTicket } from "@/lib/ticket-reads";
 import {
   apiError,
   apiJson,
   apiList,
+  attachFilesToMessage,
+  isMultipart,
   readJson,
+  readMultipart,
   readPage,
   serializeTicket,
   withApi,
@@ -31,7 +35,8 @@ type Status = (typeof STATUSES)[number];
 type Priority = (typeof PRIORITIES)[number];
 
 export async function GET(request: NextRequest) {
-  return withApi(request, "read", async ({ tenant }) => {
+  return withApi(request, "read", async (auth) => {
+    const { tenant } = auth;
     const url = new URL(request.url);
     const { limit, cursor } = readPage(request);
 
@@ -97,8 +102,20 @@ export async function GET(request: NextRequest) {
       : [];
     const byId = new Map(people.map((p) => [p.id, p]));
 
+    /*
+     * `unread` only exists for a person: it is "have I seen this", and a
+     * workspace API key has no I. Omitted rather than guessed, so a client can
+     * tell "not applicable" from "read".
+     */
+    const unread = auth.agent
+      ? await unreadByTicket(tenant.id, auth.agent.id, page.map((t) => t.id))
+      : null;
+
     return apiList(
-      page.map((t) => serializeTicket(t, t.requesterId ? (byId.get(t.requesterId) ?? null) : null)),
+      page.map((t) => ({
+        ...serializeTicket(t, t.requesterId ? (byId.get(t.requesterId) ?? null) : null),
+        ...(unread ? { unread: unread.get(t.id) ?? false } : {}),
+      })),
       next,
     );
   });
@@ -106,8 +123,23 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   return withApi(request, "ticket:create", async ({ tenant }) => {
-    const body = await readJson(request);
-    if (body instanceof Response) return body;
+    /*
+     * JSON, or multipart when the caller has files — the app's "New ticket"
+     * screen (MA-03) offers an attachment, and a ticket whose first message
+     * arrives without the screenshot it describes is half a ticket.
+     */
+    let files: File[] = [];
+    let body: Record<string, unknown>;
+    if (isMultipart(request)) {
+      const form = await readMultipart(request);
+      if (form instanceof Response) return form;
+      body = form.fields;
+      files = form.files;
+    } else {
+      const json = await readJson(request);
+      if (json instanceof Response) return json;
+      body = json;
+    }
 
     const email = String(body.requester_email ?? "").trim().toLowerCase();
     const subject = String(body.subject ?? "").trim();
@@ -121,9 +153,17 @@ export async function POST(request: NextRequest) {
       return apiError(400, "invalid_priority", `Unknown priority "${priority}".`);
     }
 
-    const tags = Array.isArray(body.tags)
-      ? (body.tags as unknown[]).map((t) => String(t).trim()).filter(Boolean).slice(0, 30)
-      : [];
+    /*
+     * A JSON caller sends an array; a multipart one can only send text, so
+     * "billing,urgent" is accepted there. Without this, tags passed alongside a
+     * file would be dropped without a word.
+     */
+    const rawTags = Array.isArray(body.tags)
+      ? (body.tags as unknown[])
+      : typeof body.tags === "string"
+        ? body.tags.split(",")
+        : [];
+    const tags = rawTags.map((t) => String(t).trim()).filter(Boolean).slice(0, 30);
     const customFields =
       body.custom_fields && typeof body.custom_fields === "object" && !Array.isArray(body.custom_fields)
         ? (body.custom_fields as Record<string, unknown>)
@@ -159,20 +199,34 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
-    await db.insert(ticketMessages).values({
-      tenantId: tenant.id,
-      ticketId: ticket!.id,
-      kind: "public_reply",
-      authorType: "contact",
-      authorId: contact!.id,
-      bodyText: message,
-      source: "api",
-    });
+    const [first] = await db
+      .insert(ticketMessages)
+      .values({
+        tenantId: tenant.id,
+        ticketId: ticket!.id,
+        kind: "public_reply",
+        authorType: "contact",
+        authorId: contact!.id,
+        bodyText: message,
+        source: "api",
+      })
+      .returning({ id: ticketMessages.id });
+
+    // Before the engine runs, which may email this message onward.
+    const stored = await attachFilesToMessage(tenant.id, first!.id, files);
 
     await onTicketCreated(tenant.id, ticket!.id);
 
     return apiJson(
-      serializeTicket(ticket!, { id: contact!.id, email: contact!.email, name: contact!.name }),
+      {
+        ...serializeTicket(ticket!, {
+          id: contact!.id,
+          email: contact!.email,
+          name: contact!.name,
+        }),
+        attachments: stored.attachments,
+        ...(stored.skipped.length ? { skipped_files: stored.skipped } : {}),
+      },
       201,
     );
   });

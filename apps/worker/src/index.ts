@@ -11,6 +11,7 @@ import {
 } from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated, runScheduledRules, scanSlaTimers } from "@openhelpdesk/rules";
 import { deliverWebhookJob, type WebhookJob } from "@openhelpdesk/webhooks";
+import { deliverPushJob, type PushJob } from "@openhelpdesk/push";
 import { executeRun, parseZendeskExport, reapStaleRuns, type ImportSource } from "@openhelpdesk/import";
 import { QUEUE_NAMES, type QueueName } from "./queues";
 
@@ -86,6 +87,18 @@ const processors: Record<QueueName, Processor> = {
     const ok = httpStatus === null ? false : httpStatus >= 200 && httpStatus < 300;
     if (!ok && httpStatus !== null) throw new Error(`webhook responded ${httpStatus}`);
     console.log(`[webhook-dispatch] ${data.event} → ${httpStatus ?? "no response"}`);
+  },
+  "push-dispatch": async (job) => {
+    const data = job.data as PushJob;
+    const { ok, gone } = await deliverPushJob(data);
+    /*
+     * Throwing lets BullMQ retry: a gateway down for a minute is worth a second
+     * attempt. A token the gateway called dead is not — the registration has
+     * just been revoked, so every retry would send to something that no longer
+     * exists. Retrying that is how a queue spends an afternoon on a wiped phone.
+     */
+    if (!ok && !gone) throw new Error(`push ${data.notification.event} not delivered`);
+    console.log(`[push-dispatch] ${data.notification.event} → ${data.platform}`);
   },
   automations: async () => {
     const applied = await runScheduledRules();

@@ -14,6 +14,7 @@ import {
 import { and, arrayContains, eq, inArray, sql } from "drizzle-orm";
 import { sendTicketReplyEmail } from "@openhelpdesk/mail";
 import { maybeSendCsat, onAgentReplySla, onTicketCreated, runTriggers } from "@openhelpdesk/rules";
+import { notifyAssignee, notifyOnNewMessage } from "@openhelpdesk/push";
 import { requireAgent } from "@/lib/session";
 import { getT } from "@/i18n/server";
 import { nextTicketNumber } from "@/lib/data";
@@ -125,6 +126,12 @@ export async function sendReply(formData: FormData) {
   // An agent's reply or note is a message event too — the customer channels go
   // through onContactMessage, this is the other side of the same conversation.
   await dispatchWebhookEvent(tenant.id, "message.created", ticketId);
+  /*
+   * And the same for the customer's phone (MC-04). `notifyOnNewMessage` reads
+   * the message it is about to announce, so an internal note wakes nobody — the
+   * kind is not passed in and cannot be got wrong here.
+   */
+  await notifyOnNewMessage(tenant.id, ticketId);
   if (patch.status) {
     await dispatchTicketChanged(tenant.id, ticketId, ticket.status, patch.status);
   }
@@ -135,7 +142,7 @@ export async function sendReply(formData: FormData) {
 
 /** Properties panel (AG-04): assignee, team, priority, type, status. */
 export async function updateTicketProps(formData: FormData) {
-  const { tenant } = await requireAgent();
+  const { tenant, agent } = await requireAgent();
   const ticketId = String(formData.get("ticketId"));
   const number = Number(formData.get("number"));
 
@@ -175,9 +182,11 @@ export async function updateTicketProps(formData: FormData) {
   }
 
   // Read the status before writing: ticket.solved must fire on the transition,
-  // not every time a resolved ticket is touched again.
+  // not every time a resolved ticket is touched again. The assignee comes along
+  // for the same reason — a phone should buzz when the owner changes, not every
+  // time somebody edits the ticket of the person who already owned it.
   const [before] = await db
-    .select({ status: tickets.status })
+    .select({ status: tickets.status, assigneeId: tickets.assigneeId })
     .from(tickets)
     .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.id, ticketId)));
 
@@ -197,6 +206,11 @@ export async function updateTicketProps(formData: FormData) {
     before?.status ?? null,
     patch.status ?? before?.status ?? null,
   );
+  if (patch.assigneeId && patch.assigneeId !== (before?.assigneeId ?? null)) {
+    // Not to whoever performed the assignment: they are looking at the screen
+    // that did it.
+    await notifyAssignee(tenant.id, ticketId, "ticket.assigned", { exceptUserId: agent.id });
+  }
 
   revalidatePath(`/app/tickets/${number}`);
   revalidatePath("/app/tickets");
@@ -212,7 +226,7 @@ export async function bulkUpdateTickets(input: {
   op: BulkOp;
   value?: string;
 }) {
-  const { tenant } = await requireAgent();
+  const { tenant, agent } = await requireAgent();
   const ids = input.ids.filter(Boolean);
   if (ids.length === 0) return;
 
@@ -220,12 +234,26 @@ export async function bulkUpdateTickets(input: {
   const value = input.value ?? "";
 
   switch (input.op) {
-    case "assign":
+    case "assign": {
+      const assigneeId = value === "" ? null : value;
+      // Who owned them before, so only the tickets that actually changed hands
+      // wake anybody — a bulk pass usually holds some that were already theirs.
+      const previous = assigneeId
+        ? await db
+            .select({ id: tickets.id, assigneeId: tickets.assigneeId })
+            .from(tickets)
+            .where(scope)
+        : [];
       await db
         .update(tickets)
-        .set({ assigneeId: value === "" ? null : value, updatedAt: new Date() })
+        .set({ assigneeId, updatedAt: new Date() })
         .where(scope);
+      for (const row of previous) {
+        if (row.assigneeId === assigneeId) continue;
+        await notifyAssignee(tenant.id, row.id, "ticket.assigned", { exceptUserId: agent.id });
+      }
       break;
+    }
     case "status":
       if (["new", "open", "waiting", "on_hold", "resolved", "closed"].includes(value)) {
         // Statuses read before the write: a bulk pass can hold tickets that were

@@ -6,15 +6,33 @@
  * gap. Auth is by key, not by subdomain: the key resolves its own tenant, so a
  * call works regardless of the host it lands on — but it only ever sees that
  * one workspace.
+ *
+ * Two credentials open the same doors (see lib/device-auth.ts): a workspace API
+ * key, which is an integration, and a device session token, which is an agent on
+ * a phone. Everything downstream of `authenticate` treats them alike except
+ * where a route needs a person — `/me` and the push registrations — because a
+ * key has nobody behind it.
  */
 import { createHash } from "node:crypto";
-import { apiKeys, db, tenants } from "@openhelpdesk/db";
+import { apiKeys, db, deviceSessions, tenants, users } from "@openhelpdesk/db";
+import { MAX_ATTACHMENT_BYTES } from "@openhelpdesk/storage";
 import { and, eq, isNull } from "drizzle-orm";
+import {
+  DEVICE_SESSION_TTL_MS,
+  DEVICE_TOKEN_RE,
+  PORTAL_TOKEN_RE,
+  hashSecret,
+  scopesForRole,
+  sessionAgent,
+} from "@/lib/device-auth";
 
 export type ApiAuth = {
   tenant: typeof tenants.$inferSelect;
   scopes: string[];
+  /** Rate-limit bucket: the API key, or the device session. */
   keyId: string;
+  /** The agent signed in on the device — null for a workspace API key. */
+  agent: typeof users.$inferSelect | null;
 };
 
 /** JSON error, one consistent shape for every failure. */
@@ -26,20 +44,39 @@ export function apiJson(data: unknown, status = 200): Response {
   return Response.json(data, { status });
 }
 
+/** A workspace that serves nothing over the API — the rule its screens apply. */
+function usable(tenant: typeof tenants.$inferSelect): Response | null {
+  if (tenant.status === "suspended" || tenant.status === "deleting") {
+    return apiError(403, "workspace_suspended", "This workspace is suspended.");
+  }
+  return null;
+}
+
 /**
- * Resolve the caller from `Authorization: Bearer ohd_live_…`.
+ * Resolve the caller from `Authorization: Bearer ohd_live_…` or `ohd_app_…`.
  *
- * The key is hashed and matched against a non-revoked row; the tenant comes
- * from the key. `lastUsedAt` is bumped fire-and-forget — a key's activity is
- * worth recording, but not worth blocking the request on.
+ * The credential is hashed and matched against a non-revoked row; the tenant
+ * comes from it, never from the host, so a call works wherever it lands but only
+ * ever sees that one workspace. `lastUsedAt` is bumped fire-and-forget —
+ * activity is worth recording, not worth blocking the request on.
  */
 async function authenticate(request: Request): Promise<ApiAuth | Response> {
   const header = request.headers.get("authorization") ?? "";
-  const match = header.match(/^Bearer\s+(ohd_live_[a-f0-9]{32})$/);
-  if (!match) {
+  const token = header.match(/^Bearer\s+(\S+)$/)?.[1] ?? "";
+  if (DEVICE_TOKEN_RE.test(token)) return authenticateDevice(token);
+  if (PORTAL_TOKEN_RE.test(token)) {
+    // A real, possibly valid credential — for the other half of the API. Saying
+    // so beats a 401 that reads like a broken sign-in.
+    return apiError(
+      403,
+      "portal_session",
+      "This is a customer session. Use the /api/v1/portal endpoints.",
+    );
+  }
+  if (!/^ohd_live_[a-f0-9]{32}$/.test(token)) {
     return apiError(401, "unauthorized", "Provide a valid API key as a Bearer token.");
   }
-  const hashed = createHash("sha256").update(match[1]!).digest("hex");
+  const hashed = createHash("sha256").update(token).digest("hex");
   const [key] = await db
     .select()
     .from(apiKeys)
@@ -51,13 +88,75 @@ async function authenticate(request: Request): Promise<ApiAuth | Response> {
   if (!tenant) {
     return apiError(401, "unauthorized", "This API key is not attached to a workspace.");
   }
-  // A suspended or deleting workspace serves nothing over the API — same rule
-  // the product applies to its own screens.
-  if (tenant.status === "suspended" || tenant.status === "deleting") {
-    return apiError(403, "workspace_suspended", "This workspace is suspended.");
-  }
+  const unusable = usable(tenant);
+  if (unusable) return unusable;
   void db.update(apiKeys).set({ lastUsedAt: new Date() }).where(eq(apiKeys.id, key.id));
-  return { tenant, scopes: key.scopes, keyId: key.id };
+  return { tenant, scopes: key.scopes, keyId: key.id, agent: null };
+}
+
+/**
+ * Resolve one phone (MO-xx): the session, its workspace, and its agent.
+ *
+ * Three things can end a session between two calls, and each has to be checked
+ * here rather than at sign-in: it was revoked from another device, it expired,
+ * or the agent was disabled in the workspace. The last one is why the agent row
+ * is loaded on every call instead of being copied into the session — an
+ * offboarded agent whose phone kept working would be the whole point of
+ * disabling them, missed.
+ *
+ * Expiry then slides forward, which is what makes 90 days a safe number.
+ */
+async function authenticateDevice(token: string): Promise<ApiAuth | Response> {
+  const [session] = await db
+    .select()
+    .from(deviceSessions)
+    .where(and(eq(deviceSessions.hashedToken, hashSecret(token)), isNull(deviceSessions.revokedAt)));
+  if (!session) {
+    return apiError(401, "unauthorized", "This session is unknown or has been signed out.");
+  }
+  if (session.expiresAt.getTime() <= Date.now()) {
+    return apiError(401, "session_expired", "This session has expired. Sign in again.");
+  }
+  // The prefix already separates the two credential families; this is the check
+  // that does not depend on a string having been matched correctly.
+  if (!session.userId) {
+    return apiError(403, "portal_session", "This session belongs to a customer, not an agent.");
+  }
+  const [tenant] = await db.select().from(tenants).where(eq(tenants.id, session.tenantId));
+  if (!tenant) {
+    return apiError(401, "unauthorized", "This session is not attached to a workspace.");
+  }
+  const unusable = usable(tenant);
+  if (unusable) return unusable;
+
+  const agent = await sessionAgent(session.tenantId, session.userId);
+  if (!agent) {
+    return apiError(401, "unauthorized", "This session no longer belongs to an active agent.");
+  }
+  const now = new Date();
+  void db
+    .update(deviceSessions)
+    .set({ lastSeenAt: now, expiresAt: new Date(now.getTime() + DEVICE_SESSION_TTL_MS) })
+    .where(eq(deviceSessions.id, session.id));
+  return { tenant, scopes: scopesForRole(agent.role), keyId: session.id, agent };
+}
+
+/**
+ * Routes that need a person rather than a credential.
+ *
+ * `/me` and the push registrations are about an agent: answering them for a
+ * workspace API key would mean inventing one, so they refuse instead — with the
+ * name of the thing to do about it.
+ */
+export function requireDeviceAgent(auth: ApiAuth): typeof users.$inferSelect | Response {
+  if (!auth.agent) {
+    return apiError(
+      403,
+      "agent_required",
+      "This endpoint needs an agent session. Sign in with POST /api/v1/auth/login.",
+    );
+  }
+  return auth.agent;
 }
 
 /**
@@ -72,15 +171,23 @@ const RATE_WINDOW_MS = 60_000;
 const RATE_MAX = 600;
 const hits = new Map<string, number[]>();
 
-function rateLimited(keyId: string): number | null {
+/**
+ * Seconds to wait, or null when the call is within its allowance.
+ *
+ * Exported because sign-in needs a much tighter window than the rest of the API
+ * (an unauthenticated endpoint that checks passwords is a guessing target, and
+ * it has no key to count against), and one implementation of a sliding window
+ * is enough.
+ */
+export function rateLimit(bucket: string, max = RATE_MAX, windowMs = RATE_WINDOW_MS): number | null {
   const now = Date.now();
-  const recent = (hits.get(keyId) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  if (recent.length >= RATE_MAX) {
-    hits.set(keyId, recent);
-    return Math.ceil((RATE_WINDOW_MS - (now - recent[0]!)) / 1000);
+  const recent = (hits.get(bucket) ?? []).filter((t) => now - t < windowMs);
+  if (recent.length >= max) {
+    hits.set(bucket, recent);
+    return Math.ceil((windowMs - (now - recent[0]!)) / 1000);
   }
   recent.push(now);
-  hits.set(keyId, recent);
+  hits.set(bucket, recent);
   // Cheap sweep so a long-lived process does not accumulate one array per key
   // that stopped calling months ago.
   if (hits.size > 5_000) {
@@ -89,6 +196,19 @@ function rateLimited(keyId: string): number | null {
     }
   }
   return null;
+}
+
+/** The 429 both the API-wide limit and the sign-in limit answer with. */
+export function rateLimitedResponse(retryAfter: number): Response {
+  return Response.json(
+    {
+      error: {
+        code: "rate_limited",
+        message: `Too many requests. Retry in ${retryAfter} second(s).`,
+      },
+    },
+    { status: 429, headers: { "retry-after": String(retryAfter) } },
+  );
 }
 
 /**
@@ -105,20 +225,16 @@ export async function withApi(
   const auth = await authenticate(request);
   if (auth instanceof Response) return auth;
   if (!auth.scopes.includes(scope)) {
-    return apiError(403, "forbidden", `This API key is missing the "${scope}" scope.`);
-  }
-  const retryAfter = rateLimited(auth.keyId);
-  if (retryAfter !== null) {
-    return Response.json(
-      {
-        error: {
-          code: "rate_limited",
-          message: `Too many requests. Retry in ${retryAfter} second(s).`,
-        },
-      },
-      { status: 429, headers: { "retry-after": String(retryAfter) } },
+    return apiError(
+      403,
+      "forbidden",
+      auth.agent
+        ? `The role "${auth.agent.role}" does not carry the "${scope}" permission.`
+        : `This API key is missing the "${scope}" scope.`,
     );
   }
+  const retryAfter = rateLimit(auth.keyId);
+  if (retryAfter !== null) return rateLimitedResponse(retryAfter);
   try {
     return await handler(auth);
   } catch (err) {
@@ -178,6 +294,23 @@ export function serializeTicket(
     requester: requester ? { id: requester.id, email: requester.email, name: requester.name } : null,
     assignee_id: t.assigneeId,
     organization_id: t.organizationId,
+    /*
+     * The clock, as the inbox draws it.
+     *
+     * A row that says "Open" without saying "42 minutes left" is missing the
+     * half an agent triages on — and it was missing here: the mobile inbox had
+     * to invent a countdown from `updated_at` or draw none. The instants go out
+     * raw rather than as a remaining duration, because a phone that has been
+     * asleep for an hour would otherwise show an hour-old answer as current.
+     */
+    sla: {
+      first_reply_due_at: t.firstReplyDueAt?.toISOString() ?? null,
+      next_reply_due_at: t.nextReplyDueAt?.toISOString() ?? null,
+      resolve_due_at: t.resolveDueAt?.toISOString() ?? null,
+      first_replied_at: t.firstRepliedAt?.toISOString() ?? null,
+      warned_at: t.slaWarnedAt?.toISOString() ?? null,
+      breached_at: t.slaBreachedAt?.toISOString() ?? null,
+    },
     created_at: t.createdAt?.toISOString() ?? null,
     updated_at: t.updatedAt?.toISOString() ?? null,
   };
@@ -356,6 +489,28 @@ export function serializeAttachment(a: AttachmentRow): Record<string, unknown> {
   };
 }
 
+type PushDeviceRow = Schema["pushDevices"]["$inferSelect"];
+
+/**
+ * A push registration, without the token it was created from.
+ *
+ * The APNs/FCM token stays server-side: it is the address a notification is
+ * delivered to, and echoing it back would put a credential in a response that
+ * the app already has and nobody else should.
+ */
+export function serializePushDevice(d: PushDeviceRow): Record<string, unknown> {
+  return {
+    id: d.id,
+    platform: d.platform,
+    device_name: d.deviceName,
+    app_version: d.appVersion,
+    agent_id: d.userId,
+    contact_id: d.contactId,
+    created_at: d.createdAt?.toISOString() ?? null,
+    last_seen_at: d.lastSeenAt?.toISOString() ?? null,
+  };
+}
+
 /** Parse a JSON body, or return a 400 the caller can pass straight back. */
 export async function readJson(request: Request): Promise<Record<string, unknown> | Response> {
   try {
@@ -367,6 +522,129 @@ export async function readJson(request: Request): Promise<Record<string, unknown
   } catch {
     return apiError(400, "invalid_body", "The request body is not valid JSON.");
   }
+}
+
+/* ---------- Files ---------- */
+
+/**
+ * Ten files per request.
+ *
+ * The compose screens (MA-03, MC-03) attach a screenshot or two; a request
+ * carrying fifty is either a mistake or a way to fill a bucket, and the cap is
+ * cheaper to explain than to discover.
+ */
+const MAX_FILES_PER_REQUEST = 10;
+
+/**
+ * The whole multipart body, files and fields together.
+ *
+ * The same number as the per-file ceiling, and not by choice: past it the
+ * runtime stops accepting the body at all, so a 10 MB file cannot be sent —
+ * its envelope pushes the request over. Announcing the real number is better
+ * than announcing 10 MB and failing at 10 MB.
+ */
+const MAX_MULTIPART_BYTES = MAX_ATTACHMENT_BYTES;
+
+export function isMultipart(request: Request): boolean {
+  return (request.headers.get("content-type") ?? "").startsWith("multipart/form-data");
+}
+
+/**
+ * Read a `multipart/form-data` body: text fields, and the files under `files`.
+ *
+ * Files are refused loudly here rather than skipped quietly downstream. The
+ * storage layer drops what is too large — the right behaviour for inbound email,
+ * where the alternative is losing the message too — but an API client that gets
+ * 201 and no attachment has no way to learn it needs to compress the screenshot.
+ */
+export async function readMultipart(
+  request: Request,
+): Promise<{ fields: Record<string, string>; files: File[] } | Response> {
+  /*
+   * Checked before parsing, because past the ceiling the runtime refuses the
+   * body itself and `formData()` throws a parse error — which reads as "your
+   * multipart is malformed" when the truth is "your file is too big". Measured:
+   * a 10 MiB body goes through, an 11 MiB one never reaches this code.
+   */
+  const declared = Number(request.headers.get("content-length") ?? "");
+  if (Number.isFinite(declared) && declared > MAX_MULTIPART_BYTES) {
+    return apiError(
+      413,
+      "request_too_large",
+      `The whole request — files and fields together — must stay under ${
+        MAX_MULTIPART_BYTES / 1024 / 1024
+      } MB. Send the files across several messages.`,
+    );
+  }
+
+  let form: FormData;
+  try {
+    form = await request.formData();
+  } catch {
+    return apiError(
+      400,
+      "invalid_body",
+      `The request body is not valid multipart/form-data, or exceeds ${
+        MAX_MULTIPART_BYTES / 1024 / 1024
+      } MB.`,
+    );
+  }
+  const fields: Record<string, string> = {};
+  const files: File[] = [];
+  for (const [key, value] of form.entries()) {
+    if (typeof value === "string") {
+      fields[key] = value;
+      continue;
+    }
+    // An empty file part is what an untouched file input sends.
+    if (value.size === 0) continue;
+    if (value.size > MAX_ATTACHMENT_BYTES) {
+      return apiError(
+        413,
+        "file_too_large",
+        `"${value.name}" is ${Math.round(value.size / 1024 / 1024)} MB; the limit is ${
+          MAX_ATTACHMENT_BYTES / 1024 / 1024
+        } MB per file.`,
+      );
+    }
+    files.push(value);
+  }
+  if (files.length > MAX_FILES_PER_REQUEST) {
+    return apiError(
+      400,
+      "too_many_files",
+      `At most ${MAX_FILES_PER_REQUEST} files per request.`,
+    );
+  }
+  return { fields, files };
+}
+
+/**
+ * Store the files of a request against the message just written, and say what
+ * happened to each.
+ *
+ * `skipped` is normally empty — `readMultipart` already refused what is too
+ * large — and stays in the answer for the case the storage layer rejects
+ * something this side could not see.
+ */
+export async function attachFilesToMessage(
+  tenantId: string,
+  messageId: string,
+  files: File[],
+): Promise<{ attachments: Record<string, unknown>[]; skipped: string[] }> {
+  if (files.length === 0) return { attachments: [], skipped: [] };
+  const { storeFilesOnMessage } = await import("@/lib/storage");
+  const { stored, skipped } = await storeFilesOnMessage(tenantId, messageId, files);
+  return {
+    attachments: stored.map((a) => ({
+      id: a.id,
+      filename: a.filename,
+      content_type: a.contentType,
+      size_bytes: a.sizeBytes,
+      download_url: `/api/v1/attachments/${a.id}/download`,
+    })),
+    skipped: skipped.map((f) => f.filename),
+  };
 }
 
 /* ---------- Input helpers ---------- */

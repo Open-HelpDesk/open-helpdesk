@@ -1,5 +1,6 @@
 import { automationRules, db, tickets } from "@openhelpdesk/db";
 import { dispatchWebhookEvent } from "@openhelpdesk/webhooks";
+import { notifyOnNewMessage } from "@openhelpdesk/push";
 import { and, asc, eq, inArray, isNull } from "drizzle-orm";
 import { applyActions } from "./apply";
 import { evaluateConditions } from "./evaluate";
@@ -71,6 +72,13 @@ export async function onContactMessage(tenantId: string, ticketId: string): Prom
   await runTriggers("message.created", tenantId, ticketId);
   await onContactReplySla(tenantId, ticketId);
   await dispatchWebhookEvent(tenantId, "message.created", ticketId);
+  /*
+   * Push last, and from here for the same reason the webhook is: every channel
+   * that adds a message comes through this function. Who gets woken is derived
+   * from the message's own author, so the public API's agent replies — which
+   * also travel this path — reach the customer rather than the assignee.
+   */
+  await notifyOnNewMessage(tenantId, ticketId);
 }
 
 /**
