@@ -19,7 +19,6 @@ import {
   tickets,
 } from "@openhelpdesk/db";
 import { and, arrayContains, desc, eq, inArray, sql } from "drizzle-orm";
-import { storeAttachments } from "@openhelpdesk/storage";
 import type { InboundEmail, IngestResult } from "./types";
 
 const REOPEN_FROM = new Set(["waiting", "on_hold", "resolved"]);
@@ -110,6 +109,11 @@ async function saveInboundFiles(
 ): Promise<void> {
   if (!mail.attachments?.length) return;
   try {
+    // Imported here, not at module scope: @openhelpdesk/storage pulls in the
+    // AWS SDK, and this module is reachable from the marketing site's signup
+    // tunnel (provisioning → mail). Loading the SDK to answer "is this
+    // workspace name free?" is both wasteful and, once bundled, fatal.
+    const { storeAttachments } = await import("@openhelpdesk/storage");
     await storeAttachments(tenantId, messageId, mail.attachments);
   } catch (err) {
     console.error("[mail] attachments could not be stored:", err);

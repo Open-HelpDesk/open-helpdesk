@@ -25,24 +25,41 @@ export const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024;
 
 export const ATTACHMENT_BUCKET = process.env.S3_BUCKET ?? "attachments";
 
-export const s3 = new S3Client({
-  endpoint: process.env.S3_ENDPOINT ?? "http://localhost:9010",
-  region: process.env.S3_REGION ?? "us-east-1",
-  forcePathStyle: true,
-  credentials: {
-    accessKeyId: process.env.S3_ACCESS_KEY_ID ?? "openhelpdesk",
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? "openhelpdesk",
-  },
-});
+/**
+ * Built on first use, never at import.
+ *
+ * Constructing it at module scope made every consumer of this package pay for
+ * the AWS SDK the moment the module loaded — including the signup tunnel of the
+ * marketing site, which imports the provisioning package, which imports the mail
+ * package. Bundled by nitro, that construction threw at load time and the whole
+ * import failed: the workspace availability check answered "cannot verify" for
+ * every name, with the real cause three packages away.
+ *
+ * The environment is read here too, not at module scope, so a process that
+ * never touches an attachment does not need S3 credentials to start.
+ */
+let client: S3Client | undefined;
+export function s3(): S3Client {
+  client ??= new S3Client({
+    endpoint: process.env.S3_ENDPOINT ?? "http://localhost:9010",
+    region: process.env.S3_REGION ?? "us-east-1",
+    forcePathStyle: true,
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY_ID ?? "openhelpdesk",
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY ?? "openhelpdesk",
+    },
+  });
+  return client;
+}
 
 let bucketReady = false;
 export async function ensureBucket(): Promise<void> {
   if (bucketReady) return;
   try {
-    await s3.send(new HeadBucketCommand({ Bucket: ATTACHMENT_BUCKET }));
+    await s3().send(new HeadBucketCommand({ Bucket: ATTACHMENT_BUCKET }));
   } catch {
     try {
-      await s3.send(new CreateBucketCommand({ Bucket: ATTACHMENT_BUCKET }));
+      await s3().send(new CreateBucketCommand({ Bucket: ATTACHMENT_BUCKET }));
     } catch {
       /* race with another instance — HeadBucket will revalidate */
     }
@@ -100,7 +117,7 @@ export async function storeAttachments(
     const filename = sanitizeFilename(file.filename);
     const contentType = file.contentType || "application/octet-stream";
     const key = `${tenantId}/${messageId}/${randomUUID()}-${filename}`;
-    await s3.send(
+    await s3().send(
       new PutObjectCommand({
         Bucket: ATTACHMENT_BUCKET,
         Key: key,
