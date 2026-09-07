@@ -1,0 +1,33 @@
+/**
+ * /api/v1/sla-policies — SLA policies, in the order they are evaluated.
+ *
+ * Keyset-paginated on the identifier so a caller can walk the collection while
+ * the workspace keeps changing.
+ */
+import type { NextRequest } from "next/server";
+import { and, asc, eq, gt } from "drizzle-orm";
+import { db, slaPolicies } from "@openhelpdesk/db";
+import { apiError, apiList, readPage, serializeSlaPolicy, withApi } from "@/lib/api";
+
+export async function GET(request: NextRequest) {
+  return withApi(request, "read", async ({ tenant }) => {
+    const { limit, cursor } = readPage(request);
+    const filters = [eq(slaPolicies.tenantId, tenant.id)];
+    if (cursor) {
+      if (!/^[0-9a-f-]{36}$/.test(cursor)) {
+        return apiError(400, "invalid_cursor", "Malformed cursor.");
+      }
+      filters.push(gt(slaPolicies.id, cursor));
+    }
+
+    const rows = await db
+      .select()
+      .from(slaPolicies)
+      .where(and(...filters))
+      .orderBy(asc(slaPolicies.id))
+      .limit(limit + 1);
+
+    const page = rows.slice(0, limit);
+    return apiList(page.map(serializeSlaPolicy), rows.length > limit ? page.at(-1)!.id : null);
+  });
+}

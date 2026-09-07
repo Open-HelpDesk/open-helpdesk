@@ -44,6 +44,9 @@ importers:
       '@openhelpdesk/mail':
         specifier: workspace:*
         version: link:../../packages/mail
+      '@openhelpdesk/openapi':
+        specifier: workspace:*
+        version: link:../../packages/openapi
       '@openhelpdesk/rules':
         specifier: workspace:*
         version: link:../../packages/rules
@@ -334,6 +337,18 @@ importers:
       '@types/nodemailer':
         specifier: ^6.4.17
         version: 6.4.24
+      typescript:
+        specifier: ^5.8.0
+        version: 5.9.3
+
+  packages/openapi:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.1
+      tsx:
+        specifier: ^4.19.0
+        version: 4.23.12
       typescript:
         specifier: ^5.8.0
         version: 5.9.3

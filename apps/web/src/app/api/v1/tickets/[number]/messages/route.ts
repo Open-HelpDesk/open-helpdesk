@@ -1,5 +1,5 @@
 /**
- * /api/v1/tickets/{number}/messages — add a reply or an internal note.
+ * /api/v1/tickets/{number}/messages — read a conversation, or add to it.
  *
  * A public reply is a message TO the customer and goes out through the same
  * onContactMessage path the product uses (so triggers and notifications fire);
@@ -11,7 +11,63 @@ import { and, eq } from "drizzle-orm";
 import { db, ticketMessages, tickets, users } from "@openhelpdesk/db";
 import { onContactMessage } from "@openhelpdesk/rules";
 import { dispatchWebhookEvent } from "@openhelpdesk/webhooks";
-import { apiError, apiJson, readJson, withApi } from "@/lib/api";
+import {
+  apiError,
+  apiJson,
+  apiList,
+  readJson,
+  readPage,
+  serializeMessage,
+  withApi,
+} from "@/lib/api";
+import { asc, gt, or } from "drizzle-orm";
+
+/** The whole thread, oldest first — the order a human reads it in. */
+export async function GET(request: NextRequest, { params }: { params: Promise<{ number: string }> }) {
+  return withApi(request, "read", async ({ tenant }) => {
+    const { number } = await params;
+    const n = Number(number);
+    if (!Number.isInteger(n)) return apiError(404, "not_found", "No ticket with that number.");
+    const [ticket] = await db
+      .select({ id: tickets.id })
+      .from(tickets)
+      .where(and(eq(tickets.tenantId, tenant.id), eq(tickets.number, n)));
+    if (!ticket) return apiError(404, "not_found", "No ticket with that number.");
+
+    const { limit, cursor } = readPage(request);
+    const filters = [eq(ticketMessages.tenantId, tenant.id), eq(ticketMessages.ticketId, ticket.id)];
+    if (cursor) {
+      /*
+       * The cursor carries BOTH the timestamp and the id, because the ordering
+       * does. Paginating on the id alone while sorting by date would skip
+       * messages whenever two of them share a second — which is exactly what
+       * happens when a rule posts a system event next to an agent's reply.
+       */
+      const [at, id] = cursor.split("|");
+      const from = new Date(at ?? "");
+      if (Number.isNaN(from.getTime()) || !id || !/^[0-9a-f-]{36}$/.test(id)) {
+        return apiError(400, "invalid_cursor", "Malformed cursor.");
+      }
+      filters.push(
+        or(
+          gt(ticketMessages.createdAt, from),
+          and(eq(ticketMessages.createdAt, from), gt(ticketMessages.id, id)),
+        )!,
+      );
+    }
+    const rows = await db
+      .select()
+      .from(ticketMessages)
+      .where(and(...filters))
+      .orderBy(asc(ticketMessages.createdAt), asc(ticketMessages.id))
+      .limit(limit + 1);
+    const page = rows.slice(0, limit);
+    const last = page.at(-1);
+    const next =
+      rows.length > limit && last ? `${last.createdAt.toISOString()}|${last.id}` : null;
+    return apiList(page.map(serializeMessage), next);
+  });
+}
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ number: string }> }) {
   return withApi(request, "write", async ({ tenant }) => {

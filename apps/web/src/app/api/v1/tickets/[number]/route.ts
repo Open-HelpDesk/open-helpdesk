@@ -7,7 +7,7 @@
  */
 import type { NextRequest } from "next/server";
 import { and, eq } from "drizzle-orm";
-import { contacts, db, tickets, users } from "@openhelpdesk/db";
+import { contacts, db, organizations, tickets, users } from "@openhelpdesk/db";
 import { dispatchTicketChanged } from "@openhelpdesk/webhooks";
 import { apiError, apiJson, readJson, serializeTicket, withApi } from "@/lib/api";
 
@@ -76,8 +76,53 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       }
       patch.assigneeId = assigneeId;
     }
+    if (body.subject !== undefined) {
+      const subject = String(body.subject).trim();
+      if (!subject) return apiError(400, "invalid_subject", "subject cannot be empty.");
+      patch.subject = subject.slice(0, 500);
+    }
+    if (body.type !== undefined) {
+      patch.type = body.type === null ? null : String(body.type).slice(0, 80);
+    }
+    if (body.tags !== undefined) {
+      if (!Array.isArray(body.tags)) return apiError(400, "invalid_tags", "tags must be an array.");
+      patch.tags = (body.tags as unknown[])
+        .map((t) => String(t).trim())
+        .filter(Boolean)
+        .slice(0, 30);
+    }
+    if (body.organization_id !== undefined) {
+      const organizationId = body.organization_id === null ? null : String(body.organization_id);
+      if (organizationId) {
+        const [org] = await db
+          .select({ id: organizations.id })
+          .from(organizations)
+          .where(and(eq(organizations.tenantId, tenant.id), eq(organizations.id, organizationId)));
+        if (!org) {
+          return apiError(400, "invalid_organization", "organization_id is not an organization of this workspace.");
+        }
+      }
+      patch.organizationId = organizationId;
+    }
+    if (
+      body.custom_fields !== undefined &&
+      typeof body.custom_fields === "object" &&
+      body.custom_fields !== null &&
+      !Array.isArray(body.custom_fields)
+    ) {
+      // Merged, not replaced: an integration that owns one field must not wipe
+      // the others by omitting them.
+      patch.customFields = {
+        ...(ticket.customFields as Record<string, unknown>),
+        ...(body.custom_fields as Record<string, unknown>),
+      };
+    }
     if (Object.keys(patch).length === 0) {
-      return apiError(400, "empty_patch", "Provide at least one of: status, priority, assignee_id.");
+      return apiError(
+        400,
+        "empty_patch",
+        "Provide at least one of: status, priority, assignee_id, subject, type, tags, organization_id, custom_fields.",
+      );
     }
     patch.updatedAt = new Date();
 

@@ -19,6 +19,7 @@
     "@openhelpdesk/export": "workspace:*",
     "@openhelpdesk/import": "workspace:*",
     "@openhelpdesk/mail": "workspace:*",
+    "@openhelpdesk/openapi": "workspace:*",
     "@openhelpdesk/rules": "workspace:*",
     "@openhelpdesk/storage": "workspace:*",
     "@openhelpdesk/ui": "workspace:*",

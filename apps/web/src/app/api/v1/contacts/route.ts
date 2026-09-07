@@ -6,21 +6,43 @@
  * than a duplicate — idempotent by email.
  */
 import type { NextRequest } from "next/server";
-import { and, desc, eq } from "drizzle-orm";
+import { and, asc, eq, gt } from "drizzle-orm";
 import { contacts, db } from "@openhelpdesk/db";
-import { apiError, apiJson, readJson, serializeContact, withApi } from "@/lib/api";
+import {
+  apiError,
+  apiJson,
+  apiList,
+  readJson,
+  readPage,
+  serializeContact,
+  withApi,
+} from "@/lib/api";
 
 export async function GET(request: NextRequest) {
   return withApi(request, "read", async ({ tenant }) => {
     const url = new URL(request.url);
-    const limit = Math.min(100, Math.max(1, Number(url.searchParams.get("limit")) || 25));
+    const { limit, cursor } = readPage(request);
+    const filters = [eq(contacts.tenantId, tenant.id)];
+
+    // Looking someone up by address is the commonest reason to call this at all.
+    const email = url.searchParams.get("email");
+    if (email) filters.push(eq(contacts.email, email.trim().toLowerCase()));
+
+    if (cursor) {
+      if (!/^[0-9a-f-]{36}$/.test(cursor)) {
+        return apiError(400, "invalid_cursor", "Malformed cursor.");
+      }
+      filters.push(gt(contacts.id, cursor));
+    }
+
     const rows = await db
       .select()
       .from(contacts)
-      .where(eq(contacts.tenantId, tenant.id))
-      .orderBy(desc(contacts.createdAt))
-      .limit(limit);
-    return apiJson({ data: rows.map(serializeContact) });
+      .where(and(...filters))
+      .orderBy(asc(contacts.id))
+      .limit(limit + 1);
+    const page = rows.slice(0, limit);
+    return apiList(page.map(serializeContact), rows.length > limit ? page.at(-1)!.id : null);
   });
 }
 

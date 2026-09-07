@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
     "@openhelpdesk/import",
     "@openhelpdesk/storage",
     "@openhelpdesk/export",
+    "@openhelpdesk/openapi",
   ],
   // postgres.js and better-auth stay on the Node side.
   serverExternalPackages: ["postgres", "nodemailer", "bullmq", "ioredis"],
