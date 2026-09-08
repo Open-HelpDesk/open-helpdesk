@@ -26,6 +26,7 @@ import {
   ask,
   capabilityAllowed,
   getAiSettings,
+  logRefusal,
   runCapability,
   type Actor,
 } from "./governance";
@@ -363,7 +364,11 @@ export async function draftReply(
 
   const question = `${thread.subject}\n${thread.text.slice(-3000)}`;
   const passages = await findPassages(provider, tenantId, question, actor, { limit: 4 });
-  if (passages.length === 0) return { ok: false, reason: "no_source" };
+  if (passages.length === 0) {
+    /* Le refus qui compte pour l'admin : la question posée, la base muette. */
+    await logRefusal(tenantId, "reply_draft", actor, ticketId, provider, "no_passage");
+    return { ok: false, reason: "no_source" };
+  }
 
   const value = await runCapability(tenantId, "reply_draft", actor, ticketId, async () => {
     const material = passages
@@ -443,7 +448,13 @@ export async function suggestMacro(
     },
   );
   const best = found[0];
-  return best ? { ok: true, value: best } : { ok: false, reason: "no_source" };
+  if (!best) {
+    await logRefusal(tenantId, "macro_suggest", actor, ticketId, provider, "no_passage");
+    return { ok: false, reason: "no_source" };
+  }
+  /* Une macro trouvée ne coûte qu'un embedding, déjà journalisé : rien à
+     consigner de plus, le journal porterait deux lignes pour un seul geste. */
+  return { ok: true, value: best };
 }
 
 /** Les capacités qu'un écran peut proposer, sachant l'offre de l'espace. */

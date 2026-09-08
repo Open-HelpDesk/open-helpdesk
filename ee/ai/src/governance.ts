@@ -303,6 +303,49 @@ export async function ask(
   return { ...completion, redactions: cleaned.counts };
 }
 
+/**
+ * Un refus consigné, sans appel au modèle.
+ *
+ * Il en existe un que `runCapability` ne peut pas voir : celui qui arrive
+ * **avant** la génération, quand aucun passage de la base ne dépasse le
+ * plancher. Rien n'est demandé au modèle, donc rien n'était journalisé — et
+ * l'écran de gouvernance affichait un état « n'a rien trouvé » qui ne pouvait
+ * jamais apparaître.
+ *
+ * C'est pourtant le refus le plus utile des deux. « L'agent a demandé, la base
+ * n'a pas répondu » est exactement le signal qui dit quel article écrire
+ * ensuite ; le perdre vide le journal de sa raison d'être. Coût zéro, jetons
+ * zéro : ce n'est pas une dépense, c'est une trace.
+ */
+export async function logRefusal(
+  tenantId: string,
+  cap: AiCapability,
+  actor: Actor,
+  ticketId: string | null,
+  provider: ProviderConfig,
+  reason: string,
+): Promise<void> {
+  await db
+    .insert(aiCalls)
+    .values({
+      tenantId,
+      capability: cap,
+      provider: provider.label,
+      model: provider.model,
+      actorKind: actor.kind,
+      actorUserId: actor.userId,
+      actorName: actor.name,
+      ticketId,
+      inputTokens: 0,
+      outputTokens: 0,
+      costMicros: 0,
+      durationMs: 0,
+      status: "refused",
+      error: reason,
+    })
+    .catch(() => {});
+}
+
 /** Un embedding, journalisé comme le reste — c'est un appel payant. */
 export async function embedText(
   provider: ProviderConfig,

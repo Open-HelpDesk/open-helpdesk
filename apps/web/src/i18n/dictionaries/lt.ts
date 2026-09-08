@@ -2183,6 +2183,13 @@ export const lt: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Raktas išsaugotas. Kad jis liktų, laukelį palikite tuščią.",
   "app.settings.assistant.byoClear": "Vėl naudoti šio serverio teikėją",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Žinių sluoksnis",
+  "app.settings.assistant.indexHint": "Asistentas skaito tik tai, kas yra suindeksuota. Indeksavimas vyksta kas šešias valandas; paleiskite jį dabar, kad būtų įtrauktas ką tik paskelbtas straipsnis arba pašalinta tai, ką aukščiau išjungėte.",
+  "app.settings.assistant.indexNow": "Indeksuoti dabar",
+  "app.settings.assistant.indexIndexed": "Suindeksuoti dokumentai",
+  "app.settings.assistant.indexRemoved": "Pašalinti dokumentai",
+
   "app.settings.assistant.usageCard": "Šio mėnesio naudojimas",
   "app.settings.assistant.usageQuota": "Panaudoti atsakymai klientams",
   "app.settings.assistant.usageProvisional": "laukiama patvirtinimo",
@@ -2211,6 +2218,7 @@ export const lt: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Šis adresas nėra tinkamas URL.",
   "app.settings.assistant.errInsecure": "Galinis taškas, pasiekiamas per viešąjį internetą, turi naudoti https — API raktas negali keliauti neužšifruotas.",
+  "app.settings.assistant.errIndex": "Indeksavimas neįvyko. Teikėjas neturi įterpinių modelio arba atmetė iškvietimą.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Darbo erdvė",

@@ -2114,6 +2114,13 @@ export const lv: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Atslēga ir saglabāta. Lai to paturētu, atstājiet lauku tukšu.",
   "app.settings.assistant.byoClear": "Atkal izmantot šīs instances nodrošinātāju",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Zināšanu slānis",
+  "app.settings.assistant.indexHint": "Asistents lasa tikai to, kas ir indeksēts. Indeksēšana notiek reizi sešās stundās; palaidiet to tagad, lai iekļautu tikko publicētu rakstu vai izņemtu to, ko tikko izslēdzāt augstāk.",
+  "app.settings.assistant.indexNow": "Indeksēt tagad",
+  "app.settings.assistant.indexIndexed": "Indeksētie dokumenti",
+  "app.settings.assistant.indexRemoved": "Izņemtie dokumenti",
+
   "app.settings.assistant.usageCard": "Šā mēneša patēriņš",
   "app.settings.assistant.usageQuota": "Izmantotās atbildes klientiem",
   "app.settings.assistant.usageProvisional": "gaida apstiprinājumu",
@@ -2142,6 +2149,7 @@ export const lv: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Šī adrese nav derīga URL.",
   "app.settings.assistant.errInsecure": "Galapunktam, kas sasniedzams caur publisko internetu, jāizmanto https — API atslēga nedrīkst ceļot nešifrēta.",
+  "app.settings.assistant.errIndex": "Indeksēšana nenotika. Nodrošinātājam nav iegulumu modeļa, vai arī tas atteica izsaukumu.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Darbvieta",

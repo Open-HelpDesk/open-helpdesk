@@ -2012,6 +2012,13 @@ export const el: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Υπάρχει αποθηκευμένο κλειδί. Αφήστε το πεδίο κενό για να το διατηρήσετε.",
   "app.settings.assistant.byoClear": "Επιστροφή στον φιλοξενούμενο πάροχο",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Στρώμα γνώσης",
+  "app.settings.assistant.indexHint": "Ο βοηθός διαβάζει μόνο ό,τι έχει καταχωριστεί στο ευρετήριο. Η ευρετηρίαση εκτελείται κάθε έξι ώρες· ξεκινήστε την τώρα για να συμπεριληφθεί ένα άρθρο που μόλις δημοσιεύσατε ή για να αφαιρεθεί ό,τι μόλις απενεργοποιήσατε παραπάνω.",
+  "app.settings.assistant.indexNow": "Ευρετηρίαση τώρα",
+  "app.settings.assistant.indexIndexed": "Ευρετηριασμένα έγγραφα",
+  "app.settings.assistant.indexRemoved": "Αφαιρεμένα έγγραφα",
+
   "app.settings.assistant.usageCard": "Χρήση αυτόν τον μήνα",
   "app.settings.assistant.usageQuota": "Χρησιμοποιημένες απαντήσεις σε πελάτες",
   "app.settings.assistant.usageProvisional": "σε αναμονή επιβεβαίωσης",
@@ -2040,6 +2047,7 @@ export const el: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Η διεύθυνση αυτή δεν είναι έγκυρο URL.",
   "app.settings.assistant.errInsecure": "Ένα τελικό σημείο προσβάσιμο από το δημόσιο διαδίκτυο πρέπει να χρησιμοποιεί https — ένα κλειδί API δεν πρέπει να ταξιδεύει χωρίς κρυπτογράφηση.",
+  "app.settings.assistant.errIndex": "Η ευρετηρίαση δεν εκτελέστηκε. Ο πάροχος δεν διαθέτει μοντέλο embeddings ή απέρριψε την κλήση.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Χώρος εργασίας",

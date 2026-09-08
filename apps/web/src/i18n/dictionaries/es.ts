@@ -1854,6 +1854,13 @@ export const es: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Hay una clave guardada. Deja el campo vacío para conservarla.",
   "app.settings.assistant.byoClear": "Volver al proveedor alojado",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Capa de conocimiento",
+  "app.settings.assistant.indexHint": "El asistente solo lee lo que se ha indexado. La indexación pasa cada seis horas; lánzala ahora para recoger un artículo que acabas de publicar, o para retirar lo que acabas de desactivar más arriba.",
+  "app.settings.assistant.indexNow": "Indexar ahora",
+  "app.settings.assistant.indexIndexed": "Documentos indexados",
+  "app.settings.assistant.indexRemoved": "Documentos retirados",
+
   "app.settings.assistant.usageCard": "Uso de este mes",
   "app.settings.assistant.usageQuota": "Respuestas a clientes utilizadas",
   "app.settings.assistant.usageProvisional": "pendientes de confirmación",
@@ -1882,6 +1889,7 @@ export const es: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Esa dirección no es una URL válida.",
   "app.settings.assistant.errInsecure": "Un endpoint accesible desde internet público debe usar https — una clave de API no debe viajar sin cifrar.",
+  "app.settings.assistant.errIndex": "La indexación no se ha ejecutado. El proveedor no tiene modelo de embeddings, o ha rechazado la llamada.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nuevo",

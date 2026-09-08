@@ -13,8 +13,12 @@ import { revalidatePath } from "next/cache";
 import { encryptSecret } from "@openhelpdesk/crypto";
 import { LOCALES } from "@/i18n/locales";
 import { requireManager } from "@/lib/session";
+import { decryptSecret } from "@openhelpdesk/crypto";
 import {
   AI_CAPABILITIES,
+  getAiSettings,
+  providerFor,
+  reindexWorkspace,
   sanitizeCapabilities,
   sanitizeLocales,
   saveAiSettings,
@@ -23,7 +27,7 @@ import {
 const PATH = "/app/settings/assistant";
 
 export async function saveAssistant(formData: FormData) {
-  const { tenant } = await requireManager();
+  const { tenant, agent } = await requireManager();
 
   /* Une case décochée n'arrive pas dans le FormData : l'absence vaut « éteint ».
      D'où la boucle sur la liste connue plutôt que sur ce que le formulaire a
@@ -32,15 +36,18 @@ export async function saveAssistant(formData: FormData) {
     Object.fromEntries(AI_CAPABILITIES.map((cap) => [cap, formData.get(`cap.${cap}`) === "on"])),
   );
 
+  const sources = {
+    kb: formData.get("source.kb") === "on",
+    macros: formData.get("source.macros") === "on",
+    resolvedTickets: formData.get("source.resolvedTickets") === "on",
+    internalNotes: formData.get("source.internalNotes") === "on",
+  };
+  const before = await getAiSettings(tenant.id);
+
   await saveAiSettings(tenant.id, {
     enabled: formData.get("enabled") === "on",
     capabilities,
-    sources: {
-      kb: formData.get("source.kb") === "on",
-      macros: formData.get("source.macros") === "on",
-      resolvedTickets: formData.get("source.resolvedTickets") === "on",
-      internalNotes: formData.get("source.internalNotes") === "on",
-    },
+    sources,
     deflectionLocales: sanitizeLocales(
       formData.getAll("locale").map((l) => String(l)),
       LOCALES.map((l) => l.code),
@@ -48,8 +55,64 @@ export async function saveAssistant(formData: FormData) {
     deflectionThreshold: Number(formData.get("threshold") ?? 70),
   });
 
+  /* Couper une source doit retirer ce qu'elle avait indexé, tout de suite.
+     `reindexWorkspace` est ce qui supprime le devenu-interdit ; sans cet appel
+     l'interrupteur ne changerait rien à ce que l'assistant lit avant le
+     passage du worker, six heures plus tard — et l'écran mentirait.
+
+     Au mieux : une réindexation qui échoue ne doit pas perdre l'enregistrement
+     de l'admin. Le balayage périodique rattrapera. */
+  if (changed(before.sources, sources)) {
+    try {
+      const provider = await providerFor(tenant.id, decryptSecret);
+      if (provider?.embedModel) {
+        await reindexWorkspace(provider, tenant.id, sources, {
+          kind: "agent",
+          userId: agent.id,
+          name: agent.name,
+        });
+      }
+    } catch {
+      /* rien : l'enregistrement compte plus que l'index */
+    }
+  }
+
   revalidatePath(PATH);
   redirect(`${PATH}?saved=1`);
+}
+
+function changed(a: Record<string, boolean>, b: Record<string, boolean>): boolean {
+  return Object.keys(b).some((k) => a[k] !== b[k]);
+}
+
+/**
+ * Réindexe maintenant, et dit combien.
+ *
+ * Le balayage du worker passe toutes les six heures ; ce bouton existe parce
+ * qu'un admin qui vient de couper « tickets résolus » veut voir les documents
+ * disparaître tout de suite — c'est `reindexWorkspace` qui supprime ce que
+ * l'espace vient d'interdire, donc sans lui l'interrupteur ne changerait rien
+ * à ce que l'assistant lit avant six heures.
+ */
+export async function reindexKnowledge() {
+  const { tenant, agent } = await requireManager();
+  const provider = await providerFor(tenant.id, decryptSecret);
+  if (!provider?.embedModel) redirect(`${PATH}?error=index`);
+
+  const settings = await getAiSettings(tenant.id);
+  try {
+    const out = await reindexWorkspace(provider, tenant.id, settings.sources, {
+      kind: "agent",
+      userId: agent.id,
+      name: agent.name,
+    });
+    revalidatePath(PATH);
+    redirect(`${PATH}?indexed=${out.indexed}&removed=${out.removed}`);
+  } catch (err) {
+    /* redirect() lève : la relancer, sinon le catch avale la navigation. */
+    if (err && typeof err === "object" && "digest" in err) throw err;
+    redirect(`${PATH}?error=index`);
+  }
 }
 
 export async function saveByoModel(formData: FormData) {

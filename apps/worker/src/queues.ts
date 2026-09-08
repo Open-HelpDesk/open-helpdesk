@@ -12,6 +12,10 @@
  * - ai-sweep      : the assistant's 72-hour settlement (ee/ai) — a deflection
  *                   whose window has passed becomes confirmed, one a ticket
  *                   followed gives its credit back
+ * - ai-index      : the assistant's knowledge layer (ee/ai) — published
+ *                   articles, macros and resolved tickets, embedded once and
+ *                   compared in-app. Without this pass the layer stays empty
+ *                   and every draft refuses for lack of a source.
  */
 export const QUEUE_NAMES = [
   "sla-timers",
@@ -24,6 +28,7 @@ export const QUEUE_NAMES = [
   "housekeeping",
   "import-run",
   "ai-sweep",
+  "ai-index",
 ] as const;
 
 export type QueueName = (typeof QUEUE_NAMES)[number];

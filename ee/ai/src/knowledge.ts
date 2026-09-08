@@ -18,13 +18,15 @@
 import { and, desc, eq, inArray, isNotNull } from "drizzle-orm";
 import {
   aiDocuments,
+  aiSettings,
   db,
   kbArticles,
   macros,
   ticketMessages,
   tickets,
 } from "@openhelpdesk/db";
-import { embedText, type Actor } from "./governance";
+import { decryptSecret } from "@openhelpdesk/crypto";
+import { embedText, providerFor, type Actor } from "./governance";
 import { cosine } from "./similarity";
 import type { ProviderConfig } from "./provider";
 
@@ -286,4 +288,57 @@ export async function findPassages(
     .filter((d) => d.score >= (opts.floor ?? FLOOR))
     .sort((a, b) => b.score - a.score)
     .slice(0, opts.limit ?? 5);
+}
+
+/**
+ * Réindexe tous les espaces où l'assistant est allumé.
+ *
+ * Sans ceci, `reindexWorkspace` n'était appelé par personne : la couche de
+ * connaissance restait vide, `findPassages` ne rendait jamais rien, et chaque
+ * brouillon refusait faute de source sur une installation par ailleurs
+ * correcte. L'assistant était complet et inerte.
+ *
+ * Périodique et non événementiel, à dessein. Les sources bougent sans arrêt
+ * — un article publié, un ticket résolu, une macro modifiée — et réindexer à
+ * chaque écriture ferait un appel payant par sauvegarde d'article. Un passage
+ * régulier coûte un embedding par document *modifié* et rattrape tout ; le
+ * bouton de l'écran de réglages sert à ne pas attendre le prochain passage.
+ *
+ * Un espace qui échoue n'arrête pas les autres : c'est un balayage, pas une
+ * transaction.
+ */
+export async function reindexEnabledWorkspaces(): Promise<{
+  tenants: number;
+  indexed: number;
+  removed: number;
+  failed: number;
+}> {
+  const rows = await db
+    .select({ tenantId: aiSettings.tenantId, sources: aiSettings.sources })
+    .from(aiSettings)
+    .where(eq(aiSettings.enabled, true));
+
+  let tenantsDone = 0;
+  let indexed = 0;
+  let removed = 0;
+  let failed = 0;
+  for (const row of rows) {
+    /* Chaque espace avec son propre fournisseur : celui qui apporte son modèle
+       vectorise chez lui, et l'instance ne paie pas son indexation. */
+    const provider = await providerFor(row.tenantId, decryptSecret);
+    if (!provider?.embedModel) continue;
+    try {
+      const out = await reindexWorkspace(provider, row.tenantId, row.sources, {
+        kind: "system",
+        userId: null,
+        name: "index",
+      });
+      indexed += out.indexed;
+      removed += out.removed;
+      tenantsDone++;
+    } catch {
+      failed++;
+    }
+  }
+  return { tenants: tenantsDone, indexed, removed, failed };
 }

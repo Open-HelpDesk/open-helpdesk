@@ -1840,6 +1840,13 @@ export const de: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Ein Schlüssel ist gespeichert. Leer lassen, um ihn beizubehalten.",
   "app.settings.assistant.byoClear": "Wieder den gehosteten Anbieter verwenden",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Wissensschicht",
+  "app.settings.assistant.indexHint": "Der Assistent liest nur, was indexiert ist. Die Indexierung läuft alle sechs Stunden; starten Sie sie jetzt, um einen gerade veröffentlichten Artikel aufzunehmen oder um zu entfernen, was Sie oben gerade abgeschaltet haben.",
+  "app.settings.assistant.indexNow": "Jetzt indexieren",
+  "app.settings.assistant.indexIndexed": "Indexierte Dokumente",
+  "app.settings.assistant.indexRemoved": "Entfernte Dokumente",
+
   "app.settings.assistant.usageCard": "Nutzung in diesem Monat",
   "app.settings.assistant.usageQuota": "Verbrauchte Kundenantworten",
   "app.settings.assistant.usageProvisional": "wird noch bestätigt",
@@ -1868,6 +1875,7 @@ export const de: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Diese Adresse ist keine gültige URL.",
   "app.settings.assistant.errInsecure": "Ein über das öffentliche Internet erreichbarer Endpunkt muss https verwenden: Ein API-Schlüssel darf nicht unverschlüsselt übertragen werden.",
+  "app.settings.assistant.errIndex": "Die Indexierung hat nicht stattgefunden. Der Anbieter hat kein Embedding-Modell, oder er hat den Aufruf abgelehnt.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Neu",

@@ -1987,6 +1987,13 @@ export const hu: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Van eltárolt kulcs. Hagyja üresen a mezőt, ha meg szeretné tartani.",
   "app.settings.assistant.byoClear": "Visszatérés az általunk üzemeltetett szolgáltatóhoz",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Tudásréteg",
+  "app.settings.assistant.indexHint": "Az asszisztens csak azt olvassa, ami indexelve van. Az indexelés hat óránként lefut; futtassa most, ha be szeretné vonni az éppen közzétett cikket, vagy ha el szeretné távolítani azt, amit fentebb éppen kikapcsolt.",
+  "app.settings.assistant.indexNow": "Indexelés most",
+  "app.settings.assistant.indexIndexed": "Indexelt dokumentumok",
+  "app.settings.assistant.indexRemoved": "Eltávolított dokumentumok",
+
   "app.settings.assistant.usageCard": "Felhasználás ebben a hónapban",
   "app.settings.assistant.usageQuota": "Felhasznált ügyfélválaszok",
   "app.settings.assistant.usageProvisional": "megerősítésre vár",
@@ -2015,6 +2022,7 @@ export const hu: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Ez a cím nem érvényes URL.",
   "app.settings.assistant.errInsecure": "A nyilvános interneten elérhető végpontnak https-t kell használnia — az API-kulcs nem utazhat titkosítás nélkül.",
+  "app.settings.assistant.errIndex": "Az indexelés nem futott le. A szolgáltatónak nincs beágyazási modellje, vagy elutasította a hívást.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Munkaterület",

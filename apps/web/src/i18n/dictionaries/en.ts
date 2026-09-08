@@ -1841,6 +1841,13 @@ export const en = {
   "app.settings.assistant.byoSecretSet": "A key is stored. Leave the field empty to keep it.",
   "app.settings.assistant.byoClear": "Use the hosted provider again",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Knowledge layer",
+  "app.settings.assistant.indexHint": "The assistant only reads what has been indexed. Indexing runs every six hours; run it now to pick up an article you have just published, or to drop what you have just switched off above.",
+  "app.settings.assistant.indexNow": "Index now",
+  "app.settings.assistant.indexIndexed": "Documents indexed",
+  "app.settings.assistant.indexRemoved": "Documents dropped",
+
   "app.settings.assistant.usageCard": "Usage this month",
   "app.settings.assistant.usageQuota": "Customer answers used",
   "app.settings.assistant.usageProvisional": "Awaiting confirmation",
@@ -1869,6 +1876,7 @@ export const en = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "That endpoint is not a valid URL.",
   "app.settings.assistant.errInsecure": "An endpoint reached over the public internet must use https — an API key must not travel in the clear.",
+  "app.settings.assistant.errIndex": "Indexing did not run. The provider has no embedding model, or it refused the call.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "New",

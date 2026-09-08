@@ -1855,6 +1855,13 @@ export const fr: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Une clé est enregistrée. Laissez le champ vide pour la conserver.",
   "app.settings.assistant.byoClear": "Revenir au fournisseur hébergé",
 
+  /* --- La couche de connaissance : ce que l'assistant a vraiment lu --- */
+  "app.settings.assistant.indexCard": "Couche de connaissance",
+  "app.settings.assistant.indexHint": "L'assistant ne lit que ce qui a été indexé. L'indexation passe toutes les six heures ; lancez-la maintenant pour prendre un article que vous venez de publier, ou pour retirer ce que vous venez de couper ci-dessus.",
+  "app.settings.assistant.indexNow": "Indexer maintenant",
+  "app.settings.assistant.indexIndexed": "Documents indexés",
+  "app.settings.assistant.indexRemoved": "Documents retirés",
+
   "app.settings.assistant.usageCard": "Consommation du mois",
   "app.settings.assistant.usageQuota": "Réponses aux clients utilisées",
   "app.settings.assistant.usageProvisional": "En attente de confirmation",
@@ -1883,6 +1890,7 @@ export const fr: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Cet endpoint n'est pas une URL valide.",
   "app.settings.assistant.errInsecure": "Un endpoint joint par l'internet public doit être en https — une clé d'API ne doit pas circuler en clair.",
+  "app.settings.assistant.errIndex": "L'indexation n'a pas eu lieu. Le fournisseur n'a pas de modèle d'embeddings, ou il a refusé l'appel.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Espace de travail",

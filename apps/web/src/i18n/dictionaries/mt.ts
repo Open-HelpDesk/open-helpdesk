@@ -2248,6 +2248,13 @@ export const mt: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Hemm ċavetta maħżuna. Ħalli l-kamp vojt biex iżżommha.",
   "app.settings.assistant.byoClear": "Erġa' uża l-fornitur ta' din l-istanza",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Saff tal-għarfien",
+  "app.settings.assistant.indexHint": "L-assistent jaqra biss dak li ġie indiċjat. L-indiċjar isir kull sitt sigħat; ħaddmu issa biex tiġbor artiklu li għadek kif ippubblikajt, jew biex tneħħi dak li għadek kif tfejt hawn fuq.",
+  "app.settings.assistant.indexNow": "Indiċja issa",
+  "app.settings.assistant.indexIndexed": "Dokumenti indiċjati",
+  "app.settings.assistant.indexRemoved": "Dokumenti mneħħija",
+
   "app.settings.assistant.usageCard": "Konsum tax-xahar",
   "app.settings.assistant.usageQuota": "Tweġibiet użati lill-klijenti",
   "app.settings.assistant.usageProvisional": "fl-istennija ta' konferma",
@@ -2276,6 +2283,7 @@ export const mt: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Dan l-indirizz mhuwiex URL validu.",
   "app.settings.assistant.errInsecure": "Endpoint li jintlaħaq mill-internet pubbliku jrid juża https — ċavetta tal-API ma tistax tivvjaġġa mhux ikkriptata.",
+  "app.settings.assistant.errIndex": "L-indiċjar ma sarx. Il-fornitur ma għandux mudell ta' embeddings, jew ċaħad is-sejħa.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Spazju tax-xogħol",

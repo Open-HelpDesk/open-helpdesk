@@ -1971,6 +1971,13 @@ export const et: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Võti on salvestatud. Selle säilitamiseks jätke väli tühjaks.",
   "app.settings.assistant.byoClear": "Kasuta taas majutatud teenusepakkujat",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Teadmuskiht",
+  "app.settings.assistant.indexHint": "Assistent loeb ainult seda, mis on indekseeritud. Indekseerimine käib iga kuue tunni tagant; käivitage see kohe, kui olete just avaldanud artikli või just ülal midagi välja lülitanud.",
+  "app.settings.assistant.indexNow": "Indekseeri kohe",
+  "app.settings.assistant.indexIndexed": "Indekseeritud dokumendid",
+  "app.settings.assistant.indexRemoved": "Eemaldatud dokumendid",
+
   "app.settings.assistant.usageCard": "Selle kuu kasutus",
   "app.settings.assistant.usageQuota": "Kasutatud kliendivastused",
   "app.settings.assistant.usageProvisional": "ootab kinnitust",
@@ -1999,6 +2006,7 @@ export const et: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "See aadress ei ole korrektne URL.",
   "app.settings.assistant.errInsecure": "Avaliku interneti kaudu kättesaadav lõpp-punkt peab kasutama https-i — API võti ei tohi liikuda krüptimata kujul.",
+  "app.settings.assistant.errIndex": "Indekseerimist ei toimunud. Teenusepakkujal pole embedding-mudelit või ta keeldus väljakutsest.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Tööruum",

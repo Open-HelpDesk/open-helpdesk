@@ -1845,6 +1845,13 @@ export const fi: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Avain on tallennettu. Jätä kenttä tyhjäksi säilyttääksesi sen.",
   "app.settings.assistant.byoClear": "Palaa isännöityyn palveluntarjoajaan",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Tietämyskerros",
+  "app.settings.assistant.indexHint": "Avustaja lukee vain sitä, mikä on indeksoitu. Indeksointi ajetaan kuuden tunnin välein; aja se nyt, jos olet juuri julkaissut artikkelin tai juuri kytkenyt yllä jotain pois.",
+  "app.settings.assistant.indexNow": "Indeksoi nyt",
+  "app.settings.assistant.indexIndexed": "Indeksoidut dokumentit",
+  "app.settings.assistant.indexRemoved": "Poistetut dokumentit",
+
   "app.settings.assistant.usageCard": "Käyttö tässä kuussa",
   "app.settings.assistant.usageQuota": "Käytetyt asiakasvastaukset",
   "app.settings.assistant.usageProvisional": "odottaa vahvistusta",
@@ -1873,6 +1880,7 @@ export const fi: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Tämä osoite ei ole kelvollinen URL.",
   "app.settings.assistant.errInsecure": "Julkisen internetin kautta tavoitettavan päätepisteen on käytettävä https:ää — API-avain ei saa kulkea salaamattomana.",
+  "app.settings.assistant.errIndex": "Indeksointia ei suoritettu. Palveluntarjoajalla ei ole embedding-mallia, tai se hylkäsi kutsun.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Uusi",

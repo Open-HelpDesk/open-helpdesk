@@ -2188,6 +2188,13 @@ export const pl: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Klucz jest zapisany. Pozostaw pole puste, aby go zachować.",
   "app.settings.assistant.byoClear": "Ponownie użyj dostawcy hostowanego",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Warstwa wiedzy",
+  "app.settings.assistant.indexHint": "Asystent czyta tylko to, co zostało zindeksowane. Indeksowanie przebiega co sześć godzin; prosimy uruchomić je teraz, aby uwzględnić właśnie opublikowany artykuł albo usunąć to, co właśnie zostało wyłączone powyżej.",
+  "app.settings.assistant.indexNow": "Zindeksuj teraz",
+  "app.settings.assistant.indexIndexed": "Zindeksowane dokumenty",
+  "app.settings.assistant.indexRemoved": "Usunięte dokumenty",
+
   "app.settings.assistant.usageCard": "Zużycie w tym miesiącu",
   "app.settings.assistant.usageQuota": "Wykorzystane odpowiedzi dla klientów",
   "app.settings.assistant.usageProvisional": "oczekuje na potwierdzenie",
@@ -2216,6 +2223,7 @@ export const pl: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Ten adres nie jest prawidłowym adresem URL.",
   "app.settings.assistant.errInsecure": "Punkt końcowy dostępny z publicznego internetu musi używać https — klucz API nie może być przesyłany bez szyfrowania.",
+  "app.settings.assistant.errIndex": "Indeksowanie nie zostało wykonane. Dostawca nie ma modelu embeddingów albo odrzucił wywołanie.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Obszar roboczy",

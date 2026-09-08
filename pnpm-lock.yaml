@@ -172,6 +172,9 @@ importers:
       '@openhelpdesk/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@openhelpdesk/crypto':
+        specifier: workspace:*
+        version: link:../../packages/crypto
       '@openhelpdesk/db':
         specifier: workspace:*
         version: link:../../packages/db

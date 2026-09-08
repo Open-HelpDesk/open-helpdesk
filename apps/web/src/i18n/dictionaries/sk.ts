@@ -2168,6 +2168,13 @@ export const sk: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Kľúč je uložený. Ak ho chcete ponechať, nechajte pole prázdne.",
   "app.settings.assistant.byoClear": "Znova použiť hostovaného poskytovateľa",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Vrstva znalostí",
+  "app.settings.assistant.indexHint": "Asistent číta len to, čo bolo zaindexované. Indexovanie prebieha každých šesť hodín; spustite ho teraz, aby zachytilo práve publikovaný článok alebo odobralo to, čo ste práve vypli vyššie.",
+  "app.settings.assistant.indexNow": "Indexovať teraz",
+  "app.settings.assistant.indexIndexed": "Zaindexované dokumenty",
+  "app.settings.assistant.indexRemoved": "Odobrané dokumenty",
+
   "app.settings.assistant.usageCard": "Spotreba tohto mesiaca",
   "app.settings.assistant.usageQuota": "Využité odpovede zákazníkom",
   "app.settings.assistant.usageProvisional": "čaká na potvrdenie",
@@ -2196,6 +2203,7 @@ export const sk: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Táto adresa nie je platná URL.",
   "app.settings.assistant.errInsecure": "Koncový bod dostupný z verejného internetu musí používať https — kľúč API nesmie byť prenášaný nezašifrovane.",
+  "app.settings.assistant.errIndex": "Indexovanie neprebehlo. Poskytovateľ nemá model embeddingov, alebo volanie odmietol.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Pracovný priestor",

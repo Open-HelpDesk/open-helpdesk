@@ -1843,6 +1843,13 @@ export const nl: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Er is een sleutel opgeslagen. Laat het veld leeg om die te behouden.",
   "app.settings.assistant.byoClear": "Weer de gehoste provider gebruiken",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Kennislaag",
+  "app.settings.assistant.indexHint": "De assistent leest alleen wat geïndexeerd is. Het indexeren gebeurt elke zes uur; start het nu om een artikel op te nemen dat u net hebt gepubliceerd, of om te verwijderen wat u hierboven net hebt uitgeschakeld.",
+  "app.settings.assistant.indexNow": "Nu indexeren",
+  "app.settings.assistant.indexIndexed": "Geïndexeerde documenten",
+  "app.settings.assistant.indexRemoved": "Verwijderde documenten",
+
   "app.settings.assistant.usageCard": "Gebruik deze maand",
   "app.settings.assistant.usageQuota": "Gebruikte klantantwoorden",
   "app.settings.assistant.usageProvisional": "in afwachting van bevestiging",
@@ -1871,6 +1878,7 @@ export const nl: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Dat adres is geen geldige URL.",
   "app.settings.assistant.errInsecure": "Een endpoint dat via het publieke internet bereikbaar is, moet https gebruiken: een API-sleutel mag niet onversleuteld over de lijn gaan.",
+  "app.settings.assistant.errIndex": "Het indexeren is niet uitgevoerd. De provider heeft geen embeddingmodel, of heeft de aanroep geweigerd.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nieuw",

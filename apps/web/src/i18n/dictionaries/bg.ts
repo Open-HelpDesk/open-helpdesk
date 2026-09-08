@@ -1953,6 +1953,13 @@ export const bg: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Съхранен е ключ. Оставете полето празно, за да го запазите.",
   "app.settings.assistant.byoClear": "Връщане към хостнатия доставчик",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Слой на знанието",
+  "app.settings.assistant.indexHint": "Асистентът чете само това, което е индексирано. Индексирането минава на всеки шест часа; пуснете го сега, за да включи статия, която току-що сте публикували, или за да премахне това, което току-що сте изключили по-горе.",
+  "app.settings.assistant.indexNow": "Индексиране сега",
+  "app.settings.assistant.indexIndexed": "Индексирани документи",
+  "app.settings.assistant.indexRemoved": "Премахнати документи",
+
   "app.settings.assistant.usageCard": "Потребление за този месец",
   "app.settings.assistant.usageQuota": "Използвани отговори до клиенти",
   "app.settings.assistant.usageProvisional": "чака потвърждение",
@@ -1981,6 +1988,7 @@ export const bg: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Този адрес не е валиден URL.",
   "app.settings.assistant.errInsecure": "Крайна точка, достъпна през публичния интернет, трябва да използва https — API ключ не бива да се предава в открит вид.",
+  "app.settings.assistant.errIndex": "Индексирането не беше извършено. Доставчикът няма модел за вграждания или отказа извикването.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Работно пространство",

@@ -1841,6 +1841,13 @@ export const nb: Dictionary = {
   "app.settings.assistant.byoSecretSet": "En nøkkel er lagret. La feltet stå tomt for å beholde den.",
   "app.settings.assistant.byoClear": "Bruk den hostede leverandøren igjen",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Kunnskapslag",
+  "app.settings.assistant.indexHint": "Assistenten leser bare det som er indeksert. Indekseringen kjøres hver sjette time; kjør den nå for å få med en artikkel du nettopp har publisert, eller for å fjerne det du nettopp har slått av ovenfor.",
+  "app.settings.assistant.indexNow": "Indekser nå",
+  "app.settings.assistant.indexIndexed": "Indekserte dokumenter",
+  "app.settings.assistant.indexRemoved": "Fjernede dokumenter",
+
   "app.settings.assistant.usageCard": "Bruk denne måneden",
   "app.settings.assistant.usageQuota": "Brukte kundesvar",
   "app.settings.assistant.usageProvisional": "venter på bekreftelse",
@@ -1869,6 +1876,7 @@ export const nb: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Den adressen er ikke en gyldig URL.",
   "app.settings.assistant.errInsecure": "Et endepunkt som nås over det offentlige internett, må bruke https: en API-nøkkel skal ikke sendes i klartekst.",
+  "app.settings.assistant.errIndex": "Indekseringen ble ikke kjørt. Leverandøren har ingen embedding-modell, eller den avviste kallet.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Ny",

@@ -10,7 +10,7 @@ import {
   type MailSendJob,
 } from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated, runScheduledRules, scanSlaTimers } from "@openhelpdesk/rules";
-import { sweepDeflections } from "@openhelpdesk/ee-ai";
+import { reindexEnabledWorkspaces, sweepDeflections } from "@openhelpdesk/ee-ai";
 import { deliverWebhookJob, type WebhookJob } from "@openhelpdesk/webhooks";
 import { deliverPushJob, type PushJob } from "@openhelpdesk/push";
 import { executeRun, parseZendeskExport, reapStaleRuns, type ImportSource } from "@openhelpdesk/import";
@@ -134,6 +134,23 @@ const processors: Record<QueueName, Processor> = {
       );
     }
   },
+  /**
+   * The knowledge layer, kept current.
+   *
+   * Every six hours rather than on every write: a workspace publishing an
+   * article would otherwise pay an embedding per save, and the layer only has
+   * to be right by the time someone asks the assistant. The settings screen
+   * has a button for those who do not want to wait for the next pass.
+   */
+  "ai-index": async () => {
+    const out = await reindexEnabledWorkspaces();
+    if (out.tenants > 0 || out.failed > 0) {
+      console.log(
+        `[ai-index] ${out.tenants} workspace(s): ${out.indexed} indexed, ` +
+          `${out.removed} removed, ${out.failed} failed`,
+      );
+    }
+  },
   "import-run": async (job) => {
     const data = job.data as ImportRunJob;
     const { data: parsed, anomalies } = parseZendeskExport(data.payload);
@@ -176,7 +193,19 @@ async function registerSchedulers() {
     /* Toutes les heures : la fenêtre est de 72 h, donc rien n'exige la minute,
        et un balayage horaire garde le compteur du quota juste à l'heure près. */
     ["ai-sweep", 3_600_000],
+    ["ai-index", 21_600_000],
   ];
+  /*
+   * The knowledge layer is indexed once at boot, on top of its schedule.
+   *
+   * A repeatable scheduler fires after its interval, not on registration: a
+   * fresh install would have had an empty knowledge layer for six hours, and
+   * during those six hours every reply draft refuses for lack of a source on
+   * a install that is in fact correct. That is the first thing anyone trying
+   * the assistant would hit.
+   */
+  await new Queue("ai-index", { connection }).add("boot", {});
+
   for (const [name, every] of schedules) {
     const queue = new Queue(name, { connection });
     await queue.upsertJobScheduler(`${name}-tick`, { every });

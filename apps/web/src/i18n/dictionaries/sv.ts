@@ -1851,6 +1851,13 @@ export const sv: Dictionary = {
   "app.settings.assistant.byoSecretSet": "En nyckel är sparad. Lämna fältet tomt för att behålla den.",
   "app.settings.assistant.byoClear": "Använd den hostade leverantören igen",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Kunskapslager",
+  "app.settings.assistant.indexHint": "Assistenten läser bara det som har indexerats. Indexeringen körs var sjätte timme; kör den nu för att få med en artikel du just har publicerat, eller för att ta bort det du just har stängt av ovan.",
+  "app.settings.assistant.indexNow": "Indexera nu",
+  "app.settings.assistant.indexIndexed": "Indexerade dokument",
+  "app.settings.assistant.indexRemoved": "Borttagna dokument",
+
   "app.settings.assistant.usageCard": "Användning denna månad",
   "app.settings.assistant.usageQuota": "Förbrukade kundsvar",
   "app.settings.assistant.usageProvisional": "väntar på bekräftelse",
@@ -1879,6 +1886,7 @@ export const sv: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Den adressen är inte en giltig URL.",
   "app.settings.assistant.errInsecure": "En slutpunkt som nås över det offentliga internet måste använda https: en API-nyckel får inte skickas i klartext.",
+  "app.settings.assistant.errIndex": "Indexeringen kördes inte. Leverantören har ingen embedding-modell, eller så avvisade den anropet.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nytt",

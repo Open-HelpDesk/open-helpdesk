@@ -1841,6 +1841,13 @@ export const it: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Una chiave è memorizzata. Lascia il campo vuoto per conservarla.",
   "app.settings.assistant.byoClear": "Torna al provider ospitato",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Strato di conoscenza",
+  "app.settings.assistant.indexHint": "L'assistente legge solo ciò che è stato indicizzato. L'indicizzazione passa ogni sei ore; avviala ora per prendere un articolo che hai appena pubblicato, o per rimuovere ciò che hai appena disattivato qui sopra.",
+  "app.settings.assistant.indexNow": "Indicizza ora",
+  "app.settings.assistant.indexIndexed": "Documenti indicizzati",
+  "app.settings.assistant.indexRemoved": "Documenti rimossi",
+
   "app.settings.assistant.usageCard": "Utilizzo di questo mese",
   "app.settings.assistant.usageQuota": "Risposte ai clienti utilizzate",
   "app.settings.assistant.usageProvisional": "in attesa di conferma",
@@ -1869,6 +1876,7 @@ export const it: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Questo indirizzo non è una URL valida.",
   "app.settings.assistant.errInsecure": "Un endpoint raggiungibile da internet pubblica deve usare https — una chiave API non deve viaggiare in chiaro.",
+  "app.settings.assistant.errIndex": "L'indicizzazione non è avvenuta. Il provider non ha un modello di embedding, oppure ha rifiutato la chiamata.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nuovo",

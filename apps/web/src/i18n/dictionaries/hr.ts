@@ -2086,6 +2086,13 @@ export const hr: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Ključ je spremljen. Ostavite polje prazno da ga zadržite.",
   "app.settings.assistant.byoClear": "Ponovno koristi hostiranog davatelja",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Sloj znanja",
+  "app.settings.assistant.indexHint": "Asistent čita samo ono što je indeksirano. Indeksiranje se pokreće svakih šest sati; pokrenite ga sada da uhvati članak koji ste upravo objavili ili da ukloni ono što ste upravo isključili iznad.",
+  "app.settings.assistant.indexNow": "Indeksiraj sada",
+  "app.settings.assistant.indexIndexed": "Indeksirani dokumenti",
+  "app.settings.assistant.indexRemoved": "Uklonjeni dokumenti",
+
   "app.settings.assistant.usageCard": "Potrošnja ovog mjeseca",
   "app.settings.assistant.usageQuota": "Iskorišteni odgovori klijentima",
   "app.settings.assistant.usageProvisional": "čeka potvrdu",
@@ -2114,6 +2121,7 @@ export const hr: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Ta adresa nije ispravan URL.",
   "app.settings.assistant.errInsecure": "Krajnja točka dostupna preko javnog interneta mora koristiti https — API ključ ne smije putovati nešifriran.",
+  "app.settings.assistant.errIndex": "Indeksiranje nije provedeno. Davatelj nema model embeddinga ili je odbio poziv.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Radni prostor",

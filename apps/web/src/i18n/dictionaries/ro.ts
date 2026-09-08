@@ -2124,6 +2124,13 @@ export const ro: Dictionary = {
   "app.settings.assistant.byoSecretSet": "O cheie este stocată. Lăsați câmpul gol pentru a o păstra.",
   "app.settings.assistant.byoClear": "Revenire la furnizorul găzduit",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Strat de cunoștințe",
+  "app.settings.assistant.indexHint": "Asistentul citește doar ceea ce a fost indexat. Indexarea rulează la fiecare șase ore; porniți-o acum pentru a include un articol pe care l-ați publicat chiar acum sau pentru a elimina ceea ce ați dezactivat mai sus.",
+  "app.settings.assistant.indexNow": "Indexare acum",
+  "app.settings.assistant.indexIndexed": "Documente indexate",
+  "app.settings.assistant.indexRemoved": "Documente eliminate",
+
   "app.settings.assistant.usageCard": "Utilizare în luna curentă",
   "app.settings.assistant.usageQuota": "Răspunsuri pentru clienți utilizate",
   "app.settings.assistant.usageProvisional": "în așteptarea confirmării",
@@ -2152,6 +2159,7 @@ export const ro: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Această adresă nu este un URL valid.",
   "app.settings.assistant.errInsecure": "Un punct final accesibil din internetul public trebuie să folosească https — o cheie API nu are voie să circule necriptată.",
+  "app.settings.assistant.errIndex": "Indexarea nu a avut loc. Furnizorul nu are un model de embeddings sau a refuzat apelul.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Spațiu de lucru",

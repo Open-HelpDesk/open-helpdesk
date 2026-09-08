@@ -2262,6 +2262,13 @@ export const ga: Dictionary = {
   "app.settings.assistant.byoSecretSet": "Tá eochair sábháilte. Fág an réimse folamh chun í a choinneáil.",
   "app.settings.assistant.byoClear": "Úsáid soláthraí an áisc seo arís",
 
+  /* --- The knowledge layer: what the assistant has actually read --- */
+  "app.settings.assistant.indexCard": "Sraith eolais",
+  "app.settings.assistant.indexHint": "Ní léann an cúntóir ach an rud atá innéacsaithe. Ritheann an t-innéacsú gach sé huaire an chloig; rith é anois chun alt atá díreach foilsithe agat a thógáil isteach, nó chun an rud a mhúch tú thuas a bhaint.",
+  "app.settings.assistant.indexNow": "Innéacsaigh anois",
+  "app.settings.assistant.indexIndexed": "Cáipéisí innéacsaithe",
+  "app.settings.assistant.indexRemoved": "Cáipéisí a baineadh",
+
   "app.settings.assistant.usageCard": "Úsáid na míosa seo",
   "app.settings.assistant.usageQuota": "Freagraí úsáidte do chustaiméirí",
   "app.settings.assistant.usageProvisional": "ag feitheamh le deimhniú",
@@ -2290,6 +2297,7 @@ export const ga: Dictionary = {
   "app.settings.assistant.businessOnly": "Business",
   "app.settings.assistant.errEndpoint": "Ní URL bailí an seoladh sin.",
   "app.settings.assistant.errInsecure": "Ní mór https a úsáid ar chríochphointe a shroichtear tríd an idirlíon poiblí — níor cheart eochair API a sheoladh gan chriptiú.",
+  "app.settings.assistant.errIndex": "Níor ritheadh an t-innéacsú. Níl aon samhail leabúcháin ag an soláthraí, nó dhiúltaigh sé don ghlao.",
 
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Spás oibre",

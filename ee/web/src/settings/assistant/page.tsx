@@ -32,14 +32,29 @@ import { entitlementsFor } from "@/lib/entitlements";
 import { requireManager } from "@/lib/session";
 import { LOCALES } from "@/i18n/locales";
 import { getT, type Translate } from "@/i18n/server";
-import { clearByoModel, saveAssistant, saveByoModel } from "./actions";
+import { clearByoModel, reindexKnowledge, saveAssistant, saveByoModel } from "./actions";
 
 const LOG_GRID = "150px 150px minmax(120px,1fr) 90px 170px 110px 110px";
 
-/** Le quota mensuel du palier — le même tableau que la page tarifs annonce. */
+/**
+ * Le quota mensuel du palier — le même tableau que la page tarifs annonce.
+ *
+ * Comparaison **insensible à la casse**, et sur plusieurs noms par palier. Le
+ * plan de contrôle dénormalise `plan_name` avec le nom *affiché* de l'offre
+ * (« Team », « Enterprise »), pas son identifiant : la première version
+ * comparait à « team » et « business » en minuscules, donc aucun palier ne
+ * correspondait jamais et tout le monde héritait du quota gratuit de 50.
+ *
+ * Le palier à 19 € s'appelle « Business » sur la page tarifs et
+ * « Enterprise » dans le catalogue du plan de contrôle. Les deux sont
+ * acceptés : renommer une offre ne doit pas diviser un quota par vingt en
+ * silence. Un nom inconnu retombe sur le plus petit quota — se tromper vers le
+ * bas se voit et se corrige, se tromper vers le haut se facture.
+ */
 function quotaFor(planName: string | null): number {
-  if (planName === "business") return 1000;
-  if (planName === "team") return 200;
+  const name = (planName ?? "").trim().toLowerCase();
+  if (name === "business" || name === "enterprise") return 1000;
+  if (name === "team") return 200;
   return 50;
 }
 
@@ -135,12 +150,12 @@ function AssistantGhost({ t }: { t: Translate }) {
 export default async function AssistantPage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string; error?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string; indexed?: string; removed?: string }>;
 }) {
   const t = await getT();
   const { tenant } = await requireManager();
   const ent = entitlementsFor(tenant);
-  const { saved, error } = await searchParams;
+  const { saved, error, indexed, removed } = await searchParams;
 
   const header = (
     <PageHeader
@@ -193,7 +208,9 @@ export default async function AssistantPage({
             {t(
               error === "insecure"
                 ? "app.settings.assistant.errInsecure"
-                : "app.settings.assistant.errEndpoint",
+                : error === "index"
+                  ? "app.settings.assistant.errIndex"
+                  : "app.settings.assistant.errEndpoint",
             )}
           </p>
         </Card>
@@ -352,6 +369,46 @@ export default async function AssistantPage({
 
       {/* 6 — Le modèle apporté par l'espace. Son propre formulaire : l'effacer
               est une décision, pas un champ vidé par distraction. */}
+      {/* 6 — La couche de connaissance. Hors du grand formulaire : réindexer
+          n'est pas enregistrer, et mêler les deux ferait qu'un clic sur
+          « réindexer » perdrait les cases qu'on venait de cocher. */}
+      <Card title={t("app.settings.assistant.indexCard")}>
+        <p style={{ fontSize: 12.5, color: "var(--ink-2)", margin: 0 }}>
+          {t("app.settings.assistant.indexHint")}
+        </p>
+        {indexed !== undefined && (
+          <dl className="grid gap-2" style={{ gridTemplateColumns: "220px 1fr", margin: 0 }}>
+            <dt style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+              {t("app.settings.assistant.indexIndexed")}
+            </dt>
+            <dd style={{ fontSize: 13.5, color: "var(--ink)", margin: 0 }}>{indexed}</dd>
+            <dt style={{ fontSize: 12.5, color: "var(--ink-2)" }}>
+              {t("app.settings.assistant.indexRemoved")}
+            </dt>
+            <dd style={{ fontSize: 13.5, color: "var(--ink)", margin: 0 }}>{removed ?? "0"}</dd>
+          </dl>
+        )}
+        <form action={reindexKnowledge}>
+          <button
+            type="submit"
+            disabled={!configured}
+            className="inline-flex items-center border font-medium"
+            style={{
+              height: 34,
+              borderRadius: 9,
+              padding: "0 14px",
+              fontSize: 13,
+              borderColor: "var(--line)",
+              background: "var(--panel)",
+              color: "var(--ink)",
+              opacity: configured ? 1 : 0.5,
+            }}
+          >
+            {t("app.settings.assistant.indexNow")}
+          </button>
+        </form>
+      </Card>
+
       <Card title={t("app.settings.assistant.byoCard")}>
         <p style={{ fontSize: 12.5, color: "var(--ink-2)", margin: 0 }}>
           {t("app.settings.assistant.byoHint")}
