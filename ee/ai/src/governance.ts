@@ -258,12 +258,21 @@ export async function runCapability<T>(
  * Elles sont ici et pas dans chaque appel pour qu'aucun nouvel appel ne puisse
  * les oublier : c'est la seule garantie qui tienne quand le nombre de capacités
  * grandit.
+ *
+ * **En anglais, et sans règle sur la langue.** La première version était écrite
+ * en français et disait « garde la langue du matériau » : mesuré contre
+ * `gemma-4-26b-a4b-it`, un ticket anglais du workspace de démo a produit un
+ * résumé et un brouillon entièrement en français. Un modèle suit la langue de
+ * son instruction bien avant celle de son matériau, et sur un produit en 25
+ * langues cela rendait chaque sortie française. La langue attendue se dit
+ * désormais explicitement, capacité par capacité, parce qu'elle n'est pas la
+ * même partout : le résumé est pour l'agent (langue de l'espace), le brouillon
+ * part chez le client (langue du fil).
  */
 const RULES = [
-  "Tu rédiges un brouillon, un humain le publie.",
-  "N'invente jamais un fait absent du matériau fourni ; quand tu ne sais pas, dis-le.",
-  "Garde la langue du matériau : un ticket en français reste en français.",
-  "Pas de préambule, pas de formule d'introduction, pas de méta-commentaire.",
+  "You write a draft; a human publishes it.",
+  "Never state a fact absent from the material you were given. When you do not know, say nothing rather than guess.",
+  "No preamble, no opening formula, no commentary about the material or about your own answer.",
 ].join("\n");
 
 /** Une complétion rédigée, avec les règles du produit et le décompte des masquages. */

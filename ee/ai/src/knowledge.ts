@@ -73,6 +73,18 @@ const SUMMARY_CHARS = 1200;
  * l'autre), donc les planchers conseillés pour d'autres modèles ne s'y
  * transposent pas. À recalibrer si le modèle d'embeddings change — d'où les
  * chiffres ci-dessus, qui disent comment.
+ *
+ * **Deuxième mesure, et elle resserre l'affaire.** Sur le ticket #4821 du
+ * workspace de démo (« Cannot export invoices to PDF », anglais, base
+ * d'articles anglaise), l'article qui répond — et dont le brouillon produit
+ * était juste — n'obtient que **0,655**, quand la meilleure macro française
+ * sans rapport obtient 0,621. Le plancher de 0,62 tient donc pour les deux cas
+ * mesurés, mais avec 0,035 de marge au lieu de 0,19 : l'écart utile est bien
+ * plus étroit d'une langue à l'autre qu'à l'intérieur d'une seule.
+ *
+ * Deux points de mesure ne font pas une calibration. C'est l'objet du jeu
+ * d'évaluation (IA-6) : tant qu'il n'existe pas, cette constante est un choix
+ * défendable et non un résultat, et c'est ce que ce commentaire doit dire.
  */
 const FLOOR = 0.62;
 

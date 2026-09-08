@@ -16,6 +16,7 @@ import {
   contacts,
   db,
   teams,
+  tenants,
   ticketMessages,
   tickets,
   type AiCapability,
@@ -170,6 +171,38 @@ function validLocale(raw: unknown): string | null {
 }
 
 /**
+ * La langue de l'espace, celle dans laquelle son équipe travaille.
+ *
+ * C'est la langue des sorties destinées à l'agent — le résumé, le triage —
+ * indépendamment de celle du client. Une équipe française qui reçoit un ticket
+ * en portugais veut un résumé en français ; c'est l'inverse pour le brouillon,
+ * qui part chez le client.
+ */
+async function workspaceLocale(tenantId: string): Promise<string> {
+  const [row] = await db
+    .select({ locale: tenants.locale })
+    .from(tenants)
+    .where(eq(tenants.id, tenantId));
+  return validLocale(row?.locale) ?? "en";
+}
+
+/**
+ * Le nom anglais d'une langue, pour l'écrire dans un prompt.
+ *
+ * Un code ISO seul ne suffit pas : « write in mt » est compris beaucoup moins
+ * sûrement que « write in Maltese », et c'est précisément sur les langues rares
+ * que la confusion coûte cher. `Intl.DisplayNames` porte déjà les 25, donc rien
+ * à maintenir à la main ; le code brut reste le repli.
+ */
+function languageName(locale: string): string {
+  try {
+    return new Intl.DisplayNames(["en"], { type: "language" }).of(locale) ?? locale;
+  } catch {
+    return locale;
+  }
+}
+
+/**
  * Propose une catégorie, une priorité, une langue et une équipe.
  *
  * **Refuse en dessous de quinze mots utiles.** Un « bonjour, ça ne marche
@@ -195,6 +228,10 @@ export async function triageTicket(
     .select({ id: teams.id, name: teams.name })
     .from(teams)
     .where(eq(teams.tenantId, tenantId));
+  /* La catégorie s'affiche dans l'inbox : elle est pour l'agent, donc dans la
+     langue de l'espace. Le champ `locale`, lui, reste celui du client — c'est
+     tout son objet. */
+  const locale = await workspaceLocale(tenantId);
 
   return runCapability(tenantId, "triage", actor, ticketId, async () => {
     const out = await ask(
@@ -205,6 +242,7 @@ export async function triageTicket(
         teamRows.length > 0
           ? `The teams are: ${teamRows.map((t) => t.name).join(", ")}.`
           : "There are no teams: return null for team.",
+        `Write "category" in ${languageName(locale)}. "locale" stays the ticket's own language.`,
         "Use null for anything the material does not support. A guess is worse than a null.",
       ].join("\n"),
       `Subject: ${thread.subject}\n\n${thread.text}`,
@@ -266,6 +304,11 @@ export async function summarizeThread(
   const thread = await threadFor(tenantId, ticketId, settings.sources.internalNotes);
   if (!thread || thread.text.length < 40) return { ok: false, reason: "no_source" };
 
+  /* Le résumé est lu par l'agent, donc il est écrit dans la langue de l'espace
+     — pas dans celle du client, qui peut écrire en portugais à une équipe
+     française. */
+  const locale = await workspaceLocale(tenantId);
+
   const value = await runCapability(tenantId, "summary", actor, ticketId, async () => {
     const out = await ask(
       provider,
@@ -273,6 +316,7 @@ export async function summarizeThread(
         "You summarise a support thread for the agent picking it up now.",
         "One paragraph, at most four sentences: what the customer wants, what has been tried, what is blocking.",
         "No greeting, no bullet list, no restatement of the subject line.",
+        `Write the summary in ${languageName(locale)}, whatever language the thread is in.`,
       ].join("\n"),
       `Subject: ${thread.subject}\n\n${thread.text}`,
       { maxTokens: 600, keep: thread.keep },
@@ -329,22 +373,34 @@ export async function draftReply(
       provider,
       [
         "You draft a support reply to a customer, for an agent to read and send.",
-        "Use ONLY the numbered material below. If it does not answer the question, say so in one sentence and stop.",
+        "Use ONLY the numbered material below. Never add a fact it does not contain.",
         "Do not cite the numbers in the reply: the interface shows the sources separately.",
         "No subject line, no signature — the product adds them.",
+        "Reply in the language of the THREAD, not the language of the material.",
+        'Answer with a JSON object: {"answers": true|false, "reply": "…"}.',
+        '"answers" is false when the material does not answer what the customer asks; then leave "reply" empty.',
+        'Never explain in "reply" that the material is insufficient — that is what "answers": false is for.',
       ].join("\n"),
       `MATERIAL\n${material}\n\nTHREAD\nSubject: ${thread.subject}\n\n${thread.text}`,
-      { maxTokens: 1200, keep: thread.keep },
+      { json: true, maxTokens: 1200, keep: thread.keep },
     );
+    /* Le refus passe par un champ, pas par une phrase. La première version
+       demandait au modèle de « le dire en une phrase » : il a répondu « le
+       matériau fourni ne contient pas d'estimation de délai », et l'écran a
+       inséré ce méta-commentaire dans le composeur comme s'il s'agissait d'un
+       brouillon. Un refus lisible par la machine remonte en `no_source`, et
+       l'écran propose alors d'écrire l'article manquant. */
+    const parsed = parseJson<{ answers?: boolean; reply?: string }>(out.text);
+    const text = parsed?.answers === true ? (parsed.reply ?? "").trim() : "";
     return {
-      result: { text: out.text, sources: passages } satisfies Draft,
+      result: { text, sources: passages } satisfies Draft,
       model: out.model,
       provider: provider.label,
       inputTokens: out.inputTokens,
       outputTokens: out.outputTokens,
       costMicros: out.costMicros,
       redactions: out.redactions,
-      refused: out.text.length === 0,
+      refused: text.length === 0,
     };
   });
   return value.text ? { ok: true, value } : { ok: false, reason: "no_source" };

@@ -9,7 +9,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "check": "tsx check.mts"
+    "check": "tsx check.mts",
+    "live": "tsx live.mts"
   },
   "dependencies": {
     "@openhelpdesk/config": "workspace:*",
