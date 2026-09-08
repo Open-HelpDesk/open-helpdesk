@@ -1265,3 +1265,176 @@ export const importRuns = app.table(
   },
   (t) => [index("import_runs_tenant_created").on(t.tenantId, t.createdAt)],
 );
+
+/* ---------- L'assistant — gouvernance, journal, connaissance, crédits ---------- */
+
+/**
+ * Ce que l'assistant sait faire (spec 18, AI-01 → AI-09).
+ *
+ * Les noms sont ceux du produit et non ceux des écrans : `reply_draft` reste
+ * `reply_draft` si la carte AI-03 change de numéro. `auto_reply` est déclarée
+ * ici alors qu'elle n'est pas livrée en v1 (décision D3) : la colonne accepte
+ * déjà sa valeur, ce qui évite une migration le jour où on l'ouvre.
+ */
+export type AiCapability =
+  | "triage"
+  | "summary"
+  | "reply_draft"
+  | "rewrite"
+  | "kb_article"
+  | "macro_suggest"
+  | "deflect"
+  | "auto_reply"
+  | "kb_search";
+
+/** Ce que l'espace autorise l'assistant à faire, et à lire. Une ligne par tenant. */
+export const aiSettings = app.table(
+  "ai_settings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    enabled: boolean("enabled").notNull().default(true),
+    /** Par capacité ; absente = allumée. */
+    capabilities: jsonb("capabilities")
+      .$type<Partial<Record<AiCapability, boolean>>>()
+      .notNull()
+      .default({}),
+    /**
+     * Ce que l'assistant a le droit de lire. `resolvedTickets` est à vrai par
+     * décision D5 — sans les tickets résolus la base est trop pauvre les
+     * premiers mois — et `internalNotes` à faux, parce qu'une note interne
+     * n'est pas écrite pour être lue par un modèle.
+     */
+    sources: jsonb("sources")
+      .$type<{ kb: boolean; macros: boolean; resolvedTickets: boolean; internalNotes: boolean }>()
+      .notNull()
+      .default({ kb: true, macros: true, resolvedTickets: true, internalNotes: false }),
+    /** Les langues où la déflexion est permise (spec 18 § 8.1) — vide = aucune. */
+    deflectionLocales: jsonb("deflection_locales").$type<string[]>().notNull().default([]),
+    /** Le plancher de confiance d'une sortie face au client, en centièmes. */
+    deflectionThreshold: integer("deflection_threshold").notNull().default(70),
+    /** Endpoint du client quand il apporte son modèle (BYO LLM, ee) — chiffré. */
+    byoEndpoint: text("byo_endpoint"),
+    byoModel: text("byo_model"),
+    byoSecret: text("byo_secret"),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("ai_settings_tenant").on(t.tenantId)],
+);
+
+/**
+ * Le journal : un appel, une ligne, quoi qu'il arrive.
+ *
+ * `costMicros` est la colonne qui n'existe pas chez Open Incident et qui est
+ * indispensable ici : on vend une résolution 0,49 € et il faut savoir ce
+ * qu'elle coûte (décision D4). En millionièmes d'euro parce qu'un appel de
+ * triage coûte 0,00023 € — en centimes, tout vaudrait zéro.
+ */
+export const aiCalls = app.table(
+  "ai_calls",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    capability: text("capability").$type<AiCapability | "embed">().notNull(),
+    provider: text("provider").notNull(),
+    model: text("model").notNull(),
+    actorKind: text("actor_kind").$type<"agent" | "contact" | "system" | "api">().notNull(),
+    actorUserId: uuid("actor_user_id").references(() => users.id, { onDelete: "set null" }),
+    actorName: text("actor_name"),
+    ticketId: uuid("ticket_id").references(() => tickets.id, { onDelete: "set null" }),
+    inputTokens: integer("input_tokens").notNull().default(0),
+    outputTokens: integer("output_tokens").notNull().default(0),
+    costMicros: integer("cost_micros").notNull().default(0),
+    durationMs: integer("duration_ms").notNull().default(0),
+    status: text("status").$type<"ok" | "failed" | "refused">().notNull().default("ok"),
+    /** `refused` n'est pas une panne : c'est « rien dans la base ne répond ». */
+    error: text("error"),
+    /** Ce que la rédaction a masqué, par type — la preuve, pas la promesse. */
+    redactions: jsonb("redactions").$type<Record<string, number>>().notNull().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("ai_calls_tenant_created").on(t.tenantId, t.createdAt)],
+);
+
+/** La couche de connaissance : un document résumé et vectorisé par objet lisible. */
+export const aiDocuments = app.table(
+  "ai_documents",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    source: text("source").$type<"kb_article" | "macro" | "resolved_ticket">().notNull(),
+    refId: text("ref_id").notNull(),
+    locale: text("locale"),
+    title: text("title").notNull(),
+    summary: text("summary").notNull(),
+    /** L'embedding, en nombres — comparé dans l'application, aucune extension requise. */
+    embedding: jsonb("embedding").$type<number[] | null>(),
+    model: text("model"),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("ai_documents_ref").on(t.tenantId, t.source, t.refId)],
+);
+
+/**
+ * Une réponse servie à un client final, et ce qu'elle est devenue.
+ *
+ * Le compteur est à deux étages (spec 18 § 3.1) : `provisional` dès le signal
+ * positif, puis `confirmed` ou `returned` après la fenêtre de 72 h. Le silence
+ * ne crée jamais de ligne comptée — c'est ici que cette règle vit.
+ */
+export const aiDeflections = app.table(
+  "ai_deflections",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    contactId: uuid("contact_id").references(() => contacts.id, { onDelete: "set null" }),
+    surface: text("surface").$type<"portal" | "widget" | "email">().notNull(),
+    locale: text("locale"),
+    question: text("question").notNull(),
+    /** Les articles cités, pour l'audit par réponse. */
+    sources: jsonb("sources").$type<string[]>().notNull().default([]),
+    status: text("status")
+      .$type<"provisional" | "confirmed" | "returned">()
+      .notNull()
+      .default("provisional"),
+    /** Le ticket qui a rendu le crédit, quand il y en a eu un. */
+    ticketId: uuid("ticket_id").references(() => tickets.id, { onDelete: "set null" }),
+    confirmAfter: timestamp("confirm_after", { withTimezone: true }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("ai_deflections_tenant_created").on(t.tenantId, t.createdAt),
+    index("ai_deflections_pending").on(t.status, t.confirmAfter),
+  ],
+);
+
+/**
+ * Le portefeuille de crédits achetés d'avance (décision D4).
+ *
+ * Pas de dépassement facturé après coup : au quota, la déflexion s'arrête et
+ * l'espace achète un lot par carte. Une ligne par lot, jamais décrémentée en
+ * place — ce qui reste se lit en soustrayant les déflexions confirmées.
+ */
+export const aiCredits = app.table(
+  "ai_credits",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    resolutions: integer("resolutions").notNull(),
+    /** Ce que le lot a coûté au client, en centimes, tel que facturé. */
+    priceCents: integer("price_cents").notNull(),
+    stripePaymentIntentId: text("stripe_payment_intent_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("ai_credits_tenant").on(t.tenantId, t.createdAt)],
+);

@@ -1,0 +1,24 @@
+{
+  "name": "@openhelpdesk/ee-ai",
+  "version": "0.2.0",
+  "private": true,
+  "license": "SEE LICENSE IN ../LICENSE",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "check": "tsx check.mts"
+  },
+  "dependencies": {
+    "@openhelpdesk/config": "workspace:*",
+    "@openhelpdesk/db": "workspace:*",
+    "drizzle-orm": "^0.44.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0",
+    "tsx": "^4.19.0"
+  }
+}

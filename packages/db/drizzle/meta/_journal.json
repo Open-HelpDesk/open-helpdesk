@@ -183,6 +183,13 @@
       "when": 1788815010717,
       "tag": "0025_chilly_triathlon",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1788890531775,
+      "tag": "0026_windy_pestilence",
+      "breakpoints": true
     }
   ]
 }
