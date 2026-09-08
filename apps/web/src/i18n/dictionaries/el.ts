@@ -1942,6 +1942,105 @@ export const el: Dictionary = {
   "app.settings.dev.exportEnterpriseOnly":
     "Το αρχείο ελέγχου αποτελεί μέρος της έκδοσης Enterprise Edition.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Βοηθός",
+  "app.settings.assistant.subtitle": "Τι μπορεί να κάνει ο βοηθός, τι διαβάζει και πόσο κοστίζει.",
+  "app.settings.assistant.lockedTitle": "Ο βοηθός αποτελεί μέρος της έκδοσης Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Διαλογή, συνόψεις της συνομιλίας, πρόχειρα απαντήσεων γραμμένα από τη βάση γνώσης σας και απαντήσεις αυτοεξυπηρέτησης για τους πελάτες σας. Ο βοηθός γράφει το πρόχειρο· τη δημοσίευση την κάνει άνθρωπος.",
+  "app.settings.assistant.unconfiguredTitle": "Δεν έχει ρυθμιστεί κανένας πάροχος μοντέλου.",
+  "app.settings.assistant.unconfiguredText": "Τίποτα δεν προσομοιώνεται: κάθε λειτουργία παραμένει μη διαθέσιμη μέχρι να δοθεί πάροχος σε αυτήν την εγκατάσταση ή μέχρι αυτός ο χώρος εργασίας να φέρει το δικό του μοντέλο, παρακάτω.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Πάροχος",
+  "app.settings.assistant.providerName": "Πάροχος",
+  "app.settings.assistant.providerModel": "Μοντέλο",
+  "app.settings.assistant.providerRegion": "Περιοχή",
+  "app.settings.assistant.providerOwn": "Το δικό σας μοντέλο",
+  "app.settings.assistant.noTraining": "Το Open HelpDesk δεν εκπαιδεύει ποτέ τίποτα στα δεδομένα σας, ούτε το κάνει ο πάροχος για λογαριασμό μας.",
+  "app.settings.assistant.redactionNote": "Τα email, οι αριθμοί τηλεφώνου, οι αριθμοί καρτών, τα IBAN, οι διευθύνσεις IP και οτιδήποτε μοιάζει με μυστικό αφαιρούνται προτού ένα prompt φύγει από αυτήν την εγκατάσταση. Η καταγραφή παρακάτω μετρά όσα αφαιρέθηκαν.",
+
+  "app.settings.assistant.masterCard": "Γενικός διακόπτης",
+  "app.settings.assistant.enabled": "Ο βοηθός είναι ενεργός για αυτόν τον χώρο εργασίας",
+  "app.settings.assistant.enabledHint": "Απενεργοποιημένος: κάθε λειτουργία εξαφανίζεται από τις οθόνες, αντί να εμφανίζεται γκριζαρισμένη.",
+
+  "app.settings.assistant.capabilitiesCard": "Λειτουργίες",
+  "app.settings.assistant.capTriage": "Προτεινόμενη διαλογή",
+  "app.settings.assistant.capTriageHint": "Προτείνει κατηγορία, προτεραιότητα και ομάδα μόλις φτάσει το τικέτ. Τίποτα δεν εφαρμόζεται χωρίς κλικ.",
+  "app.settings.assistant.capSummary": "Σύνοψη της συνομιλίας",
+  "app.settings.assistant.capSummaryHint": "Μια παράγραφος για όποιον αναλαμβάνει το τικέτ τώρα.",
+  "app.settings.assistant.capReplyDraft": "Πρόχειρο απάντησης",
+  "app.settings.assistant.capReplyDraftHint": "Γράφεται από τη βάση γνώσης σας, με τα άρθρα που χρησιμοποίησε. Όταν δεν βρίσκει τίποτα, αρνείται αντί να επινοήσει.",
+  "app.settings.assistant.capRewrite": "Επαναδιατύπωση και μετάφραση",
+  "app.settings.assistant.capRewriteHint": "Πιο σύντομο, πιο φιλικό, πιο επίσημο ή σε άλλη γλώσσα — μόνο στο επιλεγμένο κείμενο.",
+  "app.settings.assistant.capKbArticle": "Άρθρο από επιλυμένο τικέτ",
+  "app.settings.assistant.capKbArticleHint": "Φτάνει ως πρόχειρο στη βάση γνώσης, χωρίς τα στοιχεία του πελάτη. Δεν δημοσιεύεται ποτέ από μόνο του.",
+  "app.settings.assistant.capMacroSuggest": "Προτεινόμενη μακροεντολή",
+  "app.settings.assistant.capMacroSuggestHint": "Προτείνει μια απάντηση που η ομάδα σας έχει ήδη εγκρίνει, αντί να γράψει νέα.",
+  "app.settings.assistant.capDeflect": "Απάντηση σε πελάτες χωρίς χειριστή",
+  "app.settings.assistant.capDeflectHint": "Στο κέντρο βοήθειας και στο widget, προτού υποβληθεί αίτημα. Είναι η μόνη λειτουργία που βλέπουν οι πελάτες σας.",
+  "app.settings.assistant.capKbSearch": "Αναζήτηση με βάση το νόημα",
+  "app.settings.assistant.capKbSearchHint": "Ταξινομεί τα άρθρα του κέντρου βοήθειας με βάση το νόημα της ερώτησης. Δεν παράγει τίποτα και δεν καταναλώνει ποσόστωση.",
+
+  "app.settings.assistant.sourcesCard": "Τι διαβάζει",
+  "app.settings.assistant.sourceKb": "Δημοσιευμένα άρθρα της βάσης γνώσης",
+  "app.settings.assistant.sourceMacros": "Μακροεντολές",
+  "app.settings.assistant.sourceResolved": "Επιλυμένα τικέτ",
+  "app.settings.assistant.sourceResolvedHint": "Οι δικές σας απαντήσεις, και αυτό είναι που κάνει χρήσιμες τις πρώτες εβδομάδες. Δεν κοινοποιούνται ποτέ σε άλλον χώρο εργασίας.",
+  "app.settings.assistant.sourceNotes": "Εσωτερικές σημειώσεις",
+  "app.settings.assistant.sourceNotesHint": "Απενεργοποιημένο εξ ορισμού: μια σημείωση γράφεται για την ομάδα σας, όχι για ένα μοντέλο, και ακόμη λιγότερο για να τροφοδοτήσει μια απάντηση προς πελάτη.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Απαντήσεις στους πελάτες σας",
+  "app.settings.assistant.deflectionLocales": "Επιτρεπόμενες γλώσσες",
+  "app.settings.assistant.deflectionLocalesHint": "Οι απαντήσεις δίνονται μόνο στις γλώσσες που επιτρέπετε εδώ. Η ποιότητα των μοντέλων δεν έχει μετρηθεί σε αρκετές ευρωπαϊκές γλώσσες, και μια απάντηση που κανείς δεν μπορεί να αξιολογήσει είναι ρίσκο που δεν αναλαμβάνουμε για λογαριασμό σας — στις άλλες λειτουργίες ο βοηθός βοηθά τους χειριστές σας, που διαβάζουν πριν στείλουν.",
+  "app.settings.assistant.deflectionNoLocale": "Καμία γλώσσα δεν επιτρέπεται: οι πελάτες σας δεν βλέπουν καμία απάντηση και κάθε αίτημα φτάνει σε χειριστή.",
+  "app.settings.assistant.deflectionThreshold": "Κατώφλι βεβαιότητας",
+  "app.settings.assistant.deflectionThresholdHint": "Κάτω από αυτό ο βοηθός σιωπά αντί να απαντήσει. Ανεβάστε το αν κάποια απάντηση φανεί λανθασμένη.",
+  "app.settings.assistant.disclosureNote": "Κάθε απάντηση δηλώνει ότι δημιουργήθηκε αυτόματα και φέρει σήμανση αναγνώσιμη από μηχανή. Απαιτείται από το άρθρο 50 του ευρωπαϊκού κανονισμού για την τεχνητή νοημοσύνη, και είναι έτσι κι αλλιώς το σωστό.",
+
+  "app.settings.assistant.byoCard": "Χρησιμοποιήστε το δικό σας μοντέλο",
+  "app.settings.assistant.byoHint": "Στρέψτε τον βοηθό στο δικό σας τελικό σημείο συμβατό με OpenAI: πάροχο της επιλογής σας ή μοντέλο που φιλοξενείτε εσείς. Τα prompt σας περνούν τότε από το δικό σας συμβόλαιο, και εδώ τίποτα δεν μετράται ούτε περιορίζεται.",
+  "app.settings.assistant.byoEndpoint": "Τελικό σημείο",
+  "app.settings.assistant.byoModel": "Μοντέλο",
+  "app.settings.assistant.byoSecret": "Κλειδί API",
+  "app.settings.assistant.byoSecretSet": "Υπάρχει αποθηκευμένο κλειδί. Αφήστε το πεδίο κενό για να το διατηρήσετε.",
+  "app.settings.assistant.byoClear": "Επιστροφή στον φιλοξενούμενο πάροχο",
+
+  "app.settings.assistant.usageCard": "Χρήση αυτόν τον μήνα",
+  "app.settings.assistant.usageQuota": "Χρησιμοποιημένες απαντήσεις σε πελάτες",
+  "app.settings.assistant.usageProvisional": "σε αναμονή επιβεβαίωσης",
+  "app.settings.assistant.usageReturned": "πιστώθηκαν πίσω",
+  "app.settings.assistant.usageReturnedHint": "Μια απάντηση που ακολουθείται από αίτημα εντός 72 ωρών δεν σας κοστίζει τίποτα.",
+  "app.settings.assistant.usageQuotaReached": "Η ποσόστωση του μήνα εξαντλήθηκε: οι απαντήσεις στους πελάτες σας είναι σε παύση και κάθε αίτημα φτάνει σε χειριστή. Οι λειτουργίες από την πλευρά των χειριστών συνεχίζουν να λειτουργούν.",
+  "app.settings.assistant.usageBuy": "Αγορά περισσότερων απαντήσεων",
+  "app.settings.assistant.usageCalls": "Κλήσεις",
+  "app.settings.assistant.usageCost": "Κόστος",
+  "app.settings.assistant.usageNoQuota": "Το δικό σας μοντέλο: εδώ δεν μετράται τίποτα.",
+
+  "app.settings.assistant.logCard": "Αρχείο κλήσεων",
+  "app.settings.assistant.logHint": "Κάθε κλήση, όποιο και να είναι το αποτέλεσμα — το ίχνος που θα ζητήσει το δικό σας αρχείο δραστηριοτήτων επεξεργασίας.",
+  "app.settings.assistant.logExport": "Εξαγωγή CSV",
+  "app.settings.assistant.colWhen": "Πότε",
+  "app.settings.assistant.colFunction": "Λειτουργία",
+  "app.settings.assistant.colWho": "Ποιος",
+  "app.settings.assistant.colTicket": "Τικέτ",
+  "app.settings.assistant.colModel": "Μοντέλο",
+  "app.settings.assistant.colTokens": "Tokens",
+  "app.settings.assistant.colOutcome": "Αποτέλεσμα",
+  "app.settings.assistant.outcomeOk": "Απαντήθηκε",
+  "app.settings.assistant.outcomeRefused": "Δεν βρήκε τίποτα",
+  "app.settings.assistant.outcomeFailed": "Απέτυχε",
+  "app.settings.assistant.logEmpty": "Καμία κλήση ακόμη — θα εμφανίζονται εδώ μόλις χρησιμοποιηθεί ο βοηθός.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Η διεύθυνση αυτή δεν είναι έγκυρο URL.",
+  "app.settings.assistant.errInsecure": "Ένα τελικό σημείο προσβάσιμο από το δημόσιο διαδίκτυο πρέπει να χρησιμοποιεί https — ένα κλειδί API δεν πρέπει να ταξιδεύει χωρίς κρυπτογράφηση.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Χώρος εργασίας",
   "app.settingsNav.itemGeneral": "Γενικά",
@@ -1956,6 +2055,7 @@ export const el: Dictionary = {
   "app.settingsNav.itemMacros": "Μακροεντολές",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Ικανοποίηση",
+  "app.settingsNav.itemAssistant": "Βοηθός",
   "app.settingsNav.groupSecurity": "Ασφάλεια",
   "app.settingsNav.itemAgentSso": "SSO χειριστών",
   "app.settingsNav.itemCustomerSso": "SSO πελατών",

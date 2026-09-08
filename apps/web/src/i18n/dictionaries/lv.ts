@@ -2044,6 +2044,105 @@ export const lv: Dictionary = {
   "app.settings.dev.exportForbidden": "Pieejams tikai Owner un Admin lomām.",
   "app.settings.dev.exportEnterpriseOnly": "Audita žurnāls ir daļa no izdevuma Enterprise Edition.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Asistents",
+  "app.settings.assistant.subtitle": "Ko asistentam ir atļauts darīt, ko tas lasa un cik tas maksā.",
+  "app.settings.assistant.lockedTitle": "Asistents ir daļa no izdevuma Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Šķirošana, sarunu kopsavilkumi, atbilžu melnraksti, kas rakstīti no jūsu zināšanu bāzes, un pašapkalpošanās atbildes jūsu klientiem. Asistents raksta melnrakstu, publicē cilvēks.",
+  "app.settings.assistant.unconfiguredTitle": "Nav konfigurēts neviens inferences nodrošinātājs.",
+  "app.settings.assistant.unconfiguredText": "Nekas netiek imitēts: neviena funkcija nav pieejama, kamēr šai instancei nav norādīts nodrošinātājs vai kamēr šī darbvieta zemāk nenorāda savu modeli.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Nodrošinātājs",
+  "app.settings.assistant.providerName": "Nodrošinātājs",
+  "app.settings.assistant.providerModel": "Modelis",
+  "app.settings.assistant.providerRegion": "Reģions",
+  "app.settings.assistant.providerOwn": "Nodrošina šī darbvieta",
+  "app.settings.assistant.noTraining": "Open HelpDesk nekad neapmāca neko ar jūsu datiem, un nodrošinātājs mūsu vārdā to arī nedara.",
+  "app.settings.assistant.redactionNote": "E-pasta adreses, tālruņa numuri, kartes numuri, IBAN, IP adreses un viss, kas izskatās pēc noslēpuma, tiek izņemts, pirms uzvedne atstāj šo instanci. Zemāk esošais žurnāls uzskaita, kas tika izņemts.",
+
+  "app.settings.assistant.masterCard": "Galvenais slēdzis",
+  "app.settings.assistant.enabled": "Asistents šajā darbvietā ir ieslēgts",
+  "app.settings.assistant.enabledHint": "Izslēgts: katra funkcija pazūd no ekrāniem, nevis tiek rādīta pelēkā krāsā.",
+
+  "app.settings.assistant.capabilitiesCard": "Funkcijas",
+  "app.settings.assistant.capTriage": "Ieteiktā šķirošana",
+  "app.settings.assistant.capTriageHint": "Saņemot pieteikumu, ierosina kategoriju, prioritāti un komandu. Nekas netiek piemērots bez klikšķa.",
+  "app.settings.assistant.capSummary": "Sarunas kopsavilkums",
+  "app.settings.assistant.capSummaryHint": "Viena rindkopa tam, kas pieteikumu pārņem tagad.",
+  "app.settings.assistant.capReplyDraft": "Atbildes melnraksts",
+  "app.settings.assistant.capReplyDraftHint": "Rakstīts no jūsu zināšanu bāzes, kopā ar izmantotajiem rakstiem. Ja asistents neko neatrod, tas labāk atsakās, nekā izdomā.",
+  "app.settings.assistant.capRewrite": "Pārrakstīšana un tulkošana",
+  "app.settings.assistant.capRewriteHint": "Īsāk, siltāk, formālāk vai citā valodā — tikai atlasītajam tekstam.",
+  "app.settings.assistant.capKbArticle": "Raksts no atrisināta pieteikuma",
+  "app.settings.assistant.capKbArticleHint": "Nonāk zināšanu bāzē kā melnraksts, bez klienta datiem. Nekad netiek publicēts pats no sevis.",
+  "app.settings.assistant.capMacroSuggest": "Ieteiktais makro",
+  "app.settings.assistant.capMacroSuggestHint": "Piedāvā atbildi, ko jūsu komanda jau ir apstiprinājusi, nevis raksta jaunu.",
+  "app.settings.assistant.capDeflect": "Atbildēšana klientiem bez aģenta",
+  "app.settings.assistant.capDeflectHint": "Palīdzības centrā un logrīkā, pirms pieprasījums ir iesniegts. Šī ir vienīgā funkcija, ko redz jūsu klienti.",
+  "app.settings.assistant.capKbSearch": "Meklēšana pēc nozīmes",
+  "app.settings.assistant.capKbSearchHint": "Sarindo palīdzības centra rakstus pēc tā, ko jautājums nozīmē. Neko negenerē un nekad netiek ieskaitīta jūsu kvotā.",
+
+  "app.settings.assistant.sourcesCard": "Ko asistents lasa",
+  "app.settings.assistant.sourceKb": "Publicētie zināšanu bāzes raksti",
+  "app.settings.assistant.sourceMacros": "Makro",
+  "app.settings.assistant.sourceResolved": "Atrisinātie pieteikumi",
+  "app.settings.assistant.sourceResolvedHint": "Jūsu pašu atbildes — tieši tāpēc jau pirmās nedēļas ir noderīgas. Nekad netiek koplietotas ar citu darbvietu.",
+  "app.settings.assistant.sourceNotes": "Iekšējās piezīmes",
+  "app.settings.assistant.sourceNotesHint": "Pēc noklusējuma izslēgts: piezīme tiek rakstīta jūsu komandai, nevis modelim, un vēl jo mazāk, lai nonāktu atbildē klientam.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Atbildes jūsu klientiem",
+  "app.settings.assistant.deflectionLocales": "Atļautās valodas",
+  "app.settings.assistant.deflectionLocalesHint": "Atbildes tiek sniegtas tikai šeit atļautajās valodās. Vairākās Eiropas valodās modeļu kvalitāte nav izmērīta, un atbilde, ko neviens nevar novērtēt, ir risks, ko mēs jūsu vietā neuzņemamies — citur asistents palīdz jūsu aģentiem, kas pirms nosūtīšanas izlasa.",
+  "app.settings.assistant.deflectionNoLocale": "Nav atļauta neviena valoda: jūsu klienti neredz nevienu atbildi, un katrs pieprasījums nonāk pie aģenta.",
+  "app.settings.assistant.deflectionThreshold": "Zemākais pārliecības līmenis",
+  "app.settings.assistant.deflectionThresholdHint": "Zem tā asistents labāk klusē, nekā atbild. Paaugstiniet to, ja kāda atbilde izrādās nepareiza.",
+  "app.settings.assistant.disclosureNote": "Katra atbilde norāda, ka tā ir ģenerēta automātiski, un tai ir mašīnlasāms marķējums. To pieprasa Eiropas Mākslīgā intelekta akta 50. pants — un tā jebkurā gadījumā ir pareizi.",
+
+  "app.settings.assistant.byoCard": "Izmantot savu modeli",
+  "app.settings.assistant.byoHint": "Norādiet asistentam savu ar OpenAI saderīgo galapunktu — izvēlēta nodrošinātāja vai modeļa, ko mitināt pats. Tad jūsu uzvednes iet pa jūsu līgumu, un šeit nekas netiek ne uzskaitīts, ne ierobežots.",
+  "app.settings.assistant.byoEndpoint": "Galapunkts",
+  "app.settings.assistant.byoModel": "Modelis",
+  "app.settings.assistant.byoSecret": "API atslēga",
+  "app.settings.assistant.byoSecretSet": "Atslēga ir saglabāta. Lai to paturētu, atstājiet lauku tukšu.",
+  "app.settings.assistant.byoClear": "Atkal izmantot šīs instances nodrošinātāju",
+
+  "app.settings.assistant.usageCard": "Šā mēneša patēriņš",
+  "app.settings.assistant.usageQuota": "Izmantotās atbildes klientiem",
+  "app.settings.assistant.usageProvisional": "gaida apstiprinājumu",
+  "app.settings.assistant.usageReturned": "atgrieztās atbildes",
+  "app.settings.assistant.usageReturnedHint": "Atbilde, kurai 72 stundu laikā seko pieprasījums, jums neizmaksā neko.",
+  "app.settings.assistant.usageQuotaReached": "Šā mēneša kvota ir izsmelta: atbildes jūsu klientiem ir apturētas, un katrs pieprasījums nonāk pie aģenta. Aģentu puses funkcijas turpina darboties.",
+  "app.settings.assistant.usageBuy": "Iegādāties vairāk atbilžu",
+  "app.settings.assistant.usageCalls": "Izsaukumi",
+  "app.settings.assistant.usageCost": "Izmaksas",
+  "app.settings.assistant.usageNoQuota": "Jūsu pašu modelis: šeit nekas netiek uzskaitīts.",
+
+  "app.settings.assistant.logCard": "Izsaukumu žurnāls",
+  "app.settings.assistant.logHint": "Katrs izsaukums neatkarīgi no iznākuma — pierādījums, ko prasīs jūsu pašu apstrādes darbību reģistrs.",
+  "app.settings.assistant.logExport": "Eksportēt CSV",
+  "app.settings.assistant.colWhen": "Kad",
+  "app.settings.assistant.colFunction": "Funkcija",
+  "app.settings.assistant.colWho": "Kas",
+  "app.settings.assistant.colTicket": "Pieteikums",
+  "app.settings.assistant.colModel": "Modelis",
+  "app.settings.assistant.colTokens": "Tokens",
+  "app.settings.assistant.colOutcome": "Iznākums",
+  "app.settings.assistant.outcomeOk": "Atbildēts",
+  "app.settings.assistant.outcomeRefused": "Nekas nav atrasts",
+  "app.settings.assistant.outcomeFailed": "Neizdevās",
+  "app.settings.assistant.logEmpty": "Vēl nav neviena izsaukuma — tie parādīsies šeit, tiklīdz asistents tiks izmantots.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Šī adrese nav derīga URL.",
+  "app.settings.assistant.errInsecure": "Galapunktam, kas sasniedzams caur publisko internetu, jāizmanto https — API atslēga nedrīkst ceļot nešifrēta.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Darbvieta",
   "app.settingsNav.itemGeneral": "Vispārīgi",
@@ -2058,6 +2157,7 @@ export const lv: Dictionary = {
   "app.settingsNav.itemMacros": "Makro",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Apmierinātība",
+  "app.settingsNav.itemAssistant": "Asistents",
   "app.settingsNav.groupSecurity": "Drošība",
   "app.settingsNav.itemAgentSso": "Aģentu SSO",
   "app.settingsNav.itemCustomerSso": "Klientu SSO",

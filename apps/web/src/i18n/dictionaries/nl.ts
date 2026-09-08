@@ -280,6 +280,7 @@ export const nl: Dictionary = {
   "app.settingsNav.itemMacros": "Macro's",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Tevredenheid",
+  "app.settingsNav.itemAssistant": "Assistent",
   "app.settingsNav.groupSecurity": "Beveiliging",
   "app.settingsNav.itemAgentSso": "Agent-SSO",
   "app.settingsNav.itemCustomerSso": "Klant-SSO",
@@ -1748,6 +1749,105 @@ export const nl: Dictionary = {
   "app.settings.dev.exportForbidden": "Alleen voor de rollen Owner en Admin.",
   "app.settings.dev.exportEnterpriseOnly":
     "Het auditlogboek maakt deel uit van Enterprise Edition.",
+
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Assistent",
+  "app.settings.assistant.subtitle": "Wat de assistent mag doen, wat hij leest en wat hij kost.",
+  "app.settings.assistant.lockedTitle": "De assistent maakt deel uit van Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Triage, samenvattingen van gesprekken, antwoordconcepten op basis van uw kennisbank en selfserviceantwoorden voor uw klanten. De assistent maakt een concept, een mens publiceert.",
+  "app.settings.assistant.unconfiguredTitle": "Er is geen inferentieprovider geconfigureerd.",
+  "app.settings.assistant.unconfiguredText": "Er wordt niets gesimuleerd: elke functie blijft onbeschikbaar totdat deze instantie een provider krijgt, of totdat deze werkruimte hieronder haar eigen model opgeeft.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Provider",
+  "app.settings.assistant.providerName": "Provider",
+  "app.settings.assistant.providerModel": "Model",
+  "app.settings.assistant.providerRegion": "Regio",
+  "app.settings.assistant.providerOwn": "Uw eigen model",
+  "app.settings.assistant.noTraining": "Open HelpDesk traint niets op uw gegevens, en de provider doet dat namens ons evenmin.",
+  "app.settings.assistant.redactionNote": "E-mailadressen, telefoonnummers, kaartnummers, IBAN's, IP-adressen en alles wat op een geheim lijkt, worden verwijderd voordat een prompt deze instantie verlaat. Het logboek hieronder telt wat er is verwijderd.",
+
+  "app.settings.assistant.masterCard": "Hoofdschakelaar",
+  "app.settings.assistant.enabled": "De assistent is ingeschakeld voor deze werkruimte",
+  "app.settings.assistant.enabledHint": "Uit: elke functie verdwijnt uit de schermen in plaats van grijs weergegeven te worden.",
+
+  "app.settings.assistant.capabilitiesCard": "Functies",
+  "app.settings.assistant.capTriage": "Voorgestelde triage",
+  "app.settings.assistant.capTriageHint": "Stelt bij binnenkomst een categorie, een prioriteit en een team voor. Niets wordt toegepast zonder klik.",
+  "app.settings.assistant.capSummary": "Samenvatting van het gesprek",
+  "app.settings.assistant.capSummaryHint": "Één alinea voor wie het ticket nu oppakt.",
+  "app.settings.assistant.capReplyDraft": "Antwoordconcept",
+  "app.settings.assistant.capReplyDraftHint": "Geschreven op basis van uw kennisbank, met de gebruikte artikelen erbij. Vindt de assistent niets, dan weigert hij liever dan iets te verzinnen.",
+  "app.settings.assistant.capRewrite": "Herschrijven en vertalen",
+  "app.settings.assistant.capRewriteHint": "Korter, vriendelijker, formeler of in een andere taal — alleen op de geselecteerde tekst.",
+  "app.settings.assistant.capKbArticle": "Artikel op basis van een opgelost ticket",
+  "app.settings.assistant.capKbArticleHint": "Komt als concept in de kennisbank terecht, zonder de gegevens van de klant. Wordt nooit vanzelf gepubliceerd.",
+  "app.settings.assistant.capMacroSuggest": "Voorgestelde macro",
+  "app.settings.assistant.capMacroSuggestHint": "Biedt een antwoord aan dat uw team al heeft goedgekeurd, in plaats van een nieuw antwoord te schrijven.",
+  "app.settings.assistant.capDeflect": "Klantvragen zonder agent beantwoorden",
+  "app.settings.assistant.capDeflectHint": "In het helpcentrum en in de widget, voordat een verzoek wordt verstuurd. Dit is de enige functie die uw klanten zien.",
+  "app.settings.assistant.capKbSearch": "Zoeken op betekenis",
+  "app.settings.assistant.capKbSearchHint": "Rangschikt de artikelen van het helpcentrum op basis van wat de vraag betekent. Genereert niets en gaat niet van uw tegoed af.",
+
+  "app.settings.assistant.sourcesCard": "Wat de assistent leest",
+  "app.settings.assistant.sourceKb": "Gepubliceerde artikelen in de kennisbank",
+  "app.settings.assistant.sourceMacros": "Macro's",
+  "app.settings.assistant.sourceResolved": "Opgeloste tickets",
+  "app.settings.assistant.sourceResolvedHint": "Uw eigen antwoorden; daardoor zijn de eerste weken al nuttig. Ze worden nooit met een andere werkruimte gedeeld.",
+  "app.settings.assistant.sourceNotes": "Interne notities",
+  "app.settings.assistant.sourceNotesHint": "Standaard uit: een notitie is bedoeld voor uw team, niet voor een model, en al helemaal niet om er een antwoord aan een klant mee te voeden.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Antwoorden aan uw klanten",
+  "app.settings.assistant.deflectionLocales": "Toegestane talen",
+  "app.settings.assistant.deflectionLocalesHint": "Antwoorden worden alleen gegeven in de talen die u hier toestaat. Voor verschillende Europese talen is de kwaliteit van de modellen niet gemeten, en een antwoord dat niemand kan beoordelen is een risico dat wij niet namens u nemen — elders helpt de assistent uw agents, die lezen voordat ze versturen.",
+  "app.settings.assistant.deflectionNoLocale": "Geen taal toegestaan: uw klanten zien geen antwoord en elk verzoek komt bij een agent terecht.",
+  "app.settings.assistant.deflectionThreshold": "Minimale zekerheid",
+  "app.settings.assistant.deflectionThresholdHint": "Daaronder blijft de assistent stil in plaats van te antwoorden. Verhoog de waarde als een antwoord er ooit verkeerd uitziet.",
+  "app.settings.assistant.disclosureNote": "Elk antwoord vermeldt dat het automatisch is gegenereerd en draagt een machineleesbare markering. Vereist door artikel 50 van de Europese AI-verordening, en hoe dan ook het juiste om te doen.",
+
+  "app.settings.assistant.byoCard": "Uw eigen model gebruiken",
+  "app.settings.assistant.byoHint": "Laat de assistent uw eigen OpenAI-compatibele endpoint gebruiken — een provider naar keuze of een model dat u zelf host. Uw prompts gaan dan via uw eigen contract, en hier wordt niets geteld of begrensd.",
+  "app.settings.assistant.byoEndpoint": "Endpoint",
+  "app.settings.assistant.byoModel": "Model",
+  "app.settings.assistant.byoSecret": "API-sleutel",
+  "app.settings.assistant.byoSecretSet": "Er is een sleutel opgeslagen. Laat het veld leeg om die te behouden.",
+  "app.settings.assistant.byoClear": "Weer de gehoste provider gebruiken",
+
+  "app.settings.assistant.usageCard": "Gebruik deze maand",
+  "app.settings.assistant.usageQuota": "Gebruikte klantantwoorden",
+  "app.settings.assistant.usageProvisional": "in afwachting van bevestiging",
+  "app.settings.assistant.usageReturned": "teruggeboekt",
+  "app.settings.assistant.usageReturnedHint": "Een antwoord waarop binnen 72 uur alsnog een verzoek volgt, kost u niets.",
+  "app.settings.assistant.usageQuotaReached": "Het tegoed van deze maand is op: antwoorden aan uw klanten zijn gepauzeerd en elk verzoek komt bij een agent terecht. De functies voor agents blijven werken.",
+  "app.settings.assistant.usageBuy": "Antwoorden bijkopen",
+  "app.settings.assistant.usageCalls": "Aanroepen",
+  "app.settings.assistant.usageCost": "Kosten",
+  "app.settings.assistant.usageNoQuota": "Uw eigen model: hier wordt niets geteld.",
+
+  "app.settings.assistant.logCard": "Logboek van aanroepen",
+  "app.settings.assistant.logHint": "Elke aanroep, wat de uitkomst ook is — de vastlegging waar uw eigen verwerkingsregister om vraagt.",
+  "app.settings.assistant.logExport": "CSV-export",
+  "app.settings.assistant.colWhen": "Wanneer",
+  "app.settings.assistant.colFunction": "Functie",
+  "app.settings.assistant.colWho": "Wie",
+  "app.settings.assistant.colTicket": "Ticket",
+  "app.settings.assistant.colModel": "Model",
+  "app.settings.assistant.colTokens": "Tokens",
+  "app.settings.assistant.colOutcome": "Uitkomst",
+  "app.settings.assistant.outcomeOk": "Beantwoord",
+  "app.settings.assistant.outcomeRefused": "Niets gevonden",
+  "app.settings.assistant.outcomeFailed": "Mislukt",
+  "app.settings.assistant.logEmpty": "Nog geen aanroepen — ze verschijnen hier zodra de assistent wordt gebruikt.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Dat adres is geen geldige URL.",
+  "app.settings.assistant.errInsecure": "Een endpoint dat via het publieke internet bereikbaar is, moet https gebruiken: een API-sleutel mag niet onversleuteld over de lijn gaan.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Nieuw",

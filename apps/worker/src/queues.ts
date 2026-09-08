@@ -9,6 +9,9 @@
  * - push-dispatch : mobile notifications (MO-xx), APNs/FCM with retries
  * - housekeeping  : purges (SsoAuthEvent 90 d, ticket trash 30 d, domain recheck 24 h)
  * - import-run    : history import from another product (packages/import)
+ * - ai-sweep      : the assistant's 72-hour settlement (ee/ai) — a deflection
+ *                   whose window has passed becomes confirmed, one a ticket
+ *                   followed gives its credit back
  */
 export const QUEUE_NAMES = [
   "sla-timers",
@@ -20,6 +23,7 @@ export const QUEUE_NAMES = [
   "push-dispatch",
   "housekeeping",
   "import-run",
+  "ai-sweep",
 ] as const;
 
 export type QueueName = (typeof QUEUE_NAMES)[number];

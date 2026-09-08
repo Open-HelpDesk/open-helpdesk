@@ -279,6 +279,7 @@ export const da: Dictionary = {
   "app.settingsNav.itemMacros": "Makroer",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Tilfredshed",
+  "app.settingsNav.itemAssistant": "Assistent",
   "app.settingsNav.groupSecurity": "Sikkerhed",
   "app.settingsNav.itemAgentSso": "Agent-SSO",
   "app.settingsNav.itemCustomerSso": "Kunde-SSO",
@@ -1738,6 +1739,105 @@ export const da: Dictionary = {
   "app.settings.dev.exportUnauthorized": "Ikke godkendt",
   "app.settings.dev.exportForbidden": "Forbeholdt rollerne Owner og Admin.",
   "app.settings.dev.exportEnterpriseOnly": "Revisionsloggen er en del af Enterprise Edition.",
+
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Assistent",
+  "app.settings.assistant.subtitle": "Hvad assistenten må, hvad den læser, og hvad den koster.",
+  "app.settings.assistant.lockedTitle": "Assistenten er en del af Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Visitering, opsummeringer af samtaler, svarkladder skrevet ud fra din vidensbase og selvbetjeningssvar til dine kunder. Assistenten skriver kladden, et menneske publicerer.",
+  "app.settings.assistant.unconfiguredTitle": "Der er ikke konfigureret nogen inferensudbyder.",
+  "app.settings.assistant.unconfiguredText": "Intet simuleres: alle funktioner er utilgængelige, indtil denne instans får en udbyder, eller indtil dette arbejdsområde angiver sin egen model nedenfor.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Udbyder",
+  "app.settings.assistant.providerName": "Udbyder",
+  "app.settings.assistant.providerModel": "Model",
+  "app.settings.assistant.providerRegion": "Region",
+  "app.settings.assistant.providerOwn": "Din egen model",
+  "app.settings.assistant.noTraining": "Open HelpDesk træner ikke noget på dine data, og udbyderen gør det heller ikke på vores vegne.",
+  "app.settings.assistant.redactionNote": "E-mailadresser, telefonnumre, kortnumre, IBAN-numre, IP-adresser og alt, der ligner en hemmelighed, fjernes, før en prompt forlader denne instans. Loggen nedenfor tæller, hvad der blev fjernet.",
+
+  "app.settings.assistant.masterCard": "Hovedafbryder",
+  "app.settings.assistant.enabled": "Assistenten er slået til for dette arbejdsområde",
+  "app.settings.assistant.enabledHint": "Slået fra: alle funktioner forsvinder fra skærmene i stedet for at stå grå.",
+
+  "app.settings.assistant.capabilitiesCard": "Funktioner",
+  "app.settings.assistant.capTriage": "Foreslået visitering",
+  "app.settings.assistant.capTriageHint": "Foreslår en kategori, en prioritet og et team, når sagen kommer ind. Intet anvendes uden et klik.",
+  "app.settings.assistant.capSummary": "Opsummering af samtalen",
+  "app.settings.assistant.capSummaryHint": "Et enkelt afsnit til den, der overtager sagen nu.",
+  "app.settings.assistant.capReplyDraft": "Svarkladde",
+  "app.settings.assistant.capReplyDraftHint": "Skrevet ud fra din vidensbase, med de artikler den har brugt. Finder den ingenting, afviser den i stedet for at digte.",
+  "app.settings.assistant.capRewrite": "Omskriv og oversæt",
+  "app.settings.assistant.capRewriteHint": "Kortere, varmere, mere formelt eller på et andet sprog — kun på den markerede tekst.",
+  "app.settings.assistant.capKbArticle": "Artikel ud fra en løst sag",
+  "app.settings.assistant.capKbArticleHint": "Havner som kladde i vidensbasen, uden kundens oplysninger. Publiceres aldrig af sig selv.",
+  "app.settings.assistant.capMacroSuggest": "Foreslået makro",
+  "app.settings.assistant.capMacroSuggestHint": "Tilbyder et svar, som dit team allerede har godkendt, frem for at skrive et nyt.",
+  "app.settings.assistant.capDeflect": "Besvar kunder uden en agent",
+  "app.settings.assistant.capDeflectHint": "I hjælpecenteret og i widgetten, før en sag oprettes. Det er den eneste funktion, dine kunder ser.",
+  "app.settings.assistant.capKbSearch": "Søgning på betydning",
+  "app.settings.assistant.capKbSearchHint": "Rangerer artiklerne i hjælpecenteret efter, hvad spørgsmålet betyder. Genererer ingenting og tæller ikke med i kvoten.",
+
+  "app.settings.assistant.sourcesCard": "Hvad assistenten læser",
+  "app.settings.assistant.sourceKb": "Publicerede artikler i vidensbasen",
+  "app.settings.assistant.sourceMacros": "Makroer",
+  "app.settings.assistant.sourceResolved": "Løste sager",
+  "app.settings.assistant.sourceResolvedHint": "Dine egne svar — det er dem, der gør de første uger nyttige. De deles aldrig med et andet arbejdsområde.",
+  "app.settings.assistant.sourceNotes": "Interne noter",
+  "app.settings.assistant.sourceNotesHint": "Slået fra som standard: en note skrives til dit team, ikke til en model, og endnu mindre for at føde et svar til en kunde.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Svar til dine kunder",
+  "app.settings.assistant.deflectionLocales": "Tilladte sprog",
+  "app.settings.assistant.deflectionLocalesHint": "Svar gives kun på de sprog, du tillader her. For flere europæiske sprog er modellernes kvalitet ikke målt, og et svar, som ingen kan bedømme, er en risiko, vi ikke tager på dine vegne — andre steder hjælper assistenten dine agenter, som læser, før de sender.",
+  "app.settings.assistant.deflectionNoLocale": "Intet sprog tilladt: dine kunder ser ikke noget svar, og hver sag når en agent.",
+  "app.settings.assistant.deflectionThreshold": "Mindste konfidens",
+  "app.settings.assistant.deflectionThresholdHint": "Under den tier assistenten i stedet for at svare. Hæv værdien, hvis et svar nogensinde ser forkert ud.",
+  "app.settings.assistant.disclosureNote": "Hvert svar oplyser, at det er genereret automatisk, og bærer en maskinlæsbar markering. Krævet af artikel 50 i EU's AI-forordning — og under alle omstændigheder det rigtige at gøre.",
+
+  "app.settings.assistant.byoCard": "Brug din egen model",
+  "app.settings.assistant.byoHint": "Peg assistenten mod dit eget OpenAI-kompatible endpoint — en udbyder efter eget valg eller en model, du selv hoster. Dine prompts går så via din egen aftale, og her tælles og begrænses ingenting.",
+  "app.settings.assistant.byoEndpoint": "Endpoint",
+  "app.settings.assistant.byoModel": "Model",
+  "app.settings.assistant.byoSecret": "API-nøgle",
+  "app.settings.assistant.byoSecretSet": "En nøgle er gemt. Lad feltet stå tomt for at beholde den.",
+  "app.settings.assistant.byoClear": "Brug den hostede udbyder igen",
+
+  "app.settings.assistant.usageCard": "Forbrug denne måned",
+  "app.settings.assistant.usageQuota": "Brugte kundesvar",
+  "app.settings.assistant.usageProvisional": "afventer bekræftelse",
+  "app.settings.assistant.usageReturned": "krediteret tilbage",
+  "app.settings.assistant.usageReturnedHint": "Et svar, der følges af en sag inden for 72 timer, koster dig ingenting.",
+  "app.settings.assistant.usageQuotaReached": "Denne måneds kvote er brugt op: svar til dine kunder er sat på pause, og hver sag når en agent. Funktionerne for agenter fortsætter.",
+  "app.settings.assistant.usageBuy": "Køb flere svar",
+  "app.settings.assistant.usageCalls": "Kald",
+  "app.settings.assistant.usageCost": "Omkostning",
+  "app.settings.assistant.usageNoQuota": "Din egen model: her tælles ingenting.",
+
+  "app.settings.assistant.logCard": "Log over kald",
+  "app.settings.assistant.logHint": "Hvert kald, uanset udfaldet — den dokumentation, din egen fortegnelse over behandlingsaktiviteter skal have.",
+  "app.settings.assistant.logExport": "CSV-eksport",
+  "app.settings.assistant.colWhen": "Tidspunkt",
+  "app.settings.assistant.colFunction": "Funktion",
+  "app.settings.assistant.colWho": "Hvem",
+  "app.settings.assistant.colTicket": "Sag",
+  "app.settings.assistant.colModel": "Model",
+  "app.settings.assistant.colTokens": "Tokens",
+  "app.settings.assistant.colOutcome": "Udfald",
+  "app.settings.assistant.outcomeOk": "Besvaret",
+  "app.settings.assistant.outcomeRefused": "Intet fundet",
+  "app.settings.assistant.outcomeFailed": "Mislykket",
+  "app.settings.assistant.logEmpty": "Ingen kald endnu — de vises her, så snart assistenten bruges.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Adressen er ikke en gyldig URL.",
+  "app.settings.assistant.errInsecure": "Et endpoint, der nås over det offentlige internet, skal bruge https: en API-nøgle må ikke sendes i klartekst.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Ny",

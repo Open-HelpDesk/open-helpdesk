@@ -2016,6 +2016,105 @@ export const hr: Dictionary = {
   "app.settings.dev.exportForbidden": "Samo za uloge Owner i Admin.",
   "app.settings.dev.exportEnterpriseOnly": "Audit log dio je izdanja Enterprise Edition.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Asistent",
+  "app.settings.assistant.subtitle": "Što asistent smije raditi, što čita i koliko to košta.",
+  "app.settings.assistant.lockedTitle": "Asistent dio je izdanja Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Razvrstavanje, sažeci razgovora, skice odgovora napisane iz vaše baze znanja i samoposlužni odgovori za vaše klijente. Asistent piše skicu, objavljuje čovjek.",
+  "app.settings.assistant.unconfiguredTitle": "Nije konfiguriran nijedan davatelj inferencije.",
+  "app.settings.assistant.unconfiguredText": "Ništa nije simulirano: svaka funkcija ostaje nedostupna dok ova instanca ne dobije davatelja ili dok ovaj radni prostor u nastavku ne priključi vlastiti model.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Davatelj",
+  "app.settings.assistant.providerName": "Davatelj",
+  "app.settings.assistant.providerModel": "Model",
+  "app.settings.assistant.providerRegion": "Regija",
+  "app.settings.assistant.providerOwn": "Vaš vlastiti model",
+  "app.settings.assistant.noTraining": "Open HelpDesk nikada ništa ne trenira na vašim podacima, a ni davatelj to ne čini u naše ime.",
+  "app.settings.assistant.redactionNote": "Adrese e-pošte, telefonski brojevi, brojevi kartica, IBAN-i, IP adrese i sve što izgleda kao tajna uklanjaju se prije nego prompt napusti ovu instancu. Zapisnik u nastavku broji što je uklonjeno.",
+
+  "app.settings.assistant.masterCard": "Glavni prekidač",
+  "app.settings.assistant.enabled": "Asistent je uključen za ovaj radni prostor",
+  "app.settings.assistant.enabledHint": "Isključeno: svaka funkcija nestaje s ekrana umjesto da bude prikazana zasivljeno.",
+
+  "app.settings.assistant.capabilitiesCard": "Funkcije",
+  "app.settings.assistant.capTriage": "Predloženo razvrstavanje",
+  "app.settings.assistant.capTriageHint": "Pri zaprimanju predlaže kategoriju, prioritet i tim. Ništa se ne primjenjuje bez klika.",
+  "app.settings.assistant.capSummary": "Sažetak razgovora",
+  "app.settings.assistant.capSummaryHint": "Jedan odlomak za onoga koji tiket preuzima sada.",
+  "app.settings.assistant.capReplyDraft": "Skica odgovora",
+  "app.settings.assistant.capReplyDraftHint": "Napisana iz vaše baze znanja, s člancima koje je asistent upotrijebio. Kad ništa ne nađe, odbija odgovoriti umjesto da izmišlja.",
+  "app.settings.assistant.capRewrite": "Prepisivanje i prijevod",
+  "app.settings.assistant.capRewriteHint": "Kraće, toplije, službenije ili na drugom jeziku — samo na označenom tekstu.",
+  "app.settings.assistant.capKbArticle": "Članak iz riješenog tiketa",
+  "app.settings.assistant.capKbArticleHint": "Nastaje kao skica u bazi znanja, bez podataka klijenta. Nikada se ne objavljuje sam.",
+  "app.settings.assistant.capMacroSuggest": "Predloženi makro",
+  "app.settings.assistant.capMacroSuggestHint": "Nudi odgovor koji je vaš tim već odobrio, prije nego da napiše novi.",
+  "app.settings.assistant.capDeflect": "Odgovaranje klijentima bez agenta",
+  "app.settings.assistant.capDeflectHint": "U centru za pomoć i u widgetu, prije nego što se zahtjev pošalje. To je jedina funkcija koju vaši klijenti vide.",
+  "app.settings.assistant.capKbSearch": "Traženje po značenju",
+  "app.settings.assistant.capKbSearchHint": "Rangira članke centra za pomoć prema tome što pitanje znači. Ništa ne generira i ništa ne troši.",
+
+  "app.settings.assistant.sourcesCard": "Što čita",
+  "app.settings.assistant.sourceKb": "Objavljeni članci baze znanja",
+  "app.settings.assistant.sourceMacros": "Makroi",
+  "app.settings.assistant.sourceResolved": "Riješeni tiketi",
+  "app.settings.assistant.sourceResolvedHint": "Vaši vlastiti odgovori — upravo zbog njih prvi tjedni imaju smisla. Nikada se ne dijele s drugim radnim prostorom.",
+  "app.settings.assistant.sourceNotes": "Interne napomene",
+  "app.settings.assistant.sourceNotesHint": "Isključeno prema zadanome: napomena se piše za vaš tim, a ne za model, još manje da bi se iz nje sastavio odgovor klijentu.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Odgovori vašim klijentima",
+  "app.settings.assistant.deflectionLocales": "Dopušteni jezici",
+  "app.settings.assistant.deflectionLocalesHint": "Odgovori se daju samo na jezicima koje ovdje dopustite. Za nekoliko europskih jezika kvaliteta modela nije izmjerena, a odgovor koji nitko ne može ocijeniti rizik je koji ne preuzimamo u vaše ime — na drugim mjestima asistent pomaže vašim agentima, koji tekst pročitaju prije slanja.",
+  "app.settings.assistant.deflectionNoLocale": "Nijedan jezik nije dopušten: vaši klijenti ne vide nikakav odgovor i svaki zahtjev dolazi do agenta.",
+  "app.settings.assistant.deflectionThreshold": "Najniža pouzdanost",
+  "app.settings.assistant.deflectionThresholdHint": "Ispod te granice asistent radije šuti nego da odgovori. Ako vam neki odgovor izgleda pogrešno, podignite granicu.",
+  "app.settings.assistant.disclosureNote": "Uz svaki odgovor stoji da je automatski generiran i nosi strojno čitljivu oznaku. To zahtijeva članak 50. europskog Akta o umjetnoj inteligenciji, a ispravno je i bez toga.",
+
+  "app.settings.assistant.byoCard": "Vlastiti model",
+  "app.settings.assistant.byoHint": "Usmjerite asistenta na svoju krajnju točku kompatibilnu s OpenAI — na davatelja po vašem odabiru ili na model koji sami hostirate. Vaši promptovi tada idu po vašem ugovoru, a ovdje se ništa ne broji ni ne ograničava.",
+  "app.settings.assistant.byoEndpoint": "Krajnja točka",
+  "app.settings.assistant.byoModel": "Model",
+  "app.settings.assistant.byoSecret": "API ključ",
+  "app.settings.assistant.byoSecretSet": "Ključ je spremljen. Ostavite polje prazno da ga zadržite.",
+  "app.settings.assistant.byoClear": "Ponovno koristi hostiranog davatelja",
+
+  "app.settings.assistant.usageCard": "Potrošnja ovog mjeseca",
+  "app.settings.assistant.usageQuota": "Iskorišteni odgovori klijentima",
+  "app.settings.assistant.usageProvisional": "čeka potvrdu",
+  "app.settings.assistant.usageReturned": "vraćeno",
+  "app.settings.assistant.usageReturnedHint": "Odgovor nakon kojeg u 72 sata dođe zahtjev ne košta vas ništa.",
+  "app.settings.assistant.usageQuotaReached": "Ovomjesečna kvota je iskorištena: odgovori vašim klijentima su zaustavljeni i svaki zahtjev dolazi do agenta. Funkcije na strani agenata rade dalje.",
+  "app.settings.assistant.usageBuy": "Dokupi odgovore",
+  "app.settings.assistant.usageCalls": "Pozivi",
+  "app.settings.assistant.usageCost": "Trošak",
+  "app.settings.assistant.usageNoQuota": "Vaš vlastiti model: ovdje se ništa ne broji.",
+
+  "app.settings.assistant.logCard": "Zapisnik poziva",
+  "app.settings.assistant.logHint": "Svaki poziv, kakav god bio ishod — zapis koji će zatražiti vaša evidencija aktivnosti obrade.",
+  "app.settings.assistant.logExport": "CSV izvoz",
+  "app.settings.assistant.colWhen": "Kada",
+  "app.settings.assistant.colFunction": "Funkcija",
+  "app.settings.assistant.colWho": "Tko",
+  "app.settings.assistant.colTicket": "Tiket",
+  "app.settings.assistant.colModel": "Model",
+  "app.settings.assistant.colTokens": "Tokeni",
+  "app.settings.assistant.colOutcome": "Ishod",
+  "app.settings.assistant.outcomeOk": "Odgovoreno",
+  "app.settings.assistant.outcomeRefused": "Ništa nije nađeno",
+  "app.settings.assistant.outcomeFailed": "Neuspjelo",
+  "app.settings.assistant.logEmpty": "Još nema poziva — pojavit će se ovdje čim se asistent upotrijebi.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Ta adresa nije ispravan URL.",
+  "app.settings.assistant.errInsecure": "Krajnja točka dostupna preko javnog interneta mora koristiti https — API ključ ne smije putovati nešifriran.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Radni prostor",
   "app.settingsNav.itemGeneral": "Općenito",
@@ -2030,6 +2129,7 @@ export const hr: Dictionary = {
   "app.settingsNav.itemMacros": "Makroi",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Zadovoljstvo",
+  "app.settingsNav.itemAssistant": "Asistent",
   "app.settingsNav.groupSecurity": "Sigurnost",
   "app.settingsNav.itemAgentSso": "SSO agenata",
   "app.settingsNav.itemCustomerSso": "SSO klijenata",

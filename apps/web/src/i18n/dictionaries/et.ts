@@ -1901,6 +1901,105 @@ export const et: Dictionary = {
   "app.settings.dev.exportForbidden": "Ainult rollidele Owner ja Admin.",
   "app.settings.dev.exportEnterpriseOnly": "Auditilogi kuulub väljaandesse Enterprise Edition.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Assistent",
+  "app.settings.assistant.subtitle": "Mida assistent tohib teha, mida ta loeb ja mida see maksab.",
+  "app.settings.assistant.lockedTitle": "Assistent kuulub väljaandesse Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Eelsortimine, vestluste kokkuvõtted, teie teadmusbaasi põhjal kirjutatud vastusemustandid ja iseteenindusvastused teie klientidele. Assistent koostab mustandi, avaldab inimene.",
+  "app.settings.assistant.unconfiguredTitle": "Mudeli teenusepakkujat pole seadistatud.",
+  "app.settings.assistant.unconfiguredText": "Midagi ei simuleerita: ükski funktsioon pole kasutatav enne, kui sellele instantsile on määratud teenusepakkuja või kui see tööruum lisab allpool oma mudeli.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Teenusepakkuja",
+  "app.settings.assistant.providerName": "Teenusepakkuja",
+  "app.settings.assistant.providerModel": "Mudel",
+  "app.settings.assistant.providerRegion": "Piirkond",
+  "app.settings.assistant.providerOwn": "Teie enda mudel",
+  "app.settings.assistant.noTraining": "Open HelpDesk ei treeni teie andmetega midagi ja teenusepakkuja ei tee seda ka meie nimel.",
+  "app.settings.assistant.redactionNote": "E-posti aadressid, telefoninumbrid, kaardinumbrid, IBAN-id, IP-aadressid ja kõik, mis näeb välja nagu saladus, eemaldatakse enne, kui viip sellest instantsist väljub. Allolev logi loendab, mis eemaldati.",
+
+  "app.settings.assistant.masterCard": "Pealüliti",
+  "app.settings.assistant.enabled": "Assistent on selles tööruumis sisse lülitatud",
+  "app.settings.assistant.enabledHint": "Välja lülitatud: iga funktsioon kaob ekraanidelt, mitte ei jää hallina nähtavaks.",
+
+  "app.settings.assistant.capabilitiesCard": "Funktsioonid",
+  "app.settings.assistant.capTriage": "Soovitatud eelsortimine",
+  "app.settings.assistant.capTriageHint": "Pakub saabumisel kategooriat, prioriteeti ja tiimi. Ilma klõpsuta ei rakendata midagi.",
+  "app.settings.assistant.capSummary": "Vestluse kokkuvõte",
+  "app.settings.assistant.capSummaryHint": "Üks lõik sellele, kes pileti kohe üle võtab.",
+  "app.settings.assistant.capReplyDraft": "Vastuse mustand",
+  "app.settings.assistant.capReplyDraftHint": "Kirjutatud teie teadmusbaasi põhjal, koos kasutatud artiklitega. Kui assistent midagi ei leia, keeldub ta pigem vastamast, kui mõtleks midagi välja.",
+  "app.settings.assistant.capRewrite": "Ümbersõnastamine ja tõlkimine",
+  "app.settings.assistant.capRewriteHint": "Lühemalt, soojemalt, ametlikumalt või teises keeles — ainult valitud tekstiga.",
+  "app.settings.assistant.capKbArticle": "Artikkel lahendatud piletist",
+  "app.settings.assistant.capKbArticleHint": "Jõuab teadmusbaasi mustandina, kliendi andmetest puhastatuna. Ei avaldata kunagi iseenesest.",
+  "app.settings.assistant.capMacroSuggest": "Soovitatud makro",
+  "app.settings.assistant.capMacroSuggestHint": "Pakub vastust, mille teie tiim on juba heaks kiitnud, selle asemel et kirjutada uus.",
+  "app.settings.assistant.capDeflect": "Klientidele vastamine ilma agendita",
+  "app.settings.assistant.capDeflectHint": "Abikeskuses ja vidinas, enne päringu esitamist. See on ainus funktsioon, mida teie kliendid näevad.",
+  "app.settings.assistant.capKbSearch": "Tähenduspõhine otsing",
+  "app.settings.assistant.capKbSearchHint": "Järjestab abikeskuse artiklid selle järgi, mida küsimus tähendab. Ei loo midagi ega lähe kunagi teie limiidi arvele.",
+
+  "app.settings.assistant.sourcesCard": "Mida assistent loeb",
+  "app.settings.assistant.sourceKb": "Avaldatud teadmusbaasi artiklid",
+  "app.settings.assistant.sourceMacros": "Makrod",
+  "app.settings.assistant.sourceResolved": "Lahendatud piletid",
+  "app.settings.assistant.sourceResolvedHint": "Teie enda vastused — just seetõttu on juba esimesed nädalad kasulikud. Neid ei jagata kunagi teise tööruumiga.",
+  "app.settings.assistant.sourceNotes": "Sisemised märkused",
+  "app.settings.assistant.sourceNotesHint": "Vaikimisi välja lülitatud: märkus kirjutatakse teie tiimile, mitte mudelile — ja veel vähem selleks, et see jõuaks kliendile saadetud vastusesse.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Vastused teie klientidele",
+  "app.settings.assistant.deflectionLocales": "Lubatud keeled",
+  "app.settings.assistant.deflectionLocalesHint": "Vastuseid antakse ainult siin lubatud keeltes. Mitmes Euroopa keeles pole mudelite kvaliteeti mõõdetud ja vastus, mida keegi hinnata ei oska, on risk, mida me teie eest ei võta — mujal aitab assistent teie agente, kes loevad enne saatmist.",
+  "app.settings.assistant.deflectionNoLocale": "Ühtki keelt pole lubatud: teie kliendid ei näe ühtegi vastust ja iga päring jõuab agendini.",
+  "app.settings.assistant.deflectionThreshold": "Kindluse alampiir",
+  "app.settings.assistant.deflectionThresholdHint": "Sellest allpool jääb assistent vaikima, selle asemel et vastata. Tõstke seda, kui mõni vastus tundub vale.",
+  "app.settings.assistant.disclosureNote": "Iga vastus ütleb, et see on loodud automaatselt, ja kannab masinloetavat märgist. Nõutud Euroopa tehisintellektimääruse artikliga 50 — ja niikuinii õige tegu.",
+
+  "app.settings.assistant.byoCard": "Kasuta oma mudelit",
+  "app.settings.assistant.byoHint": "Suunake assistent oma OpenAI-ga ühilduvale lõpp-punktile — teie valitud teenusepakkuja või mudel, mida majutate ise. Teie viibad lähevad siis teie enda lepingu alla ning siin ei loeta ega piirata midagi.",
+  "app.settings.assistant.byoEndpoint": "Lõpp-punkt",
+  "app.settings.assistant.byoModel": "Mudel",
+  "app.settings.assistant.byoSecret": "API võti",
+  "app.settings.assistant.byoSecretSet": "Võti on salvestatud. Selle säilitamiseks jätke väli tühjaks.",
+  "app.settings.assistant.byoClear": "Kasuta taas majutatud teenusepakkujat",
+
+  "app.settings.assistant.usageCard": "Selle kuu kasutus",
+  "app.settings.assistant.usageQuota": "Kasutatud kliendivastused",
+  "app.settings.assistant.usageProvisional": "ootab kinnitust",
+  "app.settings.assistant.usageReturned": "tagastatud vastused",
+  "app.settings.assistant.usageReturnedHint": "Vastus, millele järgneb 72 tunni jooksul päring, ei lähe teile midagi maksma.",
+  "app.settings.assistant.usageQuotaReached": "Selle kuu limiit on ära kasutatud: vastused teie klientidele on peatatud ja iga päring jõuab agendini. Agentide funktsioonid töötavad edasi.",
+  "app.settings.assistant.usageBuy": "Osta vastuseid juurde",
+  "app.settings.assistant.usageCalls": "Väljakutsed",
+  "app.settings.assistant.usageCost": "Kulu",
+  "app.settings.assistant.usageNoQuota": "Teie enda mudel: siin ei loeta midagi.",
+
+  "app.settings.assistant.logCard": "Väljakutsete logi",
+  "app.settings.assistant.logHint": "Iga väljakutse, olenemata tulemusest — jälg, mida teie enda isikuandmete töötlemise toimingute register nõuab.",
+  "app.settings.assistant.logExport": "CSV eksport",
+  "app.settings.assistant.colWhen": "Millal",
+  "app.settings.assistant.colFunction": "Funktsioon",
+  "app.settings.assistant.colWho": "Kes",
+  "app.settings.assistant.colTicket": "Pilet",
+  "app.settings.assistant.colModel": "Mudel",
+  "app.settings.assistant.colTokens": "Tokenid",
+  "app.settings.assistant.colOutcome": "Tulemus",
+  "app.settings.assistant.outcomeOk": "Vastatud",
+  "app.settings.assistant.outcomeRefused": "Ei leidnud midagi",
+  "app.settings.assistant.outcomeFailed": "Ebaõnnestus",
+  "app.settings.assistant.logEmpty": "Väljakutseid pole veel — need ilmuvad siia kohe, kui assistenti kasutatakse.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "See aadress ei ole korrektne URL.",
+  "app.settings.assistant.errInsecure": "Avaliku interneti kaudu kättesaadav lõpp-punkt peab kasutama https-i — API võti ei tohi liikuda krüptimata kujul.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Tööruum",
   "app.settingsNav.itemGeneral": "Üldine",
@@ -1915,6 +2014,7 @@ export const et: Dictionary = {
   "app.settingsNav.itemMacros": "Makrod",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Rahulolu",
+  "app.settingsNav.itemAssistant": "Assistent",
   "app.settingsNav.groupSecurity": "Turvalisus",
   "app.settingsNav.itemAgentSso": "Agentide SSO",
   "app.settingsNav.itemCustomerSso": "Klientide SSO",

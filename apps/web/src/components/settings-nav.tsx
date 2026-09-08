@@ -47,6 +47,7 @@ const NAV_GROUPS: NavGroup[] = [
       { labelKey: "app.settingsNav.itemMacros", href: "/app/settings/macros" },
       { labelKey: "app.settingsNav.itemSla", href: "/app/settings/sla" },
       { labelKey: "app.settingsNav.itemCsat", href: "/app/settings/csat" },
+      { labelKey: "app.settingsNav.itemAssistant", href: "/app/settings/assistant", ee: true },
     ],
   },
   {

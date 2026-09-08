@@ -278,6 +278,7 @@ export const fi: Dictionary = {
   "app.settingsNav.itemMacros": "Makrot",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Tyytyväisyys",
+  "app.settingsNav.itemAssistant": "Avustaja",
   "app.settingsNav.groupSecurity": "Tietoturva",
   "app.settingsNav.itemAgentSso": "Asiakaspalvelijoiden SSO",
   "app.settingsNav.itemCustomerSso": "Asiakkaiden SSO",
@@ -1751,6 +1752,105 @@ export const fi: Dictionary = {
   "app.settings.dev.exportUnauthorized": "Ei valtuutusta",
   "app.settings.dev.exportForbidden": "Vain Owner- ja Admin-rooleille.",
   "app.settings.dev.exportEnterpriseOnly": "Auditointiloki on osa Enterprise Edition -versiota.",
+
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Avustaja",
+  "app.settings.assistant.subtitle": "Mitä avustaja saa tehdä, mitä se lukee ja mitä se maksaa.",
+  "app.settings.assistant.lockedTitle": "Avustaja on osa Enterprise Edition -versiota.",
+  "app.settings.assistant.lockedText": "Esilajittelu, keskustelujen yhteenvedot, tietopankistasi kirjoitetut vastausluonnokset ja itsepalveluvastaukset asiakkaillesi. Avustaja luonnostelee, ihminen julkaisee.",
+  "app.settings.assistant.unconfiguredTitle": "Mallin palveluntarjoajaa ei ole määritetty.",
+  "app.settings.assistant.unconfiguredText": "Mitään ei simuloida: yksikään toiminto ei ole käytettävissä, ennen kuin tälle instanssille on määritetty palveluntarjoaja tai tämä työtila lisää alla oman mallinsa.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Palveluntarjoaja",
+  "app.settings.assistant.providerName": "Palveluntarjoaja",
+  "app.settings.assistant.providerModel": "Malli",
+  "app.settings.assistant.providerRegion": "Alue",
+  "app.settings.assistant.providerOwn": "Oma mallisi",
+  "app.settings.assistant.noTraining": "Open HelpDesk ei kouluta mitään tiedoillasi, eikä palveluntarjoaja tee sitä puolestamme.",
+  "app.settings.assistant.redactionNote": "Sähköpostiosoitteet, puhelinnumerot, korttinumerot, IBAN-tilinumerot, IP-osoitteet ja kaikki salaisuudelta vaikuttava poistetaan, ennen kuin kehote lähtee tästä instanssista. Alla oleva loki laskee, mitä poistettiin.",
+
+  "app.settings.assistant.masterCard": "Pääkytkin",
+  "app.settings.assistant.enabled": "Avustaja on käytössä tässä työtilassa",
+  "app.settings.assistant.enabledHint": "Pois: jokainen toiminto katoaa näkymistä sen sijaan, että se näkyisi harmaana.",
+
+  "app.settings.assistant.capabilitiesCard": "Toiminnot",
+  "app.settings.assistant.capTriage": "Ehdotettu esilajittelu",
+  "app.settings.assistant.capTriageHint": "Ehdottaa saapumishetkellä luokkaa, prioriteettia ja tiimiä. Mitään ei oteta käyttöön ilman napsautusta.",
+  "app.settings.assistant.capSummary": "Keskustelun yhteenveto",
+  "app.settings.assistant.capSummaryHint": "Yksi kappale sille, joka ottaa pyynnön nyt käsiteltäväkseen.",
+  "app.settings.assistant.capReplyDraft": "Vastausluonnos",
+  "app.settings.assistant.capReplyDraftHint": "Kirjoitettu tietopankistasi, käytetyt artikkelit mukana. Jos avustaja ei löydä mitään, se kieltäytyy vastaamasta sen sijaan, että keksisi jotain.",
+  "app.settings.assistant.capRewrite": "Uudelleenkirjoitus ja käännös",
+  "app.settings.assistant.capRewriteHint": "Lyhyemmin, lämpimämmin, muodollisemmin tai toisella kielellä — vain valittuun tekstiin.",
+  "app.settings.assistant.capKbArticle": "Artikkeli ratkaistusta pyynnöstä",
+  "app.settings.assistant.capKbArticleHint": "Saapuu luonnoksena tietopankkiin ilman asiakkaan tietoja. Sitä ei koskaan julkaista itsestään.",
+  "app.settings.assistant.capMacroSuggest": "Ehdotettu makro",
+  "app.settings.assistant.capMacroSuggestHint": "Tarjoaa vastauksen, jonka tiimisi on jo hyväksynyt, mieluummin kuin kirjoittaa uuden.",
+  "app.settings.assistant.capDeflect": "Vastaaminen asiakkaille ilman agenttia",
+  "app.settings.assistant.capDeflectHint": "Ohjekeskuksessa ja vimpaimessa, ennen kuin pyyntö lähetetään. Tämä on ainoa toiminto, jonka asiakkaasi näkevät.",
+  "app.settings.assistant.capKbSearch": "Merkityspohjainen haku",
+  "app.settings.assistant.capKbSearchHint": "Järjestää ohjekeskuksen artikkelit sen mukaan, mitä kysymys tarkoittaa. Ei tuota tekstiä eikä kuluta koskaan kiintiötäsi.",
+
+  "app.settings.assistant.sourcesCard": "Mitä avustaja lukee",
+  "app.settings.assistant.sourceKb": "Julkaistut tietopankin artikkelit",
+  "app.settings.assistant.sourceMacros": "Makrot",
+  "app.settings.assistant.sourceResolved": "Ratkaistut pyynnöt",
+  "app.settings.assistant.sourceResolvedHint": "Omat vastauksesi — juuri siksi ensimmäisetkin viikot ovat hyödyllisiä. Niitä ei jaeta koskaan toisen työtilan kanssa.",
+  "app.settings.assistant.sourceNotes": "Sisäiset muistiinpanot",
+  "app.settings.assistant.sourceNotesHint": "Oletuksena pois: muistiinpano kirjoitetaan tiimillesi, ei mallille — ja vielä vähemmän päätymään asiakkaalle lähtevään vastaukseen.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Vastaukset asiakkaillesi",
+  "app.settings.assistant.deflectionLocales": "Sallitut kielet",
+  "app.settings.assistant.deflectionLocalesHint": "Vastauksia annetaan vain tässä sallituilla kielillä. Useilla Euroopan kielillä mallien laatua ei ole mitattu, ja vastaus, jota kukaan ei osaa arvioida, on riski, jota emme ota puolestasi — muualla avustaja auttaa agenttejasi, jotka lukevat vastauksen ennen lähettämistä.",
+  "app.settings.assistant.deflectionNoLocale": "Yhtään kieltä ei ole sallittu: asiakkaasi eivät näe vastausta, ja jokainen pyyntö ohjautuu agentille.",
+  "app.settings.assistant.deflectionThreshold": "Varmuuden alaraja",
+  "app.settings.assistant.deflectionThresholdHint": "Sen alapuolella avustaja vaikenee sen sijaan, että vastaisi. Nosta rajaa, jos jokin vastaus näyttää virheelliseltä.",
+  "app.settings.assistant.disclosureNote": "Jokainen vastaus kertoo syntyneensä automaattisesti ja sisältää koneellisesti luettavan merkinnän. Euroopan tekoälysäädöksen 50 artiklan mukaan pakollista — ja muutenkin oikein.",
+
+  "app.settings.assistant.byoCard": "Käytä omaa mallia",
+  "app.settings.assistant.byoHint": "Osoita avustaja omaan OpenAI-yhteensopivaan päätepisteeseesi — valitsemasi palveluntarjoaja tai itse isännöimäsi malli. Kehotteesi kulkevat silloin oman sopimuksesi kautta, eikä täällä lasketa tai rajoiteta mitään.",
+  "app.settings.assistant.byoEndpoint": "Päätepiste",
+  "app.settings.assistant.byoModel": "Malli",
+  "app.settings.assistant.byoSecret": "API-avain",
+  "app.settings.assistant.byoSecretSet": "Avain on tallennettu. Jätä kenttä tyhjäksi säilyttääksesi sen.",
+  "app.settings.assistant.byoClear": "Palaa isännöityyn palveluntarjoajaan",
+
+  "app.settings.assistant.usageCard": "Käyttö tässä kuussa",
+  "app.settings.assistant.usageQuota": "Käytetyt asiakasvastaukset",
+  "app.settings.assistant.usageProvisional": "odottaa vahvistusta",
+  "app.settings.assistant.usageReturned": "hyvitetyt vastaukset",
+  "app.settings.assistant.usageReturnedHint": "Vastaus, jota seuraa pyyntö 72 tunnin sisällä, ei maksa sinulle mitään.",
+  "app.settings.assistant.usageQuotaReached": "Tämän kuun kiintiö on käytetty loppuun: vastaukset asiakkaillesi on keskeytetty, ja jokainen pyyntö ohjautuu agentille. Agenteille tarkoitetut toiminnot toimivat edelleen.",
+  "app.settings.assistant.usageBuy": "Osta lisää vastauksia",
+  "app.settings.assistant.usageCalls": "Kutsut",
+  "app.settings.assistant.usageCost": "Kustannus",
+  "app.settings.assistant.usageNoQuota": "Oma mallisi: täällä ei lasketa mitään.",
+
+  "app.settings.assistant.logCard": "Kutsuloki",
+  "app.settings.assistant.logHint": "Jokainen kutsu tuloksesta riippumatta — jälki, jota oma selosteesi käsittelytoimista edellyttää.",
+  "app.settings.assistant.logExport": "CSV-vienti",
+  "app.settings.assistant.colWhen": "Milloin",
+  "app.settings.assistant.colFunction": "Toiminto",
+  "app.settings.assistant.colWho": "Kuka",
+  "app.settings.assistant.colTicket": "Pyyntö",
+  "app.settings.assistant.colModel": "Malli",
+  "app.settings.assistant.colTokens": "Tokenit",
+  "app.settings.assistant.colOutcome": "Tulos",
+  "app.settings.assistant.outcomeOk": "Vastattu",
+  "app.settings.assistant.outcomeRefused": "Ei löytynyt mitään",
+  "app.settings.assistant.outcomeFailed": "Epäonnistui",
+  "app.settings.assistant.logEmpty": "Ei vielä kutsuja — ne ilmestyvät tänne heti, kun avustajaa käytetään.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Tämä osoite ei ole kelvollinen URL.",
+  "app.settings.assistant.errInsecure": "Julkisen internetin kautta tavoitettavan päätepisteen on käytettävä https:ää — API-avain ei saa kulkea salaamattomana.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Uusi",

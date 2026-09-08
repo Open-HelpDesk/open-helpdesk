@@ -281,6 +281,7 @@ export const pt: Dictionary = {
   "app.settingsNav.itemMacros": "Macros",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Satisfação",
+  "app.settingsNav.itemAssistant": "Assistente",
   "app.settingsNav.groupSecurity": "Segurança",
   "app.settingsNav.itemAgentSso": "SSO de agentes",
   "app.settingsNav.itemCustomerSso": "SSO de clientes",
@@ -1753,6 +1754,105 @@ export const pt: Dictionary = {
   "app.settings.dev.exportForbidden": "Reservado às funções Owner e Admin.",
   "app.settings.dev.exportEnterpriseOnly":
     "O registo de auditoria faz parte da Enterprise Edition.",
+
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Assistente",
+  "app.settings.assistant.subtitle": "O que o assistente pode fazer, o que lê e quanto custa.",
+  "app.settings.assistant.lockedTitle": "O assistente faz parte da Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Triagem, resumos da conversa, rascunhos de resposta escritos a partir da sua base de conhecimento e respostas em autosserviço para os seus clientes. O assistente escreve o rascunho; quem publica é uma pessoa.",
+  "app.settings.assistant.unconfiguredTitle": "Nenhum fornecedor de inferência está configurado.",
+  "app.settings.assistant.unconfiguredText": "Nada é simulado: todas as funções continuam indisponíveis até esta instância receber um fornecedor, ou até este espaço de trabalho trazer o seu próprio modelo, mais abaixo.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Fornecedor",
+  "app.settings.assistant.providerName": "Fornecedor",
+  "app.settings.assistant.providerModel": "Modelo",
+  "app.settings.assistant.providerRegion": "Região",
+  "app.settings.assistant.providerOwn": "O seu próprio modelo",
+  "app.settings.assistant.noTraining": "O Open HelpDesk nunca treina nada com os seus dados, e o fornecedor também não o faz em nosso nome.",
+  "app.settings.assistant.redactionNote": "Os e-mails, os números de telefone, os números de cartão, os IBAN, os endereços IP e tudo o que se pareça com um segredo são removidos antes de um prompt sair desta instância. O registo abaixo conta o que foi removido.",
+
+  "app.settings.assistant.masterCard": "Interruptor geral",
+  "app.settings.assistant.enabled": "O assistente está ativo neste espaço de trabalho",
+  "app.settings.assistant.enabledHint": "Desativado: todas as funções desaparecem dos ecrãs, em vez de aparecerem esbatidas.",
+
+  "app.settings.assistant.capabilitiesCard": "Funções",
+  "app.settings.assistant.capTriage": "Triagem sugerida",
+  "app.settings.assistant.capTriageHint": "Propõe uma categoria, uma prioridade e uma equipa à chegada do ticket. Nada é aplicado sem um clique.",
+  "app.settings.assistant.capSummary": "Resumo da conversa",
+  "app.settings.assistant.capSummaryHint": "Um parágrafo para quem pega no ticket agora.",
+  "app.settings.assistant.capReplyDraft": "Rascunho de resposta",
+  "app.settings.assistant.capReplyDraftHint": "Escrito a partir da sua base de conhecimento, com os artigos que utilizou. Quando não encontra nada, abstém-se em vez de inventar.",
+  "app.settings.assistant.capRewrite": "Reescrever e traduzir",
+  "app.settings.assistant.capRewriteHint": "Mais curto, mais cordial, mais formal ou noutro idioma — apenas sobre o texto selecionado.",
+  "app.settings.assistant.capKbArticle": "Artigo a partir de um ticket resolvido",
+  "app.settings.assistant.capKbArticleHint": "Chega como rascunho à base de conhecimento, sem os dados do cliente. Nunca é publicado por si só.",
+  "app.settings.assistant.capMacroSuggest": "Macro sugerida",
+  "app.settings.assistant.capMacroSuggestHint": "Propõe uma resposta que a sua equipa já aprovou, em vez de escrever uma nova.",
+  "app.settings.assistant.capDeflect": "Responder aos clientes sem agente",
+  "app.settings.assistant.capDeflectHint": "No centro de ajuda e no widget, antes de um pedido ser enviado. É a única função que os seus clientes veem.",
+  "app.settings.assistant.capKbSearch": "Pesquisa por significado",
+  "app.settings.assistant.capKbSearchHint": "Ordena os artigos do centro de ajuda pelo significado da pergunta. Não gera nada e não consome quota.",
+
+  "app.settings.assistant.sourcesCard": "O que lê",
+  "app.settings.assistant.sourceKb": "Artigos publicados da base de conhecimento",
+  "app.settings.assistant.sourceMacros": "Macros",
+  "app.settings.assistant.sourceResolved": "Tickets resolvidos",
+  "app.settings.assistant.sourceResolvedHint": "As suas próprias respostas, que é o que torna úteis as primeiras semanas. Nunca são partilhadas com outro espaço de trabalho.",
+  "app.settings.assistant.sourceNotes": "Notas internas",
+  "app.settings.assistant.sourceNotesHint": "Desativado por predefinição: uma nota é escrita para a sua equipa, não para um modelo, e muito menos para alimentar uma resposta a um cliente.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Respostas aos seus clientes",
+  "app.settings.assistant.deflectionLocales": "Idiomas permitidos",
+  "app.settings.assistant.deflectionLocalesHint": "As respostas só são dadas nos idiomas que permitir aqui. A qualidade dos modelos não está medida em vários idiomas europeus, e uma resposta que ninguém consegue avaliar é um risco que não assumimos em seu nome — nas restantes funções o assistente ajuda os seus agentes, que leem antes de enviar.",
+  "app.settings.assistant.deflectionNoLocale": "Nenhum idioma permitido: os seus clientes não veem nenhuma resposta e todos os pedidos chegam a um agente.",
+  "app.settings.assistant.deflectionThreshold": "Limiar de confiança",
+  "app.settings.assistant.deflectionThresholdHint": "Abaixo dele, o assistente fica calado em vez de responder. Aumente-o se alguma resposta lhe parecer errada.",
+  "app.settings.assistant.disclosureNote": "Cada resposta indica que foi gerada automaticamente e leva uma marca legível por máquina. Exigido pelo artigo 50.º do Regulamento europeu da Inteligência Artificial, e de qualquer forma é o mais correto.",
+
+  "app.settings.assistant.byoCard": "Use o seu próprio modelo",
+  "app.settings.assistant.byoHint": "Aponte o assistente para o seu próprio endpoint compatível com OpenAI: um fornecedor à sua escolha ou um modelo alojado por si. Os seus prompts passam então pelo seu contrato, e aqui nada é contado nem limitado.",
+  "app.settings.assistant.byoEndpoint": "Endpoint",
+  "app.settings.assistant.byoModel": "Modelo",
+  "app.settings.assistant.byoSecret": "Chave de API",
+  "app.settings.assistant.byoSecretSet": "Está guardada uma chave. Deixe o campo vazio para a conservar.",
+  "app.settings.assistant.byoClear": "Voltar ao fornecedor alojado",
+
+  "app.settings.assistant.usageCard": "Utilização deste mês",
+  "app.settings.assistant.usageQuota": "Respostas a clientes utilizadas",
+  "app.settings.assistant.usageProvisional": "à espera de confirmação",
+  "app.settings.assistant.usageReturned": "devolvidas",
+  "app.settings.assistant.usageReturnedHint": "Uma resposta seguida de um pedido em menos de 72 horas não lhe custa nada.",
+  "app.settings.assistant.usageQuotaReached": "A quota deste mês está esgotada: as respostas aos seus clientes estão em pausa e todos os pedidos chegam a um agente. As funções do lado dos agentes continuam a funcionar.",
+  "app.settings.assistant.usageBuy": "Comprar mais respostas",
+  "app.settings.assistant.usageCalls": "Chamadas",
+  "app.settings.assistant.usageCost": "Custo",
+  "app.settings.assistant.usageNoQuota": "O seu próprio modelo: aqui nada é contado.",
+
+  "app.settings.assistant.logCard": "Registo das chamadas",
+  "app.settings.assistant.logHint": "Todas as chamadas, qualquer que seja o seu resultado — o rasto que o seu registo de atividades de tratamento vai pedir.",
+  "app.settings.assistant.logExport": "Exportar CSV",
+  "app.settings.assistant.colWhen": "Quando",
+  "app.settings.assistant.colFunction": "Função",
+  "app.settings.assistant.colWho": "Quem",
+  "app.settings.assistant.colTicket": "Ticket",
+  "app.settings.assistant.colModel": "Modelo",
+  "app.settings.assistant.colTokens": "Tokens",
+  "app.settings.assistant.colOutcome": "Resultado",
+  "app.settings.assistant.outcomeOk": "Respondida",
+  "app.settings.assistant.outcomeRefused": "Sem resultados",
+  "app.settings.assistant.outcomeFailed": "Falhou",
+  "app.settings.assistant.logEmpty": "Ainda nenhuma chamada — aparecerão aqui assim que o assistente for utilizado.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Este endereço não é um URL válido.",
+  "app.settings.assistant.errInsecure": "Um endpoint acessível pela internet pública tem de usar https — uma chave de API não pode viajar em claro.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "Novo",

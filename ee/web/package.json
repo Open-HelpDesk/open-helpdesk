@@ -13,7 +13,9 @@
     "./settings/audit/export-route": "./src/settings/audit/export-route.ts",
     "./portal/sso-section": "./src/portal/sso-section.tsx",
     "./portal/sso-actions": "./src/portal/sso-actions.ts",
-    "./portal/sso-data": "./src/portal/sso-data.ts"
+    "./portal/sso-data": "./src/portal/sso-data.ts",
+    "./settings/assistant/page": "./src/settings/assistant/page.tsx",
+    "./settings/assistant/actions": "./src/settings/assistant/actions.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
@@ -21,7 +23,9 @@
   "dependencies": {
     "@openhelpdesk/config": "workspace:*",
     "@openhelpdesk/db": "workspace:*",
-    "drizzle-orm": "^0.44.0"
+    "drizzle-orm": "^0.44.0",
+    "@openhelpdesk/ee-ai": "workspace:*",
+    "@openhelpdesk/crypto": "workspace:*"
   },
   "peerDependencies": {
     "next": "*",

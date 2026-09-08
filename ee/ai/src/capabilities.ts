@@ -1,0 +1,378 @@
+/**
+ * Les capacités, une fonction chacune (spec 18 § 4 et § 5).
+ *
+ * Toutes passent par `capabilityAllowed` puis `runCapability` : la première dit
+ * si l'espace le permet, la seconde journalise l'appel avec son coût quoi qu'il
+ * arrive. Aucune ne devrait être appelée directement par un écran sans elles —
+ * c'est pour ça qu'elles sont ici et pas dans les Server Actions.
+ *
+ * Les instructions au modèle sont en anglais parce qu'elles s'adressent au
+ * modèle et non à un humain ; le contenu, lui, garde sa langue, c'est la
+ * troisième règle du système (`governance.ts`). Un prompt français n'améliore
+ * pas une réponse française : c'est le matériau qui la commande.
+ */
+import { and, asc, eq, inArray } from "drizzle-orm";
+import {
+  contacts,
+  db,
+  teams,
+  ticketMessages,
+  tickets,
+  type AiCapability,
+} from "@openhelpdesk/db";
+import { findPassages, type Passage } from "./knowledge";
+import {
+  ask,
+  capabilityAllowed,
+  getAiSettings,
+  runCapability,
+  type Actor,
+} from "./governance";
+import { parseJson, type ProviderConfig } from "./provider";
+
+/**
+ * Ce qu'une capacité renvoie : une sortie, ou la raison de son absence.
+ *
+ * Les cinq premiers motifs viennent de la gouvernance et ont chacun leur phrase
+ * à l'écran. `no_source` est le sixième, et le seul qui ne soit pas un refus de
+ * permission : la question n'a pas de réponse dans le matériau autorisé. C'est
+ * une issue normale, pas une panne, et l'écran la traite autrement — il propose
+ * d'écrire l'article manquant.
+ */
+export type OutcomeReason =
+  | "unconfigured"
+  | "disabled"
+  | "capability_off"
+  | "locale_closed"
+  | "quota_reached"
+  | "no_source";
+
+export type Outcome<T> = { ok: true; value: T } | { ok: false; reason: OutcomeReason };
+
+type Thread = {
+  subject: string;
+  requesterEmail: string | null;
+  text: string;
+  /** Les adresses des participants, qui traversent la rédaction (redact.ts). */
+  keep: string[];
+};
+
+const MAX_THREAD_CHARS = 12_000;
+
+/**
+ * Le fil, tel que le modèle le lira.
+ *
+ * Les notes internes n'entrent que si l'espace l'a explicitement autorisé, et
+ * ce contrôle est ici — au plus près de la lecture — plutôt que chez chaque
+ * appelant, pour qu'aucun nouvel appelant ne puisse l'oublier.
+ */
+async function threadFor(
+  tenantId: string,
+  ticketId: string,
+  includeNotes: boolean,
+): Promise<Thread | null> {
+  const [ticket] = await db
+    .select({ subject: tickets.subject, requesterId: tickets.requesterId })
+    .from(tickets)
+    .where(and(eq(tickets.tenantId, tenantId), eq(tickets.id, ticketId)));
+  if (!ticket) return null;
+
+  const kinds = includeNotes
+    ? (["public_reply", "internal_note"] as const)
+    : (["public_reply"] as const);
+  const rows = await db
+    .select({
+      kind: ticketMessages.kind,
+      authorType: ticketMessages.authorType,
+      body: ticketMessages.bodyText,
+    })
+    .from(ticketMessages)
+    .where(
+      and(
+        eq(ticketMessages.tenantId, tenantId),
+        eq(ticketMessages.ticketId, ticketId),
+        inArray(ticketMessages.kind, [...kinds]),
+      ),
+    )
+    .orderBy(asc(ticketMessages.createdAt))
+    .limit(60);
+
+  let requesterEmail: string | null = null;
+  if (ticket.requesterId) {
+    const [contact] = await db
+      .select({ email: contacts.email })
+      .from(contacts)
+      .where(eq(contacts.id, ticket.requesterId));
+    requesterEmail = contact?.email ?? null;
+  }
+
+  const text = rows
+    .filter((r) => r.body)
+    .map((r) => {
+      const who =
+        r.kind === "internal_note"
+          ? "INTERNAL NOTE"
+          : r.authorType === "agent"
+            ? "AGENT"
+            : "CUSTOMER";
+      return `${who}: ${r.body}`;
+    })
+    .join("\n\n")
+    /* On garde la FIN du fil : ce qui bloque maintenant est dans les derniers
+       messages, et un troncage par le début couperait la demande initiale — que
+       le sujet porte déjà. */
+    .slice(-MAX_THREAD_CHARS);
+
+  return {
+    subject: ticket.subject,
+    requesterEmail,
+    text,
+    keep: requesterEmail ? [requesterEmail] : [],
+  };
+}
+
+/* ---------- AI-01 · Triage ---------- */
+
+export type Triage = {
+  category: string | null;
+  priority: "low" | "normal" | "high" | "urgent" | null;
+  locale: string | null;
+  teamId: string | null;
+};
+
+const TRIAGE_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  required: ["priority", "locale", "team", "category"],
+  properties: {
+    category: { type: ["string", "null"] },
+    priority: { type: ["string", "null"], enum: ["low", "normal", "high", "urgent", null] },
+    /** Un code BCP-47 court : c'est ce dont la déflexion aura besoin plus tard. */
+    locale: { type: ["string", "null"] },
+    team: { type: ["string", "null"] },
+  },
+} as const;
+
+/**
+ * Propose une catégorie, une priorité, une langue et une équipe.
+ *
+ * **Refuse en dessous de quinze mots utiles.** Un « bonjour, ça ne marche
+ * pas » ne se trie pas, et prétendre le contraire dégrade l'inbox de tout le
+ * monde : une suggestion fausse coûte plus qu'une suggestion absente, parce
+ * qu'un agent finit par ignorer la pastille.
+ */
+export async function triageTicket(
+  provider: ProviderConfig,
+  tenantId: string,
+  ticketId: string,
+  actor: Actor,
+): Promise<Outcome<Triage>> {
+  const allowed = await capabilityAllowed(tenantId, "triage", { provider });
+  if (!allowed.ok) return { ok: false, reason: allowed.reason };
+
+  const thread = await threadFor(tenantId, ticketId, false);
+  if (!thread) return { ok: false, reason: "no_source" };
+  const words = thread.text.split(/\s+/).filter((w) => w.length > 2).length;
+  if (words < 15) return { ok: false, reason: "no_source" };
+
+  const teamRows = await db
+    .select({ id: teams.id, name: teams.name })
+    .from(teams)
+    .where(eq(teams.tenantId, tenantId));
+
+  return runCapability(tenantId, "triage", actor, ticketId, async () => {
+    const out = await ask(
+      provider,
+      [
+        "You triage an incoming support ticket.",
+        "Return the ticket's own language as a short BCP-47 code (fr, en, de…).",
+        teamRows.length > 0
+          ? `Pick a team from this list by name, or null: ${teamRows.map((t) => t.name).join(", ")}.`
+          : "There are no teams: return null for team.",
+        "Use null for anything the material does not support. A guess is worse than a null.",
+      ].join("\n"),
+      `Subject: ${thread.subject}\n\n${thread.text}`,
+      { schema: TRIAGE_SCHEMA as unknown as Record<string, unknown>, maxTokens: 200, keep: thread.keep },
+    );
+
+    const parsed = parseJson<{
+      category?: string | null;
+      priority?: string | null;
+      locale?: string | null;
+      team?: string | null;
+    }>(out.text);
+
+    const priority = (["low", "normal", "high", "urgent"] as const).find(
+      (p) => p === parsed?.priority,
+    );
+    const team = teamRows.find(
+      (t) => t.name.toLowerCase() === String(parsed?.team ?? "").toLowerCase(),
+    );
+
+    return {
+      result: {
+        category: parsed?.category?.trim() || null,
+        priority: priority ?? null,
+        locale: parsed?.locale?.trim().slice(0, 5).toLowerCase() || null,
+        teamId: team?.id ?? null,
+      } satisfies Triage,
+      model: out.model,
+      provider: provider.label,
+      inputTokens: out.inputTokens,
+      outputTokens: out.outputTokens,
+      costMicros: out.costMicros,
+      redactions: out.redactions,
+      refused: !parsed,
+    };
+  }).then((value) => ({ ok: true as const, value }));
+}
+
+/* ---------- AI-02 · Résumé de fil ---------- */
+
+/**
+ * Un paragraphe pour celui qui reprend le ticket maintenant : ce que demande le
+ * client, ce qui a été tenté, ce qui bloque.
+ *
+ * Les notes internes entrent ici si l'espace les autorise — c'est le seul
+ * endroit où elles servent vraiment, puisque le résumé est lu par un agent et
+ * jamais par un client.
+ */
+export async function summarizeThread(
+  provider: ProviderConfig,
+  tenantId: string,
+  ticketId: string,
+  actor: Actor,
+): Promise<Outcome<string>> {
+  const allowed = await capabilityAllowed(tenantId, "summary", { provider });
+  if (!allowed.ok) return { ok: false, reason: allowed.reason };
+
+  const settings = await getAiSettings(tenantId);
+  const thread = await threadFor(tenantId, ticketId, settings.sources.internalNotes);
+  if (!thread || thread.text.length < 40) return { ok: false, reason: "no_source" };
+
+  const value = await runCapability(tenantId, "summary", actor, ticketId, async () => {
+    const out = await ask(
+      provider,
+      [
+        "You summarise a support thread for the agent picking it up now.",
+        "One paragraph, at most four sentences: what the customer wants, what has been tried, what is blocking.",
+        "No greeting, no bullet list, no restatement of the subject line.",
+      ].join("\n"),
+      `Subject: ${thread.subject}\n\n${thread.text}`,
+      { maxTokens: 300, keep: thread.keep },
+    );
+    return {
+      result: out.text,
+      model: out.model,
+      provider: provider.label,
+      inputTokens: out.inputTokens,
+      outputTokens: out.outputTokens,
+      costMicros: out.costMicros,
+      redactions: out.redactions,
+      refused: out.text.length === 0,
+    };
+  });
+  return value ? { ok: true, value } : { ok: false, reason: "no_source" };
+}
+
+/* ---------- AI-03 · Brouillon de réponse ---------- */
+
+export type Draft = { text: string; sources: Passage[] };
+
+/**
+ * Un brouillon écrit **depuis la base**, avec les articles utilisés.
+ *
+ * `no_source` est une issue normale et fréquente, pas une panne : sans passage
+ * au-dessus du plancher, on refuse et l'écran propose d'écrire l'article
+ * manquant. C'est la seule fonction dont le refus doit être plus fréquent que
+ * l'invention — un brouillon faux part chez un client, un refus ne part nulle
+ * part.
+ */
+export async function draftReply(
+  provider: ProviderConfig,
+  tenantId: string,
+  ticketId: string,
+  actor: Actor,
+): Promise<Outcome<Draft>> {
+  const allowed = await capabilityAllowed(tenantId, "reply_draft", { provider });
+  if (!allowed.ok) return { ok: false, reason: allowed.reason };
+
+  const settings = await getAiSettings(tenantId);
+  const thread = await threadFor(tenantId, ticketId, settings.sources.internalNotes);
+  if (!thread) return { ok: false, reason: "no_source" };
+
+  const question = `${thread.subject}\n${thread.text.slice(-3000)}`;
+  const passages = await findPassages(provider, tenantId, question, actor, { limit: 4 });
+  if (passages.length === 0) return { ok: false, reason: "no_source" };
+
+  const value = await runCapability(tenantId, "reply_draft", actor, ticketId, async () => {
+    const material = passages
+      .map((p, i) => `[${i + 1}] ${p.title}\n${p.summary}`)
+      .join("\n\n---\n\n");
+    const out = await ask(
+      provider,
+      [
+        "You draft a support reply to a customer, for an agent to read and send.",
+        "Use ONLY the numbered material below. If it does not answer the question, say so in one sentence and stop.",
+        "Do not cite the numbers in the reply: the interface shows the sources separately.",
+        "No subject line, no signature — the product adds them.",
+      ].join("\n"),
+      `MATERIAL\n${material}\n\nTHREAD\nSubject: ${thread.subject}\n\n${thread.text}`,
+      { maxTokens: 700, keep: thread.keep },
+    );
+    return {
+      result: { text: out.text, sources: passages } satisfies Draft,
+      model: out.model,
+      provider: provider.label,
+      inputTokens: out.inputTokens,
+      outputTokens: out.outputTokens,
+      costMicros: out.costMicros,
+      redactions: out.redactions,
+      refused: out.text.length === 0,
+    };
+  });
+  return value.text ? { ok: true, value } : { ok: false, reason: "no_source" };
+}
+
+/* ---------- AI-06 · Macro suggérée ---------- */
+
+/**
+ * La macro que l'équipe a déjà validée, quand il y en a une qui répond.
+ *
+ * Coûte un embedding et pas une génération, et n'engage rien de neuf : à
+ * préférer à AI-03 quand les deux répondent. Le plancher est plus haut que
+ * pour la recherche générale — proposer une macro à côté du sujet fait perdre
+ * plus de temps qu'elle n'en gagne.
+ */
+export async function suggestMacro(
+  provider: ProviderConfig,
+  tenantId: string,
+  ticketId: string,
+  actor: Actor,
+): Promise<Outcome<Passage>> {
+  const allowed = await capabilityAllowed(tenantId, "macro_suggest", { provider });
+  if (!allowed.ok) return { ok: false, reason: allowed.reason };
+
+  const thread = await threadFor(tenantId, ticketId, false);
+  if (!thread) return { ok: false, reason: "no_source" };
+
+  const found = await findPassages(
+    provider,
+    tenantId,
+    `${thread.subject}\n${thread.text.slice(-2000)}`,
+    actor,
+    { sources: ["macro"], limit: 1, floor: 0.55 },
+  );
+  const best = found[0];
+  return best ? { ok: true, value: best } : { ok: false, reason: "no_source" };
+}
+
+/** Les capacités qu'un écran peut proposer, sachant l'offre de l'espace. */
+export function availableCapabilities(ent: {
+  aiBasic: boolean;
+  aiFull: boolean;
+}): AiCapability[] {
+  const basic: AiCapability[] = ["triage", "summary", "macro_suggest", "kb_search", "deflect"];
+  const full: AiCapability[] = ["reply_draft", "rewrite", "kb_article"];
+  return [...(ent.aiBasic || ent.aiFull ? basic : []), ...(ent.aiFull ? full : [])];
+}

@@ -1917,6 +1917,105 @@ export const hu: Dictionary = {
   "app.settings.dev.exportForbidden": "Csak az Owner és az Admin szerepkör számára.",
   "app.settings.dev.exportEnterpriseOnly": "Az auditnapló az Enterprise Edition kiadás része.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Asszisztens",
+  "app.settings.assistant.subtitle": "Mit tehet az asszisztens, mit olvas, és mennyibe kerül.",
+  "app.settings.assistant.lockedTitle": "Az asszisztens az Enterprise Edition kiadás része.",
+  "app.settings.assistant.lockedText": "Besorolás, beszélgetések összefoglalása, a tudásbázisából írt válaszvázlatok és önkiszolgáló válaszok az ügyfeleinek. Az asszisztens fogalmaz, ember tesz közzé.",
+  "app.settings.assistant.unconfiguredTitle": "Nincs beállított modellszolgáltató.",
+  "app.settings.assistant.unconfiguredText": "Semmi nincs szimulálva: egyetlen funkció sem érhető el, amíg ehhez a példányhoz nem tartozik szolgáltató, vagy amíg ez a munkaterület nem adja meg lent a saját modelljét.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Szolgáltató",
+  "app.settings.assistant.providerName": "Szolgáltató",
+  "app.settings.assistant.providerModel": "Modell",
+  "app.settings.assistant.providerRegion": "Régió",
+  "app.settings.assistant.providerOwn": "Az Ön saját modellje",
+  "app.settings.assistant.noTraining": "Az Open HelpDesk semmit nem tanít az Ön adataival, és a szolgáltató sem teszi ezt a mi megbízásunkból.",
+  "app.settings.assistant.redactionNote": "Az e-mail-címeket, telefonszámokat, kártyaszámokat, IBAN-okat, IP-címeket és minden titoknak tűnő adatot eltávolítunk, mielőtt egy prompt elhagyja ezt a példányt. Az alábbi napló megszámolja, mit távolítottunk el.",
+
+  "app.settings.assistant.masterCard": "Főkapcsoló",
+  "app.settings.assistant.enabled": "Az asszisztens be van kapcsolva ezen a munkaterületen",
+  "app.settings.assistant.enabledHint": "Kikapcsolva: minden funkció eltűnik a felületről, nem pedig szürkén jelenik meg.",
+
+  "app.settings.assistant.capabilitiesCard": "Funkciók",
+  "app.settings.assistant.capTriage": "Javasolt besorolás",
+  "app.settings.assistant.capTriageHint": "Beérkezéskor kategóriát, prioritást és csapatot javasol. Kattintás nélkül semmi nem lép érvénybe.",
+  "app.settings.assistant.capSummary": "A beszélgetés összefoglalása",
+  "app.settings.assistant.capSummaryHint": "Egy bekezdés annak, aki most veszi át a jegyet.",
+  "app.settings.assistant.capReplyDraft": "Válaszvázlat",
+  "app.settings.assistant.capReplyDraftHint": "A tudásbázisából megírva, a felhasznált cikkekkel együtt. Ha nem talál semmit, inkább megtagadja a választ, mint hogy kitaláljon valamit.",
+  "app.settings.assistant.capRewrite": "Átírás és fordítás",
+  "app.settings.assistant.capRewriteHint": "Rövidebben, barátságosabban, formálisabban vagy más nyelven — csak a kijelölt szövegen.",
+  "app.settings.assistant.capKbArticle": "Cikk megoldott jegyből",
+  "app.settings.assistant.capKbArticleHint": "Vázlatként kerül a tudásbázisba, az ügyfél adatai nélkül. Magától soha nem kerül közzétételre.",
+  "app.settings.assistant.capMacroSuggest": "Javasolt makró",
+  "app.settings.assistant.capMacroSuggestHint": "Inkább a csapata által már jóváhagyott választ ajánlja, mint hogy újat írjon.",
+  "app.settings.assistant.capDeflect": "Válaszadás ügyfeleknek ügyintéző nélkül",
+  "app.settings.assistant.capDeflectHint": "A súgóközpontban és a widgetben, még a kérés beküldése előtt. Ez az egyetlen funkció, amelyet az ügyfelei látnak.",
+  "app.settings.assistant.capKbSearch": "Jelentés szerinti keresés",
+  "app.settings.assistant.capKbSearchHint": "A súgóközpont cikkeit annak alapján rendezi, hogy mit jelent a kérdés. Semmit nem állít elő, és soha nem terheli a keretét.",
+
+  "app.settings.assistant.sourcesCard": "Amit az asszisztens olvas",
+  "app.settings.assistant.sourceKb": "Közzétett tudásbáziscikkek",
+  "app.settings.assistant.sourceMacros": "Makrók",
+  "app.settings.assistant.sourceResolved": "Megoldott jegyek",
+  "app.settings.assistant.sourceResolvedHint": "Az Ön saját válaszai — ettől hasznos már az első néhány hét is. Más munkaterülettel soha nem osztjuk meg őket.",
+  "app.settings.assistant.sourceNotes": "Belső megjegyzések",
+  "app.settings.assistant.sourceNotesHint": "Alapértelmezés szerint kikapcsolva: a megjegyzés a csapatának szól, nem egy modellnek — és még kevésbé azért, hogy egy ügyfélnek adott válaszba kerüljön.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Válaszok az ügyfeleinek",
+  "app.settings.assistant.deflectionLocales": "Engedélyezett nyelvek",
+  "app.settings.assistant.deflectionLocalesHint": "A válaszokat csak az itt engedélyezett nyelveken adjuk ki. Több európai nyelven a modellek minősége mérve sincs, és egy olyan válasz, amelyet senki nem tud megítélni, olyan kockázat, amelyet nem vállalunk Ön helyett — máshol az asszisztens az ügyintézőit segíti, akik küldés előtt elolvassák.",
+  "app.settings.assistant.deflectionNoLocale": "Nincs engedélyezett nyelv: az ügyfelei semmilyen választ nem látnak, és minden kérés ügyintézőhöz kerül.",
+  "app.settings.assistant.deflectionThreshold": "Megbízhatósági alsó határ",
+  "app.settings.assistant.deflectionThresholdHint": "Ez alatt az asszisztens inkább hallgat, mint hogy válaszoljon. Emelje meg, ha egy válasz hibásnak tűnik.",
+  "app.settings.assistant.disclosureNote": "Minden válasz közli, hogy automatikusan készült, és gépileg olvasható jelölést kap. A mesterséges intelligenciáról szóló európai rendelet 50. cikke írja elő — és amúgy is így helyes.",
+
+  "app.settings.assistant.byoCard": "Saját modell használata",
+  "app.settings.assistant.byoHint": "Irányítsa az asszisztenst a saját OpenAI-kompatibilis végpontjára — az Ön által választott szolgáltatóhoz vagy egy saját üzemeltetésű modellhez. A promptjai ilyenkor az Ön szerződése alá tartoznak, itt pedig semmit nem számolunk és nem korlátozunk.",
+  "app.settings.assistant.byoEndpoint": "Végpont",
+  "app.settings.assistant.byoModel": "Modell",
+  "app.settings.assistant.byoSecret": "API-kulcs",
+  "app.settings.assistant.byoSecretSet": "Van eltárolt kulcs. Hagyja üresen a mezőt, ha meg szeretné tartani.",
+  "app.settings.assistant.byoClear": "Visszatérés az általunk üzemeltetett szolgáltatóhoz",
+
+  "app.settings.assistant.usageCard": "Felhasználás ebben a hónapban",
+  "app.settings.assistant.usageQuota": "Felhasznált ügyfélválaszok",
+  "app.settings.assistant.usageProvisional": "megerősítésre vár",
+  "app.settings.assistant.usageReturned": "jóváírt válaszok",
+  "app.settings.assistant.usageReturnedHint": "Az a válasz, amelyet 72 órán belül kérés követ, semmibe nem kerül Önnek.",
+  "app.settings.assistant.usageQuotaReached": "A havi keret elfogyott: az ügyfeleinek adott válaszok szünetelnek, és minden kérés ügyintézőhöz kerül. Az ügyintézői funkciók továbbra is működnek.",
+  "app.settings.assistant.usageBuy": "További válaszok vásárlása",
+  "app.settings.assistant.usageCalls": "Hívások",
+  "app.settings.assistant.usageCost": "Költség",
+  "app.settings.assistant.usageNoQuota": "Az Ön saját modellje: itt semmit nem számolunk.",
+
+  "app.settings.assistant.logCard": "Hívásnapló",
+  "app.settings.assistant.logHint": "Minden hívás, az eredményétől függetlenül — az a nyom, amelyet a saját adatkezelési tevékenységeinek nyilvántartása megkíván.",
+  "app.settings.assistant.logExport": "CSV-export",
+  "app.settings.assistant.colWhen": "Mikor",
+  "app.settings.assistant.colFunction": "Funkció",
+  "app.settings.assistant.colWho": "Ki",
+  "app.settings.assistant.colTicket": "Jegy",
+  "app.settings.assistant.colModel": "Modell",
+  "app.settings.assistant.colTokens": "Tokenek",
+  "app.settings.assistant.colOutcome": "Eredmény",
+  "app.settings.assistant.outcomeOk": "Megválaszolva",
+  "app.settings.assistant.outcomeRefused": "Nem talált semmit",
+  "app.settings.assistant.outcomeFailed": "Sikertelen",
+  "app.settings.assistant.logEmpty": "Még nincs hívás — amint valaki használja az asszisztenst, itt megjelennek.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Ez a cím nem érvényes URL.",
+  "app.settings.assistant.errInsecure": "A nyilvános interneten elérhető végpontnak https-t kell használnia — az API-kulcs nem utazhat titkosítás nélkül.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Munkaterület",
   "app.settingsNav.itemGeneral": "Általános",
@@ -1931,6 +2030,7 @@ export const hu: Dictionary = {
   "app.settingsNav.itemMacros": "Makrók",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Elégedettség",
+  "app.settingsNav.itemAssistant": "Asszisztens",
   "app.settingsNav.groupSecurity": "Biztonság",
   "app.settingsNav.itemAgentSso": "Ügyintézők SSO-ja",
   "app.settingsNav.itemCustomerSso": "Ügyfelek SSO-ja",

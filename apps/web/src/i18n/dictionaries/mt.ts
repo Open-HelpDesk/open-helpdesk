@@ -2178,6 +2178,105 @@ export const mt: Dictionary = {
   "app.settings.dev.exportEnterpriseOnly":
     "L-audit log huwa parti mill-edizzjoni Enterprise Edition.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Assistent",
+  "app.settings.assistant.subtitle": "X'jista' jagħmel l-assistent, x'jaqra, u kemm jiswa.",
+  "app.settings.assistant.lockedTitle": "L-assistent huwa parti mill-edizzjoni Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Klassifikazzjoni, sommarji tal-konversazzjonijiet, abbozzi ta' tweġiba miktuba mill-bażi tal-għarfien tiegħek, u tweġibiet self-service għall-klijenti tiegħek. L-assistent jabbozza; persuna tippubblika.",
+  "app.settings.assistant.unconfiguredTitle": "Ma hemmx fornitur ta' inferenza kkonfigurat.",
+  "app.settings.assistant.unconfiguredText": "Xejn ma huwa simulat: kull funzjoni tibqa' mhux disponibbli sakemm din l-istanza ma tingħatax fornitur, jew sakemm dan l-ispazju tax-xogħol ma jġibx il-mudell tiegħu stess hawn taħt.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Fornitur",
+  "app.settings.assistant.providerName": "Fornitur",
+  "app.settings.assistant.providerModel": "Mudell",
+  "app.settings.assistant.providerRegion": "Reġjun",
+  "app.settings.assistant.providerOwn": "Ipprovdut minn dan l-ispazju tax-xogħol",
+  "app.settings.assistant.noTraining": "Open HelpDesk qatt ma jħarreġ xejn fuq id-data tiegħek, u lanqas il-fornitur ma jagħmel dan f'isimna.",
+  "app.settings.assistant.redactionNote": "L-indirizzi tal-email, in-numri tat-telefon, in-numri tal-kards, l-IBAN, l-indirizzi IP u kull ma jixbah sigriet jitneħħew qabel ma prompt joħroġ minn din l-istanza. Ir-reġistru hawn taħt jgħodd dak li tneħħa.",
+
+  "app.settings.assistant.masterCard": "Swiċċ prinċipali",
+  "app.settings.assistant.enabled": "L-assistent huwa attivat għal dan l-ispazju tax-xogħol",
+  "app.settings.assistant.enabledHint": "Mitfi: kull funzjoni tisparixxi mill-iskrins minflok tidher bl-griż.",
+
+  "app.settings.assistant.capabilitiesCard": "Funzjonijiet",
+  "app.settings.assistant.capTriage": "Klassifikazzjoni suġġerita",
+  "app.settings.assistant.capTriageHint": "Jipproponi kategorija, prijorità u tim malli jasal it-ticket. Xejn ma jiġi applikat mingħajr klikk.",
+  "app.settings.assistant.capSummary": "Sommarju tal-konversazzjoni",
+  "app.settings.assistant.capSummaryHint": "Paragrafu wieħed għal min jieħu t-ticket f'idejh issa.",
+  "app.settings.assistant.capReplyDraft": "Abbozz ta' tweġiba",
+  "app.settings.assistant.capReplyDraftHint": "Miktub mill-bażi tal-għarfien tiegħek, bl-artikli li ntużaw. Meta l-assistent ma jsib xejn, jirrifjuta minflok jivvinta.",
+  "app.settings.assistant.capRewrite": "Kitba mill-ġdid u traduzzjoni",
+  "app.settings.assistant.capRewriteHint": "Iqsar, aktar sħun, aktar formali, jew fi lingwa oħra — fuq it-test magħżul biss.",
+  "app.settings.assistant.capKbArticle": "Artiklu minn ticket solvut",
+  "app.settings.assistant.capKbArticleHint": "Jasal bħala abbozz fil-bażi tal-għarfien, bla d-dettalji tal-klijent. Qatt ma jiġi pubblikat waħdu.",
+  "app.settings.assistant.capMacroSuggest": "Makro suġġerit",
+  "app.settings.assistant.capMacroSuggestHint": "Joffri tweġiba li t-tim tiegħek diġà approva, aktar milli jikteb waħda ġdida.",
+  "app.settings.assistant.capDeflect": "Twieġeb lill-klijenti mingħajr aġent",
+  "app.settings.assistant.capDeflectHint": "Fiċ-ċentru tal-għajnuna u fil-widget, qabel ma tintbagħat talba. Din hija l-unika funzjoni li jaraw il-klijenti tiegħek.",
+  "app.settings.assistant.capKbSearch": "Tiftix bis-sens",
+  "app.settings.assistant.capKbSearchHint": "Jordna l-artikli taċ-ċentru tal-għajnuna skont dak li tfisser il-mistoqsija. Ma jiġġenera xejn, u qatt ma jingħadd mal-kwota tiegħek.",
+
+  "app.settings.assistant.sourcesCard": "X'jaqra l-assistent",
+  "app.settings.assistant.sourceKb": "Artikli pubblikati tal-bażi tal-għarfien",
+  "app.settings.assistant.sourceMacros": "Makros",
+  "app.settings.assistant.sourceResolved": "Tickets solvuti",
+  "app.settings.assistant.sourceResolvedHint": "It-tweġibiet tiegħek stess — huma li jagħmlu l-ewwel ġimgħat utli. Qatt ma jinqasmu ma' spazju tax-xogħol ieħor.",
+  "app.settings.assistant.sourceNotes": "Noti interni",
+  "app.settings.assistant.sourceNotesHint": "Mitfi b'default: nota tinkiteb għat-tim tiegħek, mhux għal mudell, u wisq inqas biex tispiċċa fi tweġiba lil klijent.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Tweġibiet lill-klijenti tiegħek",
+  "app.settings.assistant.deflectionLocales": "Lingwi permessi",
+  "app.settings.assistant.deflectionLocalesHint": "It-tweġibiet jingħataw biss fil-lingwi li tippermetti hawn. Il-kwalità tal-mudelli mhijiex imkejla fi diversi lingwi Ewropej, u tweġiba li ħadd ma jista' jevalwa hija riskju li ma nieħdux f'idejna f'ismek — band'oħra l-assistent jgħin lill-aġenti tiegħek, li jaqraw qabel jibagħtu.",
+  "app.settings.assistant.deflectionNoLocale": "L-ebda lingwa permessa: il-klijenti tiegħek ma jaraw ebda tweġiba, u kull talba tasal għand aġent.",
+  "app.settings.assistant.deflectionThreshold": "Livell minimu ta' fiduċja",
+  "app.settings.assistant.deflectionThresholdHint": "Taħtu l-assistent jibqa' sieket minflok iwieġeb. Għollih jekk qatt tweġiba tidher żbaljata.",
+  "app.settings.assistant.disclosureNote": "Kull tweġiba tgħid li ġiet iġġenerata awtomatikament, u ġġorr marka li tinqara mill-magni. Mitlub mill-Artikolu 50 tal-Att Ewropew dwar l-Intelliġenza Artifiċjali, u xorta l-ħaġa tajba li tagħmel.",
+
+  "app.settings.assistant.byoCard": "Uża l-mudell tiegħek stess",
+  "app.settings.assistant.byoHint": "Ipponta l-assistent lejn l-endpoint tiegħek stess kompatibbli ma' OpenAI — fornitur tal-għażla tiegħek, jew mudell li tospita int stess. Il-prompts tiegħek imbagħad jgħaddu taħt il-kuntratt tiegħek, u hawn xejn ma jingħadd u xejn ma jiġi limitat.",
+  "app.settings.assistant.byoEndpoint": "Endpoint",
+  "app.settings.assistant.byoModel": "Mudell",
+  "app.settings.assistant.byoSecret": "Ċavetta tal-API",
+  "app.settings.assistant.byoSecretSet": "Hemm ċavetta maħżuna. Ħalli l-kamp vojt biex iżżommha.",
+  "app.settings.assistant.byoClear": "Erġa' uża l-fornitur ta' din l-istanza",
+
+  "app.settings.assistant.usageCard": "Konsum tax-xahar",
+  "app.settings.assistant.usageQuota": "Tweġibiet użati lill-klijenti",
+  "app.settings.assistant.usageProvisional": "fl-istennija ta' konferma",
+  "app.settings.assistant.usageReturned": "tweġibiet mogħtija lura",
+  "app.settings.assistant.usageReturnedHint": "Tweġiba li warajha tasal talba fi 72 siegħa ma tiswiek xejn.",
+  "app.settings.assistant.usageQuotaReached": "Il-kwota ta' dan ix-xahar intemmet: it-tweġibiet lill-klijenti tiegħek huma sospiżi, u kull talba tasal għand aġent. Il-funzjonijiet fuq in-naħa tal-aġenti jibqgħu jaħdmu.",
+  "app.settings.assistant.usageBuy": "Ixtri aktar tweġibiet",
+  "app.settings.assistant.usageCalls": "Sejħiet",
+  "app.settings.assistant.usageCost": "Spiża",
+  "app.settings.assistant.usageNoQuota": "Il-mudell tiegħek stess: hawn xejn ma jingħadd.",
+
+  "app.settings.assistant.logCard": "Reġistru tas-sejħiet",
+  "app.settings.assistant.logHint": "Kull sejħa, tkun xi tkun ir-riżultat tagħha — it-traċċa li jitlob ir-reġistru tal-attivitajiet ta' pproċessar tiegħek stess.",
+  "app.settings.assistant.logExport": "Esportazzjoni CSV",
+  "app.settings.assistant.colWhen": "Meta",
+  "app.settings.assistant.colFunction": "Funzjoni",
+  "app.settings.assistant.colWho": "Min",
+  "app.settings.assistant.colTicket": "Ticket",
+  "app.settings.assistant.colModel": "Mudell",
+  "app.settings.assistant.colTokens": "Tokens",
+  "app.settings.assistant.colOutcome": "Riżultat",
+  "app.settings.assistant.outcomeOk": "Imwieġba",
+  "app.settings.assistant.outcomeRefused": "Ma nstab xejn",
+  "app.settings.assistant.outcomeFailed": "Falla",
+  "app.settings.assistant.logEmpty": "Għadhom l-ebda sejħiet — jidhru hawn malli jintuża l-assistent.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Dan l-indirizz mhuwiex URL validu.",
+  "app.settings.assistant.errInsecure": "Endpoint li jintlaħaq mill-internet pubbliku jrid juża https — ċavetta tal-API ma tistax tivvjaġġa mhux ikkriptata.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Spazju tax-xogħol",
   "app.settingsNav.itemGeneral": "Ġenerali",
@@ -2192,6 +2291,7 @@ export const mt: Dictionary = {
   "app.settingsNav.itemMacros": "Makros",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Sodisfazzjon",
+  "app.settingsNav.itemAssistant": "Assistent",
   "app.settingsNav.groupSecurity": "Sigurtà",
   "app.settingsNav.itemAgentSso": "SSO tal-aġenti",
   "app.settingsNav.itemCustomerSso": "SSO tal-klijenti",

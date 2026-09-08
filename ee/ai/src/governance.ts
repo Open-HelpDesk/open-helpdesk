@@ -370,6 +370,40 @@ export async function monthlyUsage(tenantId: string): Promise<{
 }
 
 /**
+ * Le balayage de tous les espaces qui ont une déflexion à trancher.
+ *
+ * Le worker appelle ceci et non `settleDeflections` par locataire : la liste
+ * des espaces concernés se lit de la table, donc le worker n'a pas à savoir
+ * combien il y a de locataires ni lesquels ont l'assistant. Un espace sans
+ * déflexion en attente ne coûte rien : il n'apparaît pas dans le `distinct`.
+ */
+export async function sweepDeflections(): Promise<{
+  tenants: number;
+  confirmed: number;
+  returned: number;
+}> {
+  const now = new Date();
+  const rows = await db
+    .selectDistinct({ tenantId: aiDeflections.tenantId })
+    .from(aiDeflections)
+    .where(
+      and(
+        eq(aiDeflections.status, "provisional"),
+        sql`${aiDeflections.confirmAfter} <= ${now}`,
+      ),
+    );
+
+  let confirmed = 0;
+  let returned = 0;
+  for (const row of rows) {
+    const out = await settleDeflections(row.tenantId);
+    confirmed += out.confirmed;
+    returned += out.returned;
+  }
+  return { tenants: rows.length, confirmed, returned };
+}
+
+/**
  * La reprise à 72 h : une déflexion dont la fenêtre est passée sans qu'un
  * ticket arrive devient confirmée ; celle qu'un ticket a suivie rend son
  * crédit.

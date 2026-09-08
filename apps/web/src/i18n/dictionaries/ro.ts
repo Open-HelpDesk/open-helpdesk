@@ -2054,6 +2054,105 @@ export const ro: Dictionary = {
   "app.settings.dev.exportForbidden": "Rezervat rolurilor Owner și Admin.",
   "app.settings.dev.exportEnterpriseOnly": "Auditul log face parte din Enterprise Edition.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Asistent",
+  "app.settings.assistant.subtitle": "Ce poate face asistentul, ce citește și cât costă.",
+  "app.settings.assistant.lockedTitle": "Asistentul face parte din Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Triere, rezumate ale conversației, ciorne de răspuns redactate din baza dvs. de cunoștințe și răspunsuri în autoservire pentru clienții dvs. Asistentul redactează ciorna; publică o persoană.",
+  "app.settings.assistant.unconfiguredTitle": "Nu este configurat niciun furnizor de inferență.",
+  "app.settings.assistant.unconfiguredText": "Nimic nu este simulat: fiecare funcție rămâne indisponibilă până când această instanță primește un furnizor sau până când acest spațiu de lucru își aduce propriul model, mai jos.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Furnizor",
+  "app.settings.assistant.providerName": "Furnizor",
+  "app.settings.assistant.providerModel": "Model",
+  "app.settings.assistant.providerRegion": "Regiune",
+  "app.settings.assistant.providerOwn": "Propriul dvs. model",
+  "app.settings.assistant.noTraining": "Open HelpDesk nu antrenează niciodată nimic pe datele dvs., iar nici furnizorul nu o face în numele nostru.",
+  "app.settings.assistant.redactionNote": "Adresele de email, numerele de telefon, numerele de card, IBAN-urile, adresele IP și orice seamănă cu un secret sunt eliminate înainte ca un prompt să părăsească această instanță. Jurnalul de mai jos numără ce a fost eliminat.",
+
+  "app.settings.assistant.masterCard": "Comutator general",
+  "app.settings.assistant.enabled": "Asistentul este activ pentru acest spațiu de lucru",
+  "app.settings.assistant.enabledHint": "Dezactivat: fiecare funcție dispare din ecrane, în loc să apară estompată.",
+
+  "app.settings.assistant.capabilitiesCard": "Funcții",
+  "app.settings.assistant.capTriage": "Triere sugerată",
+  "app.settings.assistant.capTriageHint": "Propune o categorie, o prioritate și o echipă la sosirea tichetului. Nimic nu se aplică fără un clic.",
+  "app.settings.assistant.capSummary": "Rezumatul conversației",
+  "app.settings.assistant.capSummaryHint": "Un paragraf pentru cine preia tichetul acum.",
+  "app.settings.assistant.capReplyDraft": "Ciornă de răspuns",
+  "app.settings.assistant.capReplyDraftHint": "Redactată din baza dvs. de cunoștințe, cu articolele pe care le-a folosit. Când nu găsește nimic, refuză în loc să inventeze.",
+  "app.settings.assistant.capRewrite": "Rescriere și traducere",
+  "app.settings.assistant.capRewriteHint": "Mai scurt, mai cald, mai formal sau în altă limbă — doar pe textul selectat.",
+  "app.settings.assistant.capKbArticle": "Articol dintr-un tichet rezolvat",
+  "app.settings.assistant.capKbArticleHint": "Ajunge ca ciornă în baza de cunoștințe, fără datele clientului. Nu se publică niciodată singur.",
+  "app.settings.assistant.capMacroSuggest": "Macro sugerat",
+  "app.settings.assistant.capMacroSuggestHint": "Propune un răspuns pe care echipa dvs. l-a aprobat deja, în loc să scrie unul nou.",
+  "app.settings.assistant.capDeflect": "Oferirea de răspunsuri clienților fără agent",
+  "app.settings.assistant.capDeflectHint": "În centrul de asistență și în widget, înainte ca o solicitare să fie trimisă. Este singura funcție pe care o văd clienții dvs.",
+  "app.settings.assistant.capKbSearch": "Căutare după sens",
+  "app.settings.assistant.capKbSearchHint": "Ordonează articolele centrului de asistență după sensul întrebării. Nu generează nimic și nu consumă din cotă.",
+
+  "app.settings.assistant.sourcesCard": "Ce citește",
+  "app.settings.assistant.sourceKb": "Articole publicate din baza de cunoștințe",
+  "app.settings.assistant.sourceMacros": "Macrouri",
+  "app.settings.assistant.sourceResolved": "Tichete rezolvate",
+  "app.settings.assistant.sourceResolvedHint": "Propriile dvs. răspunsuri, iar acest lucru face utile primele săptămâni. Nu sunt niciodată partajate cu alt spațiu de lucru.",
+  "app.settings.assistant.sourceNotes": "Note interne",
+  "app.settings.assistant.sourceNotesHint": "Dezactivat implicit: o notă este scrisă pentru echipa dvs., nu pentru un model, și cu atât mai puțin pentru a alimenta un răspuns către un client.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Răspunsuri pentru clienții dvs.",
+  "app.settings.assistant.deflectionLocales": "Limbi permise",
+  "app.settings.assistant.deflectionLocalesHint": "Răspunsurile sunt oferite numai în limbile pe care le permiteți aici. Calitatea modelelor nu este măsurată în mai multe limbi europene, iar un răspuns pe care nimeni nu îl poate evalua este un risc pe care nu ni-l asumăm în numele dvs. — în celelalte funcții asistentul ajută agenții dvs., care citesc înainte de a trimite.",
+  "app.settings.assistant.deflectionNoLocale": "Nicio limbă permisă: clienții dvs. nu văd niciun răspuns și fiecare solicitare ajunge la un agent.",
+  "app.settings.assistant.deflectionThreshold": "Prag de încredere",
+  "app.settings.assistant.deflectionThresholdHint": "Sub acest prag asistentul tace în loc să răspundă. Ridicați-l dacă un răspuns vi se pare greșit.",
+  "app.settings.assistant.disclosureNote": "Fiecare răspuns precizează că a fost generat automat și poartă un marcaj citibil de mașină. Cerut de articolul 50 din Regulamentul european privind inteligența artificială și, oricum, este lucrul corect.",
+
+  "app.settings.assistant.byoCard": "Folosiți propriul model",
+  "app.settings.assistant.byoHint": "Îndreptați asistentul către propriul punct final compatibil OpenAI: un furnizor la alegerea dvs. sau un model găzduit de dvs. Prompturile dvs. trec atunci prin contractul dvs., iar aici nimic nu este contorizat sau plafonat.",
+  "app.settings.assistant.byoEndpoint": "Punct final",
+  "app.settings.assistant.byoModel": "Model",
+  "app.settings.assistant.byoSecret": "Cheie API",
+  "app.settings.assistant.byoSecretSet": "O cheie este stocată. Lăsați câmpul gol pentru a o păstra.",
+  "app.settings.assistant.byoClear": "Revenire la furnizorul găzduit",
+
+  "app.settings.assistant.usageCard": "Utilizare în luna curentă",
+  "app.settings.assistant.usageQuota": "Răspunsuri pentru clienți utilizate",
+  "app.settings.assistant.usageProvisional": "în așteptarea confirmării",
+  "app.settings.assistant.usageReturned": "creditate înapoi",
+  "app.settings.assistant.usageReturnedHint": "Un răspuns urmat de o solicitare în mai puțin de 72 de ore nu vă costă nimic.",
+  "app.settings.assistant.usageQuotaReached": "Cota lunii este epuizată: răspunsurile pentru clienții dvs. sunt suspendate și fiecare solicitare ajunge la un agent. Funcțiile din partea agenților continuă să funcționeze.",
+  "app.settings.assistant.usageBuy": "Cumpărați mai multe răspunsuri",
+  "app.settings.assistant.usageCalls": "Apeluri",
+  "app.settings.assistant.usageCost": "Cost",
+  "app.settings.assistant.usageNoQuota": "Propriul dvs. model: aici nu se contorizează nimic.",
+
+  "app.settings.assistant.logCard": "Jurnalul apelurilor",
+  "app.settings.assistant.logHint": "Fiecare apel, oricare ar fi rezultatul — urma pe care o va cere propriul dvs. registru al prelucrărilor.",
+  "app.settings.assistant.logExport": "Export CSV",
+  "app.settings.assistant.colWhen": "Când",
+  "app.settings.assistant.colFunction": "Funcție",
+  "app.settings.assistant.colWho": "Cine",
+  "app.settings.assistant.colTicket": "Tichet",
+  "app.settings.assistant.colModel": "Model",
+  "app.settings.assistant.colTokens": "Tokenuri",
+  "app.settings.assistant.colOutcome": "Rezultat",
+  "app.settings.assistant.outcomeOk": "Răspuns dat",
+  "app.settings.assistant.outcomeRefused": "Nu a găsit nimic",
+  "app.settings.assistant.outcomeFailed": "Eșuat",
+  "app.settings.assistant.logEmpty": "Niciun apel deocamdată — vor apărea aici imediat ce asistentul este folosit.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Această adresă nu este un URL valid.",
+  "app.settings.assistant.errInsecure": "Un punct final accesibil din internetul public trebuie să folosească https — o cheie API nu are voie să circule necriptată.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Spațiu de lucru",
   "app.settingsNav.itemGeneral": "General",
@@ -2068,6 +2167,7 @@ export const ro: Dictionary = {
   "app.settingsNav.itemMacros": "Macrouri",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Satisfacție",
+  "app.settingsNav.itemAssistant": "Asistent",
   "app.settingsNav.groupSecurity": "Securitate",
   "app.settingsNav.itemAgentSso": "SSO agenți",
   "app.settingsNav.itemCustomerSso": "SSO clienți",

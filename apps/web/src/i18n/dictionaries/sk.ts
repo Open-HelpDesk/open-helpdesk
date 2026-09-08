@@ -2098,6 +2098,105 @@ export const sk: Dictionary = {
   "app.settings.dev.exportForbidden": "Vyhradené pre roly Owner a Admin.",
   "app.settings.dev.exportEnterpriseOnly": "Audit log je súčasťou edície Enterprise Edition.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Asistent",
+  "app.settings.assistant.subtitle": "Čo smie asistent robiť, čo číta a koľko to stojí.",
+  "app.settings.assistant.lockedTitle": "Asistent je súčasťou edície Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Triedenie, súhrny konverzácií, koncepty odpovedí napísané z vašej databázy znalostí a samoobslužné odpovede pre vašich zákazníkov. Asistent píše koncept, publikuje ho človek.",
+  "app.settings.assistant.unconfiguredTitle": "Nie je nastavený žiadny poskytovateľ inferencie.",
+  "app.settings.assistant.unconfiguredText": "Nič sa nesimuluje: každá funkcia zostane nedostupná, kým táto inštancia nedostane poskytovateľa alebo kým tento pracovný priestor nižšie nepripojí vlastný model.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Poskytovateľ",
+  "app.settings.assistant.providerName": "Poskytovateľ",
+  "app.settings.assistant.providerModel": "Model",
+  "app.settings.assistant.providerRegion": "Región",
+  "app.settings.assistant.providerOwn": "Váš vlastný model",
+  "app.settings.assistant.noTraining": "Open HelpDesk na vašich údajoch nikdy nič netrénuje a poskytovateľ to nerobí ani za nás.",
+  "app.settings.assistant.redactionNote": "E-maily, telefónne čísla, čísla kariet, čísla IBAN, IP adresy a všetko, čo pripomína tajný údaj, sa odstránia ešte predtým, ako prompt opustí túto inštanciu. Záznam nižšie počíta, čo bolo odstránené.",
+
+  "app.settings.assistant.masterCard": "Hlavný vypínač",
+  "app.settings.assistant.enabled": "Asistent je pre tento pracovný priestor zapnutý",
+  "app.settings.assistant.enabledHint": "Vypnuté: každá funkcia z obrazoviek zmizne, namiesto toho aby bola zobrazená sivo.",
+
+  "app.settings.assistant.capabilitiesCard": "Funkcie",
+  "app.settings.assistant.capTriage": "Navrhnuté triedenie",
+  "app.settings.assistant.capTriageHint": "Pri doručení navrhne kategóriu, prioritu a tím. Nič sa nepoužije bez kliknutia.",
+  "app.settings.assistant.capSummary": "Súhrn konverzácie",
+  "app.settings.assistant.capSummaryHint": "Jeden odstavec pre toho, kto tiket práve preberá.",
+  "app.settings.assistant.capReplyDraft": "Koncept odpovede",
+  "app.settings.assistant.capReplyDraftHint": "Napísaný z vašej databázy znalostí, vrátane použitých článkov. Keď nič nenájde, odpoveď odmietne, namiesto toho aby si ju vymyslel.",
+  "app.settings.assistant.capRewrite": "Prepísanie a preklad",
+  "app.settings.assistant.capRewriteHint": "Kratšie, vrelejšie, formálnejšie alebo v inom jazyku — iba na vybranom texte.",
+  "app.settings.assistant.capKbArticle": "Článok z vyriešeného tiketu",
+  "app.settings.assistant.capKbArticleHint": "Vznikne ako koncept v databáze znalostí, bez údajov zákazníka. Nikdy sa nepublikuje sám.",
+  "app.settings.assistant.capMacroSuggest": "Navrhnuté makro",
+  "app.settings.assistant.capMacroSuggestHint": "Ponúkne odpoveď, ktorú váš tím už schválil, prednostne pred písaním novej.",
+  "app.settings.assistant.capDeflect": "Odpovedanie zákazníkom bez agenta",
+  "app.settings.assistant.capDeflectHint": "V centre pomoci a vo widgete, ešte pred odoslaním požiadavky. Je to jediná funkcia, ktorú vaši zákazníci vidia.",
+  "app.settings.assistant.capKbSearch": "Hľadanie podľa významu",
+  "app.settings.assistant.capKbSearchHint": "Zoradí články centra pomoci podľa toho, čo otázka znamená. Nič negeneruje a nič nespotrebúva.",
+
+  "app.settings.assistant.sourcesCard": "Čo asistent číta",
+  "app.settings.assistant.sourceKb": "Publikované články databázy znalostí",
+  "app.settings.assistant.sourceMacros": "Makrá",
+  "app.settings.assistant.sourceResolved": "Vyriešené tikety",
+  "app.settings.assistant.sourceResolvedHint": "Vaše vlastné odpovede — práve vďaka nim sú prvé týždne užitočné. Nikdy sa nezdieľajú s iným pracovným priestorom.",
+  "app.settings.assistant.sourceNotes": "Interné poznámky",
+  "app.settings.assistant.sourceNotesHint": "Predvolene vypnuté: poznámka sa píše pre váš tím, nie pre model, a tým menej ako podklad odpovede zákazníkovi.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Odpovede vašim zákazníkom",
+  "app.settings.assistant.deflectionLocales": "Povolené jazyky",
+  "app.settings.assistant.deflectionLocalesHint": "Odpovede sa poskytujú len v jazykoch, ktoré tu povolíte. V niekoľkých európskych jazykoch nie je kvalita modelu odmeraná a odpoveď, ktorú nikto nedokáže ohodnotiť, je riziko, ktoré za vás nepreberáme — inde asistent pomáha vašim agentom, ktorí si text pred odoslaním prečítajú.",
+  "app.settings.assistant.deflectionNoLocale": "Žiadny povolený jazyk: vaši zákazníci žiadnu odpoveď neuvidia a každá požiadavka sa dostane k agentovi.",
+  "app.settings.assistant.deflectionThreshold": "Minimálna istota",
+  "app.settings.assistant.deflectionThresholdHint": "Pod touto hranicou asistent radšej mlčí, než by odpovedal. Ak sa vám niektorá odpoveď zdá nesprávna, hranicu zvýšte.",
+  "app.settings.assistant.disclosureNote": "Pri každej odpovedi je uvedené, že bola vygenerovaná automaticky, a nesie strojovo čitateľné označenie. Vyžaduje to článok 50 európskeho aktu o umelej inteligencii, a je to správne aj bez neho.",
+
+  "app.settings.assistant.byoCard": "Vlastný model",
+  "app.settings.assistant.byoHint": "Nasmerujte asistenta na svoj vlastný koncový bod kompatibilný s OpenAI — na poskytovateľa, ktorého si vyberiete, alebo na model, ktorý hostujete sami. Vaše prompty potom idú cez vašu zmluvu a nič sa tu nepočíta ani neobmedzuje.",
+  "app.settings.assistant.byoEndpoint": "Koncový bod",
+  "app.settings.assistant.byoModel": "Model",
+  "app.settings.assistant.byoSecret": "Kľúč API",
+  "app.settings.assistant.byoSecretSet": "Kľúč je uložený. Ak ho chcete ponechať, nechajte pole prázdne.",
+  "app.settings.assistant.byoClear": "Znova použiť hostovaného poskytovateľa",
+
+  "app.settings.assistant.usageCard": "Spotreba tohto mesiaca",
+  "app.settings.assistant.usageQuota": "Využité odpovede zákazníkom",
+  "app.settings.assistant.usageProvisional": "čaká na potvrdenie",
+  "app.settings.assistant.usageReturned": "vrátené",
+  "app.settings.assistant.usageReturnedHint": "Odpoveď, po ktorej do 72 hodín príde požiadavka, vás nič nestojí.",
+  "app.settings.assistant.usageQuotaReached": "Limit tohto mesiaca je vyčerpaný: odpovede vašim zákazníkom sú pozastavené a každá požiadavka sa dostane k agentovi. Funkcie na strane agentov fungujú ďalej.",
+  "app.settings.assistant.usageBuy": "Dokúpiť odpovede",
+  "app.settings.assistant.usageCalls": "Volania",
+  "app.settings.assistant.usageCost": "Náklady",
+  "app.settings.assistant.usageNoQuota": "Váš vlastný model: tu sa nič nepočíta.",
+
+  "app.settings.assistant.logCard": "Záznam volaní",
+  "app.settings.assistant.logHint": "Každé volanie, bez ohľadu na výsledok — doklad, ktorý si vyžiadajú vaše záznamy o spracovateľských činnostiach.",
+  "app.settings.assistant.logExport": "Export CSV",
+  "app.settings.assistant.colWhen": "Kedy",
+  "app.settings.assistant.colFunction": "Funkcia",
+  "app.settings.assistant.colWho": "Kto",
+  "app.settings.assistant.colTicket": "Tiket",
+  "app.settings.assistant.colModel": "Model",
+  "app.settings.assistant.colTokens": "Tokeny",
+  "app.settings.assistant.colOutcome": "Výsledok",
+  "app.settings.assistant.outcomeOk": "Odpovedané",
+  "app.settings.assistant.outcomeRefused": "Nič sa nenašlo",
+  "app.settings.assistant.outcomeFailed": "Chyba",
+  "app.settings.assistant.logEmpty": "Zatiaľ žiadne volania — objavia sa tu, len čo sa asistent použije.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Táto adresa nie je platná URL.",
+  "app.settings.assistant.errInsecure": "Koncový bod dostupný z verejného internetu musí používať https — kľúč API nesmie byť prenášaný nezašifrovane.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Pracovný priestor",
   "app.settingsNav.itemGeneral": "Všeobecné",
@@ -2112,6 +2211,7 @@ export const sk: Dictionary = {
   "app.settingsNav.itemMacros": "Makrá",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Spokojnosť",
+  "app.settingsNav.itemAssistant": "Asistent",
   "app.settingsNav.groupSecurity": "Bezpečnosť",
   "app.settingsNav.itemAgentSso": "SSO pre agentov",
   "app.settingsNav.itemCustomerSso": "SSO klientov",

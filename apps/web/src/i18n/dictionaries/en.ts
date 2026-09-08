@@ -281,6 +281,7 @@ export const en = {
   "app.settingsNav.itemMacros": "Macros",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Satisfaction",
+  "app.settingsNav.itemAssistant": "Assistant",
   "app.settingsNav.groupSecurity": "Security",
   "app.settingsNav.itemAgentSso": "Agent SSO",
   "app.settingsNav.itemCustomerSso": "Customer SSO",
@@ -1747,6 +1748,105 @@ export const en = {
   "app.settings.dev.exportUnauthorized": "Unauthorised",
   "app.settings.dev.exportForbidden": "Restricted to the Owner and Admin roles.",
   "app.settings.dev.exportEnterpriseOnly": "The audit log is part of Enterprise Edition.",
+
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Assistant",
+  "app.settings.assistant.subtitle": "What the assistant may do, what it reads, and what it costs.",
+  "app.settings.assistant.lockedTitle": "The assistant is part of Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Triage, thread summaries, reply drafts written from your knowledge base, and self-service answers for your customers. It drafts; a person publishes.",
+  "app.settings.assistant.unconfiguredTitle": "No inference provider is configured.",
+  "app.settings.assistant.unconfiguredText": "Nothing is simulated: every function stays unavailable until this instance is given a provider, or until this workspace brings its own model below.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Provider",
+  "app.settings.assistant.providerName": "Provider",
+  "app.settings.assistant.providerModel": "Model",
+  "app.settings.assistant.providerRegion": "Region",
+  "app.settings.assistant.providerOwn": "Your own model",
+  "app.settings.assistant.noTraining": "Open HelpDesk never trains anything on your data, and neither does the provider on our behalf.",
+  "app.settings.assistant.redactionNote": "Emails, phone numbers, card numbers, IBANs, IP addresses and anything resembling a secret are removed before a prompt leaves this instance. The log below counts what was removed.",
+
+  "app.settings.assistant.masterCard": "Master switch",
+  "app.settings.assistant.enabled": "The assistant is on for this workspace",
+  "app.settings.assistant.enabledHint": "Off: every function disappears from the screens instead of appearing greyed out.",
+
+  "app.settings.assistant.capabilitiesCard": "Functions",
+  "app.settings.assistant.capTriage": "Suggested triage",
+  "app.settings.assistant.capTriageHint": "Proposes a category, a priority and a team on arrival. Nothing is applied without a click.",
+  "app.settings.assistant.capSummary": "Thread summary",
+  "app.settings.assistant.capSummaryHint": "One paragraph for whoever picks the ticket up now.",
+  "app.settings.assistant.capReplyDraft": "Reply draft",
+  "app.settings.assistant.capReplyDraftHint": "Written from your knowledge base, with the articles it used. Refuses rather than inventing when it finds nothing.",
+  "app.settings.assistant.capRewrite": "Rewrite and translate",
+  "app.settings.assistant.capRewriteHint": "Shorter, warmer, more formal, or in another language — on the selected text only.",
+  "app.settings.assistant.capKbArticle": "Article from a solved ticket",
+  "app.settings.assistant.capKbArticleHint": "Arrives as a draft in the knowledge base, stripped of the customer's details. Never published on its own.",
+  "app.settings.assistant.capMacroSuggest": "Suggested macro",
+  "app.settings.assistant.capMacroSuggestHint": "Offers a reply your team has already approved, in preference to writing a new one.",
+  "app.settings.assistant.capDeflect": "Answer customers without an agent",
+  "app.settings.assistant.capDeflectHint": "On the help centre and the widget, before a request is submitted. This is the only function your customers see.",
+  "app.settings.assistant.capKbSearch": "Search by meaning",
+  "app.settings.assistant.capKbSearchHint": "Ranks help-centre articles by what the question means. Generates nothing, and never counts against your allowance.",
+
+  "app.settings.assistant.sourcesCard": "What it reads",
+  "app.settings.assistant.sourceKb": "Published knowledge-base articles",
+  "app.settings.assistant.sourceMacros": "Macros",
+  "app.settings.assistant.sourceResolved": "Solved tickets",
+  "app.settings.assistant.sourceResolvedHint": "Your own answers, which is what makes the first weeks useful. Never shared with another workspace.",
+  "app.settings.assistant.sourceNotes": "Internal notes",
+  "app.settings.assistant.sourceNotesHint": "Off by default: a note is written for your team, not for a model, and still less to end up in an answer to a customer.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Answers to your customers",
+  "app.settings.assistant.deflectionLocales": "Languages allowed",
+  "app.settings.assistant.deflectionLocalesHint": "Answers are only served in the languages you allow here. Model quality is unmeasured in several European languages, and an answer nobody can grade is a risk we do not take on your behalf — elsewhere the assistant helps your agents, who read before sending.",
+  "app.settings.assistant.deflectionNoLocale": "No language allowed: your customers see no answer, and every request reaches an agent.",
+  "app.settings.assistant.deflectionThreshold": "Confidence floor",
+  "app.settings.assistant.deflectionThresholdHint": "Below it the assistant stays silent instead of answering. Raise it if an answer ever looks wrong.",
+  "app.settings.assistant.disclosureNote": "Every answer says it was generated automatically, and carries a machine-readable marker. Required by Article 50 of the European AI Act, and the right thing to do anyway.",
+
+  "app.settings.assistant.byoCard": "Bring your own model",
+  "app.settings.assistant.byoHint": "Point the assistant at your own OpenAI-compatible endpoint — a provider of your choosing, or a model you host yourself. Your prompts then go to your contract, and nothing here is counted or capped.",
+  "app.settings.assistant.byoEndpoint": "Endpoint",
+  "app.settings.assistant.byoModel": "Model",
+  "app.settings.assistant.byoSecret": "API key",
+  "app.settings.assistant.byoSecretSet": "A key is stored. Leave the field empty to keep it.",
+  "app.settings.assistant.byoClear": "Use the hosted provider again",
+
+  "app.settings.assistant.usageCard": "Usage this month",
+  "app.settings.assistant.usageQuota": "Customer answers used",
+  "app.settings.assistant.usageProvisional": "Awaiting confirmation",
+  "app.settings.assistant.usageReturned": "Credited back",
+  "app.settings.assistant.usageReturnedHint": "An answer followed by a request within 72 hours costs you nothing.",
+  "app.settings.assistant.usageQuotaReached": "This month's allowance is used up: answers to your customers are paused, and every request reaches an agent. Agent-side functions keep working.",
+  "app.settings.assistant.usageBuy": "Buy more customer answers",
+  "app.settings.assistant.usageCalls": "Calls",
+  "app.settings.assistant.usageCost": "Cost",
+  "app.settings.assistant.usageNoQuota": "Your own model: nothing is counted here.",
+
+  "app.settings.assistant.logCard": "Call log",
+  "app.settings.assistant.logHint": "Every call, whatever its outcome — the trail you will need for your own record of processing activities.",
+  "app.settings.assistant.logExport": "Export as CSV",
+  "app.settings.assistant.colWhen": "When",
+  "app.settings.assistant.colFunction": "Function",
+  "app.settings.assistant.colWho": "Who",
+  "app.settings.assistant.colTicket": "Ticket",
+  "app.settings.assistant.colModel": "Model",
+  "app.settings.assistant.colTokens": "Tokens",
+  "app.settings.assistant.colOutcome": "Outcome",
+  "app.settings.assistant.outcomeOk": "Answered",
+  "app.settings.assistant.outcomeRefused": "Found nothing",
+  "app.settings.assistant.outcomeFailed": "Failed",
+  "app.settings.assistant.logEmpty": "No calls yet — they will appear here as soon as the assistant is used.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "That endpoint is not a valid URL.",
+  "app.settings.assistant.errInsecure": "An endpoint reached over the public internet must use https — an API key must not travel in the clear.",
 
   /* --- Foundations: statuses, priorities, channels, units --- */
   "app.status.new": "New",

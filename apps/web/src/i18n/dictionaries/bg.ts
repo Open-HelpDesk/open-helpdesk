@@ -1883,6 +1883,105 @@ export const bg: Dictionary = {
   "app.settings.dev.exportForbidden": "Само за ролите Owner и Admin.",
   "app.settings.dev.exportEnterpriseOnly": "Одитният дневник е част от Enterprise Edition.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Асистент",
+  "app.settings.assistant.subtitle": "Какво може да прави асистентът, какво чете и колко струва.",
+  "app.settings.assistant.lockedTitle": "Асистентът е част от Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Разпределяне, резюмета на разговори, чернови на отговори, написани от Вашата база знания, и самообслужващи отговори за Вашите клиенти. Асистентът пише черновата, публикува човек.",
+  "app.settings.assistant.unconfiguredTitle": "Не е конфигуриран доставчик на инференция.",
+  "app.settings.assistant.unconfiguredText": "Нищо не е симулирано: всяка функция остава недостъпна, докато тази инстанция не получи доставчик или докато това работно пространство не добави собствен модел по-долу.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Доставчик",
+  "app.settings.assistant.providerName": "Доставчик",
+  "app.settings.assistant.providerModel": "Модел",
+  "app.settings.assistant.providerRegion": "Регион",
+  "app.settings.assistant.providerOwn": "Ваш собствен модел",
+  "app.settings.assistant.noTraining": "Open HelpDesk никога не обучава нищо върху Вашите данни, нито доставчикът прави това от наше име.",
+  "app.settings.assistant.redactionNote": "Имейл адреси, телефонни номера, номера на карти, IBAN, IP адреси и всичко, което изглежда като тайна, се премахват, преди промптът да напусне тази инстанция. Дневникът по-долу отчита какво е премахнато.",
+
+  "app.settings.assistant.masterCard": "Главен превключвател",
+  "app.settings.assistant.enabled": "Асистентът е включен за това работно пространство",
+  "app.settings.assistant.enabledHint": "Изключено: всяка функция изчезва от екраните, вместо да се показва в сиво.",
+
+  "app.settings.assistant.capabilitiesCard": "Функции",
+  "app.settings.assistant.capTriage": "Предложено разпределяне",
+  "app.settings.assistant.capTriageHint": "При постъпване предлага категория, приоритет и екип. Нищо не се прилага без щракване.",
+  "app.settings.assistant.capSummary": "Резюме на разговора",
+  "app.settings.assistant.capSummaryHint": "Един абзац за онзи, който поема тикета сега.",
+  "app.settings.assistant.capReplyDraft": "Чернова на отговор",
+  "app.settings.assistant.capReplyDraftHint": "Написана от Вашата база знания, заедно със статиите, които асистентът е използвал. Когато не намери нищо, отказва, вместо да измисля.",
+  "app.settings.assistant.capRewrite": "Преписване и превод",
+  "app.settings.assistant.capRewriteHint": "По-кратко, по-топло, по-официално или на друг език — само върху избрания текст.",
+  "app.settings.assistant.capKbArticle": "Статия от решен тикет",
+  "app.settings.assistant.capKbArticleHint": "Появява се като чернова в базата знания, без данните на клиента. Никога не се публикува сама.",
+  "app.settings.assistant.capMacroSuggest": "Предложен макрос",
+  "app.settings.assistant.capMacroSuggestHint": "Предлага отговор, който екипът Ви вече е одобрил, вместо да пише нов.",
+  "app.settings.assistant.capDeflect": "Отговаряне на клиентите без агент",
+  "app.settings.assistant.capDeflectHint": "В помощния център и в уиджета, преди заявката да бъде подадена. Това е единствената функция, която Вашите клиенти виждат.",
+  "app.settings.assistant.capKbSearch": "Търсене по смисъл",
+  "app.settings.assistant.capKbSearchHint": "Подрежда статиите от помощния център според смисъла на въпроса. Не генерира нищо и не изразходва нищо.",
+
+  "app.settings.assistant.sourcesCard": "Какво чете",
+  "app.settings.assistant.sourceKb": "Публикувани статии от базата знания",
+  "app.settings.assistant.sourceMacros": "Макроси",
+  "app.settings.assistant.sourceResolved": "Решени тикети",
+  "app.settings.assistant.sourceResolvedHint": "Вашите собствени отговори — точно те правят първите седмици полезни. Никога не се споделят с друго работно пространство.",
+  "app.settings.assistant.sourceNotes": "Вътрешни бележки",
+  "app.settings.assistant.sourceNotesHint": "Изключено по подразбиране: бележката се пише за Вашия екип, а не за модел, и още по-малко за да захрани отговор до клиент.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Отговори до Вашите клиенти",
+  "app.settings.assistant.deflectionLocales": "Разрешени езици",
+  "app.settings.assistant.deflectionLocalesHint": "Отговори се предоставят само на езиците, които разрешите тук. За няколко европейски езика качеството на модела не е измерено, а отговор, който никой не може да оцени, е риск, който не поемаме от Ваше име — на другите места асистентът помага на Вашите агенти, които четат текста, преди да го изпратят.",
+  "app.settings.assistant.deflectionNoLocale": "Няма разрешен език: Вашите клиенти не виждат отговор и всяка заявка стига до агент.",
+  "app.settings.assistant.deflectionThreshold": "Минимална увереност",
+  "app.settings.assistant.deflectionThresholdHint": "Под тази граница асистентът предпочита да замълчи, вместо да отговори. Ако някой отговор Ви се стори грешен, повишете границата.",
+  "app.settings.assistant.disclosureNote": "При всеки отговор е посочено, че е генериран автоматично, и той носи машинночетим маркер. Изисква го член 50 от европейския Акт за изкуствения интелект, и е правилно и без него.",
+
+  "app.settings.assistant.byoCard": "Собствен модел",
+  "app.settings.assistant.byoHint": "Насочете асистента към Ваша собствена крайна точка, съвместима с OpenAI — доставчик по Ваш избор или модел, който хоствате сами. Промптите Ви тогава минават по Вашия договор, а тук нищо не се отчита и не се ограничава.",
+  "app.settings.assistant.byoEndpoint": "Крайна точка",
+  "app.settings.assistant.byoModel": "Модел",
+  "app.settings.assistant.byoSecret": "API ключ",
+  "app.settings.assistant.byoSecretSet": "Съхранен е ключ. Оставете полето празно, за да го запазите.",
+  "app.settings.assistant.byoClear": "Връщане към хостнатия доставчик",
+
+  "app.settings.assistant.usageCard": "Потребление за този месец",
+  "app.settings.assistant.usageQuota": "Използвани отговори до клиенти",
+  "app.settings.assistant.usageProvisional": "чака потвърждение",
+  "app.settings.assistant.usageReturned": "възстановени",
+  "app.settings.assistant.usageReturnedHint": "Отговор, след който в рамките на 72 часа постъпи заявка, не Ви струва нищо.",
+  "app.settings.assistant.usageQuotaReached": "Количеството за този месец е изчерпано: отговорите до Вашите клиенти са спрени и всяка заявка стига до агент. Функциите от страна на агентите продължават да работят.",
+  "app.settings.assistant.usageBuy": "Купуване на още отговори",
+  "app.settings.assistant.usageCalls": "Извиквания",
+  "app.settings.assistant.usageCost": "Разход",
+  "app.settings.assistant.usageNoQuota": "Ваш собствен модел: тук не се отчита нищо.",
+
+  "app.settings.assistant.logCard": "Дневник на извикванията",
+  "app.settings.assistant.logHint": "Всяко извикване, независимо от изхода — записът, който ще поиска собственият Ви регистър на дейностите по обработване.",
+  "app.settings.assistant.logExport": "Експорт в CSV",
+  "app.settings.assistant.colWhen": "Кога",
+  "app.settings.assistant.colFunction": "Функция",
+  "app.settings.assistant.colWho": "Кой",
+  "app.settings.assistant.colTicket": "Тикет",
+  "app.settings.assistant.colModel": "Модел",
+  "app.settings.assistant.colTokens": "Токени",
+  "app.settings.assistant.colOutcome": "Резултат",
+  "app.settings.assistant.outcomeOk": "Отговорено",
+  "app.settings.assistant.outcomeRefused": "Нищо не е намерено",
+  "app.settings.assistant.outcomeFailed": "Неуспешно",
+  "app.settings.assistant.logEmpty": "Все още няма извиквания — ще се появят тук веднага след като асистентът бъде използван.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Този адрес не е валиден URL.",
+  "app.settings.assistant.errInsecure": "Крайна точка, достъпна през публичния интернет, трябва да използва https — API ключ не бива да се предава в открит вид.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Работно пространство",
   "app.settingsNav.itemGeneral": "Общи",
@@ -1897,6 +1996,7 @@ export const bg: Dictionary = {
   "app.settingsNav.itemMacros": "Макроси",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Удовлетвореност",
+  "app.settingsNav.itemAssistant": "Асистент",
   "app.settingsNav.groupSecurity": "Сигурност",
   "app.settingsNav.itemAgentSso": "SSO за агенти",
   "app.settingsNav.itemCustomerSso": "SSO за клиенти",

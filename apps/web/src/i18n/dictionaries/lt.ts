@@ -2113,6 +2113,105 @@ export const lt: Dictionary = {
   "app.settings.dev.exportForbidden": "Skirta tik Owner ir Admin vaidmenims.",
   "app.settings.dev.exportEnterpriseOnly": "Audito žurnalas yra leidimo Enterprise Edition dalis.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Asistentas",
+  "app.settings.assistant.subtitle": "Ką asistentui leidžiama daryti, ką jis skaito ir kiek tai kainuoja.",
+  "app.settings.assistant.lockedTitle": "Asistentas yra leidimo Enterprise Edition dalis.",
+  "app.settings.assistant.lockedText": "Skirstymas, pokalbių santraukos, atsakymų juodraščiai, parašyti iš jūsų žinių bazės, ir savitarnos atsakymai jūsų klientams. Asistentas rašo juodraštį, o paskelbia žmogus.",
+  "app.settings.assistant.unconfiguredTitle": "Nesukonfigūruotas nė vienas inferencijos teikėjas.",
+  "app.settings.assistant.unconfiguredText": "Niekas nėra imituojama: kiekviena funkcija lieka neprieinama, kol šiam serveriui nenurodomas teikėjas arba kol ši darbo erdvė žemiau nepateikia savo modelio.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Teikėjas",
+  "app.settings.assistant.providerName": "Teikėjas",
+  "app.settings.assistant.providerModel": "Modelis",
+  "app.settings.assistant.providerRegion": "Regionas",
+  "app.settings.assistant.providerOwn": "Pateikia ši darbo erdvė",
+  "app.settings.assistant.noTraining": "Open HelpDesk niekada nieko netreniruoja su jūsų duomenimis, ir teikėjas mūsų vardu to taip pat nedaro.",
+  "app.settings.assistant.redactionNote": "El. pašto adresai, telefono numeriai, kortelių numeriai, IBAN, IP adresai ir viskas, kas atrodo kaip paslaptis, pašalinama, kol promptas dar nepaliko šio serverio. Žemiau esantis žurnalas suskaičiuoja, kas buvo pašalinta.",
+
+  "app.settings.assistant.masterCard": "Pagrindinis jungiklis",
+  "app.settings.assistant.enabled": "Asistentas šioje darbo erdvėje įjungtas",
+  "app.settings.assistant.enabledHint": "Išjungta: kiekviena funkcija iš ekranų išnyksta, o ne rodoma pilka ir neveikianti.",
+
+  "app.settings.assistant.capabilitiesCard": "Funkcijos",
+  "app.settings.assistant.capTriage": "Siūlomas skirstymas",
+  "app.settings.assistant.capTriageHint": "Gavus užklausą pasiūlo kategoriją, prioritetą ir komandą. Be paspaudimo niekas nepritaikoma.",
+  "app.settings.assistant.capSummary": "Pokalbio santrauka",
+  "app.settings.assistant.capSummaryHint": "Viena pastraipa tam, kas užklausą perima dabar.",
+  "app.settings.assistant.capReplyDraft": "Atsakymo juodraštis",
+  "app.settings.assistant.capReplyDraftHint": "Parašytas iš jūsų žinių bazės, kartu su naudotais straipsniais. Nieko neradęs, asistentas verčiau atsisako, nei sugalvoja.",
+  "app.settings.assistant.capRewrite": "Perrašymas ir vertimas",
+  "app.settings.assistant.capRewriteHint": "Trumpiau, draugiškiau, oficialiau arba kita kalba — tik pažymėtam tekstui.",
+  "app.settings.assistant.capKbArticle": "Straipsnis iš išspręstos užklausos",
+  "app.settings.assistant.capKbArticleHint": "Atsiranda žinių bazėje kaip juodraštis, be kliento duomenų. Niekada nepaskelbiamas savaime.",
+  "app.settings.assistant.capMacroSuggest": "Siūloma makrokomanda",
+  "app.settings.assistant.capMacroSuggestHint": "Pasiūlo atsakymą, kurį jūsų komanda jau patvirtino, užuot rašęs naują.",
+  "app.settings.assistant.capDeflect": "Atsakyti klientams be agento",
+  "app.settings.assistant.capDeflectHint": "Pagalbos centre ir valdiklyje, prieš pateikiant užklausą. Tai vienintelė funkcija, kurią mato jūsų klientai.",
+  "app.settings.assistant.capKbSearch": "Paieška pagal reikšmę",
+  "app.settings.assistant.capKbSearchHint": "Rikiuoja pagalbos centro straipsnius pagal tai, ką klausimas reiškia. Nieko negeneruoja ir niekada neįskaitoma į jūsų kvotą.",
+
+  "app.settings.assistant.sourcesCard": "Ką asistentas skaito",
+  "app.settings.assistant.sourceKb": "Paskelbti žinių bazės straipsniai",
+  "app.settings.assistant.sourceMacros": "Makrokomandos",
+  "app.settings.assistant.sourceResolved": "Išspręstos užklausos",
+  "app.settings.assistant.sourceResolvedHint": "Jūsų pačių atsakymai — būtent dėl jų pirmosios savaitės jau naudingos. Niekada nesidalijama su kita darbo erdve.",
+  "app.settings.assistant.sourceNotes": "Vidinės pastabos",
+  "app.settings.assistant.sourceNotesHint": "Pagal numatytuosius nustatymus išjungta: pastaba rašoma jūsų komandai, o ne modeliui, ir juo labiau ne tam, kad atsidurtų atsakyme klientui.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Atsakymai jūsų klientams",
+  "app.settings.assistant.deflectionLocales": "Leidžiamos kalbos",
+  "app.settings.assistant.deflectionLocalesHint": "Atsakymai teikiami tik čia leidžiamomis kalbomis. Kelioms Europos kalboms modelių kokybė neišmatuota, o atsakymas, kurio niekas negali įvertinti, yra rizika, kurios jūsų vardu neprisiimame — kitur asistentas padeda jūsų agentams, kurie prieš išsiųsdami perskaito.",
+  "app.settings.assistant.deflectionNoLocale": "Neleidžiama nė viena kalba: jūsų klientai atsakymo nemato, ir kiekviena užklausa patenka agentui.",
+  "app.settings.assistant.deflectionThreshold": "Mažiausias pasitikėjimo lygis",
+  "app.settings.assistant.deflectionThresholdHint": "Žemiau jo asistentas verčiau tyli, nei atsako. Pakelkite jį, jei kuris nors atsakymas pasirodys neteisingas.",
+  "app.settings.assistant.disclosureNote": "Kiekvienas atsakymas nurodo, kad buvo sugeneruotas automatiškai, ir turi kompiuteriu nuskaitomą žymą. To reikalauja Europos dirbtinio intelekto akto 50 straipsnis — ir šiaip tai yra teisinga.",
+
+  "app.settings.assistant.byoCard": "Naudoti savo modelį",
+  "app.settings.assistant.byoHint": "Nukreipkite asistentą į savo su OpenAI suderinamą galinį tašką — pasirinkto teikėjo arba modelio, kurį talpinate patys. Tada jūsų promptai eina pagal jūsų sutartį, o čia niekas nėra nei skaičiuojama, nei ribojama.",
+  "app.settings.assistant.byoEndpoint": "Galinis taškas",
+  "app.settings.assistant.byoModel": "Modelis",
+  "app.settings.assistant.byoSecret": "API raktas",
+  "app.settings.assistant.byoSecretSet": "Raktas išsaugotas. Kad jis liktų, laukelį palikite tuščią.",
+  "app.settings.assistant.byoClear": "Vėl naudoti šio serverio teikėją",
+
+  "app.settings.assistant.usageCard": "Šio mėnesio naudojimas",
+  "app.settings.assistant.usageQuota": "Panaudoti atsakymai klientams",
+  "app.settings.assistant.usageProvisional": "laukiama patvirtinimo",
+  "app.settings.assistant.usageReturned": "grąžinti atsakymai",
+  "app.settings.assistant.usageReturnedHint": "Atsakymas, po kurio per 72 valandas pateikiama užklausa, jums nieko nekainuoja.",
+  "app.settings.assistant.usageQuotaReached": "Šio mėnesio kvota išnaudota: atsakymai jūsų klientams pristabdyti, ir kiekviena užklausa patenka agentui. Agentų pusės funkcijos veikia toliau.",
+  "app.settings.assistant.usageBuy": "Pirkti daugiau atsakymų",
+  "app.settings.assistant.usageCalls": "Iškvietimai",
+  "app.settings.assistant.usageCost": "Kaina",
+  "app.settings.assistant.usageNoQuota": "Jūsų pačių modelis: čia niekas neskaičiuojama.",
+
+  "app.settings.assistant.logCard": "Iškvietimų žurnalas",
+  "app.settings.assistant.logHint": "Kiekvienas iškvietimas, nesvarbu, kaip pasibaigė, — pėdsakas, kurio prašys jūsų pačių duomenų tvarkymo veiklos įrašai.",
+  "app.settings.assistant.logExport": "Eksportuoti CSV",
+  "app.settings.assistant.colWhen": "Kada",
+  "app.settings.assistant.colFunction": "Funkcija",
+  "app.settings.assistant.colWho": "Kas",
+  "app.settings.assistant.colTicket": "Užklausa",
+  "app.settings.assistant.colModel": "Modelis",
+  "app.settings.assistant.colTokens": "Tokens",
+  "app.settings.assistant.colOutcome": "Rezultatas",
+  "app.settings.assistant.outcomeOk": "Atsakyta",
+  "app.settings.assistant.outcomeRefused": "Nieko nerasta",
+  "app.settings.assistant.outcomeFailed": "Nepavyko",
+  "app.settings.assistant.logEmpty": "Iškvietimų dar nėra — jie čia atsiras vos pradėjus naudoti asistentą.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Šis adresas nėra tinkamas URL.",
+  "app.settings.assistant.errInsecure": "Galinis taškas, pasiekiamas per viešąjį internetą, turi naudoti https — API raktas negali keliauti neužšifruotas.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Darbo erdvė",
   "app.settingsNav.itemGeneral": "Bendrieji",
@@ -2127,6 +2226,7 @@ export const lt: Dictionary = {
   "app.settingsNav.itemMacros": "Makrokomandos",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Pasitenkinimas",
+  "app.settingsNav.itemAssistant": "Asistentas",
   "app.settingsNav.groupSecurity": "Saugumas",
   "app.settingsNav.itemAgentSso": "Agentų SSO",
   "app.settingsNav.itemCustomerSso": "Klientų SSO",

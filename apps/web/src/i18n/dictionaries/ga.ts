@@ -550,6 +550,9 @@ export const ga: Dictionary = {
     "Seolfar suirbhé sástachta 24 uair an chloig tar éis an réitigh.",
   "app.ticket.resolutionPending": {
     one: "Tá {count} tasc fós oscailte — dúnfar é leis an ticéad.",
+    two: "Tá {count} thasc fós oscailte — dúnfar iad leis an ticéad.",
+    few: "Tá {count} thasc fós oscailte — dúnfar iad leis an ticéad.",
+    many: "Tá {count} dtasc fós oscailte — dúnfar iad leis an ticéad.",
     other: "Tá {count} tasc fós oscailte — dúnfar iad leis an ticéad.",
   },
   "app.ticket.resolutionMark": "✓ Marcáil mar réitithe",
@@ -743,6 +746,9 @@ export const ga: Dictionary = {
   "app.contacts.searchPlaceholder": "Cuardaigh teagmhálaithe…",
   "app.contacts.subtitle": {
     one: "{count} teagmhálaí, cruthaithe go huathoibríoch ar an gcéad teachtaireacht.",
+    two: "{count} theagmhálaí, cruthaithe go huathoibríoch ar an gcéad teachtaireacht.",
+    few: "{count} theagmhálaí, cruthaithe go huathoibríoch ar an gcéad teachtaireacht.",
+    many: "{count} dteagmhálaí, cruthaithe go huathoibríoch ar an gcéad teachtaireacht.",
     other: "{count} teagmhálaí, cruthaithe go huathoibríoch ar an gcéad teachtaireacht.",
   },
   "app.contacts.empty": "Gan teagmhálaithe.",
@@ -784,6 +790,9 @@ export const ga: Dictionary = {
   "app.contacts.orgSearchPlaceholder": "Cuardaigh eagraíochtaí…",
   "app.contacts.orgSubtitle": {
     one: "{count} eagraíocht, a ghrúpálann teagmhálaithe de réir fearainn.",
+    two: "{count} eagraíocht, a ghrúpálann teagmhálaithe de réir fearainn.",
+    few: "{count} eagraíocht, a ghrúpálann teagmhálaithe de réir fearainn.",
+    many: "{count} n-eagraíocht, a ghrúpálann teagmhálaithe de réir fearainn.",
     other: "{count} eagraíocht, a ghrúpálann teagmhálaithe de réir fearainn.",
   },
   "app.contacts.orgEmpty": "Gan eagraíochtaí.",
@@ -2183,6 +2192,105 @@ export const ga: Dictionary = {
   "app.settings.dev.exportForbidden": "Teoranta do na róil Owner agus Admin.",
   "app.settings.dev.exportEnterpriseOnly": "Tá an loga iniúchta mar chuid d'Enterprise Edition.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     The screen exists so a customer can answer, alone, the four questions a
+     legal department asks: what is sent, to whom, what the AI does, and how to
+     switch it off. Every sentence here is read by someone deciding whether to
+     trust the product with their customers' emails, so none of them oversells. */
+  "app.settings.assistant.title": "Cúntóir",
+  "app.settings.assistant.subtitle": "An rud atá ceadaithe don chúntóir, an rud a léann sé, agus an méid a chosnaíonn sé.",
+  "app.settings.assistant.lockedTitle": "Tá an cúntóir mar chuid d'Enterprise Edition.",
+  "app.settings.assistant.lockedText": "Réamhshórtáil, coimrithe comhrá, dréachtaí freagra scríofa ó do bhunachar eolais, agus freagraí féinseirbhíse do do chustaiméirí. Dréachtaíonn an cúntóir; foilsíonn duine.",
+  "app.settings.assistant.unconfiguredTitle": "Níl aon soláthraí samhla cumraithe.",
+  "app.settings.assistant.unconfiguredText": "Ní dhéantar aithris ar aon rud: níl aon fheidhm ar fáil go dtí go dtugtar soláthraí don ásc seo, nó go gcuireann an spás oibre seo a shamhail féin ar fáil thíos.",
+
+  /* The provider block is read-only on purpose: it states a fact, it is not a
+     setting. It is also the answer to “where does our data go”. */
+  "app.settings.assistant.providerCard": "Soláthraí",
+  "app.settings.assistant.providerName": "Soláthraí",
+  "app.settings.assistant.providerModel": "Samhail",
+  "app.settings.assistant.providerRegion": "Réigiún",
+  "app.settings.assistant.providerOwn": "Curtha ar fáil ag an spás oibre seo",
+  "app.settings.assistant.noTraining": "Ní thraenálann Open HelpDesk aon rud ar do chuid sonraí riamh, agus ní dhéanann an soláthraí é ar ár son ach oiread.",
+  "app.settings.assistant.redactionNote": "Baintear seoltaí ríomhphoist, uimhreacha teileafóin, uimhreacha cárta, IBANanna, seoltaí IP agus aon rud a bhfuil cuma rúin air amach sula seolann an ásc seo téacs ar bith chuig an soláthraí. Áiríonn an loga thíos an méid a baineadh amach.",
+
+  "app.settings.assistant.masterCard": "Príomhlasc",
+  "app.settings.assistant.enabled": "Tá an cúntóir cumasaithe don spás oibre seo",
+  "app.settings.assistant.enabledHint": "As: imíonn gach feidhm ó na scáileáin seachas fanacht ar taispeáint go liath.",
+
+  "app.settings.assistant.capabilitiesCard": "Feidhmeanna",
+  "app.settings.assistant.capTriage": "Réamhshórtáil mholta",
+  "app.settings.assistant.capTriageHint": "Molann an cúntóir catagóir, tosaíocht agus foireann ar theacht isteach an ticéid. Ní chuirtear aon rud i bhfeidhm gan chliceáil.",
+  "app.settings.assistant.capSummary": "Coimriú an chomhrá",
+  "app.settings.assistant.capSummaryHint": "Paragraf amháin don duine a thógann an ticéad ar láimh anois.",
+  "app.settings.assistant.capReplyDraft": "Dréacht freagra",
+  "app.settings.assistant.capReplyDraftHint": "Scríofa ó do bhunachar eolais, agus na hailt a úsáideadh luaite leis. Nuair nach bhfaigheann an cúntóir aon rud, diúltaíonn sé seachas rud a chumadh.",
+  "app.settings.assistant.capRewrite": "Athscríobh agus aistriú",
+  "app.settings.assistant.capRewriteHint": "Níos giorra, níos cairdiúla, níos foirmiúla, nó i dteanga eile — ar an téacs roghnaithe amháin.",
+  "app.settings.assistant.capKbArticle": "Alt ó thicéad réitithe",
+  "app.settings.assistant.capKbArticleHint": "Tagann sé isteach mar dhréacht sa bhunachar eolais, gan sonraí an chustaiméara. Ní fhoilsítear riamh é dá dheoin féin.",
+  "app.settings.assistant.capMacroSuggest": "Macra molta",
+  "app.settings.assistant.capMacroSuggestHint": "Tairgeann an cúntóir freagra atá ceadaithe ag d'fhoireann cheana, seachas ceann nua a scríobh.",
+  "app.settings.assistant.capDeflect": "Freagra a thabhairt do chustaiméirí gan gníomhaire",
+  "app.settings.assistant.capDeflectHint": "Ar an ionad cabhrach agus sa ghiuirléid, sula gcuirtear iarratas isteach. Ní fheiceann do chustaiméirí aon fheidhm eile.",
+  "app.settings.assistant.capKbSearch": "Cuardach de réir brí",
+  "app.settings.assistant.capKbSearchHint": "Rangaíonn an cúntóir ailt an ionaid chabhraigh de réir bhrí na ceiste. Ní ghineann sé aon rud, agus ní áirítear riamh in aghaidh do theorainne é.",
+
+  "app.settings.assistant.sourcesCard": "An rud a léann an cúntóir",
+  "app.settings.assistant.sourceKb": "Ailt fhoilsithe sa bhunachar eolais",
+  "app.settings.assistant.sourceMacros": "Macraí",
+  "app.settings.assistant.sourceResolved": "Ticéid réitithe",
+  "app.settings.assistant.sourceResolvedHint": "Do fhreagraí féin — sin an rud a fhágann na chéad seachtainí úsáideach. Ní roinntear riamh le spás oibre eile iad.",
+  "app.settings.assistant.sourceNotes": "Nótaí inmheánacha",
+  "app.settings.assistant.sourceNotesHint": "As mar réamhshocrú: scríobhtar nóta do d'fhoireann, ní do shamhail, agus níos lú fós chun críochnú i bhfreagra chuig custaiméir.",
+
+  /* Deflection is the only output a customer reads, so its guard rails get
+     their own block rather than hiding among the switches. */
+  "app.settings.assistant.deflectionCard": "Freagraí do do chustaiméirí",
+  "app.settings.assistant.deflectionLocales": "Teangacha ceadaithe",
+  "app.settings.assistant.deflectionLocalesHint": "Ní chuirtear freagraí ar fáil ach sna teangacha a cheadaíonn tú anseo. Níl caighdeán na samhlacha tomhaiste i roinnt teangacha Eorpacha, agus is baol é freagra nach féidir le duine ar bith é a mheas — baol nach nglacaimid orainn féin ar do shon. In áiteanna eile cabhraíonn an cúntóir le do ghníomhairí, a léann sula seolann.",
+  "app.settings.assistant.deflectionNoLocale": "Gan teanga ar bith ceadaithe: ní fheiceann do chustaiméirí freagra ar bith, agus sroicheann gach iarratas gníomhaire.",
+  "app.settings.assistant.deflectionThreshold": "Íosleibhéal muiníne",
+  "app.settings.assistant.deflectionThresholdHint": "Faoina bhun fanann an cúntóir ina thost seachas freagra a thabhairt. Ardaigh é má bhíonn cuma mhícheart ar fhreagra am ar bith.",
+  "app.settings.assistant.disclosureNote": "Deir gach freagra gur go huathoibríoch a gineadh é, agus bíonn marcóir inléite ag meaisín air. Éilithe ag Airteagal 50 de Ghníomh Eorpach na hIntleachta Saorga, agus an rud ceart a dhéanamh ar aon nós.",
+
+  "app.settings.assistant.byoCard": "Úsáid do shamhail féin",
+  "app.settings.assistant.byoHint": "Dírigh an cúntóir ar do chríochphointe féin atá comhoiriúnach le OpenAI — soláthraí de do rogha, nó samhail a óstálann tú féin. Téann an téacs a sheoltar ansin faoi do chonradh féin, agus ní áirítear ná ní theorannaítear aon rud anseo.",
+  "app.settings.assistant.byoEndpoint": "Críochphointe",
+  "app.settings.assistant.byoModel": "Samhail",
+  "app.settings.assistant.byoSecret": "Eochair API",
+  "app.settings.assistant.byoSecretSet": "Tá eochair sábháilte. Fág an réimse folamh chun í a choinneáil.",
+  "app.settings.assistant.byoClear": "Úsáid soláthraí an áisc seo arís",
+
+  "app.settings.assistant.usageCard": "Úsáid na míosa seo",
+  "app.settings.assistant.usageQuota": "Freagraí úsáidte do chustaiméirí",
+  "app.settings.assistant.usageProvisional": "ag feitheamh le deimhniú",
+  "app.settings.assistant.usageReturned": "freagraí aisíoctha",
+  "app.settings.assistant.usageReturnedHint": "Má thagann iarratas i ndiaidh freagra laistigh de 72 uair an chloig, ní chosnaíonn an freagra sin aon rud ort.",
+  "app.settings.assistant.usageQuotaReached": "Tá teorainn na míosa seo caite: tá na freagraí do do chustaiméirí curtha ar sos, agus sroicheann gach iarratas gníomhaire. Leanann na feidhmeanna ar thaobh na ngníomhairí ag obair.",
+  "app.settings.assistant.usageBuy": "Ceannaigh tuilleadh freagraí",
+  "app.settings.assistant.usageCalls": "Glaonna",
+  "app.settings.assistant.usageCost": "Costas",
+  "app.settings.assistant.usageNoQuota": "Do shamhail féin: ní áirítear aon rud anseo.",
+
+  "app.settings.assistant.logCard": "Loga glaonna",
+  "app.settings.assistant.logHint": "Gach glao, cibé toradh a bhí air — an rian a iarrfaidh do thaifead féin ar ghníomhaíochtaí próiseála.",
+  "app.settings.assistant.logExport": "Easpórtáil CSV",
+  "app.settings.assistant.colWhen": "Cathain",
+  "app.settings.assistant.colFunction": "Feidhm",
+  "app.settings.assistant.colWho": "Cé",
+  "app.settings.assistant.colTicket": "Ticéad",
+  "app.settings.assistant.colModel": "Samhail",
+  "app.settings.assistant.colTokens": "Tokens",
+  "app.settings.assistant.colOutcome": "Toradh",
+  "app.settings.assistant.outcomeOk": "Freagraithe",
+  "app.settings.assistant.outcomeRefused": "Níor aimsíodh aon rud",
+  "app.settings.assistant.outcomeFailed": "Theip",
+  "app.settings.assistant.logEmpty": "Gan glaonna go fóill — taispeánfar anseo iad chomh luath agus a úsáidtear an cúntóir.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Ní URL bailí an seoladh sin.",
+  "app.settings.assistant.errInsecure": "Ní mór https a úsáid ar chríochphointe a shroichtear tríd an idirlíon poiblí — níor cheart eochair API a sheoladh gan chriptiú.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Spás oibre",
   "app.settingsNav.itemGeneral": "Ginearálta",
@@ -2197,6 +2305,7 @@ export const ga: Dictionary = {
   "app.settingsNav.itemMacros": "Macraí",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Sástacht",
+  "app.settingsNav.itemAssistant": "Cúntóir",
   "app.settingsNav.groupSecurity": "Slándáil",
   "app.settingsNav.itemAgentSso": "SSO na ngníomhairí",
   "app.settingsNav.itemCustomerSso": "SSO na gcustaiméirí",

@@ -129,6 +129,9 @@ importers:
       '@openhelpdesk/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@openhelpdesk/ee-ai':
+        specifier: workspace:*
+        version: link:../../ee/ai
       '@openhelpdesk/import':
         specifier: workspace:*
         version: link:../../packages/import
@@ -191,9 +194,15 @@ importers:
       '@openhelpdesk/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@openhelpdesk/crypto':
+        specifier: workspace:*
+        version: link:../../packages/crypto
       '@openhelpdesk/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@openhelpdesk/ee-ai':
+        specifier: workspace:*
+        version: link:../ai
       drizzle-orm:
         specifier: ^0.44.0
         version: 0.44.7(kysely@0.29.5)(postgres@3.4.9)

@@ -1785,6 +1785,105 @@ export const fr: Dictionary = {
   "app.settings.dev.exportForbidden": "Réservé aux rôles Owner et Admin.",
   "app.settings.dev.exportEnterpriseOnly": "L'audit log fait partie d'Enterprise Edition.",
 
+  /* --- ST-15 Assistant (spec 18) ---
+     L'écran existe pour qu'un client réponde seul aux quatre questions d'un
+     service juridique : ce qui est envoyé, à qui, ce que fait l'IA, et comment
+     l'éteindre. Chaque phrase est lue par quelqu'un qui décide de confier les
+     emails de ses clients au produit : aucune ne survend. */
+  "app.settings.assistant.title": "Assistant",
+  "app.settings.assistant.subtitle": "Ce que l'assistant peut faire, ce qu'il lit, et ce qu'il coûte.",
+  "app.settings.assistant.lockedTitle": "L'assistant fait partie de l'édition Enterprise.",
+  "app.settings.assistant.lockedText": "Tri à l'arrivée, résumé de fil, brouillons de réponse écrits depuis votre base de connaissances, et réponses en libre-service pour vos clients. Il rédige, une personne publie.",
+  "app.settings.assistant.unconfiguredTitle": "Aucun fournisseur d'inférence n'est configuré.",
+  "app.settings.assistant.unconfiguredText": "Rien n'est simulé : chaque fonction reste indisponible tant qu'un fournisseur n'a pas été donné à cette instance, ou tant que cet espace n'apporte pas son propre modèle ci-dessous.",
+
+  /* Le bloc fournisseur est en lecture seule à dessein : il énonce un fait, ce
+     n'est pas un réglage. C'est aussi la réponse à « où vont nos données ». */
+  "app.settings.assistant.providerCard": "Fournisseur",
+  "app.settings.assistant.providerName": "Fournisseur",
+  "app.settings.assistant.providerModel": "Modèle",
+  "app.settings.assistant.providerRegion": "Région",
+  "app.settings.assistant.providerOwn": "Votre propre modèle",
+  "app.settings.assistant.noTraining": "Open HelpDesk n'entraîne jamais rien sur vos données, et le fournisseur ne le fait pas davantage pour notre compte.",
+  "app.settings.assistant.redactionNote": "Adresses email, numéros de téléphone, numéros de carte, IBAN, adresses IP et tout ce qui ressemble à un secret sont retirés avant qu'un prompt quitte cette instance. Le journal ci-dessous compte ce qui a été retiré.",
+
+  "app.settings.assistant.masterCard": "Interrupteur général",
+  "app.settings.assistant.enabled": "L'assistant est actif pour cet espace",
+  "app.settings.assistant.enabledHint": "Éteint : chaque fonction disparaît des écrans au lieu de s'y afficher grisée. Rien ne reste cliquable pour rien.",
+
+  "app.settings.assistant.capabilitiesCard": "Fonctions",
+  "app.settings.assistant.capTriage": "Tri suggéré",
+  "app.settings.assistant.capTriageHint": "Propose une catégorie, une priorité et une équipe à l'arrivée. Rien n'est appliqué sans un clic.",
+  "app.settings.assistant.capSummary": "Résumé de fil",
+  "app.settings.assistant.capSummaryHint": "Un paragraphe pour celui qui reprend le ticket maintenant.",
+  "app.settings.assistant.capReplyDraft": "Brouillon de réponse",
+  "app.settings.assistant.capReplyDraftHint": "Écrit depuis votre base de connaissances, avec les articles utilisés. Refuse plutôt que d'inventer quand il ne trouve rien.",
+  "app.settings.assistant.capRewrite": "Réécrire et traduire",
+  "app.settings.assistant.capRewriteHint": "Plus court, plus chaleureux, plus formel, ou dans une autre langue — sur le texte sélectionné uniquement.",
+  "app.settings.assistant.capKbArticle": "Article depuis un ticket résolu",
+  "app.settings.assistant.capKbArticleHint": "Arrive en brouillon dans la base de connaissances, débarrassé des données du client. Jamais publié tout seul.",
+  "app.settings.assistant.capMacroSuggest": "Macro suggérée",
+  "app.settings.assistant.capMacroSuggestHint": "Propose une réponse que votre équipe a déjà validée, plutôt que d'en écrire une nouvelle.",
+  "app.settings.assistant.capDeflect": "Répondre aux clients sans agent",
+  "app.settings.assistant.capDeflectHint": "Sur le centre d'aide et le widget, avant qu'une demande soit envoyée. C'est la seule fonction que vos clients voient.",
+  "app.settings.assistant.capKbSearch": "Recherche par le sens",
+  "app.settings.assistant.capKbSearchHint": "Classe les articles du centre d'aide selon ce que la question veut dire. Ne génère rien, et n'est jamais décompté de votre forfait.",
+
+  "app.settings.assistant.sourcesCard": "Ce qu'il lit",
+  "app.settings.assistant.sourceKb": "Articles publiés de la base de connaissances",
+  "app.settings.assistant.sourceMacros": "Macros",
+  "app.settings.assistant.sourceResolved": "Tickets résolus",
+  "app.settings.assistant.sourceResolvedHint": "Vos propres réponses, ce qui rend les premières semaines utiles. Jamais partagées avec un autre espace.",
+  "app.settings.assistant.sourceNotes": "Notes internes",
+  "app.settings.assistant.sourceNotesHint": "Éteint par défaut : une note s'écrit pour votre équipe, pas pour un modèle, et encore moins pour finir dans une réponse à un client.",
+
+  /* La déflexion est la seule sortie qu'un client lit : ses garde-fous ont leur
+     propre bloc plutôt que de se perdre parmi les interrupteurs. */
+  "app.settings.assistant.deflectionCard": "Réponses à vos clients",
+  "app.settings.assistant.deflectionLocales": "Langues autorisées",
+  "app.settings.assistant.deflectionLocalesHint": "Les réponses ne sont servies que dans les langues autorisées ici. La qualité des modèles n'est pas mesurée dans plusieurs langues européennes, et une réponse que personne ne sait évaluer est un risque que nous ne prenons pas à votre place — ailleurs, l'assistant aide vos agents, qui relisent avant d'envoyer.",
+  "app.settings.assistant.deflectionNoLocale": "Aucune langue autorisée : vos clients ne voient aucune réponse, et chaque demande arrive à un agent.",
+  "app.settings.assistant.deflectionThreshold": "Plancher de confiance",
+  "app.settings.assistant.deflectionThresholdHint": "En dessous, l'assistant se tait au lieu de répondre. À relever si une réponse vous paraît fausse.",
+  "app.settings.assistant.disclosureNote": "Chaque réponse indique qu'elle a été générée automatiquement et porte un marqueur lisible par une machine. Exigé par l'article 50 du règlement européen sur l'IA, et de toute façon la bonne façon de faire.",
+
+  "app.settings.assistant.byoCard": "Apportez votre modèle",
+  "app.settings.assistant.byoHint": "Faites pointer l'assistant sur votre propre endpoint compatible OpenAI — le fournisseur de votre choix, ou un modèle que vous hébergez vous-même. Vos prompts partent alors sur votre contrat, et rien n'est décompté ni plafonné ici.",
+  "app.settings.assistant.byoEndpoint": "Endpoint",
+  "app.settings.assistant.byoModel": "Modèle",
+  "app.settings.assistant.byoSecret": "Clé d'API",
+  "app.settings.assistant.byoSecretSet": "Une clé est enregistrée. Laissez le champ vide pour la conserver.",
+  "app.settings.assistant.byoClear": "Revenir au fournisseur hébergé",
+
+  "app.settings.assistant.usageCard": "Consommation du mois",
+  "app.settings.assistant.usageQuota": "Réponses aux clients utilisées",
+  "app.settings.assistant.usageProvisional": "En attente de confirmation",
+  "app.settings.assistant.usageReturned": "Recréditées",
+  "app.settings.assistant.usageReturnedHint": "Une réponse suivie d'une demande dans les 72 heures ne vous coûte rien.",
+  "app.settings.assistant.usageQuotaReached": "Le forfait du mois est épuisé : les réponses à vos clients sont suspendues, et chaque demande arrive à un agent. Les fonctions côté agent continuent de marcher.",
+  "app.settings.assistant.usageBuy": "Acheter des réponses clients",
+  "app.settings.assistant.usageCalls": "Appels",
+  "app.settings.assistant.usageCost": "Coût",
+  "app.settings.assistant.usageNoQuota": "Votre propre modèle : rien n'est décompté ici.",
+
+  "app.settings.assistant.logCard": "Journal des appels",
+  "app.settings.assistant.logHint": "Chaque appel, quelle qu'en soit l'issue — la trace dont vous aurez besoin pour votre propre registre des traitements.",
+  "app.settings.assistant.logExport": "Exporter en CSV",
+  "app.settings.assistant.colWhen": "Quand",
+  "app.settings.assistant.colFunction": "Fonction",
+  "app.settings.assistant.colWho": "Qui",
+  "app.settings.assistant.colTicket": "Ticket",
+  "app.settings.assistant.colModel": "Modèle",
+  "app.settings.assistant.colTokens": "Jetons",
+  "app.settings.assistant.colOutcome": "Issue",
+  "app.settings.assistant.outcomeOk": "Répondu",
+  "app.settings.assistant.outcomeRefused": "N'a rien trouvé",
+  "app.settings.assistant.outcomeFailed": "Échec",
+  "app.settings.assistant.logEmpty": "Aucun appel pour l'instant — ils apparaîtront ici dès que l'assistant sera utilisé.",
+  "app.settings.assistant.businessOnly": "Business",
+  "app.settings.assistant.errEndpoint": "Cet endpoint n'est pas une URL valide.",
+  "app.settings.assistant.errInsecure": "Un endpoint joint par l'internet public doit être en https — une clé d'API ne doit pas circuler en clair.",
+
   /* --- settingsNav: administration navigation and rule editor --- */
   "app.settingsNav.groupWorkspace": "Espace de travail",
   "app.settingsNav.itemGeneral": "Général",
@@ -1799,6 +1898,7 @@ export const fr: Dictionary = {
   "app.settingsNav.itemMacros": "Macros",
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Satisfaction",
+  "app.settingsNav.itemAssistant": "Assistant",
   "app.settingsNav.groupSecurity": "Sécurité",
   "app.settingsNav.itemAgentSso": "SSO des agents",
   "app.settingsNav.itemCustomerSso": "SSO clients",

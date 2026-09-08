@@ -10,6 +10,7 @@ import {
   type MailSendJob,
 } from "@openhelpdesk/mail";
 import { onContactMessage, onTicketCreated, runScheduledRules, scanSlaTimers } from "@openhelpdesk/rules";
+import { sweepDeflections } from "@openhelpdesk/ee-ai";
 import { deliverWebhookJob, type WebhookJob } from "@openhelpdesk/webhooks";
 import { deliverPushJob, type PushJob } from "@openhelpdesk/push";
 import { executeRun, parseZendeskExport, reapStaleRuns, type ImportSource } from "@openhelpdesk/import";
@@ -115,6 +116,24 @@ const processors: Record<QueueName, Processor> = {
       .where(lt(rejectedEmails.createdAt, new Date(Date.now() - 30 * DAY_MS)));
     console.log("[housekeeping] purges done");
   },
+  /**
+   * Le règlement des déflexions de l'assistant.
+   *
+   * Dépendance directe sur `ee/ai`, comme `apps/web` en a une sur `ee/web` :
+   * la frontière de licence de ce dépôt est juridique et non physique, et
+   * prétendre le contraire ici — par un import dynamique qui « survivrait » à
+   * un `ee/` absent — décrirait un montage qui ne compile de toute façon pas
+   * sans lui.
+   */
+  "ai-sweep": async () => {
+    const out = await sweepDeflections();
+    if (out.tenants > 0) {
+      console.log(
+        `[ai-sweep] ${out.tenants} workspace(s): ${out.confirmed} confirmed, ` +
+          `${out.returned} credited back`,
+      );
+    }
+  },
   "import-run": async (job) => {
     const data = job.data as ImportRunJob;
     const { data: parsed, anomalies } = parseZendeskExport(data.payload);
@@ -154,6 +173,9 @@ async function registerSchedulers() {
     ["imap-poll", 60_000],
     ["automations", 300_000],
     ["housekeeping", DAY_MS],
+    /* Toutes les heures : la fenêtre est de 72 h, donc rien n'exige la minute,
+       et un balayage horaire garde le compteur du quota juste à l'heure près. */
+    ["ai-sweep", 3_600_000],
   ];
   for (const [name, every] of schedules) {
     const queue = new Queue(name, { connection });
