@@ -54,6 +54,8 @@ export type Outcome<T> = { ok: true; value: T } | { ok: false; reason: OutcomeRe
 type Thread = {
   subject: string;
   requesterEmail: string | null;
+  /** La langue déclarée du demandeur, quand il en a une : celle de la réponse. */
+  requesterLocale: string | null;
   text: string;
   /** Les adresses des participants, qui traversent la rédaction (redact.ts). */
   keep: string[];
@@ -100,12 +102,14 @@ async function threadFor(
     .limit(60);
 
   let requesterEmail: string | null = null;
+  let requesterLocale: string | null = null;
   if (ticket.requesterId) {
     const [contact] = await db
-      .select({ email: contacts.email })
+      .select({ email: contacts.email, locale: contacts.locale })
       .from(contacts)
       .where(eq(contacts.id, ticket.requesterId));
     requesterEmail = contact?.email ?? null;
+    requesterLocale = validLocale(contact?.locale);
   }
 
   const text = rows
@@ -128,6 +132,7 @@ async function threadFor(
   return {
     subject: ticket.subject,
     requesterEmail,
+    requesterLocale,
     text,
     keep: requesterEmail ? [requesterEmail] : [],
   };
@@ -370,6 +375,22 @@ export async function draftReply(
     return { ok: false, reason: "no_source" };
   }
 
+  /*
+   * La langue de la réponse est **nommée**, pas déduite.
+   *
+   * La première version disait « réponds dans la langue du FIL ». Vérifié sur
+   * la staging : fil anglais, articles anglais, et le modèle a rendu une
+   * traduction française de l'article. La même consigne avait donné de
+   * l'anglais en local — donc elle ne tient pas, elle tombe juste du bon côté
+   * une fois sur deux. Nommer la langue (« Write the reply in English »)
+   * fonctionne, comme pour le résumé.
+   *
+   * L'ordre des sources dit à qui la réponse s'adresse : la langue déclarée du
+   * client d'abord, celle de l'espace ensuite. Deviner la langue du fil
+   * coûterait un appel de plus pour un signal que le contact porte déjà.
+   */
+  const replyLocale = thread.requesterLocale ?? (await workspaceLocale(tenantId));
+
   const value = await runCapability(tenantId, "reply_draft", actor, ticketId, async () => {
     const material = passages
       .map((p, i) => `[${i + 1}] ${p.title}\n${p.summary}`)
@@ -381,7 +402,7 @@ export async function draftReply(
         "Use ONLY the numbered material below. Never add a fact it does not contain.",
         "Do not cite the numbers in the reply: the interface shows the sources separately.",
         "No subject line, no signature — the product adds them.",
-        "Reply in the language of the THREAD, not the language of the material.",
+        `Write the reply in ${languageName(replyLocale)}.`,
         'Answer with a JSON object: {"answers": true|false, "reply": "…"}.',
         '"answers" is false when the material does not answer what the customer asks; then leave "reply" empty.',
         'Never explain in "reply" that the material is insufficient — that is what "answers": false is for.',
