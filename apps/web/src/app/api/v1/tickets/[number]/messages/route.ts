@@ -16,6 +16,7 @@ import {
   apiJson,
   apiList,
   attachFilesToMessage,
+  attachmentsForMessages,
   isMultipart,
   readJson,
   readMultipart,
@@ -68,7 +69,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const last = page.at(-1);
     const next =
       rows.length > limit && last ? `${last.createdAt.toISOString()}|${last.id}` : null;
-    return apiList(page.map(serializeMessage), next);
+    const files = await attachmentsForMessages(
+      tenant.id,
+      page.map((m) => m.id),
+    );
+    return apiList(
+      page.map((m) => serializeMessage(m, files.get(m.id))),
+      next,
+    );
   });
 }
 

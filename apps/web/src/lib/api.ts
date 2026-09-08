@@ -14,9 +14,9 @@
  * key has nobody behind it.
  */
 import { createHash } from "node:crypto";
-import { apiKeys, db, deviceSessions, tenants, users } from "@openhelpdesk/db";
+import { apiKeys, attachments, db, deviceSessions, tenants, users } from "@openhelpdesk/db";
 import { MAX_ATTACHMENT_BYTES } from "@openhelpdesk/storage";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, asc, eq, inArray, isNull } from "drizzle-orm";
 import {
   DEVICE_SESSION_TTL_MS,
   DEVICE_TOKEN_RE,
@@ -372,7 +372,10 @@ export function serializeTeam(t: TeamRow): Record<string, unknown> {
   return { id: t.id, name: t.name, created_at: t.createdAt?.toISOString() ?? null };
 }
 
-export function serializeMessage(m: MessageRow): Record<string, unknown> {
+export function serializeMessage(
+  m: MessageRow,
+  files: AttachmentRow[] = [],
+): Record<string, unknown> {
   return {
     id: m.id,
     kind: m.kind,
@@ -382,7 +385,36 @@ export function serializeMessage(m: MessageRow): Record<string, unknown> {
     body_html: m.bodyHtml,
     source: m.source,
     created_at: m.createdAt?.toISOString() ?? null,
+    attachments: files.map(serializeAttachment),
   };
+}
+
+/**
+ * The attachments of a page of messages, in one query, grouped by message.
+ *
+ * A thread is read far more often than it is written, and the phone reading it
+ * needs to know a message carries a screenshot before it can offer to open it.
+ * Asking per message would be a query per line; asking for the whole ticket
+ * would fetch files the caller has not paged to yet.
+ */
+export async function attachmentsForMessages(
+  tenantId: string,
+  messageIds: string[],
+): Promise<Map<string, AttachmentRow[]>> {
+  const grouped = new Map<string, AttachmentRow[]>();
+  if (messageIds.length === 0) return grouped;
+  const rows = await db
+    .select()
+    .from(attachments)
+    .where(and(eq(attachments.tenantId, tenantId), inArray(attachments.messageId, messageIds)))
+    .orderBy(asc(attachments.createdAt));
+  for (const row of rows) {
+    if (!row.messageId) continue;
+    const list = grouped.get(row.messageId);
+    if (list) list.push(row);
+    else grouped.set(row.messageId, [row]);
+  }
+  return grouped;
 }
 
 export function serializeMacro(m: MacroRow): Record<string, unknown> {

@@ -183,6 +183,11 @@ const SCHEMAS = {
       body_html: { type: "string", nullable: true },
       source: { type: "string", nullable: true },
       created_at: dateTime,
+      attachments: {
+        type: "array",
+        description: "The files sent with this message. Empty for most of them.",
+        items: { $ref: "#/components/schemas/Attachment" },
+      },
     },
   },
   Contact: {
