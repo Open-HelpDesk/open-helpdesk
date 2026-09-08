@@ -2306,6 +2306,28 @@ export const ga: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Sástacht",
   "app.settingsNav.itemAssistant": "Cúntóir",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Dréachtaigh le AI",
+  "app.ticket.aiWorking": "Á scríobh…",
+  "app.ticket.aiDraftBadge": "Dréacht AI",
+  "app.ticket.aiSources": "Bunaithe ar:",
+  "app.ticket.aiNoSource": "Níl aon rud sa bhunachar eolais a fhreagraíonn an cheist seo.",
+  "app.ticket.aiUnconfigured": "Níl an cúntóir ar fáil ar an ásc seo.",
+  "app.ticket.aiDisabled": "Tá an cúntóir díchumasaithe don spás oibre seo.",
+  "app.ticket.aiCapabilityOff": "Tá an fheidhm seo múchta, nó níl sí mar chuid de do phlean.",
+  "app.ticket.aiQuotaReached": "Tá teorainn na míosa seo caite.",
+  "app.ticket.aiLocaleClosed": "Ní thugann an cúntóir freagra sa teanga seo go fóill.",
+  "app.ticket.aiSummaryTitle": "Coimre",
+  "app.ticket.aiSummarise": "Coimrigh",
+  "app.ticket.aiRegenerate": "Gin arís",
+  "app.ticket.aiSummaryAt": "Scríofa ag",
+  "app.ticket.aiSummaryHint": "Paragraf amháin: an rud atá an custaiméir ag iarraidh, an rud a triaileadh cheana agus an rud atá ina bhac — don duine a thógann an ticéad ar láimh anois.",
+  "app.ticket.aiTooShort": "Níl a dhóthain sa chomhrá seo le coimriú a dhéanamh.",
   "app.settingsNav.groupSecurity": "Slándáil",
   "app.settingsNav.itemAgentSso": "SSO na ngníomhairí",
   "app.settingsNav.itemCustomerSso": "SSO na gcustaiméirí",

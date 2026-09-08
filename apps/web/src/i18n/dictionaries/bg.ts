@@ -1997,6 +1997,28 @@ export const bg: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Удовлетвореност",
   "app.settingsNav.itemAssistant": "Асистент",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Изготвяне с AI",
+  "app.ticket.aiWorking": "Писане…",
+  "app.ticket.aiDraftBadge": "AI чернова",
+  "app.ticket.aiSources": "Въз основа на:",
+  "app.ticket.aiNoSource": "В базата знания няма отговор на това.",
+  "app.ticket.aiUnconfigured": "Асистентът не е достъпен в тази инстанция.",
+  "app.ticket.aiDisabled": "Асистентът е изключен за това работно пространство.",
+  "app.ticket.aiCapabilityOff": "Тази функция е изключена или не е част от Вашия план.",
+  "app.ticket.aiQuotaReached": "Количеството за този месец е изчерпано.",
+  "app.ticket.aiLocaleClosed": "Асистентът още не отговаря на този език.",
+  "app.ticket.aiSummaryTitle": "Резюме",
+  "app.ticket.aiSummarise": "Резюмиране",
+  "app.ticket.aiRegenerate": "Регенериране",
+  "app.ticket.aiSummaryAt": "Написано в",
+  "app.ticket.aiSummaryHint": "Един абзац за това какво иска клиентът, какво вече е опитано и какво пречи на решението — за онзи, който поема тикета сега.",
+  "app.ticket.aiTooShort": "В този разговор няма достатъчно материал за резюме.",
   "app.settingsNav.groupSecurity": "Сигурност",
   "app.settingsNav.itemAgentSso": "SSO за агенти",
   "app.settingsNav.itemCustomerSso": "SSO за клиенти",

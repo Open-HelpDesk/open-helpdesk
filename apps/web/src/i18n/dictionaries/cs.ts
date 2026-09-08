@@ -2196,6 +2196,28 @@ export const cs: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Spokojenost",
   "app.settingsNav.itemAssistant": "Asistent",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Napsat pomocí AI",
+  "app.ticket.aiWorking": "Psaní…",
+  "app.ticket.aiDraftBadge": "Koncept AI",
+  "app.ticket.aiSources": "Na základě:",
+  "app.ticket.aiNoSource": "Ve znalostní bázi na to není odpověď.",
+  "app.ticket.aiUnconfigured": "Asistent není na této instanci dostupný.",
+  "app.ticket.aiDisabled": "Asistent je pro tento pracovní prostor vypnutý.",
+  "app.ticket.aiCapabilityOff": "Tato funkce je vypnutá, nebo není součástí vašeho plánu.",
+  "app.ticket.aiQuotaReached": "Limit tohoto měsíce je vyčerpán.",
+  "app.ticket.aiLocaleClosed": "Asistent v tomto jazyce zatím neodpovídá.",
+  "app.ticket.aiSummaryTitle": "Souhrn",
+  "app.ticket.aiSummarise": "Shrnout",
+  "app.ticket.aiRegenerate": "Vygenerovat znovu",
+  "app.ticket.aiSummaryAt": "Vytvořeno v",
+  "app.ticket.aiSummaryHint": "Jeden odstavec o tom, co zákazník chce, co už bylo vyzkoušeno a co brání dořešení — pro toho, kdo tiket právě přebírá.",
+  "app.ticket.aiTooShort": "V této konverzaci není dost materiálu na souhrn.",
   "app.settingsNav.groupSecurity": "Zabezpečení",
   "app.settingsNav.itemAgentSso": "SSO agentů",
   "app.settingsNav.itemCustomerSso": "SSO zákazníků",

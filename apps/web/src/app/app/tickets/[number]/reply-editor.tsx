@@ -11,6 +11,9 @@
  * are about to write sits where it will end up.
  */
 import { useEffect, useRef, useState } from "react";
+/* L'assistant vit sous ee/ : le composeur lui passe une fonction d'insertion,
+   parce que c'est lui qui tient l'état du texte. */
+import { AiDraftBadge, AiDraftButton } from "@openhelpdesk/ee-web/tickets/ai-draft";
 import { Paperclip } from "lucide-react";
 import { STATUS_KEYS } from "@/lib/format";
 import { Avatar } from "@/components/ticket-bits";
@@ -68,6 +71,8 @@ export function ReplyEditor({
   const [macroMenu, setMacroMenu] = useState(false);
   const [varMenu, setVarMenu] = useState(false);
   const [attachError, setAttachError] = useState(false);
+  /** Le texte vient de l'assistant : il porte son label tant qu'on n'y a pas touché. */
+  const [aiDrafted, setAiDrafted] = useState(false);
   /** How many files are staged — the only feedback left once the native
    *  control is out of sight. */
   const [attachCount, setAttachCount] = useState(0);
@@ -264,7 +269,8 @@ export function ReplyEditor({
       <input type="hidden" name="macroId" value={appliedMacroId} />
       <input type="hidden" name="nextStatus" value={isNote ? "" : nextStatus} />
 
-      {/* Tabs + draft */}
+      {/* Tabs + draft. Le label de brouillon d'IA vit ici, dans l'en-tête, et
+          pas près du bouton : il qualifie le texte, pas l'action. */}
       <div className="flex" style={{ gap: 2, padding: "8px 10px 0" }}>
         <button type="button" onClick={() => setKind("public_reply")} style={tabStyle(!isNote, false)}>
           {t("app.ticket.tabReply")}
@@ -290,6 +296,7 @@ export function ReplyEditor({
           {t("app.ticket.internalNote")}
         </button>
         <span className="flex-1" />
+        {aiDrafted && <span className="self-center"><AiDraftBadge /></span>}
         {draftLabel() && (
           <span className="self-center" style={{ fontSize: 11.5, color: "var(--ink-3)" }}>
             {draftLabel()}
@@ -320,6 +327,20 @@ export function ReplyEditor({
             {b.label}
           </button>
         ))}
+        <span style={{ width: 1, height: 16, margin: "0 5px", background: "var(--line)" }} />
+
+        <AiDraftButton
+          ticketId={ticketId}
+          disabled={kind === "internal_note"}
+          onInsert={(text) => {
+            /* On complète, on ne remplace pas : un agent qui a déjà écrit trois
+               lignes avant de cliquer ne doit pas les perdre. */
+            setBody((current) => (current.trim() ? `${current.trimEnd()}\n\n${text}` : text));
+            setAiDrafted(true);
+            textareaRef.current?.focus();
+          }}
+        />
+
         <span style={{ width: 1, height: 16, margin: "0 5px", background: "var(--line)" }} />
 
         {/* / Macros */}
@@ -421,7 +442,12 @@ export function ReplyEditor({
         required
         rows={4}
         value={body}
-        onChange={(e) => setBody(e.target.value)}
+        onChange={(e) => {
+          setBody(e.target.value);
+          /* Dès la première frappe, ce n'est plus un brouillon d'IA mais le
+             texte de l'agent : le label tombe, et il ne revient pas. */
+          if (aiDrafted) setAiDrafted(false);
+        }}
         placeholder={
           isNote
             ? // Not app.ticket.notePlaceholder — that one asks "what should we

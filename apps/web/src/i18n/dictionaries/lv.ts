@@ -2158,6 +2158,28 @@ export const lv: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Apmierinātība",
   "app.settingsNav.itemAssistant": "Asistents",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Rakstīt ar MI",
+  "app.ticket.aiWorking": "Notiek rakstīšana…",
+  "app.ticket.aiDraftBadge": "MI melnraksts",
+  "app.ticket.aiSources": "Balstīts uz:",
+  "app.ticket.aiNoSource": "Zināšanu bāzē nav atbildes uz šo.",
+  "app.ticket.aiUnconfigured": "Asistents šajā instancē nav pieejams.",
+  "app.ticket.aiDisabled": "Asistents šajā darbvietā ir izslēgts.",
+  "app.ticket.aiCapabilityOff": "Šī funkcija ir izslēgta vai neietilpst jūsu plānā.",
+  "app.ticket.aiQuotaReached": "Šā mēneša kvota ir izsmelta.",
+  "app.ticket.aiLocaleClosed": "Asistents šajā valodā vēl neatbild.",
+  "app.ticket.aiSummaryTitle": "Kopsavilkums",
+  "app.ticket.aiSummarise": "Sagatavot kopsavilkumu",
+  "app.ticket.aiRegenerate": "Ģenerēt vēlreiz",
+  "app.ticket.aiSummaryAt": "Sagatavots plkst.",
+  "app.ticket.aiSummaryHint": "Viena rindkopa par to, ko klients vēlas, kas jau ir izmēģināts un kas kavē — tam, kas pieteikumu pārņem tagad.",
+  "app.ticket.aiTooShort": "Šajā sarunā nav pietiekami daudz satura kopsavilkumam.",
   "app.settingsNav.groupSecurity": "Drošība",
   "app.settingsNav.itemAgentSso": "Aģentu SSO",
   "app.settingsNav.itemCustomerSso": "Klientu SSO",

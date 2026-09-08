@@ -2168,6 +2168,28 @@ export const ro: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Satisfacție",
   "app.settingsNav.itemAssistant": "Asistent",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Redactați cu IA",
+  "app.ticket.aiWorking": "Se redactează…",
+  "app.ticket.aiDraftBadge": "Ciornă IA",
+  "app.ticket.aiSources": "Surse:",
+  "app.ticket.aiNoSource": "Nimic din baza de cunoștințe nu răspunde la aceasta.",
+  "app.ticket.aiUnconfigured": "Asistentul nu este disponibil pe această instanță.",
+  "app.ticket.aiDisabled": "Asistentul este dezactivat pentru acest spațiu de lucru.",
+  "app.ticket.aiCapabilityOff": "Această funcție este dezactivată sau nu face parte din planul dvs.",
+  "app.ticket.aiQuotaReached": "Cota lunii este epuizată.",
+  "app.ticket.aiLocaleClosed": "Asistentul nu răspunde încă în această limbă.",
+  "app.ticket.aiSummaryTitle": "Rezumat",
+  "app.ticket.aiSummarise": "Rezumați",
+  "app.ticket.aiRegenerate": "Regenerați",
+  "app.ticket.aiSummaryAt": "Redactat la",
+  "app.ticket.aiSummaryHint": "Un paragraf despre ce cere clientul, ce s-a încercat și ce blochează — pentru cine preia tichetul acum.",
+  "app.ticket.aiTooShort": "Această conversație nu conține suficient material pentru un rezumat.",
   "app.settingsNav.groupSecurity": "Securitate",
   "app.settingsNav.itemAgentSso": "SSO agenți",
   "app.settingsNav.itemCustomerSso": "SSO clienți",

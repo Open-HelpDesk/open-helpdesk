@@ -2292,6 +2292,28 @@ export const mt: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Sodisfazzjon",
   "app.settingsNav.itemAssistant": "Assistent",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Abbozza bl-AI",
+  "app.ticket.aiWorking": "Qed jikteb…",
+  "app.ticket.aiDraftBadge": "Abbozz AI",
+  "app.ticket.aiSources": "Ibbażat fuq:",
+  "app.ticket.aiNoSource": "Xejn fil-bażi tal-għarfien ma jwieġeb dan.",
+  "app.ticket.aiUnconfigured": "L-assistent mhuwiex disponibbli fuq din l-istanza.",
+  "app.ticket.aiDisabled": "L-assistent huwa mitfi għal dan l-ispazju tax-xogħol.",
+  "app.ticket.aiCapabilityOff": "Din il-funzjoni hija mitfija, jew mhijiex parti mill-pjan tiegħek.",
+  "app.ticket.aiQuotaReached": "Il-kwota ta' dan ix-xahar intemmet.",
+  "app.ticket.aiLocaleClosed": "L-assistent għadu ma jweġibx f'din il-lingwa.",
+  "app.ticket.aiSummaryTitle": "Sommarju",
+  "app.ticket.aiSummarise": "Agħmel sommarju",
+  "app.ticket.aiRegenerate": "Iġġenera mill-ġdid",
+  "app.ticket.aiSummaryAt": "Miktub:",
+  "app.ticket.aiSummaryHint": "Paragrafu wieħed dwar dak li jrid il-klijent, dak li ġie ppruvat u dak li qed ixekkel — għal min jieħu t-ticket f'idejh issa.",
+  "app.ticket.aiTooShort": "F'din il-konversazzjoni ma hemmx biżżejjed biex isir sommarju.",
   "app.settingsNav.groupSecurity": "Sigurtà",
   "app.settingsNav.itemAgentSso": "SSO tal-aġenti",
   "app.settingsNav.itemCustomerSso": "SSO tal-klijenti",

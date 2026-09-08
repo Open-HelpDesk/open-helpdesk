@@ -2227,6 +2227,28 @@ export const lt: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Pasitenkinimas",
   "app.settingsNav.itemAssistant": "Asistentas",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Rašyti su DI",
+  "app.ticket.aiWorking": "Rašoma…",
+  "app.ticket.aiDraftBadge": "DI juodraštis",
+  "app.ticket.aiSources": "Remiantis:",
+  "app.ticket.aiNoSource": "Žinių bazėje į tai nėra atsakymo.",
+  "app.ticket.aiUnconfigured": "Asistentas šiame serveryje neprieinamas.",
+  "app.ticket.aiDisabled": "Asistentas šioje darbo erdvėje išjungtas.",
+  "app.ticket.aiCapabilityOff": "Ši funkcija išjungta arba neįeina į jūsų planą.",
+  "app.ticket.aiQuotaReached": "Šio mėnesio kvota išnaudota.",
+  "app.ticket.aiLocaleClosed": "Asistentas šia kalba dar neatsako.",
+  "app.ticket.aiSummaryTitle": "Santrauka",
+  "app.ticket.aiSummarise": "Apibendrinti",
+  "app.ticket.aiRegenerate": "Generuoti iš naujo",
+  "app.ticket.aiSummaryAt": "Parengta",
+  "app.ticket.aiSummaryHint": "Viena pastraipa apie tai, ko nori klientas, kas jau išbandyta ir kas stringa — tam, kas užklausą perima dabar.",
+  "app.ticket.aiTooShort": "Šiame pokalbyje per mažai medžiagos santraukai.",
   "app.settingsNav.groupSecurity": "Saugumas",
   "app.settingsNav.itemAgentSso": "Agentų SSO",
   "app.settingsNav.itemCustomerSso": "Klientų SSO",

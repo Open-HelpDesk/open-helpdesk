@@ -2056,6 +2056,28 @@ export const el: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Ικανοποίηση",
   "app.settingsNav.itemAssistant": "Βοηθός",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Σύνταξη με AI",
+  "app.ticket.aiWorking": "Σύνταξη…",
+  "app.ticket.aiDraftBadge": "Πρόχειρο AI",
+  "app.ticket.aiSources": "Με βάση:",
+  "app.ticket.aiNoSource": "Τίποτα στη βάση γνώσης δεν απαντά σε αυτό.",
+  "app.ticket.aiUnconfigured": "Ο βοηθός δεν είναι διαθέσιμος σε αυτήν την εγκατάσταση.",
+  "app.ticket.aiDisabled": "Ο βοηθός είναι απενεργοποιημένος για αυτόν τον χώρο εργασίας.",
+  "app.ticket.aiCapabilityOff": "Αυτή η λειτουργία είναι απενεργοποιημένη ή δεν αποτελεί μέρος του προγράμματός σας.",
+  "app.ticket.aiQuotaReached": "Η ποσόστωση του μήνα εξαντλήθηκε.",
+  "app.ticket.aiLocaleClosed": "Ο βοηθός δεν απαντά ακόμη σε αυτήν τη γλώσσα.",
+  "app.ticket.aiSummaryTitle": "Σύνοψη",
+  "app.ticket.aiSummarise": "Δημιουργία σύνοψης",
+  "app.ticket.aiRegenerate": "Αναδημιουργία",
+  "app.ticket.aiSummaryAt": "Γράφτηκε στις",
+  "app.ticket.aiSummaryHint": "Μια παράγραφος για το τι ζητά ο πελάτης, τι έχει δοκιμαστεί και τι μπλοκάρει — για όποιον αναλαμβάνει το τικέτ τώρα.",
+  "app.ticket.aiTooShort": "Αυτή η συνομιλία δεν έχει αρκετό υλικό για σύνοψη.",
   "app.settingsNav.groupSecurity": "Ασφάλεια",
   "app.settingsNav.itemAgentSso": "SSO χειριστών",
   "app.settingsNav.itemCustomerSso": "SSO πελατών",

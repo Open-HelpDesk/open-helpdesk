@@ -282,6 +282,28 @@ export const en = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Satisfaction",
   "app.settingsNav.itemAssistant": "Assistant",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Draft with AI",
+  "app.ticket.aiWorking": "Writing…",
+  "app.ticket.aiDraftBadge": "AI draft",
+  "app.ticket.aiSources": "Based on:",
+  "app.ticket.aiNoSource": "Nothing in the knowledge base answers this.",
+  "app.ticket.aiUnconfigured": "The assistant is not available on this instance.",
+  "app.ticket.aiDisabled": "The assistant is switched off for this workspace.",
+  "app.ticket.aiCapabilityOff": "This function is switched off, or not part of your plan.",
+  "app.ticket.aiQuotaReached": "This month's allowance is used up.",
+  "app.ticket.aiLocaleClosed": "The assistant does not answer in this language yet.",
+  "app.ticket.aiSummaryTitle": "Summary",
+  "app.ticket.aiSummarise": "Summarise",
+  "app.ticket.aiRegenerate": "Regenerate",
+  "app.ticket.aiSummaryAt": "Written at",
+  "app.ticket.aiSummaryHint": "One paragraph of what the customer wants, what has been tried and what is blocking — for whoever picks this up now.",
+  "app.ticket.aiTooShort": "There is not enough in this thread to summarise.",
   "app.settingsNav.groupSecurity": "Security",
   "app.settingsNav.itemAgentSso": "Agent SSO",
   "app.settingsNav.itemCustomerSso": "Customer SSO",

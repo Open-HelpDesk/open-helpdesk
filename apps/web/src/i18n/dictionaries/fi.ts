@@ -279,6 +279,28 @@ export const fi: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Tyytyväisyys",
   "app.settingsNav.itemAssistant": "Avustaja",
+
+  /* --- AG-04 · avustaja pyyntönäkymässä (spec 18, AI-02 / AI-03) ---
+     Jokaisella kieltäytymisellä on oma lauseensa, koska ne johtavat eri
+     suuntiin: "ei löytynyt mitään" kutsuu kirjoittamaan puuttuvan artikkelin,
+     vika kutsuu yrittämään uudelleen ja puuttuva paketti vaihtamaan pakettia.
+     Yksi ainoa viesti ei kertoisi agentille mitään. */
+  "app.ticket.aiDraft": "Luonnostele tekoälyllä",
+  "app.ticket.aiWorking": "Kirjoitetaan…",
+  "app.ticket.aiDraftBadge": "Tekoälyluonnos",
+  "app.ticket.aiSources": "Perustuu:",
+  "app.ticket.aiNoSource": "Tietopankissa ei ole vastausta tähän.",
+  "app.ticket.aiUnconfigured": "Avustaja ei ole käytettävissä tässä instanssissa.",
+  "app.ticket.aiDisabled": "Avustaja on kytketty pois käytöstä tässä työtilassa.",
+  "app.ticket.aiCapabilityOff": "Tämä toiminto on kytketty pois käytöstä tai ei sisälly pakettiisi.",
+  "app.ticket.aiQuotaReached": "Tämän kuun kiintiö on käytetty loppuun.",
+  "app.ticket.aiLocaleClosed": "Avustaja ei vastaa vielä tällä kielellä.",
+  "app.ticket.aiSummaryTitle": "Yhteenveto",
+  "app.ticket.aiSummarise": "Tee yhteenveto",
+  "app.ticket.aiRegenerate": "Luo uudelleen",
+  "app.ticket.aiSummaryAt": "Kirjoitettu klo",
+  "app.ticket.aiSummaryHint": "Yksi kappale siitä, mitä asiakas haluaa, mitä on jo yritetty ja mikä on esteenä — sille, joka ottaa pyynnön nyt käsiteltäväkseen.",
+  "app.ticket.aiTooShort": "Tässä keskustelussa on liian vähän aineistoa yhteenvetoon.",
   "app.settingsNav.groupSecurity": "Tietoturva",
   "app.settingsNav.itemAgentSso": "Asiakaspalvelijoiden SSO",
   "app.settingsNav.itemCustomerSso": "Asiakkaiden SSO",

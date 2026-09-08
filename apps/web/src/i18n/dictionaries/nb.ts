@@ -279,6 +279,28 @@ export const nb: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Tilfredshet",
   "app.settingsNav.itemAssistant": "Assistent",
+
+  /* --- AG-04 · assistenten på henvendelsesskjermen (spec 18, AI-02 / AI-03) ---
+     Hver avvisning har sin egen setning, fordi de leder hvert sitt sted:
+     "fant ingenting" inviterer til å skrive den manglende artikkelen, en feil
+     til å prøve igjen, en manglende plan til å bytte nivå. Én melding for alle
+     tre ville ikke fortalt agenten noe. */
+  "app.ticket.aiDraft": "Skriv utkast med KI",
+  "app.ticket.aiWorking": "Skriver…",
+  "app.ticket.aiDraftBadge": "KI-utkast",
+  "app.ticket.aiSources": "Basert på:",
+  "app.ticket.aiNoSource": "Ingenting i kunnskapsbasen svarer på dette.",
+  "app.ticket.aiUnconfigured": "Assistenten er ikke tilgjengelig på denne instansen.",
+  "app.ticket.aiDisabled": "Assistenten er slått av for dette arbeidsområdet.",
+  "app.ticket.aiCapabilityOff": "Denne funksjonen er slått av eller inngår ikke i planen din.",
+  "app.ticket.aiQuotaReached": "Månedens kvote er brukt opp.",
+  "app.ticket.aiLocaleClosed": "Assistenten svarer ennå ikke på dette språket.",
+  "app.ticket.aiSummaryTitle": "Sammendrag",
+  "app.ticket.aiSummarise": "Oppsummer",
+  "app.ticket.aiRegenerate": "Generer på nytt",
+  "app.ticket.aiSummaryAt": "Skrevet kl.",
+  "app.ticket.aiSummaryHint": "Ett avsnitt om hva kunden vil, hva som er prøvd og hva som stopper — for den som tar over henvendelsen nå.",
+  "app.ticket.aiTooShort": "Det er for lite i denne samtalen til et sammendrag.",
   "app.settingsNav.groupSecurity": "Sikkerhet",
   "app.settingsNav.itemAgentSso": "Agent-SSO",
   "app.settingsNav.itemCustomerSso": "Kunde-SSO",

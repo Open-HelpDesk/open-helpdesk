@@ -1899,6 +1899,28 @@ export const fr: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Satisfaction",
   "app.settingsNav.itemAssistant": "Assistant",
+
+  /* --- AG-04 · l'assistant sur l'écran ticket (spec 18, AI-02 / AI-03) ---
+     Chaque refus a sa phrase, parce qu'ils mènent ailleurs : « rien trouvé »
+     invite à écrire l'article manquant, une panne à réessayer, une offre
+     absente à changer de palier. Un message unique n'apprendrait rien à
+     l'agent. */
+  "app.ticket.aiDraft": "Rédiger avec l'IA",
+  "app.ticket.aiWorking": "Rédaction…",
+  "app.ticket.aiDraftBadge": "Brouillon IA",
+  "app.ticket.aiSources": "D'après :",
+  "app.ticket.aiNoSource": "Rien dans la base de connaissances ne répond à ceci.",
+  "app.ticket.aiUnconfigured": "L'assistant n'est pas disponible sur cette instance.",
+  "app.ticket.aiDisabled": "L'assistant est éteint pour cet espace.",
+  "app.ticket.aiCapabilityOff": "Cette fonction est éteinte, ou ne fait pas partie de votre offre.",
+  "app.ticket.aiQuotaReached": "Le forfait du mois est épuisé.",
+  "app.ticket.aiLocaleClosed": "L'assistant ne répond pas encore dans cette langue.",
+  "app.ticket.aiSummaryTitle": "Résumé",
+  "app.ticket.aiSummarise": "Résumer",
+  "app.ticket.aiRegenerate": "Régénérer",
+  "app.ticket.aiSummaryAt": "Établi à",
+  "app.ticket.aiSummaryHint": "Un paragraphe sur ce que demande le client, ce qui a été tenté et ce qui bloque — pour celui qui reprend le ticket maintenant.",
+  "app.ticket.aiTooShort": "Ce fil ne contient pas assez de matière pour un résumé.",
   "app.settingsNav.groupSecurity": "Sécurité",
   "app.settingsNav.itemAgentSso": "SSO des agents",
   "app.settingsNav.itemCustomerSso": "SSO clients",

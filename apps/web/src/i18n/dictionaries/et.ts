@@ -2015,6 +2015,28 @@ export const et: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Rahulolu",
   "app.settingsNav.itemAssistant": "Assistent",
+
+  /* --- AG-04 · assistent pileti ekraanil (spec 18, AI-02 / AI-03) ---
+     Igal keeldumisel on oma lause, sest need viivad eri suunda: "midagi ei
+     leitud" kutsub kirjutama puuduva artikli, tõrge kutsub uuesti proovima ja
+     puuduv pakett kutsub paketti vahetama. Üks ühine teade ei ütleks agendile
+     midagi. */
+  "app.ticket.aiDraft": "Koosta mustand AI abil",
+  "app.ticket.aiWorking": "Kirjutamine…",
+  "app.ticket.aiDraftBadge": "AI-mustand",
+  "app.ticket.aiSources": "Põhineb:",
+  "app.ticket.aiNoSource": "Teadmusbaasis pole sellele vastust.",
+  "app.ticket.aiUnconfigured": "Assistent pole selles instantsis kasutatav.",
+  "app.ticket.aiDisabled": "Assistent on selles tööruumis välja lülitatud.",
+  "app.ticket.aiCapabilityOff": "See funktsioon on välja lülitatud või ei kuulu teie paketti.",
+  "app.ticket.aiQuotaReached": "Selle kuu limiit on ära kasutatud.",
+  "app.ticket.aiLocaleClosed": "Assistent ei vasta veel selles keeles.",
+  "app.ticket.aiSummaryTitle": "Kokkuvõte",
+  "app.ticket.aiSummarise": "Tee kokkuvõte",
+  "app.ticket.aiRegenerate": "Loo uuesti",
+  "app.ticket.aiSummaryAt": "Koostatud kell",
+  "app.ticket.aiSummaryHint": "Üks lõik sellest, mida klient soovib, mida on juba proovitud ja mis takistab — sellele, kes pileti kohe üle võtab.",
+  "app.ticket.aiTooShort": "Selles vestluses on kokkuvõtte tegemiseks liiga vähe sisu.",
   "app.settingsNav.groupSecurity": "Turvalisus",
   "app.settingsNav.itemAgentSso": "Agentide SSO",
   "app.settingsNav.itemCustomerSso": "Klientide SSO",

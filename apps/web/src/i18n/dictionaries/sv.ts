@@ -279,6 +279,28 @@ export const sv: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Nöjdhet",
   "app.settingsNav.itemAssistant": "Assistent",
+
+  /* --- AG-04 · assistenten på ärendeskärmen (spec 18, AI-02 / AI-03) ---
+     Varje avslag har sin egen mening, eftersom de leder till olika håll:
+     "hittade ingenting" bjuder in till att skriva den saknade artikeln, ett
+     fel till att försöka igen, en saknad plan till att byta nivå. Ett enda
+     meddelande för alla tre skulle inte säga agenten någonting. */
+  "app.ticket.aiDraft": "Skriv utkast med AI",
+  "app.ticket.aiWorking": "Skriver…",
+  "app.ticket.aiDraftBadge": "AI-utkast",
+  "app.ticket.aiSources": "Baserat på:",
+  "app.ticket.aiNoSource": "Ingenting i kunskapsbasen besvarar detta.",
+  "app.ticket.aiUnconfigured": "Assistenten är inte tillgänglig på den här instansen.",
+  "app.ticket.aiDisabled": "Assistenten är avstängd för den här arbetsytan.",
+  "app.ticket.aiCapabilityOff": "Den här funktionen är avstängd eller ingår inte i din plan.",
+  "app.ticket.aiQuotaReached": "Månadens kvot är förbrukad.",
+  "app.ticket.aiLocaleClosed": "Assistenten svarar ännu inte på det här språket.",
+  "app.ticket.aiSummaryTitle": "Sammanfattning",
+  "app.ticket.aiSummarise": "Sammanfatta",
+  "app.ticket.aiRegenerate": "Generera om",
+  "app.ticket.aiSummaryAt": "Skriven kl.",
+  "app.ticket.aiSummaryHint": "Ett stycke om vad kunden vill, vad som har provats och vad som stoppar upp — för den som tar över ärendet nu.",
+  "app.ticket.aiTooShort": "Det finns för lite i den här konversationen för en sammanfattning.",
   "app.settingsNav.groupSecurity": "Säkerhet",
   "app.settingsNav.itemAgentSso": "SSO för agenter",
   "app.settingsNav.itemCustomerSso": "SSO för kunder",

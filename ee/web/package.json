@@ -15,7 +15,10 @@
     "./portal/sso-actions": "./src/portal/sso-actions.ts",
     "./portal/sso-data": "./src/portal/sso-data.ts",
     "./settings/assistant/page": "./src/settings/assistant/page.tsx",
-    "./settings/assistant/actions": "./src/settings/assistant/actions.ts"
+    "./settings/assistant/actions": "./src/settings/assistant/actions.ts",
+    "./tickets/ai-draft": "./src/tickets/ai-draft.tsx",
+    "./tickets/ai-summary": "./src/tickets/ai-summary.tsx",
+    "./tickets/ai-actions": "./src/tickets/ai-actions.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

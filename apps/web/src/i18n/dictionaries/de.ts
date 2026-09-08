@@ -281,6 +281,28 @@ export const de: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Zufriedenheit",
   "app.settingsNav.itemAssistant": "Assistent",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Mit KI entwerfen",
+  "app.ticket.aiWorking": "Wird geschrieben…",
+  "app.ticket.aiDraftBadge": "KI-Entwurf",
+  "app.ticket.aiSources": "Basierend auf:",
+  "app.ticket.aiNoSource": "In der Wissensdatenbank steht dazu keine Antwort.",
+  "app.ticket.aiUnconfigured": "Der Assistent ist auf dieser Instanz nicht verfügbar.",
+  "app.ticket.aiDisabled": "Der Assistent ist für diesen Workspace ausgeschaltet.",
+  "app.ticket.aiCapabilityOff": "Diese Funktion ist ausgeschaltet oder nicht Teil Ihres Tarifs.",
+  "app.ticket.aiQuotaReached": "Das Kontingent dieses Monats ist aufgebraucht.",
+  "app.ticket.aiLocaleClosed": "Der Assistent antwortet in dieser Sprache noch nicht.",
+  "app.ticket.aiSummaryTitle": "Zusammenfassung",
+  "app.ticket.aiSummarise": "Zusammenfassen",
+  "app.ticket.aiRegenerate": "Neu erzeugen",
+  "app.ticket.aiSummaryAt": "Geschrieben um",
+  "app.ticket.aiSummaryHint": "Ein Absatz dazu, was der Kunde will, was versucht wurde und was blockiert — für die Person, die das Ticket jetzt übernimmt.",
+  "app.ticket.aiTooShort": "In dieser Konversation steht zu wenig für eine Zusammenfassung.",
   "app.settingsNav.groupSecurity": "Sicherheit",
   "app.settingsNav.itemAgentSso": "Agenten-SSO",
   "app.settingsNav.itemCustomerSso": "Kunden-SSO",

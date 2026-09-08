@@ -2216,6 +2216,28 @@ export const sl: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Zadovoljstvo",
   "app.settingsNav.itemAssistant": "Asistent",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Napiši z AI",
+  "app.ticket.aiWorking": "Pisanje…",
+  "app.ticket.aiDraftBadge": "Osnutek AI",
+  "app.ticket.aiSources": "Na podlagi:",
+  "app.ticket.aiNoSource": "V bazi znanja ni odgovora na to.",
+  "app.ticket.aiUnconfigured": "Asistent na tej instanci ni na voljo.",
+  "app.ticket.aiDisabled": "Asistent je za ta delovni prostor izklopljen.",
+  "app.ticket.aiCapabilityOff": "Ta funkcija je izklopljena ali pa ni del vašega paketa.",
+  "app.ticket.aiQuotaReached": "Količina za ta mesec je porabljena.",
+  "app.ticket.aiLocaleClosed": "Asistent v tem jeziku še ne odgovarja.",
+  "app.ticket.aiSummaryTitle": "Povzetek",
+  "app.ticket.aiSummarise": "Povzemi",
+  "app.ticket.aiRegenerate": "Znova ustvari",
+  "app.ticket.aiSummaryAt": "Napisano ob",
+  "app.ticket.aiSummaryHint": "En odstavek o tem, kaj stranka želi, kaj je bilo že poskušeno in kaj zavira rešitev — za tistega, ki zahtevek prevzema zdaj.",
+  "app.ticket.aiTooShort": "V tem pogovoru ni dovolj gradiva za povzetek.",
   "app.settingsNav.groupSecurity": "Varnost",
   "app.settingsNav.itemAgentSso": "SSO za agente",
   "app.settingsNav.itemCustomerSso": "SSO za stranke",

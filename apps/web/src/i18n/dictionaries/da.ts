@@ -280,6 +280,28 @@ export const da: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Tilfredshed",
   "app.settingsNav.itemAssistant": "Assistent",
+
+  /* --- AG-04 · assistenten på sagsskærmen (spec 18, AI-02 / AI-03) ---
+     Hver afvisning har sin egen sætning, fordi de fører hvert sit sted hen:
+     "intet fundet" inviterer til at skrive den manglende artikel, en fejl til
+     at prøve igen, en manglende plan til at skifte plan. Én besked for alle
+     tre ville ikke fortælle agenten noget. */
+  "app.ticket.aiDraft": "Skriv kladde med AI",
+  "app.ticket.aiWorking": "Skriver…",
+  "app.ticket.aiDraftBadge": "AI-kladde",
+  "app.ticket.aiSources": "Baseret på:",
+  "app.ticket.aiNoSource": "Der er intet i vidensbasen, der svarer på dette.",
+  "app.ticket.aiUnconfigured": "Assistenten er ikke tilgængelig på denne instans.",
+  "app.ticket.aiDisabled": "Assistenten er slået fra for dette arbejdsområde.",
+  "app.ticket.aiCapabilityOff": "Denne funktion er slået fra eller er ikke en del af din plan.",
+  "app.ticket.aiQuotaReached": "Denne måneds kvote er brugt op.",
+  "app.ticket.aiLocaleClosed": "Assistenten svarer endnu ikke på dette sprog.",
+  "app.ticket.aiSummaryTitle": "Opsummering",
+  "app.ticket.aiSummarise": "Opsummér",
+  "app.ticket.aiRegenerate": "Generér igen",
+  "app.ticket.aiSummaryAt": "Skrevet kl.",
+  "app.ticket.aiSummaryHint": "Et enkelt afsnit om, hvad kunden vil, hvad der er prøvet, og hvad der blokerer — til den, der overtager sagen nu.",
+  "app.ticket.aiTooShort": "Der er for lidt i denne samtale til en opsummering.",
   "app.settingsNav.groupSecurity": "Sikkerhed",
   "app.settingsNav.itemAgentSso": "Agent-SSO",
   "app.settingsNav.itemCustomerSso": "Kunde-SSO",

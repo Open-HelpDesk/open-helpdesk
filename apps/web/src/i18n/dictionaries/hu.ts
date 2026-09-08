@@ -2031,6 +2031,28 @@ export const hu: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Elégedettség",
   "app.settingsNav.itemAssistant": "Asszisztens",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Vázlat MI-vel",
+  "app.ticket.aiWorking": "Fogalmazás…",
+  "app.ticket.aiDraftBadge": "MI-vázlat",
+  "app.ticket.aiSources": "Az alábbiak alapján:",
+  "app.ticket.aiNoSource": "A tudásbázisban semmi nem válaszol erre.",
+  "app.ticket.aiUnconfigured": "Az asszisztens ezen a példányon nem érhető el.",
+  "app.ticket.aiDisabled": "Az asszisztens ki van kapcsolva ezen a munkaterületen.",
+  "app.ticket.aiCapabilityOff": "Ez a funkció ki van kapcsolva, vagy nem része az Ön csomagjának.",
+  "app.ticket.aiQuotaReached": "A havi keret elfogyott.",
+  "app.ticket.aiLocaleClosed": "Az asszisztens ezen a nyelven még nem válaszol.",
+  "app.ticket.aiSummaryTitle": "Összefoglaló",
+  "app.ticket.aiSummarise": "Összefoglalás",
+  "app.ticket.aiRegenerate": "Újragenerálás",
+  "app.ticket.aiSummaryAt": "Készült:",
+  "app.ticket.aiSummaryHint": "Egy bekezdés arról, hogy mit szeretne az ügyfél, mit próbáltak már, és mi akadályozza — annak, aki most veszi át a jegyet.",
+  "app.ticket.aiTooShort": "Ebben a beszélgetésben nincs elég anyag az összefoglaláshoz.",
   "app.settingsNav.groupSecurity": "Biztonság",
   "app.settingsNav.itemAgentSso": "Ügyintézők SSO-ja",
   "app.settingsNav.itemCustomerSso": "Ügyfelek SSO-ja",

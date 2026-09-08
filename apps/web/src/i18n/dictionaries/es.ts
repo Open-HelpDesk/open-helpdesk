@@ -282,6 +282,28 @@ export const es: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Satisfacción",
   "app.settingsNav.itemAssistant": "Asistente",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Redactar con IA",
+  "app.ticket.aiWorking": "Redactando…",
+  "app.ticket.aiDraftBadge": "Borrador IA",
+  "app.ticket.aiSources": "Basado en:",
+  "app.ticket.aiNoSource": "Nada en la base de conocimientos responde a esto.",
+  "app.ticket.aiUnconfigured": "El asistente no está disponible en esta instancia.",
+  "app.ticket.aiDisabled": "El asistente está desactivado en este espacio de trabajo.",
+  "app.ticket.aiCapabilityOff": "Esta función está desactivada, o no forma parte de tu plan.",
+  "app.ticket.aiQuotaReached": "La cuota de este mes está agotada.",
+  "app.ticket.aiLocaleClosed": "El asistente todavía no responde en este idioma.",
+  "app.ticket.aiSummaryTitle": "Resumen",
+  "app.ticket.aiSummarise": "Resumir",
+  "app.ticket.aiRegenerate": "Regenerar",
+  "app.ticket.aiSummaryAt": "Redactado a las",
+  "app.ticket.aiSummaryHint": "Un párrafo sobre lo que pide el cliente, lo que se ha intentado y lo que bloquea — para quien retoma el ticket ahora.",
+  "app.ticket.aiTooShort": "Esta conversación no tiene suficiente contenido para un resumen.",
   "app.settingsNav.groupSecurity": "Seguridad",
   "app.settingsNav.itemAgentSso": "SSO de agentes",
   "app.settingsNav.itemCustomerSso": "SSO de clientes",

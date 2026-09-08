@@ -2130,6 +2130,28 @@ export const hr: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Zadovoljstvo",
   "app.settingsNav.itemAssistant": "Asistent",
+
+  /* --- AG-04 · the assistant on the ticket screen (spec 18, AI-02 / AI-03) ---
+     Each refusal has its own sentence, because they lead somewhere different:
+     "found nothing" invites writing the missing article, a failure invites
+     trying again, a missing plan invites changing tier. One message for all
+     three would tell the agent nothing. */
+  "app.ticket.aiDraft": "Napiši pomoću AI",
+  "app.ticket.aiWorking": "Pisanje…",
+  "app.ticket.aiDraftBadge": "AI skica",
+  "app.ticket.aiSources": "Na temelju:",
+  "app.ticket.aiNoSource": "U bazi znanja nema odgovora na ovo.",
+  "app.ticket.aiUnconfigured": "Asistent nije dostupan na ovoj instanci.",
+  "app.ticket.aiDisabled": "Asistent je isključen za ovaj radni prostor.",
+  "app.ticket.aiCapabilityOff": "Ova funkcija je isključena ili nije dio vašeg plana.",
+  "app.ticket.aiQuotaReached": "Ovomjesečna kvota je iskorištena.",
+  "app.ticket.aiLocaleClosed": "Asistent još ne odgovara na ovom jeziku.",
+  "app.ticket.aiSummaryTitle": "Sažetak",
+  "app.ticket.aiSummarise": "Sažmi",
+  "app.ticket.aiRegenerate": "Regeneriraj",
+  "app.ticket.aiSummaryAt": "Napisano u",
+  "app.ticket.aiSummaryHint": "Jedan odlomak o tome što klijent želi, što je već pokušano i što priječi rješenje — za onoga koji tiket preuzima sada.",
+  "app.ticket.aiTooShort": "U ovom razgovoru nema dovoljno građe za sažetak.",
   "app.settingsNav.groupSecurity": "Sigurnost",
   "app.settingsNav.itemAgentSso": "SSO agenata",
   "app.settingsNav.itemCustomerSso": "SSO klijenata",

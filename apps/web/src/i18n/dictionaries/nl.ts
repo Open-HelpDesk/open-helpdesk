@@ -281,6 +281,29 @@ export const nl: Dictionary = {
   "app.settingsNav.itemSla": "SLA",
   "app.settingsNav.itemCsat": "Tevredenheid",
   "app.settingsNav.itemAssistant": "Assistent",
+
+  /* --- AG-04 · de assistent op het ticketscherm (spec 18, AI-02 / AI-03) ---
+     Elke weigering heeft haar eigen zin, want ze leiden elders naartoe: "niets
+     gevonden" nodigt uit om het ontbrekende artikel te schrijven, een storing
+     om het opnieuw te proberen, een ontbrekend abonnement om een ander
+     abonnement te kiezen. Eén melding voor alle drie zou de agent niets
+     vertellen. */
+  "app.ticket.aiDraft": "Concept opstellen met AI",
+  "app.ticket.aiWorking": "Schrijven…",
+  "app.ticket.aiDraftBadge": "AI-concept",
+  "app.ticket.aiSources": "Op basis van:",
+  "app.ticket.aiNoSource": "Niets in de kennisbank geeft hier antwoord op.",
+  "app.ticket.aiUnconfigured": "De assistent is niet beschikbaar op deze instantie.",
+  "app.ticket.aiDisabled": "De assistent is uitgeschakeld voor deze werkruimte.",
+  "app.ticket.aiCapabilityOff": "Deze functie is uitgeschakeld, of hoort niet bij uw abonnement.",
+  "app.ticket.aiQuotaReached": "Het tegoed van deze maand is op.",
+  "app.ticket.aiLocaleClosed": "De assistent antwoordt nog niet in deze taal.",
+  "app.ticket.aiSummaryTitle": "Samenvatting",
+  "app.ticket.aiSummarise": "Samenvatten",
+  "app.ticket.aiRegenerate": "Opnieuw genereren",
+  "app.ticket.aiSummaryAt": "Geschreven om",
+  "app.ticket.aiSummaryHint": "Één alinea over wat de klant wil, wat er is geprobeerd en wat er vastloopt — voor wie het ticket nu oppakt.",
+  "app.ticket.aiTooShort": "Dit gesprek bevat te weinig om samen te vatten.",
   "app.settingsNav.groupSecurity": "Beveiliging",
   "app.settingsNav.itemAgentSso": "Agent-SSO",
   "app.settingsNav.itemCustomerSso": "Klant-SSO",

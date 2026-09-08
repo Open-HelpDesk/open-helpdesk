@@ -12,6 +12,7 @@
  * putting it in the query string would make every glance a new history entry.
  */
 import { useState } from "react";
+import { AiSummary } from "@openhelpdesk/ee-web/tickets/ai-summary";
 import Link from "next/link";
 import { useT } from "@/i18n/client";
 import { Avatar, PANEL_CARD, PANEL_GROUP } from "@/components/ticket-bits";
@@ -130,7 +131,17 @@ export function SidePanels({
           borderColor: "var(--line)",
         }}
       >
-        {panel === "details" && details}
+        {panel === "details" && (
+          <>
+            {/* Le résumé au-dessus du formulaire : c'est ce qu'on lit en
+                premier quand on reprend un ticket, et le formulaire est ce
+                qu'on modifie ensuite. */}
+            <div className="flex flex-col" style={{ ...CARD, padding: "15px 16px" }}>
+              <AiSummary ticketId={ticketId} />
+            </div>
+            {details}
+          </>
+        )}
 
         {panel === "requester" && (
           <>
