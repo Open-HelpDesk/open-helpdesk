@@ -49,8 +49,32 @@ export type Sources = {
 /** Combien de texte on garde par document : assez pour répondre, pas de quoi noyer le prompt. */
 const SUMMARY_CHARS = 1200;
 
-/** Le plancher de similarité en dessous duquel un document n'est pas une source. */
-const FLOOR = 0.35;
+/**
+ * Le plancher de similarité en dessous duquel un document n'est pas une source.
+ *
+ * **Mesuré, pas deviné**, contre `qwen3-embedding-8b` le 08/09/2026 : une
+ * question de client (« le bouton Exporter en PDF ne répond plus, erreur 500 »)
+ * confrontée à six articles plausibles a donné
+ *
+ *   0,833  l'article qui répond
+ *   0,742  un article proche (les erreurs 500 en général)
+ *   0,711  un article proche (comment exporter)
+ *   0,525  sans lien (facturation)
+ *   0,505  sans lien (mot de passe)
+ *   0,442  sans lien (inviter un agent)
+ *
+ * L'écart utile est donc entre 0,711 et 0,525. La première version de ce
+ * fichier avait 0,35, valeur reprise du produit voisin — elle aurait admis
+ * **les trois documents sans lien** comme sources d'une réponse au client, ce
+ * qui vide de son sens la règle « aucune réponse sans source » : la source
+ * existe, elle ne répond simplement pas à la question.
+ *
+ * Ce modèle a une plage comprimée (0,44 pour deux textes étrangers l'un à
+ * l'autre), donc les planchers conseillés pour d'autres modèles ne s'y
+ * transposent pas. À recalibrer si le modèle d'embeddings change — d'où les
+ * chiffres ci-dessus, qui disent comment.
+ */
+const FLOOR = 0.62;
 
 function plain(html: string | null): string {
   if (!html) return "";

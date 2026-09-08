@@ -140,18 +140,34 @@ export type Triage = {
   teamId: string | null;
 };
 
-const TRIAGE_SCHEMA = {
-  type: "object",
-  additionalProperties: false,
-  required: ["priority", "locale", "team", "category"],
-  properties: {
-    category: { type: ["string", "null"] },
-    priority: { type: ["string", "null"], enum: ["low", "normal", "high", "urgent", null] },
-    /** Un code BCP-47 court : c'est ce dont la déflexion aura besoin plus tard. */
-    locale: { type: ["string", "null"] },
-    team: { type: ["string", "null"] },
-  },
-} as const;
+/**
+ * Le schéma se décrit dans le prompt et non dans `response_format`.
+ *
+ * Ce n'est pas un choix esthétique : mesuré contre l'API, le schéma strict de
+ * ce fournisseur casse la sortie de ce modèle (voir `provider.ts`). Décrit en
+ * prose et demandé en `json_object`, il est respecté — et pour vingt fois moins
+ * de jetons.
+ */
+const TRIAGE_SHAPE = [
+  "Reply with a JSON object and nothing else, with exactly these keys:",
+  '  "category": a short label for the ticket, or null',
+  '  "priority": one of "low", "normal", "high", "urgent", or null',
+  '  "locale": the ticket\'s own language as a two-letter code (fr, en, de…), or null',
+  '  "team": the destination team, chosen by name from the list below, or null',
+].join("\n");
+
+/**
+ * Une langue valide, ou rien.
+ *
+ * Le modèle a répondu `"N/A"` en test là où le prompt demandait `null`, et sans
+ * ce filtre l'inbox aurait affiché une suggestion de langue `n/a`. On n'accepte
+ * que deux lettres — ce qui écarte aussi `"unknown"`, `"none"` et le reste du
+ * répertoire des façons de dire « je ne sais pas ».
+ */
+function validLocale(raw: unknown): string | null {
+  const v = String(raw ?? "").trim().toLowerCase().slice(0, 2);
+  return /^[a-z]{2}$/.test(v) ? v : null;
+}
 
 /**
  * Propose une catégorie, une priorité, une langue et une équipe.
@@ -185,14 +201,14 @@ export async function triageTicket(
       provider,
       [
         "You triage an incoming support ticket.",
-        "Return the ticket's own language as a short BCP-47 code (fr, en, de…).",
+        TRIAGE_SHAPE,
         teamRows.length > 0
-          ? `Pick a team from this list by name, or null: ${teamRows.map((t) => t.name).join(", ")}.`
+          ? `The teams are: ${teamRows.map((t) => t.name).join(", ")}.`
           : "There are no teams: return null for team.",
         "Use null for anything the material does not support. A guess is worse than a null.",
       ].join("\n"),
       `Subject: ${thread.subject}\n\n${thread.text}`,
-      { schema: TRIAGE_SCHEMA as unknown as Record<string, unknown>, maxTokens: 200, keep: thread.keep },
+      { json: true, maxTokens: 400, keep: thread.keep },
     );
 
     const parsed = parseJson<{
@@ -213,7 +229,7 @@ export async function triageTicket(
       result: {
         category: parsed?.category?.trim() || null,
         priority: priority ?? null,
-        locale: parsed?.locale?.trim().slice(0, 5).toLowerCase() || null,
+        locale: validLocale(parsed?.locale),
         teamId: team?.id ?? null,
       } satisfies Triage,
       model: out.model,
@@ -259,7 +275,7 @@ export async function summarizeThread(
         "No greeting, no bullet list, no restatement of the subject line.",
       ].join("\n"),
       `Subject: ${thread.subject}\n\n${thread.text}`,
-      { maxTokens: 300, keep: thread.keep },
+      { maxTokens: 600, keep: thread.keep },
     );
     return {
       result: out.text,
@@ -318,7 +334,7 @@ export async function draftReply(
         "No subject line, no signature — the product adds them.",
       ].join("\n"),
       `MATERIAL\n${material}\n\nTHREAD\nSubject: ${thread.subject}\n\n${thread.text}`,
-      { maxTokens: 700, keep: thread.keep },
+      { maxTokens: 1200, keep: thread.keep },
     );
     return {
       result: { text: out.text, sources: passages } satisfies Draft,
@@ -361,7 +377,14 @@ export async function suggestMacro(
     tenantId,
     `${thread.subject}\n${thread.text.slice(-2000)}`,
     actor,
-    { sources: ["macro"], limit: 1, floor: 0.55 },
+    {
+      sources: ["macro"],
+      limit: 1,
+      /* Plus haut que le plancher général de 0,62 : une macro proposée à côté
+         du sujet fait perdre plus de temps qu'elle n'en gagne, alors qu'un
+         article seulement « proche » reste utile à un agent qui le relit. */
+      floor: 0.72,
+    },
   );
   const best = found[0];
   return best ? { ok: true, value: best } : { ok: false, reason: "no_source" };

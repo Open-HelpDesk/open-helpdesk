@@ -97,6 +97,8 @@ export type Completion = {
   inputTokens: number;
   outputTokens: number;
   costMicros: number;
+  /** Ce que la réflexion a produit, quand elle est allumée — facturé en sortie. */
+  reasoningChars: number;
 };
 
 function headers(config: ProviderConfig): Record<string, string> {
@@ -105,16 +107,43 @@ function headers(config: ProviderConfig): Record<string, string> {
   return h;
 }
 
+/**
+ * Une complétion.
+ *
+ * Trois réglages non évidents, tous trois établis en appelant vraiment l'API de
+ * Scaleway avec `gemma-4-26b-a4b-it` — et deux d'entre eux contredisent ce
+ * qu'on aurait deviné :
+ *
+ * 1. **`reasoning_effort: "none"` par défaut.** Ce modèle est un modèle à
+ *    raisonnement : il écrit sa réflexion dans un champ `reasoning` séparé et
+ *    laisse `content` à `null` jusqu'à ce qu'elle s'achève. Un triage mesuré à
+ *    **536 jetons de sortie** dont 500 de réflexion tombe à **28 jetons** sans
+ *    elle, pour une réponse meilleure (voir 2). La réflexion se rallume par
+ *    `reasoning: true` si un jour une capacité y gagne.
+ * 2. **`json_object` et pas `json_schema`.** La documentation de Scaleway
+ *    recommande le schéma et déconseille le mode JSON nu. Sur ce modèle c'est
+ *    l'inverse : avec schéma strict **et** réflexion coupée, la sortie est
+ *    cassée — le modèle a mis la langue dans le champ catégorie puis rempli
+ *    d'espaces jusqu'au plafond ; avec schéma strict **et** réflexion, il rend
+ *    du JSON valide mais un `locale: "N/A"` là où le prompt demande `null`.
+ *    Avec `json_object` et sans réflexion : 28 jetons, JSON valide, langue
+ *    juste. On garde le schéma dans le prompt, où il est respecté.
+ * 3. **Un plafond de jetons large, et la troncature qui lève.** Un
+ *    `finish_reason: "length"` avec un contenu vide n'est pas une réponse
+ *    vide : c'est une réponse coupée. La renvoyer comme `""` écrivait un
+ *    brouillon vide sans que rien ne le signale.
+ */
 export async function chatComplete(
   config: ProviderConfig,
   opts: {
     messages: ChatMessage[];
-    /** Un schéma plutôt qu'un simple mode JSON : la doc de Scaleway dit qu'un
-     *  « schemaless JSON mode will produce lower quality results ». */
-    schema?: Record<string, unknown>;
+    /** Demande un objet JSON. Le schéma attendu se décrit dans le prompt. */
+    json?: boolean;
     maxTokens?: number;
     temperature?: number;
     model?: string;
+    /** Rallume la réflexion du modèle : plus lent, ~15× plus cher en sortie. */
+    reasoning?: boolean;
   },
 ): Promise<Completion> {
   const model = opts.model ?? config.model;
@@ -124,33 +153,38 @@ export async function chatComplete(
     body: JSON.stringify({
       model,
       messages: opts.messages,
-      /* Bas par défaut, et plus bas encore pour du JSON : la fiabilité du
-         format structuré dépend de la température chez ce fournisseur. */
-      temperature: opts.temperature ?? (opts.schema ? 0.1 : 0.2),
-      max_tokens: opts.maxTokens ?? 900,
-      ...(opts.schema
-        ? {
-            response_format: {
-              type: "json_schema",
-              json_schema: { name: "out", strict: true, schema: opts.schema },
-            },
-          }
-        : {}),
+      /* Bas par défaut, et plus bas encore pour du JSON. */
+      temperature: opts.temperature ?? (opts.json ? 0.1 : 0.2),
+      max_tokens: opts.maxTokens ?? 1200,
+      ...(opts.reasoning ? {} : { reasoning_effort: "none" }),
+      ...(opts.json ? { response_format: { type: "json_object" } } : {}),
     }),
-    signal: AbortSignal.timeout(45_000),
+    signal: AbortSignal.timeout(60_000),
   });
   if (!res.ok) throw new Error(`ai_http_${res.status}`);
   const data = (await res.json()) as {
     model?: string;
-    choices?: Array<{ message?: { content?: string | Array<{ text?: string }> } }>;
+    choices?: Array<{
+      finish_reason?: string;
+      message?: { content?: string | Array<{ text?: string }> | null; reasoning?: string | null };
+    }>;
     usage?: { prompt_tokens?: number; completion_tokens?: number };
   };
-  const raw = data.choices?.[0]?.message?.content;
+  const choice = data.choices?.[0];
+  const raw = choice?.message?.content;
   const text =
     typeof raw === "string" ? raw : Array.isArray(raw) ? raw.map((p) => p.text ?? "").join("") : "";
   const inputTokens = data.usage?.prompt_tokens ?? 0;
   const outputTokens = data.usage?.completion_tokens ?? 0;
   const used = data.model ?? model;
+
+  if (!text.trim() && choice?.finish_reason === "length") {
+    /* Le cas qui a motivé ce contrôle : le modèle a dépensé tout son budget en
+       réflexion et n'a rien écrit. Une exception, pas une chaîne vide — sinon
+       la capacité journalise un succès et l'écran affiche un brouillon vide. */
+    throw new Error("ai_truncated");
+  }
+
   return {
     text: text.trim(),
     model: used,
@@ -159,6 +193,7 @@ export async function chatComplete(
     /* Le coût d'un modèle apporté par le client n'est pas le nôtre : il paie
        son inférence, donc on ne prétend pas le chiffrer. */
     costMicros: config.byo ? 0 : costMicros(used, inputTokens, outputTokens),
+    reasoningChars: (choice?.message?.reasoning ?? "").length,
   };
 }
 

@@ -272,10 +272,12 @@ export async function ask(
   system: string,
   user: string,
   opts: {
-    schema?: Record<string, unknown>;
+    /** Demande un objet JSON — le schéma se décrit dans `system`, cf. provider.ts. */
+    json?: boolean;
     maxTokens?: number;
     /** Les adresses du fil, qui traversent la rédaction (voir redact.ts). */
     keep?: readonly string[];
+    reasoning?: boolean;
   } = {},
 ): Promise<Completion & { redactions: Record<string, number> }> {
   const cleaned = redact(user, opts.keep ?? []);
@@ -285,8 +287,9 @@ export async function ask(
   ];
   const completion = await chatComplete(provider, {
     messages,
-    schema: opts.schema,
+    json: opts.json,
     maxTokens: opts.maxTokens,
+    reasoning: opts.reasoning,
   });
   return { ...completion, redactions: cleaned.counts };
 }
