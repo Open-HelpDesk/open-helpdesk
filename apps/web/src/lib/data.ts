@@ -364,7 +364,9 @@ async function inboxWhere(
           ),
         ),
       );
-    where = teamViewWhere(tenantId, ((teamView?.conditions ?? []) as ViewCondition[]) ?? []);
+    // Un seul `??` : le premier rend déjà un tableau, donc le second était
+    // mort — TypeScript 7 refuse un opérande droit inatteignable (TS2869).
+    where = teamViewWhere(tenantId, (teamView?.conditions ?? []) as ViewCondition[]);
   } else {
     where = viewWhere(tenantId, view, agentId, await escalationTeamId(tenantId));
   }

@@ -1,4 +1,14 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src"]
+  "include": [
+    "src"
+  ],
+  "compilerOptions": {
+    // Le seul paquet de l'atelier qui n'est pas du Node : des composants qui
+    // ne tournent que dans un navigateur. Il n'a donc pas @types/node, et
+    // hériter du `types: ["node"]` de la base lui donnait
+    // « Cannot find type definition file for 'node' ». L'exception est ici,
+    // nommée, plutôt qu'une dépendance inutile ajoutée pour taire une erreur.
+    "types": []
+  }
 }

@@ -120,7 +120,9 @@ export function toPostmanCollection(doc: Json): Json {
       if (!op) continue;
 
       const url = toPostmanUrl(serverUrl, path);
-      const params = [...sharedParams, ...(((op["parameters"] ?? []) as Json[]) ?? [])];
+      // Un seul `??` : le premier rend déjà un tableau, donc le second était
+      // mort — TypeScript 7 le signale (TS2869) au lieu de le laisser passer.
+      const params = [...sharedParams, ...((op["parameters"] ?? []) as Json[])];
       const query = params
         .filter((p) => p["in"] === "query")
         .map((p) => ({

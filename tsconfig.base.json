@@ -9,6 +9,16 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "skipLibCheck": true,
+    // Explicite depuis TypeScript 7, qui n'inclut plus tout
+    // `node_modules/@types` par défaut. Sans cela `process`, `Buffer` et les
+    // modules `node:` deviennent « Cannot find name » — y compris dans les
+    // sources d'un paquet de l'atelier importé par un autre, ce qui faisait
+    // échouer `ee/ai` sur du code de `packages/crypto`.
+    //
+    // Ici et non paquet par paquet : tout ce dépôt tourne sous Node, y compris
+    // les applications Next (leurs types de navigateur viennent de `lib` et de
+    // `next-env.d.ts`, pas de ce champ).
+    "types": ["node"],
     "forceConsistentCasingInFileNames": true,
     "noUncheckedIndexedAccess": true,
     "noEmit": true

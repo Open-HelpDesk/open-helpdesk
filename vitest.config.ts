@@ -91,12 +91,24 @@ export default defineConfig({
        *
        * Pour relever le plancher : mesurer, et remonter ces valeurs dans le même
        * commit que les tests qui les justifient.
+       *
+       * **Rebasé le 10/09 au passage à vitest 5, sans qu'aucun test change.**
+       * Le total d'instructions surveillées est passé de 545 à 248 et celui des
+       * branches de 149 à 228 : l'outil ne compte plus les mêmes choses. Les 69
+       * tests passent tous, à l'identique — ce n'est pas la couverture qui a
+       * baissé, c'est la règle de mesure qui a bougé.
+       *
+       * C'est le défaut d'un plancher chiffré, et il vaut mieux le connaître
+       * que le découvrir : à chaque montée de l'outil de mesure, remesurer et
+       * re-geler, **dans le commit de la montée** et jamais dans un autre —
+       * sinon on ne distingue plus un instrument qui change d'une couverture
+       * qui tombe.
        */
       thresholds: {
-        statements: 89,
-        branches: 85,
-        functions: 88,
-        lines: 89,
+        statements: 87,
+        branches: 75,
+        functions: 86,
+        lines: 88,
       },
     },
   },

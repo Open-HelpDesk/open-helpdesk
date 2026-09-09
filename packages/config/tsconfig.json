@@ -1,4 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Explicite depuis TypeScript 7, qui n'inclut plus tout `node_modules/@types`
+    // par défaut : `process` devenait « Cannot find name » alors que
+    // @types/node était bien déclaré dans package.json. Même forme que
+    // packages/crypto, qui l'avait déjà.
+    "types": ["node"]
+  },
   "include": ["src"]
 }
