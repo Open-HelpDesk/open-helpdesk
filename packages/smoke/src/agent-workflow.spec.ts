@@ -1,5 +1,13 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
-import { AGENTS, expectStatus, signInAgent, uniqueEmail, uniqueSubject } from "./helpers";
+import {
+  AGENT_NAMES,
+  AGENTS,
+  dismissTour,
+  expectStatus,
+  signInAgent,
+  uniqueEmail,
+  uniqueSubject,
+} from "./helpers";
 
 /**
  * An agent's day: they sign in, read their inbox, switch view, open a ticket,
@@ -47,7 +55,11 @@ async function signIn(page: Page, email: string): Promise<void> {
 test.beforeAll(async ({ browser }) => {
   test.setTimeout(90_000);
   const context = await browser.newContext();
-  await signIn(await context.newPage(), AGENTS.agent);
+  const page = await context.newPage();
+  await signIn(page, AGENTS.agent);
+  // The first-run tour draws a scrim over the whole inbox: without this, every
+  // click below waits ninety seconds for an element that cannot receive it.
+  await dismissTour(page);
   agentCookies = await context.cookies();
   await context.close();
 });
@@ -88,12 +100,16 @@ async function submitPortalRequest(page: Page, label: string): Promise<PortalTic
 /**
  * The inbox row that carries this subject.
  *
- * The rows are not links but clickable `<div>`s: there is no way to aim at them
- * by URL. The subject, on the other hand, is unique on every run — two specs
- * running one after the other cannot be confused.
+ * The V2 list made the rows **real links**: each card is an `<a href>` to its
+ * ticket. The previous version of this helper aimed at `div.cursor-pointer`,
+ * which no longer exists anywhere in the inbox — so it matched nothing, and
+ * three tests died waiting on a click that could never land.
+ *
+ * Aiming at the role rather than at a class is also what stops this file
+ * rotting again at the next redesign: a row will still be a link.
  */
 function inboxRow(page: Page, subject: string) {
-  return page.locator("div.cursor-pointer").filter({ hasText: subject });
+  return page.getByRole("link").filter({ hasText: subject });
 }
 
 /* ------------------------------------------------------------------------- */
@@ -108,32 +124,44 @@ test.describe("An agent's day", () => {
     await expect(page.getByRole("link", { name: /Unassigned/ })).toBeVisible();
   });
 
-  test("the inbox lists tickets with their status, their SLA and their assignee", async ({
-    page,
-  }) => {
+  test("the inbox row carries what an agent triages on", async ({ page }) => {
     const ticket = await submitPortalRequest(page, "Sauvegarde interrompue");
     await reuseAgentSession(page);
     await page.goto("/app/tickets?view=unassigned");
 
-    // The three columns an agent decides on what to handle from. They are
-    // looked for in the table header, not anywhere in the page: the same words
-    // also serve as labels for the filters in the top bar.
-    const columns = page.locator("div.sticky").first();
-    await expect(columns).toContainText("Status");
-    await expect(columns).toContainText("SLA");
-    await expect(columns).toContainText("Assignee");
-
+    /*
+     * Rewritten for the V2 list, which is a list of cards and no longer a
+     * table. The previous version asserted a sticky header with the columns
+     * “Status”, “SLA” and “Assignee” — that header does not exist any more, and
+     * the assignee was **deliberately** dropped from the row by the redesign.
+     * Patching the selector would have been the wrong fix: the test was
+     * describing a screen the product no longer has.
+     *
+     * What the row must still carry is what an agent decides from: which ticket
+     * it is, what it is about, where it stands, and how long is left.
+     */
     const row = inboxRow(page, ticket.subject);
     await expect(row).toHaveCount(1);
     await expect(row).toContainText(`#${ticket.number}`);
-    // Arrived today, nobody on it: the assignee column shows “—”.
     await expect(row).toContainText("New");
-    await expect(row).toContainText("—");
-    // The SLA countdown is set at creation. We aim at the badge (the row's
-    // only numeric `inline-flex`) and not at any number: the activity column is
-    // in tabular figures too and would turn the assertion green even with no
-    // deadline.
-    await expect(row.locator("span.inline-flex.tabular-nums")).toHaveText(/\d+\s*(min|h)/);
+
+    // The link really goes to the ticket: a card that reads right and leads
+    // nowhere is the defect this replaces the old click-target check with.
+    await expect(row).toHaveAttribute("href", new RegExp(`/app/tickets/${ticket.number}`));
+
+    /*
+     * The SLA chip. The countdown is set at creation, so a brand new request
+     * always has one.
+     *
+     * It is aimed at by the exact shape `slaShort()` produces — "42 min",
+     * "3 h", "3 h 59", "2 d", and "-42 min" once overdue — and not by a class.
+     * The anchors matter: the row also carries a relative activity time ("2 min
+     * ago"), which a loose “some number and a unit” pattern would match, and the
+     * assertion would then be green on a row with no deadline at all. That is
+     * the trap the previous version fell into from the other side, by aiming at
+     * `span.inline-flex.tabular-nums`, a class the redesign had removed.
+     */
+    await expect(row.getByText(/^-?\d+\s?(min|h|d)(\s\d{2})?$/)).toHaveCount(1);
   });
 
   test("the “Unassigned” view changes the URL and the list", async ({ page }) => {
@@ -171,10 +199,18 @@ test.describe("An agent's day", () => {
     // anywhere would also find it in the composer, which is a textarea.
     await expect(page.locator("article").filter({ hasText: ticket.body })).toHaveCount(1);
 
-    // Properties panel: the groups the agent handles, and the SLA tracking.
-    const panel = page.locator("aside").filter({ hasText: "Classification" });
-    await expect(panel.getByText("Assignment")).toBeVisible();
-    await expect(panel.getByText("SLA", { exact: true })).toBeVisible();
+    /*
+     * The side panel. Rewritten for V2, which replaced the "Classification" and
+     * "Assignment" group headings with a single "Properties" card — those two
+     * i18n keys still exist in the dictionaries and are used by nothing, which
+     * is how this assertion could keep naming a screen the product had
+     * dropped.
+     *
+     * What the panel must carry is the SLA clocks an agent reads and the
+     * properties they edit in place.
+     */
+    const panel = page.locator("aside").filter({ hasText: "Properties" });
+    await expect(panel.getByText("1st reply")).toBeVisible();
     await expect(panel.locator('select:has(option[value="urgent"])')).toHaveValue("normal");
   });
 
@@ -236,7 +272,17 @@ test.describe("An agent's day", () => {
     await reuseAgentSession(page);
     await page.goto("/app/tickets");
 
-    await page.getByTitle("Sign out").click();
+    /*
+     * Sign-out lives in the agent menu since V2 — the topbar's avatar opens a
+     * real menu, where it used to be a bare control with a `title`. The old
+     * `getByTitle("Sign out")` matched nothing and waited out the whole
+     * ninety-second budget.
+     *
+     * The menu button is named after its owner, so this is also the path a
+     * screen reader takes.
+     */
+    await page.getByRole("button", { name: AGENT_NAMES.agent }).click();
+    await page.getByRole("button", { name: "Sign out" }).click();
     await expect(page).toHaveURL(/\/login/);
 
     // The real test is not the redirect but the session: the inbox must become

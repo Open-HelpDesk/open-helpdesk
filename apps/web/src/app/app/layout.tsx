@@ -199,6 +199,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             agent={shellAgent}
             notifications={notifications.items}
             unread={notifications.unread}
+            logoUrl={branding.logoUrl ?? null}
+            workspaceName={tenant.name}
           />
         </Suspense>
 

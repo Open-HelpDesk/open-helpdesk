@@ -14,6 +14,20 @@ export const AGENTS = {
   agent: "thomas.roux@acme.example",
 } as const;
 
+/**
+ * The display names of those same accounts.
+ *
+ * Needed because the V2 topbar puts sign-out and the settings link inside the
+ * agent menu, and that menu's button is named after its owner — two initials
+ * carry no accessible name, so the product now labels it with the agent's name
+ * and the tests open it the way a screen reader reaches it.
+ */
+export const AGENT_NAMES = {
+  owner: "Claire Bonnet",
+  admin: "Marie Dupont",
+  agent: "Thomas Roux",
+} as const;
+
 /** A fresh address on every run: the portal creates the contact on the fly. */
 export function uniqueEmail(prefix = "smoke"): string {
   return `${prefix}.${Date.now()}.${Math.floor(Math.random() * 1e4)}@nordfil.example`;
@@ -50,6 +64,43 @@ export async function signInAgent(page: Page, email: string): Promise<void> {
 export async function signOutAgent(page: Page): Promise<void> {
   await page.request.post("/api/auth/sign-out");
   await page.context().clearCookies();
+}
+
+/**
+ * Walks the first-run tour out of the way, and checks it really goes.
+ *
+ * The tour greets every agent who has never seen it, and it draws a scrim over
+ * the whole inbox: `box-shadow: 0 0 0 9999px` with `pointerEvents: auto`. Every
+ * click in the views panel, in the list or in the search field then waits for an
+ * element that will never receive an event, and the test dies on the 90-second
+ * budget with a screenshot of a perfectly healthy inbox behind a bubble.
+ *
+ * That is what turned this suite red for ten nights running from 31 August, the
+ * day the V2 shell shipped the tour: five failures a night, all of them the same
+ * scrim, none of them a product defect.
+ *
+ * So this is not a workaround bolted on the side — it is the coverage the tour
+ * never had. Skipping is a product promise (`tourSeenAt` on the agent), and
+ * asserting that the scrim appears and then leaves is worth a test of its own.
+ * It only has to happen once per agent per database: the flag is persisted
+ * server-side, so a `beforeAll` covers a whole file.
+ */
+export async function dismissTour(page: Page): Promise<void> {
+  await page.goto("/app/tickets");
+  /*
+   * Aimed at `data-tour="skip"`, not at the word.
+   *
+   * The first version of this helper matched /^(Skip|Passer)$/ and went green —
+   * then the language suite switched the workspace to German, the button read
+   * “Überspringen”, and the scrim was back with a thirty-second timeout behind
+   * it. The label is translated into 25 languages; the attribute is not.
+   */
+  const skip = page.locator('[data-tour="skip"]');
+  // No tour: this agent has already seen it — a re-run against the same
+  // database, which must stay just as green as the first one.
+  if ((await skip.count()) === 0) return;
+  await skip.click();
+  await expect(skip).toHaveCount(0);
 }
 
 /* ---------------------------------------------------------------------------

@@ -1,9 +1,30 @@
 name: Smoke (end-to-end)
 
+# Blocking, on every push to main and every pull request.
+#
+# It used to run nightly on a schedule only, and it was red every night from 31
+# August to 9 September without anyone knowing: eighteen failures a night, all
+# of them the V2 redesign moving the DOM the suite aimed at — plus one real
+# regression it reported faithfully for ten days (the workspace logo had
+# disappeared from the agent shell). A gate nobody reads is not a gate.
+#
+# The nightly run is kept: it is the one that catches what time breaks rather
+# than what a commit breaks — an expired certificate, a dependency that drifted,
+# a fixture that only ages badly.
+
 on:
+  push:
+    branches: [main]
+  pull_request:
   schedule:
-    - cron: "17 3 * * *" # nightly
+    - cron: "17 3 * * *"
   workflow_dispatch:
+
+# A second push to the same branch cancels the first: a queue of smoke runs on
+# an outdated commit tells nobody anything and costs twenty minutes each.
+concurrency:
+  group: smoke-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   smoke:

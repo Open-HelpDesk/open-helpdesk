@@ -262,11 +262,17 @@ export function TopBar({
   agent,
   notifications,
   unread,
+  logoUrl,
+  workspaceName,
 }: {
   counts: ShellCounts;
   agent: ShellAgent;
   notifications: ShellNotification[];
   unread: number;
+  /** The workspace's own logo, when it has uploaded one. */
+  logoUrl?: string | null;
+  /** Le nom de l'espace : le texte alternatif du logo, comme au portail. */
+  workspaceName?: string;
 }) {
   const t = useT();
   const pathname = usePathname();
@@ -336,20 +342,41 @@ export function TopBar({
         borderColor: "var(--line)",
       }}
     >
+      {/*
+        Le logo de l'espace quand il en a un, notre marque sinon.
+
+        Le portail l'affichait déjà ; l'espace agent l'avait perdu à la refonte
+        V2 — `branding` était lu dans le layout et n'allait nulle part. Le smoke
+        le signalait chaque nuit depuis dix jours, sans que personne le lise.
+        Un client qui téléverse son logo s'attend à le voir des deux côtés :
+        c'est la moitié visible de ce qu'on lui vend sous le nom de marque
+        blanche.
+      */}
       <Link href="/app/tickets" className="flex items-center" style={{ gap: 9 }}>
-        <Asterisk />
-        <span
-          className="whitespace-nowrap"
-          style={{
-            fontFamily: "var(--font-title)",
-            fontSize: 16,
-            fontWeight: 600,
-            letterSpacing: "-.015em",
-            color: "var(--ink)",
-          }}
-        >
-          Open<span style={{ color: "var(--brand)" }}>*</span>HelpDesk
-        </span>
+        {logoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={logoUrl}
+            alt={workspaceName ?? ""}
+            style={{ height: 26, maxWidth: 168, objectFit: "contain" }}
+          />
+        ) : (
+          <>
+            <Asterisk />
+            <span
+              className="whitespace-nowrap"
+              style={{
+                fontFamily: "var(--font-title)",
+                fontSize: 16,
+                fontWeight: 600,
+                letterSpacing: "-.015em",
+                color: "var(--ink)",
+              }}
+            >
+              Open<span style={{ color: "var(--brand)" }}>*</span>HelpDesk
+            </span>
+          </>
+        )}
       </Link>
 
       <div
@@ -532,8 +559,14 @@ export function TopBar({
 
         {/* Agent menu */}
         <div style={{ position: "relative" }}>
+          {/* Nommé par l'agent lui-même. Le bouton n'avait aucun nom
+              accessible — deux initiales et un `aria-expanded` —, donc un
+              lecteur d'écran annonçait « TR, bouton » et rien d'autre. Le nom
+              de la personne dit ce que le menu ouvre, et n'a pas besoin d'être
+              traduit. */}
           <button
             type="button"
+            aria-label={agent.name}
             aria-expanded={open === "user"}
             onClick={() => setOpen(open === "user" ? "none" : "user")}
             className="grid place-items-center font-bold"

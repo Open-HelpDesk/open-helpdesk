@@ -193,8 +193,13 @@ export function InboxTour() {
             {index + 1}/{present.length}
           </span>
           <span className="flex-1" />
+          {/* `data-tour="skip"`, dans la même convention que les ancres des
+              étapes. Le libellé est traduit en 25 langues : un test qui vise le
+              mot passe en anglais et expire en allemand — c'est exactement ce
+              qui est arrivé. */}
           <button
             type="button"
+            data-tour="skip"
             onClick={finish}
             className="ohd-hover rounded-lg"
             style={{ height: 30, padding: "0 10px", fontSize: 12.5, color: "var(--ink-3)" }}

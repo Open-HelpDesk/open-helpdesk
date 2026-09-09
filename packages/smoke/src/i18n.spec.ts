@@ -1,5 +1,5 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
-import { AGENTS, setTenantLocale, signInAgent } from "./helpers";
+import { AGENTS, dismissTour, setTenantLocale, signInAgent } from "./helpers";
 import { pluralEntries, simpleEntries } from "./dict-source";
 
 /**
@@ -54,6 +54,9 @@ test.describe("Software language", () => {
     await expect(async () => {
       await signInAgent(page, AGENTS.owner);
     }).toPass({ timeout: 60_000 });
+    // The first-run tour scrims the inbox, and this file reads the inbox in
+    // six languages: dismissed once here, for this agent, before any of them.
+    await dismissTour(page);
   });
 
   test.afterAll(async () => {
@@ -126,15 +129,26 @@ test.describe("Software language", () => {
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Meine Tickets");
 
-    // The statuses live in a separate lookup table, not in the screens: this is
-    // exactly the vocabulary that stays untranslated when everything else has
-    // switched over. They are read in the “Status” filter, the only place where the
-    // labels are rendered whatever the inbox data holds.
-    const statusFilter = page.locator('details:has(a[href="/app/tickets?status=open"])');
-    await statusFilter.locator("summary").click();
-    await expect(statusFilter.getByRole("link", { name: "Offen", exact: true })).toBeVisible();
-    await expect(statusFilter.getByRole("link", { name: "Neu", exact: true })).toBeVisible();
-    await expect(statusFilter.getByRole("link", { name: "Wartend", exact: true })).toBeVisible();
+    /*
+     * The statuses live in a separate lookup table, not in the screens: this is
+     * exactly the vocabulary that stays untranslated when everything else has
+     * switched over. So they are read where EVERY label renders whatever the
+     * data holds — otherwise four seeded tickets would only ever prove the two
+     * statuses they happen to carry.
+     *
+     * That place used to be the inbox's status filter. V2 moved status
+     * filtering into the views and left the filter panel with priority and
+     * channel only, which is why the old `details:has(a[href*=status=open])`
+     * selector matched nothing and the rewritten checkbox one matched nothing
+     * either. The status `<select>` on the ticket screen is now the one place
+     * that lists them all.
+     */
+    await page.goto("/app/tickets/4801");
+    const status = page.locator('select:has(option[value="waiting"])');
+    await expect(status).toHaveCount(1);
+    for (const label of ["Neu", "Offen", "Wartend", "Gelöst"]) {
+      await expect(status.locator("option", { hasText: label })).toHaveCount(1);
+    }
   });
 
   test("in Polish, the plural form is the one the language selects", async () => {

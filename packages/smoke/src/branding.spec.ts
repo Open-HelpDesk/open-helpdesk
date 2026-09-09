@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { AGENTS, signInAgent } from "./helpers";
+import { AGENTS, dismissTour, signInAgent } from "./helpers";
 import { BASE_URL } from "../playwright.config";
 
 /**
@@ -95,6 +95,10 @@ test.describe("Workspace logo and favicon", () => {
     await expect(async () => {
       await signInAgent(page, AGENTS.owner);
     }).toPass({ timeout: 60_000 });
+    // These tests only assert visibility today, so the tour's scrim does not
+    // stop them — but the first one to click in the inbox would wait it out.
+    // A no-op once the agent has seen it.
+    await dismissTour(page);
     await resetBranding(page);
   });
 
@@ -132,9 +136,13 @@ test.describe("Workspace logo and favicon", () => {
     expect(served.status(), `${url} should answer 200`).toBe(200);
     expect(served.headers()["content-type"]).toContain("image/png");
 
-    // 3. The agent workspace rail: that is where the initial used to show.
+    // 3. The agent workspace shell. The V2 topbar carries the wordmark where
+    //    the rail used to carry the tenant square, so the logo belongs there —
+    //    and it was missing entirely: the redesign read `branding` in the layout
+    //    and passed it nowhere. This assertion was right and red for ten
+    //    nights; only the element it names has moved, from `aside` to `header`.
     await page.goto("/app/tickets");
-    await expect(page.locator(`aside img[src="${url}"]`)).toBeVisible();
+    await expect(page.locator(`header img[src="${url}"]`)).toBeVisible();
 
     // 4. The portal header — another shell, another layout. This is the place
     //    a partial wiring forgets.
@@ -173,16 +181,16 @@ test.describe("Workspace logo and favicon", () => {
     // A button that had submitted on its own would have carried away the name
     // and the language just changed on the same screen.
     await clearButton(page, "logo").click();
-    // The field's preview falls back to the initial, but the agent workspace
-    // rail keeps the logo: nothing is saved yet, and that is exactly what we
-    // want. So the assertion is carried by the field, not by the page.
+    // The field's preview falls back to the initial, but the shell keeps the
+    // logo: nothing is saved yet, and that is exactly what we want. So the
+    // assertion is carried by the field, not by the page.
     await expect(fieldPreview(page, "logo")).toHaveCount(0);
-    await expect(page.locator('aside img[src^="/api/brand/"]')).toBeVisible();
+    await expect(page.locator('header img[src^="/api/brand/"]')).toBeVisible();
 
     await save(page);
     await expect(page).toHaveURL(/saved=1/, { timeout: 15_000 });
 
-    // Once saved, no logo anywhere — rail included.
+    // Once saved, no logo anywhere — shell included.
     await expect(page.locator('img[src^="/api/brand/"]')).toHaveCount(0);
     await page.goto("/help");
     await expect(page.locator('header img[src^="/api/brand/"]')).toHaveCount(0);

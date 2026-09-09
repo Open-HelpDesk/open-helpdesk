@@ -240,8 +240,14 @@ export function InboxControls({
 
       {/* Filters */}
       <div style={{ position: "relative" }}>
+        {/* `data-inbox="filters"` : un point d'entrée qui ne dépend pas de la
+            langue. L'inbox est vérifiée en six langues par la suite i18n, et le
+            libellé du bouton change dans chacune — c'est la seule façon d'y
+            entrer sans écrire six sélecteurs. Même intention que les `data-tour`
+            de la visite guidée. */}
         <button
           type="button"
+          data-inbox="filters"
           aria-expanded={open === "filters"}
           onClick={() => setOpen(open === "filters" ? "none" : "filters")}
           style={{
