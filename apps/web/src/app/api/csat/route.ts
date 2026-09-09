@@ -23,10 +23,17 @@ async function tenantMissing(): Promise<boolean> {
   return (await getTenantFromHeaders().catch(() => null)) === null;
 }
 
-/** Escapes translated text: it ends up in hand-assembled HTML. */
+/**
+ * Escapes anything that ends up in this file's hand-assembled HTML.
+ *
+ * The apostrophe is in the set too. It changes nothing for the values inside
+ * double-quoted attributes here, and it means the function stays correct if a
+ * single-quoted one ever appears — an escape that is only right given the
+ * quoting style of its callers is a trap for the next reader.
+ */
 function esc(text: string): string {
-  return text.replace(/[&<>"]/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!,
+  return text.replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!,
   );
 }
 
@@ -76,7 +83,7 @@ function page(t: Translate, m: Brand, body: string): NextResponse {
         }${m.name ? `<span>${esc(m.name)}</span>` : ""}</div>`
       : "";
   return new NextResponse(
-    `<!doctype html><html lang="${t.locale.code}" dir="${t.locale.dir}"><head><meta charset="utf-8">
+    `<!doctype html><html lang="${esc(t.locale.code)}" dir="${esc(t.locale.dir)}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(t("csatPage.title"))}</title>
 ${m.favicon ? `<link rel="icon" href="${esc(m.favicon)}">` : ""}
@@ -137,6 +144,17 @@ export async function GET(request: NextRequest) {
     );
 
   const ref = `#${ticket.number}`;
+  /*
+   * Les champs cachés rejouent `t` et `sig`, qui viennent de la chaîne de
+   * requête — donc échappés, bien qu'on n'arrive ici qu'après vérification de
+   * la signature HMAC.
+   *
+   * Une valeur reflétée dans un attribut sans échappement est un XSS à un
+   * refactor près : il suffirait que ce contrôle se déplace, ou qu'une branche
+   * antérieure renvoie ces valeurs. C'est ce que CodeQL signalait
+   * (js/reflected-xss) et il avait raison sur la forme, même si le chemin
+   * n'est pas franchissable aujourd'hui.
+   */
   return page(
     tr,
     m,
@@ -145,9 +163,9 @@ export async function GET(request: NextRequest) {
        s === "bad" ? tr("csatPage.recordedBad", { ref }) : tr("csatPage.recorded", { ref }),
      )}</p>
      <form method="post" action="/api/csat">
-       <input type="hidden" name="t" value="${t}">
+       <input type="hidden" name="t" value="${esc(t)}">
        <input type="hidden" name="s" value="${s}">
-       <input type="hidden" name="sig" value="${sig}">
+       <input type="hidden" name="sig" value="${esc(sig)}">
        <textarea name="comment" placeholder="${esc(tr("csatPage.commentPlaceholder"))}"></textarea>
        <button type="submit">${esc(tr("csat.send"))}</button>
      </form>`,

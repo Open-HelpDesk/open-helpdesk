@@ -16,6 +16,7 @@ import type { MailTransport, OutgoingEmail } from "./types";
 export type { MailProvider } from "./provider-meta";
 export { PROVIDER_META, SMTP_PRESETS } from "./provider-meta";
 import type { MailProvider } from "./provider-meta";
+import { parseAddress } from "./address";
 
 export type SmtpConfig = {
   host: string;
@@ -123,11 +124,7 @@ export function resendTransport(apiKey: string): MailTransport {
 
 /* ---------- Brevo (ex-Sendinblue), API v3 ---------- */
 
-function splitAddress(value: string): { email: string; name?: string } {
-  const match = value.match(/^\s*(.*?)\s*<([^>]+)>\s*$/);
-  if (match) return { email: match[2]!.trim(), name: match[1]!.replace(/^"|"$/g, "").trim() || undefined };
-  return { email: value.trim() };
-}
+const splitAddress = parseAddress;
 
 export function brevoTransport(apiKey: string): MailTransport {
   return {

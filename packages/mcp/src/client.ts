@@ -33,7 +33,12 @@ export class HelpdeskClient {
     // Tolerate both "https://acme…" and "https://acme…/api/v1": people paste
     // whichever they had in front of them, and being strict about it would only
     // produce a 404 they have to guess at.
-    const trimmed = config.baseUrl.replace(/\/+$/, "");
+    // Boucle et non `replace(/\/+$/, "")` : ancrée à la fin, cette regex fait
+    // quand même essayer chaque position de départ au moteur, d'où un coût
+    // quadratique sur une longue suite de barres (js/polynomial-redos). Retirer
+    // les barres une à une est linéaire et se lit aussi bien.
+    let trimmed = config.baseUrl;
+    while (trimmed.endsWith("/")) trimmed = trimmed.slice(0, -1);
     this.root = trimmed.endsWith("/api/v1") ? trimmed : `${trimmed}/api/v1`;
   }
 

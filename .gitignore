@@ -12,3 +12,6 @@ coverage/
 # Smoke test — run artefacts
 packages/smoke/test-results/
 packages/smoke/playwright-report/
+
+# Rapports du lanceur de tests
+.vitest/

@@ -100,7 +100,13 @@ async function parseSource(source: Buffer, mailboxAddress: string): Promise<Inbo
       ? [parsed.references]
       : [];
   // Lowercased headers for the detection of automatic messages.
-  const headers: Record<string, string> = {};
+  //
+  // Sans prototype, pour la même raison qu'en inbound-adapters : la clé vient
+  // d'un en-tête choisi par l'expéditeur. CodeQL n'a pas signalé cette
+  // occurrence — il ne remonte pas jusqu'à cette source — mais elle a la même
+  // forme, et la corriger seulement là où l'outil regarde serait traiter le
+  // rapport plutôt que le défaut.
+  const headers = Object.create(null) as Record<string, string>;
   for (const { key, line } of parsed.headerLines ?? []) {
     const colon = line.indexOf(":");
     if (colon > 0) headers[key.toLowerCase()] = line.slice(colon + 1).trim();

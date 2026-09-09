@@ -9,6 +9,7 @@
  * - Mailjet "Parse API"     : flat POST { From, Recipient, Subject, Text-part… }
  */
 import type { InboundEmail } from "./types";
+import { parseAddress as splitDisplayAddress } from "./address";
 
 function str(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value : undefined;
@@ -17,11 +18,10 @@ function str(value: unknown): string | undefined {
 /** "Name <a@b.fr>" → { address, name }; "a@b.fr" accepted as-is. */
 function parseAddress(value: unknown): { address: string; name?: string } | null {
   if (typeof value !== "string") return null;
-  const match = value.match(/^\s*(?:"?([^"<]*)"?\s*)?<([^>]+)>\s*$/);
-  const address = (match?.[2] ?? value).trim().toLowerCase();
+  const parsed = splitDisplayAddress(value);
+  const address = parsed.email.toLowerCase();
   if (!address.includes("@")) return null;
-  const name = match?.[1]?.trim();
-  return { address, name: name || undefined };
+  return { address, name: parsed.name };
 }
 
 function parseReferences(value: unknown): string[] {
@@ -30,10 +30,23 @@ function parseReferences(value: unknown): string[] {
   return [];
 }
 
-/** All the provider headers, keys lowercased (detection of automatic messages). */
+/**
+ * All the provider headers, keys lowercased (detection of automatic messages).
+ *
+ * **`Object.create(null)` et non `{}`.** Les clés viennent des en-têtes d'un
+ * email entrant, donc d'un tiers : écrire `out[key.toLowerCase()]` sur un objet
+ * ordinaire, c'est laisser un expéditeur choisir un nom de propriété
+ * (`js/remote-property-injection`). Un objet sans prototype rend la question
+ * sans objet — aucune clé ne peut atteindre `__proto__` ni `constructor`,
+ * puisqu'il n'y en a pas.
+ *
+ * Et cela corrige un second travers plus discret : sur un objet ordinaire, une
+ * lecture comme `h["toString"]` rendait une fonction héritée au lieu de
+ * `undefined`, donc un en-tête absent pouvait passer pour présent.
+ */
 function lowerHeaders(headers: unknown): Record<string, string> {
-  if (!headers || typeof headers !== "object") return {};
-  const out: Record<string, string> = {};
+  if (!headers || typeof headers !== "object") return Object.create(null) as Record<string, string>;
+  const out = Object.create(null) as Record<string, string>;
   for (const [key, value] of Object.entries(headers as Record<string, unknown>)) {
     if (typeof value === "string") out[key.toLowerCase()] = value;
     else if (Array.isArray(value) && typeof value[0] === "string") out[key.toLowerCase()] = value[0];

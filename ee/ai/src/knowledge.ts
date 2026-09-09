@@ -90,16 +90,38 @@ const SUMMARY_CHARS = 1200;
  */
 const FLOOR = 0.62;
 
-function plain(html: string | null): string {
+/** Les entités qu'un éditeur riche produit, décodées en une seule passe. */
+const ENTITIES: Record<string, string> = {
+  nbsp: " ",
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  "#39": "'",
+};
+
+/**
+ * Le HTML d'un article réduit au texte que le modèle lira.
+ *
+ * **Les entités sont décodées en une seule passe**, et c'est le point à ne pas
+ * défaire. La version précédente enchaînait les remplacements — `&amp;` puis
+ * `&lt;` — de sorte que le `&` tout juste décodé était relu au tour suivant :
+ * `&amp;lt;` devenait `<` au lieu de `&lt;`. CodeQL l'a signalé
+ * (js/double-escaping), et il ne s'agit pas d'un détail cosmétique ici : un
+ * article de la base qui documente des entités HTML — il y en a, c'est un
+ * produit de support technique — voyait ses exemples déformés avant d'être
+ * indexé, donc avant d'être cité dans une réponse au client.
+ *
+ * Une passe unique rend l'ordre des règles sans importance, ce qui est la
+ * seule façon de ne pas réintroduire le défaut par inadvertance.
+ */
+export function plain(html: string | null): string {
   if (!html) return "";
   return html
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/(p|div|li|h[1-6])>/gi, "\n")
     .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
+    .replace(/&(nbsp|amp|lt|gt|quot|#39);/g, (whole, name: string) => ENTITIES[name] ?? whole)
     .replace(/[ \t]+/g, " ")
     .replace(/\n{3,}/g, "\n\n")
     .trim();

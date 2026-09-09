@@ -11,6 +11,7 @@
  * text is not localizable today.
  */
 import type { MailProvider } from "./providers";
+import { domainOfAddress } from "./address";
 
 export type DnsRecord = {
   label: string;
@@ -78,7 +79,5 @@ export function dnsRecordsFor(params: {
 /** Domain of an email address ("Support <a@b.fr>" → "b.fr"). */
 export function domainOf(address: string | null | undefined): string {
   if (!address) return "";
-  const match = address.match(/<([^>]+)>/);
-  const email = (match?.[1] ?? address).trim();
-  return email.split("@")[1]?.toLowerCase() ?? "";
+  return domainOfAddress(address);
 }
