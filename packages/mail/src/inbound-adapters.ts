@@ -44,12 +44,27 @@ function parseReferences(value: unknown): string[] {
  * lecture comme `h["toString"]` rendait une fonction héritée au lieu de
  * `undefined`, donc un en-tête absent pouvait passer pour présent.
  */
+/**
+ * Des noms qu'aucun en-tête d'email légitime ne porte, et qui ne sont écartés
+ * qu'en correspondance exacte : `X-Constructor-Id` passe, `constructor` non.
+ *
+ * Le prototype nul suffit déjà à la sûreté — aucune clé ne peut atteindre ce
+ * qui n'existe pas. Ce filtre est donc redondant de ce point de vue, et il est
+ * là pour deux autres raisons : un en-tête nommé `__proto__` est une entrée
+ * malformée qu'on a raison de jeter plutôt que de stocker, et l'intention est
+ * lisible — par le prochain lecteur, et par l'analyseur statique, qui ne
+ * reconnaît pas `Object.create(null)` comme une protection.
+ */
+const RESERVED_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
 function lowerHeaders(headers: unknown): Record<string, string> {
-  if (!headers || typeof headers !== "object") return Object.create(null) as Record<string, string>;
   const out = Object.create(null) as Record<string, string>;
+  if (!headers || typeof headers !== "object") return out;
   for (const [key, value] of Object.entries(headers as Record<string, unknown>)) {
-    if (typeof value === "string") out[key.toLowerCase()] = value;
-    else if (Array.isArray(value) && typeof value[0] === "string") out[key.toLowerCase()] = value[0];
+    const name = key.toLowerCase();
+    if (RESERVED_KEYS.has(name)) continue;
+    if (typeof value === "string") out[name] = value;
+    else if (Array.isArray(value) && typeof value[0] === "string") out[name] = value[0];
   }
   return out;
 }

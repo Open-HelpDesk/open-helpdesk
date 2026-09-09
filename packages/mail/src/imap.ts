@@ -109,7 +109,12 @@ async function parseSource(source: Buffer, mailboxAddress: string): Promise<Inbo
   const headers = Object.create(null) as Record<string, string>;
   for (const { key, line } of parsed.headerLines ?? []) {
     const colon = line.indexOf(":");
-    if (colon > 0) headers[key.toLowerCase()] = line.slice(colon + 1).trim();
+    const name = key.toLowerCase();
+    // Voir inbound-adapters : correspondance exacte seulement, et redondant
+    // avec le prototype nul — mais un en-tête ainsi nommé est malformé.
+    if (colon > 0 && name !== "__proto__" && name !== "constructor" && name !== "prototype") {
+      headers[name] = line.slice(colon + 1).trim();
+    }
   }
 
   // Inline images (a signature logo, a quoted screenshot) carry a Content-ID
