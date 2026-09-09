@@ -9,8 +9,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "run": "tsx src/cli.ts",
-    "check": "tsx check.mts"
+    "run": "tsx src/cli.ts"
   },
   "dependencies": {
     "@openhelpdesk/db": "workspace:*",

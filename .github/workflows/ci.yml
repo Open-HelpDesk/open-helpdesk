@@ -20,3 +20,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo run typecheck build
+      # Les tests unitaires : aucune base, aucun réseau, moins d'une seconde.
+      # Ils sont ici et non dans le smoke pour qu'une pull request puisse
+      # toujours les faire tourner — une suite qui exige de l'infrastructure
+      # finit sautée, et une suite sautée n'est plus une garantie.
+      - run: pnpm test

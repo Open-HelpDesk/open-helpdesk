@@ -25,11 +25,22 @@ Then open http://acme.localhost:3000 — demo login `marie.dupont@acme.example` 
 - `pnpm typecheck` must pass — this includes the strict parity check across the
   25 translation dictionaries (`apps/web/src/i18n/`, French is the source).
 - `pnpm build` must pass.
+- `pnpm test` must pass. Unit tests: no database, no network, under a second.
+  Both of these run on every push and every pull request.
+- `pnpm test:db` for anything touching the rules engine, the SLA counters or a
+  query. It needs `docker/docker-compose.yml` up and a migrated database, and
+  it writes — into a throwaway workspace it deletes afterwards, never into the
+  demo one.
 - For user-facing changes, run the end-to-end suite:
   `pnpm --filter @openhelpdesk/smoke smoke` (see `packages/smoke/README.md`
-  for the prerequisites).
+  for the prerequisites). It is blocking in CI as well.
 - Any user-visible string must live in the i18n dictionaries — hardcoded text
   fails the `i18n-hardcoded` guard in `packages/smoke/`.
+
+Where a test belongs: `*.test.ts` beside the code for anything decidable
+without infrastructure, `*.db.test.ts` when it needs Postgres, and
+`packages/smoke/` when it needs a browser and a running instance. Prefer the
+fastest of the three that can actually catch the defect.
 
 ## Scope of contributions
 

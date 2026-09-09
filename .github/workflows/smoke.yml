@@ -43,6 +43,10 @@ jobs:
       - run: pnpm db:migrate
       - run: pnpm --filter @openhelpdesk/db db:rls
       - run: pnpm db:seed && pnpm db:seed:auth
+      # Les tests d'intégration tournent ici parce que la base y est déjà, et
+      # AVANT le navigateur : ils sont mille fois plus rapides, et un moteur de
+      # règles cassé n'a pas besoin de Playwright pour se voir.
+      - run: pnpm test:db
       - run: pnpm --filter @openhelpdesk/web build
       # The magic-link email needs a real outbound path: the instance SMTP
       # fallback ships commented out in .env.example, and neither `tsx` nor

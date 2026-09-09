@@ -16,10 +16,14 @@
     "db:migrate": "pnpm --filter @openhelpdesk/db db:migrate",
     "db:seed": "pnpm --filter @openhelpdesk/db db:seed",
     "db:relocalize": "pnpm --filter @openhelpdesk/db db:relocalize",
-    "db:seed:auth": "pnpm --filter @openhelpdesk/auth seed"
+    "db:seed:auth": "pnpm --filter @openhelpdesk/auth seed",
+    "test": "vitest run --project unit",
+    "test:db": "vitest run --project db",
+    "test:watch": "vitest --project unit"
   },
   "devDependencies": {
     "turbo": "^2.5.0",
-    "typescript": "^5.8.0"
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.7"
   }
 }
