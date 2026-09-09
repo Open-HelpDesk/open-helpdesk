@@ -57,6 +57,26 @@ function parseReferences(value: unknown): string[] {
  */
 const RESERVED_KEYS = new Set(["__proto__", "constructor", "prototype"]);
 
+/*
+ * Pourquoi ce n'est PAS une `Map`, alors que c'est la première chose que
+ * recommande la règle `js/remote-property-injection`.
+ *
+ * `InboundEmail` traverse la file BullMQ `mail-ingest` (`job.data as
+ * InboundEmail` dans le worker), donc passe par JSON. Une `Map` s'y sérialise
+ * en `{}` : tous les en-têtes disparaîtraient en silence, et avec eux la
+ * détection des rebonds, celle des réponses automatiques et le verdict de
+ * spam. Ce serait une régression fonctionnelle pour satisfaire un analyseur.
+ *
+ * L'autre correctif que la règle propose — préfixer la clé d'un `$` — casserait
+ * toutes les lectures (`h["content-type"]`) chez chaque appelant.
+ *
+ * Ce qui protège réellement, et qui suffit : l'objet n'a pas de prototype, les
+ * trois noms dangereux sont écartés en amont, et de l'autre côté de la file
+ * c'est `JSON.parse` qui reconstruit l'objet — or il fait de `__proto__` une
+ * propriété propre, jamais un prototype. Les deux alertes ont donc été écartées
+ * en « false positive », avec ce raisonnement en commentaire de rejet.
+ */
+
 function lowerHeaders(headers: unknown): Record<string, string> {
   const out = Object.create(null) as Record<string, string>;
   if (!headers || typeof headers !== "object") return out;
