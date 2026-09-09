@@ -8,7 +8,7 @@
  * support client et de rien d'autre : le coût par appel, le décompte des
  * rédactions, et le quota de déflexion.
  */
-import { and, desc, eq, gte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, lte, ne, sql } from "drizzle-orm";
 import {
   aiCalls,
   aiCredits,
@@ -165,7 +165,7 @@ export async function deflectionsLeft(tenantId: string, monthlyQuota: number): P
       and(
         eq(aiDeflections.tenantId, tenantId),
         gte(aiDeflections.createdAt, startOfMonth),
-        sql`${aiDeflections.status} <> 'returned'`,
+        ne(aiDeflections.status, "returned"),
       ),
     );
 
@@ -444,7 +444,7 @@ export async function sweepDeflections(): Promise<{
     .where(
       and(
         eq(aiDeflections.status, "provisional"),
-        sql`${aiDeflections.confirmAfter} <= ${now}`,
+        lte(aiDeflections.confirmAfter, now),
       ),
     );
 
@@ -478,7 +478,7 @@ export async function settleDeflections(tenantId: string): Promise<{
       and(
         eq(aiDeflections.tenantId, tenantId),
         eq(aiDeflections.status, "provisional"),
-        sql`${aiDeflections.confirmAfter} <= ${now}`,
+        lte(aiDeflections.confirmAfter, now),
       ),
     )
     .limit(500);
@@ -499,7 +499,7 @@ export async function settleDeflections(tenantId: string): Promise<{
               eq(tickets.tenantId, tenantId),
               eq(tickets.requesterId, row.contactId),
               gte(tickets.createdAt, row.createdAt),
-              sql`${tickets.createdAt} <= ${row.confirmAfter}`,
+              lte(tickets.createdAt, row.confirmAfter),
             ),
           )
           .limit(1)

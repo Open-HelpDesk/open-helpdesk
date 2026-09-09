@@ -17,10 +17,10 @@
  * seed.
  */
 import { and, eq } from "drizzle-orm";
-import { aiCalls, aiDocuments, db, tenants, tickets } from "@openhelpdesk/db";
+import { aiCalls, aiDeflections, aiDocuments, contacts, db, tenants, tickets } from "@openhelpdesk/db";
 import { instanceProvider } from "./src/provider";
 import { reindexWorkspace } from "./src/knowledge";
-import { getAiSettings } from "./src/governance";
+import { getAiSettings, sweepDeflections } from "./src/governance";
 import { saveAiSettings } from "./src/settings";
 import { draftReply, summarizeThread, suggestMacro, triageTicket } from "./src/capabilities";
 
@@ -77,6 +77,50 @@ if (draft.ok) {
 console.log("\n— macro suggérée");
 const macro = await suggestMacro(provider, tenant.id, ticket.id, actor);
 console.log(macro.ok ? `  ${macro.value.title} (score ${macro.value.score.toFixed(3)})` : `  refusé : ${macro.reason}`);
+
+console.log("\n— règlement des déflexions à 72 h");
+/*
+ * Ce bloc existe à cause d'un bug qu'aucun test hors-ligne n'a vu : les trois
+ * comparaisons de dates de `sweepDeflections` passaient par un `sql` brut, qui
+ * ne traverse pas l'encodeur de la colonne. La `Date` partait sous sa forme
+ * `toString()` — « Wed Sep 09 2026 … (Coordinated Universal Time) » — que
+ * Postgres refuse. Le balayage échouait donc **à chaque heure**, en silence,
+ * sur la staging comme en CI, depuis sa mise en service.
+ *
+ * Un balayage sur une base vide ne prouve rien : la requête doit trouver
+ * quelque chose pour que les deux requêtes suivantes s'exécutent aussi. On pose
+ * donc une déflexion provisoire échue, et on la reprend après.
+ */
+const [contact] = await db
+  .select({ id: contacts.id })
+  .from(contacts)
+  .where(eq(contacts.tenantId, tenant.id))
+  .limit(1);
+const [posed] = await db
+  .insert(aiDeflections)
+  .values({
+    tenantId: tenant.id,
+    contactId: contact?.id ?? null,
+    surface: "portal",
+    locale: "en",
+    question: "vérification du règlement",
+    sources: [],
+    status: "provisional",
+    confirmAfter: new Date(Date.now() - 60_000),
+  })
+  .returning();
+const settled = await sweepDeflections();
+const [after] = await db
+  .select({ status: aiDeflections.status })
+  .from(aiDeflections)
+  .where(eq(aiDeflections.id, posed!.id));
+console.log(`  ${JSON.stringify(settled)} — la ligne posée est « ${after?.status} »`);
+if (after?.status === "provisional") {
+  console.log("  ✗ le balayage n'a rien réglé");
+} else {
+  console.log("  ✓ réglée");
+}
+await db.delete(aiDeflections).where(eq(aiDeflections.id, posed!.id));
 
 const calls = await db.select().from(aiCalls).where(eq(aiCalls.tenantId, tenant.id));
 const recent = calls.filter((c) => c.createdAt.getTime() >= before - 60_000);
