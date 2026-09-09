@@ -1,0 +1,26 @@
+# Secret scanning — findings verified by hand and excused, one per line.
+#
+# Each entry is a fingerprint: commit:file:rule:line. It pins a precise line in
+# a precise commit, so a new occurrence on a new line is still reported.
+#
+# Two principles behind using this file rather than editing the rules:
+#
+#   · Never weaken a rule to silence a finding. A disabled `private-key` rule
+#     would hide the next real key too, and nothing would say so.
+#   · Never allowlist a path. `.env.example` is exactly where a real secret gets
+#     pasted by accident, so the file must stay scanned.
+#
+# Adding an entry means having read the line and being able to say what it
+# grants. If the answer is "nothing, because…", write the because.
+
+# `.env.example` line 112: a COMMENTED line documenting the shape of an APNs
+# key, whose value is literally `-----BEGIN PRIVATE KEY-----\n…\n-----END
+# PRIVATE KEY-----`. The ellipsis is the placeholder. There is no key, and the
+# line is not even active.
+07d63a208e66a3e0f134f1318c6086acc2174472:.env.example:private-key:112
+
+# `packages/db/src/seed/demo.ts` line 434 at that commit: the domain
+# verification token of `nordfil.example`, written by the demo seed. Demo data
+# for a fictional domain in a reserved TLD — the product compares it against a
+# DNS record that cannot exist, so it opens nothing anywhere.
+58493b04ddfe6f079d74a94552c6f2d1c717c756:packages/db/src/seed/demo.ts:generic-api-key:434

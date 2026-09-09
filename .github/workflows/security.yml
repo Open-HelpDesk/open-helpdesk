@@ -70,9 +70,28 @@ jobs:
           # Tout l'historique : un secret retiré du dernier commit reste dans les
           # précédents, et c'est là qu'il faut le chercher.
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Le binaire, pas `gitleaks/gitleaks-action@v2`.
+      #
+      # Cette action **refuse de tourner pour une organisation sans licence
+      # payante** — vérifié ici : « [Open-HelpDesk] is an organization. License
+      # key is required. » Le moteur gitleaks lui-même est libre (MIT) ; seule
+      # l'enveloppe Action est commerciale. On appelle donc l'image officielle.
+      #
+      # `--log-opts` limite le scan aux commits nouveaux sur une pull request :
+      # tout l'historique à chaque PR coûterait deux minutes pour redire ce que
+      # la branche principale a déjà dit. Sur `main` et à la semaine, l'histoire
+      # entière est reprise, parce qu'un secret retiré du dernier commit reste
+      # dans les précédents.
+      - name: gitleaks
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            RANGE="--log-opts=${{ github.event.pull_request.base.sha }}..HEAD"
+          else
+            RANGE=""
+          fi
+          docker run --rm -v "$PWD:/repo" -w /repo \
+            zricethezav/gitleaks:latest detect \
+              --source=/repo --redact --no-banner --verbose $RANGE
 
   code:
     name: CodeQL
