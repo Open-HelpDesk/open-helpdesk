@@ -14,11 +14,11 @@
   "dependencies": {
     "@openhelpdesk/db": "workspace:*",
     "@openhelpdesk/mail": "workspace:*",
-    "better-auth": "^1.3.0"
+    "better-auth": "^1.7.3"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "tsx": "^4.19.0",
+    "@types/node": "^26.4.1",
+    "tsx": "^4.23.13",
     "typescript": "^5.8.0"
   }
 }

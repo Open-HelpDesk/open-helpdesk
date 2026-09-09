@@ -12,8 +12,8 @@
     "emit": "tsx src/emit.ts"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "tsx": "^4.19.0",
+    "@types/node": "^26.4.1",
+    "tsx": "^4.23.13",
     "typescript": "^5.8.0"
   }
 }
