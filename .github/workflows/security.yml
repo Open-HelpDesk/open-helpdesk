@@ -125,7 +125,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build ${{ matrix.target }}
         run: docker build --file docker/Dockerfile --target ${{ matrix.target }} --tag scan:${{ matrix.target }} .
-      - uses: aquasecurity/trivy-action@0.28.0
+      - uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: scan:${{ matrix.target }}
           severity: HIGH,CRITICAL
