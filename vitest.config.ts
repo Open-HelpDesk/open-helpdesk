@@ -18,6 +18,31 @@ import { defineConfig } from "vitest/config";
  * The end-to-end journeys stay in packages/smoke under Playwright: they drive a
  * browser against a running instance, which is a third thing again.
  */
+/**
+ * Ce que la couverture surveille — et pourquoi la liste est explicite.
+ *
+ * Mesurer tout le dépôt donnerait un pourcentage à un chiffre, dominé par des
+ * dizaines de milliers de lignes d'écrans React que la suite Playwright couvre
+ * déjà en les parcourant. Ce chiffre-là ne dirait rien et personne ne le
+ * regarderait : il baisserait à chaque écran ajouté et monterait en écrivant des
+ * tests sur ce qui est facile.
+ *
+ * La liste ci-dessous est donc celle des modules qui **décident** — ce qui
+ * arrive à un ticket, ce qui part chez un client, ce qu'un espace a le droit de
+ * faire, ce qu'un appel coûte. Ce sont aussi les seuls qui se testent sans
+ * navigateur ni base. Un module qui entre ici entre avec ses tests.
+ */
+const COVERED = [
+  "packages/rules/src/evaluate.ts",
+  "packages/rules/src/business-hours.ts",
+  "packages/config/src/entitlements.ts",
+  "apps/web/src/lib/format.ts",
+  "apps/web/src/lib/entitlements.ts",
+  "ee/ai/src/redact.ts",
+  "ee/ai/src/provider.ts",
+  "ee/ai/src/similarity.ts",
+];
+
 export default defineConfig({
   test: {
     projects: [
@@ -45,5 +70,34 @@ export default defineConfig({
         },
       },
     ],
+    coverage: {
+      provider: "v8",
+      include: COVERED,
+      reporter: ["text", "json-summary"],
+      reportsDirectory: "./coverage",
+      /*
+       * Un plancher, pas une cible.
+       *
+       * Ces chiffres sont le niveau **mesuré** le 09/09/2026 sur la liste
+       * ci-dessus, arrondi au point inférieur. Ils ne disent pas « voilà ce
+       * qu'il faut atteindre » : ils disent « on ne redescend pas ». Une cible
+       * ronde choisie d'avance se satisfait en testant ce qui est facile, et le
+       * chiffre monte pendant que le risque reste où il était.
+       *
+       * Ce qui reste découvert est découvert pour une raison nommée : `embed()`
+       * et le corps réseau de `chatComplete` sont éprouvés par `ee/ai/live.mts`
+       * contre le vrai fournisseur, et `occupiedSeats` par le projet `db`. Les
+       * simuler ici gonflerait le chiffre sans rien garder de plus.
+       *
+       * Pour relever le plancher : mesurer, et remonter ces valeurs dans le même
+       * commit que les tests qui les justifient.
+       */
+      thresholds: {
+        statements: 89,
+        branches: 85,
+        functions: 88,
+        lines: 89,
+      },
+    },
   },
 });
