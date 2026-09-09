@@ -42,6 +42,25 @@ without infrastructure, `*.db.test.ts` when it needs Postgres, and
 `packages/smoke/` when it needs a browser and a running instance. Prefer the
 fastest of the three that can actually catch the defect.
 
+Coverage is measured on an explicit list of modules — the ones that decide what
+happens to a ticket, what leaves for a customer, what a workspace may do — and
+its thresholds are a **floor, not a target**: the level reached, which may not
+drop. Raising it means measuring again and moving the numbers in the same commit
+as the tests that justify them (`vitest.config.ts` says why).
+
+## Security
+
+`pnpm audit --audit-level high` must pass: high and critical advisories are
+blocking, on every push and every pull request, plus a weekly run because a
+dependency becomes vulnerable without anyone touching it. Moderate advisories
+are reported without blocking — a threshold that blocks on everything gets
+disarmed by the first advisory with no fix available, and then nobody reads the
+gate at all.
+
+Secrets are scanned over the **whole history**, not the diff: a key removed in
+the last commit is still in the ones before it. CodeQL runs the
+`security-extended` query set, and the published images are scanned weekly.
+
 ## Scope of contributions
 
 - **Core (everything outside `ee/`)**: contributions welcome — bug fixes,

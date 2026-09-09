@@ -26,7 +26,7 @@
   "dependencies": {
     "@openhelpdesk/config": "workspace:*",
     "@openhelpdesk/db": "workspace:*",
-    "drizzle-orm": "^0.44.0",
+    "drizzle-orm": "^0.45.2",
     "@openhelpdesk/ee-ai": "workspace:*",
     "@openhelpdesk/crypto": "workspace:*"
   },

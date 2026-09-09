@@ -1,0 +1,53 @@
+version: 2
+
+# Dependabot n'existait pas. Les deux exécutions de code à distance de Next.js
+# trouvées le 10/09/2026 étaient corrigées une seule version plus loin, et
+# personne n'avait de raison de le savoir : rien ne surveillait.
+#
+# Groupé, et pas une pull request par paquet. Vingt-cinq PR par semaine sur un
+# monorepo ne se relisent pas, elles se ferment — et on retombe dans le cas
+# précédent avec un tableau de bord vert en plus.
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # Les correctifs de sécurité arrivent seuls et tout de suite : c'est la
+      # seule catégorie qu'on veut lire le jour où elle sort.
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+      # Le reste par famille, en une PR chacune. Un correctif de Next dans la
+      # même PR qu'une montée de Drizzle rend le retour arrière impossible.
+      next:
+        patterns: ["next", "@next/*", "eslint-config-next"]
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+      drizzle:
+        patterns: ["drizzle-orm", "drizzle-kit"]
+      editor:
+        patterns: ["@tiptap/*"]
+      tooling:
+        patterns: ["typescript", "turbo", "vitest", "@vitest/*", "@playwright/*", "eslint*", "prettier"]
+      rest:
+        patterns: ["*"]
+        exclude-patterns:
+          - "next"
+          - "@next/*"
+          - "react"
+          - "react-dom"
+          - "drizzle-orm"
+          - "drizzle-kit"
+          - "@tiptap/*"
+
+  # Les actions elles-mêmes : une action épinglée sur une balise mobile est du
+  # code tiers qui tourne avec le jeton du dépôt.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3

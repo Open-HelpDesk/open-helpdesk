@@ -1,0 +1,114 @@
+name: Security
+
+# Quatre portes, et aucune n'existait avant le 10/09/2026.
+#
+# Ce qu'un premier audit a trouvé ce jour-là, sur les dépendances installées :
+# **2 critiques et 10 hautes**. Dont deux exécutions de code à distance non
+# authentifiées dans Next.js, corrigées une seule version plus loin ; une
+# injection SQL par identifiant mal échappé dans drizzle-orm, l'ORM que tout le
+# produit utilise ; et des injections CRLF dans nodemailer, qui met en forme du
+# contenu écrit par les clients. Toutes corrigées avant d'ajouter cette porte —
+# une porte rouge dès le premier jour est une porte qu'on apprend à ignorer,
+# comme le smoke pendant dix jours.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Hebdomadaire : une dépendance devient vulnérable sans qu'on y touche, donc
+    # il faut une porte qui s'ouvre avec le temps et pas seulement avec un commit.
+    - cron: "23 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependencies:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Bloquant sur haute et critique seulement, et les moyennes rapportées
+      # sans arrêter la chaîne.
+      #
+      # Ce n'est pas de la complaisance : les trois moyennes du 10/09/2026 sont
+      # inapplicables ici, chacune pour une raison nommée. L'avis esbuild ne
+      # concerne que `esbuild serve`, son serveur de développement, que rien
+      # n'exécute — le paquet est bien dans l'arbre de production, tiré par
+      # drizzle-kit, mais le chemin vulnérable n'est jamais emprunté. Les deux
+      # avis vitest portent sur `@vitest/mocker`, qui n'existe que sous le
+      # lanceur de tests.
+      #
+      # Un seuil qui bloque sur tout finit désarmé par la première dépendance
+      # dont le correctif n'existe pas encore, et on se retrouve avec la porte
+      # rouge que plus personne ne lit. Relire cette liste à chaque avis
+      # nouveau plutôt que la subir.
+      - name: Audit (high and critical are blocking)
+        run: pnpm audit --audit-level high
+      - name: Report the rest, without blocking
+        if: always()
+        run: pnpm audit || true
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Tout l'historique : un secret retiré du dernier commit reste dans les
+          # précédents, et c'est là qu'il faut le chercher.
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  code:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          # Les requêtes de sécurité étendues : le jeu par défaut passe à côté
+          # des chemins qui traversent une base ou un modèle de rendu, qui sont
+          # précisément les nôtres.
+          queries: security-extended
+      - uses: github/codeql-action/analyze@v3
+
+  images:
+    name: Image scan
+    runs-on: ubuntu-latest
+    # Les images ne sont construites qu'aux tags : les analyser sur chaque
+    # pull request coûterait vingt minutes pour un artefact que personne ne
+    # déploie.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    strategy:
+      matrix:
+        target: [web, worker, migrate]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build ${{ matrix.target }}
+        run: docker build --file docker/Dockerfile --target ${{ matrix.target }} --tag scan:${{ matrix.target }} .
+      - uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: scan:${{ matrix.target }}
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
