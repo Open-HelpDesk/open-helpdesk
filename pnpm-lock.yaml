@@ -75,6 +75,9 @@ importers:
       '@openhelpdesk/webhooks':
         specifier: workspace:*
         version: link:../../packages/webhooks
+      '@openhelpdesk/whatsapp':
+        specifier: workspace:*
+        version: link:../../packages/whatsapp
       '@tiptap/extension-code-block':
         specifier: ^3.30.5
         version: 3.31.3(@tiptap/core@3.31.3(@tiptap/pm@3.31.3))(@tiptap/pm@3.31.3)
@@ -548,6 +551,31 @@ importers:
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
+
+  packages/whatsapp:
+    dependencies:
+      '@openhelpdesk/crypto':
+        specifier: workspace:*
+        version: link:../crypto
+      '@openhelpdesk/db':
+        specifier: workspace:*
+        version: link:../db
+      '@openhelpdesk/storage':
+        specifier: workspace:*
+        version: link:../storage
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(kysely@0.29.5)(postgres@3.4.9)
+    devDependencies:
+      '@types/node':
+        specifier: ^26.4.1
+        version: 26.4.1
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^5.0.0
+        version: 5.0.0(@types/node@26.4.1)(@vitest/coverage-v8@5.0.0)(vite@7.3.6(@types/node@26.4.1)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.13))
 
 packages:
 

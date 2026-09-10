@@ -19,6 +19,7 @@ import { requireAgent } from "@/lib/session";
 import { getT } from "@/i18n/server";
 import { nextTicketNumber } from "@/lib/data";
 import { saveUploadedFiles } from "@/lib/storage";
+import { deliverAgentReply } from "@/lib/deliver-reply";
 
 const OPENING_STATUS = new Set(["new", "open", "waiting", "on_hold"]);
 
@@ -54,32 +55,27 @@ export async function sendReply(formData: FormData) {
     await saveUploadedFiles(tenant.id, message.id, files);
   }
 
-  // Public reply → email to the requester (console transport in dev, Resend in cloud).
+  /*
+   * Public reply → the requester, BY THE CHANNEL THE TICKET CAME IN ON.
+   *
+   * This used to be an unconditional email. With WhatsApp it is a routing
+   * decision, and the wrong branch is not cosmetic: a WhatsApp contact has no
+   * email — the product stores a derived `<number>@whatsapp.invalid` — so an
+   * email would bounce and cost sender reputation for nothing. See
+   * lib/deliver-reply.ts, which also writes an out-of-window refusal into the
+   * thread so the agent learns the customer never received the answer.
+   */
   if (kind === "public_reply" && message) {
-    try {
-      const [requester] = await db
-        .select({ email: contacts.email })
-        .from(contacts)
-        .where(eq(contacts.id, ticket.requesterId));
-      if (requester) {
-        const sent = await sendTicketReplyEmail({
-          tenantId: tenant.id,
-          ticketNumber: ticket.number,
-          subject: ticket.subject,
-          to: requester.email,
-          bodyText: body,
-        });
-        if (sent?.messageId) {
-          await db
-            .update(ticketMessages)
-            .set({ emailMeta: { messageId: sent.messageId } })
-            .where(eq(ticketMessages.id, message.id));
-        }
-      }
-    } catch (err) {
-      // A send failure does not block the reply — it will show up in the log (ST-03).
-      console.error("[mail] failed to send the reply:", err);
-    }
+    await deliverAgentReply({
+      tenantId: tenant.id,
+      ticketId,
+      ticketNumber: ticket.number,
+      subject: ticket.subject,
+      channel: ticket.channel,
+      requesterId: ticket.requesterId,
+      messageId: message.id,
+      bodyText: body,
+    });
   }
 
   const patch: Partial<typeof tickets.$inferInsert> = { updatedAt: new Date() };

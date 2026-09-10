@@ -43,6 +43,7 @@ export const ticketChannel = app.enum("ticket_channel", [
   "portal",
   "widget",
   "api",
+  "whatsapp",
 ]);
 export const userRole = app.enum("user_role", ["owner", "admin", "agent", "viewer"]);
 export const userStatus = app.enum("user_status", ["active", "invited", "disabled"]);
@@ -410,6 +411,141 @@ export const emailSettings = app.table(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [uniqueIndex("email_settings_tenant").on(t.tenantId)],
+);
+
+/* ---------- WhatsApp (channel) ---------- */
+
+/**
+ * Per-workspace WhatsApp Business configuration.
+ *
+ * Same shape as email_settings, for the same reason: the credentials belong to
+ * the workspace, and the secrets are encrypted at rest rather than sitting in
+ * the environment of a process that serves every tenant.
+ *
+ * `phoneNumberId` carries a constraint that shapes the whole channel: Meta
+ * delivers every event of a business account to ONE callback URL, and the only
+ * thing in the payload that says which workspace it belongs to is that id.
+ * It is therefore unique across the instance, and the inbound route resolves
+ * the tenant from it — exactly as an inbound email resolves one from its
+ * recipient mailbox.
+ */
+export const whatsappSettings = app.table(
+  "whatsapp_settings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .unique()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    /** Meta's id for the sending number. The tenant key of every inbound event. */
+    phoneNumberId: text("phone_number_id").notNull().unique(),
+    /** The number as a human reads it, for the settings screen. */
+    displayPhone: text("display_phone"),
+    /** WhatsApp Business Account id — needed to manage templates later. */
+    wabaId: text("waba_id"),
+    /**
+     * AES-256-GCM encrypted (@openhelpdesk/crypto):
+     * { accessToken, appSecret, verifyToken }.
+     *
+     * `appSecret` is not decoration: it signs the inbound webhook, and a
+     * webhook nobody verifies is an open door onto a sending gateway.
+     */
+    encryptedSecrets: text("encrypted_secrets"),
+    secretHint: text("secret_hint"),
+    /** Tickets from this channel land in this team, like a mailbox does. */
+    defaultTeamId: uuid("default_team_id").references(() => teams.id, { onDelete: "set null" }),
+    active: boolean("active").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("whatsapp_settings_tenant").on(t.tenantId),
+    uniqueIndex("whatsapp_settings_phone_number").on(t.phoneNumberId),
+  ],
+);
+
+/**
+ * One row per person who writes to a workspace on WhatsApp.
+ *
+ * It exists because three separate problems have the same key — the sender's
+ * number — and solving them apart would mean three sources of truth:
+ *
+ *  1. **Identity.** WhatsApp gives a phone number, never an email. Matching on
+ *     `contacts.phone` would be a guess: formats differ, and two contacts can
+ *     share a number. Here the mapping is a fact we wrote.
+ *  2. **The 24-hour service window.** Outside 24 hours from the customer's last
+ *     message, free-form replies are refused by Meta and only a pre-approved
+ *     template goes through. An agent must be told BEFORE typing, so the
+ *     instant is stored rather than derived from the thread.
+ *  3. **Grouping.** Four messages in twenty seconds are one request, not four
+ *     tickets. `activeTicketId` is what the thread continues into.
+ *
+ * `waId` is stored exactly as Meta sends it — digits, no plus sign, no
+ * spacing. Normalising it ourselves would invent a format that the next event
+ * would not match.
+ */
+export const whatsappConversations = app.table(
+  "whatsapp_conversations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    /** Meta's wa_id: digits only, as received. */
+    waId: text("wa_id").notNull(),
+    contactId: uuid("contact_id")
+      .notNull()
+      .references(() => contacts.id, { onDelete: "cascade" }),
+    /** The thread a further message continues. Null once it is closed. */
+    activeTicketId: uuid("active_ticket_id").references(() => tickets.id, {
+      onDelete: "set null",
+    }),
+    /** Start of the 24-hour window. Written on every inbound message. */
+    lastInboundAt: timestamp("last_inbound_at", { withTimezone: true }),
+    /** The name the person set on their WhatsApp profile, if Meta sends it. */
+    profileName: text("profile_name"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("whatsapp_conversations_tenant_wa").on(t.tenantId, t.waId),
+    index("whatsapp_conversations_tenant_contact").on(t.tenantId, t.contactId),
+  ],
+);
+
+/**
+ * Every WhatsApp message we accepted, inbound or outbound.
+ *
+ * Its first job is deduplication: Meta retries a webhook until it gets a 200,
+ * so the same message id arrives several times. Without this table, a retry
+ * posts the customer's message twice into the thread — and a retry is the
+ * normal case, not the edge case.
+ *
+ * Its second job is the delivery record for outbound sends: what was refused,
+ * and why. An out-of-window refusal has to reach the agent who thought they
+ * had replied.
+ */
+export const whatsappMessages = app.table(
+  "whatsapp_messages",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tenantId: uuid("tenant_id")
+      .notNull()
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    /** Meta's message id (wamid.…). Unique per workspace: this is the dedupe key. */
+    wamid: text("wamid").notNull(),
+    direction: text("direction").$type<"inbound" | "outbound">().notNull(),
+    ticketId: uuid("ticket_id").references(() => tickets.id, { onDelete: "set null" }),
+    messageId: uuid("message_id").references(() => ticketMessages.id, { onDelete: "set null" }),
+    /** sent | failed | out_of_window — outbound only. */
+    status: text("status").$type<"sent" | "failed" | "out_of_window">(),
+    error: text("error"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("whatsapp_messages_tenant_wamid").on(t.tenantId, t.wamid),
+    index("whatsapp_messages_tenant_ticket").on(t.tenantId, t.ticketId),
+  ],
 );
 
 export const emailDeliveryStatus = app.enum("email_delivery_status", [
