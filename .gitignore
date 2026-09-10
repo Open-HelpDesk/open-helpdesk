@@ -3,9 +3,17 @@ node_modules/
 .turbo/
 dist/
 *.tsbuildinfo
+# Every environment file, not just the ones we happened to think of.
+#
+# `.env`, `.env.local` and `.env.*.local` were listed by name, so a `.env.prod`
+# — the file that would hold live database URLs and payment keys — was tracked.
+# This repository is public: a secret committed here is a secret published.
+#
+# A named list of secret files always ends up missing one, and it is always the
+# one someone just invented.
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 .DS_Store
 coverage/
 
