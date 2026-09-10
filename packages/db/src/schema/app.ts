@@ -441,8 +441,25 @@ export const whatsappSettings = app.table(
     phoneNumberId: text("phone_number_id").notNull().unique(),
     /** The number as a human reads it, for the settings screen. */
     displayPhone: text("display_phone"),
-    /** WhatsApp Business Account id — needed to manage templates later. */
+    /** WhatsApp Business Account id — where the templates live. */
     wabaId: text("waba_id"),
+    /**
+     * The pre-approved template used to re-open a closed service window, and
+     * nothing else.
+     *
+     * Outside 24 hours Meta refuses free-form text. Only a template approved in
+     * advance goes through, so this is the one way to reach a customer who
+     * stopped writing. Two columns and not a body: the wording lives at Meta,
+     * approved by them, and storing a copy here would let the two drift with no
+     * way to tell which one the customer actually received.
+     *
+     * Null means "no template configured", which is a legitimate state — the
+     * channel then refuses out-of-window replies rather than sending something
+     * unapproved.
+     */
+    templateName: text("template_name"),
+    /** The template's language tag as Meta spells it: `fr`, `en_US`, … */
+    templateLang: text("template_lang"),
     /**
      * AES-256-GCM encrypted (@openhelpdesk/crypto):
      * { accessToken, appSecret, verifyToken }.
@@ -537,9 +554,25 @@ export const whatsappMessages = app.table(
     direction: text("direction").$type<"inbound" | "outbound">().notNull(),
     ticketId: uuid("ticket_id").references(() => tickets.id, { onDelete: "set null" }),
     messageId: uuid("message_id").references(() => ticketMessages.id, { onDelete: "set null" }),
-    /** sent | failed | out_of_window — outbound only. */
-    status: text("status").$type<"sent" | "failed" | "out_of_window">(),
+    /**
+     * sent | queued | failed | out_of_window — outbound only.
+     *
+     * `queued` is the state that makes the 24-hour window survivable: the
+     * agent's reply is accepted, kept, and sent as soon as the customer writes
+     * again. `out_of_window` remains for the case where nothing can be done —
+     * no template configured, so there is no way to prompt the customer.
+     */
+    status: text("status").$type<"sent" | "queued" | "failed" | "out_of_window">(),
     error: text("error"),
+    /**
+     * True for the template we sent to re-open the window, false for a reply.
+     *
+     * It exists to answer one question: have we already prompted this customer
+     * since their last message? Without it, every agent reply out of window
+     * would fire another template — the customer receives four notifications
+     * for one unanswered thread, and templates are billed per send.
+     */
+    template: boolean("template").notNull().default(false),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [

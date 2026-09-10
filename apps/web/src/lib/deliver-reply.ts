@@ -36,7 +36,12 @@ export type DeliverInput = {
 
 export type DeliverOutcome =
   | { via: "email"; messageId?: string }
-  | { via: "whatsapp"; sent: boolean; outOfWindow: boolean }
+  /**
+   * `queued` is not a failure and must not be reported as one: the reply is
+   * kept and leaves as soon as the customer writes again. `outOfWindow` stays
+   * for the case where nothing can be done — no template to prompt with.
+   */
+  | { via: "whatsapp"; sent: boolean; outOfWindow: boolean; queued?: boolean }
   | { via: "none"; reason: "no_requester" | "unroutable_address" };
 
 export async function deliverAgentReply(input: DeliverInput): Promise<DeliverOutcome> {
@@ -85,12 +90,30 @@ async function deliverWhatsapp(input: DeliverInput): Promise<DeliverOutcome> {
     const { sendMessageToWhatsapp } = await import("@openhelpdesk/whatsapp");
     const result = await sendMessageToWhatsapp(input.tenantId, input.messageId);
 
+    /*
+     * Kept, not lost — and the thread says so.
+     *
+     * The distinction matters to the agent more than to us. A refusal means
+     * "do something else"; a queue means "you are done, it will go". Writing
+     * the same sentence for both would teach agents to distrust the channel.
+     */
+    if (result.outcome === "queued") {
+      await systemEvent(
+        input.tenantId,
+        input.ticketId,
+        result.prompted
+          ? "The 24-hour WhatsApp window is closed. This reply is waiting and will be sent as soon as the customer writes back; they have just been prompted with the approved template."
+          : "The 24-hour WhatsApp window is closed. This reply is waiting and will be sent as soon as the customer writes back. The customer was already prompted since their last message, so no second notification was sent.",
+      );
+      return { via: "whatsapp", sent: false, outOfWindow: false, queued: true };
+    }
+
     if (result.outcome === "out_of_window") {
       await systemEvent(
         input.tenantId,
         input.ticketId,
         result.closesAt
-          ? `WhatsApp did not accept this reply: the 24-hour service window closed at ${result.closesAt.toISOString()}. A pre-approved template is required until the customer writes again.`
+          ? `WhatsApp did not accept this reply: the 24-hour service window closed at ${result.closesAt.toISOString()}, and no approved template is configured — so the customer cannot be prompted to write back. Configure one in Settings → WhatsApp.`
           : "WhatsApp did not accept this reply: the customer has never written, so no service window is open.",
       );
       return { via: "whatsapp", sent: false, outOfWindow: true };

@@ -38,6 +38,14 @@ const COVERED = [
   "packages/config/src/entitlements.ts",
   "apps/web/src/lib/format.ts",
   "apps/web/src/lib/entitlements.ts",
+  /*
+   * WhatsApp: the two modules that decide, and they decide a lot. `verify.ts`
+   * is the door — a webhook nobody authenticates is an open sending gateway —
+   * and `window.ts` decides whether an agent's reply is kept, refused, or sent
+   * along with a billed template. Neither needs a database.
+   */
+  "packages/whatsapp/src/verify.ts",
+  "packages/whatsapp/src/window.ts",
   "ee/ai/src/redact.ts",
   "ee/ai/src/provider.ts",
   "ee/ai/src/similarity.ts",
@@ -104,11 +112,17 @@ export default defineConfig({
        * sinon on ne distingue plus un instrument qui change d'une couverture
        * qui tombe.
        */
+      /*
+       * Relevé le 10/09/2026 en entrant `packages/whatsapp/src/verify.ts` et
+       * `window.ts` dans la liste, avec leurs 28 tests : mesuré 88,84 / 77,77 /
+       * 87,5 / 89,45, arrondi au point inférieur. Le plancher monte parce que
+       * la couverture a monté, dans le commit qui l'explique — pas l'inverse.
+       */
       thresholds: {
-        statements: 87,
-        branches: 75,
-        functions: 86,
-        lines: 88,
+        statements: 88,
+        branches: 77,
+        functions: 87,
+        lines: 89,
       },
     },
   },

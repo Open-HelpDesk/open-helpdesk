@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SERVICE_WINDOW_MS, serviceWindow } from "./window";
+import { SERVICE_WINDOW_MS, closedWindowPlan, serviceWindow } from "./window";
 
 /**
  * La fenêtre de 24 heures.
@@ -67,5 +67,63 @@ describe("serviceWindow", () => {
     const ourReplyLater = new Date(AT.getTime() + SERVICE_WINDOW_MS - 1000);
     const w = serviceWindow(lastInbound, new Date(ourReplyLater.getTime() + 2000));
     expect(w.open).toBe(false);
+  });
+});
+
+/**
+ * The closed-window decision — what an agent is told, and what the customer
+ * receives.
+ *
+ * Three outcomes and not two. Before templates there was only "refused", and
+ * that answer left the agent with no move: they could not reach the customer,
+ * and the reply they had written stayed unsent until someone noticed. The
+ * customer, waiting, had no reason to write. These tests pin the difference.
+ */
+describe("closedWindowPlan", () => {
+  const template = { templateName: "ticket_update", templateLang: "fr" };
+
+  it("garde la réponse et relance le client la première fois", () => {
+    expect(closedWindowPlan({ ...template, alreadyPrompted: false })).toBe("queue_and_prompt");
+  });
+
+  /**
+   * Une seule relance par silence. Un gabarit est facturé à l'envoi, et quatre
+   * notifications pour un seul fil sans réponse est la façon la plus sûre de
+   * faire couper le canal par la personne qu'il devait atteindre.
+   */
+  it("garde la réponse sans relancer deux fois", () => {
+    expect(closedWindowPlan({ ...template, alreadyPrompted: true })).toBe("queue_only");
+  });
+
+  it("refuse quand aucun gabarit n'est configuré", () => {
+    expect(
+      closedWindowPlan({ templateName: null, templateLang: null, alreadyPrompted: false }),
+    ).toBe("refuse");
+  });
+
+  /**
+   * Et refuse aussi sur une configuration à moitié remplie. Meta rejette un
+   * nom sans code de langue, et un code sans nom ne désigne aucun gabarit :
+   * accepter la moitié produirait un canal qui promet de rouvrir la
+   * conversation et échoue au moment de le faire.
+   */
+  it("refuse une configuration à moitié remplie", () => {
+    expect(
+      closedWindowPlan({ templateName: "ticket_update", templateLang: null, alreadyPrompted: false }),
+    ).toBe("refuse");
+    expect(
+      closedWindowPlan({ templateName: null, templateLang: "fr", alreadyPrompted: false }),
+    ).toBe("refuse");
+    expect(
+      closedWindowPlan({ templateName: "", templateLang: "fr", alreadyPrompted: false }),
+    ).toBe("refuse");
+  });
+
+  it("refuse même si le client a déjà été relancé, faute de gabarit", () => {
+    // L'ordre des conditions compte : sans gabarit il n'y a rien à envoyer,
+    // que le client ait été relancé ou non.
+    expect(
+      closedWindowPlan({ templateName: null, templateLang: null, alreadyPrompted: true }),
+    ).toBe("refuse");
   });
 });

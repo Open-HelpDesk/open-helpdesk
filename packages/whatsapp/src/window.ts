@@ -52,3 +52,37 @@ export function serviceWindow(lastInboundAt: Date | null | undefined, now = new 
     ? { open: true, remainingMs, closesAt }
     : { open: false, remainingMs: 0, closesAt };
 }
+
+/**
+ * What to do with an agent's reply when the window is closed.
+ *
+ * Three outcomes, and the difference between them is what the agent is told:
+ *
+ *   `queue_and_prompt`  keep the reply, and send the template that invites the
+ *                       customer to write back — which re-opens the window.
+ *   `queue_only`        keep the reply, send nothing: the customer was already
+ *                       prompted since their last message. One prompt per
+ *                       silence, not one per reply — templates are billed per
+ *                       send, and four notifications for one unanswered thread
+ *                       is how a channel gets muted by the person it was meant
+ *                       to reach.
+ *   `refuse`            no template configured, so there is no way to make the
+ *                       customer write. The reply cannot leave, and saying so
+ *                       is the only honest answer.
+ *
+ * Pure on purpose: this is the decision, and it was buried between two
+ * database calls where it could only be exercised with a live conversation and
+ * a Meta account.
+ */
+export type ClosedWindowPlan = "queue_and_prompt" | "queue_only" | "refuse";
+
+export function closedWindowPlan(input: {
+  templateName: string | null;
+  templateLang: string | null;
+  alreadyPrompted: boolean;
+}): ClosedWindowPlan {
+  // Les deux, pas l'un : Meta refuse un nom sans code de langue, et un code
+  // sans nom ne désigne aucun gabarit.
+  if (!input.templateName || !input.templateLang) return "refuse";
+  return input.alreadyPrompted ? "queue_only" : "queue_and_prompt";
+}

@@ -8,11 +8,19 @@ export {
   type SaveWhatsappInput,
   type WhatsappSettingsRow,
 } from "./settings";
-export { SERVICE_WINDOW_MS, serviceWindow, type WindowState } from "./window";
+export {
+  SERVICE_WINDOW_MS,
+  closedWindowPlan,
+  serviceWindow,
+  type ClosedWindowPlan,
+  type WindowState,
+} from "./window";
 export { changeValues, ingestWebhook } from "./ingest";
 export {
   fetchMedia,
+  flushQueued,
   sendMessageToWhatsapp,
+  sendTemplate,
   ticketServiceWindow,
   type SendResult,
 } from "./send";

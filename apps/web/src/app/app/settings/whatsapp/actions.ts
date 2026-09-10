@@ -47,6 +47,13 @@ export async function saveWhatsapp(formData: FormData) {
     displayPhone: text(formData, "displayPhone") || null,
     wabaId: text(formData, "wabaId") || null,
     defaultTeamId: text(formData, "defaultTeamId") || null,
+    /*
+     * Les deux ensemble ou aucun des deux : un nom sans langue ne part pas
+     * (Meta exige le code) et une langue sans nom ne désigne rien. Accepter la
+     * moitié donnerait un canal qui paraît configuré et refuse quand même.
+     */
+    templateName: text(formData, "templateName") || null,
+    templateLang: text(formData, "templateLang") || null,
     ...(accessToken ? { accessToken } : {}),
     ...(appSecret ? { appSecret } : {}),
     ...(verifyToken ? { verifyToken } : {}),

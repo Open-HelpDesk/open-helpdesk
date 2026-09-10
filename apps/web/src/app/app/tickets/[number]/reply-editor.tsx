@@ -62,6 +62,7 @@ export function ReplyEditor({
   macros,
   initialKind = "public_reply",
   serviceWindow = null,
+  canQueue = false,
 }: {
   ticketId: string;
   ticketNumber: number;
@@ -84,6 +85,16 @@ export function ReplyEditor({
    * other channel — there is no window to speak of.
    */
   serviceWindow?: { open: boolean; remainingMs: number; closesAt: string | null } | null;
+  /**
+   * Un gabarit approuvé est-il configuré pour cet espace ?
+   *
+   * C'est ce qui sépare deux messages très différents quand la fenêtre est
+   * fermée : « votre réponse est conservée et partira » ou « votre réponse ne
+   * peut pas partir ». Sans cette information le bandeau devrait choisir le
+   * plus alarmant des deux, et découragerait d'écrire une réponse qui allait
+   * pourtant arriver.
+   */
+  canQueue?: boolean;
 }) {
   const t = useT();
   const [body, setBody] = useState("");
@@ -462,9 +473,13 @@ export function ReplyEditor({
       {/*
         La fenêtre de 24 heures de WhatsApp, au-dessus du champ et pas ailleurs.
         Hors fenêtre, Meta refuse une réponse libre : l'agent doit le savoir
-        avant d'écrire, sinon il écrit pour rien — et croit avoir répondu. Ne
-        s'affiche que sur un ticket WhatsApp ; les autres canaux n'ont pas de
-        fenêtre dont parler.
+        avant d'écrire. Ne s'affiche que sur un ticket WhatsApp ; les autres
+        canaux n'ont pas de fenêtre dont parler.
+
+        Trois états et non deux, parce que « fermée » ne dit pas quoi faire :
+        ouverte (le décompte), fermée avec gabarit (la réponse est conservée et
+        partira — donc écrivez), fermée sans gabarit (elle ne partira pas). Le
+        troisième est le seul qui mérite du rouge.
       */}
       {serviceWindow && kind === "public_reply" && (
         <div
@@ -474,16 +489,21 @@ export function ReplyEditor({
             borderRadius: 8,
             fontSize: 12.5,
             lineHeight: 1.45,
-            border: `1px solid ${serviceWindow.open ? "var(--line)" : "var(--dang)"}`,
-            background: serviceWindow.open ? "var(--surface-2)" : "var(--dang-t)",
-            color: serviceWindow.open ? "var(--ink-2)" : "var(--dang)",
+            border: `1px solid ${
+              serviceWindow.open || canQueue ? "var(--line)" : "var(--dang)"
+            }`,
+            background:
+              serviceWindow.open || canQueue ? "var(--surface-2)" : "var(--dang-t)",
+            color: serviceWindow.open || canQueue ? "var(--ink-2)" : "var(--dang)",
           }}
         >
           {serviceWindow.open
             ? t("app.ticket.whatsappWindowOpen", { left: humanLeft(serviceWindow.remainingMs) })
-            : serviceWindow.closesAt
-              ? t("app.ticket.whatsappWindowClosed")
-              : t("app.ticket.whatsappWindowNever")}
+            : canQueue
+              ? t("app.ticket.whatsappWindowQueued")
+              : serviceWindow.closesAt
+                ? t("app.ticket.whatsappWindowClosed")
+                : t("app.ticket.whatsappWindowNever")}
         </div>
       )}
 

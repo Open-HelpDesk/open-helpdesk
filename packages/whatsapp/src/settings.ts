@@ -76,6 +76,8 @@ export type SaveWhatsappInput = {
   displayPhone?: string | null;
   wabaId?: string | null;
   defaultTeamId?: string | null;
+  templateName?: string | null;
+  templateLang?: string | null;
   active?: boolean;
   /** Omit a field to keep the stored one — the screen never re-sends secrets. */
   accessToken?: string;
@@ -107,6 +109,15 @@ export async function saveWhatsappSettings(input: SaveWhatsappInput): Promise<Wh
     displayPhone: input.displayPhone ?? null,
     wabaId: input.wabaId ?? null,
     defaultTeamId: input.defaultTeamId ?? null,
+    /*
+     * Les deux ou aucun. Un nom sans code de langue est refusé par Meta, et un
+     * code sans nom ne désigne aucun gabarit : garder la moitié produirait un
+     * canal qui paraît prêt à rouvrir une conversation et n'y arrive pas. On
+     * préfère le champ vide, qui est un état honnête — les réponses hors
+     * fenêtre sont alors refusées, et l'écran le dit.
+     */
+    templateName: input.templateName && input.templateLang ? input.templateName : null,
+    templateLang: input.templateName && input.templateLang ? input.templateLang : null,
     active: input.active ?? existing?.active ?? false,
     encryptedSecrets: Object.keys(merged).length ? encryptSecrets(merged) : null,
     // The hint is on the access token: it is the one an operator rotates.

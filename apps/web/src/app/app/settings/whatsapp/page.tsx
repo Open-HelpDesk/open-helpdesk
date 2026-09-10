@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
 import { db, teams } from "@openhelpdesk/db";
 import { getWhatsappSettings } from "@openhelpdesk/whatsapp";
@@ -39,9 +40,30 @@ export default async function WhatsappSettingsPage() {
   ]);
 
   const configured = Boolean(settings?.encryptedSecrets);
-  const callbackUrl = settings?.phoneNumberId
-    ? `${process.env["APP_URL"] ?? "https://<votre-domaine>"}/api/ingress/whatsapp?phone_number_id=${settings.phoneNumberId}`
-    : null;
+
+  /*
+   * The callback URL is built from the REQUEST's own host, not from an
+   * environment variable.
+   *
+   * It used to read `APP_URL`, and that was wrong twice over. On staging the
+   * variable is not set at all, so the screen displayed the literal
+   * `https://<votre-domaine>/api/ingress/whatsapp?...` — a placeholder an
+   * operator pastes into Meta's console, where it fails with an error that says
+   * nothing about the cause. And even when set, one instance-wide value cannot
+   * be right for every workspace: each one is served on its own host
+   * (`acme.example.com`), and the route only answers there — the showcase host
+   * returns an HTML 404.
+   *
+   * The host that served this page is, by construction, the host that will
+   * serve the webhook. `x-forwarded-proto` because the app sits behind Caddy.
+   */
+  const head = await headers();
+  const host = head.get("host");
+  const proto = head.get("x-forwarded-proto") ?? "https";
+  const callbackUrl =
+    settings?.phoneNumberId && host
+      ? `${proto}://${host}/api/ingress/whatsapp?phone_number_id=${settings.phoneNumberId}`
+      : null;
 
   return (
     <PageShell>
@@ -116,6 +138,39 @@ export default async function WhatsappSettingsPage() {
               label="Verify token"
             >
               <TextInput name="verifyToken" type="password" autoComplete="new-password" />
+            </Field>
+          </div>
+        </Card>
+
+        {/* Le gabarit, dans sa propre carte : c'est ce qui décide si une
+            réponse hors fenêtre est conservée ou refusée, et un opérateur doit
+            pouvoir lire cette conséquence avant de remplir les champs. */}
+        <Card title={t("app.settings.whatsapp.templateCard")}>
+          <p style={{ fontSize: 12.5, color: "var(--ink-2)", lineHeight: 1.55, marginBottom: 12 }}>
+            {t("app.settings.whatsapp.templateHelp")}
+          </p>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field
+              label={t("app.settings.whatsapp.templateName")}
+              hint={t("app.settings.whatsapp.templateNameHint")}
+            >
+              <TextInput
+                name="templateName"
+                defaultValue={settings?.templateName ?? ""}
+                autoComplete="off"
+                placeholder="ticket_update"
+              />
+            </Field>
+            <Field
+              label={t("app.settings.whatsapp.templateLang")}
+              hint={t("app.settings.whatsapp.templateLangHint")}
+            >
+              <TextInput
+                name="templateLang"
+                defaultValue={settings?.templateLang ?? ""}
+                autoComplete="off"
+                placeholder="fr"
+              />
             </Field>
           </div>
         </Card>

@@ -173,18 +173,29 @@ export default async function TicketPage({
    * Les instants partent en chaîne — un composant client ne peut pas recevoir
    * un Date, que la sérialisation transformerait de toute façon.
    */
-  const serviceWindow =
+  const whatsapp =
     ticket.channel === "whatsapp"
       ? await (async () => {
-          const { ticketServiceWindow } = await import("@openhelpdesk/whatsapp");
-          const w = await ticketServiceWindow(tenant.id, ticket.id);
+          const { getWhatsappSettings, ticketServiceWindow } = await import(
+            "@openhelpdesk/whatsapp"
+          );
+          const [w, settings] = await Promise.all([
+            ticketServiceWindow(tenant.id, ticket.id),
+            getWhatsappSettings(tenant.id),
+          ]);
           return {
-            open: w.open,
-            remainingMs: w.remainingMs,
-            closesAt: w.closesAt?.toISOString() ?? null,
+            window: {
+              open: w.open,
+              remainingMs: w.remainingMs,
+              closesAt: w.closesAt?.toISOString() ?? null,
+            },
+            // Les deux ensemble : c'est la condition exacte que `send.ts`
+            // applique pour mettre en attente plutôt que refuser.
+            canQueue: Boolean(settings?.templateName && settings.templateLang),
           };
         })()
       : null;
+  const serviceWindow = whatsapp?.window ?? null;
 
   /**
    * V2 — four tabs where there used to be one stream.
@@ -1010,7 +1021,12 @@ export default async function TicketPage({
             })}
 
             {/* The composer closes the thread instead of being docked under it:
-                it is the next card of the same stack. */}
+                it is the next card of the same stack.
+
+                `serviceWindow` was resolved above and never reached this
+                component, so the WhatsApp window banner could not appear on
+                any ticket. Wiring data and rendering it are two steps, and the
+                first one alone shows nothing. */}
             {!ticket.mergedIntoId && (
               <ReplyEditor
                 ticketId={ticket.id}
@@ -1019,6 +1035,8 @@ export default async function TicketPage({
                 agentName={agent.name ?? agent.email}
                 macros={editorMacros}
                 initialKind={compose === "note" ? "internal_note" : "public_reply"}
+                serviceWindow={serviceWindow}
+                canQueue={whatsapp?.canQueue ?? false}
               />
             )}
             </div>

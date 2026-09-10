@@ -24,6 +24,7 @@ import {
   challengeResponse,
   changeValues,
   fetchMedia,
+  flushQueued,
   ingestWebhook,
   resolveConfig,
   settingsForPhoneNumberId,
@@ -99,5 +100,27 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  return NextResponse.json({ results }, { status: 200 });
+  /*
+   * The customer just wrote, so the 24-hour window is open again — and this is
+   * the only moment it opens. Any reply an agent wrote while it was closed is
+   * waiting, and it goes now.
+   *
+   * Here rather than inside the ingest for the same reason as the two hooks
+   * above: ingestion writes what arrived, orchestration decides what that
+   * causes. And a flush that throws must not turn a received message into a
+   * 4xx — Meta would retry the webhook, and the message would be ingested
+   * again (deduplicated, but the retry storm is real).
+   */
+  const flushed: Array<{ ticketId: string; sent: number; failed: number }> = [];
+  for (const result of results) {
+    if (result.outcome !== "created" && result.outcome !== "appended") continue;
+    try {
+      const counts = await flushQueued(result.tenantId, result.ticketId);
+      if (counts.sent || counts.failed) flushed.push({ ticketId: result.ticketId, ...counts });
+    } catch (err) {
+      console.error("[whatsapp] failed to flush the queued replies:", err);
+    }
+  }
+
+  return NextResponse.json({ results, ...(flushed.length ? { flushed } : {}) }, { status: 200 });
 }
