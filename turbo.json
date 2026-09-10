@@ -6,6 +6,7 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "typecheck": {},
+    "check:migrations": {},
     "lint": {},
     "dev": {
       "cache": false,

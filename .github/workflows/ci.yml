@@ -25,3 +25,8 @@ jobs:
       # toujours les faire tourner — une suite qui exige de l'infrastructure
       # finit sautée, et une suite sautée n'est plus une garantie.
       - run: pnpm test
+      # La dérive entre le schéma et ses migrations. Ni le typecheck ni les
+      # tests ne la voient : ils lisent le schéma TypeScript, pas la base. En
+      # production, `migrate` n'aurait rien à appliquer et l'application
+      # interrogerait une colonne absente — au premier client.
+      - run: pnpm turbo run check:migrations
