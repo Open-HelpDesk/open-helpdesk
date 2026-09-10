@@ -14,7 +14,7 @@ import { reindexEnabledWorkspaces, sweepDeflections } from "@openhelpdesk/ee-ai"
 import { deliverWebhookJob, type WebhookJob } from "@openhelpdesk/webhooks";
 import { deliverPushJob, type PushJob } from "@openhelpdesk/push";
 import { executeRun, parseZendeskExport, reapStaleRuns, type ImportSource } from "@openhelpdesk/import";
-import { QUEUE_NAMES, type QueueName } from "./queues";
+import { QUEUE_NAMES, type QueueName, SWEEP_JOB_OPTS } from "./queues";
 
 /**
  * An import queued by the admin screen.
@@ -204,11 +204,14 @@ async function registerSchedulers() {
    * a install that is in fact correct. That is the first thing anyone trying
    * the assistant would hit.
    */
-  await new Queue("ai-index", { connection }).add("boot", {});
+  await new Queue("ai-index", { connection }).add("boot", {}, SWEEP_JOB_OPTS);
 
   for (const [name, every] of schedules) {
     const queue = new Queue(name, { connection });
-    await queue.upsertJobScheduler(`${name}-tick`, { every });
+    // The third argument is the template every generated tick inherits, so the
+    // retry policy applies to jobs the scheduler creates later — not just to
+    // the registration itself.
+    await queue.upsertJobScheduler(`${name}-tick`, { every }, { opts: SWEEP_JOB_OPTS });
     await queue.close();
     console.log(`[scheduler] ${name} every ${Math.round(every / 1000)} s`);
   }
