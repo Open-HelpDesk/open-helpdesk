@@ -7,9 +7,28 @@
  * come from the same source. A hand-copied snapshot would start lying the first
  * time a route changed, which is exactly what the old /docs did.
  */
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 import { openApiDocument } from "./index";
 import { toPostmanCollection } from "./postman";
+
+/**
+ * Writes a file, creating its directory if it is missing.
+ *
+ * `writeFileSync` alone was enough on a laptop and failed in CI, which is the
+ * whole point of this function existing. The documentation site wants the
+ * collection under `apps/api-docs/public/`, that file is gitignored, and **git
+ * does not track empty directories** — so the directory exists on a machine
+ * where the file was once generated and nowhere else. CI got `ENOENT`, the
+ * documentation build failed, and the cloud pipeline stayed red for three days.
+ *
+ * A build step that only works where its output already exists is not a build
+ * step.
+ */
+function write(path: string, content: string): void {
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, content);
+}
 
 function flag(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -27,7 +46,7 @@ const local = flag("local");
 const extra = local ? [local] : [];
 
 const doc = openApiDocument(origin, extra);
-writeFileSync(out, JSON.stringify(doc, null, 2) + "\n");
+write(out, JSON.stringify(doc, null, 2) + "\n");
 console.log(
   `OpenAPI written to ${out} (servers: ${[origin, ...extra].map((o) => `${o}/api/v1`).join(", ")})`,
 );
@@ -42,7 +61,7 @@ console.log(
 const postman = flag("postman");
 if (postman) {
   const collection = toPostmanCollection(doc as unknown as Record<string, unknown>);
-  writeFileSync(postman, JSON.stringify(collection, null, 2) + "\n");
+  write(postman, JSON.stringify(collection, null, 2) + "\n");
   const count = (collection["item"] as { item: unknown[] }[]).reduce((n, f) => n + f.item.length, 0);
   console.log(`Postman collection written to ${postman} (${count} requests)`);
 }
