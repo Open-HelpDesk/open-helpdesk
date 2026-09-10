@@ -165,6 +165,27 @@ export default async function TicketPage({
     mergedIntoNumber,
   } = data;
 
+  /*
+   * La fenêtre de service WhatsApp, résolue ici et pas dans le composeur.
+   *
+   * Conditionnée au canal : interroger la table des conversations pour un
+   * ticket email serait une requête à chaque affichage de ticket, pour rien.
+   * Les instants partent en chaîne — un composant client ne peut pas recevoir
+   * un Date, que la sérialisation transformerait de toute façon.
+   */
+  const serviceWindow =
+    ticket.channel === "whatsapp"
+      ? await (async () => {
+          const { ticketServiceWindow } = await import("@openhelpdesk/whatsapp");
+          const w = await ticketServiceWindow(tenant.id, ticket.id);
+          return {
+            open: w.open,
+            remainingMs: w.remainingMs,
+            closesAt: w.closesAt?.toISOString() ?? null,
+          };
+        })()
+      : null;
+
   /**
    * V2 — four tabs where there used to be one stream.
    *

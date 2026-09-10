@@ -41,6 +41,19 @@ export type MacroOption = {
 
 const SEND_STATUSES = ["resolved", "waiting", "open", ""] as const;
 
+/**
+ * « 7 h 20 », « 43 min ». Volontairement grossier au-delà de l'heure : ce que
+ * l'agent décide avec ce chiffre est « j'ai le temps » ou « je n'ai pas le
+ * temps », et une précision à la seconde n'ajoute rien à cette décision.
+ */
+function humanLeft(ms: number): string {
+  const minutes = Math.max(0, Math.round(ms / 60000));
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  return rest === 0 ? `${hours} h` : `${hours} h ${rest}`;
+}
+
 export function ReplyEditor({
   ticketId,
   ticketNumber,
@@ -48,6 +61,7 @@ export function ReplyEditor({
   agentName,
   macros,
   initialKind = "public_reply",
+  serviceWindow = null,
 }: {
   ticketId: string;
   ticketNumber: number;
@@ -61,6 +75,15 @@ export function ReplyEditor({
    * that scrolls to a composer showing the wrong tab is a button that misleads.
    */
   initialKind?: "public_reply" | "internal_note";
+  /**
+   * WhatsApp's 24-hour service window, when the ticket came in on that channel.
+   *
+   * Passed in rather than fetched here, and shown ABOVE the field rather than
+   * on submit: outside the window Meta refuses a free-form reply, and an agent
+   * who learns that after writing has written for nothing. Absent on every
+   * other channel — there is no window to speak of.
+   */
+  serviceWindow?: { open: boolean; remainingMs: number; closesAt: string | null } | null;
 }) {
   const t = useT();
   const [body, setBody] = useState("");
@@ -435,6 +458,34 @@ export function ReplyEditor({
           )}
         </div>
       </div>
+
+      {/*
+        La fenêtre de 24 heures de WhatsApp, au-dessus du champ et pas ailleurs.
+        Hors fenêtre, Meta refuse une réponse libre : l'agent doit le savoir
+        avant d'écrire, sinon il écrit pour rien — et croit avoir répondu. Ne
+        s'affiche que sur un ticket WhatsApp ; les autres canaux n'ont pas de
+        fenêtre dont parler.
+      */}
+      {serviceWindow && kind === "public_reply" && (
+        <div
+          style={{
+            margin: "0 0 10px",
+            padding: "9px 12px",
+            borderRadius: 8,
+            fontSize: 12.5,
+            lineHeight: 1.45,
+            border: `1px solid ${serviceWindow.open ? "var(--line)" : "var(--dang)"}`,
+            background: serviceWindow.open ? "var(--surface-2)" : "var(--dang-t)",
+            color: serviceWindow.open ? "var(--ink-2)" : "var(--dang)",
+          }}
+        >
+          {serviceWindow.open
+            ? t("app.ticket.whatsappWindowOpen", { left: humanLeft(serviceWindow.remainingMs) })
+            : serviceWindow.closesAt
+              ? t("app.ticket.whatsappWindowClosed")
+              : t("app.ticket.whatsappWindowNever")}
+        </div>
+      )}
 
       <textarea
         ref={textareaRef}

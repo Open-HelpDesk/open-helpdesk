@@ -36,6 +36,7 @@ const NAV_GROUPS: NavGroup[] = [
     titleKey: "app.settingsNav.groupChannels",
     items: [
       { labelKey: "app.settingsNav.itemEmail", href: "/app/settings/email" },
+      { labelKey: "app.settingsNav.itemWhatsapp", href: "/app/settings/whatsapp" },
       { labelKey: "app.settingsNav.itemPortal", href: "/app/settings/portal" },
     ],
   },

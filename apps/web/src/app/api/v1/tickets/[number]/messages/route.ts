@@ -11,6 +11,7 @@ import { and, eq } from "drizzle-orm";
 import { db, ticketMessages, tickets, users } from "@openhelpdesk/db";
 import { onContactMessage } from "@openhelpdesk/rules";
 import { dispatchWebhookEvent } from "@openhelpdesk/webhooks";
+import { deliverAgentReply } from "@/lib/deliver-reply";
 import {
   apiError,
   apiJson,
@@ -137,9 +138,36 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       })
       .returning({ id: ticketMessages.id, createdAt: ticketMessages.createdAt });
 
-    // Files first: the rules engine can send this message out by email, and a
-    // reply that leaves before its attachment is stored goes out without it.
+    // Files first: the reply is delivered just below, and a reply that leaves
+    // before its attachment is stored goes out without it.
     const stored = await attachFilesToMessage(tenant.id, msg!.id, files);
+
+    /*
+     * Deliver the reply to the customer, by the channel the ticket came in on.
+     *
+     * This was missing, and it was not a gap but a bug: an agent replying from
+     * the mobile app — which posts here — had their answer recorded in the
+     * thread and never sent to anyone. The web screen delivered; the API did
+     * not, so the same action had two different effects depending on where it
+     * was performed.
+     *
+     * The outcome goes back in the response on purpose. A phone that shows a
+     * sent reply which WhatsApp refused (outside the 24-hour window) is worse
+     * than an error: the agent moves on believing the customer was answered.
+     */
+    let delivery: Awaited<ReturnType<typeof deliverAgentReply>> | null = null;
+    if (!internal) {
+      delivery = await deliverAgentReply({
+        tenantId: tenant.id,
+        ticketId: ticket.id,
+        ticketNumber: ticket.number,
+        subject: ticket.subject,
+        channel: ticket.channel,
+        requesterId: ticket.requesterId,
+        messageId: msg!.id,
+        bodyText: text,
+      });
+    }
 
     await db.update(tickets).set({ updatedAt: new Date() }).where(eq(tickets.id, ticket.id));
 
@@ -156,6 +184,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         internal,
         created_at: msg!.createdAt?.toISOString() ?? null,
         attachments: stored.attachments,
+        ...(delivery ? { delivery } : {}),
         ...(stored.skipped.length ? { skipped_files: stored.skipped } : {}),
       },
       201,
