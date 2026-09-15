@@ -169,7 +169,7 @@ readable by anything.
 - **Knowledge base & portal** — public help center, embeddable widget,
   magic-link customer accounts, article voting and search deflection
 - **Reports** — operational dashboard, CSV export
-- **REST API** — 56 operations over tickets, contacts, organizations, the
+- **REST API** — 57 operations over 43 resources: tickets, contacts, organizations, the
   knowledge base and the workspace's configuration; cursor pagination, scoped
   API keys, signed outbound webhooks, and an OpenAPI 3.1 document served by the
   instance itself
@@ -186,6 +186,14 @@ readable by anything.
   `multipart/form-data` on both sides of the desk
 - **MCP server** — nine tools that let an AI assistant search, read and answer
   through the API, with the same key, the same scopes and the same limits
+- **AI assistant** (commercial licence, `ee/ai`) — drafts an agent reply from
+  the workspace's own history and knowledge base, and answers on the customer
+  portal from published articles, stopping when it is not confident enough. The
+  agent edits before sending; nothing goes out on its own. Run it against an
+  operator-hosted model, or **bring your own LLM** — any OpenAI-compatible
+  endpoint, including one on your own hardware, in which case no ticket content
+  reaches a third party. Redaction, per-workspace governance and a call log are
+  part of it
 - **Migration & portability** — import a Zendesk history keeping its ticket
   numbers, dates and authors; export everything as NDJSON at any time
 - **Multi-tenant** — subdomain resolution, PostgreSQL row-level security
@@ -230,18 +238,23 @@ Open HelpDesk is open-core, and the licence boundary is the `ee/` directory:
   reports, the REST API, the MCP server, the Zendesk importer and the export,
   with unlimited seats. None of those is a paid add-on, and none is reserved for
   the hosted version.
-- **`ee/` — commercial licence.** Agent SSO (SAML/SCIM), delegated
-  customer-organization SSO and the advanced audit log. The source is visible
-  and free to use in development and testing, but production use requires a
-  commercial agreement — see [`ee/LICENSE`](ee/LICENSE).
+- **`ee/` — commercial licence.** The AI assistant (`ee/ai`: provider
+  abstraction, redaction, per-workspace governance and the call log), agent SSO
+  (SAML/SCIM), delegated customer-organization SSO and the advanced audit log.
+  The source is visible and free to use in development and testing, but
+  production use requires a commercial agreement — see [`ee/LICENSE`](ee/LICENSE).
+
+  The assistant was missing from this list while it was already shipping in
+  `ee/ai`, which made the core look like it included AI. It does not.
 
 ## Documentation
 
-- **API reference** — every instance serves its own OpenAPI 3.1 document at
-  `/api/v1/openapi.json`, generated from [`packages/openapi`](packages/openapi).
-  Point any OpenAPI viewer at it, or import it into Postman. A hosted developer
-  portal is being prepared; this README will link it when it exists rather than
-  before.
+- **API reference** — [developers.open-helpdesk.com](https://developers.open-helpdesk.com),
+  generated from the same OpenAPI 3.1 document every instance serves at
+  `/api/v1/openapi.json` (from [`packages/openapi`](packages/openapi)). The raw
+  document is at
+  [`/openapi.json`](https://developers.open-helpdesk.com/openapi.json), and a
+  Postman collection is generated beside it.
 - **Development setup** — [CONTRIBUTING.md](CONTRIBUTING.md).
 - **Installation** — the diagnostics card in **Settings → General** tells you
   what is still unconfigured, probe by probe.
