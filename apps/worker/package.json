@@ -19,12 +19,12 @@
     "@openhelpdesk/push": "workspace:*",
     "@openhelpdesk/rules": "workspace:*",
     "@openhelpdesk/webhooks": "workspace:*",
-    "bullmq": "^6.3.4",
+    "bullmq": "^6.3.6",
     "drizzle-orm": "^0.45.2",
     "ioredis": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^26.4.1",
+    "@types/node": "^26.6.1",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   }
