@@ -16,6 +16,15 @@
  *                   articles, macros and resolved tickets, embedded once and
  *                   compared in-app. Without this pass the layer stays empty
  *                   and every draft refuses for lack of a source.
+ * - desk-provisioning : service desk account creation/removal through the
+ *                   connectors (packages/desk) — every 30 s; a failure is
+ *                   retried, then handed to IT as a manual task
+ * - desk-approvals : approval reminders and escalations (packages/desk)
+ * - desk-expiries : temporary access reminders and revocation on expiry
+ * - desk-lifecycle : scheduled joiners and leavers (ee/desk)
+ * - desk-last-seen : sign-in activity from the connectors, per workspace
+ *                   with deskConnectors (ee/desk)
+ * - desk-shadow   : shadow IT discovery, per workspace with deskShadowIt (ee/desk)
  */
 export const QUEUE_NAMES = [
   "sla-timers",
@@ -29,7 +38,27 @@ export const QUEUE_NAMES = [
   "import-run",
   "ai-sweep",
   "ai-index",
+  "desk-provisioning",
+  "desk-approvals",
+  "desk-expiries",
+  "desk-lifecycle",
+  "desk-last-seen",
+  "desk-shadow",
 ] as const;
+
+/**
+ * Service desk schedules, in milliseconds. Here rather than inline in the
+ * entry point so the test can assert them (the entry point starts workers on
+ * import).
+ */
+export const DESK_SCHEDULES = {
+  "desk-provisioning": 30_000,
+  "desk-approvals": 15 * 60_000,
+  "desk-expiries": 3_600_000,
+  "desk-lifecycle": 5 * 60_000,
+  "desk-last-seen": 3_600_000,
+  "desk-shadow": 24 * 3_600_000,
+} as const satisfies Partial<Record<(typeof QUEUE_NAMES)[number], number>>;
 
 export type QueueName = (typeof QUEUE_NAMES)[number];
 

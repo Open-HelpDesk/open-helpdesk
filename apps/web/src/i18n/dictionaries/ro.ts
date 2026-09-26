@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_ro } from "./desk/ro";
 
 export const ro: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -2487,4 +2488,5 @@ export const ro: Dictionary = {
   "app.kb.tplReleaseHint": "Noutăți, îmbunătățiri și corecții dintr-o livrare.",
   "app.kb.tplReleaseTitle": "Noutăți în [data sau versiunea]",
   "app.kb.tplReleaseBody": "## Noutăți\n\n- **[Numele funcționalității]** — [ce permite, din perspectiva utilizatorului].\n\n## Îmbunătățiri\n\n- [Ce devine mai simplu sau mai rapid.]\n\n## Corecții\n\n- [Problema corectată, formulată așa cum o resimțea clientul.]\n\n> Aceste modificări sunt deja active în spațiul dvs., nu este necesară nicio\n> acțiune din partea dvs.\n",
+  ...desk_ro,
 };

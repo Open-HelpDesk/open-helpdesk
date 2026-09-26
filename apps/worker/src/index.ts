@@ -14,7 +14,8 @@ import { reindexEnabledWorkspaces, sweepDeflections } from "@openhelpdesk/ee-ai"
 import { deliverWebhookJob, type WebhookJob } from "@openhelpdesk/webhooks";
 import { deliverPushJob, type PushJob } from "@openhelpdesk/push";
 import { executeRun, parseZendeskExport, reapStaleRuns, type ImportSource } from "@openhelpdesk/import";
-import { QUEUE_NAMES, type QueueName, SWEEP_JOB_OPTS } from "./queues";
+import { DESK_SCHEDULES, QUEUE_NAMES, type QueueName, SWEEP_JOB_OPTS } from "./queues";
+import { deskProcessors } from "./desk";
 
 /**
  * An import queued by the admin screen.
@@ -151,6 +152,7 @@ const processors: Record<QueueName, Processor> = {
       );
     }
   },
+  ...deskProcessors,
   "import-run": async (job) => {
     const data = job.data as ImportRunJob;
     const { data: parsed, anomalies } = parseZendeskExport(data.payload);
@@ -194,6 +196,7 @@ async function registerSchedulers() {
        et un balayage horaire garde le compteur du quota juste à l'heure près. */
     ["ai-sweep", 3_600_000],
     ["ai-index", 21_600_000],
+    ...(Object.entries(DESK_SCHEDULES) as Array<[QueueName, number]>),
   ];
   /*
    * The knowledge layer is indexed once at boot, on top of its schedule.

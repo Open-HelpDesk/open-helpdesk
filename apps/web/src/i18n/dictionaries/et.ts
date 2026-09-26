@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_et } from "./desk/et";
 
 export const et: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -2330,4 +2331,5 @@ export const et: Dictionary = {
   "app.kb.tplReleaseHint": "Ühe väljalaske uued võimalused, täiustused ja parandused.",
   "app.kb.tplReleaseTitle": "Uued võimalused: [kuupäev või versioon]",
   "app.kb.tplReleaseBody": "## Uued võimalused\n\n- **[Funktsiooni nimi]** — [mida see kasutajale võimaldab].\n\n## Täiustused\n\n- [Mis muutub lihtsamaks või kiiremaks.]\n\n## Parandused\n\n- [Parandatud probleem, sõnastatud nii, nagu klient seda koges.]\n\n> Need muudatused on teie tööruumis juba aktiivsed, teie poolt ei ole vaja\n> midagi teha.\n",
+  ...desk_et,
 };

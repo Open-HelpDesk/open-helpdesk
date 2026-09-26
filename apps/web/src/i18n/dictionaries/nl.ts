@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_nl } from "./desk/nl";
 
 export const nl: Dictionary = {
   "chrome.defaultName": "Helpcentrum",
@@ -2138,4 +2139,5 @@ export const nl: Dictionary = {
   "app.kb.tplReleaseHint": "Nieuwe functies, verbeteringen en correcties van één release.",
   "app.kb.tplReleaseTitle": "Nieuw in [datum of versie]",
   "app.kb.tplReleaseBody": "## Nieuwe functies\n\n- **[Naam van de functie]** — [wat de gebruiker ermee kan].\n\n## Verbeteringen\n\n- [Wat eenvoudiger of sneller wordt.]\n\n## Correcties\n\n- [Het opgeloste probleem, verwoord zoals de klant het ervoer.]\n\n> Deze wijzigingen zijn al actief in uw werkruimte, u hoeft zelf niets te\n> doen.\n",
+  ...desk_nl,
 };

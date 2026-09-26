@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_ga } from "./desk/ga";
 
 export const ga: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -2634,4 +2635,5 @@ export const ga: Dictionary = {
   "app.kb.tplReleaseHint": "Gnéithe nua, feabhsuithe agus ceartúcháin na heisiúna.",
   "app.kb.tplReleaseTitle": "Cad atá nua i [dáta nó leagan]",
   "app.kb.tplReleaseBody": "## Gnéithe nua\n\n- **[Ainm na gné]** — [an rud a cheadaíonn sí don úsáideoir].\n\n## Feabhsuithe\n\n- [An rud a éiríonn níos simplí nó níos tapúla.]\n\n## Ceartúcháin\n\n- [An fhadhb a ceartaíodh, mar a bhraith an custaiméir í.]\n\n> Tá na hathruithe seo i bhfeidhm ar do spás oibre cheana féin, ní gá aon rud a\n> dhéanamh ó do thaobh.\n",
+  ...desk_ga,
 };

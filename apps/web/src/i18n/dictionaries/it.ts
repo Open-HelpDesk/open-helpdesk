@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_it } from "./desk/it";
 
 export const it: Dictionary = {
   "chrome.defaultName": "Centro assistenza",
@@ -2134,4 +2135,5 @@ export const it: Dictionary = {
   "app.kb.tplReleaseHint": "Novità, miglioramenti e correzioni di un rilascio.",
   "app.kb.tplReleaseTitle": "Novità di [data o versione]",
   "app.kb.tplReleaseBody": "## Novità\n\n- **[Nome della funzionalità]** — [che cosa consente di fare, lato utente].\n\n## Miglioramenti\n\n- [Ciò che diventa più semplice o più rapido.]\n\n## Correzioni\n\n- [Il problema corretto, formulato come lo viveva il cliente.]\n\n> Queste modifiche sono già attive sul tuo workspace, non è necessaria alcuna\n> azione da parte tua.\n",
+  ...desk_it,
 };

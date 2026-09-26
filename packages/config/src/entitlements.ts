@@ -25,6 +25,32 @@ export type Entitlements = {
   customDomain: boolean;
   auditLog: boolean;
   multiBrand: boolean;
+  /*
+   * Service desk (spec 19). One switch per module, so that the control plane
+   * can move any of them between tiers without a deployment: which ones are
+   * paid is a commercial decision, and it is expected to change. The console
+   * edits these per plan; the product only reads them.
+   */
+  /** The module itself: directory, catalogue, requests, approvals, manual provisioning, portal. */
+  serviceDesk: boolean;
+  /** Employees in the directory — null: no ceiling. */
+  maxDeskPeople: number | null;
+  /** Inbound SCIM and the Entra ID / Google Workspace / outbound SCIM connectors. */
+  deskConnectors: boolean;
+  /** Licence optimisation: inactive seats, renewals, spend. */
+  deskLicences: boolean;
+  /** Hardware inventory. */
+  deskHardware: boolean;
+  /** Access review campaigns and the audit evidence export. */
+  deskAccessReviews: boolean;
+  /** Joiners and leavers: packs, scheduled offboarding. */
+  deskLifecycle: boolean;
+  /** Department budgets and the three budget modes. */
+  deskBudgets: boolean;
+  /** Separation-of-duties rules and the second approver on privileged roles. */
+  deskGovernance: boolean;
+  /** Shadow IT discovery. */
+  deskShadowIt: boolean;
 };
 
 /**
@@ -46,4 +72,29 @@ export const CORE_ENTITLEMENTS: Entitlements = {
   customDomain: false,
   auditLog: false,
   multiBrand: false,
+  // D-SD1 (26/09): the request flow is AGPL core; automation and evidence are ee/.
+  serviceDesk: true,
+  maxDeskPeople: null,
+  deskConnectors: false,
+  deskLicences: false,
+  deskHardware: true,
+  deskAccessReviews: false,
+  deskLifecycle: false,
+  deskBudgets: false,
+  deskGovernance: false,
+  deskShadowIt: false,
 };
+
+/** The service desk entitlement keys, in display order — the console iterates them. */
+export const DESK_ENTITLEMENT_KEYS = [
+  "serviceDesk",
+  "maxDeskPeople",
+  "deskConnectors",
+  "deskLicences",
+  "deskHardware",
+  "deskAccessReviews",
+  "deskLifecycle",
+  "deskBudgets",
+  "deskGovernance",
+  "deskShadowIt",
+] as const satisfies ReadonlyArray<keyof Entitlements>;

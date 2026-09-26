@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { QUEUE_NAMES, SWEEP_JOB_OPTS } from "./queues";
+import { DESK_SCHEDULES, QUEUE_NAMES, SWEEP_JOB_OPTS } from "./queues";
 
 /**
  * La politique de reprise des balayages périodiques.
@@ -65,5 +65,22 @@ describe("QUEUE_NAMES", () => {
     // consommateurs concurrents sur la même file, et une exécution double des
     // balayages plutôt qu'une erreur.
     expect(new Set(QUEUE_NAMES).size).toBe(QUEUE_NAMES.length);
+  });
+});
+
+describe("DESK_SCHEDULES", () => {
+  it("schedules only queues that exist, so each tick has a worker", () => {
+    for (const name of Object.keys(DESK_SCHEDULES)) expect(QUEUE_NAMES).toContain(name);
+  });
+
+  it("runs the service desk jobs at the cadence the spec promises", () => {
+    // "Created in under a minute" (spec 19, rule 5) holds only if the
+    // provisioning queue is polled well within that minute.
+    expect(DESK_SCHEDULES["desk-provisioning"]).toBeLessThanOrEqual(30_000);
+    expect(DESK_SCHEDULES["desk-approvals"]).toBe(15 * 60_000);
+    expect(DESK_SCHEDULES["desk-expiries"]).toBe(3_600_000);
+    expect(DESK_SCHEDULES["desk-lifecycle"]).toBe(5 * 60_000);
+    expect(DESK_SCHEDULES["desk-last-seen"]).toBe(3_600_000);
+    expect(DESK_SCHEDULES["desk-shadow"]).toBe(24 * 3_600_000);
   });
 });

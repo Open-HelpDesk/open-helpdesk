@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_fi } from "./desk/fi";
 
 export const fi: Dictionary = {
   "chrome.defaultName": "Ohjekeskus",
@@ -2137,4 +2138,5 @@ export const fi: Dictionary = {
   "app.kb.tplReleaseHint": "Julkaisun uudet ominaisuudet, parannukset ja korjaukset.",
   "app.kb.tplReleaseTitle": "Uutta versiossa [päivämäärä tai versio]",
   "app.kb.tplReleaseBody": "## Uudet ominaisuudet\n\n- **[Ominaisuuden nimi]** — [mitä se mahdollistaa käyttäjän näkökulmasta].\n\n## Parannukset\n\n- [Mikä helpottuu tai nopeutuu.]\n\n## Korjaukset\n\n- [Korjattu ongelma, kuvattuna niin kuin asiakas sen koki.]\n\n> Muutokset ovat jo käytössä työtilassasi, eivätkä ne vaadi sinulta\n> toimenpiteitä.\n",
+  ...desk_fi,
 };

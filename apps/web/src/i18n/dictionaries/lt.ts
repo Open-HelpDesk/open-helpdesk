@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_lt } from "./desk/lt";
 
 export const lt: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -2553,4 +2554,5 @@ export const lt: Dictionary = {
   "app.kb.tplReleaseHint": "Vieno leidimo naujienos, patobulinimai ir klaidų taisymai.",
   "app.kb.tplReleaseTitle": "Kas nauja [data ar versija]",
   "app.kb.tplReleaseBody": "## Naujienos\n\n- **[Funkcijos pavadinimas]** — [ką ji leidžia naudotojui].\n\n## Patobulinimai\n\n- [Kas tampa paprasčiau ar greičiau.]\n\n## Klaidų taisymai\n\n- [Ištaisyta problema, aprašyta taip, kaip ją matė klientas.]\n\n> Šie pakeitimai jūsų darbo erdvėje jau veikia, jums nieko daryti\n> nereikia.\n",
+  ...desk_lt,
 };

@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_nb } from "./desk/nb";
 
 export const nb: Dictionary = {
   "chrome.defaultName": "Hjelpesenter",
@@ -2140,4 +2141,5 @@ export const nb: Dictionary = {
   "app.kb.tplReleaseHint": "Nyheter, forbedringer og feilrettinger i en utgivelse.",
   "app.kb.tplReleaseTitle": "Nyheter i [dato eller versjon]",
   "app.kb.tplReleaseBody": "## Nyheter\n\n- **[Navn på funksjonen]** — [hva den gir brukerne mulighet til å gjøre].\n\n## Forbedringer\n\n- [Det som blir enklere eller raskere.]\n\n## Feilrettinger\n\n- [Problemet som er rettet, formulert slik kunden opplevde det.]\n\n> Disse endringene er allerede aktive i arbeidsområdet ditt, og du trenger ikke\n> gjøre noe.\n",
+  ...desk_nb,
 };

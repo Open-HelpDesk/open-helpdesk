@@ -45,6 +45,12 @@ importers:
       '@openhelpdesk/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@openhelpdesk/desk':
+        specifier: workspace:*
+        version: link:../../packages/desk
+      '@openhelpdesk/ee-desk':
+        specifier: workspace:*
+        version: link:../../ee/desk
       '@openhelpdesk/ee-web':
         specifier: workspace:*
         version: link:../../ee/web
@@ -148,9 +154,15 @@ importers:
       '@openhelpdesk/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@openhelpdesk/desk':
+        specifier: workspace:*
+        version: link:../../packages/desk
       '@openhelpdesk/ee-ai':
         specifier: workspace:*
         version: link:../../ee/ai
+      '@openhelpdesk/ee-desk':
+        specifier: workspace:*
+        version: link:../../ee/desk
       '@openhelpdesk/import':
         specifier: workspace:*
         version: link:../../packages/import
@@ -214,6 +226,34 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(@types/node@26.4.1)(@vitest/coverage-v8@5.0.0)(vite@7.3.6(@types/node@26.4.1)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.13))
 
+  ee/desk:
+    dependencies:
+      '@openhelpdesk/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@openhelpdesk/crypto':
+        specifier: workspace:*
+        version: link:../../packages/crypto
+      '@openhelpdesk/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@openhelpdesk/desk':
+        specifier: workspace:*
+        version: link:../../packages/desk
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(kysely@0.29.5)(postgres@3.4.9)
+    devDependencies:
+      '@types/node':
+        specifier: ^26.4.1
+        version: 26.4.1
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^5.0.0
+        version: 5.0.0(@types/node@26.4.1)(@vitest/coverage-v8@5.0.0)(vite@7.3.6(@types/node@26.4.1)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.13))
+
   ee/web:
     dependencies:
       '@openhelpdesk/config':
@@ -225,9 +265,15 @@ importers:
       '@openhelpdesk/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@openhelpdesk/desk':
+        specifier: workspace:*
+        version: link:../../packages/desk
       '@openhelpdesk/ee-ai':
         specifier: workspace:*
         version: link:../ai
+      '@openhelpdesk/ee-desk':
+        specifier: workspace:*
+        version: link:../desk
       drizzle-orm:
         specifier: ^0.45.2
         version: 0.45.2(kysely@0.29.5)(postgres@3.4.9)
@@ -318,6 +364,34 @@ importers:
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
+
+  packages/desk:
+    dependencies:
+      '@openhelpdesk/config':
+        specifier: workspace:*
+        version: link:../config
+      '@openhelpdesk/crypto':
+        specifier: workspace:*
+        version: link:../crypto
+      '@openhelpdesk/db':
+        specifier: workspace:*
+        version: link:../db
+      '@openhelpdesk/mail':
+        specifier: workspace:*
+        version: link:../mail
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(kysely@0.29.5)(postgres@3.4.9)
+    devDependencies:
+      '@types/node':
+        specifier: ^26.4.1
+        version: 26.4.1
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^5.0.0
+        version: 5.0.0(@types/node@26.4.1)(@vitest/coverage-v8@5.0.0)(vite@7.3.6(@types/node@26.4.1)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.13))
 
   packages/export:
     dependencies:
@@ -525,6 +599,10 @@ importers:
         version: 7.0.2
 
   packages/ui:
+    dependencies:
+      simple-icons:
+        specifier: ^16.32.0
+        version: 16.32.0
     devDependencies:
       typescript:
         specifier: ^7.0.2
@@ -3191,6 +3269,10 @@ packages:
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
 
+  simple-icons@16.32.0:
+    resolution: {integrity: sha512-BwqATHxAulx7X6kNdTkecy7PBjLkgtAHcgrwYLd9iA+cD2At9DzhJwdwaSELk2+aZe01IfiM/Wxtyp68Dvup2A==}
+    engines: {node: '>=0.12.18'}
+
   smart-buffer@4.2.0:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
@@ -5829,6 +5911,8 @@ snapshots:
       side-channel-weakmap: 1.0.2
 
   siginfo@2.0.0: {}
+
+  simple-icons@16.32.0: {}
 
   smart-buffer@4.2.0: {}
 

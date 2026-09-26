@@ -1,0 +1,32 @@
+{
+  "icons": [
+    "1password", "airtable", "anthropic", "anydesk", "asana", "atlassian", "auth0", "basecamp", "behance",
+    "bitbucket", "bitwarden", "box", "brevo", "calendly", "circleci", "claude", "clickup", "cloudflare",
+    "coda", "confluence", "datadog", "digitalocean", "discord", "docker", "dribbble", "dropbox", "elastic",
+    "evernote", "figma", "firebase", "framer", "github", "githubcopilot", "gitlab", "gmail", "google",
+    "googleanalytics", "googlecalendar", "googlechat", "googlecloud", "googledocs", "googledrive",
+    "googlegemini", "googlemeet", "googlesheets", "grafana", "hotjar", "hubspot", "huggingface",
+    "intercom", "jenkins", "jira", "kubernetes", "lastpass", "linear", "loom", "lucid", "mailchimp",
+    "make", "mattermost", "miro", "mistralai", "mixpanel", "mongodb", "n8n", "netlify", "newrelic",
+    "notion", "obsidian", "odoo", "okta", "pagerduty", "paypal", "perplexity", "postman", "quickbooks",
+    "revolut", "sage", "sentry", "shopify", "sketch", "stripe", "supabase", "surveymonkey", "teamviewer",
+    "telegram", "terraform", "todoist", "trello", "typeform", "vercel", "webflow", "wetransfer",
+    "whatsapp", "wise", "wix", "wordpress", "xero", "zapier", "zendesk", "zoom"
+  ],
+  "colourOnly": [
+    ["adobe", "Adobe", "#FF0000"],
+    ["canva", "Canva", "#00C4CC"],
+    ["docusign", "Docusign", "#4C00FF"],
+    ["freshdesk", "Freshdesk", "#25C16F"],
+    ["microsoft365", "Microsoft 365", "#D83B01"],
+    ["microsoftoutlook", "Microsoft Outlook", "#0078D4"],
+    ["microsoftteams", "Microsoft Teams", "#6264A7"],
+    ["mondaydotcom", "monday.com", "#FF3D57"],
+    ["openai", "OpenAI", "#412991"],
+    ["pennylane", "Pennylane", "#00A676"],
+    ["pipedrive", "Pipedrive", "#017737"],
+    ["qonto", "Qonto", "#1D1D1B"],
+    ["salesforce", "Salesforce", "#00A1E0"],
+    ["slack", "Slack", "#4A154B"]
+  ]
+}

@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_mt } from "./desk/mt";
 
 export const mt: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -2616,4 +2617,5 @@ export const mt: Dictionary = {
   "app.kb.tplReleaseTitle": "X'hemm ġdid f'[data jew verżjoni]",
   "app.kb.tplReleaseBody": "## Funzjonijiet ġodda\n\n- **[Isem tal-funzjoni]** — [x'tippermetti li jagħmel l-utent].\n\n## Titjib\n\n- [Dak li jsir aktar sempliċi jew aktar mgħaġġel.]\n\n## Korrezzjonijiet\n\n- [Il-problema li ssewwiet, imfissra kif kien qed jgħaddi minnha l-klijent.]\n\n> Dawn il-bidliet diġà huma attivi fl-ispazju tax-xogħol tiegħek, ma hemmx\n> bżonn tagħmel xejn.\n",
 
+  ...desk_mt,
 };

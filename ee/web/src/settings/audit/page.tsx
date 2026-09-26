@@ -6,6 +6,7 @@ import { entitlementsFor } from "@/lib/entitlements";
 import { LockedScreen, PageHeader, PageShell } from "@/components/settings-page";
 import { AutoSubmitSelect } from "@/components/settings-overlays";
 import { getT, type Translate } from "@/i18n/server";
+import { describeDeskAudit } from "@/lib/desk";
 
 const AUDIT_GRID = "160px 170px minmax(220px,1fr) 200px 120px";
 
@@ -231,8 +232,9 @@ export default async function AuditPage({
                       paddingRight: 10,
                       color: destructive ? "var(--dang)" : "var(--ink)",
                     }}
+                    title={e.action}
                   >
-                    {e.action}
+                    {deskLine(t, e) ?? e.action}
                   </span>
                   <span className="truncate" style={{ paddingRight: 10, color: "var(--ink-2)" }}>
                     {e.targetType
@@ -300,4 +302,10 @@ function GhostTable({ t }: { t: Translate }) {
       </div>
     </div>
   );
+}
+
+/** Service desk actions carry their own sentence (spec 19 §4: one decision, one readable line). */
+function deskLine(t: Translate, e: { action: string; before: unknown; after: unknown }): string | null {
+  if (!e.action.startsWith("desk.")) return null;
+  return describeDeskAudit(e.action, e.after, t, (iso: string) => t.fmt.dateShort(new Date(iso)), e.before);
 }

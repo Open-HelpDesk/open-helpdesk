@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_hu } from "./desk/hu";
 
 export const hu: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -2357,4 +2358,5 @@ export const hu: Dictionary = {
   "app.kb.tplReleaseTitle": "A(z) [dátum vagy verzió] újdonságai",
   "app.kb.tplReleaseBody":
     "## Újdonságok\n\n- **[A funkció neve]** — [mit tesz lehetővé a felhasználó szempontjából].\n\n## Fejlesztések\n\n- [Ami egyszerűbbé vagy gyorsabbá válik.]\n\n## Hibajavítások\n\n- [A javított hiba, úgy megfogalmazva, ahogyan az ügyfél megtapasztalta.]\n\n> Ezek a változások már élnek a munkaterületén, semmilyen teendője nincs\n> velük.\n",
+  ...desk_hu,
 };

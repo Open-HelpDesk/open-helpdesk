@@ -12,7 +12,7 @@ import {
 } from "@openhelpdesk/db";
 import { isManager, requireAgent } from "@/lib/session";
 import { requireTenant } from "@/lib/tenant";
-import { billingOf } from "@/lib/entitlements";
+import { billingOf, entitlementsFor } from "@/lib/entitlements";
 
 import { getEdition } from "@openhelpdesk/config";
 import { CommandPalette } from "@/components/command-palette";
@@ -226,7 +226,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         )}
 
         <div className="flex min-h-0 flex-1">
-          <RailNav inboxBadge={counts.inbox} />
+          <RailNav
+            inboxBadge={counts.inbox}
+            // Service desk (spec 19): the module's entitlement, and a role that may open it.
+            serviceDesk={entitlementsFor(tenant).serviceDesk && agent.role !== "viewer"}
+          />
           <div className="min-w-0 flex-1 overflow-hidden">{children}</div>
         </div>
 

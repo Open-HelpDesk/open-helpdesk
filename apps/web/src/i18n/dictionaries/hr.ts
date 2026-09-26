@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_hr } from "./desk/hr";
 
 export const hr: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -2442,4 +2443,5 @@ export const hr: Dictionary = {
   "app.kb.tplReleaseHint": "Novosti, poboljšanja i ispravci jednog izdanja.",
   "app.kb.tplReleaseTitle": "Novosti u izdanju [datum ili verzija]",
   "app.kb.tplReleaseBody": "## Novosti\n\n- **[Naziv funkcionalnosti]** — [što omogućuje korisniku].\n\n## Poboljšanja\n\n- [Što postaje jednostavnije ili brže.]\n\n## Ispravci\n\n- [Ispravljeni problem, opisan onako kako ga je klijent doživio.]\n\n> Te su promjene već aktivne u vašem radnom prostoru i ne zahtijevaju nikakvu\n> radnju s vaše strane.\n",
+  ...desk_hr,
 };

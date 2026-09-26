@@ -204,6 +204,13 @@
       "when": 1789055858437,
       "tag": "0028_amazing_nebula",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1790451781514,
+      "tag": "0029_wide_darkstar",
+      "breakpoints": true
     }
   ]
 }

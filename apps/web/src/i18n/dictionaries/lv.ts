@@ -1,4 +1,5 @@
 import type { Dictionary } from "./en";
+import { desk_lv } from "./desk/lv";
 
 export const lv: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -2479,4 +2480,5 @@ export const lv: Dictionary = {
   "app.kb.tplReleaseHint": "Viena laidiena jaunumi, uzlabojumi un labojumi.",
   "app.kb.tplReleaseTitle": "Jaunumi laidienā [datums vai versija]",
   "app.kb.tplReleaseBody": "## Jaunumi\n\n- **[Funkcijas nosaukums]** — [ko tā ļauj darīt lietotājam].\n\n## Uzlabojumi\n\n- [Kas kļūst vienkāršāks vai ātrāks.]\n\n## Labojumi\n\n- [Novērstā problēma, formulēta tā, kā to izjuta klients.]\n\n> Šīs izmaiņas jūsu darbvietā jau ir aktīvas, no jūsu puses nekas nav\n> jādara.\n",
+  ...desk_lv,
 };

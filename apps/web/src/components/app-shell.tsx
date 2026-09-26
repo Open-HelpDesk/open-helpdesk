@@ -62,6 +62,13 @@ const RAIL = [
     d: "M22 12h-6l-2 3h-4l-2-3H2 M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z",
   },
   {
+    // Service desk (spec 19) — shown only when the workspace has the module.
+    href: "/app/desk",
+    match: "/app/desk",
+    labelKey: "desk.it.rail",
+    d: "M15 7a2 2 0 0 1 2 2 M21 9a6 6 0 0 1-7.74 5.74L11 17H9v2H7v2H4a1 1 0 0 1-1-1v-2.59a1 1 0 0 1 .29-.7l6-6A6 6 0 1 1 21 9z",
+  },
+  {
     href: "/app/contacts",
     match: "/app/contacts",
     labelKey: "app.shell.contacts",
@@ -120,9 +127,10 @@ export function Asterisk({ size = 24 }: { size?: number }) {
 
 /* ---------- Rail ---------- */
 
-export function RailNav({ inboxBadge }: { inboxBadge: number }) {
+export function RailNav({ inboxBadge, serviceDesk = false }: { inboxBadge: number; serviceDesk?: boolean }) {
   const pathname = usePathname();
   const t = useT();
+  const rail = RAIL.filter((item) => serviceDesk || item.href !== "/app/desk");
 
   return (
     <nav
@@ -136,7 +144,7 @@ export function RailNav({ inboxBadge }: { inboxBadge: number }) {
         borderColor: "var(--line)",
       }}
     >
-      {RAIL.map(({ href, match, labelKey, d }) => {
+      {rail.map(({ href, match, labelKey, d }) => {
         const active = pathname.startsWith(match);
         return (
           <Link
@@ -247,6 +255,26 @@ export function BreadcrumbLeaf({ leaf }: { leaf: string }) {
   return null;
 }
 
+/** The service desk screen the path names — the breadcrumb leaf of that section. */
+function deskLeaf(pathname: string, t: ReturnType<typeof useT>): string {
+  const screen = pathname.split("/")[3] ?? "";
+  const key = (
+    {
+      "": "desk.it.nav.requests",
+      requests: "desk.it.nav.requests",
+      apps: "desk.it.nav.apps",
+      licences: "desk.it.nav.licences",
+      hardware: "desk.it.nav.hardware",
+      reviews: "desk.it.nav.reviews",
+      shadow: "desk.it.nav.shadow",
+      people: "desk.it.nav.people",
+      lifecycle: "desk.it.nav.lifecycle",
+      config: "desk.it.nav.config",
+    } as const
+  )[screen];
+  return key ? t(key) : "";
+}
+
 function crumbFor(pathname: string, t: ReturnType<typeof useT>): Crumb {
   if (pathname.startsWith("/app/contacts")) return { root: t("app.shell.contacts"), leaf: "" };
   if (pathname.startsWith("/app/organizations"))
@@ -254,6 +282,7 @@ function crumbFor(pathname: string, t: ReturnType<typeof useT>): Crumb {
   if (pathname.startsWith("/app/reports")) return { root: t("app.shell.reports"), leaf: "" };
   if (pathname.startsWith("/app/kb")) return { root: t("app.shell.knowledgeBase"), leaf: "" };
   if (pathname.startsWith("/app/settings")) return { root: t("app.shell.settings"), leaf: "" };
+  if (pathname.startsWith("/app/desk")) return { root: t("desk.it.rail"), leaf: deskLeaf(pathname, t) };
   return { root: t("app.shell.inbox"), leaf: "" };
 }
 
@@ -384,13 +413,20 @@ export function TopBar({
         style={{ gap: 8, fontSize: 13.5, color: "var(--ink-3)" }}
       >
         <span style={{ color: "var(--brand-2)", fontWeight: 500 }}>{crumb.root}</span>
-        {leaf && (
+        {leaf ? (
           <>
             <span>/</span>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 12.5, color: "var(--ink-2)" }}>
               {leaf}
             </span>
           </>
+        ) : (
+          crumb.leaf && (
+            <>
+              <span>/</span>
+              <span style={{ color: "var(--ink-2)" }}>{crumb.leaf}</span>
+            </>
+          )
         )}
       </div>
 

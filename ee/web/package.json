@@ -18,17 +18,30 @@
     "./settings/assistant/actions": "./src/settings/assistant/actions.ts",
     "./tickets/ai-draft": "./src/tickets/ai-draft.tsx",
     "./tickets/ai-summary": "./src/tickets/ai-summary.tsx",
-    "./tickets/ai-actions": "./src/tickets/ai-actions.ts"
+    "./tickets/ai-actions": "./src/tickets/ai-actions.ts",
+    "./desk/licences/page": "./src/desk/licences/page.tsx",
+    "./desk/reviews/page": "./src/desk/reviews/page.tsx",
+    "./desk/reviews/evidence-route": "./src/desk/reviews/evidence-route.ts",
+    "./desk/lifecycle/page": "./src/desk/lifecycle/page.tsx",
+    "./desk/shadow/page": "./src/desk/shadow/page.tsx",
+    "./desk/config/connectors-tab": "./src/desk/config/connectors-tab.tsx",
+    "./desk/config/budgets-tab": "./src/desk/config/budgets-tab.tsx",
+    "./desk/config/lifecycle-tab": "./src/desk/config/lifecycle-tab.tsx",
+    "./desk/config/scim-section": "./src/desk/config/scim-section.tsx",
+    "./desk/config/governance-sections": "./src/desk/config/governance-sections.tsx",
+    "./desk/config/reviews-section": "./src/desk/config/reviews-section.tsx"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@openhelpdesk/config": "workspace:*",
+    "@openhelpdesk/crypto": "workspace:*",
     "@openhelpdesk/db": "workspace:*",
-    "drizzle-orm": "^0.45.2",
+    "@openhelpdesk/desk": "workspace:*",
     "@openhelpdesk/ee-ai": "workspace:*",
-    "@openhelpdesk/crypto": "workspace:*"
+    "@openhelpdesk/ee-desk": "workspace:*",
+    "drizzle-orm": "^0.45.2"
   },
   "peerDependencies": {
     "next": "*",

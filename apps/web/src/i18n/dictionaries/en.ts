@@ -12,6 +12,7 @@
  */
 
 import type { Message } from "../dictionary";
+import { desk_en } from "./desk/en";
 
 export const en = {
   "chrome.defaultName": "Help centre",
@@ -2132,6 +2133,7 @@ export const en = {
   "app.kb.tplReleaseHint": "New features, improvements and fixes in one release.",
   "app.kb.tplReleaseTitle": "What's new in [date or version]",
   "app.kb.tplReleaseBody": "## New features\n\n- **[Name of the feature]** — [what it lets people do, from their side].\n\n## Improvements\n\n- [What becomes simpler or faster.]\n\n## Fixes\n\n- [The problem fixed, worded the way the customer experienced it.]\n\n> These changes are already live on your workspace, nothing is required from\n> you.\n",
+  ...desk_en,
 } as const satisfies Record<string, Message>;
 
 /** The product's whole key set — the other languages are typed against it. */

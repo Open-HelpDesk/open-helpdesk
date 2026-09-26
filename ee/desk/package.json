@@ -1,0 +1,26 @@
+{
+  "name": "@openhelpdesk/ee-desk",
+  "version": "0.2.0",
+  "private": true,
+  "license": "SEE LICENSE IN ../LICENSE",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@openhelpdesk/config": "workspace:*",
+    "@openhelpdesk/crypto": "workspace:*",
+    "@openhelpdesk/db": "workspace:*",
+    "@openhelpdesk/desk": "workspace:*",
+    "drizzle-orm": "^0.45.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  }
+}

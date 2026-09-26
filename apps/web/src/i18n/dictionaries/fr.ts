@@ -4,6 +4,7 @@
  */
 
 import type { Dictionary } from "./en";
+import { desk_fr } from "./desk/fr";
 
 export const fr: Dictionary = {
   /* ---------- Chrome ---------- */
@@ -2222,4 +2223,5 @@ export const fr: Dictionary = {
   "app.kb.tplReleaseTitle": "Nouveautés du [date ou version]",
   "app.kb.tplReleaseBody": "## Nouveautés\n\n- **[Nom de la fonctionnalité]** — [ce qu'elle permet, côté utilisateur].\n\n## Améliorations\n\n- [Ce qui devient plus simple ou plus rapide.]\n\n## Corrections\n\n- [Le problème corrigé, formulé comme le client le vivait.]\n\n> Ces changements sont déjà actifs sur votre espace, aucune action de votre part\n> n'est nécessaire.\n",
 
+  ...desk_fr,
 };
