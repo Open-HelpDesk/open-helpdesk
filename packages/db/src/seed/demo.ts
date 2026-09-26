@@ -34,6 +34,7 @@ import {
   verifiedDomains,
 } from "../schema";
 import { installDefaults } from "./defaults";
+import { seedDeskDemo } from "./desk";
 
 const HOUR = 3600 * 1000;
 
@@ -924,6 +925,7 @@ async function seed() {
   if (historyCount > 0) console.log(`OK — ${historyCount} history tickets (90 days) generated.`);
   await ensureKb(tenant.id);
   await ensureOrgAdmin(tenant.id);
+  await seedDeskDemo(tenant.id);
 
   console.log(
     `OK — tenant ${tenant.slug}: defaults (SLA, macros, rules, teams, fields) + KB installed.`,
