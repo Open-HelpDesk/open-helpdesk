@@ -10,7 +10,7 @@ import { defineConfig } from "@playwright/test";
  * only exists in the interface.
  *
  * THREE THINGS MUST BE TRUE BEFORE RUNNING:
- *  1. docker compose -f docker/docker-compose.yml up -d   (Postgres, Mailpit, MinIO)
+ *  1. docker compose -f docker/docker-compose.yml up -d   (Postgres, Redis, Mailpit, RustFS)
  *  2. the database is migrated and seeded   (pnpm db:migrate && pnpm db:seed && pnpm db:seed:auth)
  *  3. the server runs with a BASE_DOMAIN that MATCHES its port:
  *       BASE_DOMAIN=localhost:3006 pnpm --filter @openhelpdesk/web exec next start --port 3006

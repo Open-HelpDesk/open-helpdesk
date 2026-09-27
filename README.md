@@ -210,7 +210,7 @@ docker compose up -d
 ```
 
 Open http://localhost:3000 — the stack (web, worker, PostgreSQL 17, Redis,
-MinIO) starts with a demo workspace: `marie.dupont@acme.example` /
+RustFS for S3 storage) starts with a demo workspace: `marie.dupont@acme.example` /
 `demo-openhelpdesk`. Set `SEED_DEMO=false` once your own agents exist. The
 diagnostics card in **Settings → General** tells you what is left to configure.
 

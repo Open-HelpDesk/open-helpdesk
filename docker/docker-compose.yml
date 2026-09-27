@@ -31,19 +31,21 @@ services:
       timeout: 3s
       retries: 10
 
-  minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
+  # S3-compatible object storage (RustFS, Apache-2.0, pinned). MinIO stopped
+  # publishing its community images: `minio/minio` no longer pulls. Console on
+  # http://localhost:9011/rustfs/console/ (openhelpdesk / openhelpdesk).
+  storage:
+    image: rustfs/rustfs:1.0.0
     environment:
-      MINIO_ROOT_USER: openhelpdesk
-      MINIO_ROOT_PASSWORD: openhelpdesk
+      RUSTFS_ACCESS_KEY: openhelpdesk
+      RUSTFS_SECRET_KEY: openhelpdesk
     ports:
-      - "${OHD_MINIO_PORT:-9010}:9000"
-      - "${OHD_MINIO_CONSOLE_PORT:-9011}:9001"
+      - "${OHD_STORAGE_PORT:-9010}:9000"
+      - "${OHD_STORAGE_CONSOLE_PORT:-9011}:9001"
     volumes:
-      - miniodata:/data
+      - storagedata:/data
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9000/health"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -67,4 +69,4 @@ services:
 volumes:
   pgdata:
   redisdata:
-  miniodata:
+  storagedata:

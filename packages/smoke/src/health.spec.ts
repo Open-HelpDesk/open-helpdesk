@@ -36,7 +36,7 @@ test("health answers with the full contract and live vitals", async ({ request }
     expect(typeof body.checks[key].ms).toBe("number");
   }
 
-  // In the smoke environment postgres, minio and redis are all up: these are
+  // In the smoke environment postgres, storage and redis are all up: these are
   // hard assertions, not tolerances.
   expect(body.checks.db.ok).toBe(true);
   expect(body.checks.storage.ok).toBe(true);

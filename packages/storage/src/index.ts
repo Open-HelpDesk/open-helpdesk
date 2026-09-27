@@ -8,7 +8,7 @@
  * it into a package is what makes an attachment reachable from the mail
  * pipeline, from an import, and from the app alike.
  *
- * S3-compatible (MinIO locally). Keys stay `{tenantId}/{messageId}/{uuid}-{name}`
+ * S3-compatible (RustFS locally). Keys stay `{tenantId}/{messageId}/{uuid}-{name}`
  * so nothing that already reads them has to change.
  */
 import { randomUUID } from "node:crypto";

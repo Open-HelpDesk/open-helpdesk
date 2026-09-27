@@ -8,7 +8,7 @@
 # Acme demo workspace — login marie.dupont@acme.example / demo-openhelpdesk,
 # to be replaced by your own agents from the first session on.
 #
-# The internal hosts (postgres, redis, minio) are pinned here and take
+# The internal hosts (postgres, redis, storage) are pinned here and take
 # precedence over .env, written for development on the host machine's ports.
 
 name: open-helpdesk-prod
@@ -38,16 +38,19 @@ services:
       timeout: 3s
       retries: 10
 
-  minio:
-    image: minio/minio:latest
-    command: server /data
+  # S3-compatible object storage for attachments. RustFS (Apache-2.0), pinned:
+  # MinIO stopped publishing its community images, and `minio/minio` no longer
+  # pulls from any public registry. Any S3 server works — the application only
+  # creates its bucket and puts, gets and deletes objects (packages/storage).
+  storage:
+    image: rustfs/rustfs:1.0.0
     environment:
-      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID:-openhelpdesk}
-      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:-openhelpdesk}
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY_ID:-openhelpdesk}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_ACCESS_KEY:-openhelpdesk}
     volumes:
-      - miniodata:/data
+      - storagedata:/data
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9000/health"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -76,7 +79,7 @@ services:
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER:-openhelpdesk}:${POSTGRES_PASSWORD:-openhelpdesk}@postgres:5432/${POSTGRES_DB:-openhelpdesk}
       REDIS_URL: redis://redis:6379
-      S3_ENDPOINT: http://minio:9000
+      S3_ENDPOINT: http://storage:9000
     ports:
       - "${WEB_PORT:-3000}:3000"
     depends_on:
@@ -84,7 +87,7 @@ services:
         condition: service_completed_successfully
       redis:
         condition: service_healthy
-      minio:
+      storage:
         condition: service_healthy
     restart: unless-stopped
 
@@ -98,15 +101,18 @@ services:
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER:-openhelpdesk}:${POSTGRES_PASSWORD:-openhelpdesk}@postgres:5432/${POSTGRES_DB:-openhelpdesk}
       REDIS_URL: redis://redis:6379
-      S3_ENDPOINT: http://minio:9000
+      S3_ENDPOINT: http://storage:9000
     depends_on:
       migrate:
         condition: service_completed_successfully
       redis:
+        condition: service_healthy
+      # Inbound email and imports write attachments.
+      storage:
         condition: service_healthy
     restart: unless-stopped
 
 volumes:
   pgdata:
   redisdata:
-  miniodata:
+  storagedata:

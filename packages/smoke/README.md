@@ -22,7 +22,7 @@ time:
 
 ```bash
 # 1. The services
-docker compose -f docker/docker-compose.yml up -d      # Postgres, Mailpit, MinIO
+docker compose -f docker/docker-compose.yml up -d      # Postgres, Redis, Mailpit, RustFS
 
 # 2. The database
 pnpm db:migrate && pnpm db:seed && pnpm db:seed:auth
@@ -109,7 +109,7 @@ Three traps met while writing this suite, worth knowing before adding a test:
 ## Known limitations
 
 - The suite **writes** to the development database: it leaves behind the requests
-  it submits and an orphan image file in MinIO. Run it against a throwaway
+  it submits and an orphan image file in the S3 storage. Run it against a throwaway
   database, not against data you care about.
 - Better Auth caps sign-in at three attempts per ten seconds per IP.
   `signInAgent` retries, which is enough — but two concurrent runs of the suite

@@ -134,6 +134,20 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   agent session also sees the views the web workspace shows them, private ones
   of colleagues excluded.
 
+### Fixed
+
+- **`docker compose up` failed on a fresh machine: the storage image no longer
+  exists.** MinIO stopped publishing its community images, and `minio/minio`
+  now answers "pull access denied" on Docker Hub (Quay refuses it too). Every
+  new self-hosted install stopped at the first step, and so did the end-to-end
+  suite in CI. Both compose files now run **RustFS** (Apache-2.0, S3-compatible)
+  pinned to `rustfs/rustfs:1.0.0`, as a service named `storage`. The
+  application is unchanged: it only creates its bucket and puts, gets and
+  deletes objects, which RustFS was checked to do with the same SDK calls.
+  An install that already holds files in MinIO keeps its old `miniodata`
+  volume untouched; copy the `attachments` bucket across with any S3 client
+  (`rclone sync`, `aws s3 sync`) before removing it.
+
 ## [0.2.3-alpha] - 2026-09-07
 
 The integration release: a REST API that reaches the whole workspace, an MCP

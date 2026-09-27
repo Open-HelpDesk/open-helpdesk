@@ -1,5 +1,5 @@
 /**
- * S3-compatible storage (MinIO locally): attachments, article
+ * S3-compatible storage (RustFS locally): attachments, article
  * images, workspace logo and favicon.
  * 10 MB limit per file (specs PT-04). Keys: {tenantId}/{messageId}/{uuid}-{name}.
  */

@@ -9,7 +9,7 @@ AGPL-3.0, the `ee/` directory is commercially licensed (see `ee/LICENSE`).
 corepack enable                 # pnpm is pinned in package.json
 pnpm install
 cp .env.example .env
-docker compose -f docker/docker-compose.yml up -d   # postgres, redis, minio, mailpit
+docker compose -f docker/docker-compose.yml up -d   # postgres, redis, storage (RustFS), mailpit
 pnpm db:generate && pnpm db:migrate
 pnpm --filter @openhelpdesk/db db:rls
 pnpm db:seed && pnpm db:seed:auth                   # demo workspace "Acme"
