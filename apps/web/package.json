@@ -34,7 +34,7 @@
     "@tiptap/starter-kit": "^3.30.5",
     "better-auth": "^1.7.3",
     "bullmq": "^6.3.4",
-    "drizzle-orm": "^0.45.2",
+    "drizzle-orm": "^0.45.3",
     "ioredis": "^6.0.0",
     "lucide-react": "^1.41.0",
     "next": "^16.3.4",

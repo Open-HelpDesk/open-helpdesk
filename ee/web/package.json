@@ -41,7 +41,7 @@
     "@openhelpdesk/desk": "workspace:*",
     "@openhelpdesk/ee-ai": "workspace:*",
     "@openhelpdesk/ee-desk": "workspace:*",
-    "drizzle-orm": "^0.45.2"
+    "drizzle-orm": "^0.45.3"
   },
   "peerDependencies": {
     "next": "*",
