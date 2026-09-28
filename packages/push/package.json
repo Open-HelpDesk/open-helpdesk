@@ -12,12 +12,12 @@
   },
   "dependencies": {
     "@openhelpdesk/db": "workspace:*",
-    "bullmq": "^6.3.4",
+    "bullmq": "^6.3.8",
     "drizzle-orm": "^0.45.2",
     "ioredis": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^26.4.1",
+    "@types/node": "^26.6.2",
     "typescript": "^7.0.2"
   }
 }
