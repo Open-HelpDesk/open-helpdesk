@@ -17,7 +17,7 @@
     "@openhelpdesk/db": "workspace:*",
     "@openhelpdesk/storage": "workspace:*",
     "bullmq": "^6.3.4",
-    "drizzle-orm": "^0.45.2",
+    "drizzle-orm": "^0.45.3",
     "imapflow": "^1.7.8",
     "ioredis": "^6.0.0",
     "mailparser": "^3.9.22",
