@@ -5,7 +5,7 @@
 #   migrate : one-shot — Drizzle migrations + RLS (+ demo workspace if SEED_DEMO=true)
 # Build context: the repository root (see docker/docker-compose.prod.yml).
 
-FROM node:22-alpine AS build
+FROM node:22.23.4-alpine AS build
 RUN npm install -g pnpm@10.15.1
 WORKDIR /repo
 COPY . .
@@ -13,7 +13,7 @@ RUN pnpm install --frozen-lockfile
 RUN NEXT_OUTPUT=standalone pnpm --filter @openhelpdesk/web build
 
 # ---------- web: standalone server ----------
-FROM node:22-alpine AS web
+FROM node:22.23.4-alpine AS web
 ENV NODE_ENV=production HOSTNAME=0.0.0.0 PORT=3000
 WORKDIR /app
 COPY --from=build /repo/apps/web/.next/standalone ./
