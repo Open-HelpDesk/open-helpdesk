@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1127.0",
+    "@aws-sdk/client-s3": "^3.1163.0",
     "@openhelpdesk/auth": "workspace:*",
     "@openhelpdesk/config": "workspace:*",
     "@openhelpdesk/crypto": "workspace:*",
@@ -32,21 +32,21 @@
     "@tiptap/extension-image": "^3.30.5",
     "@tiptap/react": "^3.30.5",
     "@tiptap/starter-kit": "^3.30.5",
-    "better-auth": "^1.7.3",
-    "bullmq": "^6.3.4",
+    "better-auth": "^1.7.18",
+    "bullmq": "^6.7.1",
     "drizzle-orm": "^0.45.2",
     "ioredis": "^6.0.0",
-    "lucide-react": "^1.41.0",
+    "lucide-react": "^1.69.0",
     "next": "^16.3.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.0",
-    "@types/node": "^26.4.1",
+    "@tailwindcss/postcss": "^4.3.4",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.2.7",
-    "tailwindcss": "^4.1.0",
+    "tailwindcss": "^4.3.4",
     "typescript": "^7.0.2",
     "vitest": "^5.0.0"
   }
